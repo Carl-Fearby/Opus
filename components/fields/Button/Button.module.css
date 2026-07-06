@@ -23,9 +23,9 @@
 }
 
 .primary {
-  border-color: color-mix(in srgb, #6b46ff 72%, #ffffff);
-  background: #6b46ff;
-  color: #ffffff;
+  border-color: color-mix(in srgb, var(--opus-accent) 72%, #ffffff);
+  background: var(--opus-accent);
+  color: var(--opus-accent-contrast, #ffffff);
 }
 
 .secondary {

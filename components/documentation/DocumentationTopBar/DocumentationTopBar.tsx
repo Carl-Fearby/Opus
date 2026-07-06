@@ -73,7 +73,7 @@ export function DocumentationTopBar({ current, trailing }: DocumentationTopBarPr
           <DocumentationNav current={current} />
         </div>
         {trailing ? (
-          <div className={styles.topBarTrailing} data-theme="dark">
+          <div className={styles.topBarTrailing}>
             {trailing}
           </div>
         ) : null}

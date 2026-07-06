@@ -1,4 +1,4 @@
-import type { AccordionGroupType, ButtonVariant, ChoiceShape, DialogActionSet, DrawerSide, DropdownMenuPlacement, EmptyStateIcon, FieldMode, ImageThumbnailSize, LabelPosition, ModalSize, ModelThumbnailSize, PopoverPlacement, SidebarSide, SkeletonAnimation, SkeletonVariant, AlertStatus, SurfaceDensity, SurfaceTone, TableDensity, TabsOrientation, TabsVariant, Theme, ToastHorizontalPosition, ToastVerticalPosition } from "@/components/fields";
+import type { AccordionGroupType, ButtonVariant, ChartPalette, ChartVariant, ChoiceShape, DialogActionSet, DrawerSide, DropdownMenuPlacement, FieldMode, ImageThumbnailSize, LabelPosition, ModalSize, ModelThumbnailSize, PopoverPlacement, SidebarSide, SkeletonAnimation, SkeletonVariant, AlertStatus, SurfaceDensity, SurfaceTone, TableDensity, TabsOrientation, TabsVariant, Theme, ToastHorizontalPosition, ToastVerticalPosition } from "@/components/fields";
 import type {
   SectionColumns,
   SectionGap,
@@ -6,6 +6,11 @@ import type {
   SectionSidebarRatio,
   SectionStackBelow,
 } from "@/lib/layout/sectionLayout";
+import type { ChartControlSlug } from "./chartCatalog";
+import type { DashboardControlSlug } from "./dashboardCatalog";
+import type { DashboardPreviewLayout } from "./dashboardPreview";
+
+export type FontAwesomeIconName = string;
 
 export type ControlSlug =
   | "button"
@@ -33,6 +38,8 @@ export type ControlSlug =
   | "text-input"
   | "textarea"
   | "theme-toggle"
+  | "accent-color-picker"
+  | "icon-picker"
   | "tooltip"
   | "dialog"
   | "drawer"
@@ -64,9 +71,11 @@ export type ControlSlug =
   | "empty-state"
   | "sidebar"
   | "mega-menu"
-  | "top-navigation";
+  | "top-navigation"
+  | ChartControlSlug
+  | DashboardControlSlug;
 
-export type ComponentCategory = "forms" | "overlays" | "content";
+export type ComponentCategory = "forms" | "overlays" | "content" | "graphs";
 
 export type BaseFieldSettings = {
   mode: FieldMode;
@@ -156,6 +165,20 @@ export type ThemeToggleSettings = {
   labelPosition: LabelPosition;
   label: string;
   value: Theme;
+};
+
+export type AccentColorPickerSettings = {
+  mode: FieldMode;
+  labelPosition: LabelPosition;
+  label: string;
+  value: string;
+};
+
+export type IconPickerSettings = {
+  mode: FieldMode;
+  labelPosition: LabelPosition;
+  label: string;
+  value: string;
 };
 
 export type TooltipSettings = {
@@ -354,6 +377,107 @@ export type SkeletonSettings = {
   variant: SkeletonVariant;
 };
 
+export type ChartSettings = {
+  title: string;
+  variant: ChartVariant;
+  palette: ChartPalette;
+  height: number;
+  maximise: boolean;
+  previewLayout: "single" | "split";
+  showAxis: boolean;
+  showGrid: boolean;
+  showLegend: boolean;
+  showValues: boolean;
+  xAxisLabel: string;
+  yAxisLabel: string;
+  highlightLabel: string;
+};
+
+export type StatCardTrend = "up" | "down";
+
+export type StatCardSettings = {
+  change: string;
+  density: SurfaceDensity;
+  icon: FontAwesomeIconName;
+  label: string;
+  previewLayout: DashboardPreviewLayout;
+  showChange: boolean;
+  trend: StatCardTrend;
+  value: string;
+};
+
+export type GaugeFooterItem = {
+  color?: string;
+  label: string;
+  trend?: StatCardTrend;
+  value: string;
+};
+
+export type GaugeTrackTone = "neutral" | "soft" | "contrast" | "palette";
+export type GaugeValueTone = "palette" | "accent" | "red" | "orange" | "blue" | "green";
+
+export type GaugeSettings = {
+  change: string;
+  changeTrend: StatCardTrend;
+  density: SurfaceDensity;
+  footerMetricCount: number;
+  palette: ChartPalette;
+  previewLayout: DashboardPreviewLayout;
+  subtitle: string;
+  summary: string;
+  title: string;
+  trackTone: GaugeTrackTone;
+  valueTone: GaugeValueTone;
+  variant: "full" | "half";
+};
+
+export type SparklineSettings = {
+  label: string;
+  palette: ChartPalette;
+  previewLayout: DashboardPreviewLayout;
+};
+
+export type ProgressRingSettings = {
+  label: string;
+  max: number;
+  previewLayout: DashboardPreviewLayout;
+  value: number;
+};
+
+export type ProgressBarSettings = {
+  label: string;
+  max: number;
+  previewLayout: DashboardPreviewLayout;
+  value: number;
+};
+
+export type SpeedometerSettings = {
+  label: string;
+  max: number;
+  previewLayout: DashboardPreviewLayout;
+  value: number;
+};
+
+export type MetricTileSettings = {
+  icon: FontAwesomeIconName;
+  label: string;
+  previewLayout: DashboardPreviewLayout;
+  showSparkline: boolean;
+  value: string;
+};
+
+export type StatusIndicatorSettings = {
+  label: string;
+  previewLayout: DashboardPreviewLayout;
+  status: "error" | "neutral" | "success" | "warning";
+};
+
+export type TrendBadgeSettings = {
+  direction: StatCardTrend;
+  previewLayout: DashboardPreviewLayout;
+  value: string;
+};
+
 export type CarouselSettings = {
   initialIndex: number;
   loop: boolean;
@@ -430,7 +554,7 @@ export type EmptyStateSettings = {
   description: string;
   density: SurfaceDensity;
   showIcon: boolean;
-  icon: EmptyStateIcon;
+  icon: FontAwesomeIconName;
   primaryAction: boolean;
   primaryActionLabel: string;
   secondaryAction: boolean;
@@ -460,11 +584,20 @@ export type TopNavigationSettings = {
   showShortcuts: boolean;
 };
 
+export type MegaMenuColumnCount = 1 | 2 | 3 | 4;
+export type MegaMenuItemsPerColumn = 1 | 2 | 3 | 4 | 5;
+
 export type MegaMenuSettings = {
   closeOnEscape: boolean;
   closeOnOutside: boolean;
+  columnCount: MegaMenuColumnCount;
   density: SurfaceDensity;
   featured: boolean;
+  featuredActionLabel: string;
+  featuredDescription: string;
+  featuredEyebrow: string;
+  featuredTitle: string;
+  itemsPerColumn: MegaMenuItemsPerColumn;
 };
 
 export type ControlSettingsBySlug = {
@@ -493,6 +626,8 @@ export type ControlSettingsBySlug = {
   "text-input": TextInputSettings;
   textarea: TextareaSettings;
   "theme-toggle": ThemeToggleSettings;
+  "accent-color-picker": AccentColorPickerSettings;
+  "icon-picker": IconPickerSettings;
   tooltip: TooltipSettings;
   dialog: DialogSettings;
   drawer: DrawerSettings;
@@ -525,6 +660,17 @@ export type ControlSettingsBySlug = {
   sidebar: SidebarSettings;
   "mega-menu": MegaMenuSettings;
   "top-navigation": TopNavigationSettings;
+} & Record<ChartControlSlug, ChartSettings> & {
+  "kpi-card": StatCardSettings;
+  "stat-card": StatCardSettings;
+  gauge: GaugeSettings;
+  sparkline: SparklineSettings;
+  "progress-ring": ProgressRingSettings;
+  "progress-bar": ProgressBarSettings;
+  speedometer: SpeedometerSettings;
+  "metric-tile": MetricTileSettings;
+  "status-indicator": StatusIndicatorSettings;
+  "trend-badge": TrendBadgeSettings;
 };
 
 export type ControlSettings = ControlSettingsBySlug[ControlSlug];

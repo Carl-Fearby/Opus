@@ -21,7 +21,7 @@ export function CheckboxField({
   help,
   id,
   label,
-  labelPosition = "right",
+  labelPosition = "left",
   mode = "flagged",
   onChange,
   shape = "square",

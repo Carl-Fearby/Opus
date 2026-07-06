@@ -2,6 +2,7 @@
 
 import type { AlertStatus } from "@/components/fields/types";
 import { AlertStatusIcon } from "@/components/AlertStatusIcon";
+import { useOpusTheme } from "@/components/OpusThemeProvider";
 import styles from "./Alert.module.css";
 
 type AlertProps = {
@@ -22,11 +23,13 @@ export function Alert({
   title,
 }: AlertProps) {
   const liveRole = status === "error" || status === "warning" ? "alert" : "status";
+  const theme = useOpusTheme();
 
   return (
     <div
       className={`${styles.alert} ${iconFlagged ? styles.iconFlagged : ""}`}
       data-status={status}
+      data-theme={theme}
       role={liveRole}
     >
       <div aria-hidden="true" className={styles.icon}>

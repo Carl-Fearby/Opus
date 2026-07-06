@@ -1,10 +1,12 @@
 "use client";
 
 import { useCallback, useEffect, useMemo, useState } from "react";
+import { CatalogIcon } from "@/components/CatalogIcon";
 import {
   Button,
   Card,
   Carousel,
+  Chart,
   CheckboxField,
   ColorField,
   CommandPalette,
@@ -31,6 +33,7 @@ import {
   RangeField,
   SelectField,
   Skeleton,
+  StatCard,
   SwitchField,
   TextAreaField,
   TextField,
@@ -55,14 +58,30 @@ import {
   SidebarNav,
   Table,
   Tabs,
+  Gauge,
+  MetricTile,
+  ProgressBar,
+  ProgressRing,
+  Sparkline,
+  Speedometer,
+  StatusIndicator,
   TopNavigation,
+  TrendBadge,
   useToast,
 } from "@/components/fields";
+import { AccentColorPicker, createAccentStyle } from "@/components/AccentColorPicker";
+import { IconPicker } from "@/components/IconPicker";
 import { DEFAULT_TOAST_DURATION_MS } from "@/components/ToastProvider";
 import type { DateInputType } from "@/components/fields";
 import type { CommandPaletteItem, DropdownMenuItemData } from "@/components/fields";
 import type { AlertStatus } from "@/components/fields/types";
 import { buildMegaMenuPreviewConfig } from "@/lib/controls/megaMenuDemo";
+import {
+  gaugePreviewValue,
+  getGaugeFooter,
+  getGaugeTrackColor,
+  getGaugeValueColor,
+} from "@/lib/controls/dashboardWidgetData";
 import { topNavigationDemoMenus } from "@/lib/controls/topNavigationDemo";
 import type { TopNavigationSelectItem } from "@/components/TopNavigation/TopNavigationContext";
 import type { ControlSettings, ControlSettingsBySlug, ControlSlug, ValueFieldSettings } from "@/lib/controls/types";
@@ -75,9 +94,28 @@ import {
   buildDataGridColumns,
   dataGridRows,
 } from "@/lib/controls/dataGridDemoData";
+import { chartDemoSeries, getChartPreviewData } from "@/lib/controls/chartDemoData";
+import { isChartSlug } from "@/lib/controls/chartCatalog";
+import { cartesianSpecializedVariants } from "@/components/Chart/SpecializedCharts";
+import { DashboardPreviewGrid } from "./DashboardPreviewGrid";
 import styles from "./ControlDetail.module.css";
 
 const toastStatuses: AlertStatus[] = ["error", "success", "warning", "info"];
+const maximisableChartVariants = [
+  "bar-vertical",
+  "bar-horizontal",
+  "grouped-bar",
+  "stacked-bar",
+  "stacked-bar-100",
+  "line",
+  "multi-line",
+  "area",
+  "stacked-area",
+  "spline",
+  "scatter",
+  "bubble",
+  ...cartesianSpecializedVariants,
+] as const;
 
 const randomToastSamples: Record<
   AlertStatus,
@@ -214,7 +252,7 @@ type ControlPreviewProps = {
   onSettingsChange: (next: ControlSettings) => void;
 };
 
-function fieldProps(settings: ControlSettingsBySlug[Exclude<ControlSlug, "button" | "submit-button" | "reset-button" | "theme-toggle" | "tooltip" | "dialog" | "drawer" | "dropdown-menu" | "context-menu" | "command-palette" | "modal" | "popover" | "alert" | "toast" | "tabs" | "card" | "panel" | "section" | "table" | "data-grid" | "skeleton" | "carousel" | "lightbox" | "image-thumbnail" | "image-gallery" | "model-viewer" | "model-lightbox" | "model-thumbnail" | "model-gallery" | "accordion" | "accordion-group" | "show-more" | "empty-state" | "sidebar" | "mega-menu" | "top-navigation">]) {
+function fieldProps(settings: ControlSettingsBySlug[Exclude<ControlSlug, "button" | "submit-button" | "reset-button" | "theme-toggle" | "accent-color-picker" | "icon-picker" | "tooltip" | "dialog" | "drawer" | "dropdown-menu" | "context-menu" | "command-palette" | "modal" | "popover" | "alert" | "toast" | "tabs" | "card" | "stat-card" | "gauge" | "panel" | "section" | "table" | "data-grid" | "skeleton" | "bar-chart-vertical" | "bar-chart-horizontal" | "grouped-bar-chart" | "stacked-bar-chart" | "stacked-bar-chart-100" | "line-chart" | "multi-line-chart" | "area-chart" | "stacked-area-chart" | "spline-chart" | "pie-chart" | "donut-chart" | "scatter-plot" | "bubble-chart" | "radar-chart" | "polar-area-chart" | "funnel-chart" | "pyramid-chart" | "carousel" | "lightbox" | "image-thumbnail" | "image-gallery" | "model-viewer" | "model-lightbox" | "model-thumbnail" | "model-gallery" | "accordion" | "accordion-group" | "show-more" | "empty-state" | "sidebar" | "mega-menu" | "top-navigation">]) {
   return {
     error: settings.errorEnabled ? settings.error : undefined,
     help: settings.helpEnabled ? settings.help : undefined,
@@ -893,6 +931,48 @@ const dateFieldTypes = {
 } as const;
 
 export function ControlPreview({ slug, settings, onSettingsChange }: ControlPreviewProps) {
+  if (isChartSlug(slug)) {
+    const s = settings as ControlSettingsBySlug[typeof slug];
+    const canMaximise = maximisableChartVariants.includes(
+      s.variant as (typeof maximisableChartVariants)[number],
+    );
+    const chartProps = {
+      data: getChartPreviewData(slug),
+      height: s.height,
+      highlightLabel: s.highlightLabel || undefined,
+      maximise: s.maximise,
+      palette: s.palette,
+      series: chartDemoSeries,
+      showAxis: s.showAxis,
+      showGrid: s.showGrid,
+      showLegend: s.showLegend,
+      showValues: s.showValues,
+      title: s.title,
+      variant: s.variant,
+      xAxisLabel: s.xAxisLabel || undefined,
+      yAxisLabel: s.yAxisLabel || undefined,
+    };
+
+    if (s.previewLayout === "split") {
+      return (
+        <div className={styles.chartPreviewGrid}>
+          <div className={styles.chartPreviewItem}>
+            <Chart {...chartProps} />
+          </div>
+          <div className={styles.chartPreviewItem}>
+            <Chart {...chartProps} />
+          </div>
+        </div>
+      );
+    }
+
+    return (
+      <div className={styles.chartPreviewSingle} data-maximise={s.maximise && canMaximise}>
+        <Chart {...chartProps} />
+      </div>
+    );
+  }
+
   switch (slug) {
     case "text-input": {
       const s = settings as ControlSettingsBySlug["text-input"];
@@ -1116,6 +1196,37 @@ export function ControlPreview({ slug, settings, onSettingsChange }: ControlPrev
         />
       );
     }
+    case "accent-color-picker": {
+      const s = settings as ControlSettingsBySlug["accent-color-picker"];
+      const accentStyle = createAccentStyle(s.value);
+
+      return (
+        <div className={styles.accentPreview} style={accentStyle}>
+          <AccentColorPicker
+            id="preview-accent-color-picker"
+            label={s.label}
+            labelPosition={s.labelPosition}
+            mode={s.mode}
+            value={s.value}
+            onChange={(value) => onSettingsChange({ ...s, value } as ControlSettings)}
+          />
+          <Button variant="primary">Preview accent</Button>
+        </div>
+      );
+    }
+    case "icon-picker": {
+      const s = settings as ControlSettingsBySlug["icon-picker"];
+      return (
+        <IconPicker
+          id="preview-icon-picker"
+          label={s.label}
+          labelPosition={s.labelPosition}
+          mode={s.mode}
+          value={s.value}
+          onChange={(value) => onSettingsChange({ ...s, value } as ControlSettings)}
+        />
+      );
+    }
     case "tooltip": {
       const s = settings as ControlSettingsBySlug["tooltip"];
       return (
@@ -1194,6 +1305,134 @@ export function ControlPreview({ slug, settings, onSettingsChange }: ControlPrev
         >
           <p>{s.content}</p>
         </Card>
+      );
+    }
+    case "kpi-card":
+    case "stat-card": {
+      const s = settings as ControlSettingsBySlug["stat-card"];
+      const icon = <CatalogIcon iconName={s.icon} />;
+
+      return (
+        <DashboardPreviewGrid
+          layout={s.previewLayout}
+          renderItem={() => (
+            <StatCard
+              change={s.showChange ? s.change : undefined}
+              density={s.density}
+              icon={icon}
+              label={s.label}
+              trend={s.trend}
+              value={s.value}
+            />
+          )}
+        />
+      );
+    }
+    case "sparkline": {
+      const s = settings as ControlSettingsBySlug["sparkline"];
+      return (
+        <DashboardPreviewGrid
+          layout={s.previewLayout}
+          renderItem={() => (
+            <Sparkline label={s.label} palette={s.palette} values={[18, 24, 21, 34, 29, 42, 38]} />
+          )}
+        />
+      );
+    }
+    case "progress-ring": {
+      const s = settings as ControlSettingsBySlug["progress-ring"];
+      return (
+        <DashboardPreviewGrid
+          layout={s.previewLayout}
+          renderItem={() => (
+            <div className={styles.dashboardWidgetSlot}>
+              <ProgressRing label={s.label} max={s.max} value={s.value} />
+            </div>
+          )}
+        />
+      );
+    }
+    case "progress-bar": {
+      const s = settings as ControlSettingsBySlug["progress-bar"];
+      return (
+        <DashboardPreviewGrid
+          layout={s.previewLayout}
+          renderItem={() => <ProgressBar label={s.label} max={s.max} value={s.value} />}
+        />
+      );
+    }
+    case "gauge":
+    {
+      const s = settings as ControlSettingsBySlug["gauge"];
+      const gaugeFooter = getGaugeFooter(s.palette);
+      const footer =
+        s.footerMetricCount > 0
+          ? gaugeFooter.slice(0, s.footerMetricCount)
+          : undefined;
+      const sharedGaugeProps = {
+        change: s.change,
+        changeTrend: s.changeTrend,
+        density: s.density,
+        footer,
+        subtitle: s.subtitle,
+        summary: s.summary,
+        trackColor: getGaugeTrackColor(s.trackTone, s.palette),
+        value: gaugePreviewValue,
+        valueColor: getGaugeValueColor(s.valueTone, s.palette),
+      };
+
+      return (
+        <DashboardPreviewGrid
+          layout={s.previewLayout}
+          renderItem={() => <Gauge {...sharedGaugeProps} title={s.title} variant={s.variant} />}
+        />
+      );
+    }
+    case "speedometer": {
+      const s = settings as ControlSettingsBySlug["speedometer"];
+      return (
+        <DashboardPreviewGrid
+          layout={s.previewLayout}
+          renderItem={() => (
+            <div className={styles.dashboardWidgetSlot}>
+              <Speedometer label={s.label} max={s.max} value={s.value} />
+            </div>
+          )}
+        />
+      );
+    }
+    case "metric-tile": {
+      const s = settings as ControlSettingsBySlug["metric-tile"];
+      return (
+        <DashboardPreviewGrid
+          layout={s.previewLayout}
+          renderItem={() => (
+            <MetricTile
+              icon={<CatalogIcon iconName={s.icon} />}
+              label={s.label}
+              sparkline={s.showSparkline ? [12, 18, 16, 24, 22, 30, 28] : undefined}
+              value={s.value}
+            />
+          )}
+        />
+      );
+    }
+    case "status-indicator": {
+      const s = settings as ControlSettingsBySlug["status-indicator"];
+      return (
+        <DashboardPreviewGrid
+          layout={s.previewLayout}
+          renderItem={() => <StatusIndicator label={s.label} status={s.status} />}
+        />
+      );
+    }
+    case "trend-badge": {
+      const s = settings as ControlSettingsBySlug["trend-badge"];
+      return (
+        <DashboardPreviewGrid
+          layout={s.previewLayout}
+          renderItem={() => <TrendBadge direction={s.direction} value={s.value} />}
+        />
       );
     }
     case "panel": {

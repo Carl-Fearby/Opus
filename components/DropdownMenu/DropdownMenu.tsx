@@ -237,7 +237,8 @@ export function DropdownMenu({
   }, [clearHoverCloseTimeout]);
 
   useEffect(() => {
-    setPortalReady(true);
+    const timeout = window.setTimeout(() => setPortalReady(true), 0);
+    return () => window.clearTimeout(timeout);
   }, []);
 
   useLayoutEffect(() => {
@@ -365,13 +366,15 @@ export function DropdownMenu({
 
   const showIconColumn = items.some(itemShowsIconColumn);
 
-  const menuStyle: CSSProperties | undefined = portalStyle
-    ? {
+  const menuStyle: CSSProperties = {
+    ...(portalStyle
+      ? {
         left: portalStyle.left,
         top: portalStyle.top,
         ...(portalStyle.width ? { width: portalStyle.width } : {}),
       }
-    : undefined;
+      : {}),
+  };
 
   const menuNode = renderMenu ? (
     <span

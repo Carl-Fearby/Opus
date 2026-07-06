@@ -4,6 +4,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import type { ReactNode } from "react";
 import { useCallback, useEffect, useState } from "react";
+import { AccentColorPicker, useAccentPreference } from "@/components/AccentColorPicker";
 import { ThemeToggleField } from "@/components/fields";
 import { OpusThemeProvider } from "@/components/OpusThemeProvider";
 import type { Theme } from "@/components/fields/types";
@@ -22,12 +23,17 @@ type GuideShellProps = {
 export function GuideShell({ children, pages }: GuideShellProps) {
   const pathname = usePathname();
   const [theme, setThemeState] = useState<Theme>("dark");
+  const { accent, accentStyle, setAccent } = useAccentPreference();
 
   useEffect(() => {
-    const stored = window.localStorage.getItem(THEME_STORAGE_KEY);
-    if (stored === "light" || stored === "dark") {
-      setThemeState(stored);
-    }
+    const timeout = window.setTimeout(() => {
+      const stored = window.localStorage.getItem(THEME_STORAGE_KEY);
+      if (stored === "light" || stored === "dark") {
+        setThemeState(stored);
+      }
+    }, 0);
+
+    return () => window.clearTimeout(timeout);
   }, []);
 
   const setTheme = useCallback((next: Theme) => {
@@ -37,18 +43,25 @@ export function GuideShell({ children, pages }: GuideShellProps) {
 
   return (
     <OpusThemeProvider theme={theme}>
-      <div className={styles.shell} data-theme={theme}>
+      <div className={styles.shell} data-theme={theme} style={accentStyle}>
         <DocumentationTopBar
           current="guide"
           trailing={
-            <ThemeToggleField
-              id="guide-theme-toggle"
-              label="Theme"
-              labelPosition="left"
-              mode="flagged"
-              value={theme}
-              onChange={setTheme}
-            />
+            <>
+              <AccentColorPicker
+                id="guide-accent-picker"
+                value={accent}
+                onChange={setAccent}
+              />
+              <ThemeToggleField
+                id="guide-theme-toggle"
+                label="Theme"
+                labelPosition="left"
+                mode="flagged"
+                value={theme}
+                onChange={setTheme}
+              />
+            </>
           }
         />
         <div className={styles.body}>

@@ -32,8 +32,7 @@
   grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
   gap: 12px;
   align-items: start;
-  width: min(1120px, 100%);
-  margin: 0 auto;
+  width: 100%;
   padding-bottom: 24px;
 }
 
@@ -47,8 +46,8 @@
   display: inline-flex;
   align-items: center;
   gap: 8px;
-  width: min(1120px, 100%);
-  margin: 18px auto 0;
+  width: 100%;
+  margin: 18px 0 0;
   color: var(--opus-accent);
   font-size: 0.78rem;
   font-weight: 900;

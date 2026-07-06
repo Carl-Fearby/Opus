@@ -1,6 +1,7 @@
 "use client";
 
-import { createContext, useCallback, useContext, useEffect, useMemo, useState, type ReactNode } from "react";
+import { createContext, useCallback, useContext, useEffect, useMemo, useState, type CSSProperties, type ReactNode } from "react";
+import { useAccentPreference } from "@/components/AccentColorPicker";
 import type { Theme } from "@/components/fields";
 import { OpusThemeProvider } from "@/components/OpusThemeProvider";
 import { ToastProvider } from "@/components/ToastProvider";
@@ -13,7 +14,10 @@ type ComponentsThemeContextValue = {
     description: string;
     title: string;
   };
+  accent: string;
+  accentStyle: CSSProperties;
   setPageHeader: (header: { description?: string; title: string }) => void;
+  setAccent: (accent: string) => void;
   setTheme: (theme: Theme) => void;
   theme: Theme;
 };
@@ -45,12 +49,17 @@ export function useSetComponentsPageHeader(title: string, description?: string) 
 export function ComponentsThemeProvider({ children }: { children: ReactNode }) {
   const [theme, setThemeState] = useState<Theme>("dark");
   const [pageHeader, setPageHeaderState] = useState(defaultPageHeader);
+  const { accent, accentStyle, setAccent } = useAccentPreference();
 
   useEffect(() => {
-    const stored = window.localStorage.getItem(THEME_STORAGE_KEY);
-    if (stored === "light" || stored === "dark") {
-      setThemeState(stored);
-    }
+    const timeout = window.setTimeout(() => {
+      const stored = window.localStorage.getItem(THEME_STORAGE_KEY);
+      if (stored === "light" || stored === "dark") {
+        setThemeState(stored);
+      }
+    }, 0);
+
+    return () => window.clearTimeout(timeout);
   }, []);
 
   const setTheme = useCallback((next: Theme) => {
@@ -74,14 +83,14 @@ export function ComponentsThemeProvider({ children }: { children: ReactNode }) {
   }, []);
 
   const contextValue = useMemo(
-    () => ({ pageHeader, setPageHeader, setTheme, theme }),
-    [pageHeader, setPageHeader, setTheme, theme],
+    () => ({ accent, accentStyle, pageHeader, setAccent, setPageHeader, setTheme, theme }),
+    [accent, accentStyle, pageHeader, setAccent, setPageHeader, setTheme, theme],
   );
 
   return (
     <ComponentsThemeContext.Provider value={contextValue}>
       <OpusThemeProvider theme={theme}>
-        <div data-theme={theme}>
+        <div data-theme="dark" style={accentStyle}>
           <ToastProvider>
             <ContextMenuProvider>{children}</ContextMenuProvider>
           </ToastProvider>

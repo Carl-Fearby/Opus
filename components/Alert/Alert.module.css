@@ -59,7 +59,7 @@
   --status-dismiss: #1e3a8a;
 }
 
-:global([data-theme="dark"]) .alert[data-status="error"] {
+.alert[data-theme="dark"][data-status="error"] {
   --status-bg: color-mix(in srgb, #ef4444 14%, var(--opus-panel));
   --status-border: color-mix(in srgb, #f87171 55%, transparent);
   --status-title: #fecaca;
@@ -67,7 +67,7 @@
   --status-dismiss: color-mix(in srgb, var(--opus-text) 82%, #fecaca);
 }
 
-:global([data-theme="dark"]) .alert[data-status="success"] {
+.alert[data-theme="dark"][data-status="success"] {
   --status-bg: color-mix(in srgb, #16a34a 14%, var(--opus-panel));
   --status-border: color-mix(in srgb, #4ade80 55%, transparent);
   --status-title: #bbf7d0;
@@ -75,7 +75,7 @@
   --status-dismiss: color-mix(in srgb, var(--opus-text) 82%, #bbf7d0);
 }
 
-:global([data-theme="dark"]) .alert[data-status="warning"] {
+.alert[data-theme="dark"][data-status="warning"] {
   --status-bg: color-mix(in srgb, #d97706 14%, var(--opus-panel));
   --status-border: color-mix(in srgb, #fbbf24 55%, transparent);
   --status-title: #fde68a;
@@ -83,7 +83,7 @@
   --status-dismiss: color-mix(in srgb, var(--opus-text) 82%, #fde68a);
 }
 
-:global([data-theme="dark"]) .alert[data-status="info"] {
+.alert[data-theme="dark"][data-status="info"] {
   --status-bg: color-mix(in srgb, #2563eb 14%, var(--opus-panel));
   --status-border: color-mix(in srgb, #60a5fa 55%, transparent);
   --status-title: #bfdbfe;

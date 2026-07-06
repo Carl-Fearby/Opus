@@ -17,15 +17,7 @@ export const megaMenuEditConfig: MegaMenuConfig = editMenu;
 
 export const topNavigationMegaMenus: MegaMenuConfig[] = [megaMenuEditConfig];
 
-export const megaMenuPreviewFeatured: MegaMenuFeatured = {
-  eyebrow: "Featured",
-  title: "Build faster with Opus",
-  description:
-    "Browse production-ready components, patterns, and implementation notes from one navigation surface.",
-  actionLabel: "Explore library",
-};
-
-export const megaMenuPreviewSections: MegaMenuSection[] = [
+export const megaMenuSectionTemplates: MegaMenuSection[] = [
   {
     id: "foundation",
     title: "Foundation",
@@ -44,6 +36,16 @@ export const megaMenuPreviewSections: MegaMenuSection[] = [
         id: "accessibility",
         label: "Accessibility",
         description: "Keyboard, focus, aria, and contrast guidance for components.",
+      },
+      {
+        id: "layout",
+        label: "Layout primitives",
+        description: "Sections, panels, and responsive page structure patterns.",
+      },
+      {
+        id: "motion",
+        label: "Motion",
+        description: "Transitions, timing, and entrance patterns for overlays and menus.",
       },
     ],
   },
@@ -66,18 +68,103 @@ export const megaMenuPreviewSections: MegaMenuSection[] = [
         label: "Overlays",
         description: "Dialogs, drawers, popovers, and command palettes.",
       },
+      {
+        id: "data",
+        label: "Data surfaces",
+        description: "Tables, grids, and readable data presentation patterns.",
+      },
+      {
+        id: "media",
+        label: "Media",
+        description: "Images, galleries, lightboxes, and 3D asset previews.",
+      },
+    ],
+  },
+  {
+    id: "workflows",
+    title: "Workflows",
+    items: [
+      {
+        id: "settings",
+        label: "Settings pages",
+        description: "Grouped controls with clear save and cancel actions.",
+      },
+      {
+        id: "confirmation",
+        label: "Confirmation flows",
+        description: "Dialogs and modals for safe decisions.",
+      },
+      {
+        id: "onboarding",
+        label: "Onboarding",
+        description: "First-run guidance, empty states, and progressive setup.",
+      },
+      {
+        id: "search",
+        label: "Search and filter",
+        description: "Command palettes, query fields, and result surfaces.",
+      },
+      {
+        id: "notifications",
+        label: "Notifications",
+        description: "Toasts, alerts, and inline status messaging.",
+      },
+    ],
+  },
+  {
+    id: "states",
+    title: "States",
+    items: [
+      {
+        id: "loading",
+        label: "Loading",
+        description: "Skeletons and progressive reveal patterns.",
+      },
+      {
+        id: "empty",
+        label: "Empty states",
+        description: "Helpful zero-state messaging and actions.",
+      },
+      {
+        id: "error",
+        label: "Error handling",
+        description: "Alerts, inline errors, and recovery routes.",
+      },
+      {
+        id: "success",
+        label: "Success feedback",
+        description: "Confirmation messaging and post-action summaries.",
+      },
+      {
+        id: "disabled",
+        label: "Disabled states",
+        description: "Unavailable actions, muted controls, and guidance copy.",
+      },
     ],
   },
 ];
 
-export function buildMegaMenuPreviewConfig(
-  settings: Pick<MegaMenuSettings, "featured">,
-): MegaMenuConfig {
+export function buildMegaMenuPreviewConfig(settings: MegaMenuSettings): MegaMenuConfig {
+  const sections = megaMenuSectionTemplates.slice(0, settings.columnCount).map((section) => ({
+    id: section.id,
+    title: section.title,
+    items: section.items.slice(0, settings.itemsPerColumn),
+  }));
+
+  const featured: MegaMenuFeatured | undefined = settings.featured
+    ? {
+        eyebrow: settings.featuredEyebrow,
+        title: settings.featuredTitle,
+        description: settings.featuredDescription,
+        actionLabel: settings.featuredActionLabel || undefined,
+      }
+    : undefined;
+
   return {
     id: "resources",
     label: "Resources",
-    featured: settings.featured ? megaMenuPreviewFeatured : undefined,
-    sections: megaMenuPreviewSections,
+    featured,
+    sections,
   };
 }
 

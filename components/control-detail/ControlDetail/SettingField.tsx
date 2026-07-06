@@ -8,6 +8,10 @@ import {
   TextAreaField,
   TextField,
 } from "@/components/fields";
+import {
+  dashboardPreviewLayoutOptions,
+  type DashboardPreviewLayout,
+} from "@/lib/controls/dashboardPreview";
 
 const panelFieldProps = {
   labelPosition: "left" as const,
@@ -140,6 +144,30 @@ export function SettingToggle({ label, checked, onChange }: SettingToggleProps) 
       label={label}
       checked={checked}
       onChange={(event) => onChange(event.target.checked)}
+    />
+  );
+}
+
+export function DashboardPreviewLayoutSetting({
+  value,
+  onChange,
+}: {
+  value: DashboardPreviewLayout;
+  onChange: (value: DashboardPreviewLayout) => void;
+}) {
+  const id = settingFieldId("Preview layout");
+
+  return (
+    <SelectField
+      {...panelFieldProps}
+      id={id}
+      label="Preview layout"
+      options={dashboardPreviewLayoutOptions.map((option) => option.label)}
+      value={dashboardPreviewLayoutOptions.find((option) => option.value === value)?.label ?? "1 view"}
+      onChange={(event) => {
+        const match = dashboardPreviewLayoutOptions.find((option) => option.label === event.target.value);
+        onChange((match?.value ?? "single") as DashboardPreviewLayout);
+      }}
     />
   );
 }

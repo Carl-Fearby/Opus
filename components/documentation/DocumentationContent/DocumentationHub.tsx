@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { useCallback, useEffect, useState } from "react";
+import { AccentColorPicker, useAccentPreference } from "@/components/AccentColorPicker";
 import { OpusThemeProvider } from "@/components/OpusThemeProvider";
 import { ThemeToggleField } from "@/components/fields";
 import type { Theme } from "@/components/fields/types";
@@ -13,12 +14,17 @@ const THEME_STORAGE_KEY = "opus-components-theme";
 
 export function DocumentationHub() {
   const [theme, setThemeState] = useState<Theme>("dark");
+  const { accent, accentStyle, setAccent } = useAccentPreference();
 
   useEffect(() => {
-    const stored = window.localStorage.getItem(THEME_STORAGE_KEY);
-    if (stored === "light" || stored === "dark") {
-      setThemeState(stored);
-    }
+    const timeout = window.setTimeout(() => {
+      const stored = window.localStorage.getItem(THEME_STORAGE_KEY);
+      if (stored === "light" || stored === "dark") {
+        setThemeState(stored);
+      }
+    }, 0);
+
+    return () => window.clearTimeout(timeout);
   }, []);
 
   const setTheme = useCallback((next: Theme) => {
@@ -28,18 +34,25 @@ export function DocumentationHub() {
 
   return (
     <OpusThemeProvider theme={theme}>
-      <div className={styles.shell} data-theme={theme}>
+      <div className={styles.shell} data-theme={theme} style={accentStyle}>
         <DocumentationTopBar
           current="home"
           trailing={
-            <ThemeToggleField
-              id="documentation-theme-toggle"
-              label="Theme"
-              labelPosition="left"
-              mode="flagged"
-              value={theme}
-              onChange={setTheme}
-            />
+            <>
+              <AccentColorPicker
+                id="documentation-accent-picker"
+                value={accent}
+                onChange={setAccent}
+              />
+              <ThemeToggleField
+                id="documentation-theme-toggle"
+                label="Theme"
+                labelPosition="left"
+                mode="flagged"
+                value={theme}
+                onChange={setTheme}
+              />
+            </>
           }
         />
         <div className={styles.hub}>

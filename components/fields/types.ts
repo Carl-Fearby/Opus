@@ -50,6 +50,50 @@ export type SkeletonVariant = "text" | "card" | "avatar" | "table";
 export type SkeletonAnimation = "shimmer" | "pulse" | "none";
 export type ImageThumbnailSize = "small" | "medium" | "large";
 export type ModelThumbnailSize = "small" | "medium" | "large";
+export type ChartPalette = "opus" | "cool" | "warm" | "mono";
+export type ChartVariant =
+  | "area"
+  | "bar-horizontal"
+  | "bar-vertical"
+  | "box-plot"
+  | "bubble"
+  | "bubble-map"
+  | "calendar-heatmap"
+  | "candlestick"
+  | "chord"
+  | "choropleth"
+  | "circle-packing"
+  | "density"
+  | "donut"
+  | "force-directed"
+  | "funnel"
+  | "gantt"
+  | "geo-map"
+  | "grouped-bar"
+  | "heatmap"
+  | "hexbin"
+  | "histogram"
+  | "line"
+  | "milestone-timeline"
+  | "multi-line"
+  | "network"
+  | "pie"
+  | "polar-area"
+  | "pyramid"
+  | "radar"
+  | "ridgeline"
+  | "sankey"
+  | "scatter"
+  | "spline"
+  | "stacked-area"
+  | "stacked-bar"
+  | "stacked-bar-100"
+  | "stream"
+  | "sunburst"
+  | "timeline"
+  | "treemap"
+  | "violin"
+  | "waterfall";
 
 export type ToastVerticalPosition = "top" | "bottom";
 export type ToastHorizontalPosition = "left" | "right";

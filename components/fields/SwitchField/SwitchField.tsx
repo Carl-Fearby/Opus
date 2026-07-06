@@ -20,7 +20,7 @@ export function SwitchField({
   help,
   id,
   label,
-  labelPosition = "right",
+  labelPosition = "left",
   mode = "flagged",
   onChange,
 }: SwitchFieldProps) {

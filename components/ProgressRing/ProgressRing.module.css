@@ -1,0 +1,51 @@
+.ring {
+  position: relative;
+  width: min(100%, 220px);
+  min-width: 0;
+  aspect-ratio: 1;
+}
+
+.svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+  transform: rotate(-90deg);
+}
+
+.track,
+.value {
+  fill: none;
+  stroke-linecap: round;
+  stroke-width: 12;
+}
+
+.track {
+  stroke: color-mix(in srgb, var(--opus-border) 80%, transparent);
+}
+
+.value {
+  stroke: var(--opus-accent);
+}
+
+.center {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-content: center;
+  gap: 2px;
+  text-align: center;
+}
+
+.center strong {
+  color: var(--opus-text);
+  font-size: 1.45rem;
+  font-weight: 800;
+  letter-spacing: -0.04em;
+  line-height: 1;
+}
+
+.center span {
+  color: var(--opus-muted);
+  font-size: 0.72rem;
+  font-weight: 700;
+}

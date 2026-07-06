@@ -1,8 +1,8 @@
 .topBar {
   --topbar-text: #f5f7ff;
   --topbar-muted: rgba(223, 226, 255, 0.72);
-  --topbar-accent: #8f6cff;
-  --topbar-accent-soft: rgba(143, 108, 255, 0.16);
+  --topbar-accent: var(--opus-accent, #8f6cff);
+  --topbar-accent-soft: var(--opus-accent-soft, rgba(143, 108, 255, 0.16));
   --topbar-border: rgba(168, 131, 255, 0.2);
   --topbar-bg: linear-gradient(180deg, #05060f 0%, #0a0c18 100%);
 
@@ -88,6 +88,9 @@
 }
 
 .topBarTrailing {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
   flex-shrink: 0;
 }
 

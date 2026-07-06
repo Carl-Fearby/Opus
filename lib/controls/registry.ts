@@ -1,9 +1,12 @@
 import type { ComponentCategory, ControlDefinition, ControlSlug } from "./types";
 import { formsControlOrder } from "./types";
+import { chartCatalog } from "./chartCatalog";
+import { dashboardCatalog } from "./dashboardCatalog";
 
 export const componentCategories: { id: ComponentCategory; label: string }[] = [
   { id: "content", label: "Content" },
   { id: "forms", label: "Forms" },
+  { id: "graphs", label: "Graphs" },
   { id: "overlays", label: "Overlays" },
 ].sort((a, b) => a.label.localeCompare(b.label)) as { id: ComponentCategory; label: string }[];
 
@@ -11,8 +14,31 @@ export const categoryDescriptions: Record<ComponentCategory, string> = {
   content:
     "Expandable sections, grouped accordions, alerts, navigation menus, empty states, sidebars, and show more / show less controls.",
   forms: "Inputs, selectors, toggles, buttons, and every field pattern used across Opus forms.",
+  graphs: "Charts and visualisations for comparing, trending, segmenting, and exploring metric data.",
   overlays: "Tooltips, command palettes, modals, drawers, and toast notifications for contextual help and feedback.",
 };
+
+const graphControls: ControlDefinition[] = chartCatalog.map((entry) => ({
+  slug: entry.slug,
+  title: entry.title,
+  category: "graphs",
+  componentName: "Chart",
+  description: entry.description,
+  navigationGroup: entry.navigationGroup,
+  sourceFiles: ["components/Chart/Chart.tsx", "components/Chart/Chart.module.css", "components/Chart/SpecializedCharts.tsx"],
+  usesFieldShell: false,
+}));
+
+const dashboardControls: ControlDefinition[] = dashboardCatalog.map((entry) => ({
+  slug: entry.slug,
+  title: entry.title,
+  category: "content",
+  componentName: entry.componentName,
+  description: entry.description,
+  navigationGroup: entry.navigationGroup,
+  sourceFiles: entry.sourceFiles,
+  usesFieldShell: false,
+}));
 
 const formsControls: Record<(typeof formsControlOrder)[number], ControlDefinition> = {
   button: {
@@ -235,6 +261,7 @@ const formsControls: Record<(typeof formsControlOrder)[number], ControlDefinitio
 
 export const controls: ControlDefinition[] = [
   ...formsControlOrder.map((slug) => formsControls[slug]),
+  ...graphControls,
   {
     slug: "theme-toggle",
     title: "Theme toggle",
@@ -245,6 +272,27 @@ export const controls: ControlDefinition[] = [
       "components/fields/ThemeToggleField/ThemeToggleField.tsx",
       "components/fields/ThemeToggleField/ThemeToggleField.module.css",
     ],
+    usesFieldShell: true,
+  },
+  {
+    slug: "accent-color-picker",
+    title: "Accent colour picker",
+    category: "forms",
+    componentName: "AccentColorPicker",
+    description: "Preset accent colour swatches for branding and theme customisation.",
+    sourceFiles: [
+      "components/AccentColorPicker/AccentColorPicker.tsx",
+      "components/AccentColorPicker/AccentColorPicker.module.css",
+    ],
+    usesFieldShell: true,
+  },
+  {
+    slug: "icon-picker",
+    title: "Icon picker",
+    category: "forms",
+    componentName: "IconPicker",
+    description: "Searchable Font Awesome icon picker with frosted icon badges.",
+    sourceFiles: ["components/IconPicker/IconPicker.tsx", "components/IconPicker/IconPicker.module.css"],
     usesFieldShell: true,
   },
   {
@@ -365,6 +413,7 @@ export const controls: ControlDefinition[] = [
     sourceFiles: ["components/Card/Card.tsx", "components/Card/Card.module.css"],
     usesFieldShell: false,
   },
+  ...dashboardControls,
   {
     slug: "panel",
     title: "Panel",
@@ -597,12 +646,9 @@ export const controls: ControlDefinition[] = [
 const controlMap = new Map(controls.map((control) => [control.slug, control]));
 
 export function getControlsByCategory(category: ComponentCategory): ControlDefinition[] {
-  const items =
-    category === "forms"
-      ? formsControlOrder.map((slug) => formsControls[slug])
-      : controls.filter((control) => control.category === category);
-
-  return items.sort((a, b) => a.title.localeCompare(b.title));
+  return controls
+    .filter((control) => control.category === category)
+    .sort((a, b) => a.title.localeCompare(b.title));
 }
 
 export function getControlSectionsByCategory(category: ComponentCategory): {

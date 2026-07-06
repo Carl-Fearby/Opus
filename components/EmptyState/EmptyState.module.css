@@ -23,18 +23,20 @@
   border: 1px solid color-mix(in srgb, var(--opus-accent) 24%, var(--opus-border));
   background:
     radial-gradient(circle at 30% 30%, color-mix(in srgb, var(--opus-accent) 18%, transparent), transparent 55%),
-    color-mix(in srgb, var(--opus-panel) 92%, transparent);
+    color-mix(in srgb, var(--opus-panel) 72%, transparent);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
   color: var(--opus-accent);
+  font-size: 1.35rem;
+  line-height: 1;
 }
 
-.root[data-density="compact"] .iconWrap {
-  width: 48px;
-  height: 48px;
-}
-
-.iconSvg {
-  width: 24px;
-  height: 24px;
+.iconWrap svg {
+  display: block;
+  width: 1em;
+  height: 1em;
+  fill: currentColor;
+  opacity: 0.92;
 }
 
 .copy {
@@ -52,6 +54,12 @@
   font-size: 1rem;
   font-weight: 800;
   line-height: 1.3;
+}
+
+.root[data-density="compact"] .iconWrap {
+  width: 48px;
+  height: 48px;
+  font-size: 1.15rem;
 }
 
 .root[data-density="compact"] .title {

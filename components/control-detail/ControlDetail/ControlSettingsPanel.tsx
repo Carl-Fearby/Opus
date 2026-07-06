@@ -1,12 +1,21 @@
 "use client";
 
 import type { BaseFieldSettings, ControlSettings, ControlSettingsBySlug, ControlSlug } from "@/lib/controls/types";
+import { isCartesianChartSlug, isChartSlug, isMatrixChartSlug } from "@/lib/controls/chartCatalog";
+import { chartVerticalBar36MonthData } from "@/lib/controls/chartDemoData";
 import {
+  gaugePaletteOptions,
+  gaugeTrackToneOptions,
+  gaugeValueToneOptions,
+} from "@/lib/controls/dashboardWidgetData";
+import {
+  DashboardPreviewLayoutSetting,
   SettingInput,
   SettingSelect,
   SettingTextarea,
   SettingToggle,
 } from "./SettingField";
+import { IconPicker } from "@/components/IconPicker";
 import styles from "./ControlDetail.module.css";
 
 const buttonVariants = [
@@ -131,6 +140,118 @@ function CommonFieldSettings({
 }
 
 export function ControlSettingsPanel({ slug, settings, onChange }: ControlSettingsPanelProps) {
+  if (isChartSlug(slug)) {
+    const s = settings as ControlSettingsBySlug[typeof slug];
+    const supportsAxes = isCartesianChartSlug(slug) || isMatrixChartSlug(slug);
+    const supportsAxisTitles = isCartesianChartSlug(slug);
+    return (
+      <div className={styles.settingsGrid}>
+        <SettingSelect
+          label="Palette"
+          value={s.palette}
+          onChange={(palette) =>
+            onChange({ ...s, palette: palette as typeof s.palette } as ControlSettings)
+          }
+          options={[
+            { label: "Opus", value: "opus" },
+            { label: "Cool", value: "cool" },
+            { label: "Warm", value: "warm" },
+            { label: "Mono", value: "mono" },
+          ]}
+        />
+        <SettingInput
+          label="Height"
+          type="number"
+          value={String(s.height)}
+          onChange={(height) =>
+            onChange({
+              ...s,
+              height: Math.min(Math.max(Number(height) || 220, 180), 520),
+            } as ControlSettings)
+          }
+        />
+        {supportsAxes ? (
+          <SettingToggle
+            label="Axes"
+            checked={s.showAxis}
+            onChange={(showAxis) => onChange({ ...s, showAxis } as ControlSettings)}
+          />
+        ) : null}
+        <SettingToggle
+          label="Grid"
+          checked={s.showGrid}
+          onChange={(showGrid) => onChange({ ...s, showGrid } as ControlSettings)}
+        />
+        <SettingToggle
+          label="Legend"
+          checked={s.showLegend}
+          onChange={(showLegend) => onChange({ ...s, showLegend } as ControlSettings)}
+        />
+        <SettingToggle
+          label="Values"
+          checked={s.showValues}
+          onChange={(showValues) => onChange({ ...s, showValues } as ControlSettings)}
+        />
+        <SettingToggle
+          label="Maximise width"
+          checked={s.maximise}
+          onChange={(maximise) => onChange({ ...s, maximise } as ControlSettings)}
+        />
+        <SettingSelect
+          label="Preview layout"
+          value={s.previewLayout}
+          onChange={(previewLayout) =>
+            onChange({ ...s, previewLayout: previewLayout as typeof s.previewLayout } as ControlSettings)
+          }
+          options={[
+            { label: "1 full width", value: "single" },
+            { label: "2 side by side", value: "split" },
+          ]}
+        />
+        <div className={styles.settingsFullWidth}>
+          <SettingInput
+            label="Title"
+            value={s.title}
+            onChange={(title) => onChange({ ...s, title } as ControlSettings)}
+          />
+        </div>
+        {supportsAxisTitles && s.showAxis ? (
+          <>
+            <div className={styles.settingsFullWidth}>
+              <SettingInput
+                label="X axis label"
+                value={s.xAxisLabel}
+                onChange={(xAxisLabel) => onChange({ ...s, xAxisLabel } as ControlSettings)}
+              />
+            </div>
+            <div className={styles.settingsFullWidth}>
+              <SettingInput
+                label="Y axis label"
+                value={s.yAxisLabel}
+                onChange={(yAxisLabel) => onChange({ ...s, yAxisLabel } as ControlSettings)}
+              />
+            </div>
+          </>
+        ) : null}
+        {slug === "bar-chart-vertical" ? (
+          <SettingSelect
+            label="Highlighted bar"
+            value={s.highlightLabel}
+            onChange={(highlightLabel) =>
+              onChange({ ...s, highlightLabel } as ControlSettings)
+            }
+            options={[
+              { label: "None", value: "" },
+              ...chartVerticalBar36MonthData
+                .filter((_, index) => index % 3 === 0)
+                .map((item) => ({ label: item.label, value: item.label })),
+            ]}
+          />
+        ) : null}
+      </div>
+    );
+  }
+
   switch (slug) {
     case "text-input": {
       const s = settings as ControlSettingsBySlug["text-input"];
@@ -532,6 +653,95 @@ export function ControlSettingsPanel({ slug, settings, onChange }: ControlSettin
               { label: "Light", value: "light" },
             ]}
           />
+        </div>
+      );
+    }
+    case "accent-color-picker": {
+      const s = settings as ControlSettingsBySlug["accent-color-picker"];
+      return (
+        <div className={styles.settingsGrid}>
+          <SettingSelect
+            label="Layout mode"
+            value={s.mode}
+            onChange={(mode) => onChange({ ...s, mode: mode as typeof s.mode } as ControlSettings)}
+            options={[
+              { label: "Stacked", value: "stacked" },
+              { label: "Flagged", value: "flagged" },
+            ]}
+          />
+          <SettingSelect
+            label="Label position"
+            value={s.labelPosition}
+            onChange={(labelPosition) =>
+              onChange({ ...s, labelPosition: labelPosition as typeof s.labelPosition } as ControlSettings)
+            }
+            options={[
+              { label: "Left", value: "left" },
+              { label: "Right", value: "right" },
+            ]}
+          />
+          <SettingInput
+            label="Label"
+            value={s.label}
+            onChange={(label) => onChange({ ...s, label } as ControlSettings)}
+          />
+          <SettingSelect
+            label="Value"
+            value={s.value}
+            onChange={(value) => onChange({ ...s, value } as ControlSettings)}
+            options={[
+              { label: "Purple", value: "#8f6cff" },
+              { label: "Blue", value: "#3b82f6" },
+              { label: "Cyan", value: "#06b6d4" },
+              { label: "Green", value: "#22c55e" },
+              { label: "Amber", value: "#f59e0b" },
+              { label: "Rose", value: "#f43f5e" },
+            ]}
+          />
+        </div>
+      );
+    }
+    case "icon-picker": {
+      const s = settings as ControlSettingsBySlug["icon-picker"];
+      return (
+        <div className={styles.settingsGrid}>
+          <SettingSelect
+            label="Layout mode"
+            value={s.mode}
+            onChange={(mode) => onChange({ ...s, mode: mode as typeof s.mode } as ControlSettings)}
+            options={[
+              { label: "Stacked", value: "stacked" },
+              { label: "Flagged", value: "flagged" },
+            ]}
+          />
+          <SettingSelect
+            label="Label position"
+            value={s.labelPosition}
+            onChange={(labelPosition) =>
+              onChange({ ...s, labelPosition: labelPosition as typeof s.labelPosition } as ControlSettings)
+            }
+            options={[
+              { label: "Left", value: "left" },
+              { label: "Right", value: "right" },
+            ]}
+          />
+          <div className={styles.settingsFullWidth}>
+            <SettingInput
+              label="Label"
+              value={s.label}
+              onChange={(label) => onChange({ ...s, label } as ControlSettings)}
+            />
+          </div>
+          <div className={styles.settingsFullWidth}>
+            <IconPicker
+              id="settings-icon-picker"
+              label="Value"
+              labelPosition="left"
+              mode="stacked"
+              value={s.value}
+              onChange={(value) => onChange({ ...s, value } as ControlSettings)}
+            />
+          </div>
         </div>
       );
     }
@@ -1246,6 +1456,343 @@ export function ControlSettingsPanel({ slug, settings, onChange }: ControlSettin
               value={s.content}
               onChange={(content) => onChange({ ...s, content } as ControlSettings)}
             />
+          </div>
+        </div>
+      );
+    }
+    case "kpi-card":
+    case "stat-card": {
+      const s = settings as ControlSettingsBySlug["stat-card"];
+      return (
+        <div className={styles.settingsGrid}>
+          <DashboardPreviewLayoutSetting
+            value={s.previewLayout}
+            onChange={(previewLayout) => onChange({ ...s, previewLayout } as ControlSettings)}
+          />
+          <div className={styles.settingsFullWidth}>
+            <IconPicker
+              id="opus-setting-stat-card-icon"
+              label="Icon"
+              labelPosition="left"
+              mode="stacked"
+              value={s.icon}
+              onChange={(icon) => onChange({ ...s, icon } as ControlSettings)}
+            />
+          </div>
+          <SettingSelect
+            label="Density"
+            value={s.density}
+            onChange={(density) =>
+              onChange({ ...s, density: density as typeof s.density } as ControlSettings)
+            }
+            options={[
+              { label: "Comfortable", value: "comfortable" },
+              { label: "Compact", value: "compact" },
+            ]}
+          />
+          <SettingToggle
+            label="Trend badge"
+            checked={s.showChange}
+            onChange={(showChange) => onChange({ ...s, showChange } as ControlSettings)}
+          />
+          {s.showChange ? (
+            <SettingSelect
+              label="Trend"
+              value={s.trend}
+              onChange={(trend) =>
+                onChange({ ...s, trend: trend as typeof s.trend } as ControlSettings)
+              }
+              options={[
+                { label: "Up", value: "up" },
+                { label: "Down", value: "down" },
+              ]}
+            />
+          ) : null}
+          <div className={styles.settingsFullWidth}>
+            <SettingInput
+              label="Label"
+              value={s.label}
+              onChange={(label) => onChange({ ...s, label } as ControlSettings)}
+            />
+          </div>
+          <div className={styles.settingsFullWidth}>
+            <SettingInput
+              label="Value"
+              value={s.value}
+              onChange={(value) => onChange({ ...s, value } as ControlSettings)}
+            />
+          </div>
+          {s.showChange ? (
+            <div className={styles.settingsFullWidth}>
+              <SettingInput
+                label="Change"
+                value={s.change}
+                onChange={(change) => onChange({ ...s, change } as ControlSettings)}
+              />
+            </div>
+          ) : null}
+        </div>
+      );
+    }
+    case "gauge":
+    {
+      const s = settings as ControlSettingsBySlug["gauge"];
+      return (
+        <div className={styles.settingsGrid}>
+          <DashboardPreviewLayoutSetting
+            value={s.previewLayout}
+            onChange={(previewLayout) => onChange({ ...s, previewLayout } as ControlSettings)}
+          />
+          <SettingSelect
+            label="Variant"
+            value={s.variant}
+            onChange={(variant) =>
+              onChange({ ...s, variant: variant as typeof s.variant } as ControlSettings)
+            }
+            options={[
+              { label: "Half", value: "half" },
+              { label: "Full", value: "full" },
+            ]}
+          />
+          <SettingSelect
+            label="Density"
+            value={s.density}
+            onChange={(density) =>
+              onChange({ ...s, density: density as typeof s.density } as ControlSettings)
+            }
+            options={[
+              { label: "Comfortable", value: "comfortable" },
+              { label: "Compact", value: "compact" },
+            ]}
+          />
+          <SettingSelect
+            label="Palette"
+            value={s.palette}
+            onChange={(palette) =>
+              onChange({ ...s, palette: palette as typeof s.palette } as ControlSettings)
+            }
+            options={gaugePaletteOptions.map((palette) => ({
+              label: palette === "opus" ? "Opus" : palette.charAt(0).toUpperCase() + palette.slice(1),
+              value: palette,
+            }))}
+          />
+          <SettingSelect
+            label="Track colour"
+            value={s.trackTone}
+            onChange={(trackTone) =>
+              onChange({ ...s, trackTone: trackTone as typeof s.trackTone } as ControlSettings)
+            }
+            options={gaugeTrackToneOptions.map((trackTone) => ({
+              label:
+                trackTone === "palette"
+                  ? "From palette"
+                  : trackTone.charAt(0).toUpperCase() + trackTone.slice(1),
+              value: trackTone,
+            }))}
+          />
+          <SettingSelect
+            label="Range colour"
+            value={s.valueTone}
+            onChange={(valueTone) =>
+              onChange({ ...s, valueTone: valueTone as typeof s.valueTone } as ControlSettings)
+            }
+            options={gaugeValueToneOptions.map((valueTone) => ({
+              label:
+                valueTone === "palette"
+                  ? "From palette"
+                  : valueTone.charAt(0).toUpperCase() + valueTone.slice(1),
+              value: valueTone,
+            }))}
+          />
+          <SettingSelect
+            label="Footer metrics"
+            value={String(s.footerMetricCount)}
+            onChange={(footerMetricCount) =>
+              onChange({
+                ...s,
+                footerMetricCount: Number(footerMetricCount),
+              } as ControlSettings)
+            }
+            options={[
+              { label: "None", value: "0" },
+              { label: "1", value: "1" },
+              { label: "2", value: "2" },
+              { label: "3", value: "3" },
+              { label: "4", value: "4" },
+              { label: "5", value: "5" },
+            ]}
+          />
+          <SettingSelect
+            label="Change trend"
+            value={s.changeTrend}
+            onChange={(changeTrend) =>
+              onChange({ ...s, changeTrend: changeTrend as typeof s.changeTrend } as ControlSettings)
+            }
+            options={[
+              { label: "Up", value: "up" },
+              { label: "Down", value: "down" },
+            ]}
+          />
+          <div className={styles.settingsFullWidth}>
+            <SettingInput
+              label="Title"
+              value={s.title}
+              onChange={(title) => onChange({ ...s, title } as ControlSettings)}
+            />
+          </div>
+          <div className={styles.settingsFullWidth}>
+            <SettingInput
+              label="Subtitle"
+              value={s.subtitle}
+              onChange={(subtitle) => onChange({ ...s, subtitle } as ControlSettings)}
+            />
+          </div>
+          <div className={styles.settingsFullWidth}>
+            <SettingInput
+              label="Change"
+              value={s.change}
+              onChange={(change) => onChange({ ...s, change } as ControlSettings)}
+            />
+          </div>
+          <div className={styles.settingsFullWidth}>
+            <SettingTextarea
+              label="Summary"
+              value={s.summary}
+              onChange={(summary) => onChange({ ...s, summary } as ControlSettings)}
+            />
+          </div>
+        </div>
+      );
+    }
+    case "sparkline": {
+      const s = settings as ControlSettingsBySlug["sparkline"];
+      return (
+        <div className={styles.settingsGrid}>
+          <DashboardPreviewLayoutSetting
+            value={s.previewLayout}
+            onChange={(previewLayout) => onChange({ ...s, previewLayout } as ControlSettings)}
+          />
+          <SettingSelect
+            label="Palette"
+            value={s.palette}
+            onChange={(palette) => onChange({ ...s, palette: palette as typeof s.palette } as ControlSettings)}
+            options={[
+              { label: "Opus", value: "opus" },
+              { label: "Cool", value: "cool" },
+              { label: "Warm", value: "warm" },
+              { label: "Mono", value: "mono" },
+            ]}
+          />
+          <div className={styles.settingsFullWidth}>
+            <SettingInput label="Label" value={s.label} onChange={(label) => onChange({ ...s, label } as ControlSettings)} />
+          </div>
+        </div>
+      );
+    }
+    case "progress-ring":
+    case "progress-bar":
+    case "speedometer": {
+      const s = settings as ControlSettingsBySlug["progress-ring"];
+      return (
+        <div className={styles.settingsGrid}>
+          <DashboardPreviewLayoutSetting
+            value={s.previewLayout}
+            onChange={(previewLayout) => onChange({ ...s, previewLayout } as ControlSettings)}
+          />
+          <SettingInput
+            label="Value"
+            type="number"
+            value={String(s.value)}
+            onChange={(value) => onChange({ ...s, value: Number(value) || 0 } as ControlSettings)}
+          />
+          <SettingInput
+            label="Max"
+            type="number"
+            value={String(s.max)}
+            onChange={(max) => onChange({ ...s, max: Number(max) || 100 } as ControlSettings)}
+          />
+          <div className={styles.settingsFullWidth}>
+            <SettingInput label="Label" value={s.label} onChange={(label) => onChange({ ...s, label } as ControlSettings)} />
+          </div>
+        </div>
+      );
+    }
+    case "metric-tile": {
+      const s = settings as ControlSettingsBySlug["metric-tile"];
+      return (
+        <div className={styles.settingsGrid}>
+          <DashboardPreviewLayoutSetting
+            value={s.previewLayout}
+            onChange={(previewLayout) => onChange({ ...s, previewLayout } as ControlSettings)}
+          />
+          <div className={styles.settingsFullWidth}>
+            <IconPicker
+              id="opus-setting-metric-tile-icon"
+              label="Icon"
+              labelPosition="left"
+              mode="stacked"
+              value={s.icon}
+              onChange={(icon) => onChange({ ...s, icon } as ControlSettings)}
+            />
+          </div>
+          <SettingToggle
+            label="Sparkline"
+            checked={s.showSparkline}
+            onChange={(showSparkline) => onChange({ ...s, showSparkline } as ControlSettings)}
+          />
+          <div className={styles.settingsFullWidth}>
+            <SettingInput label="Label" value={s.label} onChange={(label) => onChange({ ...s, label } as ControlSettings)} />
+          </div>
+          <div className={styles.settingsFullWidth}>
+            <SettingInput label="Value" value={s.value} onChange={(value) => onChange({ ...s, value } as ControlSettings)} />
+          </div>
+        </div>
+      );
+    }
+    case "status-indicator": {
+      const s = settings as ControlSettingsBySlug["status-indicator"];
+      return (
+        <div className={styles.settingsGrid}>
+          <DashboardPreviewLayoutSetting
+            value={s.previewLayout}
+            onChange={(previewLayout) => onChange({ ...s, previewLayout } as ControlSettings)}
+          />
+          <SettingSelect
+            label="Status"
+            value={s.status}
+            onChange={(status) => onChange({ ...s, status: status as typeof s.status } as ControlSettings)}
+            options={[
+              { label: "Success", value: "success" },
+              { label: "Warning", value: "warning" },
+              { label: "Error", value: "error" },
+              { label: "Neutral", value: "neutral" },
+            ]}
+          />
+          <div className={styles.settingsFullWidth}>
+            <SettingInput label="Label" value={s.label} onChange={(label) => onChange({ ...s, label } as ControlSettings)} />
+          </div>
+        </div>
+      );
+    }
+    case "trend-badge": {
+      const s = settings as ControlSettingsBySlug["trend-badge"];
+      return (
+        <div className={styles.settingsGrid}>
+          <DashboardPreviewLayoutSetting
+            value={s.previewLayout}
+            onChange={(previewLayout) => onChange({ ...s, previewLayout } as ControlSettings)}
+          />
+          <SettingSelect
+            label="Direction"
+            value={s.direction}
+            onChange={(direction) => onChange({ ...s, direction: direction as typeof s.direction } as ControlSettings)}
+            options={[
+              { label: "Up", value: "up" },
+              { label: "Down", value: "down" },
+            ]}
+          />
+          <div className={styles.settingsFullWidth}>
+            <SettingInput label="Value" value={s.value} onChange={(value) => onChange({ ...s, value } as ControlSettings)} />
           </div>
         </div>
       );
@@ -2130,21 +2677,23 @@ export function ControlSettingsPanel({ slug, settings, onChange }: ControlSettin
               { label: "Compact", value: "compact" },
             ]}
           />
-          <SettingSelect
-            label="Icon"
-            value={s.icon}
-            onChange={(icon) => onChange({ ...s, icon: icon as typeof s.icon } as ControlSettings)}
-            options={[
-              { label: "Inbox", value: "inbox" },
-              { label: "Search", value: "search" },
-              { label: "Folder", value: "folder" },
-            ]}
-          />
           <SettingToggle
             label="Show icon"
             checked={s.showIcon}
             onChange={(showIcon) => onChange({ ...s, showIcon } as ControlSettings)}
           />
+          {s.showIcon ? (
+            <div className={styles.settingsFullWidth}>
+              <IconPicker
+                id="opus-setting-empty-state-icon"
+                label="Icon"
+                labelPosition="left"
+                mode="stacked"
+                value={s.icon}
+                onChange={(icon) => onChange({ ...s, icon } as ControlSettings)}
+              />
+            </div>
+          ) : null}
           <SettingToggle
             label="Primary action"
             checked={s.primaryAction}
@@ -2272,6 +2821,39 @@ export function ControlSettingsPanel({ slug, settings, onChange }: ControlSettin
       return (
         <div className={styles.settingsGrid}>
           <SettingSelect
+            label="Columns"
+            value={String(s.columnCount)}
+            onChange={(columnCount) =>
+              onChange({
+                ...s,
+                columnCount: Number(columnCount) as typeof s.columnCount,
+              } as ControlSettings)
+            }
+            options={[
+              { label: "1 column", value: "1" },
+              { label: "2 columns", value: "2" },
+              { label: "3 columns", value: "3" },
+              { label: "4 columns", value: "4" },
+            ]}
+          />
+          <SettingSelect
+            label="Items per column"
+            value={String(s.itemsPerColumn)}
+            onChange={(itemsPerColumn) =>
+              onChange({
+                ...s,
+                itemsPerColumn: Number(itemsPerColumn) as typeof s.itemsPerColumn,
+              } as ControlSettings)
+            }
+            options={[
+              { label: "1 item", value: "1" },
+              { label: "2 items", value: "2" },
+              { label: "3 items", value: "3" },
+              { label: "4 items", value: "4" },
+              { label: "5 items", value: "5" },
+            ]}
+          />
+          <SettingSelect
             label="Density"
             value={s.density}
             onChange={(density) =>
@@ -2287,6 +2869,46 @@ export function ControlSettingsPanel({ slug, settings, onChange }: ControlSettin
             checked={s.featured}
             onChange={(featured) => onChange({ ...s, featured } as ControlSettings)}
           />
+          {s.featured ? (
+            <>
+              <div className={styles.settingsFullWidth}>
+                <SettingInput
+                  label="Featured eyebrow"
+                  value={s.featuredEyebrow}
+                  onChange={(featuredEyebrow) =>
+                    onChange({ ...s, featuredEyebrow } as ControlSettings)
+                  }
+                />
+              </div>
+              <div className={styles.settingsFullWidth}>
+                <SettingInput
+                  label="Featured title"
+                  value={s.featuredTitle}
+                  onChange={(featuredTitle) =>
+                    onChange({ ...s, featuredTitle } as ControlSettings)
+                  }
+                />
+              </div>
+              <div className={styles.settingsFullWidth}>
+                <SettingTextarea
+                  label="Featured description"
+                  value={s.featuredDescription}
+                  onChange={(featuredDescription) =>
+                    onChange({ ...s, featuredDescription } as ControlSettings)
+                  }
+                />
+              </div>
+              <div className={styles.settingsFullWidth}>
+                <SettingInput
+                  label="Featured action label"
+                  value={s.featuredActionLabel}
+                  onChange={(featuredActionLabel) =>
+                    onChange({ ...s, featuredActionLabel } as ControlSettings)
+                  }
+                />
+              </div>
+            </>
+          ) : null}
           <SettingToggle
             label="Outside dismiss"
             checked={s.closeOnOutside}

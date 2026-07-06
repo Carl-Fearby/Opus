@@ -1,4 +1,5 @@
 import type { ControlSettingsBySlug, ControlSlug } from "./types";
+import { chartDefaults } from "./chartDefaults";
 
 const baseFieldDefaults = {
   mode: "stacked" as const,
@@ -30,7 +31,6 @@ export const defaultSettings: ControlSettingsBySlug = {
     ...baseFieldDefaults,
     label: "I agree to the Terms & Conditions",
     mode: "flagged",
-    labelPosition: "right",
     checked: false,
     shape: "square",
   },
@@ -38,7 +38,6 @@ export const defaultSettings: ControlSettingsBySlug = {
     ...baseFieldDefaults,
     label: "Enable notifications",
     mode: "flagged",
-    labelPosition: "right",
     checked: true,
   },
   "radio-group": {
@@ -162,6 +161,18 @@ export const defaultSettings: ControlSettingsBySlug = {
     label: "Theme",
     value: "dark",
   },
+  "accent-color-picker": {
+    mode: "flagged",
+    labelPosition: "left",
+    label: "Accent",
+    value: "#8f6cff",
+  },
+  "icon-picker": {
+    mode: "stacked",
+    labelPosition: "left",
+    label: "Icon",
+    value: "chart-column",
+  },
   tooltip: {
     content: "Optional help text for this field",
     demoLabel: "Field label",
@@ -279,6 +290,80 @@ export const defaultSettings: ControlSettingsBySlug = {
     media: true,
     footerActions: true,
   },
+  "kpi-card": {
+    label: "Revenue",
+    value: "$128k",
+    change: "8.4%",
+    trend: "up",
+    showChange: true,
+    density: "comfortable",
+    icon: "chart-column",
+    previewLayout: "single",
+  },
+  "stat-card": {
+    label: "Customers",
+    value: "3,782",
+    change: "11.01%",
+    trend: "up",
+    showChange: true,
+    density: "comfortable",
+    icon: "users",
+    previewLayout: "single",
+  },
+  sparkline: {
+    label: "Weekly trend",
+    palette: "opus",
+    previewLayout: "single",
+  },
+  "progress-ring": {
+    label: "Quota",
+    max: 100,
+    previewLayout: "single",
+    value: 72,
+  },
+  "progress-bar": {
+    label: "Sprint progress",
+    max: 100,
+    previewLayout: "single",
+    value: 64,
+  },
+  gauge: {
+    title: "Gauge",
+    subtitle: "Supporting description for the gauge",
+    change: "+10%",
+    changeTrend: "up",
+    summary: "You earn $3287 today, its higher than last month. Keep up your good work!",
+    density: "comfortable",
+    footerMetricCount: 3,
+    palette: "opus",
+    trackTone: "neutral",
+    valueTone: "palette",
+    variant: "half",
+    previewLayout: "single",
+  },
+  speedometer: {
+    label: "Utilisation",
+    max: 100,
+    previewLayout: "single",
+    value: 78,
+  },
+  "metric-tile": {
+    label: "MRR",
+    icon: "chart-line",
+    previewLayout: "single",
+    showSparkline: true,
+    value: "$84.2k",
+  },
+  "status-indicator": {
+    label: "Systems healthy",
+    previewLayout: "single",
+    status: "success",
+  },
+  "trend-badge": {
+    direction: "up",
+    previewLayout: "single",
+    value: "12.4%",
+  },
   panel: {
     title: "Release readiness",
     description: "A structural panel for settings, grouped content, and page sections.",
@@ -339,6 +424,7 @@ export const defaultSettings: ControlSettingsBySlug = {
     lines: 3,
     variant: "card",
   },
+  ...chartDefaults,
   carousel: {
     initialIndex: 0,
     loop: true,
@@ -436,8 +522,15 @@ export const defaultSettings: ControlSettingsBySlug = {
   "mega-menu": {
     closeOnEscape: true,
     closeOnOutside: true,
+    columnCount: 2,
     density: "comfortable",
     featured: true,
+    featuredActionLabel: "Explore library",
+    featuredDescription:
+      "Browse production-ready components, patterns, and implementation notes from one navigation surface.",
+    featuredEyebrow: "Featured",
+    featuredTitle: "Build faster with Opus",
+    itemsPerColumn: 3,
   },
   "top-navigation": {
     activeMenu: "none",

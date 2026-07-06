@@ -1,0 +1,37 @@
+.sparkline {
+  display: grid;
+  gap: 6px;
+}
+
+.label {
+  margin: 0;
+  color: var(--opus-muted);
+  font-size: 0.72rem;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.svg {
+  display: block;
+}
+
+.line {
+  fill: none;
+  stroke: var(--opus-accent);
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-width: 2;
+}
+
+.sparkline[data-palette="cool"] .line {
+  stroke: #2563eb;
+}
+
+.sparkline[data-palette="warm"] .line {
+  stroke: #f97316;
+}
+
+.sparkline[data-palette="mono"] .line {
+  stroke: color-mix(in srgb, var(--opus-accent) 72%, white);
+}

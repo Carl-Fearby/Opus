@@ -150,7 +150,48 @@
   margin: 0;
   color: var(--opus-muted);
   font-size: 0.78rem;
-  line-height: 1.3;
+  line-height: 1.45;
+}
+
+.usageSection {
+  display: grid;
+  gap: 6px;
+}
+
+.usageSection + .usageSection {
+  margin-top: 14px;
+  padding-top: 14px;
+  border-top: 1px solid color-mix(in srgb, var(--opus-border) 72%, transparent);
+}
+
+.usageSectionHeading {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.usageSectionCopy {
+  display: grid;
+  gap: 4px;
+  min-width: 0;
+}
+
+.usageSectionTitle {
+  margin: 0;
+  color: var(--opus-text);
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  line-height: 1.2;
+  text-transform: uppercase;
+}
+
+.usageSectionHint {
+  margin: 0;
+  color: var(--opus-muted);
+  font-size: 0.74rem;
+  line-height: 1.4;
 }
 
 .settingsHint {
@@ -196,6 +237,12 @@
 
 .usageCopyButtonCopied {
   color: var(--opus-accent);
+}
+
+.accentPreview {
+  display: grid;
+  gap: 12px;
+  justify-items: start;
 }
 
 .tooltipDemo {
@@ -310,6 +357,126 @@
 .modalFormDemo {
   display: grid;
   gap: 12px;
+}
+
+.dashboardPreview {
+  display: grid;
+  gap: 16px;
+}
+
+.dashboardPreviewGrid {
+  display: grid;
+  align-items: stretch;
+  gap: 16px;
+  width: 100%;
+  min-width: 0;
+}
+
+.dashboardPreviewGrid[data-count="1"] {
+  grid-template-columns: minmax(0, 1fr);
+}
+
+.dashboardPreviewGrid[data-count="2"] {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.dashboardPreviewGrid[data-count="3"] {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.dashboardPreviewItem {
+  display: flex;
+  min-width: 0;
+  overflow: hidden;
+}
+
+.dashboardPreviewItem > * {
+  flex: 1 1 0;
+  width: 100%;
+  min-width: 0;
+}
+
+.dashboardWidgetSlot {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  min-width: 0;
+}
+
+.dashboardWidgetSlot > * {
+  flex: 0 1 auto;
+  min-width: 0;
+}
+
+.gaugePreviewGrid {
+  display: grid;
+  align-items: stretch;
+  gap: 16px;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.chartPreviewGrid {
+  display: grid;
+  align-items: stretch;
+  gap: 16px;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.chartPreviewSingle {
+  display: flex;
+  width: 100%;
+  min-width: 0;
+  overflow-x: auto;
+}
+
+.chartPreviewSingle > * {
+  flex: 1 1 0;
+  width: 100%;
+}
+
+.chartPreviewItem {
+  display: flex;
+  min-width: 0;
+}
+
+.chartPreviewItem > * {
+  flex: 1 1 0;
+  width: 100%;
+}
+
+.gaugePreviewItem {
+  display: flex;
+  min-width: 0;
+}
+
+.gaugePreviewItem > * {
+  flex: 1 1 0;
+  width: 100%;
+  max-width: none;
+  min-height: 100%;
+}
+
+.dashboardStatGrid {
+  display: grid;
+  gap: 16px;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.dashboardMainGrid {
+  display: grid;
+  gap: 16px;
+  grid-template-columns: minmax(0, 1.4fr) minmax(280px, 0.9fr);
+}
+
+@media (max-width: 960px) {
+  .chartPreviewGrid,
+  .gaugePreviewGrid,
+  .dashboardPreviewGrid,
+  .dashboardStatGrid,
+  .dashboardMainGrid {
+    grid-template-columns: 1fr;
+  }
 }
 
 @media (max-width: 960px) {

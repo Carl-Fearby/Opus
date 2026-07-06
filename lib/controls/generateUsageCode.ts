@@ -10,12 +10,30 @@ import {
   formatDataGridColumnsForUsage,
   formatDataGridRowsForUsage,
 } from "./dataGridDemoData";
+import {
+  chartDemoData,
+  chartDemoSeries,
+  chartUsesSeries,
+  formatChartDataForUsage,
+  formatChartSeriesForUsage,
+  getChartPreviewData,
+  getChartUsageDataMode,
+} from "./chartDemoData";
+import { worldMapRegionIds } from "@/components/Chart/worldMapRegions";
+import { isChartSlug } from "./chartCatalog";
 import { formatModelAssetsForUsage } from "@/lib/models/vx27Assets";
+import {
+  gaugePreviewValue,
+  getGaugeFooter,
+  getGaugeTrackColor,
+  getGaugeValueColor,
+} from "./dashboardWidgetData";
+import { getFontAwesomeIconOption } from "@/lib/fontAwesomeIconCatalog";
 import {
   buildMegaMenuPreviewConfig,
   formatMegaMenuMenusForUsage,
 } from "./megaMenuDemo";
-import { formatTopNavigationMenusForUsage, topNavigationDemoMenus } from "./topNavigationDemo";
+import { splitUsageCode } from "./usageCode";
 
 const radioOptions = [
   { label: "Personal", value: "personal" },
@@ -119,7 +137,7 @@ function formatJsxRichContent(content: string, indent = "  "): string {
     .join("\n");
 }
 
-function fieldProps(settings: ControlSettingsBySlug[Exclude<ControlSlug, "button" | "submit-button" | "reset-button" | "theme-toggle" | "tooltip" | "dialog" | "drawer" | "dropdown-menu" | "context-menu" | "command-palette" | "modal" | "popover" | "alert" | "toast" | "tabs" | "card" | "panel" | "section" | "table" | "data-grid" | "skeleton" | "carousel" | "lightbox" | "image-thumbnail" | "image-gallery" | "model-viewer" | "model-lightbox" | "model-thumbnail" | "model-gallery" | "accordion" | "accordion-group" | "show-more" | "empty-state" | "sidebar" | "mega-menu" | "top-navigation">]) {
+function fieldProps(settings: ControlSettingsBySlug[Exclude<ControlSlug, "button" | "submit-button" | "reset-button" | "theme-toggle" | "accent-color-picker" | "icon-picker" | "tooltip" | "dialog" | "drawer" | "dropdown-menu" | "context-menu" | "command-palette" | "modal" | "popover" | "alert" | "toast" | "tabs" | "card" | "stat-card" | "gauge" | "panel" | "section" | "table" | "data-grid" | "skeleton" | "bar-chart-vertical" | "bar-chart-horizontal" | "grouped-bar-chart" | "stacked-bar-chart" | "stacked-bar-chart-100" | "line-chart" | "multi-line-chart" | "area-chart" | "stacked-area-chart" | "spline-chart" | "pie-chart" | "donut-chart" | "scatter-plot" | "bubble-chart" | "radar-chart" | "polar-area-chart" | "funnel-chart" | "pyramid-chart" | "carousel" | "lightbox" | "image-thumbnail" | "image-gallery" | "model-viewer" | "model-lightbox" | "model-thumbnail" | "model-gallery" | "accordion" | "accordion-group" | "show-more" | "empty-state" | "sidebar" | "mega-menu" | "top-navigation">]) {
   const props = [
     formatStringProp("label", settings.label),
     formatStringProp("mode", settings.mode),
@@ -145,8 +163,91 @@ function importLine(components: string[]): string {
   return `import { ${components.join(", ")} } from "@/components/fields";`;
 }
 
-export function generateUsageCode(slug: ControlSlug, settings: ControlSettings): string {
+function usageClientPrefix(includeUseState = true): string {
+  return includeUseState ? `"use client";\n\nimport { useState } from "react";` : `"use client";`;
+}
+
+function controlledFieldUsage(
+  components: string[],
+  tagName: string,
+  state: string,
+  props: string[],
+  options?: { children?: string; initial?: string },
+): string {
+  const initial = options?.initial ?? '""';
+  const header = `${usageClientPrefix()}\n${importLine(components)}\n\nconst [${state}, ${toSetter(state)}] = useState(${initial});`;
+
+  if (options?.children) {
+    return `${header}\n\n<${tagName}${formatOpeningProps(props)}>\n${options.children}\n</${tagName}>`;
+  }
+
+  return `${header}\n\n<${tagName}${formatSelfClosing(props)}`;
+}
+
+function interactiveUsage({
+  components,
+  extraImports = [],
+  preamble = [],
+  state = [],
+  jsx,
+}: {
+  components: string[];
+  extraImports?: string[];
+  preamble?: string[];
+  state: string[];
+  jsx: string;
+}): string {
+  const importsBlock = [usageClientPrefix(), ...extraImports, importLine(components), ...preamble, ...state]
+    .filter(Boolean)
+    .join("\n");
+  const trimmedJsx = jsx.trim();
+  const returnBody = trimmedJsx.startsWith("(")
+    ? `${trimmedJsx};`
+    : trimmedJsx.endsWith(";")
+      ? trimmedJsx
+      : `${trimmedJsx};`;
+
+  return `${importsBlock}\n\nreturn ${returnBody}`;
+}
+
+function generateUsageCodeContent(slug: ControlSlug, settings: ControlSettings): string {
   const id = slug;
+
+  if (isChartSlug(slug)) {
+    const s = settings as ControlSettingsBySlug[typeof slug];
+    const includeSeries = chartUsesSeries(s.variant);
+    const previewData = getChartPreviewData(slug);
+    const props = [
+      formatExpressionProp("data", "data"),
+      ...(includeSeries ? [formatExpressionProp("series", "series")] : []),
+      formatStringProp("variant", s.variant),
+      formatStringProp("title", s.title),
+      ...(s.palette !== "opus" ? [formatStringProp("palette", s.palette)] : []),
+      ...(s.height !== 280 ? [formatNumberProp("height", s.height)] : []),
+      ...(s.maximise ? [formatBoolProp("maximise", true)] : []),
+      ...(s.showAxis ? [formatBoolProp("showAxis", true)] : []),
+      ...(s.showGrid ? [formatBoolProp("showGrid", true)] : []),
+      ...(s.showLegend ? [] : [formatBoolProp("showLegend", false)]),
+      ...(s.showValues ? [formatBoolProp("showValues", true)] : []),
+      ...(s.xAxisLabel ? [formatStringProp("xAxisLabel", s.xAxisLabel)] : []),
+      ...(s.yAxisLabel ? [formatStringProp("yAxisLabel", s.yAxisLabel)] : []),
+      ...(s.highlightLabel ? [formatStringProp("highlightLabel", s.highlightLabel)] : []),
+    ];
+    const dataMode = getChartUsageDataMode(s.variant);
+    const mapUsageNote =
+      s.variant === "choropleth"
+        ? `// Choropleth regions use region ids: ${worldMapRegionIds.join(", ")}\n\n`
+        : s.variant === "geo-map" || s.variant === "bubble-map"
+          ? "// Geo points use lat/lng coordinates from your data.\n\n"
+          : "";
+    return `${usageClientPrefix(false)}\n${importLine(["Chart"])}
+
+${mapUsageNote}const data = ${formatChartDataForUsage(previewData, dataMode)};
+
+${includeSeries ? `const series = ${formatChartSeriesForUsage(chartDemoSeries)};
+
+` : ""}return <Chart${formatSelfClosing(props)};`;
+  }
 
   switch (slug) {
     case "text-input": {
@@ -160,7 +261,7 @@ export function generateUsageCode(slug: ControlSlug, settings: ControlSettings):
         formatExpressionProp("value", state),
         formatExpressionProp("onChange", `(event) => ${toSetter(state)}(event.target.value)`),
       ];
-      return `${importLine(["TextField"])}\n\n<TextField${formatSelfClosing(props)}`;
+      return controlledFieldUsage(["TextField"], "TextField", state, props);
     }
     case "email-input":
     case "password-input":
@@ -186,7 +287,7 @@ export function generateUsageCode(slug: ControlSlug, settings: ControlSettings):
         formatExpressionProp("value", state),
         formatExpressionProp("onChange", `(event) => ${toSetter(state)}(event.target.value)`),
       ];
-      return `${importLine(["TextField"])}\n\n<TextField${formatSelfClosing(props)}`;
+      return controlledFieldUsage(["TextField"], "TextField", state, props);
     }
     case "textarea": {
       const s = settings as ControlSettingsBySlug["textarea"];
@@ -199,7 +300,7 @@ export function generateUsageCode(slug: ControlSlug, settings: ControlSettings):
         formatExpressionProp("value", state),
         formatExpressionProp("onChange", `(event) => ${toSetter(state)}(event.target.value)`),
       ];
-      return `${importLine(["TextAreaField"])}\n\n<TextAreaField${formatSelfClosing(props)}`;
+      return controlledFieldUsage(["TextAreaField"], "TextAreaField", state, props);
     }
     case "select": {
       const s = settings as ControlSettingsBySlug["select"];
@@ -215,7 +316,9 @@ export function generateUsageCode(slug: ControlSlug, settings: ControlSettings):
         formatExpressionProp("value", state),
         formatExpressionProp("onChange", `(event) => ${toSetter(state)}(event.target.value)`),
       ];
-      return `${importLine(["SelectField"])}\n\n<SelectField${formatSelfClosing(props)}`;
+      return controlledFieldUsage(["SelectField"], "SelectField", state, props, {
+        initial: options[0] ? quote(options[0]) : '""',
+      });
     }
     case "date-picker":
     case "datetime-picker":
@@ -241,7 +344,7 @@ export function generateUsageCode(slug: ControlSlug, settings: ControlSettings):
         formatExpressionProp("value", state),
         formatExpressionProp("onChange", `(event) => ${toSetter(state)}(event.target.value)`),
       ];
-      return `${importLine(["DateField"])}\n\n<DateField${formatSelfClosing(props)}`;
+      return controlledFieldUsage(["DateField"], "DateField", state, props);
     }
     case "radio-group": {
       const s = settings as ControlSettingsBySlug["radio-group"];
@@ -263,7 +366,10 @@ export function generateUsageCode(slug: ControlSlug, settings: ControlSettings):
           return `  <Radio${formatOpeningProps(radioProps)}>\n    ${option.label}\n  </Radio>`;
         })
         .join("\n");
-      return `${importLine(["Radio", "RadioGroup"])}\n\n<RadioGroup${formatOpeningProps(groupProps)}>\n${children}\n</RadioGroup>`;
+      return controlledFieldUsage(["Radio", "RadioGroup"], "RadioGroup", state, groupProps, {
+        children,
+        initial: quote(radioOptions[0]?.value ?? ""),
+      });
     }
     case "checkbox": {
       const s = settings as ControlSettingsBySlug["checkbox"];
@@ -275,7 +381,7 @@ export function generateUsageCode(slug: ControlSlug, settings: ControlSettings):
         formatExpressionProp("checked", state),
         formatExpressionProp("onChange", `(event) => ${toSetter(state)}(event.target.checked)`),
       ];
-      return `${importLine(["CheckboxField"])}\n\n<CheckboxField${formatSelfClosing(props)}`;
+      return controlledFieldUsage(["CheckboxField"], "CheckboxField", state, props, { initial: "false" });
     }
     case "switch": {
       const s = settings as ControlSettingsBySlug["switch"];
@@ -286,7 +392,7 @@ export function generateUsageCode(slug: ControlSlug, settings: ControlSettings):
         formatExpressionProp("checked", state),
         formatExpressionProp("onChange", `(event) => ${toSetter(state)}(event.target.checked)`),
       ];
-      return `${importLine(["SwitchField"])}\n\n<SwitchField${formatSelfClosing(props)}`;
+      return controlledFieldUsage(["SwitchField"], "SwitchField", state, props, { initial: "false" });
     }
     case "range-slider": {
       const s = settings as ControlSettingsBySlug["range-slider"];
@@ -300,7 +406,7 @@ export function generateUsageCode(slug: ControlSlug, settings: ControlSettings):
         formatExpressionProp("value", state),
         formatExpressionProp("onChange", `(event) => ${toSetter(state)}(Number(event.target.value))`),
       ];
-      return `${importLine(["RangeField"])}\n\n<RangeField${formatSelfClosing(props)}`;
+      return controlledFieldUsage(["RangeField"], "RangeField", state, props, { initial: String(s.min) });
     }
     case "number-input": {
       const s = settings as ControlSettingsBySlug["number-input"];
@@ -314,7 +420,7 @@ export function generateUsageCode(slug: ControlSlug, settings: ControlSettings):
         formatExpressionProp("value", state),
         formatExpressionProp("onChange", `(event) => ${toSetter(state)}(Number(event.target.value) || 0)`),
       ];
-      return `${importLine(["NumberField"])}\n\n<NumberField${formatSelfClosing(props)}`;
+      return controlledFieldUsage(["NumberField"], "NumberField", state, props, { initial: "0" });
     }
     case "file-upload": {
       const s = settings as ControlSettingsBySlug["file-upload"];
@@ -325,7 +431,7 @@ export function generateUsageCode(slug: ControlSlug, settings: ControlSettings):
         ...(s.fileName ? [formatStringProp("fileName", s.fileName)] : []),
         formatExpressionProp("onChange", `(event) => ${toSetter(state)}(event.target.files?.[0]?.name ?? "")`),
       ];
-      return `${importLine(["FileField"])}\n\n<FileField${formatSelfClosing(props)}`;
+      return controlledFieldUsage(["FileField"], "FileField", state, props);
     }
     case "color-picker": {
       const s = settings as ControlSettingsBySlug["color-picker"];
@@ -336,7 +442,7 @@ export function generateUsageCode(slug: ControlSlug, settings: ControlSettings):
         formatExpressionProp("value", state),
         formatExpressionProp("onChange", `(event) => ${toSetter(state)}(event.target.value)`),
       ];
-      return `${importLine(["ColorField"])}\n\n<ColorField${formatSelfClosing(props)}`;
+      return controlledFieldUsage(["ColorField"], "ColorField", state, props, { initial: quote("#8f6cff") });
     }
     case "hidden-input": {
       const s = settings as ControlSettingsBySlug["hidden-input"];
@@ -377,7 +483,48 @@ export function generateUsageCode(slug: ControlSlug, settings: ControlSettings):
         formatExpressionProp("value", "theme"),
         formatExpressionProp("onChange", "setTheme"),
       ];
-      return `${importLine(["ThemeToggleField"])}\n\n<ThemeToggleField${formatSelfClosing(props)}`;
+      return `${usageClientPrefix()}\n${importLine(["ThemeToggleField"])}\n\nconst [theme, setTheme] = useState<"dark" | "light">(${quote(s.value)});\n\n<ThemeToggleField${formatSelfClosing(props)}`;
+    }
+    case "accent-color-picker": {
+      const s = settings as ControlSettingsBySlug["accent-color-picker"];
+      const props = [
+        formatStringProp("id", id),
+        formatStringProp("label", s.label),
+        formatStringProp("mode", s.mode),
+        formatStringProp("labelPosition", s.labelPosition),
+        formatExpressionProp("value", "accent"),
+        formatExpressionProp("onChange", "setAccent"),
+      ];
+      return `${usageClientPrefix()}\nimport { AccentColorPicker, createAccentStyle } from "@/components/AccentColorPicker";
+
+const [accent, setAccent] = useState(${quote(s.value)});
+const accentStyle = createAccentStyle(accent);
+
+return (
+  <div style={accentStyle}>
+    <AccentColorPicker${formatSelfClosing(props)}
+  </div>
+);`;
+    }
+    case "icon-picker": {
+      const s = settings as ControlSettingsBySlug["icon-picker"];
+      const iconOption = getFontAwesomeIconOption(s.value);
+      const props = [
+        formatStringProp("id", id),
+        formatStringProp("label", s.label),
+        formatStringProp("mode", s.mode),
+        formatStringProp("labelPosition", s.labelPosition),
+        formatStringProp("value", s.value),
+        formatExpressionProp("onChange", "setIcon"),
+      ];
+      return `${usageClientPrefix()}\nimport { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { ${iconOption.importName} } from "@fortawesome/free-solid-svg-icons";
+import "@/lib/fontawesome";
+import { IconPicker } from "@/components/IconPicker";
+
+const [icon, setIcon] = useState(${quote(s.value)});
+
+return <IconPicker${formatSelfClosing(props)} />;`;
     }
     case "tooltip": {
       const s = settings as ControlSettingsBySlug["tooltip"];
@@ -398,26 +545,23 @@ export function generateUsageCode(slug: ControlSlug, settings: ControlSettings):
         ...(s.dismissOnBackdrop ? [] : [formatBoolProp("dismissOnBackdrop", false)]),
         ...(s.dismissOnEscape ? [] : [formatBoolProp("dismissOnEscape", false)]),
       ];
-      const dialogProps = props.map((prop) => `        ${prop}`).join("\n");
-      return `import { useState } from "react";
-${importLine(["Button", "Dialog"])}
-
-function Example() {
-  const [dialogOpen, setDialogOpen] = useState(${s.open});
-
-  return (
-    <>
-      <Button onClick={() => setDialogOpen(true)}>Open dialog</Button>
-      <Dialog
+      const dialogProps = props.map((prop) => `    ${prop}`).join("\n");
+      return interactiveUsage({
+        components: ["Button", "Dialog"],
+        state: [`const [dialogOpen, setDialogOpen] = useState(${s.open});`],
+        jsx: `(
+  <>
+    <Button onClick={() => setDialogOpen(true)}>Open dialog</Button>
+    <Dialog
 ${dialogProps}
-        onClose={(result) => {
-          setDialogOpen(false);
-          console.log(result);
-        }}
-      />
-    </>
-  );
-}`;
+      onClose={(result) => {
+        setDialogOpen(false);
+        console.log(result);
+      }}
+    />
+  </>
+)`,
+      });
     }
     case "drawer": {
       const s = settings as ControlSettingsBySlug["drawer"];
@@ -430,58 +574,57 @@ ${dialogProps}
         ...(s.dismissOnEscape ? [] : [formatBoolProp("dismissOnEscape", false)]),
         ...(s.closeButton ? [] : [formatBoolProp("closeButton", false)]),
       ];
-      const drawerProps = props.map((prop) => `        ${prop}`).join("\n");
+      const drawerProps = props.map((prop) => `    ${prop}`).join("\n");
       const children =
         s.contentType === "form"
-          ? `        <TextField
-          id="filter-query"
-          label="Search query"
-          mode="stacked"
-          labelPosition="left"
-          type="text"
-          value={query}
-          onChange={(event) => setQuery(event.target.value)}
-        />
-        <SelectField
-          id="filter-category"
-          label="Category"
-          mode="stacked"
-          labelPosition="left"
-          options={["Components", "Templates", "Tokens"]}
-          value={category}
-          onChange={(event) => setCategory(event.target.value)}
-        />`
-          : formatJsxRichContent(s.content, "        ");
+          ? `    <TextField
+      id="filter-query"
+      label="Search query"
+      mode="stacked"
+      labelPosition="left"
+      type="text"
+      value={query}
+      onChange={(event) => setQuery(event.target.value)}
+    />
+    <SelectField
+      id="filter-category"
+      label="Category"
+      mode="stacked"
+      labelPosition="left"
+      options={["Components", "Templates", "Tokens"]}
+      value={category}
+      onChange={(event) => setCategory(event.target.value)}
+    />`
+          : formatJsxRichContent(s.content, "    ");
       const imports =
         s.contentType === "form"
           ? ["Button", "Drawer", "DrawerDefaultActions", "SelectField", "TextField"]
           : ["Button", "Drawer", "DrawerDefaultActions"];
       const state =
         s.contentType === "form"
-          ? `  const [drawerOpen, setDrawerOpen] = useState(${s.open});
-  const [query, setQuery] = useState("Design system");
-  const [category, setCategory] = useState("Components");`
-          : `  const [drawerOpen, setDrawerOpen] = useState(${s.open});`;
-      return `import { useState } from "react";
-${importLine(imports)}
-
-function Example() {
-${state}
-
-  return (
-    <>
-      <Button onClick={() => setDrawerOpen(true)}>Open drawer</Button>
-      <Drawer
+          ? [
+              `const [drawerOpen, setDrawerOpen] = useState(${s.open});`,
+              `const [query, setQuery] = useState("Design system");`,
+              `const [category, setCategory] = useState("Components");`,
+            ]
+          : [`const [drawerOpen, setDrawerOpen] = useState(${s.open});`];
+      return interactiveUsage({
+        components: imports,
+        state,
+        jsx: `(
+  <>
+    <Button onClick={() => setDrawerOpen(true)}>Open drawer</Button>
+    <Drawer
 ${drawerProps}
-        footer={${s.footerActions ? quote("Drawer changes are applied to the current page.") : "undefined"}}
-        actions={${s.footerActions ? "<DrawerDefaultActions onClose={() => setDrawerOpen(false)} />" : "undefined"}}
-        onClose={() => setDrawerOpen(false)}
-      >
+      footer={${s.footerActions ? quote("Drawer changes are applied to the current page.") : "undefined"}}
+      actions={${s.footerActions ? "<DrawerDefaultActions onClose={() => setDrawerOpen(false)} />" : "undefined"}}
+      onClose={() => setDrawerOpen(false)}
+    >
 ${children}
-      </Drawer>
-    </>
-  );
-}`;
+    </Drawer>
+  </>
+)`,
+      });
     }
     case "dropdown-menu": {
       const s = settings as ControlSettingsBySlug["dropdown-menu"];
@@ -507,23 +650,20 @@ ${children}
         formatExpressionProp("onOpenChange", "setMenuOpen"),
         formatExpressionProp("onSelect", "(item) => console.log(item.label)"),
       ];
-      const menuProps = props.map((prop) => `        ${prop}`).join("\n");
-      return `import { useState } from "react";
-${importLine(["Button", "DropdownMenu"])}
-
-const items = [
-  ${items.join(",\n  ")},
-];
-
-function Example() {
-  const [menuOpen, setMenuOpen] = useState(${s.open});
-
-  return (
-      <DropdownMenu
+      const menuProps = props.map((prop) => `    ${prop}`).join("\n");
+      return interactiveUsage({
+        components: ["Button", "DropdownMenu"],
+        preamble: [
+          "",
+          "const items = [",
+          `  ${items.join(",\n  ")},`,
+          "];",
+        ],
+        state: [`const [menuOpen, setMenuOpen] = useState(${s.open});`],
+        jsx: `<DropdownMenu
 ${menuProps}
-      />
-  );
-}`;
+/>`,
+      });
     }
     case "context-menu": {
       const s = settings as ControlSettingsBySlug["context-menu"];
@@ -544,37 +684,36 @@ ${menuProps}
         ...(s.closeOnSelect ? [] : [formatBoolProp("closeOnSelect", false)]),
       ];
       const providerProps = props.map((prop) => `      ${prop}`).join("\n");
-      return `import { useState } from "react";
-${importLine(["ContextMenuProvider", "ContextMenuTarget"])}
-
-// Wrap your app layout once (theme is provided by OpusThemeProvider):
-// <OpusThemeProvider theme={theme}>
-//   <ContextMenuProvider>{children}</ContextMenuProvider>
-// </OpusThemeProvider>
-
-const items = [
-  ${items.join(",\n  ")},
-];
-
-function Example() {
-  const [menuOpen, setMenuOpen] = useState(${s.open});
-
-  return (
-    <ContextMenuProvider
-      open={menuOpen}
+      return interactiveUsage({
+        components: ["ContextMenuProvider", "ContextMenuTarget"],
+        preamble: [
+          "",
+          "// Wrap your app layout once (theme is provided by OpusThemeProvider):",
+          "// <OpusThemeProvider theme={theme}>",
+          "//   <ContextMenuProvider>{children}</ContextMenuProvider>",
+          "// </OpusThemeProvider>",
+          "",
+          "const items = [",
+          `  ${items.join(",\n  ")},`,
+          "];",
+        ],
+        state: [`const [menuOpen, setMenuOpen] = useState(${s.open});`],
+        jsx: `(
+  <ContextMenuProvider
+    open={menuOpen}
 ${providerProps}
-      onOpenChange={setMenuOpen}
+    onOpenChange={setMenuOpen}
+  >
+    <ContextMenuTarget
+      items={items}
+      label="Context menu"
+      onSelect={(item) => console.log(item.label)}
     >
-      <ContextMenuTarget
-        items={items}
-        label="Context menu"
-        onSelect={(item) => console.log(item.label)}
-      >
-        <p>{${quote(s.targetLabel)}}</p>
-      </ContextMenuTarget>
-    </ContextMenuProvider>
-  );
-}`;
+      <p>{${quote(s.targetLabel)}}</p>
+    </ContextMenuTarget>
+  </ContextMenuProvider>
+)`,
+      });
     }
     case "command-palette": {
       const s = settings as ControlSettingsBySlug["command-palette"];
@@ -598,26 +737,22 @@ ${providerProps}
         ...(s.showGroups ? [] : [formatBoolProp("showGroups", false)]),
         formatExpressionProp("items", "items"),
       ];
-      const paletteProps = props.map((prop) => `        ${prop}`).join("\n");
-      return `import { useState } from "react";
-${importLine(["Button", "CommandPalette"])}
-
-const items = ${items};
-
-function Example() {
-  const [paletteOpen, setPaletteOpen] = useState(${s.open});
-
-  return (
-    <>
-      <Button onClick={() => setPaletteOpen(true)}>Open command palette</Button>
-      <CommandPalette
+      const paletteProps = props.map((prop) => `    ${prop}`).join("\n");
+      return interactiveUsage({
+        components: ["Button", "CommandPalette"],
+        preamble: ["", `const items = ${items};`],
+        state: [`const [paletteOpen, setPaletteOpen] = useState(${s.open});`],
+        jsx: `(
+  <>
+    <Button onClick={() => setPaletteOpen(true)}>Open command palette</Button>
+    <CommandPalette
 ${paletteProps}
-        onClose={() => setPaletteOpen(false)}
-        onSelect={(item) => console.log(item.label)}
-      />
-    </>
-  );
-}`;
+      onClose={() => setPaletteOpen(false)}
+      onSelect={(item) => console.log(item.label)}
+    />
+  </>
+)`,
+      });
     }
     case "modal": {
       const s = settings as ControlSettingsBySlug["modal"];
@@ -630,58 +765,57 @@ ${paletteProps}
         ...(s.dismissOnEscape ? [] : [formatBoolProp("dismissOnEscape", false)]),
         ...(s.closeButton ? [] : [formatBoolProp("closeButton", false)]),
       ];
-      const modalProps = props.map((prop) => `        ${prop}`).join("\n");
+      const modalProps = props.map((prop) => `    ${prop}`).join("\n");
       const children =
         s.contentType === "form"
-          ? `        <TextField
-          id="workspace-name"
-          label="Workspace name"
-          mode="stacked"
-          labelPosition="left"
-          type="text"
-          value={workspaceName}
-          onChange={(event) => setWorkspaceName(event.target.value)}
-        />
-        <SelectField
-          id="workspace-plan"
-          label="Plan"
-          mode="stacked"
-          labelPosition="left"
-          options={["Starter", "Team", "Enterprise"]}
-          value={plan}
-          onChange={(event) => setPlan(event.target.value)}
-        />`
-          : formatJsxRichContent(s.content, "        ");
+          ? `    <TextField
+      id="workspace-name"
+      label="Workspace name"
+      mode="stacked"
+      labelPosition="left"
+      type="text"
+      value={workspaceName}
+      onChange={(event) => setWorkspaceName(event.target.value)}
+    />
+    <SelectField
+      id="workspace-plan"
+      label="Plan"
+      mode="stacked"
+      labelPosition="left"
+      options={["Starter", "Team", "Enterprise"]}
+      value={plan}
+      onChange={(event) => setPlan(event.target.value)}
+    />`
+          : formatJsxRichContent(s.content, "    ");
       const imports =
         s.contentType === "form"
           ? ["Button", "Modal", "ModalDefaultActions", "SelectField", "TextField"]
           : ["Button", "Modal", "ModalDefaultActions"];
       const state =
         s.contentType === "form"
-          ? `  const [modalOpen, setModalOpen] = useState(${s.open});
-  const [workspaceName, setWorkspaceName] = useState("Opus Design System");
-  const [plan, setPlan] = useState("Team");`
-          : `  const [modalOpen, setModalOpen] = useState(${s.open});`;
-      return `import { useState } from "react";
-${importLine(imports)}
-
-function Example() {
-${state}
-
-  return (
-    <>
-      <Button onClick={() => setModalOpen(true)}>Open modal</Button>
-      <Modal
+          ? [
+              `const [modalOpen, setModalOpen] = useState(${s.open});`,
+              `const [workspaceName, setWorkspaceName] = useState("Opus Design System");`,
+              `const [plan, setPlan] = useState("Team");`,
+            ]
+          : [`const [modalOpen, setModalOpen] = useState(${s.open});`];
+      return interactiveUsage({
+        components: imports,
+        state,
+        jsx: `(
+  <>
+    <Button onClick={() => setModalOpen(true)}>Open modal</Button>
+    <Modal
 ${modalProps}
-        footer={${s.footerActions ? quote("Changes are only saved when you confirm.") : "undefined"}}
-        actions={${s.footerActions ? "<ModalDefaultActions onClose={() => setModalOpen(false)} />" : "undefined"}}
-        onClose={() => setModalOpen(false)}
-      >
+      footer={${s.footerActions ? quote("Changes are only saved when you confirm.") : "undefined"}}
+      actions={${s.footerActions ? "<ModalDefaultActions onClose={() => setModalOpen(false)} />" : "undefined"}}
+      onClose={() => setModalOpen(false)}
+    >
 ${children}
-      </Modal>
-    </>
-  );
-}`;
+    </Modal>
+  </>
+)`,
+      });
     }
     case "popover": {
       const s = settings as ControlSettingsBySlug["popover"];
@@ -695,52 +829,49 @@ ${children}
         formatExpressionProp("onOpenChange", "setPopoverOpen"),
         formatExpressionProp("trigger", '<Button variant="primary">Open popover</Button>'),
       ];
-      const popoverProps = props.map((prop) => `        ${prop}`).join("\n");
+      const popoverProps = props.map((prop) => `    ${prop}`).join("\n");
       const children =
         s.contentType === "form"
-          ? `        <TextField
-          id="popover-note"
-          label="Note"
-          mode="stacked"
-          labelPosition="left"
-          type="text"
-          value={note}
-          onChange={(event) => setNote(event.target.value)}
-        />
-        <SelectField
-          id="popover-priority"
-          label="Priority"
-          mode="stacked"
-          labelPosition="left"
-          options={["Low", "Medium", "High"]}
-          value={priority}
-          onChange={(event) => setPriority(event.target.value)}
-        />`
-          : formatJsxRichContent(s.content, "        ");
+          ? `    <TextField
+      id="popover-note"
+      label="Note"
+      mode="stacked"
+      labelPosition="left"
+      type="text"
+      value={note}
+      onChange={(event) => setNote(event.target.value)}
+    />
+    <SelectField
+      id="popover-priority"
+      label="Priority"
+      mode="stacked"
+      labelPosition="left"
+      options={["Low", "Medium", "High"]}
+      value={priority}
+      onChange={(event) => setPriority(event.target.value)}
+    />`
+          : formatJsxRichContent(s.content, "    ");
       const imports =
         s.contentType === "form"
           ? ["Button", "Popover", "SelectField", "TextField"]
           : ["Button", "Popover"];
       const state =
         s.contentType === "form"
-          ? `  const [popoverOpen, setPopoverOpen] = useState(${s.open});
-  const [note, setNote] = useState("Follow up next week");
-  const [priority, setPriority] = useState("Medium");`
-          : `  const [popoverOpen, setPopoverOpen] = useState(${s.open});`;
-      return `import { useState } from "react";
-${importLine(imports)}
-
-function Example() {
-${state}
-
-  return (
-      <Popover
+          ? [
+              `const [popoverOpen, setPopoverOpen] = useState(${s.open});`,
+              `const [note, setNote] = useState("Follow up next week");`,
+              `const [priority, setPriority] = useState("Medium");`,
+            ]
+          : [`const [popoverOpen, setPopoverOpen] = useState(${s.open});`];
+      return interactiveUsage({
+        components: imports,
+        state,
+        jsx: `<Popover
 ${popoverProps}
-      >
+>
 ${children}
-      </Popover>
-  );
-}`;
+</Popover>`,
+      });
     }
     case "alert": {
       const s = settings as ControlSettingsBySlug["alert"];
@@ -761,27 +892,25 @@ ${children}
         ...(s.descriptionEnabled ? [formatStringProp("description", s.description)] : []),
         ...(s.dismissible ? [] : [formatBoolProp("dismissible", false)]),
       ];
-      return `${importLine(["ToastProvider", "useToast"])}
-
-// In your app layout:
-// <ToastProvider vertical="${s.positionVertical}" horizontal="${s.positionHorizontal}">
-//   {children}
-// </ToastProvider>
-
-function Example() {
-  const toast = useToast();
-
-  return (
-    <button
-      type="button"
-      onClick={() =>
-        toast.show({${showProps.length === 1 ? ` ${showProps[0]}` : `\n          ${showProps.join(",\n          ")},\n        `}})
-      }
-    >
-      Show toast
-    </button>
-  );
-}`;
+      return interactiveUsage({
+        components: ["ToastProvider", "useToast"],
+        preamble: [
+          "",
+          "// In your app layout:",
+          `// <ToastProvider vertical="${s.positionVertical}" horizontal="${s.positionHorizontal}">`,
+          "//   {children}",
+          "// </ToastProvider>",
+        ],
+        state: ["const toast = useToast();"],
+        jsx: `<button
+  type="button"
+  onClick={() =>
+    toast.show({${showProps.length === 1 ? ` ${showProps[0]}` : `\n      ${showProps.join(",\n      ")},\n    `}})
+  }
+>
+  Show toast
+</button>`,
+      });
     }
     case "card": {
       const s = settings as ControlSettingsBySlug["card"];
@@ -799,6 +928,127 @@ function Example() {
 <Card${formatOpeningProps(props)}>
 ${formatJsxRichContent(s.content)}
 </Card>`;
+    }
+    case "kpi-card":
+    case "stat-card": {
+      const s = settings as ControlSettingsBySlug["stat-card"];
+      const iconOption = getFontAwesomeIconOption(s.icon);
+      const props = [
+        formatStringProp("label", s.label),
+        formatStringProp("value", s.value),
+        formatExpressionProp("icon", `<FontAwesomeIcon icon={${iconOption.importName}} />`),
+        ...(s.showChange ? [formatStringProp("change", s.change), formatStringProp("trend", s.trend)] : []),
+        ...(s.density !== "comfortable" ? [formatStringProp("density", s.density)] : []),
+      ];
+
+      return `import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { ${iconOption.importName} } from "@fortawesome/free-solid-svg-icons";
+import "@/lib/fontawesome";
+${importLine(["StatCard"])}
+
+return <StatCard${formatSelfClosing(props)};`;
+    }
+    case "sparkline": {
+      const s = settings as ControlSettingsBySlug["sparkline"];
+      return `${importLine(["Sparkline"])}
+
+const values = [18, 24, 21, 34, 29, 42, 38];
+
+return <Sparkline label=${quote(s.label)} palette=${quote(s.palette)} values={values} />;`;
+    }
+    case "progress-ring": {
+      const s = settings as ControlSettingsBySlug["progress-ring"];
+      return `${importLine(["ProgressRing"])}
+
+<ProgressRing label=${quote(s.label)} max={${s.max}} value={${s.value}} />`;
+    }
+    case "progress-bar": {
+      const s = settings as ControlSettingsBySlug["progress-bar"];
+      return `${importLine(["ProgressBar"])}
+
+<ProgressBar label=${quote(s.label)} max={${s.max}} value={${s.value}} />`;
+    }
+    case "gauge":
+    {
+      const s = settings as ControlSettingsBySlug["gauge"];
+      const gaugeFooter = getGaugeFooter(s.palette);
+      const footerItems = gaugeFooter.slice(0, s.footerMetricCount);
+      const trackColor = getGaugeTrackColor(s.trackTone, s.palette);
+      const valueColor = getGaugeValueColor(s.valueTone, s.palette);
+      const props = [
+        formatStringProp("title", s.title),
+        formatStringProp("subtitle", s.subtitle),
+        formatExpressionProp("value", String(gaugePreviewValue)),
+        formatStringProp("trackColor", trackColor),
+        formatStringProp("valueColor", valueColor),
+        ...(s.variant !== "half" ? [formatStringProp("variant", s.variant)] : []),
+        formatStringProp("change", s.change),
+        formatStringProp("changeTrend", s.changeTrend),
+        formatStringProp("summary", s.summary),
+        ...(s.footerMetricCount > 0 ? [formatExpressionProp("footer", "footerMetrics")] : []),
+        ...(s.density !== "comfortable" ? [formatStringProp("density", s.density)] : []),
+      ];
+
+      if (s.footerMetricCount === 0) {
+        const footerLines = gaugeFooter
+          .map(
+            (item) =>
+              `//   { color: ${quote(item.color ?? "")}, label: ${quote(item.label)}, value: ${quote(item.value)}, trend: ${quote(item.trend ?? "up")} }`,
+          )
+          .join(",\n");
+
+        return `${importLine(["Gauge"])}
+
+<Gauge${formatSelfClosing(props)} />
+
+// Optional footer metrics — pass any number of items, or omit entirely:
+// footer={[
+${footerLines},
+// ]}`;
+      }
+
+      const footerBlock = footerItems
+        .map(
+          (item) =>
+            `  { color: ${quote(item.color ?? "")}, label: ${quote(item.label)}, value: ${quote(item.value)}, trend: ${quote(item.trend ?? "up")} }`,
+        )
+        .join(",\n");
+
+      return `${importLine(["Gauge"])}
+
+const footerMetrics = [
+${footerBlock},
+];
+
+<Gauge${formatSelfClosing(props)} />`;
+    }
+    case "speedometer": {
+      const s = settings as ControlSettingsBySlug["speedometer"];
+      return `${importLine(["Speedometer"])}
+
+<Speedometer label=${quote(s.label)} max={${s.max}} value={${s.value}} />`;
+    }
+    case "metric-tile": {
+      const s = settings as ControlSettingsBySlug["metric-tile"];
+      const iconOption = getFontAwesomeIconOption(s.icon);
+      return `import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { ${iconOption.importName} } from "@fortawesome/free-solid-svg-icons";
+import "@/lib/fontawesome";
+${importLine(["MetricTile"])}
+
+return <MetricTile icon={<FontAwesomeIcon icon={${iconOption.importName}} />} label=${quote(s.label)} value=${quote(s.value)}${s.showSparkline ? " sparkline={[12, 18, 16, 24, 22, 30, 28]}" : ""} />;`;
+    }
+    case "status-indicator": {
+      const s = settings as ControlSettingsBySlug["status-indicator"];
+      return `${importLine(["StatusIndicator"])}
+
+<StatusIndicator label=${quote(s.label)} status=${quote(s.status)} />`;
+    }
+    case "trend-badge": {
+      const s = settings as ControlSettingsBySlug["trend-badge"];
+      return `${importLine(["TrendBadge"])}
+
+<TrendBadge direction=${quote(s.direction)} value=${quote(s.value)} />`;
     }
     case "panel": {
       const s = settings as ControlSettingsBySlug["panel"];
@@ -1141,11 +1391,12 @@ const assets = ${formatModelAssetsForUsage()};
         ...(s.fitted ? [formatBoolProp("fitted", true)] : []),
         formatExpressionProp("onValueChange", "setActiveTab"),
       ];
-      return `import { useState } from "react";
-${importLine(["SelectField", "SwitchField", "Tabs", "TextField"])}
-
-const items = [
-  {
+      return interactiveUsage({
+        components: ["SelectField", "SwitchField", "Tabs", "TextField"],
+        preamble: [
+          "",
+          "const items = [",
+          `  {
     value: "overview",
     label: "Overview",
     content: <p>Review the main project status and current design-system health.</p>,
@@ -1195,16 +1446,16 @@ const items = [
       </div>
     ),
   },
-];
-
-function Example() {
-  const [activeTab, setActiveTab] = useState(${quote(s.activeValue)});
-  const [projectName, setProjectName] = useState("Opus");
-  const [releaseTrack, setReleaseTrack] = useState("Stable");
-  const [notifyTeam, setNotifyTeam] = useState(true);
-
-  return <Tabs${formatSelfClosing(props)};
-}`;
+];`,
+        ],
+        state: [
+          `const [activeTab, setActiveTab] = useState(${quote(s.activeValue)});`,
+          `const [projectName, setProjectName] = useState("Opus");`,
+          `const [releaseTrack, setReleaseTrack] = useState("Stable");`,
+          `const [notifyTeam, setNotifyTeam] = useState(true);`,
+        ],
+        jsx: `<Tabs${formatSelfClosing(props)}`,
+      });
     }
     case "accordion": {
       const s = settings as ControlSettingsBySlug["accordion"];
@@ -1268,7 +1519,7 @@ ${formatJsxRichContent(s.content)}
         formatStringProp("description", s.description),
         ...(s.density !== "comfortable" ? [formatStringProp("density", s.density)] : []),
         ...(s.showIcon ? [] : [formatExpressionProp("icon", "false")]),
-        ...(s.showIcon && s.icon !== "inbox" ? [formatStringProp("icon", s.icon)] : []),
+        ...(s.showIcon ? [formatStringProp("icon", s.icon)] : []),
         ...(actionParts.length ? [formatExpressionProp("actions", `<>\n    ${actionParts.join("\n    ")}\n  </>`)] : []),
       ];
       const imports = actionParts.length ? ["Button", "EmptyState"] : ["EmptyState"];
@@ -1310,7 +1561,7 @@ ${formatJsxRichContent(s.content)}
     }
     case "mega-menu": {
       const s = settings as ControlSettingsBySlug["mega-menu"];
-      const previewMenu = buildMegaMenuPreviewConfig({ featured: s.featured });
+      const previewMenu = buildMegaMenuPreviewConfig(s);
       const props = [
         formatExpressionProp("menus", "menus"),
         formatBoolProp("staticPanel", true),
@@ -1345,32 +1596,37 @@ ${formatMegaMenuMenusForUsage([previewMenu], { includeFeatured: s.featured })},
         showShortcuts: s.showShortcuts,
       });
 
-      return `import { useState } from "react";
-${importLine(["TopNavigation"])}
-
-const menus = [
-${menusBlock},
-];
-
-function Example() {
-  const [activeMenu, setActiveMenu] = useState<string | null>(${s.activeMenu === "none" ? "null" : quote(s.activeMenu)});
-  const [lastAction, setLastAction] = useState("Waiting for action");
-
-  const handleSelect = (menuId: string, item: { id: string; label: string }) => {
-    setLastAction(\`\${menuId}: \${item.label}\`);
-  };
-
-  return (
-    <>
-      <TopNavigation
+      return interactiveUsage({
+        components: ["TopNavigation"],
+        preamble: [
+          "",
+          "const menus = [",
+          `${menusBlock},`,
+          "];",
+        ],
+        state: [
+          `const [activeMenu, setActiveMenu] = useState<string | null>(${s.activeMenu === "none" ? "null" : quote(s.activeMenu)});`,
+          `const [lastAction, setLastAction] = useState("Waiting for action");`,
+          "",
+          "const handleSelect = (menuId: string, item: { id: string; label: string }) => {",
+          "  setLastAction(`${menuId}: ${item.label}`);",
+          "};",
+        ],
+        jsx: `(
+  <>
+    <TopNavigation
 ${navProps}
-      />
-      <p>{lastAction}</p>
-    </>
-  );
-}`;
+    />
+    <p>{lastAction}</p>
+  </>
+)`,
+      });
     }
     default:
       return "";
   }
+}
+
+export function generateUsageCode(slug: ControlSlug, settings: ControlSettings) {
+  return splitUsageCode(generateUsageCodeContent(slug, settings));
 }

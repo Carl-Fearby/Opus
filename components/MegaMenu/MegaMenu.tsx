@@ -334,7 +334,8 @@ export function MegaMenu({
   }, [setActive, setVisible]);
 
   useEffect(() => {
-    setPortalReady(true);
+    const timeout = window.setTimeout(() => setPortalReady(true), 0);
+    return () => window.clearTimeout(timeout);
   }, []);
 
   useLayoutEffect(() => {
@@ -418,14 +419,16 @@ export function MegaMenu({
     };
   }, [isStaticPanel, visible]);
 
+  const activeConfigId = activeConfig?.id;
+
   useEffect(() => {
-    if (!inTopNavigation || isStaticPanel || !activeConfig || !registerMenuPresent) {
+    if (!inTopNavigation || isStaticPanel || !activeConfigId || !registerMenuPresent) {
       return;
     }
 
-    registerMenuPresent(activeConfig.id, renderPanel);
-    return () => registerMenuPresent(activeConfig.id, false);
-  }, [activeConfig?.id, inTopNavigation, isStaticPanel, registerMenuPresent, renderPanel]);
+    registerMenuPresent(activeConfigId, renderPanel);
+    return () => registerMenuPresent(activeConfigId, false);
+  }, [activeConfigId, inTopNavigation, isStaticPanel, registerMenuPresent, renderPanel]);
 
   const handleSelect = (item: MegaMenuItem) => {
     item.onSelect?.();
@@ -441,14 +444,17 @@ export function MegaMenu({
 
   const showPanel = isStaticPanel ? Boolean(activeConfig) : renderPanel && Boolean(activeConfig);
 
-  const portaledPanelStyle: CSSProperties | undefined =
-    !isStaticPanel && portalStyle
-      ? {
+  const portaledPanelStyle: CSSProperties | undefined = isStaticPanel
+    ? undefined
+    : {
+        ...(portalStyle
+          ? {
           left: portalStyle.left,
           top: portalStyle.top,
           width: portalStyle.width,
         }
-      : undefined;
+          : {}),
+      };
 
   const panelNode =
     showPanel && activeConfig ? (
@@ -462,8 +468,11 @@ export function MegaMenu({
         role="menu"
         style={portaledPanelStyle}
       >
-        <div className={styles.panelContent}>
-          <div className={styles.sections}>
+        <div
+          className={styles.panelContent}
+          data-has-featured={activeConfig.featured ? "true" : "false"}
+        >
+          <div className={styles.sections} data-columns={String(activeConfig.sections.length)}>
             {activeConfig.sections.map((section) => (
               <section className={styles.section} key={section.id}>
                 <h3>{section.title}</h3>
