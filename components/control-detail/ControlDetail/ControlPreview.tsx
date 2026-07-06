@@ -1334,7 +1334,15 @@ export function ControlPreview({ slug, settings, onSettingsChange }: ControlPrev
         <DashboardPreviewGrid
           layout={s.previewLayout}
           renderItem={() => (
-            <Sparkline label={s.label} palette={s.palette} values={[18, 24, 21, 34, 29, 42, 38]} />
+            <div className={styles.sparklineStandalone}>
+              <Sparkline
+                height={48}
+                label={s.label}
+                palette={s.palette}
+                values={[18, 24, 21, 34, 29, 42, 38]}
+                variant="labeled"
+              />
+            </div>
           )}
         />
       );

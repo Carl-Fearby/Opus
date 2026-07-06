@@ -1,66 +1,9 @@
 .page {
-  width: 100%;
-  min-height: 100%;
-}
-
-.page[data-resizing="true"] {
-  cursor: col-resize;
-}
-
-.workspace {
-  display: flex;
-  align-items: stretch;
-  gap: 0;
-}
-
-.mainColumn {
   display: grid;
   gap: 6px;
-  flex: 1;
+  width: 100%;
   min-width: 0;
-  padding-right: 12px;
   align-content: start;
-  align-self: start;
-}
-
-.settingsSidebar {
-  container-type: inline-size;
-  container-name: settings-sidebar;
-  flex-shrink: 0;
-  position: sticky;
-  top: 0;
-  align-self: flex-start;
-  max-height: calc(100vh - var(--opus-topbar-height, 58px) - 36px);
-  overflow: auto;
-  padding-left: 0;
-}
-
-.resizeHandle {
-  position: relative;
-  flex-shrink: 0;
-  width: 10px;
-  margin: 0 -5px;
-  cursor: col-resize;
-  touch-action: none;
-  z-index: 2;
-}
-
-.resizeHandle::before {
-  content: "";
-  position: absolute;
-  top: 0;
-  bottom: 0;
-  left: 50%;
-  width: 2px;
-  border-radius: 999px;
-  background: transparent;
-  transform: translateX(-50%);
-  transition: background 160ms ease;
-}
-
-.resizeHandle:hover::before,
-.page[data-resizing="true"] .resizeHandle::before {
-  background: color-mix(in srgb, var(--opus-accent) 55%, transparent);
 }
 
 .panel {
@@ -93,34 +36,6 @@
 
 .previewBody > [data-fit-content="true"] {
   width: fit-content;
-}
-
-.settingsGrid {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr);
-  gap: 8px;
-  align-items: start;
-}
-
-@container settings-sidebar (min-width: 340px) {
-  .settingsGrid {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
-}
-
-@container settings-sidebar (min-width: 520px) {
-  .settingsGrid {
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-  }
-}
-
-.settingsGrid > * {
-  width: 100%;
-  min-width: 0;
-}
-
-.settingsFullWidth {
-  grid-column: 1 / -1;
 }
 
 .sourcePanel {
@@ -192,13 +107,6 @@
   color: var(--opus-muted);
   font-size: 0.74rem;
   line-height: 1.4;
-}
-
-.settingsHint {
-  margin: 0;
-  color: var(--opus-muted);
-  font-size: 0.76rem;
-  line-height: 1.35;
 }
 
 .usageCopyButton,
@@ -404,6 +312,23 @@
   min-width: 0;
 }
 
+.dashboardPreviewItem > .sparklineStandalone {
+  flex: 0 1 auto;
+  align-self: start;
+}
+
+.sparklineStandalone {
+  display: grid;
+  gap: 10px;
+  align-content: start;
+  width: 100%;
+  padding: 18px 20px;
+  border: 1px solid color-mix(in srgb, var(--opus-border) 88%, transparent);
+  border-radius: var(--opus-input-radius-large);
+  background: color-mix(in srgb, var(--opus-panel) 96%, transparent);
+  box-shadow: var(--opus-shadow);
+}
+
 .dashboardWidgetSlot > * {
   flex: 0 1 auto;
   min-width: 0;
@@ -476,27 +401,5 @@
   .dashboardStatGrid,
   .dashboardMainGrid {
     grid-template-columns: 1fr;
-  }
-}
-
-@media (max-width: 960px) {
-  .workspace {
-    flex-direction: column;
-    min-height: 0;
-  }
-
-  .mainColumn {
-    padding-right: 0;
-  }
-
-  .resizeHandle {
-    display: none;
-  }
-
-  .settingsSidebar {
-    position: static;
-    width: 100% !important;
-    max-height: none;
-    overflow: visible;
   }
 }

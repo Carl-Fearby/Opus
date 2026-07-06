@@ -954,7 +954,7 @@ return <StatCard${formatSelfClosing(props)};`;
 
 const values = [18, 24, 21, 34, 29, 42, 38];
 
-return <Sparkline label=${quote(s.label)} palette=${quote(s.palette)} values={values} />;`;
+return <Sparkline label=${quote(s.label)} palette=${quote(s.palette)} values={values} variant="labeled" />;`;
     }
     case "progress-ring": {
       const s = settings as ControlSettingsBySlug["progress-ring"];

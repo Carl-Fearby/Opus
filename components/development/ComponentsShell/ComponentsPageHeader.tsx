@@ -11,7 +11,7 @@ export function ComponentsPageHeader() {
   }
 
   return (
-    <div className={styles.pageHeader}>
+    <div className={styles.pageHeader} data-theme="dark">
       <h1>{pageHeader.title}</h1>
       {pageHeader.description ? <p>{pageHeader.description}</p> : null}
     </div>

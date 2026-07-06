@@ -49,7 +49,7 @@ export const dashboardCatalog = [
     title: "Sparkline",
     componentName: "Sparkline",
     navigationGroup: "Dashboard",
-    description: "Compact inline trend line for embedding beside metrics.",
+    description: "Compact inline trend line for embedding in metric tiles and dashboard cards.",
     settingsType: "sparkline",
     sourceFiles: ["components/Sparkline/Sparkline.tsx", "components/Sparkline/Sparkline.module.css"],
   },

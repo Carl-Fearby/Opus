@@ -23,19 +23,22 @@
     var(--accent-option);
   box-shadow: 0 0 0 0 color-mix(in srgb, var(--accent-option) 0%, transparent);
   cursor: pointer;
-  transition:
-    box-shadow 160ms ease,
-    transform 160ms ease;
+  transition: box-shadow 160ms ease;
 }
 
 .swatch:hover,
-.swatch:focus-visible,
+.swatch:focus-visible {
+  box-shadow:
+    0 0 0 2px color-mix(in srgb, var(--opus-input-bg) 72%, transparent),
+    0 0 0 4px color-mix(in srgb, var(--accent-option) 72%, transparent);
+  outline: 0;
+}
+
 .swatch[data-selected="true"] {
   box-shadow:
     0 0 0 2px color-mix(in srgb, var(--opus-input-bg) 72%, transparent),
     0 0 0 4px color-mix(in srgb, var(--accent-option) 72%, transparent);
   outline: 0;
-  transform: translateY(-1px);
 }
 
 @media (prefers-reduced-motion: reduce) {

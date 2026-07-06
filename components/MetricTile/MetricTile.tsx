@@ -31,7 +31,7 @@ export function MetricTile({ density = "comfortable", icon, label, sparkline, va
       <p className={layout.value}>{value}</p>
       <div aria-hidden="true" className={styles.sparklineRail}>
         {sparkline ? (
-          <Sparkline height={SPARKLINE_HEIGHT} values={sparkline} />
+          <Sparkline height={SPARKLINE_HEIGHT} values={sparkline} variant="inline" width={120} />
         ) : (
           <span className={styles.sparklineReserve} />
         )}

@@ -16,7 +16,7 @@ import {
   SettingToggle,
 } from "./SettingField";
 import { IconPicker } from "@/components/IconPicker";
-import styles from "./ControlDetail.module.css";
+import shellStyles from "@/components/development/ComponentsShell/ComponentsShell.module.css";
 
 const buttonVariants = [
   "primary",
@@ -120,7 +120,7 @@ function CommonFieldSettings({
         onChange={(helpEnabled) => onChange({ ...settings, helpEnabled })}
       />
       {settings.helpEnabled ? (
-        <div className={styles.settingsFullWidth}>
+        <div className={shellStyles.settingsFullWidth}>
           <SettingTextarea
             label="Help text"
             value={settings.help}
@@ -145,7 +145,7 @@ export function ControlSettingsPanel({ slug, settings, onChange }: ControlSettin
     const supportsAxes = isCartesianChartSlug(slug) || isMatrixChartSlug(slug);
     const supportsAxisTitles = isCartesianChartSlug(slug);
     return (
-      <div className={styles.settingsGrid}>
+      <div className={shellStyles.settingsGrid}>
         <SettingSelect
           label="Palette"
           value={s.palette}
@@ -208,7 +208,7 @@ export function ControlSettingsPanel({ slug, settings, onChange }: ControlSettin
             { label: "2 side by side", value: "split" },
           ]}
         />
-        <div className={styles.settingsFullWidth}>
+        <div className={shellStyles.settingsFullWidth}>
           <SettingInput
             label="Title"
             value={s.title}
@@ -217,14 +217,14 @@ export function ControlSettingsPanel({ slug, settings, onChange }: ControlSettin
         </div>
         {supportsAxisTitles && s.showAxis ? (
           <>
-            <div className={styles.settingsFullWidth}>
+            <div className={shellStyles.settingsFullWidth}>
               <SettingInput
                 label="X axis label"
                 value={s.xAxisLabel}
                 onChange={(xAxisLabel) => onChange({ ...s, xAxisLabel } as ControlSettings)}
               />
             </div>
-            <div className={styles.settingsFullWidth}>
+            <div className={shellStyles.settingsFullWidth}>
               <SettingInput
                 label="Y axis label"
                 value={s.yAxisLabel}
@@ -256,7 +256,7 @@ export function ControlSettingsPanel({ slug, settings, onChange }: ControlSettin
     case "text-input": {
       const s = settings as ControlSettingsBySlug["text-input"];
       return (
-        <div className={styles.settingsGrid}>
+        <div className={shellStyles.settingsGrid}>
           <CommonFieldSettings
             settings={s}
             onChange={(next) => onChange({ ...s, ...next })}
@@ -289,13 +289,13 @@ export function ControlSettingsPanel({ slug, settings, onChange }: ControlSettin
     case "select": {
       const s = settings as ControlSettingsBySlug[typeof slug];
       return (
-        <div className={styles.settingsGrid}>
+        <div className={shellStyles.settingsGrid}>
           <CommonFieldSettings
             settings={s}
             onChange={(next) => onChange({ ...s, ...next })}
           />
           {slug === "select" ? (
-            <div className={styles.settingsFullWidth}>
+            <div className={shellStyles.settingsFullWidth}>
               <SettingTextarea
                 label="Options (comma-separated)"
                 value={(s as ControlSettingsBySlug["select"]).options}
@@ -311,7 +311,7 @@ export function ControlSettingsPanel({ slug, settings, onChange }: ControlSettin
     case "textarea": {
       const s = settings as ControlSettingsBySlug["textarea"];
       return (
-        <div className={styles.settingsGrid}>
+        <div className={shellStyles.settingsGrid}>
           <CommonFieldSettings
             settings={s}
             onChange={(next) => onChange({ ...s, ...next })}
@@ -349,7 +349,7 @@ export function ControlSettingsPanel({ slug, settings, onChange }: ControlSettin
     case "color-picker": {
       const s = settings as ControlSettingsBySlug["color-picker"];
       return (
-        <div className={styles.settingsGrid}>
+        <div className={shellStyles.settingsGrid}>
           <CommonFieldSettings
             includeValue={false}
             settings={s}
@@ -367,7 +367,7 @@ export function ControlSettingsPanel({ slug, settings, onChange }: ControlSettin
     case "radio-group": {
       const s = settings as ControlSettingsBySlug["radio-group"];
       return (
-        <div className={styles.settingsGrid}>
+        <div className={shellStyles.settingsGrid}>
           <CommonFieldSettings
             includeValue={false}
             settings={s}
@@ -425,7 +425,7 @@ export function ControlSettingsPanel({ slug, settings, onChange }: ControlSettin
     case "checkbox": {
       const s = settings as ControlSettingsBySlug["checkbox"];
       return (
-        <div className={styles.settingsGrid}>
+        <div className={shellStyles.settingsGrid}>
           <CommonFieldSettings
             includeValue={false}
             settings={s}
@@ -451,7 +451,7 @@ export function ControlSettingsPanel({ slug, settings, onChange }: ControlSettin
     case "switch": {
       const s = settings as ControlSettingsBySlug["switch"];
       return (
-        <div className={styles.settingsGrid}>
+        <div className={shellStyles.settingsGrid}>
           <CommonFieldSettings
             includeValue={false}
             settings={s}
@@ -468,7 +468,7 @@ export function ControlSettingsPanel({ slug, settings, onChange }: ControlSettin
     case "range-slider": {
       const s = settings as ControlSettingsBySlug["range-slider"];
       return (
-        <div className={styles.settingsGrid}>
+        <div className={shellStyles.settingsGrid}>
           <CommonFieldSettings
             includeValue={false}
             settings={s}
@@ -508,7 +508,7 @@ export function ControlSettingsPanel({ slug, settings, onChange }: ControlSettin
     case "number-input": {
       const s = settings as ControlSettingsBySlug["number-input"];
       return (
-        <div className={styles.settingsGrid}>
+        <div className={shellStyles.settingsGrid}>
           <CommonFieldSettings
             includeValue={false}
             settings={s}
@@ -548,7 +548,7 @@ export function ControlSettingsPanel({ slug, settings, onChange }: ControlSettin
     case "file-upload": {
       const s = settings as ControlSettingsBySlug["file-upload"];
       return (
-        <div className={styles.settingsGrid}>
+        <div className={shellStyles.settingsGrid}>
           <CommonFieldSettings
             includeValue={false}
             settings={s}
@@ -566,7 +566,7 @@ export function ControlSettingsPanel({ slug, settings, onChange }: ControlSettin
     case "hidden-input": {
       const s = settings as ControlSettingsBySlug["hidden-input"];
       return (
-        <div className={styles.settingsGrid}>
+        <div className={shellStyles.settingsGrid}>
           <CommonFieldSettings
             includeValue={false}
             settings={s}
@@ -590,7 +590,7 @@ export function ControlSettingsPanel({ slug, settings, onChange }: ControlSettin
     case "reset-button": {
       const s = settings as ControlSettingsBySlug["button"];
       return (
-        <div className={styles.settingsGrid}>
+        <div className={shellStyles.settingsGrid}>
           <SettingSelect
             label="Variant"
             value={s.variant}
@@ -618,7 +618,7 @@ export function ControlSettingsPanel({ slug, settings, onChange }: ControlSettin
     case "theme-toggle": {
       const s = settings as ControlSettingsBySlug["theme-toggle"];
       return (
-        <div className={styles.settingsGrid}>
+        <div className={shellStyles.settingsGrid}>
           <SettingSelect
             label="Layout mode"
             value={s.mode}
@@ -659,7 +659,7 @@ export function ControlSettingsPanel({ slug, settings, onChange }: ControlSettin
     case "accent-color-picker": {
       const s = settings as ControlSettingsBySlug["accent-color-picker"];
       return (
-        <div className={styles.settingsGrid}>
+        <div className={shellStyles.settingsGrid}>
           <SettingSelect
             label="Layout mode"
             value={s.mode}
@@ -704,7 +704,7 @@ export function ControlSettingsPanel({ slug, settings, onChange }: ControlSettin
     case "icon-picker": {
       const s = settings as ControlSettingsBySlug["icon-picker"];
       return (
-        <div className={styles.settingsGrid}>
+        <div className={shellStyles.settingsGrid}>
           <SettingSelect
             label="Layout mode"
             value={s.mode}
@@ -725,14 +725,14 @@ export function ControlSettingsPanel({ slug, settings, onChange }: ControlSettin
               { label: "Right", value: "right" },
             ]}
           />
-          <div className={styles.settingsFullWidth}>
+          <div className={shellStyles.settingsFullWidth}>
             <SettingInput
               label="Label"
               value={s.label}
               onChange={(label) => onChange({ ...s, label } as ControlSettings)}
             />
           </div>
-          <div className={styles.settingsFullWidth}>
+          <div className={shellStyles.settingsFullWidth}>
             <IconPicker
               id="settings-icon-picker"
               label="Value"
@@ -748,13 +748,13 @@ export function ControlSettingsPanel({ slug, settings, onChange }: ControlSettin
     case "tooltip": {
       const s = settings as ControlSettingsBySlug["tooltip"];
       return (
-        <div className={styles.settingsGrid}>
+        <div className={shellStyles.settingsGrid}>
           <SettingInput
             label="Demo label"
             value={s.demoLabel}
             onChange={(demoLabel) => onChange({ ...s, demoLabel } as ControlSettings)}
           />
-          <div className={styles.settingsFullWidth}>
+          <div className={shellStyles.settingsFullWidth}>
             <SettingTextarea
               label="Tooltip content"
               value={s.content}
@@ -767,7 +767,7 @@ export function ControlSettingsPanel({ slug, settings, onChange }: ControlSettin
     case "dialog": {
       const s = settings as ControlSettingsBySlug["dialog"];
       return (
-        <div className={styles.settingsGrid}>
+        <div className={shellStyles.settingsGrid}>
           <SettingToggle
             label="Dialog open"
             checked={s.open}
@@ -820,14 +820,14 @@ export function ControlSettingsPanel({ slug, settings, onChange }: ControlSettin
               { label: "Info", value: "info" },
             ]}
           />
-          <div className={styles.settingsFullWidth}>
+          <div className={shellStyles.settingsFullWidth}>
             <SettingInput
               label="Title"
               value={s.title}
               onChange={(title) => onChange({ ...s, title } as ControlSettings)}
             />
           </div>
-          <div className={styles.settingsFullWidth}>
+          <div className={shellStyles.settingsFullWidth}>
             <SettingTextarea
               label="Description"
               value={s.description}
@@ -840,7 +840,7 @@ export function ControlSettingsPanel({ slug, settings, onChange }: ControlSettin
     case "drawer": {
       const s = settings as ControlSettingsBySlug["drawer"];
       return (
-        <div className={styles.settingsGrid}>
+        <div className={shellStyles.settingsGrid}>
           <SettingToggle
             label="Drawer open"
             checked={s.open}
@@ -894,14 +894,14 @@ export function ControlSettingsPanel({ slug, settings, onChange }: ControlSettin
               { label: "Bottom", value: "bottom" },
             ]}
           />
-          <div className={styles.settingsFullWidth}>
+          <div className={shellStyles.settingsFullWidth}>
             <SettingInput
               label="Title"
               value={s.title}
               onChange={(title) => onChange({ ...s, title } as ControlSettings)}
             />
           </div>
-          <div className={styles.settingsFullWidth}>
+          <div className={shellStyles.settingsFullWidth}>
             <SettingTextarea
               label="Description"
               value={s.description}
@@ -909,7 +909,7 @@ export function ControlSettingsPanel({ slug, settings, onChange }: ControlSettin
             />
           </div>
           {s.contentType === "html" ? (
-            <div className={styles.settingsFullWidth}>
+            <div className={shellStyles.settingsFullWidth}>
               <SettingTextarea
                 label="Content"
                 value={s.content}
@@ -923,7 +923,7 @@ export function ControlSettingsPanel({ slug, settings, onChange }: ControlSettin
     case "dropdown-menu": {
       const s = settings as ControlSettingsBySlug["dropdown-menu"];
       return (
-        <div className={styles.settingsGrid}>
+        <div className={shellStyles.settingsGrid}>
           <SettingToggle
             label="Menu open"
             checked={s.open}
@@ -955,8 +955,8 @@ export function ControlSettingsPanel({ slug, settings, onChange }: ControlSettin
             checked={s.showIcons}
             onChange={(showIcons) => onChange({ ...s, showIcons } as ControlSettings)}
           />
-          <div className={styles.settingsFullWidth}>
-            <p className={styles.settingsHint}>
+          <div className={shellStyles.settingsFullWidth}>
+            <p className={shellStyles.settingsHint}>
               The icon column appears only when at least one item includes an icon or checked state.
             </p>
           </div>
@@ -991,7 +991,7 @@ export function ControlSettingsPanel({ slug, settings, onChange }: ControlSettin
     case "context-menu": {
       const s = settings as ControlSettingsBySlug["context-menu"];
       return (
-        <div className={styles.settingsGrid}>
+        <div className={shellStyles.settingsGrid}>
           <SettingInput
             label="Target label"
             value={s.targetLabel}
@@ -1028,8 +1028,8 @@ export function ControlSettingsPanel({ slug, settings, onChange }: ControlSettin
             checked={s.showIcons}
             onChange={(showIcons) => onChange({ ...s, showIcons } as ControlSettings)}
           />
-          <div className={styles.settingsFullWidth}>
-            <p className={styles.settingsHint}>
+          <div className={shellStyles.settingsFullWidth}>
+            <p className={shellStyles.settingsHint}>
               The icon column appears only when at least one item includes an icon or checked state.
             </p>
           </div>
@@ -1051,7 +1051,7 @@ export function ControlSettingsPanel({ slug, settings, onChange }: ControlSettin
     case "command-palette": {
       const s = settings as ControlSettingsBySlug["command-palette"];
       return (
-        <div className={styles.settingsGrid}>
+        <div className={shellStyles.settingsGrid}>
           <SettingToggle
             label="Palette open"
             checked={s.open}
@@ -1100,14 +1100,14 @@ export function ControlSettingsPanel({ slug, settings, onChange }: ControlSettin
               onChange({ ...s, showEmptyResults } as ControlSettings)
             }
           />
-          <div className={styles.settingsFullWidth}>
+          <div className={shellStyles.settingsFullWidth}>
             <SettingInput
               label="Placeholder"
               value={s.placeholder}
               onChange={(placeholder) => onChange({ ...s, placeholder } as ControlSettings)}
             />
           </div>
-          <div className={styles.settingsFullWidth}>
+          <div className={shellStyles.settingsFullWidth}>
             <SettingInput
               label="Empty message"
               value={s.emptyMessage}
@@ -1120,7 +1120,7 @@ export function ControlSettingsPanel({ slug, settings, onChange }: ControlSettin
     case "modal": {
       const s = settings as ControlSettingsBySlug["modal"];
       return (
-        <div className={styles.settingsGrid}>
+        <div className={shellStyles.settingsGrid}>
           <SettingToggle
             label="Modal open"
             checked={s.open}
@@ -1174,14 +1174,14 @@ export function ControlSettingsPanel({ slug, settings, onChange }: ControlSettin
               { label: "Fullscreen", value: "fullscreen" },
             ]}
           />
-          <div className={styles.settingsFullWidth}>
+          <div className={shellStyles.settingsFullWidth}>
             <SettingInput
               label="Title"
               value={s.title}
               onChange={(title) => onChange({ ...s, title } as ControlSettings)}
             />
           </div>
-          <div className={styles.settingsFullWidth}>
+          <div className={shellStyles.settingsFullWidth}>
             <SettingTextarea
               label="Description"
               value={s.description}
@@ -1189,7 +1189,7 @@ export function ControlSettingsPanel({ slug, settings, onChange }: ControlSettin
             />
           </div>
           {s.contentType === "html" ? (
-            <div className={styles.settingsFullWidth}>
+            <div className={shellStyles.settingsFullWidth}>
               <SettingTextarea
                 label="Content"
                 value={s.content}
@@ -1203,7 +1203,7 @@ export function ControlSettingsPanel({ slug, settings, onChange }: ControlSettin
     case "popover": {
       const s = settings as ControlSettingsBySlug["popover"];
       return (
-        <div className={styles.settingsGrid}>
+        <div className={shellStyles.settingsGrid}>
           <SettingToggle
             label="Popover open"
             checked={s.open}
@@ -1252,7 +1252,7 @@ export function ControlSettingsPanel({ slug, settings, onChange }: ControlSettin
               { label: "Left", value: "left" },
             ]}
           />
-          <div className={styles.settingsFullWidth}>
+          <div className={shellStyles.settingsFullWidth}>
             <SettingInput
               label="Title"
               value={s.title}
@@ -1260,7 +1260,7 @@ export function ControlSettingsPanel({ slug, settings, onChange }: ControlSettin
             />
           </div>
           {s.contentType === "html" ? (
-            <div className={styles.settingsFullWidth}>
+            <div className={shellStyles.settingsFullWidth}>
               <SettingTextarea
                 label="Content"
                 value={s.content}
@@ -1274,7 +1274,7 @@ export function ControlSettingsPanel({ slug, settings, onChange }: ControlSettin
     case "alert": {
       const s = settings as ControlSettingsBySlug["alert"];
       return (
-        <div className={styles.settingsGrid}>
+        <div className={shellStyles.settingsGrid}>
           <SettingToggle
             label="Show alert"
             checked={s.visible}
@@ -1303,14 +1303,14 @@ export function ControlSettingsPanel({ slug, settings, onChange }: ControlSettin
             checked={s.iconFlagged}
             onChange={(iconFlagged) => onChange({ ...s, iconFlagged } as ControlSettings)}
           />
-          <div className={styles.settingsFullWidth}>
+          <div className={shellStyles.settingsFullWidth}>
             <SettingInput
               label="Title"
               value={s.title}
               onChange={(title) => onChange({ ...s, title } as ControlSettings)}
             />
           </div>
-          <div className={styles.settingsFullWidth}>
+          <div className={shellStyles.settingsFullWidth}>
             <SettingTextarea
               label="Description"
               value={s.description}
@@ -1323,7 +1323,7 @@ export function ControlSettingsPanel({ slug, settings, onChange }: ControlSettin
     case "toast": {
       const s = settings as ControlSettingsBySlug["toast"];
       return (
-        <div className={styles.settingsGrid}>
+        <div className={shellStyles.settingsGrid}>
           <SettingSelect
             label="Vertical position"
             value={s.positionVertical}
@@ -1381,7 +1381,7 @@ export function ControlSettingsPanel({ slug, settings, onChange }: ControlSettin
               onChange({ ...s, descriptionEnabled } as ControlSettings)
             }
           />
-          <div className={styles.settingsFullWidth}>
+          <div className={shellStyles.settingsFullWidth}>
             <SettingInput
               label="Title"
               value={s.title}
@@ -1389,7 +1389,7 @@ export function ControlSettingsPanel({ slug, settings, onChange }: ControlSettin
             />
           </div>
           {s.descriptionEnabled ? (
-            <div className={styles.settingsFullWidth}>
+            <div className={shellStyles.settingsFullWidth}>
               <SettingTextarea
                 label="Description"
                 value={s.description}
@@ -1403,7 +1403,7 @@ export function ControlSettingsPanel({ slug, settings, onChange }: ControlSettin
     case "card": {
       const s = settings as ControlSettingsBySlug["card"];
       return (
-        <div className={styles.settingsGrid}>
+        <div className={shellStyles.settingsGrid}>
           <SettingSelect
             label="Tone"
             value={s.tone}
@@ -1443,14 +1443,14 @@ export function ControlSettingsPanel({ slug, settings, onChange }: ControlSettin
             value={s.eyebrow}
             onChange={(eyebrow) => onChange({ ...s, eyebrow } as ControlSettings)}
           />
-          <div className={styles.settingsFullWidth}>
+          <div className={shellStyles.settingsFullWidth}>
             <SettingInput
               label="Title"
               value={s.title}
               onChange={(title) => onChange({ ...s, title } as ControlSettings)}
             />
           </div>
-          <div className={styles.settingsFullWidth}>
+          <div className={shellStyles.settingsFullWidth}>
             <SettingTextarea
               label="Content"
               value={s.content}
@@ -1464,12 +1464,12 @@ export function ControlSettingsPanel({ slug, settings, onChange }: ControlSettin
     case "stat-card": {
       const s = settings as ControlSettingsBySlug["stat-card"];
       return (
-        <div className={styles.settingsGrid}>
+        <div className={shellStyles.settingsGrid}>
           <DashboardPreviewLayoutSetting
             value={s.previewLayout}
             onChange={(previewLayout) => onChange({ ...s, previewLayout } as ControlSettings)}
           />
-          <div className={styles.settingsFullWidth}>
+          <div className={shellStyles.settingsFullWidth}>
             <IconPicker
               id="opus-setting-stat-card-icon"
               label="Icon"
@@ -1508,14 +1508,14 @@ export function ControlSettingsPanel({ slug, settings, onChange }: ControlSettin
               ]}
             />
           ) : null}
-          <div className={styles.settingsFullWidth}>
+          <div className={shellStyles.settingsFullWidth}>
             <SettingInput
               label="Label"
               value={s.label}
               onChange={(label) => onChange({ ...s, label } as ControlSettings)}
             />
           </div>
-          <div className={styles.settingsFullWidth}>
+          <div className={shellStyles.settingsFullWidth}>
             <SettingInput
               label="Value"
               value={s.value}
@@ -1523,7 +1523,7 @@ export function ControlSettingsPanel({ slug, settings, onChange }: ControlSettin
             />
           </div>
           {s.showChange ? (
-            <div className={styles.settingsFullWidth}>
+            <div className={shellStyles.settingsFullWidth}>
               <SettingInput
                 label="Change"
                 value={s.change}
@@ -1538,7 +1538,7 @@ export function ControlSettingsPanel({ slug, settings, onChange }: ControlSettin
     {
       const s = settings as ControlSettingsBySlug["gauge"];
       return (
-        <div className={styles.settingsGrid}>
+        <div className={shellStyles.settingsGrid}>
           <DashboardPreviewLayoutSetting
             value={s.previewLayout}
             onChange={(previewLayout) => onChange({ ...s, previewLayout } as ControlSettings)}
@@ -1633,28 +1633,28 @@ export function ControlSettingsPanel({ slug, settings, onChange }: ControlSettin
               { label: "Down", value: "down" },
             ]}
           />
-          <div className={styles.settingsFullWidth}>
+          <div className={shellStyles.settingsFullWidth}>
             <SettingInput
               label="Title"
               value={s.title}
               onChange={(title) => onChange({ ...s, title } as ControlSettings)}
             />
           </div>
-          <div className={styles.settingsFullWidth}>
+          <div className={shellStyles.settingsFullWidth}>
             <SettingInput
               label="Subtitle"
               value={s.subtitle}
               onChange={(subtitle) => onChange({ ...s, subtitle } as ControlSettings)}
             />
           </div>
-          <div className={styles.settingsFullWidth}>
+          <div className={shellStyles.settingsFullWidth}>
             <SettingInput
               label="Change"
               value={s.change}
               onChange={(change) => onChange({ ...s, change } as ControlSettings)}
             />
           </div>
-          <div className={styles.settingsFullWidth}>
+          <div className={shellStyles.settingsFullWidth}>
             <SettingTextarea
               label="Summary"
               value={s.summary}
@@ -1667,7 +1667,7 @@ export function ControlSettingsPanel({ slug, settings, onChange }: ControlSettin
     case "sparkline": {
       const s = settings as ControlSettingsBySlug["sparkline"];
       return (
-        <div className={styles.settingsGrid}>
+        <div className={shellStyles.settingsGrid}>
           <DashboardPreviewLayoutSetting
             value={s.previewLayout}
             onChange={(previewLayout) => onChange({ ...s, previewLayout } as ControlSettings)}
@@ -1683,7 +1683,7 @@ export function ControlSettingsPanel({ slug, settings, onChange }: ControlSettin
               { label: "Mono", value: "mono" },
             ]}
           />
-          <div className={styles.settingsFullWidth}>
+          <div className={shellStyles.settingsFullWidth}>
             <SettingInput label="Label" value={s.label} onChange={(label) => onChange({ ...s, label } as ControlSettings)} />
           </div>
         </div>
@@ -1694,7 +1694,7 @@ export function ControlSettingsPanel({ slug, settings, onChange }: ControlSettin
     case "speedometer": {
       const s = settings as ControlSettingsBySlug["progress-ring"];
       return (
-        <div className={styles.settingsGrid}>
+        <div className={shellStyles.settingsGrid}>
           <DashboardPreviewLayoutSetting
             value={s.previewLayout}
             onChange={(previewLayout) => onChange({ ...s, previewLayout } as ControlSettings)}
@@ -1711,7 +1711,7 @@ export function ControlSettingsPanel({ slug, settings, onChange }: ControlSettin
             value={String(s.max)}
             onChange={(max) => onChange({ ...s, max: Number(max) || 100 } as ControlSettings)}
           />
-          <div className={styles.settingsFullWidth}>
+          <div className={shellStyles.settingsFullWidth}>
             <SettingInput label="Label" value={s.label} onChange={(label) => onChange({ ...s, label } as ControlSettings)} />
           </div>
         </div>
@@ -1720,12 +1720,12 @@ export function ControlSettingsPanel({ slug, settings, onChange }: ControlSettin
     case "metric-tile": {
       const s = settings as ControlSettingsBySlug["metric-tile"];
       return (
-        <div className={styles.settingsGrid}>
+        <div className={shellStyles.settingsGrid}>
           <DashboardPreviewLayoutSetting
             value={s.previewLayout}
             onChange={(previewLayout) => onChange({ ...s, previewLayout } as ControlSettings)}
           />
-          <div className={styles.settingsFullWidth}>
+          <div className={shellStyles.settingsFullWidth}>
             <IconPicker
               id="opus-setting-metric-tile-icon"
               label="Icon"
@@ -1740,10 +1740,10 @@ export function ControlSettingsPanel({ slug, settings, onChange }: ControlSettin
             checked={s.showSparkline}
             onChange={(showSparkline) => onChange({ ...s, showSparkline } as ControlSettings)}
           />
-          <div className={styles.settingsFullWidth}>
+          <div className={shellStyles.settingsFullWidth}>
             <SettingInput label="Label" value={s.label} onChange={(label) => onChange({ ...s, label } as ControlSettings)} />
           </div>
-          <div className={styles.settingsFullWidth}>
+          <div className={shellStyles.settingsFullWidth}>
             <SettingInput label="Value" value={s.value} onChange={(value) => onChange({ ...s, value } as ControlSettings)} />
           </div>
         </div>
@@ -1752,7 +1752,7 @@ export function ControlSettingsPanel({ slug, settings, onChange }: ControlSettin
     case "status-indicator": {
       const s = settings as ControlSettingsBySlug["status-indicator"];
       return (
-        <div className={styles.settingsGrid}>
+        <div className={shellStyles.settingsGrid}>
           <DashboardPreviewLayoutSetting
             value={s.previewLayout}
             onChange={(previewLayout) => onChange({ ...s, previewLayout } as ControlSettings)}
@@ -1768,7 +1768,7 @@ export function ControlSettingsPanel({ slug, settings, onChange }: ControlSettin
               { label: "Neutral", value: "neutral" },
             ]}
           />
-          <div className={styles.settingsFullWidth}>
+          <div className={shellStyles.settingsFullWidth}>
             <SettingInput label="Label" value={s.label} onChange={(label) => onChange({ ...s, label } as ControlSettings)} />
           </div>
         </div>
@@ -1777,7 +1777,7 @@ export function ControlSettingsPanel({ slug, settings, onChange }: ControlSettin
     case "trend-badge": {
       const s = settings as ControlSettingsBySlug["trend-badge"];
       return (
-        <div className={styles.settingsGrid}>
+        <div className={shellStyles.settingsGrid}>
           <DashboardPreviewLayoutSetting
             value={s.previewLayout}
             onChange={(previewLayout) => onChange({ ...s, previewLayout } as ControlSettings)}
@@ -1791,7 +1791,7 @@ export function ControlSettingsPanel({ slug, settings, onChange }: ControlSettin
               { label: "Down", value: "down" },
             ]}
           />
-          <div className={styles.settingsFullWidth}>
+          <div className={shellStyles.settingsFullWidth}>
             <SettingInput label="Value" value={s.value} onChange={(value) => onChange({ ...s, value } as ControlSettings)} />
           </div>
         </div>
@@ -1800,7 +1800,7 @@ export function ControlSettingsPanel({ slug, settings, onChange }: ControlSettin
     case "panel": {
       const s = settings as ControlSettingsBySlug["panel"];
       return (
-        <div className={styles.settingsGrid}>
+        <div className={shellStyles.settingsGrid}>
           <SettingSelect
             label="Tone"
             value={s.tone}
@@ -1830,28 +1830,28 @@ export function ControlSettingsPanel({ slug, settings, onChange }: ControlSettin
             checked={s.divided}
             onChange={(divided) => onChange({ ...s, divided } as ControlSettings)}
           />
-          <div className={styles.settingsFullWidth}>
+          <div className={shellStyles.settingsFullWidth}>
             <SettingInput
               label="Title"
               value={s.title}
               onChange={(title) => onChange({ ...s, title } as ControlSettings)}
             />
           </div>
-          <div className={styles.settingsFullWidth}>
+          <div className={shellStyles.settingsFullWidth}>
             <SettingTextarea
               label="Description"
               value={s.description}
               onChange={(description) => onChange({ ...s, description } as ControlSettings)}
             />
           </div>
-          <div className={styles.settingsFullWidth}>
+          <div className={shellStyles.settingsFullWidth}>
             <SettingTextarea
               label="Content"
               value={s.content}
               onChange={(content) => onChange({ ...s, content } as ControlSettings)}
             />
           </div>
-          <div className={styles.settingsFullWidth}>
+          <div className={shellStyles.settingsFullWidth}>
             <SettingTextarea
               label="Footer"
               value={s.footer}
@@ -1865,7 +1865,7 @@ export function ControlSettingsPanel({ slug, settings, onChange }: ControlSettin
       const s = settings as ControlSettingsBySlug["section"];
 
       return (
-        <div className={styles.settingsGrid}>
+        <div className={shellStyles.settingsGrid}>
           <SettingSelect
             label="Sidebar"
             value={s.sidebar}
@@ -1924,70 +1924,70 @@ export function ControlSettingsPanel({ slug, settings, onChange }: ControlSettin
               { label: "2:3", value: "2:3" },
             ]}
           />
-          <div className={styles.settingsFullWidth}>
+          <div className={shellStyles.settingsFullWidth}>
             <SettingInput
               label="Title"
               value={s.title}
               onChange={(title) => onChange({ ...s, title } as ControlSettings)}
             />
           </div>
-          <div className={styles.settingsFullWidth}>
+          <div className={shellStyles.settingsFullWidth}>
             <SettingTextarea
               label="Description"
               value={s.description}
               onChange={(description) => onChange({ ...s, description } as ControlSettings)}
             />
           </div>
-          <div className={styles.settingsFullWidth}>
+          <div className={shellStyles.settingsFullWidth}>
             <SettingInput
               label="Sidebar title"
               value={s.sidebarTitle}
               onChange={(sidebarTitle) => onChange({ ...s, sidebarTitle } as ControlSettings)}
             />
           </div>
-          <div className={styles.settingsFullWidth}>
+          <div className={shellStyles.settingsFullWidth}>
             <SettingTextarea
               label="Sidebar content"
               value={s.sidebarContent}
               onChange={(sidebarContent) => onChange({ ...s, sidebarContent } as ControlSettings)}
             />
           </div>
-          <div className={styles.settingsFullWidth}>
+          <div className={shellStyles.settingsFullWidth}>
             <SettingInput
               label="Column 1 title"
               value={s.columnOneTitle}
               onChange={(columnOneTitle) => onChange({ ...s, columnOneTitle } as ControlSettings)}
             />
           </div>
-          <div className={styles.settingsFullWidth}>
+          <div className={shellStyles.settingsFullWidth}>
             <SettingTextarea
               label="Column 1 content"
               value={s.columnOneContent}
               onChange={(columnOneContent) => onChange({ ...s, columnOneContent } as ControlSettings)}
             />
           </div>
-          <div className={styles.settingsFullWidth}>
+          <div className={shellStyles.settingsFullWidth}>
             <SettingInput
               label="Column 2 title"
               value={s.columnTwoTitle}
               onChange={(columnTwoTitle) => onChange({ ...s, columnTwoTitle } as ControlSettings)}
             />
           </div>
-          <div className={styles.settingsFullWidth}>
+          <div className={shellStyles.settingsFullWidth}>
             <SettingTextarea
               label="Column 2 content"
               value={s.columnTwoContent}
               onChange={(columnTwoContent) => onChange({ ...s, columnTwoContent } as ControlSettings)}
             />
           </div>
-          <div className={styles.settingsFullWidth}>
+          <div className={shellStyles.settingsFullWidth}>
             <SettingInput
               label="Column 3 title"
               value={s.columnThreeTitle}
               onChange={(columnThreeTitle) => onChange({ ...s, columnThreeTitle } as ControlSettings)}
             />
           </div>
-          <div className={styles.settingsFullWidth}>
+          <div className={shellStyles.settingsFullWidth}>
             <SettingTextarea
               label="Column 3 content"
               value={s.columnThreeContent}
@@ -1996,14 +1996,14 @@ export function ControlSettingsPanel({ slug, settings, onChange }: ControlSettin
               }
             />
           </div>
-          <div className={styles.settingsFullWidth}>
+          <div className={shellStyles.settingsFullWidth}>
             <SettingInput
               label="Column 4 title"
               value={s.columnFourTitle}
               onChange={(columnFourTitle) => onChange({ ...s, columnFourTitle } as ControlSettings)}
             />
           </div>
-          <div className={styles.settingsFullWidth}>
+          <div className={shellStyles.settingsFullWidth}>
             <SettingTextarea
               label="Column 4 content"
               value={s.columnFourContent}
@@ -2012,14 +2012,14 @@ export function ControlSettingsPanel({ slug, settings, onChange }: ControlSettin
               }
             />
           </div>
-          <div className={styles.settingsFullWidth}>
+          <div className={shellStyles.settingsFullWidth}>
             <SettingInput
               label="Column 5 title"
               value={s.columnFiveTitle}
               onChange={(columnFiveTitle) => onChange({ ...s, columnFiveTitle } as ControlSettings)}
             />
           </div>
-          <div className={styles.settingsFullWidth}>
+          <div className={shellStyles.settingsFullWidth}>
             <SettingTextarea
               label="Column 5 content"
               value={s.columnFiveContent}
@@ -2034,7 +2034,7 @@ export function ControlSettingsPanel({ slug, settings, onChange }: ControlSettin
     case "table": {
       const s = settings as ControlSettingsBySlug["table"];
       return (
-        <div className={styles.settingsGrid}>
+        <div className={shellStyles.settingsGrid}>
           <SettingSelect
             label="Density"
             value={s.density}
@@ -2071,7 +2071,7 @@ export function ControlSettingsPanel({ slug, settings, onChange }: ControlSettin
             checked={s.numericColumn}
             onChange={(numericColumn) => onChange({ ...s, numericColumn } as ControlSettings)}
           />
-          <div className={styles.settingsFullWidth}>
+          <div className={shellStyles.settingsFullWidth}>
             <SettingInput
               label="Caption"
               value={s.caption}
@@ -2084,7 +2084,7 @@ export function ControlSettingsPanel({ slug, settings, onChange }: ControlSettin
     case "data-grid": {
       const s = settings as ControlSettingsBySlug["data-grid"];
       return (
-        <div className={styles.settingsGrid}>
+        <div className={shellStyles.settingsGrid}>
           <SettingSelect
             label="Density"
             value={s.density}
@@ -2159,7 +2159,7 @@ export function ControlSettingsPanel({ slug, settings, onChange }: ControlSettin
             checked={s.numericColumns}
             onChange={(numericColumns) => onChange({ ...s, numericColumns } as ControlSettings)}
           />
-          <div className={styles.settingsFullWidth}>
+          <div className={shellStyles.settingsFullWidth}>
             <SettingInput
               label="Caption"
               value={s.caption}
@@ -2172,7 +2172,7 @@ export function ControlSettingsPanel({ slug, settings, onChange }: ControlSettin
     case "skeleton": {
       const s = settings as ControlSettingsBySlug["skeleton"];
       return (
-        <div className={styles.settingsGrid}>
+        <div className={shellStyles.settingsGrid}>
           <SettingSelect
             label="Variant"
             value={s.variant}
@@ -2215,7 +2215,7 @@ export function ControlSettingsPanel({ slug, settings, onChange }: ControlSettin
     case "carousel": {
       const s = settings as ControlSettingsBySlug["carousel"];
       return (
-        <div className={styles.settingsGrid}>
+        <div className={shellStyles.settingsGrid}>
           <SettingInput
             label="Start image"
             type="number"
@@ -2248,7 +2248,7 @@ export function ControlSettingsPanel({ slug, settings, onChange }: ControlSettin
     case "lightbox": {
       const s = settings as ControlSettingsBySlug["lightbox"];
       return (
-        <div className={styles.settingsGrid}>
+        <div className={shellStyles.settingsGrid}>
           <SettingToggle
             label="Captions"
             checked={s.showCaptions}
@@ -2274,7 +2274,7 @@ export function ControlSettingsPanel({ slug, settings, onChange }: ControlSettin
     case "image-thumbnail": {
       const s = settings as ControlSettingsBySlug["image-thumbnail"];
       return (
-        <div className={styles.settingsGrid}>
+        <div className={shellStyles.settingsGrid}>
           <SettingSelect
             label="Size"
             value={s.size}
@@ -2305,7 +2305,7 @@ export function ControlSettingsPanel({ slug, settings, onChange }: ControlSettin
     case "image-gallery": {
       const s = settings as ControlSettingsBySlug["image-gallery"];
       return (
-        <div className={styles.settingsGrid}>
+        <div className={shellStyles.settingsGrid}>
           <SettingSelect
             label="Columns"
             value={String(s.columns)}
@@ -2344,7 +2344,7 @@ export function ControlSettingsPanel({ slug, settings, onChange }: ControlSettin
     case "model-viewer": {
       const s = settings as ControlSettingsBySlug["model-viewer"];
       return (
-        <div className={styles.settingsGrid}>
+        <div className={shellStyles.settingsGrid}>
           <SettingToggle
             label="Auto rotate"
             checked={s.autoRotate}
@@ -2366,7 +2366,7 @@ export function ControlSettingsPanel({ slug, settings, onChange }: ControlSettin
     case "model-lightbox": {
       const s = settings as ControlSettingsBySlug["model-lightbox"];
       return (
-        <div className={styles.settingsGrid}>
+        <div className={shellStyles.settingsGrid}>
           <SettingToggle
             label="Caption"
             checked={s.showCaption}
@@ -2386,7 +2386,7 @@ export function ControlSettingsPanel({ slug, settings, onChange }: ControlSettin
               onChange({ ...s, dismissOnEscape } as ControlSettings)
             }
           />
-          <div className={styles.settingsFullWidth}>
+          <div className={shellStyles.settingsFullWidth}>
             <SettingInput
               label="Trigger label"
               value={s.triggerLabel}
@@ -2399,7 +2399,7 @@ export function ControlSettingsPanel({ slug, settings, onChange }: ControlSettin
     case "model-thumbnail": {
       const s = settings as ControlSettingsBySlug["model-thumbnail"];
       return (
-        <div className={styles.settingsGrid}>
+        <div className={shellStyles.settingsGrid}>
           <SettingSelect
             label="Size"
             value={s.size}
@@ -2430,7 +2430,7 @@ export function ControlSettingsPanel({ slug, settings, onChange }: ControlSettin
     case "model-gallery": {
       const s = settings as ControlSettingsBySlug["model-gallery"];
       return (
-        <div className={styles.settingsGrid}>
+        <div className={shellStyles.settingsGrid}>
           <SettingSelect
             label="Columns"
             value={String(s.columns)}
@@ -2469,7 +2469,7 @@ export function ControlSettingsPanel({ slug, settings, onChange }: ControlSettin
     case "tabs": {
       const s = settings as ControlSettingsBySlug["tabs"];
       return (
-        <div className={styles.settingsGrid}>
+        <div className={shellStyles.settingsGrid}>
           <SettingSelect
             label="Active tab"
             value={s.activeValue}
@@ -2525,7 +2525,7 @@ export function ControlSettingsPanel({ slug, settings, onChange }: ControlSettin
     case "accordion": {
       const s = settings as ControlSettingsBySlug["accordion"];
       return (
-        <div className={styles.settingsGrid}>
+        <div className={shellStyles.settingsGrid}>
           <SettingToggle
             label="Open by default"
             checked={s.defaultOpen}
@@ -2536,14 +2536,14 @@ export function ControlSettingsPanel({ slug, settings, onChange }: ControlSettin
             checked={s.disabled}
             onChange={(disabled) => onChange({ ...s, disabled } as ControlSettings)}
           />
-          <div className={styles.settingsFullWidth}>
+          <div className={shellStyles.settingsFullWidth}>
             <SettingInput
               label="Title"
               value={s.title}
               onChange={(title) => onChange({ ...s, title } as ControlSettings)}
             />
           </div>
-          <div className={styles.settingsFullWidth}>
+          <div className={shellStyles.settingsFullWidth}>
             <SettingTextarea
               label="Content"
               value={s.content}
@@ -2556,7 +2556,7 @@ export function ControlSettingsPanel({ slug, settings, onChange }: ControlSettin
     case "accordion-group": {
       const s = settings as ControlSettingsBySlug["accordion-group"];
       return (
-        <div className={styles.settingsGrid}>
+        <div className={shellStyles.settingsGrid}>
           <SettingSelect
             label="Expand mode"
             value={s.type}
@@ -2578,42 +2578,42 @@ export function ControlSettingsPanel({ slug, settings, onChange }: ControlSettin
               onChange({ ...s, defaultOpenFirst } as ControlSettings)
             }
           />
-          <div className={styles.settingsFullWidth}>
+          <div className={shellStyles.settingsFullWidth}>
             <SettingInput
               label="Item 1 title"
               value={s.itemOneTitle}
               onChange={(itemOneTitle) => onChange({ ...s, itemOneTitle } as ControlSettings)}
             />
           </div>
-          <div className={styles.settingsFullWidth}>
+          <div className={shellStyles.settingsFullWidth}>
             <SettingTextarea
               label="Item 1 content"
               value={s.itemOneContent}
               onChange={(itemOneContent) => onChange({ ...s, itemOneContent } as ControlSettings)}
             />
           </div>
-          <div className={styles.settingsFullWidth}>
+          <div className={shellStyles.settingsFullWidth}>
             <SettingInput
               label="Item 2 title"
               value={s.itemTwoTitle}
               onChange={(itemTwoTitle) => onChange({ ...s, itemTwoTitle } as ControlSettings)}
             />
           </div>
-          <div className={styles.settingsFullWidth}>
+          <div className={shellStyles.settingsFullWidth}>
             <SettingTextarea
               label="Item 2 content"
               value={s.itemTwoContent}
               onChange={(itemTwoContent) => onChange({ ...s, itemTwoContent } as ControlSettings)}
             />
           </div>
-          <div className={styles.settingsFullWidth}>
+          <div className={shellStyles.settingsFullWidth}>
             <SettingInput
               label="Item 3 title"
               value={s.itemThreeTitle}
               onChange={(itemThreeTitle) => onChange({ ...s, itemThreeTitle } as ControlSettings)}
             />
           </div>
-          <div className={styles.settingsFullWidth}>
+          <div className={shellStyles.settingsFullWidth}>
             <SettingTextarea
               label="Item 3 content"
               value={s.itemThreeContent}
@@ -2628,7 +2628,7 @@ export function ControlSettingsPanel({ slug, settings, onChange }: ControlSettin
     case "show-more": {
       const s = settings as ControlSettingsBySlug["show-more"];
       return (
-        <div className={styles.settingsGrid}>
+        <div className={shellStyles.settingsGrid}>
           <SettingToggle
             label="Expanded by default"
             checked={s.defaultExpanded}
@@ -2652,7 +2652,7 @@ export function ControlSettingsPanel({ slug, settings, onChange }: ControlSettin
             value={s.showLessLabel}
             onChange={(showLessLabel) => onChange({ ...s, showLessLabel } as ControlSettings)}
           />
-          <div className={styles.settingsFullWidth}>
+          <div className={shellStyles.settingsFullWidth}>
             <SettingTextarea
               label="Content"
               value={s.content}
@@ -2665,7 +2665,7 @@ export function ControlSettingsPanel({ slug, settings, onChange }: ControlSettin
     case "empty-state": {
       const s = settings as ControlSettingsBySlug["empty-state"];
       return (
-        <div className={styles.settingsGrid}>
+        <div className={shellStyles.settingsGrid}>
           <SettingSelect
             label="Density"
             value={s.density}
@@ -2683,7 +2683,7 @@ export function ControlSettingsPanel({ slug, settings, onChange }: ControlSettin
             onChange={(showIcon) => onChange({ ...s, showIcon } as ControlSettings)}
           />
           {s.showIcon ? (
-            <div className={styles.settingsFullWidth}>
+            <div className={shellStyles.settingsFullWidth}>
               <IconPicker
                 id="opus-setting-empty-state-icon"
                 label="Icon"
@@ -2704,14 +2704,14 @@ export function ControlSettingsPanel({ slug, settings, onChange }: ControlSettin
             checked={s.secondaryAction}
             onChange={(secondaryAction) => onChange({ ...s, secondaryAction } as ControlSettings)}
           />
-          <div className={styles.settingsFullWidth}>
+          <div className={shellStyles.settingsFullWidth}>
             <SettingInput
               label="Title"
               value={s.title}
               onChange={(title) => onChange({ ...s, title } as ControlSettings)}
             />
           </div>
-          <div className={styles.settingsFullWidth}>
+          <div className={shellStyles.settingsFullWidth}>
             <SettingTextarea
               label="Description"
               value={s.description}
@@ -2742,7 +2742,7 @@ export function ControlSettingsPanel({ slug, settings, onChange }: ControlSettin
     case "sidebar": {
       const s = settings as ControlSettingsBySlug["sidebar"];
       return (
-        <div className={styles.settingsGrid}>
+        <div className={shellStyles.settingsGrid}>
           <SettingSelect
             label="Side"
             value={s.side}
@@ -2796,7 +2796,7 @@ export function ControlSettingsPanel({ slug, settings, onChange }: ControlSettin
             onChange={(groupOpen) => onChange({ ...s, groupOpen } as ControlSettings)}
           />
           {s.showHeader ? (
-            <div className={styles.settingsFullWidth}>
+            <div className={shellStyles.settingsFullWidth}>
               <SettingInput
                 label="Header title"
                 value={s.headerTitle}
@@ -2805,7 +2805,7 @@ export function ControlSettingsPanel({ slug, settings, onChange }: ControlSettin
             </div>
           ) : null}
           {s.showFooter ? (
-            <div className={styles.settingsFullWidth}>
+            <div className={shellStyles.settingsFullWidth}>
               <SettingInput
                 label="Footer text"
                 value={s.footerText}
@@ -2819,7 +2819,7 @@ export function ControlSettingsPanel({ slug, settings, onChange }: ControlSettin
     case "mega-menu": {
       const s = settings as ControlSettingsBySlug["mega-menu"];
       return (
-        <div className={styles.settingsGrid}>
+        <div className={shellStyles.settingsGrid}>
           <SettingSelect
             label="Columns"
             value={String(s.columnCount)}
@@ -2871,7 +2871,7 @@ export function ControlSettingsPanel({ slug, settings, onChange }: ControlSettin
           />
           {s.featured ? (
             <>
-              <div className={styles.settingsFullWidth}>
+              <div className={shellStyles.settingsFullWidth}>
                 <SettingInput
                   label="Featured eyebrow"
                   value={s.featuredEyebrow}
@@ -2880,7 +2880,7 @@ export function ControlSettingsPanel({ slug, settings, onChange }: ControlSettin
                   }
                 />
               </div>
-              <div className={styles.settingsFullWidth}>
+              <div className={shellStyles.settingsFullWidth}>
                 <SettingInput
                   label="Featured title"
                   value={s.featuredTitle}
@@ -2889,7 +2889,7 @@ export function ControlSettingsPanel({ slug, settings, onChange }: ControlSettin
                   }
                 />
               </div>
-              <div className={styles.settingsFullWidth}>
+              <div className={shellStyles.settingsFullWidth}>
                 <SettingTextarea
                   label="Featured description"
                   value={s.featuredDescription}
@@ -2898,7 +2898,7 @@ export function ControlSettingsPanel({ slug, settings, onChange }: ControlSettin
                   }
                 />
               </div>
-              <div className={styles.settingsFullWidth}>
+              <div className={shellStyles.settingsFullWidth}>
                 <SettingInput
                   label="Featured action label"
                   value={s.featuredActionLabel}
@@ -2927,7 +2927,7 @@ export function ControlSettingsPanel({ slug, settings, onChange }: ControlSettin
     case "top-navigation": {
       const s = settings as ControlSettingsBySlug["top-navigation"];
       return (
-        <div className={styles.settingsGrid}>
+        <div className={shellStyles.settingsGrid}>
           <SettingSelect
             label="Open menu"
             value={s.activeMenu}
