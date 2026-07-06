@@ -1,0 +1,85 @@
+.shell {
+  align-items: start;
+}
+
+.toggle {
+  position: relative;
+  display: grid;
+  place-items: center;
+  width: var(--opus-control-height);
+  height: var(--opus-control-height);
+  color: var(--opus-text);
+  cursor: pointer;
+}
+
+.nativeInput {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  opacity: 0;
+}
+
+.visual {
+  position: relative;
+  width: var(--opus-control-height);
+  height: var(--opus-control-height);
+  border: 1px solid var(--opus-border-strong);
+  background: var(--opus-input-bg);
+  box-shadow:
+    0 1px 0 rgba(255, 255, 255, 0.05) inset,
+    0 14px 30px rgba(0, 0, 0, 0.06);
+  transition:
+    background 160ms ease,
+    border-color 160ms ease,
+    box-shadow 160ms ease;
+}
+
+.square {
+  border-radius: var(--opus-input-radius);
+}
+
+.round {
+  border-radius: 999px;
+}
+
+.visual::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  top: 45%;
+  width: 11px;
+  height: 6px;
+  border-left: 2px solid #ffffff;
+  border-bottom: 2px solid #ffffff;
+  opacity: 0;
+  transform: translate(-50%, -50%) rotate(-45deg);
+}
+
+.nativeInput:checked + .visual {
+  border-color: var(--opus-border-strong);
+  background: linear-gradient(
+    135deg,
+    var(--opus-accent),
+    color-mix(in srgb, var(--opus-accent) 40%, #00d2ff)
+  );
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.18);
+}
+
+.nativeInput:checked + .visual::after {
+  opacity: 1;
+}
+
+.nativeInput:focus-visible + .visual {
+  box-shadow:
+    0 0 0 4px color-mix(in srgb, var(--opus-accent) 24%, transparent),
+    inset 0 0 0 1px rgba(255, 255, 255, 0.08);
+}
+
+.error {
+  outline: 2px solid color-mix(in srgb, var(--opus-error) 36%, transparent);
+  outline-offset: 2px;
+}

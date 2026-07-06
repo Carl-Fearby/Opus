@@ -1,0 +1,169 @@
+.toast {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  width: min(100%, 380px);
+}
+
+.body {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  border-radius: inherit;
+}
+
+.toast[data-status="error"] {
+  --toast-accent: #ef4444;
+  --toast-icon-bg: #ef4444;
+  --toast-icon-fg: #ffffff;
+  --toast-title: var(--opus-text, #f5f7ff);
+  --toast-body: var(--opus-muted, rgba(223, 226, 255, 0.72));
+}
+
+.toast[data-status="success"] {
+  --toast-accent: #16a34a;
+  --toast-icon-bg: #16a34a;
+  --toast-icon-fg: #ffffff;
+  --toast-title: var(--opus-text, #f5f7ff);
+  --toast-body: var(--opus-muted, rgba(223, 226, 255, 0.72));
+}
+
+.toast[data-status="warning"] {
+  --toast-accent: #d97706;
+  --toast-icon-bg: #d97706;
+  --toast-icon-fg: #ffffff;
+  --toast-title: var(--opus-text, #f5f7ff);
+  --toast-body: var(--opus-muted, rgba(223, 226, 255, 0.72));
+}
+
+.toast[data-status="info"] {
+  --toast-accent: #2563eb;
+  --toast-icon-bg: #2563eb;
+  --toast-icon-fg: #ffffff;
+  --toast-title: var(--opus-text, #f5f7ff);
+  --toast-body: var(--opus-muted, rgba(223, 226, 255, 0.72));
+}
+
+.main {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: start;
+  gap: 12px;
+  padding: 12px 14px;
+}
+
+.icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  margin-top: 1px;
+  border-radius: 999px;
+  background: var(--toast-icon-bg);
+  color: var(--toast-icon-fg);
+  flex-shrink: 0;
+}
+
+.iconSvg {
+  width: 16px;
+  height: 16px;
+}
+
+.iconMark {
+  font-size: 1.1rem;
+  font-weight: 800;
+  line-height: 1;
+}
+
+.content {
+  display: grid;
+  gap: 2px;
+  min-width: 0;
+  padding-top: 2px;
+}
+
+.title {
+  margin: 0;
+  color: var(--toast-title);
+  font-size: 0.88rem;
+  font-weight: 700;
+  line-height: 1.35;
+}
+
+.description {
+  margin: 0;
+  color: var(--toast-body);
+  font-size: 0.8rem;
+  line-height: 1.4;
+}
+
+.dismiss {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  align-self: start;
+  width: 24px;
+  height: 24px;
+  padding: 0;
+  border: 0;
+  border-radius: 999px;
+  background: transparent;
+  color: var(--opus-muted, rgba(223, 226, 255, 0.72));
+  cursor: pointer;
+  flex-shrink: 0;
+  transition:
+    background 160ms ease,
+    color 160ms ease;
+}
+
+.dismiss:hover {
+  background: color-mix(in srgb, var(--toast-accent) 12%, transparent);
+  color: var(--opus-text, #f5f7ff);
+}
+
+.dismiss:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--toast-accent) 24%, transparent);
+}
+
+.dismissIcon {
+  width: 14px;
+  height: 14px;
+}
+
+.progressTrack {
+  height: 3px;
+  margin-top: auto;
+  background: color-mix(in srgb, var(--toast-accent, var(--opus-accent, #8f6cff)) 16%, transparent);
+}
+
+.progressBar {
+  height: 100%;
+  background: var(--toast-accent, var(--opus-accent, #8f6cff));
+  transform-origin: left center;
+  animation: toastProgress linear forwards;
+}
+
+.toast[data-paused="true"] .progressBar {
+  animation-play-state: paused;
+}
+
+@keyframes toastProgress {
+  from {
+    transform: scaleX(1);
+  }
+
+  to {
+    transform: scaleX(0);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .progressBar {
+    animation: none;
+    transform: scaleX(0);
+  }
+}

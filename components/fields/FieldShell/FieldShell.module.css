@@ -1,0 +1,161 @@
+.root {
+  width: 100%;
+  display: grid;
+  gap: 8px;
+  min-width: 0;
+}
+
+.stacked {
+  display: grid;
+  gap: 10px;
+  width: 100%;
+  grid-template-columns: minmax(0, 1fr);
+}
+
+.stackedLeft,
+.stackedRight {
+  width: 100%;
+}
+
+.stacked > * {
+  min-width: 0;
+}
+
+.stackedLeft .label {
+  justify-self: start;
+  justify-content: flex-start;
+  text-align: left;
+}
+
+.stackedRight .label {
+  justify-self: end;
+  justify-content: flex-end;
+  text-align: right;
+}
+
+.flagged {
+  display: grid;
+  align-items: start;
+  gap: 8px 12px;
+  width: 100%;
+}
+
+.flaggedCenter {
+  align-items: center;
+}
+
+.flaggedStart {
+  align-items: start;
+}
+
+.labelLeft {
+  grid-template-columns: minmax(120px, 34%) minmax(0, 1fr);
+  grid-template-areas:
+    "label control"
+    ". error";
+}
+
+.labelRight {
+  grid-template-columns: minmax(0, 1fr) minmax(120px, 34%);
+  grid-template-areas:
+    "control label"
+    "error .";
+}
+
+.compactControl.labelLeft {
+  grid-template-columns: minmax(0, 1fr) var(--opus-control-height) !important;
+}
+
+.compactControl.labelRight {
+  grid-template-columns: var(--opus-control-height) minmax(0, 1fr) !important;
+}
+
+.compactControl .controlFlagged {
+  justify-self: end;
+  width: auto;
+}
+
+.fitContent {
+  width: fit-content;
+  max-width: 100%;
+}
+
+.fitContent.stacked,
+.fitContent.stackedLeft,
+.fitContent.stackedRight {
+  width: fit-content;
+}
+
+.fitContent.labelLeft,
+.fitContent.labelRight {
+  grid-template-columns: auto auto;
+  align-items: center;
+}
+
+.fitContent .label,
+.fitContent .labelFlagged {
+  width: auto;
+  white-space: nowrap;
+}
+
+.fitContent .control,
+.fitContent .controlFlagged {
+  width: auto;
+  justify-self: start;
+}
+
+.label {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  width: 100%;
+  color: var(--opus-text);
+  font-size: 0.86rem;
+  font-weight: 600;
+  line-height: 1.2;
+}
+
+.labelFlagged {
+  grid-area: label;
+  min-height: var(--opus-control-height);
+}
+
+.labelRight .labelFlagged {
+  justify-self: end;
+}
+
+.control {
+  width: 100%;
+  min-width: 0;
+}
+
+.controlFlagged {
+  grid-area: control;
+}
+
+.error {
+  margin: 0;
+  color: var(--opus-error);
+  font-size: 0.78rem;
+  line-height: 1.4;
+}
+
+.errorFlagged {
+  grid-area: error;
+}
+
+.required {
+  color: var(--opus-error);
+  font-size: 0.76rem;
+  font-weight: 500;
+}
+
+.visuallyHidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+}

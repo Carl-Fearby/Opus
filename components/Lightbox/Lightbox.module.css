@@ -1,0 +1,162 @@
+.lightbox {
+  display: inline-grid;
+  gap: 12px;
+}
+
+.lightbox[data-trigger-variant="image"] {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.trigger {
+  justify-self: start;
+  min-height: var(--opus-input-height);
+  border: 1px solid color-mix(in srgb, var(--opus-accent) 64%, white 18%);
+  background: linear-gradient(135deg, var(--opus-accent), color-mix(in srgb, var(--opus-accent) 68%, #39a3ff 32%));
+  color: white;
+  cursor: pointer;
+  font: inherit;
+  font-size: var(--opus-control-font-size);
+  font-weight: 900;
+  padding: 0 18px;
+  box-shadow: var(--opus-shadow);
+}
+
+.trigger[data-variant="image"] {
+  display: block;
+  width: 100%;
+  height: 100%;
+  min-height: 0;
+  border: 0;
+  background: transparent;
+  padding: 0;
+  box-shadow: none;
+}
+
+.overlay {
+  position: fixed;
+  z-index: 90;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  padding: 0;
+  background:
+    radial-gradient(circle at 50% 0%, color-mix(in srgb, var(--opus-accent) 24%, transparent), transparent 42%),
+    color-mix(in srgb, #021231 78%, transparent);
+  backdrop-filter: blur(3px);
+  animation: lightboxFadeIn 160ms ease both;
+}
+
+.overlay[data-state="closing"] {
+  animation: lightboxFadeOut 180ms ease both;
+}
+
+.frame {
+  position: relative;
+  display: grid;
+  width: min(90vw, 100%);
+  height: min(90vh, 100%);
+  max-width: min(90vw, 100%);
+  max-height: min(90vh, 100%);
+  animation: lightboxPanelIn 180ms ease both;
+}
+
+.overlay[data-state="closing"] .frame {
+  animation: lightboxPanelOut 180ms ease both;
+}
+
+.panel {
+  display: grid;
+  height: min(90vh, 100%);
+  max-height: min(90vh, 100%);
+  margin: 0;
+  overflow: hidden;
+  border: 1px solid color-mix(in srgb, var(--opus-border) 82%, transparent);
+  background: color-mix(in srgb, var(--opus-page-bg) 90%, black 10%);
+  box-shadow: 0 28px 90px color-mix(in srgb, black 54%, transparent);
+}
+
+.image {
+  display: block;
+  width: 100%;
+  height: min(calc(90vh - 48px), calc(100% - 48px));
+  object-fit: contain;
+  background: black;
+}
+
+.close {
+  position: absolute;
+  z-index: 3;
+  top: 12px;
+  right: 12px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  padding: 0;
+  border: 1px solid var(--opus-border-strong);
+  border-radius: 999px;
+  background: var(--opus-panel);
+  color: var(--opus-text);
+  cursor: pointer;
+  line-height: 0;
+  transition:
+    background 160ms ease,
+    border-color 160ms ease,
+    transform 160ms ease;
+}
+
+.closeIcon {
+  width: 16px;
+  height: 16px;
+}
+
+.close:hover {
+  border-color: var(--opus-accent);
+  background: var(--opus-accent);
+  color: #fff;
+  transform: scale(1.04);
+}
+
+.caption {
+  margin: 0;
+  padding: 12px 14px;
+  color: var(--opus-text);
+  font-size: var(--opus-control-font-size);
+  font-weight: 900;
+  text-align: center;
+}
+
+@keyframes lightboxFadeIn {
+  from {
+    opacity: 0;
+  }
+}
+
+@keyframes lightboxFadeOut {
+  to {
+    opacity: 0;
+  }
+}
+
+@keyframes lightboxPanelIn {
+  from {
+    opacity: 0;
+    transform: translateY(12px) scale(0.98);
+  }
+}
+
+@keyframes lightboxPanelOut {
+  to {
+    opacity: 0;
+    transform: translateY(10px) scale(0.98);
+  }
+}
+
+@media (max-width: 720px) {
+  .overlay {
+    padding: 0;
+  }
+}

@@ -1,0 +1,114 @@
+.topBar {
+  --topbar-text: #f5f7ff;
+  --topbar-muted: rgba(223, 226, 255, 0.72);
+  --topbar-accent: #8f6cff;
+  --topbar-accent-soft: rgba(143, 108, 255, 0.16);
+  --topbar-border: rgba(168, 131, 255, 0.2);
+  --topbar-bg: linear-gradient(180deg, #05060f 0%, #0a0c18 100%);
+
+  position: sticky;
+  top: 0;
+  z-index: 20;
+  min-height: 76px;
+  padding: 16px 24px;
+  border-bottom: 1px solid var(--topbar-border);
+  background: var(--topbar-bg);
+  color: var(--topbar-text);
+}
+
+.topBarRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  min-height: 44px;
+  min-width: 0;
+}
+
+.topBarStart {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  min-width: 0;
+  flex: 1;
+}
+
+.logoLink {
+  display: inline-flex;
+  flex-shrink: 0;
+  align-items: center;
+  line-height: 0;
+  text-decoration: none;
+}
+
+.logo {
+  display: block;
+  height: 44px;
+  width: auto;
+  max-width: 220px;
+  object-fit: contain;
+}
+
+.nav {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+.navLink,
+.navLinkActive {
+  padding: 8px 12px;
+  border: 1px solid transparent;
+  border-radius: var(--opus-input-radius);
+  font-size: 0.88rem;
+  font-weight: 600;
+  line-height: 1.2;
+  text-decoration: none;
+  transition:
+    background 160ms ease,
+    border-color 160ms ease,
+    color 160ms ease;
+}
+
+.navLink {
+  color: var(--topbar-muted);
+}
+
+.navLink:hover {
+  border-color: var(--topbar-border);
+  background: color-mix(in srgb, var(--topbar-accent-soft) 80%, transparent);
+  color: var(--topbar-text);
+}
+
+.navLinkActive {
+  border-color: color-mix(in srgb, var(--topbar-accent) 45%, transparent);
+  background: var(--topbar-accent-soft);
+  color: var(--topbar-accent);
+}
+
+.topBarTrailing {
+  flex-shrink: 0;
+}
+
+@media (max-width: 720px) {
+  .topBar {
+    min-height: 68px;
+    padding: 12px 16px;
+  }
+
+  .topBarStart {
+    gap: 12px;
+  }
+
+  .logo {
+    height: 36px;
+    max-width: 168px;
+  }
+
+  .navLink,
+  .navLinkActive {
+    padding: 7px 10px;
+    font-size: 0.82rem;
+  }
+}
