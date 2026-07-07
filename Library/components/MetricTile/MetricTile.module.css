@@ -1,0 +1,29 @@
+.tile {
+  position: relative;
+}
+
+.sparklineRail {
+  position: absolute;
+  top: 18px;
+  right: 20px;
+  display: flex;
+  width: 120px;
+  height: calc(2.5rem + 10px + 0.84rem + 10px + 1.75rem);
+  align-items: center;
+  justify-content: flex-end;
+  pointer-events: none;
+}
+
+.tile[data-density="compact"] .sparklineRail {
+  top: 14px;
+  right: 16px;
+  height: calc(2.5rem + 8px + 0.84rem + 8px + 1.45rem);
+}
+
+.sparklineReserve {
+  display: block;
+  width: 120px;
+  height: 72px;
+  flex-shrink: 0;
+  visibility: hidden;
+}

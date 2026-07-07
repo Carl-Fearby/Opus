@@ -1,0 +1,125 @@
+.lightbox {
+  display: block;
+  width: 100%;
+}
+
+.trigger {
+  display: inline-flex;
+  min-height: var(--opus-control-height);
+  align-items: center;
+  justify-content: center;
+  border: 1px solid color-mix(in srgb, var(--opus-accent) 58%, transparent);
+  border-radius: var(--opus-input-radius);
+  background: var(--opus-accent);
+  color: var(--opus-accent-contrast);
+  cursor: pointer;
+  font: inherit;
+  font-size: var(--opus-control-font-size);
+  font-weight: 900;
+  padding: 0 16px;
+}
+
+.trigger[data-custom="true"] {
+  display: block;
+  width: 100%;
+  min-height: 0;
+  justify-content: stretch;
+  border: 0;
+  background: transparent;
+  color: inherit;
+  padding: 0;
+  text-align: left;
+}
+
+.overlay {
+  position: fixed;
+  z-index: 90;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  padding: 0;
+  background:
+    radial-gradient(circle at 50% 0%, color-mix(in srgb, var(--opus-accent) 24%, transparent), transparent 42%),
+    color-mix(in srgb, #021231 78%, transparent);
+  backdrop-filter: blur(3px);
+  animation: modelLightboxFadeIn 160ms ease both;
+}
+
+.overlay[data-state="closing"] {
+  animation: modelLightboxFadeOut 180ms ease both;
+}
+
+.frame {
+  position: relative;
+  display: grid;
+  width: 90vw;
+  height: 90vh;
+  max-width: 90vw;
+  max-height: 90vh;
+  animation: modelLightboxPanelIn 180ms ease both;
+}
+
+.overlay[data-state="closing"] .frame {
+  animation: modelLightboxPanelOut 180ms ease both;
+}
+
+.close {
+  position: fixed;
+  z-index: 3;
+  top: 18px;
+  right: 18px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  padding: 0;
+  border: 1px solid var(--opus-border-strong);
+  border-radius: 999px;
+  background: var(--opus-panel);
+  color: var(--opus-text);
+  cursor: pointer;
+  line-height: 0;
+  transition:
+    background 160ms ease,
+    border-color 160ms ease,
+    transform 160ms ease;
+}
+
+.closeIcon {
+  width: 16px;
+  height: 16px;
+}
+
+.close:hover {
+  border-color: var(--opus-accent);
+  background: var(--opus-accent);
+  color: #fff;
+  transform: scale(1.04);
+}
+
+@keyframes modelLightboxFadeIn {
+  from {
+    opacity: 0;
+  }
+}
+
+@keyframes modelLightboxFadeOut {
+  to {
+    opacity: 0;
+  }
+}
+
+@keyframes modelLightboxPanelIn {
+  from {
+    opacity: 0;
+    transform: translateY(12px) scale(0.98);
+  }
+}
+
+@keyframes modelLightboxPanelOut {
+  to {
+    opacity: 0;
+    transform: translateY(10px) scale(0.98);
+  }
+}

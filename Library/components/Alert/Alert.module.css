@@ -1,0 +1,169 @@
+.alert {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 14px;
+  width: 100%;
+  padding: 14px 16px;
+  border: 1px solid var(--status-border);
+  border-radius: var(--opus-input-radius-large);
+  background: var(--status-bg);
+  box-shadow: 0 10px 28px color-mix(in srgb, var(--status-border) 12%, transparent);
+}
+
+.iconFlagged {
+  align-items: start;
+}
+
+.iconFlagged .icon {
+  margin-top: 1px;
+}
+
+.alert[data-status="error"] {
+  --status-bg: #fff5f5;
+  --status-border: #f87171;
+  --status-icon-bg: #ef4444;
+  --status-icon-fg: #ffffff;
+  --status-title: #991b1b;
+  --status-body: #312e81;
+  --status-dismiss: #312e81;
+}
+
+.alert[data-status="success"] {
+  --status-bg: #f0fdf4;
+  --status-border: #4ade80;
+  --status-icon-bg: #16a34a;
+  --status-icon-fg: #ffffff;
+  --status-title: #166534;
+  --status-body: #14532d;
+  --status-dismiss: #14532d;
+}
+
+.alert[data-status="warning"] {
+  --status-bg: #fffbeb;
+  --status-border: #fbbf24;
+  --status-icon-bg: #d97706;
+  --status-icon-fg: #ffffff;
+  --status-title: #92400e;
+  --status-body: #78350f;
+  --status-dismiss: #78350f;
+}
+
+.alert[data-status="info"] {
+  --status-bg: #eff6ff;
+  --status-border: #60a5fa;
+  --status-icon-bg: #2563eb;
+  --status-icon-fg: #ffffff;
+  --status-title: #1e40af;
+  --status-body: #1e3a8a;
+  --status-dismiss: #1e3a8a;
+}
+
+.alert[data-theme="dark"][data-status="error"] {
+  --status-bg: color-mix(in srgb, #ef4444 14%, var(--opus-panel));
+  --status-border: color-mix(in srgb, #f87171 55%, transparent);
+  --status-title: #fecaca;
+  --status-body: color-mix(in srgb, var(--opus-text) 88%, #fecaca);
+  --status-dismiss: color-mix(in srgb, var(--opus-text) 82%, #fecaca);
+}
+
+.alert[data-theme="dark"][data-status="success"] {
+  --status-bg: color-mix(in srgb, #16a34a 14%, var(--opus-panel));
+  --status-border: color-mix(in srgb, #4ade80 55%, transparent);
+  --status-title: #bbf7d0;
+  --status-body: color-mix(in srgb, var(--opus-text) 88%, #bbf7d0);
+  --status-dismiss: color-mix(in srgb, var(--opus-text) 82%, #bbf7d0);
+}
+
+.alert[data-theme="dark"][data-status="warning"] {
+  --status-bg: color-mix(in srgb, #d97706 14%, var(--opus-panel));
+  --status-border: color-mix(in srgb, #fbbf24 55%, transparent);
+  --status-title: #fde68a;
+  --status-body: color-mix(in srgb, var(--opus-text) 88%, #fde68a);
+  --status-dismiss: color-mix(in srgb, var(--opus-text) 82%, #fde68a);
+}
+
+.alert[data-theme="dark"][data-status="info"] {
+  --status-bg: color-mix(in srgb, #2563eb 14%, var(--opus-panel));
+  --status-border: color-mix(in srgb, #60a5fa 55%, transparent);
+  --status-title: #bfdbfe;
+  --status-body: color-mix(in srgb, var(--opus-text) 88%, #bfdbfe);
+  --status-dismiss: color-mix(in srgb, var(--opus-text) 82%, #bfdbfe);
+}
+
+.icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 999px;
+  background: var(--status-icon-bg);
+  color: var(--status-icon-fg);
+  flex-shrink: 0;
+}
+
+.iconSvg {
+  width: 20px;
+  height: 20px;
+}
+
+.iconMark {
+  font-size: 1.35rem;
+  font-weight: 800;
+  line-height: 1;
+}
+
+.content {
+  display: grid;
+  gap: 4px;
+  min-width: 0;
+}
+
+.title {
+  margin: 0;
+  color: var(--status-title);
+  font-size: 0.92rem;
+  font-weight: 700;
+  line-height: 1.35;
+}
+
+.description {
+  margin: 0;
+  color: var(--status-body);
+  font-size: 0.84rem;
+  line-height: 1.45;
+}
+
+.dismiss {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  align-self: start;
+  width: 28px;
+  height: 28px;
+  padding: 0;
+  border: 0;
+  border-radius: 999px;
+  background: transparent;
+  color: var(--status-dismiss);
+  cursor: pointer;
+  flex-shrink: 0;
+  transition:
+    background 160ms ease,
+    color 160ms ease;
+}
+
+.dismiss:hover {
+  background: color-mix(in srgb, var(--status-border) 16%, transparent);
+}
+
+.dismiss:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--status-border) 28%, transparent);
+}
+
+.dismissIcon {
+  width: 16px;
+  height: 16px;
+}

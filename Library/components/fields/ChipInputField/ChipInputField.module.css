@@ -1,0 +1,183 @@
+.shell {
+  width: 100%;
+}
+
+.field {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  align-content: flex-start;
+  gap: 6px;
+  width: 100%;
+  min-height: var(--opus-control-height);
+  padding: 4px 8px;
+  border: 1px solid var(--opus-border-strong);
+  border-radius: var(--opus-input-radius);
+  background: var(--opus-input-bg);
+  color: var(--opus-text);
+  box-shadow:
+    0 1px 0 rgba(255, 255, 255, 0.05) inset,
+    0 14px 30px rgba(0, 0, 0, 0.06);
+  cursor: text;
+  transition:
+    border-color 160ms ease,
+    box-shadow 160ms ease;
+}
+
+.field:hover:not(.disabled):not(.readOnly) {
+  border-color: color-mix(in srgb, var(--opus-accent) 28%, var(--opus-border-strong));
+}
+
+.field:focus-within:not(.disabled):not(.readOnly) {
+  border-color: var(--opus-accent);
+  box-shadow:
+    0 0 0 4px color-mix(in srgb, var(--opus-accent) 22%, transparent),
+    0 14px 30px rgba(0, 0, 0, 0.06);
+}
+
+.field.error {
+  border-color: color-mix(in srgb, var(--opus-error) 75%, transparent);
+}
+
+.field.error:focus-within {
+  box-shadow:
+    0 0 0 4px color-mix(in srgb, var(--opus-error) 18%, transparent),
+    0 14px 30px rgba(0, 0, 0, 0.06);
+}
+
+.field.disabled {
+  opacity: 0.58;
+  cursor: not-allowed;
+}
+
+.field.readOnly {
+  cursor: default;
+}
+
+.chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  max-width: 100%;
+  min-height: calc(var(--opus-control-height) - 12px);
+  padding: 0 4px 0 10px;
+  border-radius: 999px;
+  font-size: calc(var(--opus-control-font-size) - 1px);
+  font-weight: 650;
+  line-height: 1.2;
+  white-space: nowrap;
+  transition:
+    background 160ms ease,
+    border-color 160ms ease,
+    box-shadow 160ms ease,
+    color 160ms ease;
+}
+
+.chipLabel {
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.remove {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 20px;
+  height: 20px;
+  padding: 0;
+  border: 0;
+  border-radius: 999px;
+  background: transparent;
+  color: inherit;
+  font-size: 16px;
+  line-height: 1;
+  cursor: pointer;
+  opacity: 0.72;
+  transition:
+    background 160ms ease,
+    opacity 160ms ease;
+}
+
+.remove:hover:not(:disabled) {
+  opacity: 1;
+  background: color-mix(in srgb, currentColor 12%, transparent);
+}
+
+.remove:focus-visible {
+  outline: 2px solid color-mix(in srgb, var(--opus-accent) 65%, transparent);
+  outline-offset: 1px;
+  opacity: 1;
+}
+
+.remove:disabled {
+  cursor: not-allowed;
+}
+
+.input {
+  flex: 1 1 120px;
+  width: auto;
+  min-width: 120px;
+  height: calc(var(--opus-control-height) - 12px);
+  padding: 0 4px;
+  border: 0;
+  background: transparent;
+  color: var(--opus-text);
+  font-family: inherit;
+  font-size: var(--opus-control-font-size);
+  outline: none;
+}
+
+.input::placeholder {
+  color: color-mix(in srgb, var(--opus-muted) 80%, transparent);
+}
+
+.input:disabled {
+  cursor: not-allowed;
+}
+
+.field[data-chip-variant="filled"] .chip {
+  border: 1px solid color-mix(in srgb, var(--opus-border-strong) 85%, transparent);
+  background: color-mix(in srgb, var(--opus-text) 8%, var(--opus-input-bg));
+  color: var(--opus-text);
+}
+
+.field[data-chip-variant="outlined"] .chip {
+  border: 1px solid var(--opus-border-strong);
+  background: transparent;
+  color: var(--opus-text);
+}
+
+.field[data-chip-variant="soft"] .chip {
+  border: 1px solid color-mix(in srgb, var(--opus-accent) 35%, var(--opus-border-strong));
+  background: var(--opus-accent-soft);
+  color: var(--opus-accent);
+}
+
+.field[data-chip-variant="glass"] .chip {
+  border: 1px solid color-mix(in srgb, var(--opus-border-strong) 55%, transparent);
+  background: color-mix(in srgb, var(--opus-input-bg) 55%, transparent);
+  backdrop-filter: blur(10px);
+  color: var(--opus-text);
+}
+
+.field[data-chip-variant="gradient"] .chip {
+  border: 1px solid transparent;
+  background:
+    linear-gradient(var(--opus-input-bg), var(--opus-input-bg)) padding-box,
+    linear-gradient(
+      135deg,
+      color-mix(in srgb, var(--opus-accent) 85%, #4f8cff),
+      color-mix(in srgb, var(--opus-accent) 55%, #7c3aed)
+    )
+      border-box;
+  color: var(--opus-accent);
+  box-shadow: 0 0 0 1px color-mix(in srgb, var(--opus-accent) 10%, transparent);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .field,
+  .chip,
+  .remove {
+    transition: none;
+  }
+}

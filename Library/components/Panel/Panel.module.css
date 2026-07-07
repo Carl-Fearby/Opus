@@ -1,0 +1,107 @@
+.panel {
+  --surface-accent: var(--opus-accent);
+  display: grid;
+  grid-template-rows: auto 1fr auto;
+  height: 100%;
+  overflow: hidden;
+  border: 1px solid color-mix(in srgb, var(--surface-accent) 18%, var(--opus-border));
+  border-radius: var(--opus-input-radius-large);
+  background: color-mix(in srgb, var(--opus-panel) 92%, transparent);
+  box-shadow: var(--opus-shadow);
+}
+
+.panel[data-tone="success"] {
+  --surface-accent: #16a34a;
+}
+
+.panel[data-tone="warning"] {
+  --surface-accent: #d97706;
+}
+
+.panel[data-tone="danger"] {
+  --surface-accent: #ef4444;
+}
+
+.panel[data-tone="info"] {
+  --surface-accent: #2563eb;
+}
+
+.panel[data-tone="default"] {
+  --surface-accent: var(--opus-border-strong);
+}
+
+.panel[data-density="compact"] {
+  --surface-pad: 12px;
+}
+
+.panel[data-density="comfortable"] {
+  --surface-pad: 16px;
+}
+
+.header {
+  display: flex;
+  flex-wrap: nowrap;
+  gap: 12px;
+  align-items: start;
+  justify-content: space-between;
+  padding: var(--surface-pad);
+  min-width: 0;
+}
+
+.panel[data-divided="true"] .header {
+  border-bottom: 1px solid color-mix(in srgb, var(--opus-border) 72%, transparent);
+}
+
+.heading {
+  display: grid;
+  gap: 5px;
+  min-width: 0;
+  flex: 1 1 auto;
+}
+
+.title,
+.description,
+.body p,
+.footer {
+  margin: 0;
+}
+
+.title {
+  color: var(--opus-text);
+  font-size: 1rem;
+  font-weight: 850;
+  line-height: 1.25;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.description {
+  color: var(--opus-muted);
+  font-size: var(--opus-control-font-size);
+  line-height: 1.45;
+}
+
+.headerActions {
+  display: flex;
+  gap: 8px;
+  flex-shrink: 0;
+}
+
+.body {
+  padding: var(--surface-pad);
+  color: var(--opus-muted);
+  font-size: var(--opus-control-font-size);
+  line-height: 1.55;
+  min-height: 0;
+}
+
+.panel[data-divided="true"] .body {
+  border-bottom: 1px solid color-mix(in srgb, var(--opus-border) 72%, transparent);
+}
+
+.footer {
+  padding: var(--surface-pad);
+  color: var(--opus-muted);
+  font-size: 0.8rem;
+}

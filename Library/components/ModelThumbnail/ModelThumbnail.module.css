@@ -1,0 +1,39 @@
+.content {
+  display: grid;
+  gap: 8px;
+  width: 100%;
+  min-width: 0;
+}
+
+.content[data-size="small"] {
+  width: 180px;
+}
+
+.content[data-size="medium"] {
+  width: 240px;
+}
+
+.content[data-size="large"] {
+  width: min(100%, 340px);
+}
+
+.caption {
+  overflow: hidden;
+  color: var(--opus-text);
+  font-size: var(--opus-control-font-size);
+  font-weight: 900;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.staticThumbnail {
+  display: inline-block;
+}
+
+.content :global(figure) {
+  pointer-events: none;
+}
+
+.staticThumbnail .content :global(figure) {
+  pointer-events: auto;
+}

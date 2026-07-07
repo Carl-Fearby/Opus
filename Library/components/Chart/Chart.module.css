@@ -1,0 +1,433 @@
+.chart {
+  --chart-series-a: var(--opus-accent);
+  --chart-series-b: #22c55e;
+  --chart-series-c: #f59e0b;
+  --chart-series-d: #ef4444;
+  --chart-series-e: #06b6d4;
+  --chart-series-f: #a855f7;
+  display: grid;
+  gap: 12px;
+  box-sizing: border-box;
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+  margin: 0;
+  overflow: hidden;
+  padding: 14px;
+  border: 1px solid var(--opus-border);
+  border-radius: var(--opus-input-radius-large);
+  background:
+    radial-gradient(circle at 12% 10%, color-mix(in srgb, var(--opus-accent) 12%, transparent), transparent 34%),
+    color-mix(in srgb, var(--opus-panel) 94%, transparent);
+  box-shadow: var(--opus-shadow);
+}
+
+.chart[data-show-axis="true"] {
+  gap: 6px;
+}
+
+.chart[data-show-axis="true"] .svg {
+  margin-top: -4px;
+}
+
+.chart[data-maximise="true"][data-maximise-plot="true"] {
+  overflow-x: auto;
+}
+
+.chart[data-maximise="true"][data-maximise-plot="true"] .svg {
+  min-width: 100%;
+}
+
+.chart[data-palette="cool"] {
+  --chart-series-a: #2563eb;
+  --chart-series-b: #0891b2;
+  --chart-series-c: #14b8a6;
+  --chart-series-d: #84cc16;
+  --chart-series-e: #8b5cf6;
+  --chart-series-f: #06b6d4;
+}
+
+.chart[data-palette="warm"] {
+  --chart-series-a: #f97316;
+  --chart-series-b: #ef4444;
+  --chart-series-c: #f59e0b;
+  --chart-series-d: #eab308;
+  --chart-series-e: #fb7185;
+  --chart-series-f: #a855f7;
+}
+
+.chart[data-palette="mono"] {
+  --chart-series-a: color-mix(in srgb, var(--opus-accent) 92%, white);
+  --chart-series-b: color-mix(in srgb, var(--opus-accent) 72%, white);
+  --chart-series-c: color-mix(in srgb, var(--opus-accent) 52%, white);
+  --chart-series-d: color-mix(in srgb, var(--opus-accent) 36%, white);
+  --chart-series-e: color-mix(in srgb, var(--opus-accent) 24%, white);
+  --chart-series-f: color-mix(in srgb, var(--opus-accent) 14%, white);
+}
+
+.header {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  justify-content: space-between;
+  min-width: 0;
+}
+
+.title,
+.meta {
+  margin: 0;
+}
+
+.title {
+  color: var(--opus-text);
+  font-size: 0.92rem;
+  font-weight: 900;
+  letter-spacing: 0.02em;
+}
+
+.meta {
+  color: var(--opus-muted);
+  font-size: 0.68rem;
+  font-weight: 900;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.svg {
+  display: block;
+  width: 100%;
+  height: var(--chart-height);
+  min-height: 220px;
+  overflow: hidden;
+}
+
+.grid line,
+.grid circle,
+.funnelGuide,
+.radarGrid {
+  fill: none;
+  stroke: color-mix(in srgb, var(--opus-border) 70%, transparent);
+  stroke-width: 1;
+}
+
+.funnelGuide {
+  stroke-dasharray: 4 5;
+}
+
+.axisLabels,
+.valueLabel,
+.funnelText {
+  fill: var(--opus-muted);
+  font-size: 10px;
+  font-weight: 800;
+}
+
+.valueLabel {
+  fill: var(--opus-text);
+}
+
+.bar[data-highlighted="true"] {
+  fill: var(--opus-accent);
+}
+
+.axes {
+  pointer-events: none;
+}
+
+.axisLine {
+  stroke: color-mix(in srgb, var(--opus-border-strong) 72%, transparent);
+  stroke-width: 1.5;
+}
+
+.axisTick,
+.axisTitle {
+  fill: var(--opus-muted);
+  font-size: 9px;
+  font-weight: 700;
+}
+
+.axisTitle {
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.ridge {
+  fill: color-mix(in srgb, var(--chart-current, var(--chart-series-a)) 18%, transparent);
+  stroke: var(--chart-current, var(--chart-series-a));
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-width: 1.5;
+}
+
+.link {
+  fill: none;
+  stroke: color-mix(in srgb, var(--chart-current, var(--chart-series-a)) 32%, transparent);
+  stroke-width: 1.5;
+}
+
+.wick {
+  fill: none;
+  stroke: var(--chart-current, var(--chart-series-a));
+  stroke-width: 1.5;
+}
+
+.ring {
+  fill: color-mix(in srgb, var(--chart-current, var(--chart-series-a)) 14%, transparent);
+  stroke: var(--chart-current, var(--chart-series-a));
+  stroke-width: 1.5;
+}
+
+.axisGuide {
+  fill: none;
+  stroke: color-mix(in srgb, var(--opus-border-strong) 70%, transparent);
+  stroke-width: 1.5;
+}
+
+.land {
+  fill: color-mix(in srgb, var(--chart-current, var(--chart-series-a)) 12%, transparent);
+  stroke: color-mix(in srgb, var(--opus-border) 80%, transparent);
+  stroke-width: 1.5;
+}
+
+.mapLand {
+  fill: color-mix(in srgb, var(--opus-muted) 18%, var(--opus-panel));
+  stroke: color-mix(in srgb, var(--opus-border) 65%, transparent);
+  stroke-width: 0.75;
+}
+
+.mapRegion {
+  fill: var(--chart-current, var(--chart-series-a));
+  stroke: color-mix(in srgb, var(--opus-border) 55%, transparent);
+  stroke-width: 0.5;
+  color: var(--chart-current);
+}
+
+.mapLabel {
+  fill: var(--opus-text);
+  font-size: 11px;
+  font-weight: 800;
+  pointer-events: none;
+}
+
+.mapValue {
+  fill: var(--opus-text);
+  font-size: 12px;
+  font-weight: 900;
+  pointer-events: none;
+}
+
+.wick,
+.ring,
+.land,
+.link {
+  color: var(--chart-current);
+}
+
+.bar,
+.slice,
+.funnel,
+.area,
+.point,
+.line,
+.sankeyNode,
+.sankeyLink,
+.violin,
+.legendSwatch {
+  color: var(--chart-current);
+}
+
+.seriesA {
+  --chart-current: var(--chart-series-a);
+}
+
+.seriesB {
+  --chart-current: var(--chart-series-b);
+}
+
+.seriesC {
+  --chart-current: var(--chart-series-c);
+}
+
+.seriesD {
+  --chart-current: var(--chart-series-d);
+}
+
+.seriesE {
+  --chart-current: var(--chart-series-e);
+}
+
+.seriesF {
+  --chart-current: var(--chart-series-f);
+}
+
+.violin {
+  fill: color-mix(in srgb, var(--chart-current, var(--chart-series-a)) 24%, transparent);
+  stroke: var(--chart-current, var(--chart-series-a));
+  stroke-width: 1.5;
+}
+
+.bar,
+.slice,
+.funnel {
+  fill: var(--chart-current, var(--chart-series-a));
+  filter: drop-shadow(0 10px 18px color-mix(in srgb, var(--chart-current, var(--chart-series-a)) 22%, transparent));
+}
+
+.area,
+.radarArea {
+  fill: color-mix(in srgb, var(--chart-current, var(--chart-series-a)) 22%, transparent);
+}
+
+.line {
+  fill: none;
+  stroke: var(--chart-current, var(--chart-series-a));
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-width: 2;
+  filter: drop-shadow(0 6px 12px color-mix(in srgb, var(--chart-current, var(--chart-series-a)) 20%, transparent));
+}
+
+.packParent {
+  fill: color-mix(in srgb, var(--chart-current, var(--chart-series-a)) 20%, transparent);
+  stroke: color-mix(in srgb, var(--opus-panel) 88%, white);
+  stroke-width: 3;
+  color: var(--chart-current);
+}
+
+.packLabel,
+.treemapLabel {
+  fill: #ffffff;
+  font-size: 11px;
+  pointer-events: none;
+}
+
+.treemapGroupLabel {
+  fill: var(--chart-current, var(--chart-series-a));
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.point {
+  fill: var(--chart-current, var(--chart-series-a));
+  stroke: color-mix(in srgb, var(--opus-panel) 90%, transparent);
+  stroke-width: 2;
+}
+
+.graphLink {
+  stroke: color-mix(in srgb, var(--opus-border) 72%, transparent);
+  stroke-linecap: round;
+  stroke-width: 1.25;
+}
+
+.graphLinkColored {
+  stroke: color-mix(in srgb, var(--chart-current, var(--chart-series-a)) 72%, transparent);
+}
+
+.graphNode {
+  fill: var(--chart-current, var(--chart-series-a));
+  filter: drop-shadow(0 4px 8px color-mix(in srgb, var(--chart-current, var(--chart-series-a)) 24%, transparent));
+  stroke: color-mix(in srgb, var(--opus-panel) 88%, white);
+  stroke-width: 1.5;
+}
+
+.graphNodeRing {
+  fill: none;
+  stroke: var(--chart-current, var(--chart-series-a));
+  stroke-width: 2.5;
+}
+
+.graphLabel {
+  fill: #ffffff;
+  font-size: 10px;
+  font-weight: 600;
+  pointer-events: none;
+}
+
+.sankeyLink {
+  stroke: none;
+  fill: color-mix(in srgb, var(--chart-current, var(--chart-series-a)) 40%, transparent);
+}
+
+.sankeyNode {
+  rx: 1;
+  fill: var(--chart-current, var(--chart-series-a));
+}
+
+.sankeyLabelBox {
+  fill: color-mix(in srgb, var(--opus-panel) 92%, white);
+  stroke: color-mix(in srgb, var(--opus-border) 55%, transparent);
+  stroke-width: 1;
+}
+
+.sankeyCenterLabel,
+.sankeySideLabel {
+  fill: var(--opus-text, #e2e8f0);
+  font-size: 9px;
+  font-weight: 600;
+}
+
+.sankeySideValue {
+  fill: color-mix(in srgb, var(--opus-text, #e2e8f0) 68%, transparent);
+  font-size: 8px;
+  font-weight: 500;
+}
+
+.sankeySideName {
+  font-size: 9px;
+  font-weight: 600;
+}
+
+.radarArea {
+  --chart-current: var(--chart-series-a);
+  stroke: var(--chart-series-a);
+  stroke-width: 3;
+}
+
+.funnelText {
+  fill: #ffffff;
+  font-size: 11px;
+  text-shadow: 0 1px 5px rgb(0 0 0 / 40%);
+}
+
+.legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 14px;
+  align-items: center;
+}
+
+.legendItem {
+  display: inline-flex;
+  gap: 6px;
+  align-items: center;
+  color: var(--opus-muted);
+  font-size: 0.75rem;
+  font-weight: 800;
+}
+
+.legendSwatch {
+  width: 10px;
+  height: 10px;
+  border-radius: 999px;
+  background: var(--chart-current);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--chart-current) 18%, transparent);
+}
+
+@media (max-width: 640px) {
+  .chart {
+    padding: 12px;
+  }
+
+  .svg {
+    min-height: 190px;
+  }
+
+  .header {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+}

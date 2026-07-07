@@ -1,0 +1,98 @@
+[data-theme="light"] {
+  --opus-control-font-size: 0.86rem;
+  --opus-control-height: 28px;
+  --opus-input-radius: 4px;
+  --opus-input-radius-large: 6px;
+  --opus-input-radius-small: 2px;
+  --opus-input-radius-mark: 1px;
+  --opus-panel: rgba(248, 249, 255, 0.96);
+  --opus-border: rgba(126, 103, 255, 0.22);
+  --opus-border-strong: rgba(94, 72, 220, 0.34);
+  --opus-text: #17132f;
+  --opus-muted: #655f83;
+  --opus-accent: var(--opus-user-accent, #6b46ff);
+  --opus-accent-soft: var(--opus-user-accent-soft, rgba(107, 70, 255, 0.12));
+  --opus-accent-contrast: #ffffff;
+  --opus-error: #eb2434;
+  --opus-input-bg: rgba(255, 255, 255, 0.82);
+  --opus-input-fill: rgba(255, 255, 255, 0.98);
+  --opus-date-icon-filter: none;
+  --opus-shadow: 0 24px 80px rgba(26, 18, 74, 0.08);
+  --opus-overlay-blur: 4px;
+  --opus-overlay-saturate: 1.08;
+  --opus-overlay-backdrop:
+    linear-gradient(
+      135deg,
+      color-mix(in srgb, #020617 58%, transparent),
+      color-mix(in srgb, #1e3a8a 22%, transparent)
+    ),
+    color-mix(in srgb, #020617 42%, transparent);
+  --opus-overlay-backdrop-solid: color-mix(in srgb, #020617 72%, #1e3a8a);
+  --opus-glass-surface: rgba(252, 253, 255, 0.62);
+  --opus-glass-border: rgba(126, 103, 255, 0.24);
+  --opus-menu-glass-surface: rgba(252, 253, 255, 0.88);
+  --opus-menu-glass-border: rgba(126, 103, 255, 0.3);
+}
+
+[data-theme="dark"] {
+  --opus-control-font-size: 0.86rem;
+  --opus-control-height: 28px;
+  --opus-input-radius: 4px;
+  --opus-input-radius-large: 6px;
+  --opus-input-radius-small: 2px;
+  --opus-input-radius-mark: 1px;
+  --opus-panel: rgba(9, 11, 28, 0.95);
+  --opus-border: rgba(168, 131, 255, 0.18);
+  --opus-border-strong: rgba(191, 168, 255, 0.32);
+  --opus-text: #f5f7ff;
+  --opus-muted: rgba(223, 226, 255, 0.72);
+  --opus-accent: var(--opus-user-accent, #8f6cff);
+  --opus-accent-soft: var(--opus-user-accent-soft, rgba(143, 108, 255, 0.16));
+  --opus-accent-contrast: #ffffff;
+  --opus-error: #ff5858;
+  --opus-input-bg: rgba(21, 24, 50, 0.9);
+  --opus-input-fill: rgba(19, 22, 44, 0.92);
+  --opus-date-icon-filter: invert(1);
+  --opus-shadow: 0 28px 110px rgba(4, 5, 14, 0.48);
+  --opus-overlay-blur: 4px;
+  --opus-overlay-saturate: 1.08;
+  --opus-overlay-backdrop:
+    linear-gradient(
+      135deg,
+      color-mix(in srgb, #020617 58%, transparent),
+      color-mix(in srgb, #1e3a8a 22%, transparent)
+    ),
+    color-mix(in srgb, #020617 42%, transparent);
+  --opus-overlay-backdrop-solid: color-mix(in srgb, #020617 72%, #1e3a8a);
+  --opus-glass-surface: rgba(14, 16, 36, 0.52);
+  --opus-glass-border: rgba(168, 131, 255, 0.22);
+  --opus-menu-glass-surface: rgba(14, 16, 36, 0.82);
+  --opus-menu-glass-border: rgba(168, 131, 255, 0.28);
+}
+
+.opus-panel-title {
+  display: block;
+  margin: 0;
+  padding-bottom: 6px;
+  border-bottom: 1px solid var(--opus-border);
+  color: var(--opus-accent);
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  line-height: 1;
+  text-transform: uppercase;
+}
+
+.opus-panel-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding-bottom: 6px;
+  border-bottom: 1px solid var(--opus-border);
+}
+
+.opus-panel-heading > .opus-panel-title {
+  padding-bottom: 0;
+  border-bottom: 0;
+}

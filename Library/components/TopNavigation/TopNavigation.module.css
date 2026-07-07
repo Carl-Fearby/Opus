@@ -1,0 +1,85 @@
+.bar {
+  position: relative;
+  z-index: 200;
+  display: flex;
+  align-items: center;
+  width: 100%;
+  min-height: 36px;
+  padding: 0 10px;
+  border-bottom: 1px solid var(--opus-border);
+  background: color-mix(in srgb, var(--opus-panel) 92%, transparent);
+  backdrop-filter: blur(10px);
+}
+
+.bar[data-density="compact"] {
+  min-height: 32px;
+  padding: 0 8px;
+}
+
+.nav {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0;
+}
+
+.menuSlot {
+  position: relative;
+  display: inline-flex;
+}
+
+.menuSlot[data-open="true"] {
+  z-index: 202;
+}
+
+.menuSlot[data-open="true"][data-active="true"] {
+  z-index: 203;
+}
+
+.menuSlotMega {
+  position: static;
+  display: inline-flex;
+}
+
+.menuSlotMega[data-open="true"] {
+  z-index: 202;
+}
+
+.menuSlotMega[data-open="true"][data-active="true"] {
+  z-index: 203;
+}
+
+.menuTrigger {
+  display: inline-flex;
+  align-items: center;
+  min-height: 28px;
+  padding: 0 10px;
+  border: 0;
+  border-radius: var(--opus-input-radius);
+  background: transparent;
+  color: var(--opus-text);
+  font: inherit;
+  font-size: 0.84rem;
+  font-weight: 650;
+  line-height: 1;
+  cursor: pointer;
+  transition:
+    background 140ms ease,
+    color 140ms ease;
+}
+
+.bar[data-density="compact"] .menuTrigger {
+  min-height: 24px;
+  padding: 0 8px;
+  font-size: 0.8rem;
+}
+
+.menuTrigger:hover,
+.menuTrigger[aria-expanded="true"] {
+  background: color-mix(in srgb, var(--opus-accent) 14%, transparent);
+}
+
+.menuTrigger:focus-visible {
+  outline: 2px solid color-mix(in srgb, var(--opus-accent) 70%, transparent);
+  outline-offset: 1px;
+}
