@@ -10,7 +10,7 @@ import { ComponentsSettingsSidebar } from "./ComponentsSettingsSidebar";
 import styles from "./ComponentsShell.module.css";
 
 function ComponentsShellBody({ children }: { children: ReactNode }) {
-  const { accentStyle, theme } = useComponentsTheme();
+  const { accentStyle } = useComponentsTheme();
   const { activeSlug, isResizing, settingsWidth } = useComponentSettingsContext();
 
   return (
@@ -21,7 +21,7 @@ function ComponentsShellBody({ children }: { children: ReactNode }) {
       style={{ "--settings-sidebar-width": `${settingsWidth}px` } as CSSProperties}
     >
       <ComponentsSidebar />
-      <main className={styles.content} data-theme={theme} id="main-content" style={accentStyle}>
+      <main className={styles.content} data-theme="dark" id="main-content" style={accentStyle}>
         <ComponentsPageHeader />
         <div className={styles.contentBody}>{children}</div>
       </main>

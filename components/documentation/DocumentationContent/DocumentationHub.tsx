@@ -6,7 +6,8 @@ import { AccentColorPicker, useAccentPreference } from "@/components/AccentColor
 import { OpusThemeProvider } from "@/components/OpusThemeProvider";
 import { ThemeToggleField } from "@/components/fields";
 import type { Theme } from "@/components/fields/types";
-import { COMPONENTS_BASE_PATH, GUIDE_BASE_PATH } from "@/lib/documentation/routes";
+import { COMPONENTS_BASE_PATH, GUIDE_BASE_PATH, VERSION_BASE_PATH } from "@/lib/documentation/routes";
+import { currentVersion } from "@/lib/documentation/versionLog";
 import { DocumentationTopBar } from "@/components/documentation/DocumentationTopBar";
 import styles from "./documentation.module.css";
 
@@ -71,6 +72,12 @@ export function DocumentationHub() {
               <h3 className={styles.hubCardTitle}>Components</h3>
               <p className={styles.hubCardDescription}>
                 Browse all 47 controls with live previews, settings, and generated usage code.
+              </p>
+            </Link>
+            <Link className={styles.hubCard} href={VERSION_BASE_PATH}>
+              <h3 className={styles.hubCardTitle}>Version {currentVersion}</h3>
+              <p className={styles.hubCardDescription}>
+                Release history generated from git commits, with summaries for each shipped change.
               </p>
             </Link>
           </div>

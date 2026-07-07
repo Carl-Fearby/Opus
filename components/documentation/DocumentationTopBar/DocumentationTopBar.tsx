@@ -8,7 +8,7 @@ import { DOCUMENTATION_BASE_PATH } from "@/lib/documentation/routes";
 import styles from "./TopBar.module.css";
 
 type DocumentationNavProps = {
-  current?: "home" | "components" | "guide";
+  current?: "home" | "components" | "guide" | "version";
 };
 
 export function DocumentationNav({ current }: DocumentationNavProps) {
@@ -19,9 +19,11 @@ export function DocumentationNav({ current }: DocumentationNavProps) {
       ? "components"
       : pathname.startsWith("/documentation/guide")
         ? "guide"
-        : pathname === DOCUMENTATION_BASE_PATH
-          ? "home"
-          : undefined);
+        : pathname.startsWith("/documentation/version")
+          ? "version"
+          : pathname === DOCUMENTATION_BASE_PATH
+            ? "home"
+            : undefined);
 
   return (
     <nav aria-label="Documentation" className={styles.nav}>
@@ -46,12 +48,19 @@ export function DocumentationNav({ current }: DocumentationNavProps) {
       >
         Components
       </Link>
+      <Link
+        aria-current={active === "version" ? "page" : undefined}
+        className={active === "version" ? styles.navLinkActive : styles.navLink}
+        href="/documentation/version"
+      >
+        Version
+      </Link>
     </nav>
   );
 }
 
 type DocumentationTopBarProps = {
-  current: "home" | "components" | "guide";
+  current: "home" | "components" | "guide" | "version";
   trailing?: ReactNode;
 };
 

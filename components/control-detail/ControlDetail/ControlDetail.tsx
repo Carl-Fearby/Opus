@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useSetComponentsPageHeader } from "@/components/development/ComponentsThemeProvider";
+import { useComponentsTheme, useSetComponentsPageHeader } from "@/components/development/ComponentsThemeProvider";
 import { useComponentSettings } from "@/components/development/ComponentsShell/ComponentSettingsContext";
 import { componentRawPath } from "@/lib/controls/routes";
 import type { ControlDefinition, ControlSettings } from "@/lib/controls/types";
@@ -18,6 +18,7 @@ type ControlDetailProps = {
 
 export function ControlDetail({ control, defaultSettings, documentation }: ControlDetailProps) {
   useSetComponentsPageHeader(control.title, control.description);
+  const { theme } = useComponentsTheme();
   const { settings, setSettings } = useComponentSettings(control.slug, defaultSettings);
 
   return (
@@ -35,7 +36,9 @@ export function ControlDetail({ control, defaultSettings, documentation }: Contr
           </Link>
         </div>
         <div className={styles.previewBody}>
-          <ControlPreview slug={control.slug} settings={settings} onSettingsChange={setSettings} />
+          <div className={styles.previewStage} data-theme={theme}>
+            <ControlPreview slug={control.slug} settings={settings} onSettingsChange={setSettings} />
+          </div>
         </div>
       </section>
 

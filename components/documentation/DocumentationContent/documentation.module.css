@@ -88,7 +88,7 @@
 
 .hubGrid {
   display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
+  grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 6px;
   width: 100%;
 }
@@ -241,6 +241,112 @@
 .markdown hr {
   border: 0;
   border-top: 1px solid var(--opus-border);
+}
+
+.versionPage {
+  display: grid;
+  gap: 18px;
+  width: min(720px, 100%);
+  margin: 0 auto;
+  padding: 16px 18px 28px;
+  align-content: start;
+}
+
+.versionIntro {
+  display: grid;
+  gap: 8px;
+}
+
+.versionEyebrow {
+  margin: 0;
+  color: var(--opus-muted);
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.versionTitle {
+  margin: 0;
+  color: var(--opus-accent);
+  font-size: 1.6rem;
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  line-height: 1.1;
+}
+
+.versionDescription {
+  margin: 0;
+  color: var(--opus-muted);
+  font-size: 0.9rem;
+  line-height: 1.55;
+  max-width: 58ch;
+}
+
+.versionInlineCode {
+  padding: 0.1rem 0.35rem;
+  border-radius: var(--opus-input-radius-small);
+  background: color-mix(in srgb, var(--opus-accent-soft) 70%, transparent);
+  font-family: var(--font-ibm-plex-mono), monospace;
+  font-size: 0.84em;
+}
+
+.versionList {
+  display: grid;
+  gap: 12px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.versionItem {
+  display: grid;
+  gap: 8px;
+  padding: 14px 16px;
+  border: 1px solid var(--opus-border);
+  border-radius: var(--opus-input-radius-large);
+  background: color-mix(in srgb, var(--opus-panel) 88%, transparent);
+  box-shadow: var(--opus-shadow);
+}
+
+.versionItemHeader {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px;
+}
+
+.versionBadge {
+  display: inline-flex;
+  align-items: center;
+  padding: 4px 8px;
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--opus-accent-soft) 80%, transparent);
+  color: var(--opus-accent);
+  font-size: 0.78rem;
+  font-weight: 800;
+  letter-spacing: 0.02em;
+}
+
+.versionDate {
+  color: var(--opus-muted);
+  font-size: 0.82rem;
+  font-weight: 600;
+}
+
+.versionSummary {
+  margin: 0;
+  color: var(--opus-text);
+  font-size: 0.92rem;
+  font-weight: 650;
+  line-height: 1.45;
+}
+
+.versionCommit {
+  margin: 0;
+  color: var(--opus-muted);
+  font-size: 0.8rem;
+  line-height: 1.4;
 }
 
 @media (max-width: 720px) {

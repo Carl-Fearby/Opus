@@ -14,11 +14,6 @@
     color 220ms ease;
 }
 
-.content[data-theme="light"] {
-  --opus-page-bg: linear-gradient(180deg, #f9f8ff 0%, #e7ebff 100%);
-  color: #17132f;
-}
-
 .body {
   display: grid;
   grid-template-columns: 240px minmax(0, 1fr);
@@ -89,9 +84,9 @@
   min-width: 0;
   min-height: 0;
   overflow: hidden;
-  border-left: 1px solid rgba(168, 131, 255, 0.18);
   background: color-mix(in srgb, var(--opus-panel) 90%, transparent);
   color: #f5f7ff;
+  transition: background 220ms ease;
 }
 
 .settingsSidebarHeader {
@@ -150,11 +145,8 @@
   flex-direction: column;
   min-height: 0;
   overflow: hidden;
-  border-right: 1px solid var(--opus-border);
   background: color-mix(in srgb, var(--opus-panel) 90%, transparent);
-  transition:
-    background 220ms ease,
-    border-color 220ms ease;
+  transition: background 220ms ease;
 }
 
 .sidebarSearch {
@@ -588,8 +580,6 @@
 
   .body[data-has-settings="true"] .settingsSidebar {
     max-height: 42vh;
-    border-left: 0;
-    border-top: 1px solid rgba(168, 131, 255, 0.18);
   }
 }
 
@@ -619,8 +609,6 @@
 
   .sidebar {
     max-height: 42vh;
-    border-right: none;
-    border-bottom: 1px solid var(--opus-border);
   }
 
   .navGroupItems {
