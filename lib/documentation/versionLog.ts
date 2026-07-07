@@ -30,6 +30,20 @@ export const versionLog: VersionEntry[] = [
     commit: "8e08fa75e1596b39df10df2011d0624cd0394fc9",
     commitShort: "8e08fa7",
     summary: "Fix dashboard sparkline layout and add global component settings sidebar.",
+  },
+  {
+    version: "0.2.2",
+    releasedAt: "2026-07-07",
+    commit: "1ca7176337efe0d54fc9b7d874b95f490b1024bc",
+    commitShort: "1ca7176",
+    summary: "Scope preview theme to canvas, add version log, and clean shell chrome.",
+  },
+  {
+    version: "0.2.3",
+    releasedAt: "2026-07-07",
+    commit: "7f54b85659ae2d08ae57b91ef9730a833387f9d5",
+    commitShort: "7f54b85",
+    summary: "Fix usage examples and raw preview theming",
   }
 ].reverse();
 
