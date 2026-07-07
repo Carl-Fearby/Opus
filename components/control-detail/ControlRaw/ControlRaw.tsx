@@ -2,6 +2,8 @@
 
 import { useState } from "react";
 import { ControlPreview } from "@/components/control-detail/ControlDetail/ControlPreview";
+import { PreviewThemeControls } from "@/components/control-detail/ControlDetail/PreviewThemeControls";
+import { useComponentsTheme } from "@/components/development/ComponentsThemeProvider";
 import { decodeRawSettingsParam } from "@/lib/controls/rawSettings";
 import {
   formatRawPreviewCanvasLabel,
@@ -12,6 +14,7 @@ import {
   type RawPreviewOrientation,
   type RawPreviewWidthId,
 } from "./rawPreviewWidths";
+import { useRawViewportScale } from "./useRawViewportScale";
 import styles from "./ControlRaw.module.css";
 import type { ControlSettings, ControlSlug } from "@/lib/controls/types";
 
@@ -22,6 +25,7 @@ type ControlRawProps = {
 };
 
 export function ControlRaw({ defaultSettings, encodedSettings, slug }: ControlRawProps) {
+  const { theme } = useComponentsTheme();
   const [settings, setSettings] = useState<ControlSettings>(() =>
     decodeRawSettingsParam(encodedSettings, defaultSettings),
   );
@@ -30,6 +34,11 @@ export function ControlRaw({ defaultSettings, encodedSettings, slug }: ControlRa
   const widthOption = getRawPreviewWidthOption(previewWidth);
   const canvasSize = resolveRawPreviewCanvasSize(widthOption, orientation);
   const orientationDisabled = canvasSize.full;
+  const { areaRef, scale } = useRawViewportScale(canvasSize.width, canvasSize.height, canvasSize.full);
+
+  const preview = (
+    <ControlPreview slug={slug} settings={settings} onSettingsChange={setSettings} />
+  );
 
   return (
     <div className={styles.frame}>
@@ -73,25 +82,43 @@ export function ControlRaw({ defaultSettings, encodedSettings, slug }: ControlRa
 
         <span className={styles.toolbarMeta}>
           {formatRawPreviewCanvasLabel(canvasSize, orientation)}
+          {!canvasSize.full && scale < 1 ? ` · ${Math.round(scale * 100)}% fit` : null}
         </span>
+
+        <PreviewThemeControls id={`preview-theme-toggle-${slug}-raw`} variant="toolbar" />
       </header>
 
-      <div className={styles.canvasArea}>
-        <div
-          className={styles.canvas}
-          data-fixed-width={canvasSize.full ? undefined : "true"}
-          data-orientation={canvasSize.full ? undefined : orientation}
-          data-raw-preview-root
-          style={
-            canvasSize.full || canvasSize.width === null || canvasSize.height === null
-              ? undefined
-              : {
-                  width: `${canvasSize.width}px`,
-                  height: `${canvasSize.height}px`,
-                }
-          }
-        >
-          <ControlPreview slug={slug} settings={settings} onSettingsChange={setSettings} />
+      <div className={styles.canvasArea} ref={areaRef}>
+        <div className={styles.viewportStage}>
+          {canvasSize.full || canvasSize.width === null || canvasSize.height === null ? (
+            <div className={styles.canvas} data-full="true" data-raw-preview-root data-theme={theme}>
+              {preview}
+            </div>
+          ) : (
+            <div
+              className={styles.viewportFrame}
+              style={{
+                height: canvasSize.height * scale,
+                width: canvasSize.width * scale,
+              }}
+            >
+              <div
+                className={styles.canvas}
+                data-fixed-width="true"
+                data-orientation={orientation}
+                data-raw-preview-root
+                data-theme={theme}
+                style={{
+                  height: canvasSize.height,
+                  transform: scale < 1 ? `scale(${scale})` : undefined,
+                  transformOrigin: "top left",
+                  width: canvasSize.width,
+                }}
+              >
+                {preview}
+              </div>
+            </div>
+          )}
         </div>
       </div>
     </div>

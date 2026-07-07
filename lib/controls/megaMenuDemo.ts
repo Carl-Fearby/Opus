@@ -185,7 +185,7 @@ function formatMegaMenuItem(item: MegaMenuItem, indent: string): string {
 }
 
 function formatMegaMenuSection(section: MegaMenuSection, indent: string): string {
-  const itemIndent = `${indent}  `;
+  const itemIndent = `${indent}    `;
   const items = section.items.map((item) => formatMegaMenuItem(item, itemIndent)).join(",\n");
 
   return [

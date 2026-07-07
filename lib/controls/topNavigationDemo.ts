@@ -21,7 +21,11 @@ function withShortcutPreference(
     return items;
   }
 
-  return items.map(({ shortcut, ...item }) => item);
+  return items.map((item) => {
+    const itemWithoutShortcut: DropdownMenuItemData = { ...item };
+    delete itemWithoutShortcut.shortcut;
+    return itemWithoutShortcut;
+  });
 }
 
 function formatDropdownMenuItemsForUsage(
@@ -30,7 +34,7 @@ function formatDropdownMenuItemsForUsage(
 ): string {
   const showShortcuts = options.showShortcuts ?? true;
   const resolvedItems = withShortcutPreference(items, showShortcuts);
-  const indent = "    ";
+  const indent = "      ";
 
   return resolvedItems
     .map((item) => {

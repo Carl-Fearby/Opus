@@ -4,8 +4,7 @@ import { useMemo } from "react";
 import CodeMirror from "@uiw/react-codemirror";
 import { javascript } from "@codemirror/lang-javascript";
 import { EditorView } from "@codemirror/view";
-import { vscodeDark, vscodeLight } from "@uiw/codemirror-theme-vscode";
-import { useComponentsTheme } from "@/components/development/ComponentsThemeProvider";
+import { vscodeDark } from "@uiw/codemirror-theme-vscode";
 import styles from "./UsageCodeEditor.module.css";
 
 type UsageCodeEditorProps = {
@@ -13,8 +12,6 @@ type UsageCodeEditorProps = {
 };
 
 export function UsageCodeEditor({ code }: UsageCodeEditorProps) {
-  const { theme } = useComponentsTheme();
-
   const extensions = useMemo(
     () => [javascript({ jsx: true, typescript: true }), EditorView.lineWrapping],
     [],
@@ -36,7 +33,7 @@ export function UsageCodeEditor({ code }: UsageCodeEditorProps) {
         extensions={extensions}
         height="auto"
         maxHeight="320px"
-        theme={theme === "dark" ? vscodeDark : vscodeLight}
+        theme={vscodeDark}
         value={code}
       />
     </div>

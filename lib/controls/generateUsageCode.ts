@@ -11,7 +11,6 @@ import {
   formatDataGridRowsForUsage,
 } from "./dataGridDemoData";
 import {
-  chartDemoData,
   chartDemoSeries,
   chartUsesSeries,
   formatChartDataForUsage,
@@ -33,6 +32,10 @@ import {
   buildMegaMenuPreviewConfig,
   formatMegaMenuMenusForUsage,
 } from "./megaMenuDemo";
+import {
+  formatTopNavigationMenusForUsage,
+  topNavigationDemoMenus,
+} from "./topNavigationDemo";
 import { splitUsageCode } from "./usageCode";
 
 const radioOptions = [
@@ -40,6 +43,17 @@ const radioOptions = [
   { label: "Business", value: "business" },
   { label: "Enterprise", value: "enterprise" },
 ];
+
+type FieldUsageSettings = {
+  error?: string;
+  errorEnabled?: boolean;
+  help?: string;
+  helpEnabled?: boolean;
+  label: string;
+  labelPosition: string;
+  mode: string;
+  required?: boolean;
+};
 
 function toStateName(label: string): string {
   const words = label
@@ -95,6 +109,30 @@ function formatSelfClosing(props: string[]): string {
   return `\n  ${props.join("\n  ")}\n/>`;
 }
 
+function formatSelfClosingElement(tagName: string, props: string[], indent = ""): string {
+  if (!props.length) {
+    return `${indent}<${tagName} />`;
+  }
+
+  if (props.length === 1) {
+    return `${indent}<${tagName} ${props[0]} />`;
+  }
+
+  return `${indent}<${tagName}\n${props.map((prop) => `${indent}  ${prop}`).join("\n")}\n${indent}/>`;
+}
+
+function formatOpeningElement(tagName: string, props: string[], indent = ""): string {
+  if (!props.length) {
+    return `${indent}<${tagName}>`;
+  }
+
+  if (props.length === 1) {
+    return `${indent}<${tagName} ${props[0]}>`;
+  }
+
+  return `${indent}<${tagName}\n${props.map((prop) => `${indent}  ${prop}`).join("\n")}\n${indent}>`;
+}
+
 function formatOpeningProps(props: string[]): string {
   if (!props.length) {
     return "";
@@ -105,6 +143,44 @@ function formatOpeningProps(props: string[]): string {
   }
 
   return `\n  ${props.join("\n  ")}\n`;
+}
+
+function escapeJsxText(text: string): string {
+  return text
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/{/g, "&#123;")
+    .replace(/}/g, "&#125;");
+}
+
+function formatJsxParagraphContent(content: string, indent = "  "): string {
+  const paragraphs = content
+    .split(/\n\n+/)
+    .map((paragraph) => paragraph.trim())
+    .filter(Boolean);
+
+  if (!paragraphs.length) {
+    return "";
+  }
+
+  return paragraphs
+    .map((paragraph) => {
+      const lines = paragraph.split("\n");
+
+      if (lines.length === 1) {
+        return `${indent}<p>${escapeJsxText(paragraph)}</p>`;
+      }
+
+      const body = lines
+        .map((line, index) => {
+          const lineText = escapeJsxText(line);
+          return index === 0 ? lineText : `\n${indent}  <br />\n${indent}  ${lineText}`;
+        })
+        .join("");
+
+      return `${indent}<p>\n${indent}  ${body}\n${indent}</p>`;
+    })
+    .join("\n");
 }
 
 function formatJsxRichContent(content: string, indent = "  "): string {
@@ -137,7 +213,7 @@ function formatJsxRichContent(content: string, indent = "  "): string {
     .join("\n");
 }
 
-function fieldProps(settings: ControlSettingsBySlug[Exclude<ControlSlug, "button" | "submit-button" | "reset-button" | "theme-toggle" | "accent-color-picker" | "icon-picker" | "tooltip" | "dialog" | "drawer" | "dropdown-menu" | "context-menu" | "command-palette" | "modal" | "popover" | "alert" | "toast" | "tabs" | "card" | "stat-card" | "gauge" | "panel" | "section" | "table" | "data-grid" | "skeleton" | "bar-chart-vertical" | "bar-chart-horizontal" | "grouped-bar-chart" | "stacked-bar-chart" | "stacked-bar-chart-100" | "line-chart" | "multi-line-chart" | "area-chart" | "stacked-area-chart" | "spline-chart" | "pie-chart" | "donut-chart" | "scatter-plot" | "bubble-chart" | "radar-chart" | "polar-area-chart" | "funnel-chart" | "pyramid-chart" | "carousel" | "lightbox" | "image-thumbnail" | "image-gallery" | "model-viewer" | "model-lightbox" | "model-thumbnail" | "model-gallery" | "accordion" | "accordion-group" | "show-more" | "empty-state" | "sidebar" | "mega-menu" | "top-navigation">]) {
+function fieldProps(settings: FieldUsageSettings) {
   const props = [
     formatStringProp("label", settings.label),
     formatStringProp("mode", settings.mode),
@@ -149,11 +225,11 @@ function fieldProps(settings: ControlSettingsBySlug[Exclude<ControlSlug, "button
   }
 
   if (settings.errorEnabled) {
-    props.push(formatStringProp("error", settings.error));
+    props.push(formatStringProp("error", settings.error ?? ""));
   }
 
   if (settings.helpEnabled) {
-    props.push(formatStringProp("help", settings.help));
+    props.push(formatStringProp("help", settings.help ?? ""));
   }
 
   return props;
@@ -502,7 +578,7 @@ const accentStyle = createAccentStyle(accent);
 
 return (
   <div style={accentStyle}>
-    <AccentColorPicker${formatSelfClosing(props)}
+${formatSelfClosingElement("AccentColorPicker", props, "    ")}
   </div>
 );`;
     }
@@ -524,7 +600,7 @@ import { IconPicker } from "@/components/IconPicker";
 
 const [icon, setIcon] = useState(${quote(s.value)});
 
-return <IconPicker${formatSelfClosing(props)} />;`;
+return <IconPicker${formatSelfClosing(props)};`;
     }
     case "tooltip": {
       const s = settings as ControlSettingsBySlug["tooltip"];
@@ -545,7 +621,7 @@ return <IconPicker${formatSelfClosing(props)} />;`;
         ...(s.dismissOnBackdrop ? [] : [formatBoolProp("dismissOnBackdrop", false)]),
         ...(s.dismissOnEscape ? [] : [formatBoolProp("dismissOnEscape", false)]),
       ];
-      const dialogProps = props.map((prop) => `    ${prop}`).join("\n");
+      const dialogProps = props.map((prop) => `      ${prop}`).join("\n");
       return interactiveUsage({
         components: ["Button", "Dialog"],
         state: [`const [dialogOpen, setDialogOpen] = useState(${s.open});`],
@@ -574,28 +650,28 @@ ${dialogProps}
         ...(s.dismissOnEscape ? [] : [formatBoolProp("dismissOnEscape", false)]),
         ...(s.closeButton ? [] : [formatBoolProp("closeButton", false)]),
       ];
-      const drawerProps = props.map((prop) => `    ${prop}`).join("\n");
+      const drawerProps = props.map((prop) => `      ${prop}`).join("\n");
       const children =
         s.contentType === "form"
-          ? `    <TextField
-      id="filter-query"
-      label="Search query"
-      mode="stacked"
-      labelPosition="left"
-      type="text"
-      value={query}
-      onChange={(event) => setQuery(event.target.value)}
-    />
-    <SelectField
-      id="filter-category"
-      label="Category"
-      mode="stacked"
-      labelPosition="left"
-      options={["Components", "Templates", "Tokens"]}
-      value={category}
-      onChange={(event) => setCategory(event.target.value)}
-    />`
-          : formatJsxRichContent(s.content, "    ");
+          ? `      <TextField
+        id="filter-query"
+        label="Search query"
+        mode="stacked"
+        labelPosition="left"
+        type="text"
+        value={query}
+        onChange={(event) => setQuery(event.target.value)}
+      />
+      <SelectField
+        id="filter-category"
+        label="Category"
+        mode="stacked"
+        labelPosition="left"
+        options={["Components", "Templates", "Tokens"]}
+        value={category}
+        onChange={(event) => setCategory(event.target.value)}
+      />`
+          : formatJsxRichContent(s.content, "      ");
       const imports =
         s.contentType === "form"
           ? ["Button", "Drawer", "DrawerDefaultActions", "SelectField", "TextField"]
@@ -650,7 +726,7 @@ ${children}
         formatExpressionProp("onOpenChange", "setMenuOpen"),
         formatExpressionProp("onSelect", "(item) => console.log(item.label)"),
       ];
-      const menuProps = props.map((prop) => `    ${prop}`).join("\n");
+      const menuProps = props.map((prop) => `  ${prop}`).join("\n");
       return interactiveUsage({
         components: ["Button", "DropdownMenu"],
         preamble: [
@@ -765,28 +841,28 @@ ${paletteProps}
         ...(s.dismissOnEscape ? [] : [formatBoolProp("dismissOnEscape", false)]),
         ...(s.closeButton ? [] : [formatBoolProp("closeButton", false)]),
       ];
-      const modalProps = props.map((prop) => `    ${prop}`).join("\n");
+      const modalProps = props.map((prop) => `      ${prop}`).join("\n");
       const children =
         s.contentType === "form"
-          ? `    <TextField
-      id="workspace-name"
-      label="Workspace name"
-      mode="stacked"
-      labelPosition="left"
-      type="text"
-      value={workspaceName}
-      onChange={(event) => setWorkspaceName(event.target.value)}
-    />
-    <SelectField
-      id="workspace-plan"
-      label="Plan"
-      mode="stacked"
-      labelPosition="left"
-      options={["Starter", "Team", "Enterprise"]}
-      value={plan}
-      onChange={(event) => setPlan(event.target.value)}
-    />`
-          : formatJsxRichContent(s.content, "    ");
+          ? `      <TextField
+        id="workspace-name"
+        label="Workspace name"
+        mode="stacked"
+        labelPosition="left"
+        type="text"
+        value={workspaceName}
+        onChange={(event) => setWorkspaceName(event.target.value)}
+      />
+      <SelectField
+        id="workspace-plan"
+        label="Plan"
+        mode="stacked"
+        labelPosition="left"
+        options={["Starter", "Team", "Enterprise"]}
+        value={plan}
+        onChange={(event) => setPlan(event.target.value)}
+      />`
+          : formatJsxRichContent(s.content, "      ");
       const imports =
         s.contentType === "form"
           ? ["Button", "Modal", "ModalDefaultActions", "SelectField", "TextField"]
@@ -829,28 +905,28 @@ ${children}
         formatExpressionProp("onOpenChange", "setPopoverOpen"),
         formatExpressionProp("trigger", '<Button variant="primary">Open popover</Button>'),
       ];
-      const popoverProps = props.map((prop) => `    ${prop}`).join("\n");
+      const popoverProps = props.map((prop) => `  ${prop}`).join("\n");
       const children =
         s.contentType === "form"
-          ? `    <TextField
-      id="popover-note"
-      label="Note"
-      mode="stacked"
-      labelPosition="left"
-      type="text"
-      value={note}
-      onChange={(event) => setNote(event.target.value)}
-    />
-    <SelectField
-      id="popover-priority"
-      label="Priority"
-      mode="stacked"
-      labelPosition="left"
-      options={["Low", "Medium", "High"]}
-      value={priority}
-      onChange={(event) => setPriority(event.target.value)}
-    />`
-          : formatJsxRichContent(s.content, "    ");
+          ? `  <TextField
+    id="popover-note"
+    label="Note"
+    mode="stacked"
+    labelPosition="left"
+    type="text"
+    value={note}
+    onChange={(event) => setNote(event.target.value)}
+  />
+  <SelectField
+    id="popover-priority"
+    label="Priority"
+    mode="stacked"
+    labelPosition="left"
+    options={["Low", "Medium", "High"]}
+    value={priority}
+    onChange={(event) => setPriority(event.target.value)}
+  />`
+          : formatJsxRichContent(s.content, "  ");
       const imports =
         s.contentType === "form"
           ? ["Button", "Popover", "SelectField", "TextField"]
@@ -999,7 +1075,7 @@ return <Sparkline label=${quote(s.label)} palette=${quote(s.palette)} values={va
 
         return `${importLine(["Gauge"])}
 
-<Gauge${formatSelfClosing(props)} />
+<Gauge${formatSelfClosing(props)}
 
 // Optional footer metrics — pass any number of items, or omit entirely:
 // footer={[
@@ -1020,7 +1096,7 @@ const footerMetrics = [
 ${footerBlock},
 ];
 
-<Gauge${formatSelfClosing(props)} />`;
+<Gauge${formatSelfClosing(props)}`;
     }
     case "speedometer": {
       const s = settings as ControlSettingsBySlug["speedometer"];
@@ -1094,7 +1170,7 @@ ${formatJsxRichContent(s.content)}
         const contentMarkup = contentSlots
           .map(
             (column) => `        <Section.Column>
-          ${formatPanel(column.title, column.content, "          ")}
+${formatPanel(column.title, column.content, "          ")}
         </Section.Column>`,
           )
           .join("\n");
@@ -1110,7 +1186,7 @@ ${contentMarkup}
         const outerColumns =
           s.sidebar === "left"
             ? `      <Section.Column>
-        ${formatPanel(sidebarSlot.title, sidebarSlot.content, "        ")}
+${formatPanel(sidebarSlot.title, sidebarSlot.content, "        ")}
       </Section.Column>
       <Section.Column>
 ${nestedRow}
@@ -1119,7 +1195,7 @@ ${nestedRow}
 ${nestedRow}
       </Section.Column>
       <Section.Column>
-        ${formatPanel(sidebarSlot.title, sidebarSlot.content, "        ")}
+${formatPanel(sidebarSlot.title, sidebarSlot.content, "        ")}
       </Section.Column>`;
 
         return `${importLine(["Panel", "Section"])}
@@ -1134,7 +1210,7 @@ ${outerColumns}
       const columnMarkup = slots
         .map(
           (column) => `    <Section.Column>
-      ${formatPanel(column.title, column.content, "      ")}
+${formatPanel(column.title, column.content, "      ")}
     </Section.Column>`,
         )
         .join("\n");
@@ -1502,7 +1578,7 @@ ${formatJsxRichContent(s.itemThreeContent, "    ")}
       return `${importLine(["ShowMore"])}
 
 <ShowMore${formatOpeningProps(props)}>
-${formatJsxRichContent(s.content)}
+${formatJsxParagraphContent(s.content)}
 </ShowMore>`;
     }
     case "empty-state": {
@@ -1546,7 +1622,7 @@ ${formatJsxRichContent(s.content)}
       ])}
 
 <SidebarLayout main="Main content area"${s.side !== "left" ? ` side=${quote(s.side)}` : ""}>
-  <Sidebar${formatOpeningProps(sidebarProps)}>
+${formatOpeningElement("Sidebar", sidebarProps, "  ")}
     <SidebarNav aria-label="Primary">
       <SidebarLink${s.activeItem === "overview" ? ' active' : ""}>Overview</SidebarLink>
       <SidebarGroup label="Library"${s.groupOpen ? "" : " defaultOpen={false}"}>

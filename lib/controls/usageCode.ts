@@ -15,12 +15,29 @@ function normalizeJsx(jsx: string): string {
   }
 
   if (result.startsWith("(") && result.endsWith(");")) {
-    result = result.slice(1, -2).trim();
+    result = stripCommonIndent(result.slice(1, -2)).trim();
   } else if (result.endsWith(";")) {
     result = result.slice(0, -1).trim();
   }
 
   return result;
+}
+
+function stripCommonIndent(value: string): string {
+  const lines = value.replace(/^\n/, "").replace(/\n\s*$/, "").split("\n");
+  const indentedLines = lines.filter((line) => line.trim());
+
+  if (!indentedLines.length) {
+    return "";
+  }
+
+  const indent = Math.min(...indentedLines.map((line) => line.match(/^\s*/)?.[0].length ?? 0));
+
+  if (!indent) {
+    return lines.join("\n");
+  }
+
+  return lines.map((line) => (line.trim() ? line.slice(indent) : line)).join("\n");
 }
 
 export function splitUsageCode(code: string): UsageCode {

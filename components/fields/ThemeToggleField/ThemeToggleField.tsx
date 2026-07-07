@@ -6,30 +6,36 @@ import { FieldShell } from "@/components/fields/FieldShell";
 import type { FieldMode, LabelPosition, Theme } from "@/components/fields/types";
 
 type ThemeToggleFieldProps = {
+  className?: string;
   id: string;
   label?: string;
   labelPosition?: LabelPosition;
+  labelVisuallyHidden?: boolean;
   mode?: FieldMode;
   value: Theme;
   onChange: (value: Theme) => void;
 };
 
 export function ThemeToggleField({
+  className,
   id,
   label = "Theme",
   labelPosition = "left",
+  labelVisuallyHidden,
   mode = "flagged",
   value,
   onChange,
 }: ThemeToggleFieldProps) {
   return (
     <FieldShell
+      className={className}
       fitContent
       flaggedAlign="center"
       id={id}
       label={label}
       labelPosition={labelPosition}
       labelTag="div"
+      labelVisuallyHidden={labelVisuallyHidden}
       mode={mode}
     >
       <div className={styles.toggle} role="group" aria-label={label}>

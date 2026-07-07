@@ -28,6 +28,40 @@
   align-self: start;
 }
 
+.previewToolbar {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  flex-shrink: 0;
+}
+
+.previewThemeControls {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  flex-shrink: 0;
+}
+
+.previewThemeControlsToolbar {
+  min-height: 36px;
+}
+
+.previewThemeLabel {
+  color: var(--opus-muted);
+  font-size: 0.82rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  line-height: 1;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.previewThemeField {
+  width: auto !important;
+  align-items: center !important;
+  gap: 0 !important;
+}
+
 .previewStage {
   min-width: 0;
   padding: 16px;
