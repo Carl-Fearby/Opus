@@ -82,6 +82,7 @@ export function useAccentPreference() {
 }
 
 type AccentColorPickerProps = {
+  help?: string;
   id: string;
   label?: string;
   labelPosition?: LabelPosition;
@@ -91,6 +92,7 @@ type AccentColorPickerProps = {
 };
 
 export function AccentColorPicker({
+  help,
   id,
   label = "Accent",
   labelPosition = "left",
@@ -102,6 +104,7 @@ export function AccentColorPicker({
     <FieldShell
       fitContent
       flaggedAlign="center"
+      help={help}
       id={id}
       label={label}
       labelPosition={labelPosition}

@@ -32,6 +32,56 @@ export const chartCandlestickData: ChartDatum[] = [
   { label: "Fri", value: 108, open: 110, high: 113, low: 104, close: 108 },
 ];
 
+export const chartOhlcData = chartCandlestickData;
+
+export const chartRangeData: ChartDatum[] = [
+  { label: "Jan", value: 42, low: 28, high: 54 },
+  { label: "Feb", value: 58, low: 40, high: 72 },
+  { label: "Mar", value: 49, low: 34, high: 61 },
+  { label: "Apr", value: 67, low: 51, high: 80 },
+  { label: "May", value: 61, low: 46, high: 74 },
+  { label: "Jun", value: 78, low: 60, high: 92 },
+];
+
+export const chartErrorBarData: ChartDatum[] = [
+  { label: "North", value: 62, error: 8 },
+  { label: "South", value: 48, error: 6 },
+  { label: "East", value: 71, error: 9 },
+  { label: "West", value: 55, error: 7 },
+  { label: "Central", value: 66, error: 5 },
+];
+
+export const chartParallelData: ChartDatum[] = [
+  { label: "Alpha", value: 72, values: [72, 58, 81, 44, 69] },
+  { label: "Beta", value: 64, values: [64, 77, 52, 68, 61] },
+  { label: "Gamma", value: 81, values: [81, 49, 73, 80, 57] },
+  { label: "Delta", value: 55, values: [55, 70, 46, 59, 78] },
+];
+
+export const chartContourData: ChartDatum[] = Array.from({ length: 36 }, (_, index) => {
+  const x = index % 6;
+  const y = Math.floor(index / 6);
+  const value = 35 + Math.round(45 * Math.exp(-((x - 2.4) ** 2 + (y - 2.8) ** 2) / 4));
+  return { label: `${x},${y}`, value, x, y };
+});
+
+export const chartSurfaceData = chartContourData;
+
+export const chartBulletData: ChartDatum[] = [
+  { label: "Revenue", value: 780, target: 850, max: 1000 },
+  { label: "Profit", value: 220, target: 260, max: 400 },
+  { label: "NPS", value: 64, target: 70, max: 100 },
+  { label: "Uptime", value: 97, target: 99, max: 100 },
+];
+
+export const chartParetoData: ChartDatum[] = [
+  { label: "Billing", value: 42 },
+  { label: "Auth", value: 28 },
+  { label: "Search", value: 18 },
+  { label: "Upload", value: 12 },
+  { label: "Other", value: 8 },
+];
+
 export const chartBoxPlotData: ChartDatum[] = [
   { label: "API", value: 84, min: 42, q1: 68, median: 84, q3: 96, max: 118 },
   { label: "Web", value: 72, min: 38, q1: 58, median: 72, q3: 86, max: 104 },
@@ -229,8 +279,36 @@ export function getChartPreviewData(slug: ChartControlSlug): ChartDatum[] {
     return chartFinancialData;
   }
 
-  if (slug === "candlestick-chart") {
+  if (slug === "candlestick-chart" || slug === "ohlc-chart") {
     return chartCandlestickData;
+  }
+
+  if (slug === "range-area-chart" || slug === "range-bar-chart") {
+    return chartRangeData;
+  }
+
+  if (slug === "error-bar-chart") {
+    return chartErrorBarData;
+  }
+
+  if (slug === "parallel-coordinates") {
+    return chartParallelData;
+  }
+
+  if (slug === "contour-plot") {
+    return chartContourData;
+  }
+
+  if (slug === "surface-plot") {
+    return chartSurfaceData;
+  }
+
+  if (slug === "bullet-chart") {
+    return chartBulletData;
+  }
+
+  if (slug === "pareto-chart") {
+    return chartParetoData;
   }
 
   if (slug === "box-plot") {

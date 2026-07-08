@@ -5,7 +5,7 @@ import styles from "./page.module.css";
 
 export default function Home() {
   return (
-    <main className={styles.page} data-theme="dark">
+    <main className={styles.page}>
       <div className={styles.hero}>
         <Link className={styles.logoLink} href="/">
           <Image

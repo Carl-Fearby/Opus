@@ -134,6 +134,7 @@
   max-width: 100%;
 }
 
-.canvas > [data-fit-content="true"] {
-  width: fit-content;
+.canvas [data-fit-content="true"] {
+  width: fit-content !important;
+  max-width: 100%;
 }

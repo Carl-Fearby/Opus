@@ -1,0 +1,1 @@
+export { ComponentCategories } from "./ComponentCategories";

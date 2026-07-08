@@ -1,0 +1,38 @@
+.root {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.symbol {
+  min-width: 34px;
+  min-height: 34px;
+  border: 0;
+  background: transparent;
+  color: color-mix(in srgb, var(--opus-muted) 70%, transparent);
+  font-size: 1.35rem;
+  line-height: 1;
+  cursor: pointer;
+}
+
+.symbolActive {
+  color: var(--opus-accent);
+}
+
+.numeric {
+  min-width: 34px;
+  min-height: 34px;
+  border: 1px solid var(--opus-border-strong);
+  border-radius: var(--opus-input-radius);
+  background: var(--opus-input-bg);
+  color: var(--opus-text);
+  font-size: 0.82rem;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.numericActive {
+  border-color: color-mix(in srgb, var(--opus-accent) 45%, transparent);
+  background: var(--opus-accent-soft);
+  color: var(--opus-accent);
+}

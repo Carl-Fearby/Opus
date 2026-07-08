@@ -29,6 +29,8 @@ export type ChartDatum = {
   lng?: number;
   close?: number;
   end?: number;
+  /** Error / uncertainty magnitude used by error-bar charts when high/low are omitted. */
+  error?: number;
   group?: string;
   high?: number;
   label: string;
@@ -41,6 +43,8 @@ export type ChartDatum = {
   q1?: number;
   q3?: number;
   start?: number;
+  /** Target value for bullet charts. */
+  target?: number;
   value: number;
   values?: number[];
   x?: number;
@@ -353,13 +357,45 @@ function getWaterfallDomain(data: ChartDatum[]) {
 }
 
 function getChartYDomain(variant: ChartVariant, data: ChartDatum[], series: ChartSeries[], fallbackMax: number) {
-  if (variant === "candlestick") {
+  if (variant === "candlestick" || variant === "ohlc") {
     const lows = data.map((item) => item.low ?? item.value * 0.82);
     const highs = data.map((item) => item.high ?? item.value * 1.08);
     const min = Math.min(...lows);
     const max = Math.max(...highs);
     const pad = Math.max(0, (max - min) * 0.04);
     return { min: min - pad, max: max + pad };
+  }
+
+  if (variant === "range-area" || variant === "range-bar") {
+    const lows = data.map((item) => item.low ?? item.min ?? item.value * 0.75);
+    const highs = data.map((item) => item.high ?? item.max ?? item.value * 1.25);
+    const min = Math.min(...lows);
+    const max = Math.max(...highs);
+    const pad = Math.max(0, (max - min) * 0.06);
+    return { min: Math.max(0, min - pad), max: max + pad };
+  }
+
+  if (variant === "error-bar") {
+    const lows = data.map((item) => {
+      const error = item.error ?? item.value * 0.12;
+      return (item.low ?? item.value) - (item.low == null ? error : 0);
+    });
+    const highs = data.map((item) => {
+      const error = item.error ?? item.value * 0.12;
+      return (item.high ?? item.value) + (item.high == null ? error : 0);
+    });
+    const min = Math.min(0, ...lows);
+    const max = Math.max(...highs);
+    return { min, max: max * 1.08 };
+  }
+
+  if (variant === "bullet") {
+    const highs = data.map((item) => Math.max(item.value, item.target ?? item.value, item.max ?? item.value));
+    return { min: 0, max: Math.max(1, ...highs) * 1.08 };
+  }
+
+  if (variant === "pareto") {
+    return { min: 0, max: Math.max(1, ...data.map((item) => item.value)) * 1.08 };
   }
 
   if (variant === "box-plot") {
@@ -1496,7 +1532,11 @@ export function Chart({
             slotCentered={specializedVariantUsesSlotLabels(variant)}
             timeline={variant === "timeline" || variant === "milestone-timeline"}
             edgeBarHalfWidth={
-              variant === "candlestick"
+              variant === "candlestick" ||
+              variant === "ohlc" ||
+              variant === "range-bar" ||
+              variant === "error-bar" ||
+              variant === "pareto"
                 ? getCandlestickBarHalfWidth(activePlot, data.length)
                 : variant === "histogram"
                   ? getHistogramBarHalfWidth(activePlot, data.length)

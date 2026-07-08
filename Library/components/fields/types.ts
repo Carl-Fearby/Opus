@@ -60,13 +60,16 @@ export type ChartVariant =
   | "box-plot"
   | "bubble"
   | "bubble-map"
+  | "bullet"
   | "calendar-heatmap"
   | "candlestick"
   | "chord"
   | "choropleth"
   | "circle-packing"
+  | "contour"
   | "density"
   | "donut"
+  | "error-bar"
   | "force-directed"
   | "funnel"
   | "gantt"
@@ -79,10 +82,15 @@ export type ChartVariant =
   | "milestone-timeline"
   | "multi-line"
   | "network"
+  | "ohlc"
+  | "parallel-coordinates"
+  | "pareto"
   | "pie"
   | "polar-area"
   | "pyramid"
   | "radar"
+  | "range-area"
+  | "range-bar"
   | "ridgeline"
   | "sankey"
   | "scatter"
@@ -92,6 +100,7 @@ export type ChartVariant =
   | "stacked-bar-100"
   | "stream"
   | "sunburst"
+  | "surface"
   | "timeline"
   | "treemap"
   | "violin"
@@ -106,3 +115,14 @@ export type ToastViewportPosition = {
 };
 
 export type AccordionGroupType = "single" | "multiple";
+
+export type BadgeTone = "neutral" | "accent" | "success" | "warning" | "danger" | "info";
+export type BadgeVariant = "solid" | "soft" | "outline";
+export type BadgeSize = "sm" | "md";
+export type AvatarSize = "sm" | "md" | "lg" | "xl";
+export type AvatarShape = "circle" | "rounded";
+export type DividerOrientation = "horizontal" | "vertical";
+export type DividerTone = "default" | "muted" | "strong";
+export type DescriptionListLayout = "stacked" | "inline";
+export type ContentTimelineStatus = "default" | "success" | "warning" | "danger" | "muted";
+export type StatisticTrend = "up" | "down" | "flat";

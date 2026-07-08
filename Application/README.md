@@ -27,9 +27,17 @@ npm run dev -- -p 3001
 
 ## npm package
 
-Application currently links to the local **`opus-react@0.2.7`** build (`file:../Library/packages/opus-react`) until that version is published.
+Application depends on **`opus-react@^0.2.7`**. Until that version is on the registry, install the local build into `node_modules`:
 
-After publishing, switch back to the registry:
+```bash
+# from Application/
+rm -rf node_modules/opus-react
+cp -R ../Library/packages/opus-react/dist node_modules/opus-react/dist
+cp ../Library/packages/opus-react/package.json node_modules/opus-react/package.json
+cp ../Library/packages/opus-react/README.md node_modules/opus-react/README.md
+```
+
+After publishing:
 
 ```bash
 npm install opus-react@^0.2.7

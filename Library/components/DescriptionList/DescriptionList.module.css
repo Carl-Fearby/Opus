@@ -1,0 +1,33 @@
+.list {
+  margin: 0;
+  display: grid;
+  gap: 14px;
+  width: 100%;
+}
+
+.row {
+  display: grid;
+  gap: 4px;
+  min-width: 0;
+}
+
+.list[data-layout="inline"] .row {
+  grid-template-columns: minmax(7rem, 11rem) minmax(0, 1fr);
+  gap: 16px;
+  align-items: baseline;
+}
+
+.term {
+  margin: 0;
+  color: var(--opus-muted);
+  font-size: 0.78rem;
+  font-weight: 650;
+  letter-spacing: 0.02em;
+}
+
+.details {
+  margin: 0;
+  color: var(--opus-text);
+  font-size: 0.92rem;
+  line-height: 1.45;
+}

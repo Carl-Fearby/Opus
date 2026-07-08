@@ -12,6 +12,7 @@ import {
 import styles from "./IconPicker.module.css";
 
 type IconPickerProps = {
+  help?: string;
   id: string;
   label?: string;
   labelPosition?: LabelPosition;
@@ -22,6 +23,7 @@ type IconPickerProps = {
 };
 
 export function IconPicker({
+  help,
   id,
   label = "Icon",
   labelPosition = "left",
@@ -68,7 +70,7 @@ export function IconPicker({
   }, [open]);
 
   return (
-    <FieldShell id={id} label={label} labelPosition={labelPosition} mode={mode}>
+    <FieldShell help={help} id={id} label={label} labelPosition={labelPosition} mode={mode}>
       <div className={styles.root} ref={rootRef}>
         <button
           aria-controls={open ? listboxId : undefined}

@@ -1,0 +1,7 @@
+.trap {
+  display: contents;
+}
+
+.trap[data-active="true"] {
+  outline: none;
+}

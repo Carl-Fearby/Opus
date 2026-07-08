@@ -139,6 +139,33 @@ function CommonFieldSettings({
   );
 }
 
+function HelpTextSettings<T extends { helpEnabled: boolean; help: string }>({
+  settings,
+  onChange,
+}: {
+  settings: T;
+  onChange: (next: ControlSettings) => void;
+}) {
+  return (
+    <>
+      <SettingToggle
+        label="Show help text"
+        checked={settings.helpEnabled}
+        onChange={(helpEnabled) => onChange({ ...settings, helpEnabled } as ControlSettings)}
+      />
+      {settings.helpEnabled ? (
+        <div className={shellStyles.settingsFullWidth}>
+          <SettingTextarea
+            label="Help text"
+            value={settings.help}
+            onChange={(help) => onChange({ ...settings, help } as ControlSettings)}
+          />
+        </div>
+      ) : null}
+    </>
+  );
+}
+
 export function ControlSettingsPanel({ slug, settings, onChange }: ControlSettingsPanelProps) {
   if (isChartSlug(slug)) {
     const s = settings as ControlSettingsBySlug[typeof slug];
@@ -279,7 +306,6 @@ export function ControlSettingsPanel({ slug, settings, onChange }: ControlSettin
     case "email-input":
     case "password-input":
     case "search-input":
-    case "telephone-input":
     case "url-input":
     case "date-picker":
     case "datetime-picker":
@@ -343,6 +369,279 @@ export function ControlSettingsPanel({ slug, settings, onChange }: ControlSettin
               onChange={(placeholder) => onChange({ ...s, placeholder } as ControlSettings)}
             />
           ) : null}
+        </div>
+      );
+    }
+    case "rich-text-field": {
+      const s = settings as ControlSettingsBySlug["rich-text-field"];
+      return (
+        <div className={shellStyles.settingsGrid}>
+          <CommonFieldSettings
+            includeValue={false}
+            settings={s}
+            onChange={(next) => onChange({ ...s, ...next })}
+          />
+          <SettingInput
+            label="Min height (px)"
+            type="number"
+            value={String(s.minHeight)}
+            onChange={(value) =>
+              onChange({ ...s, minHeight: Number(value) || 160 } as ControlSettings)
+            }
+          />
+          <SettingToggle
+            label="Show placeholder"
+            checked={s.placeholderEnabled}
+            onChange={(placeholderEnabled) => onChange({ ...s, placeholderEnabled } as ControlSettings)}
+          />
+          {s.placeholderEnabled ? (
+            <SettingInput
+              label="Placeholder"
+              value={s.placeholder}
+              onChange={(placeholder) => onChange({ ...s, placeholder } as ControlSettings)}
+            />
+          ) : null}
+        </div>
+      );
+    }
+    case "filter-select":
+    case "tree-select": {
+      const s = settings as ControlSettingsBySlug[typeof slug];
+      return (
+        <div className={shellStyles.settingsGrid}>
+          <CommonFieldSettings
+            includeValue={false}
+            settings={s}
+            onChange={(next) => onChange({ ...s, ...next })}
+          />
+        </div>
+      );
+    }
+    case "multi-select": {
+      const s = settings as ControlSettingsBySlug["multi-select"];
+      return (
+        <div className={shellStyles.settingsGrid}>
+          <CommonFieldSettings
+            includeValue={false}
+            settings={s}
+            onChange={(next) => onChange({ ...s, ...next })}
+          />
+          <div className={shellStyles.settingsFullWidth}>
+            <SettingTextarea
+              label="Options (comma-separated)"
+              value={s.options}
+              onChange={(options) => onChange({ ...s, options } as ControlSettings)}
+            />
+          </div>
+        </div>
+      );
+    }
+    case "transfer-list": {
+      const s = settings as ControlSettingsBySlug["transfer-list"];
+      return (
+        <div className={shellStyles.settingsGrid}>
+          <CommonFieldSettings
+            includeValue={false}
+            settings={s}
+            onChange={(next) => onChange({ ...s, ...next })}
+          />
+          <div className={shellStyles.settingsFullWidth}>
+            <SettingTextarea
+              label="Available items (comma-separated)"
+              value={s.available}
+              onChange={(available) => onChange({ ...s, available } as ControlSettings)}
+            />
+          </div>
+        </div>
+      );
+    }
+    case "password-strength-field": {
+      const s = settings as ControlSettingsBySlug["password-strength-field"];
+      return (
+        <div className={shellStyles.settingsGrid}>
+          <CommonFieldSettings
+            settings={s}
+            onChange={(next) => onChange({ ...s, ...next })}
+          />
+          <SettingToggle
+            label="Show requirements"
+            checked={s.showRequirements}
+            onChange={(showRequirements) => onChange({ ...s, showRequirements } as ControlSettings)}
+          />
+        </div>
+      );
+    }
+    case "rating-input": {
+      const s = settings as ControlSettingsBySlug["rating-input"];
+      return (
+        <div className={shellStyles.settingsGrid}>
+          <CommonFieldSettings
+            includeValue={false}
+            settings={s}
+            onChange={(next) => onChange({ ...s, ...next })}
+          />
+          <SettingSelect
+            label="Variant"
+            value={s.variant}
+            options={[
+              { label: "Stars", value: "stars" },
+              { label: "Hearts", value: "hearts" },
+              { label: "Numeric", value: "numeric" },
+            ]}
+            onChange={(variant) => onChange({ ...s, variant } as ControlSettings)}
+          />
+          <SettingInput
+            label="Maximum rating"
+            type="number"
+            value={String(s.max)}
+            onChange={(value) => onChange({ ...s, max: Number(value) || 5 } as ControlSettings)}
+          />
+          <SettingInput
+            label="Value"
+            type="number"
+            value={String(s.value)}
+            onChange={(value) => onChange({ ...s, value: Number(value) || 0 } as ControlSettings)}
+          />
+        </div>
+      );
+    }
+    case "segmented-control": {
+      const s = settings as ControlSettingsBySlug["segmented-control"];
+      return (
+        <div className={shellStyles.settingsGrid}>
+          <CommonFieldSettings
+            settings={s}
+            onChange={(next) => onChange({ ...s, ...next })}
+          />
+          <div className={shellStyles.settingsFullWidth}>
+            <SettingTextarea
+              label="Options (comma-separated)"
+              value={s.options}
+              onChange={(options) => onChange({ ...s, options } as ControlSettings)}
+            />
+          </div>
+        </div>
+      );
+    }
+    case "slider-range": {
+      const s = settings as ControlSettingsBySlug["slider-range"];
+      return (
+        <div className={shellStyles.settingsGrid}>
+          <CommonFieldSettings
+            includeValue={false}
+            settings={s}
+            onChange={(next) => onChange({ ...s, ...next })}
+          />
+          <SettingInput
+            label="Minimum value"
+            type="number"
+            value={String(s.value[0])}
+            onChange={(value) =>
+              onChange({ ...s, value: [Number(value) || s.min, s.value[1]] } as ControlSettings)
+            }
+          />
+          <SettingInput
+            label="Maximum value"
+            type="number"
+            value={String(s.value[1])}
+            onChange={(value) =>
+              onChange({ ...s, value: [s.value[0], Number(value) || s.max] } as ControlSettings)
+            }
+          />
+          <SettingInput
+            label="Range min"
+            type="number"
+            value={String(s.min)}
+            onChange={(value) => onChange({ ...s, min: Number(value) || 0 } as ControlSettings)}
+          />
+          <SettingInput
+            label="Range max"
+            type="number"
+            value={String(s.max)}
+            onChange={(value) => onChange({ ...s, max: Number(value) || 100 } as ControlSettings)}
+          />
+          <SettingInput
+            label="Step"
+            type="number"
+            value={String(s.step)}
+            onChange={(value) => onChange({ ...s, step: Number(value) || 1 } as ControlSettings)}
+          />
+        </div>
+      );
+    }
+    case "phone-number-input": {
+      const s = settings as ControlSettingsBySlug["phone-number-input"];
+      return (
+        <div className={shellStyles.settingsGrid}>
+          <CommonFieldSettings
+            settings={s}
+            onChange={(next) => onChange({ ...s, ...next })}
+          />
+          <SettingSelect
+            label="Country"
+            value={s.countryCode}
+            options={[
+              { label: "United Kingdom", value: "GB" },
+              { label: "United States", value: "US" },
+              { label: "Germany", value: "DE" },
+              { label: "France", value: "FR" },
+              { label: "Ireland", value: "IE" },
+            ]}
+            onChange={(countryCode) => onChange({ ...s, countryCode } as ControlSettings)}
+          />
+        </div>
+      );
+    }
+    case "country-picker": {
+      const s = settings as ControlSettingsBySlug["country-picker"];
+      return (
+        <div className={shellStyles.settingsGrid}>
+          <CommonFieldSettings
+            includeValue={false}
+            settings={s}
+            onChange={(next) => onChange({ ...s, ...next })}
+          />
+          <SettingSelect
+            label="Default country"
+            value={s.value}
+            options={[
+              { label: "United Kingdom", value: "GB" },
+              { label: "United States", value: "US" },
+              { label: "Germany", value: "DE" },
+              { label: "France", value: "FR" },
+              { label: "Ireland", value: "IE" },
+            ]}
+            onChange={(value) => onChange({ ...s, value } as ControlSettings)}
+          />
+          <SettingToggle
+            label="Show placeholder"
+            checked={s.placeholderEnabled}
+            onChange={(placeholderEnabled) => onChange({ ...s, placeholderEnabled } as ControlSettings)}
+          />
+          {s.placeholderEnabled ? (
+            <SettingInput
+              label="Placeholder"
+              value={s.placeholder}
+              onChange={(placeholder) => onChange({ ...s, placeholder } as ControlSettings)}
+            />
+          ) : null}
+          <SettingInput
+            label="Search placeholder"
+            value={s.searchPlaceholder}
+            onChange={(searchPlaceholder) => onChange({ ...s, searchPlaceholder } as ControlSettings)}
+          />
+        </div>
+      );
+    }
+    case "cascader": {
+      const s = settings as ControlSettingsBySlug["cascader"];
+      return (
+        <div className={shellStyles.settingsGrid}>
+          <CommonFieldSettings
+            includeValue={false}
+            settings={s}
+            onChange={(next) => onChange({ ...s, ...next })}
+          />
         </div>
       );
     }
@@ -729,6 +1028,7 @@ export function ControlSettingsPanel({ slug, settings, onChange }: ControlSettin
             value={s.label}
             onChange={(label) => onChange({ ...s, label } as ControlSettings)}
           />
+          <HelpTextSettings settings={s} onChange={onChange} />
           <SettingSelect
             label="Value"
             value={s.value}
@@ -770,6 +1070,7 @@ export function ControlSettingsPanel({ slug, settings, onChange }: ControlSettin
             value={s.label}
             onChange={(label) => onChange({ ...s, label } as ControlSettings)}
           />
+          <HelpTextSettings settings={s} onChange={onChange} />
           <SettingSelect
             label="Value"
             value={s.value}
@@ -817,6 +1118,7 @@ export function ControlSettingsPanel({ slug, settings, onChange }: ControlSettin
               onChange={(label) => onChange({ ...s, label } as ControlSettings)}
             />
           </div>
+          <HelpTextSettings settings={s} onChange={onChange} />
           <div className={shellStyles.settingsFullWidth}>
             <IconPicker
               id="settings-icon-picker"
@@ -2168,8 +2470,50 @@ export function ControlSettingsPanel({ slug, settings, onChange }: ControlSettin
     }
     case "data-grid": {
       const s = settings as ControlSettingsBySlug["data-grid"];
+      const pivotLayout = s.layout === "pivot";
+      const treeLayout = s.layout === "tree";
       return (
         <div className={shellStyles.settingsGrid}>
+          <SettingSelect
+            label="Layout"
+            value={s.layout}
+            onChange={(layout) => {
+              const nextLayout = layout as typeof s.layout;
+              onChange({
+                ...s,
+                layout: nextLayout,
+                ...(nextLayout === "pivot" ? { masterDetail: false } : {}),
+                ...(nextLayout === "tree" || nextLayout === "pivot"
+                  ? { infiniteScroll: false }
+                  : {}),
+              } as ControlSettings);
+            }}
+            options={[
+              { label: "Flat", value: "flat" },
+              { label: "Grouped", value: "grouped" },
+              { label: "Tree", value: "tree" },
+              { label: "Pivot", value: "pivot" },
+            ]}
+          />
+          {!pivotLayout ? (
+            <SettingToggle
+              label="Master detail"
+              checked={s.masterDetail}
+              onChange={(masterDetail) => onChange({ ...s, masterDetail } as ControlSettings)}
+            />
+          ) : null}
+          <SettingToggle
+            label="Virtualized"
+            checked={s.virtualized}
+            onChange={(virtualized) => onChange({ ...s, virtualized } as ControlSettings)}
+          />
+          {!treeLayout && !pivotLayout ? (
+            <SettingToggle
+              label="Infinite scroll"
+              checked={s.infiniteScroll}
+              onChange={(infiniteScroll) => onChange({ ...s, infiniteScroll } as ControlSettings)}
+            />
+          ) : null}
           <SettingSelect
             label="Density"
             value={s.density}
@@ -2824,6 +3168,568 @@ export function ControlSettingsPanel({ slug, settings, onChange }: ControlSettin
         </div>
       );
     }
+    case "badge": {
+      const s = settings as ControlSettingsBySlug["badge"];
+      return (
+        <div className={shellStyles.settingsGrid}>
+          <SettingInput
+            label="Label"
+            value={s.label}
+            onChange={(label) => onChange({ ...s, label } as ControlSettings)}
+          />
+          <SettingSelect
+            label="Tone"
+            value={s.tone}
+            onChange={(tone) => onChange({ ...s, tone: tone as typeof s.tone } as ControlSettings)}
+            options={[
+              { label: "Neutral", value: "neutral" },
+              { label: "Accent", value: "accent" },
+              { label: "Success", value: "success" },
+              { label: "Warning", value: "warning" },
+              { label: "Danger", value: "danger" },
+              { label: "Info", value: "info" },
+            ]}
+          />
+          <SettingSelect
+            label="Variant"
+            value={s.variant}
+            onChange={(variant) =>
+              onChange({ ...s, variant: variant as typeof s.variant } as ControlSettings)
+            }
+            options={[
+              { label: "Soft", value: "soft" },
+              { label: "Solid", value: "solid" },
+              { label: "Outline", value: "outline" },
+            ]}
+          />
+          <SettingSelect
+            label="Size"
+            value={s.size}
+            onChange={(size) => onChange({ ...s, size: size as typeof s.size } as ControlSettings)}
+            options={[
+              { label: "Small", value: "sm" },
+              { label: "Medium", value: "md" },
+            ]}
+          />
+          <SettingToggle
+            label="Show dot"
+            checked={s.dot}
+            onChange={(dot) => onChange({ ...s, dot } as ControlSettings)}
+          />
+        </div>
+      );
+    }
+    case "avatar": {
+      const s = settings as ControlSettingsBySlug["avatar"];
+      return (
+        <div className={shellStyles.settingsGrid}>
+          <SettingInput
+            label="Name"
+            value={s.name}
+            onChange={(name) => onChange({ ...s, name } as ControlSettings)}
+          />
+          <SettingSelect
+            label="Size"
+            value={s.size}
+            onChange={(size) => onChange({ ...s, size: size as typeof s.size } as ControlSettings)}
+            options={[
+              { label: "Small", value: "sm" },
+              { label: "Medium", value: "md" },
+              { label: "Large", value: "lg" },
+              { label: "XL", value: "xl" },
+            ]}
+          />
+          <SettingSelect
+            label="Shape"
+            value={s.shape}
+            onChange={(shape) => onChange({ ...s, shape: shape as typeof s.shape } as ControlSettings)}
+            options={[
+              { label: "Circle", value: "circle" },
+              { label: "Rounded", value: "rounded" },
+            ]}
+          />
+          <SettingToggle
+            label="Use image URL"
+            checked={s.srcEnabled}
+            onChange={(srcEnabled) => onChange({ ...s, srcEnabled } as ControlSettings)}
+          />
+          {s.srcEnabled ? (
+            <div className={shellStyles.settingsFullWidth}>
+              <SettingInput
+                label="Image URL"
+                value={s.src}
+                onChange={(src) => onChange({ ...s, src } as ControlSettings)}
+              />
+            </div>
+          ) : null}
+        </div>
+      );
+    }
+    case "avatar-group": {
+      const s = settings as ControlSettingsBySlug["avatar-group"];
+      return (
+        <div className={shellStyles.settingsGrid}>
+          <SettingSelect
+            label="Size"
+            value={s.size}
+            onChange={(size) => onChange({ ...s, size: size as typeof s.size } as ControlSettings)}
+            options={[
+              { label: "Small", value: "sm" },
+              { label: "Medium", value: "md" },
+              { label: "Large", value: "lg" },
+              { label: "XL", value: "xl" },
+            ]}
+          />
+          <SettingInput
+            label="Max visible"
+            type="number"
+            value={String(s.max)}
+            onChange={(max) =>
+              onChange({
+                ...s,
+                max: Math.min(Math.max(Number(max) || 1, 1), 8),
+              } as ControlSettings)
+            }
+          />
+        </div>
+      );
+    }
+    case "list": {
+      const s = settings as ControlSettingsBySlug["list"];
+      return (
+        <div className={shellStyles.settingsGrid}>
+          <SettingSelect
+            label="Density"
+            value={s.density}
+            onChange={(density) =>
+              onChange({ ...s, density: density as typeof s.density } as ControlSettings)
+            }
+            options={[
+              { label: "Comfortable", value: "comfortable" },
+              { label: "Compact", value: "compact" },
+            ]}
+          />
+          <SettingToggle
+            label="Ordered"
+            checked={s.ordered}
+            onChange={(ordered) => onChange({ ...s, ordered } as ControlSettings)}
+          />
+          <SettingToggle
+            label="Show icons"
+            checked={s.showIcons}
+            onChange={(showIcons) => onChange({ ...s, showIcons } as ControlSettings)}
+          />
+        </div>
+      );
+    }
+    case "description-list": {
+      const s = settings as ControlSettingsBySlug["description-list"];
+      return (
+        <div className={shellStyles.settingsGrid}>
+          <SettingSelect
+            label="Layout"
+            value={s.layout}
+            onChange={(layout) =>
+              onChange({ ...s, layout: layout as typeof s.layout } as ControlSettings)
+            }
+            options={[
+              { label: "Stacked", value: "stacked" },
+              { label: "Inline", value: "inline" },
+            ]}
+          />
+        </div>
+      );
+    }
+    case "divider": {
+      const s = settings as ControlSettingsBySlug["divider"];
+      return (
+        <div className={shellStyles.settingsGrid}>
+          <SettingSelect
+            label="Orientation"
+            value={s.orientation}
+            onChange={(orientation) =>
+              onChange({ ...s, orientation: orientation as typeof s.orientation } as ControlSettings)
+            }
+            options={[
+              { label: "Horizontal", value: "horizontal" },
+              { label: "Vertical", value: "vertical" },
+            ]}
+          />
+          <SettingSelect
+            label="Tone"
+            value={s.tone}
+            onChange={(tone) => onChange({ ...s, tone: tone as typeof s.tone } as ControlSettings)}
+            options={[
+              { label: "Default", value: "default" },
+              { label: "Muted", value: "muted" },
+              { label: "Strong", value: "strong" },
+            ]}
+          />
+          <SettingToggle
+            label="Show label"
+            checked={s.labelEnabled}
+            onChange={(labelEnabled) => onChange({ ...s, labelEnabled } as ControlSettings)}
+          />
+          {s.labelEnabled && s.orientation === "horizontal" ? (
+            <SettingInput
+              label="Label"
+              value={s.label}
+              onChange={(label) => onChange({ ...s, label } as ControlSettings)}
+            />
+          ) : null}
+        </div>
+      );
+    }
+    case "content-timeline": {
+      const s = settings as ControlSettingsBySlug["content-timeline"];
+      return (
+        <div className={shellStyles.settingsGrid}>
+          <SettingToggle
+            label="Status accents"
+            checked={s.includeStatus}
+            onChange={(includeStatus) => onChange({ ...s, includeStatus } as ControlSettings)}
+          />
+        </div>
+      );
+    }
+    case "tree-view": {
+      const s = settings as ControlSettingsBySlug["tree-view"];
+      return (
+        <div className={shellStyles.settingsGrid}>
+          <SettingToggle
+            label="Expand root nodes"
+            checked={s.expandRoots}
+            onChange={(expandRoots) => onChange({ ...s, expandRoots } as ControlSettings)}
+          />
+        </div>
+      );
+    }
+    case "masonry-grid": {
+      const s = settings as ControlSettingsBySlug["masonry-grid"];
+      return (
+        <div className={shellStyles.settingsGrid}>
+          <SettingInput
+            label="Columns"
+            type="number"
+            value={String(s.columns)}
+            onChange={(columns) =>
+              onChange({
+                ...s,
+                columns: Math.min(Math.max(Number(columns) || 2, 2), 4),
+              } as ControlSettings)
+            }
+          />
+          <SettingInput
+            label="Gap"
+            type="number"
+            value={String(s.gap)}
+            onChange={(gap) =>
+              onChange({
+                ...s,
+                gap: Math.min(Math.max(Number(gap) || 8, 8), 28),
+              } as ControlSettings)
+            }
+          />
+        </div>
+      );
+    }
+    case "property-grid": {
+      const s = settings as ControlSettingsBySlug["property-grid"];
+      return (
+        <div className={shellStyles.settingsGrid}>
+          <SettingToggle
+            label="Copyable rows"
+            checked={s.copyable}
+            onChange={(copyable) => onChange({ ...s, copyable } as ControlSettings)}
+          />
+        </div>
+      );
+    }
+    case "json-viewer": {
+      const s = settings as ControlSettingsBySlug["json-viewer"];
+      return (
+        <div className={shellStyles.settingsGrid}>
+          <SettingInput
+            label="Collapsed depth"
+            type="number"
+            value={String(s.collapsedDepth)}
+            onChange={(collapsedDepth) =>
+              onChange({
+                ...s,
+                collapsedDepth: Math.min(Math.max(Number(collapsedDepth) || 0, 0), 4),
+              } as ControlSettings)
+            }
+          />
+        </div>
+      );
+    }
+    case "statistic": {
+      const s = settings as ControlSettingsBySlug["statistic"];
+      return (
+        <div className={shellStyles.settingsGrid}>
+          <SettingInput
+            label="Label"
+            value={s.label}
+            onChange={(label) => onChange({ ...s, label } as ControlSettings)}
+          />
+          <SettingInput
+            label="Value"
+            value={s.value}
+            onChange={(value) => onChange({ ...s, value } as ControlSettings)}
+          />
+          <SettingInput
+            label="Prefix"
+            value={s.prefix}
+            onChange={(prefix) => onChange({ ...s, prefix } as ControlSettings)}
+          />
+          <SettingInput
+            label="Suffix"
+            value={s.suffix}
+            onChange={(suffix) => onChange({ ...s, suffix } as ControlSettings)}
+          />
+          <SettingToggle
+            label="Show trend"
+            checked={s.trendEnabled}
+            onChange={(trendEnabled) => onChange({ ...s, trendEnabled } as ControlSettings)}
+          />
+          {s.trendEnabled ? (
+            <>
+              <SettingSelect
+                label="Trend"
+                value={s.trend}
+                onChange={(trend) =>
+                  onChange({ ...s, trend: trend as typeof s.trend } as ControlSettings)
+                }
+                options={[
+                  { label: "Up", value: "up" },
+                  { label: "Down", value: "down" },
+                  { label: "Flat", value: "flat" },
+                ]}
+              />
+              <div className={shellStyles.settingsFullWidth}>
+                <SettingInput
+                  label="Trend label"
+                  value={s.trendLabel}
+                  onChange={(trendLabel) => onChange({ ...s, trendLabel } as ControlSettings)}
+                />
+              </div>
+            </>
+          ) : null}
+        </div>
+      );
+    }
+
+    case "icon": {
+      const s = settings as ControlSettingsBySlug["icon"];
+      return (
+        <div className={shellStyles.settingsGrid}>
+          <SettingInput label="Name" value={s.name} onChange={(name) => onChange({ ...s, name } as ControlSettings)} />
+          <SettingSelect
+            label="Size"
+            value={s.size}
+            onChange={(size) => onChange({ ...s, size: size as typeof s.size } as ControlSettings)}
+            options={[
+              { label: "Small", value: "sm" },
+              { label: "Medium", value: "md" },
+              { label: "Large", value: "lg" },
+            ]}
+          />
+          <SettingSelect
+            label="Tone"
+            value={s.tone}
+            onChange={(tone) => onChange({ ...s, tone: tone as typeof s.tone } as ControlSettings)}
+            options={[
+              { label: "Default", value: "default" },
+              { label: "Muted", value: "muted" },
+              { label: "Accent", value: "accent" },
+              { label: "Success", value: "success" },
+              { label: "Warning", value: "warning" },
+              { label: "Danger", value: "danger" },
+            ]}
+          />
+          <SettingToggle
+            label="Accessible label"
+            checked={s.labelEnabled}
+            onChange={(labelEnabled) => onChange({ ...s, labelEnabled } as ControlSettings)}
+          />
+          {s.labelEnabled ? (
+            <SettingInput label="Label" value={s.label} onChange={(label) => onChange({ ...s, label } as ControlSettings)} />
+          ) : null}
+        </div>
+      );
+    }
+    case "spinner": {
+      const s = settings as ControlSettingsBySlug["spinner"];
+      return (
+        <div className={shellStyles.settingsGrid}>
+          <SettingSelect
+            label="Size"
+            value={s.size}
+            onChange={(size) => onChange({ ...s, size: size as typeof s.size } as ControlSettings)}
+            options={[
+              { label: "Small", value: "sm" },
+              { label: "Medium", value: "md" },
+              { label: "Large", value: "lg" },
+            ]}
+          />
+          <SettingSelect
+            label="Tone"
+            value={s.tone}
+            onChange={(tone) => onChange({ ...s, tone: tone as typeof s.tone } as ControlSettings)}
+            options={[
+              { label: "Accent", value: "accent" },
+              { label: "Muted", value: "muted" },
+              { label: "Inverse", value: "inverse" },
+            ]}
+          />
+          <SettingInput label="Label" value={s.label} onChange={(label) => onChange({ ...s, label } as ControlSettings)} />
+        </div>
+      );
+    }
+    case "portal": {
+      const s = settings as ControlSettingsBySlug["portal"];
+      return (
+        <div className={shellStyles.settingsGrid}>
+          <SettingToggle label="Disabled" checked={s.disabled} onChange={(disabled) => onChange({ ...s, disabled } as ControlSettings)} />
+          <div className={shellStyles.settingsFullWidth}>
+            <SettingInput label="Message" value={s.message} onChange={(message) => onChange({ ...s, message } as ControlSettings)} />
+          </div>
+        </div>
+      );
+    }
+    case "portal-host": {
+      const s = settings as ControlSettingsBySlug["portal-host"];
+      return (
+        <div className={shellStyles.settingsGrid}>
+          <SettingInput label="Host id" value={s.hostId} onChange={(hostId) => onChange({ ...s, hostId } as ControlSettings)} />
+          <SettingInput label="Message" value={s.message} onChange={(message) => onChange({ ...s, message } as ControlSettings)} />
+        </div>
+      );
+    }
+    case "visually-hidden": {
+      const s = settings as ControlSettingsBySlug["visually-hidden"];
+      return (
+        <div className={shellStyles.settingsGrid}>
+          <SettingToggle label="Show hint" checked={s.showHint} onChange={(showHint) => onChange({ ...s, showHint } as ControlSettings)} />
+          <div className={shellStyles.settingsFullWidth}>
+            <SettingInput label="Hidden text" value={s.text} onChange={(text) => onChange({ ...s, text } as ControlSettings)} />
+          </div>
+        </div>
+      );
+    }
+    case "focus-trap": {
+      const s = settings as ControlSettingsBySlug["focus-trap"];
+      return (
+        <div className={shellStyles.settingsGrid}>
+          <SettingToggle label="Active" checked={s.active} onChange={(active) => onChange({ ...s, active } as ControlSettings)} />
+        </div>
+      );
+    }
+    case "keyboard-shortcut": {
+      const s = settings as ControlSettingsBySlug["keyboard-shortcut"];
+      return (
+        <div className={shellStyles.settingsGrid}>
+          <SettingInput label="Keys" value={s.keys} onChange={(keys) => onChange({ ...s, keys } as ControlSettings)} />
+          <SettingSelect
+            label="Size"
+            value={s.size}
+            onChange={(size) => onChange({ ...s, size: size as typeof s.size } as ControlSettings)}
+            options={[
+              { label: "Small", value: "sm" },
+              { label: "Medium", value: "md" },
+            ]}
+          />
+        </div>
+      );
+    }
+    case "hotkey-manager": {
+      const s = settings as ControlSettingsBySlug["hotkey-manager"];
+      return (
+        <div className={shellStyles.settingsGrid}>
+          <SettingToggle label="Enabled" checked={s.enabled} onChange={(enabled) => onChange({ ...s, enabled } as ControlSettings)} />
+          <SettingInput label="Key" value={s.key} onChange={(key) => onChange({ ...s, key } as ControlSettings)} />
+        </div>
+      );
+    }
+    case "copy-button": {
+      const s = settings as ControlSettingsBySlug["copy-button"];
+      return (
+        <div className={shellStyles.settingsGrid}>
+          <SettingInput label="Value" value={s.value} onChange={(value) => onChange({ ...s, value } as ControlSettings)} />
+          <SettingInput label="Label" value={s.label} onChange={(label) => onChange({ ...s, label } as ControlSettings)} />
+          <SettingInput label="Copied label" value={s.copiedLabel} onChange={(copiedLabel) => onChange({ ...s, copiedLabel } as ControlSettings)} />
+        </div>
+      );
+    }
+    case "clipboard": {
+      const s = settings as ControlSettingsBySlug["clipboard"];
+      return (
+        <div className={shellStyles.settingsGrid}>
+          <div className={shellStyles.settingsFullWidth}>
+            <SettingInput label="Value" value={s.value} onChange={(value) => onChange({ ...s, value } as ControlSettings)} />
+          </div>
+        </div>
+      );
+    }
+    case "theme-provider": {
+      const s = settings as ControlSettingsBySlug["theme-provider"];
+      return (
+        <div className={shellStyles.settingsGrid}>
+          <SettingSelect
+            label="Theme"
+            value={s.theme}
+            onChange={(theme) => onChange({ ...s, theme: theme as typeof s.theme } as ControlSettings)}
+            options={[
+              { label: "Dark", value: "dark" },
+              { label: "Light", value: "light" },
+            ]}
+          />
+        </div>
+      );
+    }
+    case "theme-switcher": {
+      const s = settings as ControlSettingsBySlug["theme-switcher"];
+      return (
+        <div className={shellStyles.settingsGrid}>
+          <SettingInput label="Label" value={s.label} onChange={(label) => onChange({ ...s, label } as ControlSettings)} />
+          <SettingSelect
+            label="Theme"
+            value={s.theme}
+            onChange={(theme) => onChange({ ...s, theme: theme as typeof s.theme } as ControlSettings)}
+            options={[
+              { label: "Dark", value: "dark" },
+              { label: "Light", value: "light" },
+            ]}
+          />
+        </div>
+      );
+    }
+    case "resize-observer": {
+      const s = settings as ControlSettingsBySlug["resize-observer"];
+      return (
+        <div className={shellStyles.settingsGrid}>
+          <SettingInput label="Hint" value={s.hint} onChange={(hint) => onChange({ ...s, hint } as ControlSettings)} />
+        </div>
+      );
+    }
+    case "intersection-observer": {
+      const s = settings as ControlSettingsBySlug["intersection-observer"];
+      return (
+        <div className={shellStyles.settingsGrid}>
+          <SettingInput
+            label="Threshold"
+            value={String(s.threshold)}
+            onChange={(threshold) =>
+              onChange({
+                ...s,
+                threshold: Math.min(1, Math.max(0, Number(threshold) || 0)),
+              } as ControlSettings)
+            }
+          />
+        </div>
+      );
+    }
+
     case "sidebar": {
       const s = settings as ControlSettingsBySlug["sidebar"];
       return (

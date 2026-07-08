@@ -1,0 +1,54 @@
+.group {
+  display: inline-flex;
+  align-items: center;
+}
+
+.item {
+  display: inline-flex;
+  margin-left: -8px;
+}
+
+.item:first-child {
+  margin-left: 0;
+}
+
+.item :global([class*="avatar"]) {
+  box-shadow: 0 0 0 2px var(--opus-panel, #10132b);
+}
+
+.overflow {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  margin-left: -8px;
+  border: 1px solid color-mix(in srgb, var(--opus-border) 80%, transparent);
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--opus-muted) 18%, var(--opus-panel));
+  color: var(--opus-text);
+  font-weight: 700;
+  box-shadow: 0 0 0 2px var(--opus-panel, #10132b);
+}
+
+.overflow[data-size="sm"] {
+  width: 28px;
+  height: 28px;
+  font-size: 0.64rem;
+}
+
+.overflow[data-size="md"] {
+  width: 36px;
+  height: 36px;
+  font-size: 0.7rem;
+}
+
+.overflow[data-size="lg"] {
+  width: 48px;
+  height: 48px;
+  font-size: 0.78rem;
+}
+
+.overflow[data-size="xl"] {
+  width: 64px;
+  height: 64px;
+  font-size: 0.9rem;
+}

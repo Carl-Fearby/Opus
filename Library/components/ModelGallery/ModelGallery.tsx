@@ -30,6 +30,7 @@ export function ModelGallery({
       {assets.map((asset) => (
         <ModelThumbnail
           asset={asset}
+          fill
           key={asset.id ?? asset.src}
           openInLightbox
           showCaption={showCaptions}

@@ -506,6 +506,132 @@
   white-space: nowrap;
 }
 
+.rowHeaderInner {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  min-width: 0;
+  max-width: 100%;
+}
+
+.rowHeaderLabel {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.chevron {
+  width: 10px;
+  height: 10px;
+  flex: 0 0 auto;
+  font-size: 10px;
+  line-height: 1;
+}
+
+.chevron svg {
+  width: 10px !important;
+  height: 10px !important;
+}
+
+.expandButton {
+  display: inline-grid;
+  place-items: center;
+  width: 18px;
+  height: 18px;
+  flex: 0 0 auto;
+  padding: 0;
+  border: 0;
+  border-radius: 4px;
+  background: transparent;
+  color: var(--opus-muted);
+  cursor: pointer;
+  font-size: 10px;
+  line-height: 1;
+}
+
+.expandButton:hover {
+  color: var(--opus-accent);
+  background: color-mix(in srgb, var(--opus-accent) 12%, transparent);
+}
+
+.expandButton svg {
+  width: 10px !important;
+  height: 10px !important;
+}
+
+.expandSpacer {
+  width: 18px;
+  height: 18px;
+  flex: 0 0 auto;
+}
+
+.groupRow td,
+.groupCell {
+  height: 34px;
+  max-height: 34px;
+  padding: 0 !important;
+  vertical-align: middle;
+  background: color-mix(in srgb, var(--opus-accent) 10%, var(--opus-panel)) !important;
+}
+
+.groupButton {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  box-sizing: border-box;
+  width: 100%;
+  height: 34px;
+  max-height: 34px;
+  padding: 0 12px;
+  border: 0;
+  background: transparent;
+  color: var(--opus-text);
+  cursor: pointer;
+  font: inherit;
+  font-size: 0.82rem;
+  font-weight: 800;
+  line-height: 1;
+  text-align: left;
+}
+
+.groupButton svg {
+  width: 10px !important;
+  height: 10px !important;
+  flex: 0 0 auto;
+}
+
+.groupCount {
+  margin-left: auto;
+  color: var(--opus-muted);
+  font-size: 0.74rem;
+  font-weight: 700;
+}
+
+.detailRow td,
+.detailCell {
+  white-space: normal !important;
+  background: color-mix(in srgb, var(--opus-accent) 6%, var(--opus-panel)) !important;
+  padding: 12px 14px !important;
+  color: var(--opus-muted);
+  font-size: 0.82rem;
+  line-height: 1.45;
+}
+
+.spacerRow td {
+  border: 0 !important;
+  background: transparent !important;
+}
+
+.infiniteFooter {
+  display: grid;
+  place-items: center;
+  min-height: 36px;
+  border-top: 1px solid color-mix(in srgb, var(--opus-border) 72%, transparent);
+  color: var(--opus-muted);
+  font-size: 0.74rem;
+  font-weight: 700;
+}
+
 @media (prefers-reduced-transparency: reduce) {
   .grid thead th::before {
     -webkit-backdrop-filter: none;

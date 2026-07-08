@@ -1,6 +1,43 @@
 import type { ControlSettingsBySlug, ControlSlug } from "./types";
 import { chartDefaults } from "./chartDefaults";
 
+const now = new Date();
+
+function pad(value: number) {
+  return String(value).padStart(2, "0");
+}
+
+function toDateValue(date: Date) {
+  return `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(date.getDate())}`;
+}
+
+function toTimeValue(date: Date) {
+  return `${pad(date.getHours())}:${pad(date.getMinutes())}`;
+}
+
+function toDateTimeValue(date: Date) {
+  return `${toDateValue(date)}T${toTimeValue(date)}`;
+}
+
+function toMonthValue(date: Date) {
+  return `${date.getFullYear()}-${pad(date.getMonth() + 1)}`;
+}
+
+function toWeekValue(date: Date) {
+  const target = new Date(Date.UTC(date.getFullYear(), date.getMonth(), date.getDate()));
+  const dayNumber = target.getUTCDay() || 7;
+  target.setUTCDate(target.getUTCDate() + 4 - dayNumber);
+  const yearStart = new Date(Date.UTC(target.getUTCFullYear(), 0, 1));
+  const week = Math.ceil(((target.getTime() - yearStart.getTime()) / 86400000 + 1) / 7);
+  return `${target.getUTCFullYear()}-W${pad(week)}`;
+}
+
+const currentDateValue = toDateValue(now);
+const currentTimeValue = toTimeValue(now);
+const currentDateTimeValue = toDateTimeValue(now);
+const currentMonthValue = toMonthValue(now);
+const currentWeekValue = toWeekValue(now);
+
 const baseFieldDefaults = {
   mode: "stacked" as const,
   labelPosition: "left" as const,
@@ -68,37 +105,32 @@ export const defaultSettings: ControlSettingsBySlug = {
   "date-picker": {
     ...baseFieldDefaults,
     label: "Date of birth",
-    value: "1990-05-24",
+    value: currentDateValue,
   },
   "time-picker": {
     ...baseFieldDefaults,
     label: "Start time",
-    value: "09:30",
+    value: currentTimeValue,
   },
   "datetime-picker": {
     ...baseFieldDefaults,
     label: "Appointment",
-    value: "1990-05-24T09:30",
+    value: currentDateTimeValue,
   },
   "month-picker": {
     ...baseFieldDefaults,
     label: "Billing month",
-    value: "1990-05",
+    value: currentMonthValue,
   },
   "week-picker": {
     ...baseFieldDefaults,
     label: "Planning week",
-    value: "1990-W21",
+    value: currentWeekValue,
   },
   "email-input": {
     ...baseFieldDefaults,
     label: "Email address",
     value: "jane.cooper@example.com",
-  },
-  "telephone-input": {
-    ...baseFieldDefaults,
-    label: "Phone number",
-    value: "+44 7700 900123",
   },
   "url-input": {
     ...baseFieldDefaults,
@@ -166,22 +198,104 @@ export const defaultSettings: ControlSettingsBySlug = {
     placeholder: "Type your message here...",
     placeholderEnabled: true,
   },
+  "rich-text-field": {
+    ...baseFieldDefaults,
+    label: "Description",
+    value: "<p>Describe your project goals and timeline.</p>",
+    placeholder: "Write something…",
+    placeholderEnabled: true,
+    minHeight: 160,
+  },
+  "filter-select": {
+    ...baseFieldDefaults,
+    label: "Filters",
+    value: ["Open", "High"],
+  },
+  "multi-select": {
+    ...baseFieldDefaults,
+    label: "Teams",
+    value: ["Design", "Engineering"],
+    options: "Design, Engineering, Marketing, Sales, Support, Operations",
+  },
+  "transfer-list": {
+    ...baseFieldDefaults,
+    label: "Office locations",
+    available: "Amsterdam, Berlin, Copenhagen, Dublin, Helsinki, Lisbon, Madrid, Oslo, Prague, Stockholm",
+    selected: ["London", "Paris"],
+  },
+  "password-strength-field": {
+    ...baseFieldDefaults,
+    label: "Create password",
+    value: "Opus2026",
+    showRequirements: true,
+  },
+  "rating-input": {
+    ...baseFieldDefaults,
+    label: "Satisfaction",
+    value: 4,
+    max: 5,
+    variant: "stars",
+  },
+  "segmented-control": {
+    ...baseFieldDefaults,
+    label: "Billing cycle",
+    value: "Monthly",
+    options: "Monthly, Quarterly, Yearly",
+  },
+  "slider-range": {
+    ...baseFieldDefaults,
+    label: "Budget range",
+    value: [20, 80],
+    min: 0,
+    max: 100,
+    step: 5,
+  },
+  "phone-number-input": {
+    ...baseFieldDefaults,
+    label: "Mobile number",
+    value: "7700 900123",
+    countryCode: "GB",
+  },
+  "country-picker": {
+    ...baseFieldDefaults,
+    label: "Country",
+    value: "GB",
+    placeholder: "Select country…",
+    placeholderEnabled: true,
+    searchPlaceholder: "Search countries…",
+  },
+  "tree-select": {
+    ...baseFieldDefaults,
+    label: "Department",
+    value: "frontend",
+  },
+  cascader: {
+    ...baseFieldDefaults,
+    label: "Location",
+    value: ["uk", "england", "london"],
+  },
   "theme-toggle": {
     mode: "flagged",
     labelPosition: "left",
     label: "Theme",
+    helpEnabled: false,
+    help: "Switch between light and dark appearance.",
     value: "dark",
   },
   "accent-color-picker": {
     mode: "flagged",
     labelPosition: "left",
     label: "Accent",
+    helpEnabled: false,
+    help: "Choose the accent colour used across the interface.",
     value: "#8f6cff",
   },
   "icon-picker": {
     mode: "stacked",
     labelPosition: "left",
     label: "Icon",
+    helpEnabled: false,
+    help: "Search and select an icon for this item.",
     value: "chart-column",
   },
   tooltip: {
@@ -429,6 +543,10 @@ export const defaultSettings: ControlSettingsBySlug = {
     stickyHeader: true,
     stickyFirstColumn: true,
     numericColumns: true,
+    layout: "flat",
+    masterDetail: false,
+    virtualized: false,
+    infiniteScroll: false,
   },
   skeleton: {
     animation: "shimmer",
@@ -518,6 +636,119 @@ export const defaultSettings: ControlSettingsBySlug = {
     primaryActionLabel: "Create component",
     secondaryAction: true,
     secondaryActionLabel: "Browse templates",
+  },
+  badge: {
+    label: "In review",
+    tone: "accent",
+    variant: "soft",
+    size: "md",
+    dot: true,
+  },
+  avatar: {
+    name: "Alex Morgan",
+    size: "md",
+    shape: "circle",
+    srcEnabled: false,
+    src: "",
+  },
+  "avatar-group": {
+    size: "md",
+    max: 3,
+  },
+  list: {
+    density: "comfortable",
+    ordered: false,
+    showIcons: true,
+  },
+  "description-list": {
+    layout: "stacked",
+  },
+  divider: {
+    orientation: "horizontal",
+    tone: "default",
+    labelEnabled: true,
+    label: "Or continue",
+  },
+  "content-timeline": {
+    includeStatus: true,
+  },
+  "tree-view": {
+    expandRoots: true,
+  },
+  "masonry-grid": {
+    columns: 3,
+    gap: 12,
+  },
+  "property-grid": {
+    copyable: true,
+  },
+  "json-viewer": {
+    collapsedDepth: 1,
+  },
+  statistic: {
+    label: "Monthly active users",
+    value: "24.8",
+    prefix: "",
+    suffix: "k",
+    trendEnabled: true,
+    trend: "up",
+    trendLabel: "12.4% vs last month",
+  },
+  icon: {
+    name: "star",
+    size: "md",
+    tone: "accent",
+    labelEnabled: true,
+    label: "Favourite",
+  },
+  spinner: {
+    size: "md",
+    tone: "accent",
+    label: "Loading",
+  },
+  portal: {
+    disabled: false,
+    message: "Rendered through a portal",
+  },
+  "portal-host": {
+    hostId: "opus-demo-portal-host",
+    message: "Hosted portal content",
+  },
+  "visually-hidden": {
+    text: "Screen reader only announcement",
+    showHint: true,
+  },
+  "focus-trap": {
+    active: true,
+  },
+  "keyboard-shortcut": {
+    keys: "⌘ K",
+    size: "md",
+  },
+  "hotkey-manager": {
+    enabled: true,
+    key: "k",
+  },
+  "copy-button": {
+    value: "npm install opus-react",
+    label: "Copy",
+    copiedLabel: "Copied",
+  },
+  clipboard: {
+    value: "Hello from Clipboard",
+  },
+  "theme-provider": {
+    theme: "dark",
+  },
+  "theme-switcher": {
+    theme: "dark",
+    label: "Theme",
+  },
+  "resize-observer": {
+    hint: "Resize the box",
+  },
+  "intersection-observer": {
+    threshold: 0.4,
   },
   sidebar: {
     side: "left",

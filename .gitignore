@@ -21,6 +21,7 @@ Library/packages/opus-react/dist/
 *.pem
 .env*
 !.env.example
+.npmrc
 
 # debug
 npm-debug.log*

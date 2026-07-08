@@ -1,0 +1,122 @@
+.page {
+  max-width: var(--opus-max-width);
+  margin: 0 auto;
+  padding: 72px 24px 96px;
+}
+
+.hero {
+  max-width: 720px;
+  margin-bottom: 40px;
+}
+
+.eyebrow {
+  margin: 0 0 12px;
+  color: var(--opus-cyan);
+  font-family: var(--font-ibm-plex-mono), monospace;
+  font-size: 0.78rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.hero h1 {
+  margin: 0;
+  font-size: clamp(2.2rem, 4vw, 3.4rem);
+  line-height: 1.04;
+  letter-spacing: -0.04em;
+}
+
+.hero p {
+  margin: 16px 0 0;
+  color: var(--opus-muted);
+  font-size: 1.04rem;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 18px;
+}
+
+.card {
+  display: flex;
+  flex-direction: column;
+  gap: 22px;
+  padding: 28px;
+  border: 1px solid var(--opus-border);
+  border-radius: var(--opus-radius);
+  background: color-mix(in srgb, var(--opus-panel) 84%, transparent);
+}
+
+.card[data-featured="true"] {
+  border-color: var(--opus-border-strong);
+  background:
+    radial-gradient(circle at top, rgba(143, 108, 255, 0.16), transparent 42%),
+    color-mix(in srgb, var(--opus-panel) 88%, transparent);
+  box-shadow: var(--opus-shadow);
+}
+
+.cardHead h2 {
+  margin: 0;
+  font-size: 1.3rem;
+}
+
+.cardHead p {
+  margin: 8px 0 0;
+  color: var(--opus-muted);
+}
+
+.cardHead strong {
+  display: block;
+  margin-top: 18px;
+  font-size: 2rem;
+  letter-spacing: -0.04em;
+}
+
+.card ul {
+  flex: 1;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: grid;
+  gap: 10px;
+}
+
+.card li {
+  position: relative;
+  padding-left: 18px;
+  color: var(--opus-muted);
+}
+
+.card li::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0.62em;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--opus-accent), var(--opus-cyan));
+}
+
+.cta {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 46px;
+  padding: 0 18px;
+  border-radius: 999px;
+  font-weight: 600;
+  background: linear-gradient(135deg, var(--opus-accent), #6b46ff);
+}
+
+@media (max-width: 980px) {
+  .grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 560px) {
+  .page {
+    padding-inline: 18px;
+  }
+}

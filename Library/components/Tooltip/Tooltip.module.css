@@ -4,6 +4,10 @@
   flex-shrink: 0;
 }
 
+.triggerWrap {
+  display: inline-flex;
+}
+
 .trigger {
   display: inline-flex;
   align-items: center;
@@ -30,10 +34,8 @@
 }
 
 .popup {
-  position: absolute;
-  z-index: 20;
-  bottom: calc(100% + 8px);
-  left: 50%;
+  position: fixed;
+  z-index: 1000;
   width: max-content;
   max-width: min(240px, 70vw);
   padding: 8px 10px;
@@ -47,18 +49,40 @@
   font-style: normal;
   line-height: 1.45;
   text-align: left;
-  transform: translateX(-50%);
+  pointer-events: none;
 }
 
-.popup::after {
-  content: "";
+.arrow {
   position: absolute;
-  top: 100%;
-  left: 50%;
   width: 8px;
   height: 8px;
+  background: var(--opus-panel);
+}
+
+.top .arrow {
+  top: 100%;
   border-right: 1px solid var(--opus-border-strong);
   border-bottom: 1px solid var(--opus-border-strong);
-  background: var(--opus-panel);
   transform: translate(-50%, -50%) rotate(45deg);
+}
+
+.bottom .arrow {
+  bottom: 100%;
+  border-left: 1px solid var(--opus-border-strong);
+  border-top: 1px solid var(--opus-border-strong);
+  transform: translate(-50%, 50%) rotate(45deg);
+}
+
+.left .arrow {
+  left: 100%;
+  border-top: 1px solid var(--opus-border-strong);
+  border-right: 1px solid var(--opus-border-strong);
+  transform: translate(-50%, -50%) rotate(45deg);
+}
+
+.right .arrow {
+  right: 100%;
+  border-bottom: 1px solid var(--opus-border-strong);
+  border-left: 1px solid var(--opus-border-strong);
+  transform: translate(50%, -50%) rotate(45deg);
 }

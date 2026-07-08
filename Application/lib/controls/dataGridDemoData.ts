@@ -36,6 +36,7 @@ export function createDataGridRows(count = 200): DataGridRow[] {
     return {
       id: `row-${index + 1}`,
       values: {
+        group,
         team,
         q1,
         q2,
@@ -51,6 +52,65 @@ export function createDataGridRows(count = 200): DataGridRow[] {
 }
 
 export const dataGridRows = createDataGridRows();
+
+/** Tree sample: one parent per catalog group with a few leaf teams. */
+export function createDataGridTreeRows(): DataGridRow[] {
+  return dataGridRowGroups.map((group, groupIndex) => {
+    const children = Array.from({ length: 3 }, (_, childIndex) => {
+      const index = groupIndex * 3 + childIndex;
+      const q1 = 5 + (index % 12);
+      return {
+        id: `tree-${groupIndex + 1}-${childIndex + 1}`,
+        values: {
+          group,
+          team: `${group} · squad ${childIndex + 1}`,
+          q1,
+          q2: q1 + 3,
+          q3: q1 + 6,
+          q4: q1 + 8,
+          adoption: `${70 + (index % 20)}%`,
+          coverage: `${72 + (index % 18)}%`,
+          a11y: childIndex === 0 ? "Review" : "Pass",
+          velocity: `+${8 + (index % 10)}%`,
+        },
+      } satisfies DataGridRow;
+    });
+
+    return {
+      id: `tree-group-${groupIndex + 1}`,
+      values: {
+        group,
+        team: group,
+        q1: children.reduce((sum, row) => sum + Number(row.values.q1), 0),
+        q2: "—",
+        q3: "—",
+        q4: "—",
+        adoption: "—",
+        coverage: "—",
+        a11y: "—",
+        velocity: "—",
+      },
+      children,
+    } satisfies DataGridRow;
+  });
+}
+
+export const dataGridTreeRows = createDataGridTreeRows();
+
+export const dataGridPivotConfig = {
+  rows: ["group"],
+  columns: ["a11y"],
+  values: ["q1", "q2"],
+  aggregator: "sum" as const,
+};
+
+export function getDetailContentForDemo(row: DataGridRow) {
+  const group = String(row.values.group ?? "—");
+  const team = String(row.values.team ?? row.label ?? row.id);
+  const adoption = String(row.values.adoption ?? "—");
+  const coverage = String(row.values.coverage ?? "—");
+  return `Detail for ${team} (${group}): adoption ${adoption}, coverage ${coverage}. Use master-detail to show nested editors, activity, or related records.`;
+}
 
 export type DataGridColumnHeaderDefaults = {
   filterable: boolean;
@@ -195,9 +255,15 @@ function formatRowValuesForUsage(row: DataGridRow): string {
 }
 
 export function formatDataGridRowsForUsage(rows: DataGridRow[]): string {
-  return `[\n${rows
-    .map((row) => {
-      return `  { id: ${JSON.stringify(row.id)}, values: ${formatRowValuesForUsage(row)} }`;
-    })
-    .join(",\n")},\n]`;
+  const formatRow = (row: DataGridRow, indent: string): string => {
+    const children =
+      row.children?.length
+        ? `,\n${indent}  children: [\n${row.children
+            .map((child) => `${indent}    ${formatRow(child, `${indent}    `)}`)
+            .join(",\n")},\n${indent}  ]`
+        : "";
+    return `{ id: ${JSON.stringify(row.id)}, values: ${formatRowValuesForUsage(row)}${children} }`;
+  };
+
+  return `[\n${rows.map((row) => `  ${formatRow(row, "  ")}`).join(",\n")},\n]`;
 }

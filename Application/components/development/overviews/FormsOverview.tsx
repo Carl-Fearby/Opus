@@ -6,22 +6,42 @@ import { useState } from "react";
 import { useSetComponentsPageHeader } from "@/components/development/ComponentsThemeProvider";
 import {
   Button,
+  CascaderField,
   CheckboxField,
+  ChipInput,
   ColorField,
+  CountryPickerField,
   DateField,
   FileField,
+  FilterSelectField,
   HiddenField,
+  MultiSelectField,
   NumberField,
+  PasswordStrengthField,
+  PhoneNumberField,
   Radio,
   RadioGroup,
   RangeField,
+  RatingField,
+  RichTextField,
+  SegmentedControlField,
   SelectField,
+  SliderRangeField,
   SwitchField,
   TextAreaField,
   TextField,
+  TransferListField,
+  TreeSelectField,
   type ChoiceShape,
   type LabelPosition,
 } from "opus-react";
+import {
+  cascaderDemoOptions,
+  filterSelectDemoGroups,
+  multiSelectDemoOptions,
+  transferListDemoAvailable,
+  treeSelectDemoNodes,
+} from "@/lib/controls/advancedFormDemoData";
 import { getControlsByCategory } from "@/lib/controls/registry";
 import { componentPath } from "@/lib/controls/routes";
 import type { ControlSlug } from "@/lib/controls/types";
@@ -32,6 +52,33 @@ const radioValues = [
   { label: "Business", value: "business" },
   { label: "Enterprise", value: "enterprise" },
 ];
+
+const now = new Date();
+
+function pad(value: number) {
+  return String(value).padStart(2, "0");
+}
+
+function toDateValue(date: Date) {
+  return `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(date.getDate())}`;
+}
+
+function toTimeValue(date: Date) {
+  return `${pad(date.getHours())}:${pad(date.getMinutes())}`;
+}
+
+function toMonthValue(date: Date) {
+  return `${date.getFullYear()}-${pad(date.getMonth() + 1)}`;
+}
+
+function toWeekValue(date: Date) {
+  const target = new Date(Date.UTC(date.getFullYear(), date.getMonth(), date.getDate()));
+  const dayNumber = target.getUTCDay() || 7;
+  target.setUTCDate(target.getUTCDate() + 4 - dayNumber);
+  const yearStart = new Date(Date.UTC(target.getUTCFullYear(), 0, 1));
+  const week = Math.ceil(((target.getTime() - yearStart.getTime()) / 86400000 + 1) / 7);
+  return `${target.getUTCFullYear()}-W${pad(week)}`;
+}
 
 type SharedFieldOptions = {
   checkboxShape: ChoiceShape;
@@ -56,16 +103,15 @@ export function FormsOverview() {
   const [fullName, setFullName] = useState("Jane Cooper");
   const [email, setEmail] = useState("jane.cooper@example.com");
   const [password, setPassword] = useState("hunter2!");
-  const [telephone, setTelephone] = useState("+44 7700 900123");
   const [website, setWebsite] = useState("https://example.com");
   const [search, setSearch] = useState("Search query");
   const [message, setMessage] = useState("");
   const [country, setCountry] = useState("Select a country");
-  const [birthDate, setBirthDate] = useState("1990-05-24");
-  const [startTime, setStartTime] = useState("09:30");
-  const [appointment, setAppointment] = useState("1990-05-24T09:30");
-  const [billingMonth, setBillingMonth] = useState("1990-05");
-  const [planningWeek, setPlanningWeek] = useState("1990-W21");
+  const [birthDate, setBirthDate] = useState(toDateValue(now));
+  const [startTime, setStartTime] = useState(toTimeValue(now));
+  const [appointment, setAppointment] = useState(`${toDateValue(now)}T${toTimeValue(now)}`);
+  const [billingMonth, setBillingMonth] = useState(toMonthValue(now));
+  const [planningWeek, setPlanningWeek] = useState(toWeekValue(now));
   const [accountType, setAccountType] = useState("personal");
   const [agree, setAgree] = useState(false);
   const [notifications, setNotifications] = useState(true);
@@ -73,6 +119,20 @@ export function FormsOverview() {
   const [quantity, setQuantity] = useState(3);
   const [fileName, setFileName] = useState("");
   const [accentColor, setAccentColor] = useState("#6D2BD9");
+  const [chips, setChips] = useState(["Design", "React", "UI"]);
+  const [richText, setRichText] = useState("<p>Describe your project goals and timeline.</p>");
+  const [filterValues, setFilterValues] = useState(["Open", "High"]);
+  const [multiSelectValues, setMultiSelectValues] = useState(["Design", "Engineering"]);
+  const [transferSelected, setTransferSelected] = useState(["London", "Paris"]);
+  const [passwordStrength, setPasswordStrength] = useState("Opus2026");
+  const [rating, setRating] = useState(4);
+  const [billingCycle, setBillingCycle] = useState("Monthly");
+  const [budgetRange, setBudgetRange] = useState<[number, number]>([20, 80]);
+  const [phoneNumber, setPhoneNumber] = useState("7700 900123");
+  const [phoneCountryCode, setPhoneCountryCode] = useState("GB");
+  const [countryPicker, setCountryPicker] = useState("GB");
+  const [department, setDepartment] = useState("frontend");
+  const [location, setLocation] = useState(["uk", "england", "london"]);
 
   const mode = flagged ? "flagged" : "stacked";
   const labelPosition = labelDirection;
@@ -216,18 +276,6 @@ export function FormsOverview() {
         onChange={(event) => setEmail(event.target.value)}
       />
     ),
-    "telephone-input": (
-      <TextField
-        id="overview-telephone-input"
-        label="Phone number"
-        mode={shared.mode}
-        labelPosition={shared.labelPosition}
-        error={shared.errorText("Enter a valid phone number")}
-        type="tel"
-        value={telephone}
-        onChange={(event) => setTelephone(event.target.value)}
-      />
-    ),
     "url-input": (
       <TextField
         id="overview-url-input"
@@ -344,6 +392,168 @@ export function FormsOverview() {
         placeholder="Type your message here..."
         value={message}
         onChange={(event) => setMessage(event.target.value)}
+      />
+    ),
+    "rich-text-field": (
+      <RichTextField
+        id="overview-rich-text-field"
+        label="Description"
+        minHeight={160}
+        mode={shared.mode}
+        labelPosition={shared.labelPosition}
+        error={shared.errorText("Please enter a description")}
+        placeholder="Write something…"
+        value={richText}
+        onChange={setRichText}
+      />
+    ),
+    "chip-input": (
+      <ChipInput
+        id="overview-chip-input"
+        label="Tags"
+        mode={shared.mode}
+        labelPosition={shared.labelPosition}
+        error={shared.errorText("Please add at least one tag")}
+        placeholder="Add a tag…"
+        value={chips}
+        onChange={setChips}
+      />
+    ),
+    "filter-select": (
+      <FilterSelectField
+        id="overview-filter-select"
+        label="Filters"
+        groups={filterSelectDemoGroups}
+        mode={shared.mode}
+        labelPosition={shared.labelPosition}
+        error={shared.errorText("Please select at least one filter")}
+        value={filterValues}
+        onChange={setFilterValues}
+      />
+    ),
+    "multi-select": (
+      <MultiSelectField
+        id="overview-multi-select"
+        label="Teams"
+        mode={shared.mode}
+        labelPosition={shared.labelPosition}
+        error={shared.errorText("Please select at least one team")}
+        options={multiSelectDemoOptions}
+        value={multiSelectValues}
+        onChange={setMultiSelectValues}
+      />
+    ),
+    "transfer-list": (
+      <TransferListField
+        id="overview-transfer-list"
+        label="Office locations"
+        available={transferListDemoAvailable}
+        mode={shared.mode}
+        labelPosition={shared.labelPosition}
+        error={shared.errorText("Please select at least one location")}
+        selected={transferSelected}
+        onChange={setTransferSelected}
+      />
+    ),
+    "password-strength-field": (
+      <PasswordStrengthField
+        id="overview-password-strength-field"
+        label="Create password"
+        mode={shared.mode}
+        labelPosition={shared.labelPosition}
+        error={shared.errorText("Please choose a stronger password")}
+        showRequirements
+        value={passwordStrength}
+        onChange={setPasswordStrength}
+      />
+    ),
+    "rating-input": (
+      <RatingField
+        id="overview-rating-input"
+        label="Satisfaction"
+        max={5}
+        mode={shared.mode}
+        labelPosition={shared.labelPosition}
+        error={shared.errorText("Please provide a rating")}
+        value={rating}
+        variant="stars"
+        onChange={setRating}
+      />
+    ),
+    "segmented-control": (
+      <SegmentedControlField
+        id="overview-segmented-control"
+        label="Billing cycle"
+        mode={shared.mode}
+        labelPosition={shared.labelPosition}
+        error={shared.errorText("Please select a billing cycle")}
+        options={["Monthly", "Quarterly", "Yearly"]}
+        value={billingCycle}
+        onChange={setBillingCycle}
+      />
+    ),
+    "slider-range": (
+      <SliderRangeField
+        id="overview-slider-range"
+        label="Budget range"
+        max={100}
+        min={0}
+        mode={shared.mode}
+        labelPosition={shared.labelPosition}
+        error={shared.errorText("Please select a valid range")}
+        step={1}
+        value={budgetRange}
+        onChange={setBudgetRange}
+      />
+    ),
+    "phone-number-input": (
+      <PhoneNumberField
+        id="overview-phone-number-input"
+        label="Mobile number"
+        countryCode={phoneCountryCode}
+        mode={shared.mode}
+        labelPosition={shared.labelPosition}
+        error={shared.errorText("Please enter a valid phone number")}
+        value={phoneNumber}
+        onChange={setPhoneNumber}
+        onCountryCodeChange={setPhoneCountryCode}
+      />
+    ),
+    "country-picker": (
+      <CountryPickerField
+        id="overview-country-picker"
+        label="Country"
+        mode={shared.mode}
+        labelPosition={shared.labelPosition}
+        error={shared.errorText("Please select a country")}
+        placeholder="Select country…"
+        searchPlaceholder="Search countries…"
+        value={countryPicker}
+        onChange={setCountryPicker}
+      />
+    ),
+    "tree-select": (
+      <TreeSelectField
+        id="overview-tree-select"
+        label="Department"
+        mode={shared.mode}
+        labelPosition={shared.labelPosition}
+        error={shared.errorText("Please select a department")}
+        nodes={treeSelectDemoNodes}
+        value={department}
+        onChange={setDepartment}
+      />
+    ),
+    cascader: (
+      <CascaderField
+        id="overview-cascader"
+        label="Location"
+        mode={shared.mode}
+        labelPosition={shared.labelPosition}
+        error={shared.errorText("Please select a location")}
+        options={cascaderDemoOptions}
+        value={location}
+        onChange={setLocation}
       />
     ),
   };

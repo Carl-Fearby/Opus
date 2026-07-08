@@ -7,6 +7,7 @@ import styles from "./ModelThumbnail.module.css";
 
 type ModelThumbnailProps = {
   asset: ModelAsset;
+  fill?: boolean;
   openInLightbox?: boolean;
   showCaption?: boolean;
   size?: ModelThumbnailSize;
@@ -14,15 +15,17 @@ type ModelThumbnailProps = {
 
 function ThumbnailContent({
   asset,
+  fill,
   showCaption,
   size,
 }: {
   asset: ModelAsset;
+  fill: boolean;
   showCaption: boolean;
   size: ModelThumbnailSize;
 }) {
   return (
-    <span className={styles.content} data-size={size}>
+    <span className={styles.content} data-fill={fill ? "true" : undefined} data-size={size}>
       <ModelViewer asset={asset} cameraControls={false} height="compact" showCaption={false} />
       {showCaption ? <span className={styles.caption}>{asset.name}</span> : null}
     </span>
@@ -31,11 +34,14 @@ function ThumbnailContent({
 
 export function ModelThumbnail({
   asset,
+  fill = false,
   openInLightbox = true,
   showCaption = true,
   size = "medium",
 }: ModelThumbnailProps) {
-  const content = <ThumbnailContent asset={asset} showCaption={showCaption} size={size} />;
+  const content = (
+    <ThumbnailContent asset={asset} fill={fill} showCaption={showCaption} size={size} />
+  );
 
   if (openInLightbox) {
     return (

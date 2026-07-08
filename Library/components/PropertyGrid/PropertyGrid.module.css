@@ -1,0 +1,77 @@
+.grid {
+  display: grid;
+  width: 100%;
+  border: 1px solid var(--opus-border);
+  border-radius: var(--opus-input-radius-large, 6px);
+  overflow: hidden;
+  background: color-mix(in srgb, var(--opus-panel) 92%, transparent);
+}
+
+.row {
+  display: grid;
+  grid-template-columns: minmax(8rem, 12rem) minmax(0, 1fr);
+  border-bottom: 1px solid var(--opus-border);
+}
+
+.row:last-child {
+  border-bottom: 0;
+}
+
+.label {
+  padding: 10px 12px;
+  background: color-mix(in srgb, var(--opus-muted) 8%, transparent);
+  color: var(--opus-muted);
+  font-size: 0.78rem;
+  font-weight: 650;
+}
+
+.valueCell {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  min-width: 0;
+  padding: 10px 12px;
+}
+
+.value {
+  min-width: 0;
+  overflow: hidden;
+  color: var(--opus-text);
+  font-family: var(--font-ibm-plex-mono), ui-monospace, monospace;
+  font-size: 0.8rem;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.copy {
+  flex-shrink: 0;
+  padding: 4px 8px;
+  border: 1px solid var(--opus-border);
+  border-radius: 999px;
+  background: transparent;
+  color: var(--opus-muted);
+  font-size: 0.7rem;
+  font-weight: 650;
+  cursor: pointer;
+}
+
+.copy:hover {
+  color: var(--opus-text);
+  border-color: color-mix(in srgb, var(--opus-accent) 40%, var(--opus-border));
+}
+
+.copy:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--opus-accent) 24%, transparent);
+}
+
+@media (max-width: 560px) {
+  .row {
+    grid-template-columns: 1fr;
+  }
+
+  .label {
+    border-bottom: 1px solid var(--opus-border);
+  }
+}

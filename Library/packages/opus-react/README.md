@@ -44,6 +44,8 @@ export function App() {
 
 `OpusThemeProvider` sets `data-theme` on `document.documentElement` by default, so themed CSS variables apply everywhere — including portalled content such as modals, drawers, and toasts.
 
+Country flags for `PhoneNumberField` are bundled into `opus-react/index.css` — no separate flag package import is required.
+
 ## Next.js
 
 Add `opus-react` to `transpilePackages`.

@@ -33,10 +33,22 @@ import {
   RadioGroup,
   RangeField,
   SelectField,
+  FilterSelectField,
+  MultiSelectField,
+  TransferListField,
+  PasswordStrengthField,
+  RatingField,
+  SegmentedControlField,
+  SliderRangeField,
+  PhoneNumberField,
+  CountryPickerField,
+  TreeSelectField,
+  CascaderField,
   Skeleton,
   StatCard,
   SwitchField,
   TextAreaField,
+  RichTextField,
   TextField,
   ThemeToggleField,
   Tooltip,
@@ -44,6 +56,34 @@ import {
   Drawer,
   DrawerDefaultActions,
   EmptyState,
+  Badge,
+  Divider,
+  Avatar,
+  AvatarGroup,
+  Statistic,
+  List,
+  DescriptionList,
+  PropertyGrid,
+  ContentTimeline,
+  TreeView,
+  MasonryGrid,
+  JsonViewer,
+  Icon,
+  Spinner,
+  Portal,
+  PortalHost,
+  VisuallyHidden,
+  FocusTrap,
+  KeyboardShortcut,
+  HotkeyManager,
+  useHotkey,
+  CopyButton,
+  Clipboard,
+  useClipboard,
+  ThemeProvider,
+  ThemeSwitcher,
+  ResizeObserver,
+  IntersectionObserver,
   Modal,
   ModalDefaultActions,
   Popover,
@@ -78,6 +118,16 @@ import type { CommandPaletteItem, DropdownMenuItemData } from "@/components/fiel
 import type { AlertStatus } from "@/components/fields/types";
 import { buildMegaMenuPreviewConfig } from "@/lib/controls/megaMenuDemo";
 import {
+  demoAvatarGroupItems,
+  demoContentTimelineItems,
+  demoDescriptionListItems,
+  demoJsonValue,
+  demoListItems,
+  demoMasonryItems,
+  demoPropertyItems,
+  demoTreeViewNodes,
+} from "@/lib/controls/contentDemoData";
+import {
   gaugePreviewValue,
   getGaugeFooter,
   getGaugeTrackColor,
@@ -93,9 +143,20 @@ import {
 } from "@/lib/layout/sectionLayout";
 import {
   buildDataGridColumns,
+  createDataGridRows,
+  dataGridPivotConfig,
   dataGridRows,
+  dataGridTreeRows,
+  getDetailContentForDemo,
 } from "@/lib/controls/dataGridDemoData";
 import { chartDemoSeries, getChartPreviewData } from "@/lib/controls/chartDemoData";
+import {
+  cascaderDemoOptions,
+  filterSelectDemoGroups,
+  multiSelectDemoOptions,
+  transferListDemoAvailable,
+  treeSelectDemoNodes,
+} from "@/lib/controls/advancedFormDemoData";
 import { isChartSlug } from "@/lib/controls/chartCatalog";
 import { cartesianSpecializedVariants } from "@/components/Chart/SpecializedCharts";
 import { DashboardPreviewGrid } from "./DashboardPreviewGrid";
@@ -264,7 +325,7 @@ type ControlPreviewProps = {
   onSettingsChange: (next: ControlSettings) => void;
 };
 
-function fieldProps(settings: ControlSettingsBySlug[Exclude<ControlSlug, "button" | "submit-button" | "reset-button" | "theme-toggle" | "accent-color-picker" | "icon-picker" | "tooltip" | "dialog" | "drawer" | "dropdown-menu" | "context-menu" | "command-palette" | "modal" | "popover" | "alert" | "toast" | "tabs" | "card" | "stat-card" | "gauge" | "panel" | "section" | "table" | "data-grid" | "skeleton" | "bar-chart-vertical" | "bar-chart-horizontal" | "grouped-bar-chart" | "stacked-bar-chart" | "stacked-bar-chart-100" | "line-chart" | "multi-line-chart" | "area-chart" | "stacked-area-chart" | "spline-chart" | "pie-chart" | "donut-chart" | "scatter-plot" | "bubble-chart" | "radar-chart" | "polar-area-chart" | "funnel-chart" | "pyramid-chart" | "carousel" | "lightbox" | "image-thumbnail" | "image-gallery" | "model-viewer" | "model-lightbox" | "model-thumbnail" | "model-gallery" | "accordion" | "accordion-group" | "show-more" | "empty-state" | "sidebar" | "mega-menu" | "top-navigation">]) {
+function fieldProps(settings: ControlSettingsBySlug[Exclude<ControlSlug, "button" | "submit-button" | "reset-button" | "theme-toggle" | "accent-color-picker" | "icon-picker" | "tooltip" | "dialog" | "drawer" | "dropdown-menu" | "context-menu" | "command-palette" | "modal" | "popover" | "alert" | "toast" | "tabs" | "card" | "stat-card" | "gauge" | "panel" | "section" | "table" | "data-grid" | "skeleton" | "bar-chart-vertical" | "bar-chart-horizontal" | "grouped-bar-chart" | "stacked-bar-chart" | "stacked-bar-chart-100" | "line-chart" | "multi-line-chart" | "area-chart" | "stacked-area-chart" | "spline-chart" | "pie-chart" | "donut-chart" | "scatter-plot" | "bubble-chart" | "radar-chart" | "polar-area-chart" | "funnel-chart" | "pyramid-chart" | "carousel" | "lightbox" | "image-thumbnail" | "image-gallery" | "model-viewer" | "model-lightbox" | "model-thumbnail" | "model-gallery" | "accordion" | "accordion-group" | "show-more" | "empty-state" | "badge" | "avatar" | "avatar-group" | "list" | "description-list" | "divider" | "content-timeline" | "tree-view" | "masonry-grid" | "property-grid" | "json-viewer" | "statistic" | "icon" | "spinner" | "portal" | "portal-host" | "visually-hidden" | "focus-trap" | "keyboard-shortcut" | "hotkey-manager" | "copy-button" | "clipboard" | "theme-provider" | "theme-switcher" | "resize-observer" | "intersection-observer" | "sidebar" | "mega-menu" | "top-navigation">]) {
   return {
     error: settings.errorEnabled ? settings.error : undefined,
     help: settings.helpEnabled ? settings.help : undefined,
@@ -930,7 +991,6 @@ const textFieldTypes = {
   "email-input": "email",
   "password-input": "password",
   "search-input": "search",
-  "telephone-input": "tel",
   "url-input": "url",
 } as const;
 
@@ -941,6 +1001,127 @@ const dateFieldTypes = {
   "time-picker": "time",
   "week-picker": "week",
 } as const;
+
+const DATA_GRID_PAGE_SIZE = 40;
+
+function DataGridPreview({ settings: s }: { settings: ControlSettingsBySlug["data-grid"] }) {
+  const [pageCount, setPageCount] = useState(1);
+  const [loadingMore, setLoadingMore] = useState(false);
+
+  useEffect(() => {
+    setPageCount(1);
+    setLoadingMore(false);
+  }, [s.infiniteScroll, s.layout]);
+
+  const gridDefaults = {
+    filterable: s.filterable,
+    resizable: s.resizable,
+    sortable: s.sortable,
+  };
+  const columns = buildDataGridColumns({
+    gridDefaults,
+    numericColumns: s.numericColumns,
+    q1Q2Resizable: s.q1Q2Resizable,
+    q1Q2SortFilter: s.q1Q2SortFilter,
+    teamResizable: s.rowHeaderResizable,
+  });
+
+  const baseRows =
+    s.layout === "tree"
+      ? dataGridTreeRows
+      : s.infiniteScroll
+        ? createDataGridRows(pageCount * DATA_GRID_PAGE_SIZE)
+        : dataGridRows;
+
+  const hasMore = s.infiniteScroll && s.layout !== "tree" && s.layout !== "pivot" && pageCount < 8;
+
+  const handleLoadMore = useCallback(() => {
+    if (!hasMore || loadingMore) {
+      return;
+    }
+    setLoadingMore(true);
+    window.setTimeout(() => {
+      setPageCount((count) => count + 1);
+      setLoadingMore(false);
+    }, 450);
+  }, [hasMore, loadingMore]);
+
+  return (
+    <DataGrid
+      bordered={s.bordered}
+      caption={s.caption}
+      columns={columns}
+      density={s.density}
+      getDetailContent={
+        s.masterDetail && s.layout !== "pivot" ? getDetailContentForDemo : undefined
+      }
+      groupBy={s.layout === "grouped" ? "group" : undefined}
+      hasMore={hasMore}
+      layout={s.layout}
+      loadingMore={loadingMore}
+      onLoadMore={s.infiniteScroll && s.layout !== "tree" && s.layout !== "pivot" ? handleLoadMore : undefined}
+      pivot={s.layout === "pivot" ? dataGridPivotConfig : undefined}
+      rows={baseRows}
+      stickyFirstColumn={s.stickyFirstColumn}
+      stickyHeader={s.stickyHeader}
+      striped={s.striped}
+      virtualized={s.virtualized}
+      viewportHeight={s.virtualized || s.infiniteScroll ? 360 : undefined}
+    />
+  );
+}
+
+
+function HotkeyManagerPreview({ enabled, hotkey }: { enabled: boolean; hotkey: string }) {
+  const [count, setCount] = useState(0);
+  const onFire = useCallback(() => {
+    setCount((n) => n + 1);
+  }, []);
+
+  return (
+    <HotkeyManager enabled={enabled}>
+      <HotkeyListener hotkey={hotkey} onFire={onFire} />
+      <div style={{ display: "grid", gap: 8 }}>
+        <p style={{ margin: 0 }}>
+          Press <KeyboardShortcut keys={["Meta", hotkey.toUpperCase()]} /> (or Ctrl+{hotkey.toUpperCase()} via settings key) — fired {count} times.
+        </p>
+        <p style={{ margin: 0, color: "var(--opus-muted)" }}>Demo listens for key &quot;{hotkey}&quot; with Meta.</p>
+      </div>
+    </HotkeyManager>
+  );
+}
+
+function HotkeyListener({ hotkey, onFire }: { hotkey: string; onFire: () => void }) {
+  const combo = useMemo(
+    () => ({ id: "demo-hotkey", key: hotkey, meta: true, description: "Demo" }),
+    [hotkey],
+  );
+  useHotkey(combo, onFire);
+  return null;
+}
+
+function ClipboardPreview({ value }: { value: string }) {
+  return (
+    <Clipboard>
+      <ClipboardPreviewInner value={value} />
+    </Clipboard>
+  );
+}
+
+function ClipboardPreviewInner({ value }: { value: string }) {
+  const { lastCopied, writeText } = useClipboard();
+  return (
+    <div style={{ display: "grid", gap: 10 }}>
+      <Button type="button" variant="primary" onClick={() => void writeText(value)}>
+        Write to clipboard
+      </Button>
+      <p style={{ margin: 0, color: "var(--opus-muted)" }}>
+        Last copied: {lastCopied ?? "—"}
+      </p>
+    </div>
+  );
+}
+
 
 export function ControlPreview({ slug, settings, onSettingsChange }: ControlPreviewProps) {
   if (isChartSlug(slug)) {
@@ -1002,7 +1183,6 @@ export function ControlPreview({ slug, settings, onSettingsChange }: ControlPrev
     case "email-input":
     case "password-input":
     case "search-input":
-    case "telephone-input":
     case "url-input": {
       const s = settings as ValueFieldSettings;
       return (
@@ -1025,6 +1205,170 @@ export function ControlPreview({ slug, settings, onSettingsChange }: ControlPrev
           placeholder={s.placeholderEnabled ? s.placeholder : undefined}
           value={s.value}
           onChange={(event) => onSettingsChange({ ...s, value: event.target.value } as ControlSettings)}
+        />
+      );
+    }
+    case "rich-text-field": {
+      const s = settings as ControlSettingsBySlug["rich-text-field"];
+      return (
+        <RichTextField
+          {...fieldProps(s)}
+          id="preview-rich-text-field"
+          minHeight={s.minHeight}
+          placeholder={s.placeholderEnabled ? s.placeholder : undefined}
+          value={s.value}
+          onChange={(value) => onSettingsChange({ ...s, value } as ControlSettings)}
+        />
+      );
+    }
+    case "filter-select": {
+      const s = settings as ControlSettingsBySlug["filter-select"];
+      return (
+        <FilterSelectField
+          {...fieldProps(s)}
+          groups={filterSelectDemoGroups}
+          id="preview-filter-select"
+          value={s.value}
+          onChange={(value) => onSettingsChange({ ...s, value } as ControlSettings)}
+        />
+      );
+    }
+    case "multi-select": {
+      const s = settings as ControlSettingsBySlug["multi-select"];
+      const options = s.options
+        .split(",")
+        .map((option) => option.trim())
+        .filter(Boolean);
+      return (
+        <MultiSelectField
+          {...fieldProps(s)}
+          id="preview-multi-select"
+          options={options.length ? options : multiSelectDemoOptions}
+          value={s.value}
+          onChange={(value) => onSettingsChange({ ...s, value } as ControlSettings)}
+        />
+      );
+    }
+    case "transfer-list": {
+      const s = settings as ControlSettingsBySlug["transfer-list"];
+      const available = s.available
+        .split(",")
+        .map((item) => item.trim())
+        .filter(Boolean);
+      return (
+        <TransferListField
+          {...fieldProps(s)}
+          available={available.length ? available : transferListDemoAvailable}
+          id="preview-transfer-list"
+          selected={s.selected}
+          onChange={(selected) => onSettingsChange({ ...s, selected } as ControlSettings)}
+        />
+      );
+    }
+    case "password-strength-field": {
+      const s = settings as ControlSettingsBySlug["password-strength-field"];
+      return (
+        <PasswordStrengthField
+          {...fieldProps(s)}
+          id="preview-password-strength-field"
+          showRequirements={s.showRequirements}
+          value={s.value}
+          onChange={(value) => onSettingsChange({ ...s, value } as ControlSettings)}
+        />
+      );
+    }
+    case "rating-input": {
+      const s = settings as ControlSettingsBySlug["rating-input"];
+      return (
+        <RatingField
+          {...fieldProps(s)}
+          id="preview-rating-input"
+          max={s.max}
+          value={s.value}
+          variant={s.variant}
+          onChange={(value) => onSettingsChange({ ...s, value } as ControlSettings)}
+        />
+      );
+    }
+    case "segmented-control": {
+      const s = settings as ControlSettingsBySlug["segmented-control"];
+      const options = s.options
+        .split(",")
+        .map((option) => option.trim())
+        .filter(Boolean);
+      return (
+        <SegmentedControlField
+          {...fieldProps(s)}
+          id="preview-segmented-control"
+          options={options.length ? options : ["Monthly", "Quarterly", "Yearly"]}
+          value={s.value}
+          onChange={(value) => onSettingsChange({ ...s, value } as ControlSettings)}
+        />
+      );
+    }
+    case "slider-range": {
+      const s = settings as ControlSettingsBySlug["slider-range"];
+      return (
+        <SliderRangeField
+          {...fieldProps(s)}
+          id="preview-slider-range"
+          max={s.max}
+          min={s.min}
+          step={s.step}
+          value={s.value}
+          onChange={(value) => onSettingsChange({ ...s, value } as ControlSettings)}
+        />
+      );
+    }
+    case "phone-number-input": {
+      const s = settings as ControlSettingsBySlug["phone-number-input"];
+      return (
+        <PhoneNumberField
+          {...fieldProps(s)}
+          countryCode={s.countryCode}
+          id="preview-phone-number-input"
+          value={s.value}
+          onChange={(value) => onSettingsChange({ ...s, value } as ControlSettings)}
+          onCountryCodeChange={(countryCode) =>
+            onSettingsChange({ ...s, countryCode } as ControlSettings)
+          }
+        />
+      );
+    }
+    case "country-picker": {
+      const s = settings as ControlSettingsBySlug["country-picker"];
+      return (
+        <CountryPickerField
+          {...fieldProps(s)}
+          id="preview-country-picker"
+          placeholder={s.placeholderEnabled ? s.placeholder : undefined}
+          searchPlaceholder={s.searchPlaceholder}
+          value={s.value}
+          onChange={(value) => onSettingsChange({ ...s, value } as ControlSettings)}
+        />
+      );
+    }
+    case "tree-select": {
+      const s = settings as ControlSettingsBySlug["tree-select"];
+      return (
+        <TreeSelectField
+          {...fieldProps(s)}
+          id="preview-tree-select"
+          nodes={treeSelectDemoNodes}
+          value={s.value}
+          onChange={(value) => onSettingsChange({ ...s, value } as ControlSettings)}
+        />
+      );
+    }
+    case "cascader": {
+      const s = settings as ControlSettingsBySlug["cascader"];
+      return (
+        <CascaderField
+          {...fieldProps(s)}
+          id="preview-cascader"
+          options={cascaderDemoOptions}
+          value={s.value}
+          onChange={(value) => onSettingsChange({ ...s, value } as ControlSettings)}
         />
       );
     }
@@ -1220,6 +1564,7 @@ export function ControlPreview({ slug, settings, onSettingsChange }: ControlPrev
       const s = settings as ControlSettingsBySlug["theme-toggle"];
       return (
         <ThemeToggleField
+          help={s.helpEnabled ? s.help : undefined}
           id="preview-theme-toggle"
           label={s.label}
           labelPosition={s.labelPosition}
@@ -1236,6 +1581,7 @@ export function ControlPreview({ slug, settings, onSettingsChange }: ControlPrev
       return (
         <div className={styles.accentPreview} style={accentStyle}>
           <AccentColorPicker
+            help={s.helpEnabled ? s.help : undefined}
             id="preview-accent-color-picker"
             label={s.label}
             labelPosition={s.labelPosition}
@@ -1251,6 +1597,7 @@ export function ControlPreview({ slug, settings, onSettingsChange }: ControlPrev
       const s = settings as ControlSettingsBySlug["icon-picker"];
       return (
         <IconPicker
+          help={s.helpEnabled ? s.help : undefined}
           id="preview-icon-picker"
           label={s.label}
           labelPosition={s.labelPosition}
@@ -1567,31 +1914,7 @@ export function ControlPreview({ slug, settings, onSettingsChange }: ControlPrev
     }
     case "data-grid": {
       const s = settings as ControlSettingsBySlug["data-grid"];
-      const gridDefaults = {
-        filterable: s.filterable,
-        resizable: s.resizable,
-        sortable: s.sortable,
-      };
-      const columns = buildDataGridColumns({
-        gridDefaults,
-        numericColumns: s.numericColumns,
-        q1Q2Resizable: s.q1Q2Resizable,
-        q1Q2SortFilter: s.q1Q2SortFilter,
-        teamResizable: s.rowHeaderResizable,
-      });
-
-      return (
-        <DataGrid
-          bordered={s.bordered}
-          caption={s.caption}
-          columns={columns}
-          density={s.density}
-          rows={dataGridRows}
-          stickyFirstColumn={s.stickyFirstColumn}
-          stickyHeader={s.stickyHeader}
-          striped={s.striped}
-        />
-      );
+      return <DataGridPreview settings={s} />;
     }
     case "skeleton": {
       const s = settings as ControlSettingsBySlug["skeleton"];
@@ -1764,6 +2087,277 @@ export function ControlPreview({ slug, settings, onSettingsChange }: ControlPrev
         />
       );
     }
+    case "badge": {
+      const s = settings as ControlSettingsBySlug["badge"];
+      return <Badge dot={s.dot} label={s.label} size={s.size} tone={s.tone} variant={s.variant} />;
+    }
+    case "avatar": {
+      const s = settings as ControlSettingsBySlug["avatar"];
+      return (
+        <Avatar
+          name={s.name}
+          shape={s.shape}
+          size={s.size}
+          src={s.srcEnabled && s.src ? s.src : undefined}
+        />
+      );
+    }
+    case "avatar-group": {
+      const s = settings as ControlSettingsBySlug["avatar-group"];
+      return <AvatarGroup items={demoAvatarGroupItems} max={s.max} size={s.size} />;
+    }
+    case "list": {
+      const s = settings as ControlSettingsBySlug["list"];
+      return <List density={s.density} items={demoListItems(s.showIcons)} ordered={s.ordered} />;
+    }
+    case "description-list": {
+      const s = settings as ControlSettingsBySlug["description-list"];
+      return <DescriptionList items={demoDescriptionListItems} layout={s.layout} />;
+    }
+    case "divider": {
+      const s = settings as ControlSettingsBySlug["divider"];
+      return (
+        <div style={{ width: "100%", minHeight: s.orientation === "vertical" ? 80 : undefined, display: "flex", alignItems: "center" }}>
+          <Divider
+            label={s.labelEnabled && s.orientation === "horizontal" ? s.label : undefined}
+            orientation={s.orientation}
+            tone={s.tone}
+          />
+        </div>
+      );
+    }
+    case "content-timeline": {
+      const s = settings as ControlSettingsBySlug["content-timeline"];
+      return <ContentTimeline items={demoContentTimelineItems(s.includeStatus)} />;
+    }
+    case "tree-view": {
+      const s = settings as ControlSettingsBySlug["tree-view"];
+      return (
+        <TreeView
+          defaultExpandedIds={s.expandRoots ? ["product", "engineering"] : []}
+          nodes={demoTreeViewNodes}
+        />
+      );
+    }
+    case "masonry-grid": {
+      const s = settings as ControlSettingsBySlug["masonry-grid"];
+      return <MasonryGrid columns={s.columns} gap={s.gap} items={demoMasonryItems} />;
+    }
+    case "property-grid": {
+      const s = settings as ControlSettingsBySlug["property-grid"];
+      return <PropertyGrid items={demoPropertyItems(s.copyable)} />;
+    }
+    case "json-viewer": {
+      const s = settings as ControlSettingsBySlug["json-viewer"];
+      return <JsonViewer collapsedDepth={s.collapsedDepth} value={demoJsonValue} />;
+    }
+    case "statistic": {
+      const s = settings as ControlSettingsBySlug["statistic"];
+      return (
+        <Statistic
+          label={s.label}
+          prefix={s.prefix || undefined}
+          suffix={s.suffix || undefined}
+          trend={s.trendEnabled ? s.trend : undefined}
+          trendLabel={s.trendEnabled ? s.trendLabel : undefined}
+          value={s.value}
+        />
+      );
+    }
+
+    case "icon": {
+      const s = settings as ControlSettingsBySlug["icon"];
+      return (
+        <Icon
+          label={s.labelEnabled ? s.label : undefined}
+          name={s.name}
+          size={s.size}
+          tone={s.tone}
+        />
+      );
+    }
+    case "spinner": {
+      const s = settings as ControlSettingsBySlug["spinner"];
+      return <Spinner label={s.label} size={s.size} tone={s.tone} />;
+    }
+    case "portal": {
+      const s = settings as ControlSettingsBySlug["portal"];
+      return (
+        <div style={{ display: "grid", gap: 12 }}>
+          <p style={{ margin: 0, color: "var(--opus-muted)" }}>Source tree stays here.</p>
+          <Portal disabled={s.disabled}>
+            <div
+              style={{
+                position: "fixed",
+                right: 24,
+                bottom: 24,
+                zIndex: 80,
+                padding: "10px 14px",
+                borderRadius: 10,
+                border: "1px solid var(--opus-border)",
+                background: "var(--opus-panel)",
+                boxShadow: "var(--opus-shadow)",
+              }}
+            >
+              {s.message}
+            </div>
+          </Portal>
+        </div>
+      );
+    }
+    case "portal-host": {
+      const s = settings as ControlSettingsBySlug["portal-host"];
+      return (
+        <PortalHost id={s.hostId}>
+          <p style={{ margin: 0, color: "var(--opus-muted)" }}>Host id: {s.hostId}</p>
+          <Portal>
+            <div
+              style={{
+                marginTop: 12,
+                padding: "10px 14px",
+                borderRadius: 10,
+                border: "1px dashed var(--opus-accent)",
+                color: "var(--opus-text)",
+              }}
+            >
+              {s.message}
+            </div>
+          </Portal>
+        </PortalHost>
+      );
+    }
+    case "visually-hidden": {
+      const s = settings as ControlSettingsBySlug["visually-hidden"];
+      return (
+        <div style={{ display: "grid", gap: 8 }}>
+          {s.showHint ? (
+            <p style={{ margin: 0, color: "var(--opus-muted)" }}>
+              Visible hint — the next phrase is only for screen readers.
+            </p>
+          ) : null}
+          <VisuallyHidden>{s.text}</VisuallyHidden>
+          <span aria-hidden="true" style={{ color: "var(--opus-text)" }}>
+            ★
+          </span>
+        </div>
+      );
+    }
+    case "focus-trap": {
+      const s = settings as ControlSettingsBySlug["focus-trap"];
+      return (
+        <FocusTrap active={s.active}>
+          <div
+            style={{
+              display: "grid",
+              gap: 10,
+              padding: 14,
+              border: "1px solid var(--opus-border)",
+              borderRadius: 12,
+              maxWidth: 280,
+            }}
+          >
+            <p style={{ margin: 0 }}>Tab cycles inside this panel while active.</p>
+            <Button type="button" variant="secondary">
+              First
+            </Button>
+            <Button type="button" variant="primary">
+              Second
+            </Button>
+            <Button type="button" variant="secondary">
+              Third
+            </Button>
+          </div>
+        </FocusTrap>
+      );
+    }
+    case "keyboard-shortcut": {
+      const s = settings as ControlSettingsBySlug["keyboard-shortcut"];
+      const keys = s.keys.split(/\s*\+\s*|\s+/).filter(Boolean);
+      return <KeyboardShortcut keys={keys.length ? keys : ["⌘", "K"]} size={s.size} />;
+    }
+    case "hotkey-manager": {
+      const s = settings as ControlSettingsBySlug["hotkey-manager"];
+      return <HotkeyManagerPreview enabled={s.enabled} hotkey={s.key} />;
+    }
+    case "copy-button": {
+      const s = settings as ControlSettingsBySlug["copy-button"];
+      return <CopyButton copiedLabel={s.copiedLabel} label={s.label} value={s.value} />;
+    }
+    case "clipboard": {
+      const s = settings as ControlSettingsBySlug["clipboard"];
+      return <ClipboardPreview value={s.value} />;
+    }
+    case "theme-provider": {
+      const s = settings as ControlSettingsBySlug["theme-provider"];
+      return (
+        <ThemeProvider applyToDocument={false} theme={s.theme}>
+          <div data-theme={s.theme} style={{ padding: 16, borderRadius: 12, border: "1px solid var(--opus-border)", background: "var(--opus-panel)", color: "var(--opus-text)" }}>
+            Theme provider value: <strong>{s.theme}</strong>
+          </div>
+        </ThemeProvider>
+      );
+    }
+    case "theme-switcher": {
+      const s = settings as ControlSettingsBySlug["theme-switcher"];
+      return (
+        <ThemeSwitcher
+          label={s.label}
+          value={s.theme}
+          onChange={(theme) => onSettingsChange({ ...s, theme } as ControlSettings)}
+        />
+      );
+    }
+    case "resize-observer": {
+      const s = settings as ControlSettingsBySlug["resize-observer"];
+      return (
+        <ResizeObserver>
+          {(size) => (
+            <div
+              style={{
+                resize: "both",
+                overflow: "auto",
+                minWidth: 160,
+                minHeight: 90,
+                width: 240,
+                height: 120,
+                padding: 12,
+                border: "1px dashed var(--opus-accent)",
+                borderRadius: 12,
+              }}
+            >
+              <div style={{ color: "var(--opus-muted)", marginBottom: 8 }}>{s.hint}</div>
+              <strong>
+                {size.width} × {size.height}
+              </strong>
+            </div>
+          )}
+        </ResizeObserver>
+      );
+    }
+    case "intersection-observer": {
+      const s = settings as ControlSettingsBySlug["intersection-observer"];
+      return (
+        <div style={{ maxHeight: 180, overflow: "auto", border: "1px solid var(--opus-border)", borderRadius: 12, padding: 12 }}>
+          <div style={{ height: 160, color: "var(--opus-muted)" }}>Scroll down…</div>
+          <IntersectionObserver threshold={s.threshold}>
+            {(visible) => (
+              <div
+                style={{
+                  padding: 16,
+                  borderRadius: 10,
+                  background: visible ? "color-mix(in srgb, var(--opus-accent) 18%, transparent)" : "var(--opus-panel)",
+                  border: "1px solid var(--opus-border)",
+                }}
+              >
+                Target is {visible ? "visible" : "hidden"}
+              </div>
+            )}
+          </IntersectionObserver>
+          <div style={{ height: 160 }} />
+        </div>
+      );
+    }
+
     case "sidebar": {
       const s = settings as ControlSettingsBySlug["sidebar"];
 

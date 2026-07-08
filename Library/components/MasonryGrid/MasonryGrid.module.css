@@ -1,0 +1,42 @@
+.grid {
+  width: 100%;
+}
+
+.card {
+  display: grid;
+  gap: 8px;
+  break-inside: avoid;
+  page-break-inside: avoid;
+  padding: 16px;
+  border: 1px solid var(--opus-border);
+  border-radius: var(--opus-input-radius-large, 6px);
+  background:
+    linear-gradient(180deg, color-mix(in srgb, var(--opus-accent) 8%, transparent), transparent 48%),
+    color-mix(in srgb, var(--opus-panel) 94%, transparent);
+}
+
+.title {
+  margin: 0;
+  color: var(--opus-text);
+  font-size: 0.9rem;
+  font-weight: 650;
+}
+
+.body {
+  margin: 0;
+  color: var(--opus-muted);
+  font-size: 0.82rem;
+  line-height: 1.45;
+}
+
+@media (max-width: 720px) {
+  .grid {
+    column-count: 2 !important;
+  }
+}
+
+@media (max-width: 480px) {
+  .grid {
+    column-count: 1 !important;
+  }
+}

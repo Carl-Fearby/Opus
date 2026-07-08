@@ -66,7 +66,6 @@ Forms controls use `FieldShell` unless noted. Button variants share the `Button`
 | `month-picker` | `DateField` | `type="month"` |
 | `week-picker` | `DateField` | `type="week"` |
 | `email-input` | `TextField` | `type="email"` |
-| `telephone-input` | `TextField` | `type="tel"` |
 | `url-input` | `TextField` | `type="url"` |
 | `search-input` | `TextField` | `type="search"` |
 | `file-upload` | `FileField` | File picker with drag area |
@@ -77,6 +76,7 @@ Forms controls use `FieldShell` unless noted. Button variants share the `Button`
 | `select` | `SelectField` | Dropdown select |
 | `text-input` | `TextField` | Single-line text |
 | `textarea` | `TextAreaField` | Multi-line text |
+| `rich-text-field` | `RichTextField` | Formatted text editor with toolbar |
 | `theme-toggle` | `ThemeToggleField` | Light/dark toggle with sun/moon icons |
 
 ### FieldShell modes

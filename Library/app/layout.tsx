@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { IBM_Plex_Mono, Space_Grotesk } from "next/font/google";
+import "../packages/opus-react/dist/flags.css";
 import "./globals.css";
 
 const spaceGrotesk = Space_Grotesk({

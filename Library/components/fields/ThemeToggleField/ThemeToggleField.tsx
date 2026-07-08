@@ -7,6 +7,7 @@ import type { FieldMode, LabelPosition, Theme } from "@/components/fields/types"
 
 type ThemeToggleFieldProps = {
   className?: string;
+  help?: string;
   id: string;
   label?: string;
   labelPosition?: LabelPosition;
@@ -18,6 +19,7 @@ type ThemeToggleFieldProps = {
 
 export function ThemeToggleField({
   className,
+  help,
   id,
   label = "Theme",
   labelPosition = "left",
@@ -31,6 +33,7 @@ export function ThemeToggleField({
       className={className}
       fitContent
       flaggedAlign="center"
+      help={help}
       id={id}
       label={label}
       labelPosition={labelPosition}

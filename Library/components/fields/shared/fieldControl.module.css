@@ -1,0 +1,207 @@
+.input {
+  width: 100%;
+  min-height: var(--opus-control-height);
+  padding: 0 10px;
+  border: 1px solid var(--opus-border-strong);
+  border-radius: var(--opus-input-radius);
+  background: var(--opus-input-bg);
+  color: var(--opus-text);
+  font-size: var(--opus-control-font-size);
+  box-shadow:
+    0 1px 0 rgba(255, 255, 255, 0.05) inset,
+    0 14px 30px rgba(0, 0, 0, 0.06);
+  transition:
+    border-color 160ms ease,
+    box-shadow 160ms ease;
+}
+
+.input:focus {
+  border-color: var(--opus-accent);
+  box-shadow:
+    0 0 0 4px color-mix(in srgb, var(--opus-accent) 22%, transparent),
+    0 14px 30px rgba(0, 0, 0, 0.06);
+  outline: none;
+}
+
+.input::placeholder {
+  color: color-mix(in srgb, var(--opus-muted) 80%, transparent);
+}
+
+.error {
+  border-color: color-mix(in srgb, var(--opus-error) 75%, transparent);
+}
+
+.passwordWrap {
+  position: relative;
+  display: flex;
+  align-items: center;
+  width: 100%;
+}
+
+.passwordInput {
+  padding-right: 38px;
+}
+
+.passwordToggleSlot {
+  position: absolute;
+  right: 6px;
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+.passwordToggle {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 22px;
+  height: 22px;
+  padding: 0;
+  border: 0;
+  border-radius: var(--opus-input-radius);
+  background: transparent;
+  color: color-mix(in srgb, var(--opus-muted) 70%, transparent);
+  font-size: 0.5rem;
+  cursor: pointer;
+  transition:
+    color 160ms ease,
+    background 160ms ease;
+}
+
+.passwordToggle:hover {
+  color: var(--opus-text);
+  background: color-mix(in srgb, var(--opus-accent-soft) 60%, transparent);
+}
+
+.passwordToggle:focus-visible {
+  outline: none;
+  color: var(--opus-accent);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--opus-accent) 22%, transparent);
+}
+
+.trigger {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  width: 100%;
+  min-height: var(--opus-control-height);
+  padding: 0 10px;
+  border: 1px solid var(--opus-border-strong);
+  border-radius: var(--opus-input-radius);
+  background: var(--opus-input-bg);
+  color: var(--opus-text);
+  font-size: var(--opus-control-font-size);
+  cursor: pointer;
+  text-align: left;
+}
+
+.trigger:hover {
+  border-color: color-mix(in srgb, var(--opus-accent) 45%, var(--opus-border-strong));
+}
+
+.triggerOpen,
+.trigger:focus-visible {
+  border-color: var(--opus-accent);
+  box-shadow: 0 0 0 4px color-mix(in srgb, var(--opus-accent) 22%, transparent);
+  outline: none;
+}
+
+.triggerError {
+  border-color: color-mix(in srgb, var(--opus-error) 75%, transparent);
+}
+
+.placeholder {
+  color: color-mix(in srgb, var(--opus-muted) 80%, transparent);
+}
+
+.chevron {
+  color: var(--opus-muted);
+  font-size: 0.72rem;
+}
+
+.panel {
+  position: absolute;
+  top: calc(100% + 6px);
+  left: 0;
+  right: 0;
+  z-index: 20;
+  border: 1px solid var(--opus-border-strong);
+  border-radius: var(--opus-input-radius-large);
+  background: var(--opus-panel);
+  box-shadow: var(--opus-shadow);
+  overflow: hidden;
+}
+
+.panelFooter {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+  padding: 10px;
+  border-top: 1px solid var(--opus-border);
+  background: color-mix(in srgb, var(--opus-panel) 92%, var(--opus-accent-soft));
+}
+
+.actionButton {
+  min-height: 28px;
+  padding: 0 12px;
+  border: 1px solid var(--opus-border-strong);
+  border-radius: var(--opus-input-radius);
+  background: var(--opus-input-bg);
+  color: var(--opus-text);
+  font-size: 0.78rem;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.actionButtonPrimary {
+  border-color: color-mix(in srgb, var(--opus-accent) 45%, transparent);
+  background: var(--opus-accent);
+  color: #fff;
+}
+
+.search {
+  width: 100%;
+  min-height: 32px;
+  padding: 0 10px;
+  border: 0;
+  border-bottom: 1px solid var(--opus-border);
+  background: transparent;
+  color: var(--opus-text);
+  font-size: 0.82rem;
+}
+
+.search:focus {
+  outline: none;
+}
+
+.groupLabel {
+  padding: 8px 10px 4px;
+  color: var(--opus-muted);
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.option {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 10px;
+  color: var(--opus-text);
+  font-size: 0.82rem;
+  cursor: pointer;
+}
+
+.option:hover {
+  background: color-mix(in srgb, var(--opus-accent-soft) 65%, transparent);
+}
+
+.option input {
+  accent-color: var(--opus-accent);
+}
+
+.list {
+  max-height: 220px;
+  overflow: auto;
+}

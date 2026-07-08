@@ -158,7 +158,7 @@ export function DrawerDefaultActions({ onClose }: { onClose: () => void }) {
   return (
     <>
       <Button variant="secondary" onClick={onClose}>
-        Reset
+        Cancel
       </Button>
       <Button variant="primary" onClick={onClose}>
         Apply

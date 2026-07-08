@@ -1,0 +1,119 @@
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  max-width: 100%;
+  border: 1px solid transparent;
+  border-radius: 999px;
+  font-weight: 650;
+  letter-spacing: 0.01em;
+  line-height: 1;
+  white-space: nowrap;
+  vertical-align: middle;
+}
+
+.badge[data-size="sm"] {
+  min-height: 20px;
+  padding: 0 8px;
+  font-size: 0.68rem;
+}
+
+.badge[data-size="md"] {
+  min-height: 24px;
+  padding: 0 10px;
+  font-size: 0.74rem;
+}
+
+.dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 999px;
+  background: currentColor;
+  flex-shrink: 0;
+}
+
+.badge[data-variant="solid"] {
+  color: var(--badge-solid-fg);
+  background: var(--badge-solid-bg);
+}
+
+.badge[data-variant="soft"] {
+  color: var(--badge-soft-fg);
+  background: var(--badge-soft-bg);
+}
+
+.badge[data-variant="outline"] {
+  color: var(--badge-outline-fg);
+  border-color: var(--badge-outline-border);
+  background: transparent;
+}
+
+.badge[data-tone="neutral"] {
+  --badge-solid-bg: color-mix(in srgb, var(--opus-muted) 72%, var(--opus-text));
+  --badge-solid-fg: var(--opus-panel);
+  --badge-soft-bg: color-mix(in srgb, var(--opus-muted) 16%, transparent);
+  --badge-soft-fg: var(--opus-muted);
+  --badge-outline-fg: var(--opus-muted);
+  --badge-outline-border: color-mix(in srgb, var(--opus-muted) 40%, transparent);
+}
+
+.badge[data-tone="accent"] {
+  --badge-solid-bg: var(--opus-accent);
+  --badge-solid-fg: var(--opus-accent-contrast, #fff);
+  --badge-soft-bg: var(--opus-accent-soft);
+  --badge-soft-fg: var(--opus-accent);
+  --badge-outline-fg: var(--opus-accent);
+  --badge-outline-border: color-mix(in srgb, var(--opus-accent) 45%, transparent);
+}
+
+.badge[data-tone="success"] {
+  --badge-solid-bg: #16a34a;
+  --badge-solid-fg: #ffffff;
+  --badge-soft-bg: color-mix(in srgb, #22c55e 16%, transparent);
+  --badge-soft-fg: #15803d;
+  --badge-outline-fg: #16a34a;
+  --badge-outline-border: color-mix(in srgb, #22c55e 42%, transparent);
+}
+
+.badge[data-tone="warning"] {
+  --badge-solid-bg: #d97706;
+  --badge-solid-fg: #ffffff;
+  --badge-soft-bg: color-mix(in srgb, #f59e0b 16%, transparent);
+  --badge-soft-fg: #b45309;
+  --badge-outline-fg: #d97706;
+  --badge-outline-border: color-mix(in srgb, #f59e0b 42%, transparent);
+}
+
+.badge[data-tone="danger"] {
+  --badge-solid-bg: #dc2626;
+  --badge-solid-fg: #ffffff;
+  --badge-soft-bg: color-mix(in srgb, #ef4444 16%, transparent);
+  --badge-soft-fg: #b91c1c;
+  --badge-outline-fg: #dc2626;
+  --badge-outline-border: color-mix(in srgb, #ef4444 42%, transparent);
+}
+
+.badge[data-tone="info"] {
+  --badge-solid-bg: #2563eb;
+  --badge-solid-fg: #ffffff;
+  --badge-soft-bg: color-mix(in srgb, #3b82f6 16%, transparent);
+  --badge-soft-fg: #1d4ed8;
+  --badge-outline-fg: #2563eb;
+  --badge-outline-border: color-mix(in srgb, #3b82f6 42%, transparent);
+}
+
+:global([data-theme="dark"]) .badge[data-tone="success"] {
+  --badge-soft-fg: #86efac;
+}
+
+:global([data-theme="dark"]) .badge[data-tone="warning"] {
+  --badge-soft-fg: #fcd34d;
+}
+
+:global([data-theme="dark"]) .badge[data-tone="danger"] {
+  --badge-soft-fg: #fca5a5;
+}
+
+:global([data-theme="dark"]) .badge[data-tone="info"] {
+  --badge-soft-fg: #93c5fd;
+}

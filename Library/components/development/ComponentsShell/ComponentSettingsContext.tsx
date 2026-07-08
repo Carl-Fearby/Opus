@@ -11,10 +11,10 @@ import {
 } from "react";
 import type { ControlSettings, ControlSlug } from "@/lib/controls/types";
 
-export const SETTINGS_WIDTH_KEY = "opus-settings-sidebar-width";
-export const DEFAULT_SETTINGS_WIDTH = 320;
-export const MIN_SETTINGS_WIDTH = 280;
-export const MAX_SETTINGS_WIDTH = 720;
+export const SETTINGS_WIDTH_KEY = "opus-settings-sidebar-width-v2";
+export const DEFAULT_SETTINGS_WIDTH = 160;
+export const MIN_SETTINGS_WIDTH = 140;
+export const MAX_SETTINGS_WIDTH = 360;
 
 export function clampSettingsWidth(width: number) {
   return Math.min(MAX_SETTINGS_WIDTH, Math.max(MIN_SETTINGS_WIDTH, width));

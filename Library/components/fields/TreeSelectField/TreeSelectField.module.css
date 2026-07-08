@@ -1,0 +1,24 @@
+.root {
+  position: relative;
+}
+
+.treeOption {
+  display: block;
+  width: 100%;
+  padding: 8px 10px;
+  border: 0;
+  background: transparent;
+  color: var(--opus-text);
+  font-size: 0.82rem;
+  text-align: left;
+  cursor: pointer;
+}
+
+.treeOption:hover {
+  background: color-mix(in srgb, var(--opus-accent-soft) 65%, transparent);
+}
+
+.treeOptionActive {
+  color: var(--opus-accent);
+  font-weight: 600;
+}

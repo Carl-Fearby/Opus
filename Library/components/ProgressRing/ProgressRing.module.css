@@ -1,7 +1,10 @@
 .ring {
   position: relative;
-  width: min(100%, 220px);
-  min-width: 0;
+  width: 220px;
+  height: 220px;
+  min-width: 220px;
+  max-width: 220px;
+  flex-shrink: 0;
   aspect-ratio: 1;
 }
 

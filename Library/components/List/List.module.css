@@ -1,0 +1,96 @@
+.list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: grid;
+  gap: 0;
+  width: 100%;
+  border: 1px solid var(--opus-border);
+  border-radius: var(--opus-input-radius-large, 6px);
+  background: color-mix(in srgb, var(--opus-panel) 88%, transparent);
+  overflow: hidden;
+}
+
+.list[data-ordered="true"] {
+  counter-reset: opus-list;
+}
+
+.item {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  gap: 12px;
+  align-items: start;
+  padding: 14px 16px;
+  border-bottom: 1px solid var(--opus-border);
+}
+
+.list[data-density="compact"] .item {
+  padding: 10px 12px;
+  gap: 10px;
+}
+
+.item:last-child {
+  border-bottom: 0;
+}
+
+.list[data-ordered="true"] .item {
+  counter-increment: opus-list;
+}
+
+.list[data-ordered="true"] .item:not(:has(.icon))::before {
+  content: counter(opus-list);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--opus-accent) 14%, transparent);
+  color: var(--opus-accent);
+  font-size: 0.72rem;
+  font-weight: 700;
+}
+
+.icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  border-radius: 8px;
+  background: color-mix(in srgb, var(--opus-accent) 12%, transparent);
+  color: var(--opus-accent);
+  font-size: 0.82rem;
+}
+
+.body {
+  display: grid;
+  gap: 4px;
+  min-width: 0;
+}
+
+.head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.title {
+  color: var(--opus-text);
+  font-size: 0.9rem;
+  font-weight: 650;
+}
+
+.meta {
+  color: var(--opus-muted);
+  font-size: 0.76rem;
+  white-space: nowrap;
+}
+
+.description {
+  margin: 0;
+  color: var(--opus-muted);
+  font-size: 0.82rem;
+  line-height: 1.45;
+}

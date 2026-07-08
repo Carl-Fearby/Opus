@@ -94,12 +94,14 @@ function NavLink({
   icon,
   label,
   nested,
+  isNew,
   onNavigate,
 }: {
   href: string;
   icon: IconDefinition;
   label: string;
   nested?: boolean;
+  isNew?: boolean;
   onNavigate?: () => void;
 }) {
   const pathname = usePathname();
@@ -115,7 +117,14 @@ function NavLink({
       onClick={onNavigate}
     >
       <ComponentIcon compact={nested} icon={icon} />
-      <span>{label}</span>
+      <span className={styles.navLinkLabel}>
+        {label}
+        {isNew ? (
+          <span aria-label="New" className={styles.navLinkNewMark} title="New">
+            *
+          </span>
+        ) : null}
+      </span>
     </Link>
   );
 }
@@ -190,6 +199,7 @@ function NavGroup({
                       key={control.slug}
                       href={componentPath(control.slug)}
                       icon={getComponentIcon(control.slug)}
+                      isNew={control.isNew}
                       label={control.title}
                       nested
                     />
@@ -243,6 +253,7 @@ function NavSubgroup({
               key={control.slug}
               href={componentPath(control.slug)}
               icon={getComponentIcon(control.slug)}
+              isNew={control.isNew}
               label={control.title}
               nested
             />
@@ -394,6 +405,7 @@ export function ComponentsSidebar() {
                 key={control.slug}
                 href={componentPath(control.slug)}
                 icon={getComponentIcon(control.slug)}
+                isNew={control.isNew}
                 label={control.title}
                 nested
                 onNavigate={clearSearch}

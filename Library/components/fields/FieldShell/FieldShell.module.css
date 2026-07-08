@@ -36,7 +36,8 @@
 .flagged {
   display: grid;
   align-items: start;
-  gap: 8px 12px;
+  row-gap: 0;
+  column-gap: 12px;
   width: 100%;
 }
 
@@ -142,6 +143,7 @@
 
 .errorFlagged {
   grid-area: error;
+  margin-top: 8px;
 }
 
 .required {

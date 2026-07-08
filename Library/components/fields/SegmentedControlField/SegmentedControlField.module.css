@@ -1,0 +1,31 @@
+.root {
+  display: inline-flex;
+  flex-wrap: wrap;
+  gap: 0;
+  padding: 3px;
+  border: 1px solid var(--opus-border-strong);
+  border-radius: var(--opus-input-radius-large);
+  background: color-mix(in srgb, var(--opus-input-bg) 88%, var(--opus-panel));
+}
+
+.segment {
+  min-height: 30px;
+  padding: 0 14px;
+  border: 0;
+  border-radius: calc(var(--opus-input-radius-large) - 2px);
+  background: transparent;
+  color: var(--opus-muted);
+  font-size: 0.8rem;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.segment:hover {
+  color: var(--opus-text);
+}
+
+.segmentActive {
+  background: var(--opus-accent);
+  color: #fff;
+  box-shadow: 0 8px 18px color-mix(in srgb, var(--opus-accent) 28%, transparent);
+}

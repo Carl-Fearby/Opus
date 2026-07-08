@@ -1,0 +1,38 @@
+.shortcut {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  color: var(--opus-muted);
+  font-family: inherit;
+  font-weight: 700;
+}
+
+.shortcut[data-size="sm"] .key {
+  min-width: 1.35rem;
+  min-height: 1.35rem;
+  padding: 0 5px;
+  font-size: 0.68rem;
+}
+
+.shortcut[data-size="md"] .key {
+  min-width: 1.55rem;
+  min-height: 1.55rem;
+  padding: 0 7px;
+  font-size: 0.74rem;
+}
+
+.key {
+  display: inline-grid;
+  place-items: center;
+  border: 1px solid color-mix(in srgb, var(--opus-border) 85%, transparent);
+  border-radius: 6px;
+  background: color-mix(in srgb, var(--opus-panel) 88%, transparent);
+  box-shadow: inset 0 -1px 0 color-mix(in srgb, var(--opus-border) 70%, transparent);
+  color: var(--opus-text);
+  text-transform: capitalize;
+}
+
+.plus {
+  margin: 0 1px;
+  opacity: 0.7;
+}

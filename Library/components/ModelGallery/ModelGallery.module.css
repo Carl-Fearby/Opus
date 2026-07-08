@@ -1,5 +1,7 @@
 .gallery {
   display: grid;
+  width: 100%;
+  min-width: 0;
   gap: 14px;
   grid-template-columns: repeat(var(--model-gallery-columns), minmax(0, 1fr));
 }
@@ -18,6 +20,8 @@
 
 .gallery > * {
   width: 100%;
+  min-width: 0;
+  max-width: 100%;
 }
 
 .empty {

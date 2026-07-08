@@ -1,4 +1,4 @@
-import type { AccordionGroupType, ButtonVariant, ChartPalette, ChartVariant, ChipInputPreset, ChipInputVariant, ChoiceShape, DialogActionSet, DrawerSide, DropdownMenuPlacement, FieldMode, ImageThumbnailSize, LabelPosition, ModalSize, ModelThumbnailSize, PopoverPlacement, SidebarSide, SkeletonAnimation, SkeletonVariant, AlertStatus, SurfaceDensity, SurfaceTone, TableDensity, TabsOrientation, TabsVariant, Theme, ToastHorizontalPosition, ToastVerticalPosition } from "opus-react";
+import type { AccordionGroupType, AvatarShape, AvatarSize, BadgeSize, BadgeTone, BadgeVariant, ButtonVariant, ChartPalette, ChartVariant, ChipInputPreset, ChipInputVariant, ChoiceShape, ContentTimelineStatus, DescriptionListLayout, DialogActionSet, DividerOrientation, DividerTone, DrawerSide, DropdownMenuPlacement, FieldMode, ImageThumbnailSize, LabelPosition, ModalSize, ModelThumbnailSize, PopoverPlacement, SidebarSide, SkeletonAnimation, SkeletonVariant, AlertStatus, StatisticTrend, SurfaceDensity, SurfaceTone, TableDensity, TabsOrientation, TabsVariant, Theme, ToastHorizontalPosition, ToastVerticalPosition } from "opus-react";
 import type {
   SectionColumns,
   SectionGap,
@@ -27,7 +27,6 @@ export type ControlSlug =
   | "month-picker"
   | "week-picker"
   | "email-input"
-  | "telephone-input"
   | "url-input"
   | "search-input"
   | "file-upload"
@@ -38,6 +37,18 @@ export type ControlSlug =
   | "select"
   | "text-input"
   | "textarea"
+  | "rich-text-field"
+  | "filter-select"
+  | "multi-select"
+  | "transfer-list"
+  | "password-strength-field"
+  | "rating-input"
+  | "segmented-control"
+  | "slider-range"
+  | "phone-number-input"
+  | "country-picker"
+  | "tree-select"
+  | "cascader"
   | "theme-toggle"
   | "accent-color-picker"
   | "icon-picker"
@@ -70,6 +81,32 @@ export type ControlSlug =
   | "accordion-group"
   | "show-more"
   | "empty-state"
+  | "badge"
+  | "avatar"
+  | "avatar-group"
+  | "list"
+  | "description-list"
+  | "divider"
+  | "content-timeline"
+  | "tree-view"
+  | "masonry-grid"
+  | "property-grid"
+  | "json-viewer"
+  | "statistic"
+  | "icon"
+  | "spinner"
+  | "portal"
+  | "portal-host"
+  | "visually-hidden"
+  | "focus-trap"
+  | "keyboard-shortcut"
+  | "hotkey-manager"
+  | "copy-button"
+  | "clipboard"
+  | "theme-provider"
+  | "theme-switcher"
+  | "resize-observer"
+  | "intersection-observer"
   | "sidebar"
   | "mega-menu"
   | "top-navigation"
@@ -105,6 +142,13 @@ export type TextareaSettings = BaseFieldSettings & {
   maxChars: number;
   placeholder: string;
   placeholderEnabled: boolean;
+};
+
+export type RichTextFieldSettings = BaseFieldSettings & {
+  value: string;
+  placeholder: string;
+  placeholderEnabled: boolean;
+  minHeight: number;
 };
 
 export type SelectSettings = BaseFieldSettings & {
@@ -145,6 +189,63 @@ export type RangeSettings = BaseFieldSettings & {
   step: number;
 };
 
+export type SliderRangeSettings = BaseFieldSettings & {
+  value: [number, number];
+  min: number;
+  max: number;
+  step: number;
+};
+
+export type MultiSelectSettings = BaseFieldSettings & {
+  value: string[];
+  options: string;
+};
+
+export type FilterSelectSettings = BaseFieldSettings & {
+  value: string[];
+};
+
+export type TransferListSettings = BaseFieldSettings & {
+  available: string;
+  selected: string[];
+};
+
+export type PasswordStrengthSettings = BaseFieldSettings & {
+  value: string;
+  showRequirements: boolean;
+};
+
+export type RatingInputSettings = BaseFieldSettings & {
+  value: number;
+  max: number;
+  variant: "stars" | "hearts" | "numeric";
+};
+
+export type SegmentedControlSettings = BaseFieldSettings & {
+  value: string;
+  options: string;
+};
+
+export type PhoneNumberInputSettings = BaseFieldSettings & {
+  value: string;
+  countryCode: string;
+};
+
+export type CountryPickerSettings = BaseFieldSettings & {
+  value: string;
+  placeholder: string;
+  placeholderEnabled: boolean;
+  searchPlaceholder: string;
+};
+
+export type TreeSelectSettings = BaseFieldSettings & {
+  value: string | null;
+};
+
+export type CascaderSettings = BaseFieldSettings & {
+  value: string[];
+};
+
 export type NumberInputSettings = BaseFieldSettings & {
   value: number;
   min: number;
@@ -175,6 +276,8 @@ export type ThemeToggleSettings = {
   mode: FieldMode;
   labelPosition: LabelPosition;
   label: string;
+  helpEnabled: boolean;
+  help: string;
   value: Theme;
 };
 
@@ -182,6 +285,8 @@ export type AccentColorPickerSettings = {
   mode: FieldMode;
   labelPosition: LabelPosition;
   label: string;
+  helpEnabled: boolean;
+  help: string;
   value: string;
 };
 
@@ -189,6 +294,8 @@ export type IconPickerSettings = {
   mode: FieldMode;
   labelPosition: LabelPosition;
   label: string;
+  helpEnabled: boolean;
+  help: string;
   value: string;
 };
 
@@ -366,6 +473,8 @@ export type TableSettings = {
   numericColumn: boolean;
 };
 
+export type DataGridLayoutSetting = "flat" | "grouped" | "tree" | "pivot";
+
 export type DataGridSettings = {
   caption: string;
   density: TableDensity;
@@ -380,6 +489,10 @@ export type DataGridSettings = {
   stickyHeader: boolean;
   stickyFirstColumn: boolean;
   numericColumns: boolean;
+  layout: DataGridLayoutSetting;
+  masterDetail: boolean;
+  virtualized: boolean;
+  infiniteScroll: boolean;
 };
 
 export type SkeletonSettings = {
@@ -572,6 +685,145 @@ export type EmptyStateSettings = {
   secondaryActionLabel: string;
 };
 
+export type BadgeSettings = {
+  label: string;
+  tone: BadgeTone;
+  variant: BadgeVariant;
+  size: BadgeSize;
+  dot: boolean;
+};
+
+export type AvatarSettings = {
+  name: string;
+  size: AvatarSize;
+  shape: AvatarShape;
+  srcEnabled: boolean;
+  src: string;
+};
+
+export type AvatarGroupSettings = {
+  size: AvatarSize;
+  max: number;
+};
+
+export type ListSettings = {
+  density: SurfaceDensity;
+  ordered: boolean;
+  showIcons: boolean;
+};
+
+export type DescriptionListSettings = {
+  layout: DescriptionListLayout;
+};
+
+export type DividerSettings = {
+  orientation: DividerOrientation;
+  tone: DividerTone;
+  labelEnabled: boolean;
+  label: string;
+};
+
+export type ContentTimelineSettings = {
+  includeStatus: boolean;
+};
+
+export type TreeViewSettings = {
+  expandRoots: boolean;
+};
+
+export type MasonryGridSettings = {
+  columns: number;
+  gap: number;
+};
+
+export type PropertyGridSettings = {
+  copyable: boolean;
+};
+
+export type JsonViewerSettings = {
+  collapsedDepth: number;
+};
+
+export type StatisticSettings = {
+  label: string;
+  value: string;
+  prefix: string;
+  suffix: string;
+  trendEnabled: boolean;
+  trend: StatisticTrend;
+  trendLabel: string;
+};
+
+export type IconSettings = {
+  name: string;
+  size: "sm" | "md" | "lg";
+  tone: "default" | "muted" | "accent" | "success" | "warning" | "danger";
+  labelEnabled: boolean;
+  label: string;
+};
+
+export type SpinnerSettings = {
+  size: "sm" | "md" | "lg";
+  tone: "accent" | "muted" | "inverse";
+  label: string;
+};
+
+export type PortalSettings = {
+  disabled: boolean;
+  message: string;
+};
+
+export type PortalHostSettings = {
+  hostId: string;
+  message: string;
+};
+
+export type VisuallyHiddenSettings = {
+  text: string;
+  showHint: boolean;
+};
+
+export type FocusTrapSettings = {
+  active: boolean;
+};
+
+export type KeyboardShortcutSettings = {
+  keys: string;
+  size: "sm" | "md";
+};
+
+export type HotkeyManagerSettings = {
+  enabled: boolean;
+  key: string;
+};
+
+export type CopyButtonSettings = {
+  value: string;
+  label: string;
+  copiedLabel: string;
+};
+
+export type ClipboardSettings = {
+  value: string;
+};
+
+export type ThemeProviderSettings = {
+  theme: Theme;
+};
+
+export type ThemeSwitcherSettings = {
+  theme: Theme;
+  label: string;
+};
+
+export type ResizeObserverSettings = {
+  hint: string;
+};
+
+export type IntersectionObserverSettings = {
+  threshold: number;
+};
+
 export type SidebarSettings = {
   side: SidebarSide;
   collapsed: boolean;
@@ -626,7 +878,6 @@ export type ControlSettingsBySlug = {
   "month-picker": ValueFieldSettings;
   "week-picker": ValueFieldSettings;
   "email-input": ValueFieldSettings;
-  "telephone-input": ValueFieldSettings;
   "url-input": ValueFieldSettings;
   "search-input": ValueFieldSettings;
   "file-upload": FileUploadSettings;
@@ -637,6 +888,18 @@ export type ControlSettingsBySlug = {
   select: SelectSettings;
   "text-input": TextInputSettings;
   textarea: TextareaSettings;
+  "rich-text-field": RichTextFieldSettings;
+  "filter-select": FilterSelectSettings;
+  "multi-select": MultiSelectSettings;
+  "transfer-list": TransferListSettings;
+  "password-strength-field": PasswordStrengthSettings;
+  "rating-input": RatingInputSettings;
+  "segmented-control": SegmentedControlSettings;
+  "slider-range": SliderRangeSettings;
+  "phone-number-input": PhoneNumberInputSettings;
+  "country-picker": CountryPickerSettings;
+  "tree-select": TreeSelectSettings;
+  cascader: CascaderSettings;
   "theme-toggle": ThemeToggleSettings;
   "accent-color-picker": AccentColorPickerSettings;
   "icon-picker": IconPickerSettings;
@@ -669,6 +932,32 @@ export type ControlSettingsBySlug = {
   "accordion-group": AccordionGroupSettings;
   "show-more": ShowMoreSettings;
   "empty-state": EmptyStateSettings;
+  badge: BadgeSettings;
+  avatar: AvatarSettings;
+  "avatar-group": AvatarGroupSettings;
+  list: ListSettings;
+  "description-list": DescriptionListSettings;
+  divider: DividerSettings;
+  "content-timeline": ContentTimelineSettings;
+  "tree-view": TreeViewSettings;
+  "masonry-grid": MasonryGridSettings;
+  "property-grid": PropertyGridSettings;
+  "json-viewer": JsonViewerSettings;
+  statistic: StatisticSettings;
+  icon: IconSettings;
+  spinner: SpinnerSettings;
+  portal: PortalSettings;
+  "portal-host": PortalHostSettings;
+  "visually-hidden": VisuallyHiddenSettings;
+  "focus-trap": FocusTrapSettings;
+  "keyboard-shortcut": KeyboardShortcutSettings;
+  "hotkey-manager": HotkeyManagerSettings;
+  "copy-button": CopyButtonSettings;
+  clipboard: ClipboardSettings;
+  "theme-provider": ThemeProviderSettings;
+  "theme-switcher": ThemeSwitcherSettings;
+  "resize-observer": ResizeObserverSettings;
+  "intersection-observer": IntersectionObserverSettings;
   sidebar: SidebarSettings;
   "mega-menu": MegaMenuSettings;
   "top-navigation": TopNavigationSettings;
@@ -693,6 +982,8 @@ export type ControlDefinition<S extends ControlSlug = ControlSlug> = {
   category: ComponentCategory;
   componentName: string;
   description: string;
+  /** Marks the sidebar nav entry with an orange asterisk for discoverability. */
+  isNew?: boolean;
   navigationGroup?: string;
   sourceFiles: string[];
   usesFieldShell: boolean;
@@ -713,7 +1004,6 @@ export const formsControlOrder = [
   "month-picker",
   "week-picker",
   "email-input",
-  "telephone-input",
   "url-input",
   "search-input",
   "file-upload",
@@ -724,4 +1014,16 @@ export const formsControlOrder = [
   "select",
   "text-input",
   "textarea",
+  "rich-text-field",
+  "filter-select",
+  "multi-select",
+  "transfer-list",
+  "password-strength-field",
+  "rating-input",
+  "segmented-control",
+  "slider-range",
+  "phone-number-input",
+  "country-picker",
+  "tree-select",
+  "cascader",
 ] as const satisfies readonly ControlSlug[];

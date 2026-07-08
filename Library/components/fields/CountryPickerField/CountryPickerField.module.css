@@ -1,0 +1,66 @@
+.root {
+  position: relative;
+}
+
+.triggerValue {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.flag {
+  width: 20px;
+  height: 15px;
+  flex-shrink: 0;
+  border-radius: 2px;
+  box-shadow: 0 0 0 1px color-mix(in srgb, var(--opus-border-strong) 70%, transparent);
+  background-size: cover;
+  background-position: center;
+}
+
+.option {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  padding: 8px 10px;
+  border: 0;
+  background: transparent;
+  color: var(--opus-text);
+  font-size: 0.82rem;
+  text-align: left;
+  cursor: pointer;
+}
+
+.option:hover {
+  background: color-mix(in srgb, var(--opus-accent-soft) 65%, transparent);
+}
+
+.optionActive {
+  background: var(--opus-accent-soft);
+  color: var(--opus-accent);
+}
+
+.optionLabel {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.optionCode {
+  color: var(--opus-muted);
+  font-size: 0.78rem;
+}
+
+.empty {
+  margin: 0;
+  padding: 12px 10px;
+  color: var(--opus-muted);
+  font-size: 0.8rem;
+}

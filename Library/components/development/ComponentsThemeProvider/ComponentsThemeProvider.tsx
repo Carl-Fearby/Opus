@@ -90,7 +90,7 @@ export function ComponentsThemeProvider({ children }: { children: ReactNode }) {
   return (
     <ComponentsThemeContext.Provider value={contextValue}>
       <OpusThemeProvider theme={theme}>
-        <div data-theme="dark" style={accentStyle}>
+        <div style={accentStyle}>
           <ToastProvider>
             <ContextMenuProvider>{children}</ContextMenuProvider>
           </ToastProvider>

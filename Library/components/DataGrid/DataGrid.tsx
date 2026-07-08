@@ -1,11 +1,30 @@
 "use client";
 
 import type { PointerEvent, ReactNode, Ref } from "react";
-import { forwardRef, useCallback, useLayoutEffect, useMemo, useRef, useState } from "react";
-import { faFilter } from "@fortawesome/free-solid-svg-icons";
+import {
+  Fragment,
+  forwardRef,
+  useCallback,
+  useEffect,
+  useLayoutEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
+import { faChevronDown, faChevronRight, faFilter } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import type { TableDensity } from "@/components/fields/types";
 import "@/lib/fontawesome";
+import {
+  buildFlatDisplayRows,
+  buildGroupedDisplayRows,
+  buildTreeDisplayRows,
+  collectTreeIds,
+  getRowCellText,
+  type DataGridDisplayRow,
+  type DataGridLayout,
+} from "./dataGridLayout";
+import { buildPivotGrid, type DataGridPivotConfig } from "./dataGridPivot";
 import styles from "./DataGrid.module.css";
 
 export type DataGridColumn = {
@@ -24,21 +43,37 @@ export type DataGridRowHeaderColumn = {
 };
 
 export type DataGridRow = {
+  children?: DataGridRow[];
   id: string;
   label?: string;
   values: Record<string, ReactNode>;
 };
 
+export type { DataGridLayout, DataGridPivotConfig };
+
 type DataGridProps = {
   bordered?: boolean;
   caption?: string;
   columns: DataGridColumn[];
+  defaultExpandedIds?: string[];
   density?: TableDensity;
+  detailExpandedIds?: string[];
+  getDetailContent?: (row: DataGridRow) => ReactNode;
+  groupBy?: string;
+  hasMore?: boolean;
+  layout?: DataGridLayout;
+  loadingMore?: boolean;
+  onExpandedChange?: (ids: string[]) => void;
+  onLoadMore?: () => void;
+  pivot?: DataGridPivotConfig;
   rowHeader?: DataGridRowHeaderColumn;
+  rowHeight?: number;
   rows: DataGridRow[];
   stickyFirstColumn?: boolean;
   stickyHeader?: boolean;
   striped?: boolean;
+  viewportHeight?: number;
+  virtualized?: boolean;
 };
 
 type ResizeState = {
@@ -75,6 +110,8 @@ const HEADER_CONTROL_GAP = 6;
 const SORT_INDICATOR_WIDTH = 8;
 const SORT_LABEL_GAP = 8;
 const RESIZE_HANDLE_WIDTH = 14;
+const DEFAULT_VIEWPORT = 360;
+const OVERSCAN = 6;
 
 function resolveColumnFeatures(
   column: DataGridColumn | DataGridRowHeaderColumn | undefined,
@@ -101,24 +138,8 @@ function getMinColumnWidth(sortable: boolean, hasMenu: boolean, density: TableDe
   return width;
 }
 
-function cellText(value: ReactNode): string {
-  if (value === null || value === undefined || typeof value === "boolean") {
-    return "";
-  }
-
-  if (typeof value === "number" || typeof value === "string") {
-    return String(value);
-  }
-
-  if (Array.isArray(value)) {
-    return value.map(cellText).join(" ");
-  }
-
-  return "";
-}
-
 function rowTeamValue(row: DataGridRow): string {
-  return cellText(row.values.team ?? row.label);
+  return getRowCellText(row, "team");
 }
 
 function isNumericValue(value: string) {
@@ -136,35 +157,74 @@ function compareValues(a: string, b: string) {
   return aTrim.localeCompare(bTrim, undefined, { numeric: true, sensitivity: "base" });
 }
 
+function defaultRowHeight(density: TableDensity) {
+  return density === "comfortable" ? 44 : 36;
+}
+
 export function DataGrid({
   bordered = true,
   caption,
   columns,
+  defaultExpandedIds,
   density = "compact",
+  detailExpandedIds,
+  getDetailContent,
+  groupBy = "group",
+  hasMore = false,
+  layout = "flat",
+  loadingMore = false,
+  onExpandedChange,
+  onLoadMore,
+  pivot,
   rowHeader,
+  rowHeight,
   rows,
   stickyFirstColumn = true,
   stickyHeader = true,
   striped = true,
+  viewportHeight = DEFAULT_VIEWPORT,
+  virtualized = false,
 }: DataGridProps) {
   const [columnWidths, setColumnWidths] = useState<Record<string, number>>({});
   const [filters, setFilters] = useState<Record<string, string>>({});
   const [openMenu, setOpenMenu] = useState<OpenMenuState | null>(null);
   const [resizing, setResizing] = useState<ResizeState | null>(null);
   const [sort, setSort] = useState<SortState | null>(null);
+  const [collapsedGroupIds, setCollapsedGroupIds] = useState<Set<string>>(() => new Set());
+  const [treeExpandedIds, setTreeExpandedIds] = useState<Set<string>>(
+    () => new Set(defaultExpandedIds ?? []),
+  );
+  const [uncontrolledDetailIds, setUncontrolledDetailIds] = useState<Set<string>>(() => new Set());
+  const [scrollTop, setScrollTop] = useState(0);
   const menuAnchorRef = useRef<MenuAnchor | null>(null);
   const menuHostRef = useRef<HTMLDivElement | null>(null);
   const menuRef = useRef<HTMLSpanElement | null>(null);
   const menuFrameRef = useRef<number | null>(null);
   const resizeDragRef = useRef<ResizeState | null>(null);
   const wrapRef = useRef<HTMLDivElement | null>(null);
-  const hasTeamColumn = columns.some((column) => column.key === "team");
+  const sentinelRef = useRef<HTMLDivElement | null>(null);
+
+  const resolvedRowHeight = rowHeight ?? defaultRowHeight(density);
+  const detailIds = detailExpandedIds ? new Set(detailExpandedIds) : uncontrolledDetailIds;
+  const masterDetail = Boolean(getDetailContent) && layout !== "pivot";
+
+  const pivotResult = useMemo(() => {
+    if (layout !== "pivot") {
+      return null;
+    }
+    return buildPivotGrid(rows, pivot ?? { rows: ["group"], columns: ["a11y"], values: ["q1", "q2"] });
+  }, [layout, pivot, rows]);
+
+  const activeColumns = pivotResult?.columns ?? columns;
+  const activeRows = pivotResult?.rows ?? rows;
+
+  const hasTeamColumn = activeColumns.some((column) => column.key === "team");
   const gridColumns = useMemo(
     () =>
       hasTeamColumn
-        ? columns
-        : [{ key: "team", label: "Team", align: "left" as const }, ...columns],
-    [columns, hasTeamColumn],
+        ? activeColumns
+        : [{ key: "team", label: "Team", align: "left" as const }, ...activeColumns],
+    [activeColumns, hasTeamColumn],
   );
   const dataColumns = useMemo(
     () => gridColumns.filter((column) => column.key !== "team"),
@@ -180,41 +240,111 @@ export function DataGrid({
 
     return features;
   }, [gridColumns, hasTeamColumn, rowHeader]);
-  const visibleRows = rows
-    .filter((row) =>
-      gridColumns.every((column) => {
-        const features = columnFeatures[column.key];
 
-        if (!features?.filterable) {
-          return true;
-        }
+  const filterSortRows = useCallback(
+    (source: DataGridRow[]) => {
+      return source
+        .filter((row) =>
+          gridColumns.every((column) => {
+            const features = columnFeatures[column.key];
 
-        const filter = filters[column.key]?.trim().toLowerCase();
+            if (!features?.filterable) {
+              return true;
+            }
 
-        if (!filter) {
-          return true;
-        }
+            const filter = filters[column.key]?.trim().toLowerCase();
 
-        const value = column.key === "team" ? rowTeamValue(row) : cellText(row.values[column.key]);
-        return value.toLowerCase().includes(filter);
-      }),
-    )
-    .sort((a, b) => {
-      if (!sort) {
-        return 0;
-      }
+            if (!filter) {
+              return true;
+            }
 
-      if (!columnFeatures[sort.key]?.sortable) {
-        return 0;
-      }
+            const value =
+              column.key === "team" ? rowTeamValue(row) : getRowCellText(row, column.key);
+            return value.toLowerCase().includes(filter);
+          }),
+        )
+        .sort((a, b) => {
+          if (!sort || !columnFeatures[sort.key]?.sortable) {
+            return 0;
+          }
 
-      const aValue = sort.key === "team" ? rowTeamValue(a) : cellText(a.values[sort.key]);
-      const bValue = sort.key === "team" ? rowTeamValue(b) : cellText(b.values[sort.key]);
-      const result = compareValues(aValue, bValue);
+          const aValue = sort.key === "team" ? rowTeamValue(a) : getRowCellText(a, sort.key);
+          const bValue = sort.key === "team" ? rowTeamValue(b) : getRowCellText(b, sort.key);
+          const result = compareValues(aValue, bValue);
 
-      return sort.direction === "ascending" ? result : -result;
-    });
+          return sort.direction === "ascending" ? result : -result;
+        });
+    },
+    [columnFeatures, filters, gridColumns, sort],
+  );
+
+  useEffect(() => {
+    if (layout === "tree" && defaultExpandedIds === undefined && treeExpandedIds.size === 0) {
+      setTreeExpandedIds(new Set(collectTreeIds(activeRows).slice(0, 4)));
+    }
+  }, [activeRows, defaultExpandedIds, layout, treeExpandedIds.size]);
+
+  const displayRows = useMemo(() => {
+    if (layout === "tree") {
+      return buildTreeDisplayRows(filterSortRows(activeRows), treeExpandedIds);
+    }
+
+    const flat = filterSortRows(activeRows);
+
+    if (layout === "grouped") {
+      return buildGroupedDisplayRows(flat, groupBy, collapsedGroupIds);
+    }
+
+    return buildFlatDisplayRows(flat);
+  }, [activeRows, collapsedGroupIds, filterSortRows, groupBy, layout, treeExpandedIds]);
+
   const openMenuFeatures = openMenu ? columnFeatures[openMenu.key] : undefined;
+
+  const setExpandedIds = useCallback(
+    (next: Set<string>) => {
+      setTreeExpandedIds(next);
+      onExpandedChange?.(Array.from(next));
+    },
+    [onExpandedChange],
+  );
+
+  const toggleTreeExpand = (id: string) => {
+    const next = new Set(treeExpandedIds);
+    if (next.has(id)) {
+      next.delete(id);
+    } else {
+      next.add(id);
+    }
+    setExpandedIds(next);
+  };
+
+  const toggleGroup = (id: string) => {
+    setCollapsedGroupIds((current) => {
+      const next = new Set(current);
+      if (next.has(id)) {
+        next.delete(id);
+      } else {
+        next.add(id);
+      }
+      return next;
+    });
+  };
+
+  const toggleDetail = (id: string) => {
+    if (detailExpandedIds) {
+      return;
+    }
+
+    setUncontrolledDetailIds((current) => {
+      const next = new Set(current);
+      if (next.has(id)) {
+        next.delete(id);
+      } else {
+        next.add(id);
+      }
+      return next;
+    });
+  };
 
   const resetWrapMinHeight = useCallback(() => {
     if (wrapRef.current) {
@@ -383,6 +513,31 @@ export function DataGrid({
     scheduleMenuPosition();
   }, [columnWidths, openMenu, scheduleMenuPosition]);
 
+  useEffect(() => {
+    if (!onLoadMore || !hasMore) {
+      return;
+    }
+
+    const root = wrapRef.current;
+    const target = sentinelRef.current;
+
+    if (!root || !target) {
+      return;
+    }
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (entries.some((entry) => entry.isIntersecting) && !loadingMore) {
+          onLoadMore();
+        }
+      },
+      { root, rootMargin: "120px" },
+    );
+
+    observer.observe(target);
+    return () => observer.disconnect();
+  }, [displayRows.length, hasMore, loadingMore, onLoadMore]);
+
   const toggleSort = (key: string) => {
     if (!columnFeatures[key]?.sortable) {
       return;
@@ -516,6 +671,126 @@ export function DataGrid({
     beginResize(event, columnKey, width);
   }, [beginResize, columnFeatures]);
 
+  const colSpan = gridColumns.length;
+
+  const virtualWindow = useMemo(() => {
+    if (!virtualized) {
+      return {
+        offset: 0,
+        items: displayRows,
+        paddingTop: 0,
+        paddingBottom: 0,
+      };
+    }
+
+    const start = Math.max(0, Math.floor(scrollTop / resolvedRowHeight) - OVERSCAN);
+    const visibleCount = Math.ceil(viewportHeight / resolvedRowHeight) + OVERSCAN * 2;
+    const end = Math.min(displayRows.length, start + visibleCount);
+    const items = displayRows.slice(start, end);
+
+    return {
+      offset: start,
+      items,
+      paddingTop: start * resolvedRowHeight,
+      paddingBottom: Math.max(0, (displayRows.length - end) * resolvedRowHeight),
+    };
+  }, [displayRows, resolvedRowHeight, scrollTop, viewportHeight, virtualized]);
+
+  const renderDataRow = (entry: Extract<DataGridDisplayRow, { kind: "data" }>) => {
+    const { row, depth, expandable, expanded, hasChildren } = entry;
+    const detailOpen = masterDetail && detailIds.has(row.id);
+    const showTreeToggle = layout === "tree" && expandable;
+
+    return (
+      <Fragment key={row.id}>
+        <tr data-row-kind="data">
+          <th
+            className={styles.rowHeader}
+            scope="row"
+            style={
+              columnWidths.team
+                ? { width: columnWidths.team, minWidth: columnWidths.team }
+                : undefined
+            }
+          >
+            <span className={styles.rowHeaderInner} style={{ paddingLeft: depth * 14 }}>
+              {masterDetail ? (
+                <button
+                  aria-expanded={detailOpen}
+                  aria-label={detailOpen ? `Hide details for ${rowTeamValue(row)}` : `Show details for ${rowTeamValue(row)}`}
+                  className={styles.expandButton}
+                  onClick={() => toggleDetail(row.id)}
+                  type="button"
+                >
+                  <FontAwesomeIcon className={styles.chevron} icon={detailOpen ? faChevronDown : faChevronRight} />
+                </button>
+              ) : null}
+              {showTreeToggle ? (
+                <button
+                  aria-expanded={expanded}
+                  aria-label={expanded ? `Collapse ${rowTeamValue(row)}` : `Expand ${rowTeamValue(row)}`}
+                  className={styles.expandButton}
+                  onClick={() => toggleTreeExpand(row.id)}
+                  type="button"
+                >
+                  <FontAwesomeIcon className={styles.chevron} icon={expanded ? faChevronDown : faChevronRight} />
+                </button>
+              ) : layout === "tree" && !hasChildren ? (
+                <span aria-hidden="true" className={styles.expandSpacer} />
+              ) : null}
+              <span className={styles.rowHeaderLabel}>{row.values.team ?? row.label}</span>
+            </span>
+          </th>
+          {dataColumns.map((column) => (
+            <td
+              data-align={column.align ?? "left"}
+              data-column-key={column.key}
+              data-column-resizable={columnFeatures[column.key].resizable}
+              key={column.key}
+              style={
+                columnWidths[column.key]
+                  ? { width: columnWidths[column.key], minWidth: columnWidths[column.key] }
+                  : undefined
+              }
+            >
+              {row.values[column.key]}
+            </td>
+          ))}
+        </tr>
+        {detailOpen && getDetailContent ? (
+          <tr className={styles.detailRow} key={`${row.id}-detail`}>
+            <td className={styles.detailCell} colSpan={colSpan}>
+              {getDetailContent(row)}
+            </td>
+          </tr>
+        ) : null}
+      </Fragment>
+    );
+  };
+
+  const renderDisplayRow = (entry: DataGridDisplayRow, index: number) => {
+    if (entry.kind === "group") {
+      return (
+        <tr className={styles.groupRow} key={entry.id}>
+          <td className={styles.groupCell} colSpan={colSpan}>
+            <button
+              aria-expanded={entry.expanded}
+              className={styles.groupButton}
+              onClick={() => toggleGroup(entry.id)}
+              type="button"
+            >
+              <FontAwesomeIcon className={styles.chevron} icon={entry.expanded ? faChevronDown : faChevronRight} />
+              <span>{entry.label}</span>
+              <span className={styles.groupCount}>{entry.count}</span>
+            </button>
+          </td>
+        </tr>
+      );
+    }
+
+    return renderDataRow(entry);
+  };
+
   return (
     <div className={styles.frame}>
       {caption ? <div className={styles.caption}>{caption}</div> : null}
@@ -532,6 +807,12 @@ export function DataGrid({
           data-sticky-column={stickyFirstColumn}
           data-sticky-header={stickyHeader}
           data-striped={striped}
+          onScroll={(event) => {
+            if (virtualized) {
+              setScrollTop(event.currentTarget.scrollTop);
+            }
+          }}
+          style={{ maxHeight: viewportHeight }}
         >
           <table className={styles.grid}>
             {caption ? <caption className={styles.visuallyHidden}>{caption}</caption> : null}
@@ -599,37 +880,18 @@ export function DataGrid({
               </tr>
             </thead>
             <tbody onPointerDown={handleBodyPointerDown}>
-              {visibleRows.map((row) => (
-                <tr key={row.id}>
-                  <th
-                    className={styles.rowHeader}
-                    scope="row"
-                    style={
-                      columnWidths.team
-                        ? { width: columnWidths.team, minWidth: columnWidths.team }
-                        : undefined
-                    }
-                  >
-                    {row.values.team ?? row.label}
-                  </th>
-                  {dataColumns.map((column) => (
-                    <td
-                      data-align={column.align ?? "left"}
-                      data-column-key={column.key}
-                      data-column-resizable={columnFeatures[column.key].resizable}
-                      key={column.key}
-                      style={
-                        columnWidths[column.key]
-                          ? { width: columnWidths[column.key], minWidth: columnWidths[column.key] }
-                          : undefined
-                      }
-                    >
-                      {row.values[column.key]}
-                    </td>
-                  ))}
+              {virtualized && virtualWindow.paddingTop > 0 ? (
+                <tr aria-hidden="true" className={styles.spacerRow}>
+                  <td colSpan={colSpan} style={{ height: virtualWindow.paddingTop, padding: 0 }} />
                 </tr>
-              ))}
-              {!visibleRows.length ? (
+              ) : null}
+              {virtualWindow.items.map((entry, index) => renderDisplayRow(entry, virtualWindow.offset + index))}
+              {virtualized && virtualWindow.paddingBottom > 0 ? (
+                <tr aria-hidden="true" className={styles.spacerRow}>
+                  <td colSpan={colSpan} style={{ height: virtualWindow.paddingBottom, padding: 0 }} />
+                </tr>
+              ) : null}
+              {!displayRows.length ? (
                 <tr>
                   <th className={styles.rowHeader} scope="row">
                     No rows
@@ -641,6 +903,11 @@ export function DataGrid({
               ) : null}
             </tbody>
           </table>
+          {onLoadMore || hasMore ? (
+            <div className={styles.infiniteFooter} ref={sentinelRef}>
+              {loadingMore ? "Loading more…" : hasMore ? "Scroll for more" : "End of results"}
+            </div>
+          ) : null}
         </div>
         {openMenu ? (
           <div className={styles.menuHost} ref={menuHostRef}>

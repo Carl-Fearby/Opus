@@ -148,6 +148,55 @@ const chartDefaultOverrides: Partial<Record<ChartControlSlug, Partial<ChartSetti
     xAxisLabel: "Day",
     yAxisLabel: "Price",
   },
+  "ohlc-chart": {
+    title: "OHLC session",
+    xAxisLabel: "Day",
+    yAxisLabel: "Price",
+  },
+  "range-area-chart": {
+    title: "Temperature band",
+    xAxisLabel: "Month",
+    yAxisLabel: "°C",
+  },
+  "range-bar-chart": {
+    title: "Latency range",
+    xAxisLabel: "Service",
+    yAxisLabel: "Ms",
+  },
+  "error-bar-chart": {
+    title: "Survey scores",
+    xAxisLabel: "Region",
+    yAxisLabel: "Score",
+  },
+  "parallel-coordinates": {
+    title: "Capability profiles",
+    showAxis: false,
+    xAxisLabel: "",
+    yAxisLabel: "",
+  },
+  "contour-plot": {
+    title: "Density field",
+    showAxis: false,
+    xAxisLabel: "",
+    yAxisLabel: "",
+  },
+  "surface-plot": {
+    title: "Surface projection",
+    showAxis: false,
+    xAxisLabel: "",
+    yAxisLabel: "",
+  },
+  "bullet-chart": {
+    title: "KPI progress",
+    showLegend: false,
+    xAxisLabel: "Progress",
+    yAxisLabel: "Metric",
+  },
+  "pareto-chart": {
+    title: "Defect contributors",
+    xAxisLabel: "Category",
+    yAxisLabel: "Count",
+  },
   "box-plot": {
     title: "Latency distribution",
     xAxisLabel: "Service",

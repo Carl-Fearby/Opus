@@ -3,6 +3,7 @@ import { IBM_Plex_Mono, Space_Grotesk } from "next/font/google";
 import "opus-react/styles.css";
 import "opus-react/index.css";
 import "./globals.css";
+import { OpusAppShell } from "./OpusAppShell";
 
 const spaceGrotesk = Space_Grotesk({
   variable: "--font-space-grotesk",
@@ -28,7 +29,7 @@ export default function RootLayout({
   return (
     <html lang="en-GB">
       <body className={`${spaceGrotesk.variable} ${ibmPlexMono.variable}`}>
-        {children}
+        <OpusAppShell>{children}</OpusAppShell>
       </body>
     </html>
   );

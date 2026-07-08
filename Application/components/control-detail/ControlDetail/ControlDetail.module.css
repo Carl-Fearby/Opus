@@ -63,6 +63,7 @@
 }
 
 .previewStage {
+  width: 100%;
   min-width: 0;
   padding: 16px;
   border: 1px solid var(--opus-border);
@@ -77,8 +78,15 @@
   max-width: 100%;
 }
 
-.previewBody > [data-fit-content="true"] {
-  width: fit-content;
+.previewStage > * {
+  width: 100%;
+  min-width: 0;
+  max-width: 100%;
+}
+
+.previewStage [data-fit-content="true"] {
+  width: fit-content !important;
+  max-width: 100%;
 }
 
 .sourcePanel {

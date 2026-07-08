@@ -26,6 +26,15 @@ export const specializedChartVariants = new Set<ChartVariant>([
   "sankey",
   "waterfall",
   "candlestick",
+  "ohlc",
+  "range-area",
+  "range-bar",
+  "error-bar",
+  "parallel-coordinates",
+  "contour",
+  "surface",
+  "bullet",
+  "pareto",
   "box-plot",
   "histogram",
   "violin",
@@ -54,6 +63,12 @@ export const cartesianSpecializedVariants: ChartVariant[] = [
   "histogram",
   "waterfall",
   "candlestick",
+  "ohlc",
+  "range-area",
+  "range-bar",
+  "error-bar",
+  "bullet",
+  "pareto",
   "box-plot",
   "violin",
   "hexbin",
@@ -66,9 +81,18 @@ export const cartesianSpecializedVariants: ChartVariant[] = [
 ];
 
 export function specializedVariantHasYNumericAxis(variant: ChartVariant) {
-  return !["timeline", "milestone-timeline", "gantt", "heatmap", "calendar-heatmap", "ridgeline", "hexbin"].includes(
-    variant,
-  );
+  return ![
+    "timeline",
+    "milestone-timeline",
+    "gantt",
+    "heatmap",
+    "calendar-heatmap",
+    "ridgeline",
+    "hexbin",
+    "contour",
+    "surface",
+    "parallel-coordinates",
+  ].includes(variant);
 }
 
 export function specializedVariantHasXCategoryLabels(variant: ChartVariant) {
@@ -76,6 +100,12 @@ export function specializedVariantHasXCategoryLabels(variant: ChartVariant) {
     "histogram",
     "waterfall",
     "candlestick",
+    "ohlc",
+    "range-area",
+    "range-bar",
+    "error-bar",
+    "bullet",
+    "pareto",
     "box-plot",
     "violin",
     "stream",
@@ -87,7 +117,7 @@ export function specializedVariantHasXCategoryLabels(variant: ChartVariant) {
 }
 
 export function specializedVariantUsesSlotLabels(variant: ChartVariant) {
-  return ["waterfall"].includes(variant);
+  return ["waterfall", "range-area", "bullet"].includes(variant);
 }
 
 export const chartSeriesAxisInset = 0;
@@ -469,6 +499,455 @@ function Candlestick({ data, plot, showValues, styles, yMax, yMin }: Specialized
           </g>
         );
       })}
+    </g>
+  );
+}
+
+function OhlcChart({ data, plot, showValues, styles, yMax, yMin }: SpecializedChartProps) {
+  const bodyWidth = candlestickBodyWidth(plot, data.length);
+  const barHalfWidth = bodyWidth / 2;
+  const tick = Math.max(4, bodyWidth * 0.45);
+
+  return (
+    <g>
+      {data.map((item, index) => {
+        const open = item.open ?? item.value * 0.9;
+        const close = item.close ?? item.value;
+        const high = item.high ?? item.value * 1.08;
+        const low = item.low ?? item.value * 0.82;
+        const x = xForEdgeBarIndex(plot, index, data.length, barHalfWidth);
+        const bullish = close >= open;
+        const openY = yForDomain(open, yMin, yMax, plot);
+        const closeY = yForDomain(close, yMin, yMax, plot);
+        const seriesClass = chartClass(styles, bullish ? 1 : 3);
+        return (
+          <g key={item.label}>
+            <line
+              className={`${styles.wick} ${seriesClass}`}
+              x1={x}
+              x2={x}
+              y1={yForDomain(high, yMin, yMax, plot)}
+              y2={yForDomain(low, yMin, yMax, plot)}
+            />
+            <line className={`${styles.wick} ${seriesClass}`} x1={x - tick} x2={x} y1={openY} y2={openY} />
+            <line className={`${styles.wick} ${seriesClass}`} x1={x} x2={x + tick} y1={closeY} y2={closeY} />
+            {showValues ? (
+              <text className={styles.valueLabel} textAnchor="middle" x={x} y={yForDomain(high, yMin, yMax, plot) - 6}>
+                {formatValue(close)}
+              </text>
+            ) : null}
+          </g>
+        );
+      })}
+    </g>
+  );
+}
+
+function RangeAreaChart({ data, plot, showValues, styles, yMax, yMin }: SpecializedChartProps) {
+  if (!data.length) {
+    return null;
+  }
+
+  const points = data.map((item, index) => {
+    const low = item.low ?? item.min ?? item.value * 0.75;
+    const high = item.high ?? item.max ?? item.value * 1.25;
+    const mid = item.value;
+    const x = xForSeriesCategoryIndex(plot, index, data.length);
+    return {
+      x,
+      lowY: yForDomain(low, yMin, yMax, plot),
+      midY: yForDomain(mid, yMin, yMax, plot),
+      highY: yForDomain(high, yMin, yMax, plot),
+      label: item.label,
+      mid,
+    };
+  });
+
+  const band = [
+    ...points.map((point) => `${point.x},${point.highY}`),
+    ...[...points].reverse().map((point) => `${point.x},${point.lowY}`),
+  ].join(" ");
+  const midLine = points.map((point) => `${point.x},${point.midY}`).join(" ");
+
+  return (
+    <g>
+      <polygon className={`${styles.area} ${chartClass(styles, 0)}`} points={band} />
+      <polyline className={`${styles.line} ${chartClass(styles, 1)}`} fill="none" points={midLine} />
+      {showValues
+        ? points.map((point) => (
+            <text className={styles.valueLabel} key={point.label} textAnchor="middle" x={point.x} y={point.highY - 6}>
+              {formatValue(point.mid)}
+            </text>
+          ))
+        : null}
+    </g>
+  );
+}
+
+function RangeBarChart({ data, plot, showValues, styles, yMax, yMin }: SpecializedChartProps) {
+  const bodyWidth = candlestickBodyWidth(plot, data.length);
+  const barHalfWidth = bodyWidth / 2;
+
+  return (
+    <g>
+      {data.map((item, index) => {
+        const low = item.low ?? item.min ?? item.value * 0.75;
+        const high = item.high ?? item.max ?? item.value * 1.25;
+        const x = xForEdgeBarIndex(plot, index, data.length, barHalfWidth);
+        const top = yForDomain(high, yMin, yMax, plot);
+        const bottom = yForDomain(low, yMin, yMax, plot);
+        return (
+          <g key={item.label}>
+            <rect
+              className={`${styles.bar} ${chartClass(styles, index % paletteClasses.length)}`}
+              height={Math.max(4, bottom - top)}
+              rx="3"
+              width={bodyWidth}
+              x={x - bodyWidth / 2}
+              y={top}
+            />
+            {showValues ? (
+              <text className={styles.valueLabel} textAnchor="middle" x={x} y={top - 6}>
+                {formatValue(high)}
+              </text>
+            ) : null}
+          </g>
+        );
+      })}
+    </g>
+  );
+}
+
+function ErrorBarChart({ data, plot, showValues, styles, yMax, yMin }: SpecializedChartProps) {
+  const bodyWidth = Math.min(18, candlestickBodyWidth(plot, data.length));
+  const barHalfWidth = bodyWidth / 2;
+  const cap = Math.max(4, bodyWidth * 0.55);
+
+  return (
+    <g>
+      {data.map((item, index) => {
+        const error = item.error ?? item.value * 0.12;
+        const low = item.low ?? item.value - error;
+        const high = item.high ?? item.value + error;
+        const x = xForEdgeBarIndex(plot, index, data.length, barHalfWidth);
+        const valueY = yForDomain(item.value, yMin, yMax, plot);
+        const highY = yForDomain(high, yMin, yMax, plot);
+        const lowY = yForDomain(low, yMin, yMax, plot);
+        const seriesClass = chartClass(styles, index % paletteClasses.length);
+        return (
+          <g key={item.label}>
+            <rect
+              className={`${styles.bar} ${seriesClass}`}
+              height={Math.max(4, plot.bottom - valueY)}
+              rx="2"
+              width={bodyWidth}
+              x={x - bodyWidth / 2}
+              y={valueY}
+            />
+            <line className={`${styles.wick} ${seriesClass}`} x1={x} x2={x} y1={highY} y2={lowY} />
+            <line className={`${styles.wick} ${seriesClass}`} x1={x - cap} x2={x + cap} y1={highY} y2={highY} />
+            <line className={`${styles.wick} ${seriesClass}`} x1={x - cap} x2={x + cap} y1={lowY} y2={lowY} />
+            {showValues ? (
+              <text className={styles.valueLabel} textAnchor="middle" x={x} y={highY - 6}>
+                {formatValue(item.value)}
+              </text>
+            ) : null}
+          </g>
+        );
+      })}
+    </g>
+  );
+}
+
+function ParallelCoordinates({ data, plot, showValues, styles }: SpecializedChartProps) {
+  const dims = Math.max(2, ...(data.map((item) => item.values?.length ?? 0)));
+  if (!data.length || dims < 2) {
+    return null;
+  }
+
+  const axes = Array.from({ length: dims }, (_, dim) => {
+    const values = data.map((item) => item.values?.[dim] ?? item.value);
+    const min = Math.min(...values);
+    const max = Math.max(...values);
+    return { min, max: max === min ? min + 1 : max };
+  });
+
+  const xAt = (dim: number) =>
+    dims <= 1 ? (plot.gridLeft + plot.gridRight) / 2 : plot.gridLeft + (dim * (plot.gridRight - plot.gridLeft)) / (dims - 1);
+
+  return (
+    <g>
+      {axes.map((axis, dim) => {
+        const x = xAt(dim);
+        return (
+          <g key={`axis-${dim}`}>
+            <line className={styles.gridLine} x1={x} x2={x} y1={plot.top} y2={plot.bottom} />
+            <text className={styles.axisLabel} textAnchor="middle" x={x} y={plot.bottom + 16}>
+              D{dim + 1}
+            </text>
+            <text className={styles.axisLabel} textAnchor="middle" x={x} y={plot.top - 8}>
+              {formatValue(axis.max)}
+            </text>
+          </g>
+        );
+      })}
+      {data.map((item, index) => {
+        const points = Array.from({ length: dims }, (_, dim) => {
+          const value = item.values?.[dim] ?? item.value;
+          const axis = axes[dim];
+          const y = plot.bottom - ((value - axis.min) / (axis.max - axis.min)) * (plot.bottom - plot.top);
+          return `${xAt(dim)},${y}`;
+        }).join(" ");
+        return (
+          <g key={item.label}>
+            <polyline className={`${styles.line} ${chartClass(styles, index % paletteClasses.length)}`} fill="none" points={points} />
+            {showValues ? (
+              <text
+                className={styles.valueLabel}
+                textAnchor="start"
+                x={xAt(dims - 1) + 6}
+                y={
+                  plot.bottom -
+                  ((((item.values?.[dims - 1] ?? item.value) - axes[dims - 1].min) /
+                    (axes[dims - 1].max - axes[dims - 1].min)) *
+                    (plot.bottom - plot.top))
+                }
+              >
+                {item.label}
+              </text>
+            ) : null}
+          </g>
+        );
+      })}
+    </g>
+  );
+}
+
+function ContourPlot({ data, plot, showValues, styles }: SpecializedChartProps) {
+  const cols = Math.max(4, Math.ceil(Math.sqrt(Math.max(data.length, 1))));
+  const rows = Math.max(3, Math.ceil(data.length / cols));
+  const values = data.length
+    ? data.map((item) => item.value)
+    : Array.from({ length: cols * rows }, (_, index) => 20 + ((index * 17) % 80));
+  const min = Math.min(...values);
+  const max = Math.max(...values);
+  const cellW = (plot.gridRight - plot.gridLeft) / cols;
+  const cellH = (plot.bottom - plot.top) / rows;
+
+  return (
+    <g>
+      {Array.from({ length: rows * cols }, (_, index) => {
+        const value = values[index % values.length];
+        const col = index % cols;
+        const row = Math.floor(index / cols);
+        const intensity = (value - min) / Math.max(1, max - min);
+        const band = Math.min(5, Math.floor(intensity * 6));
+        return (
+          <rect
+            className={`${styles.area} ${chartClass(styles, band)}`}
+            height={Math.max(2, cellH - 1)}
+            key={`contour-${index}`}
+            opacity={0.35 + intensity * 0.55}
+            rx="2"
+            width={Math.max(2, cellW - 1)}
+            x={plot.gridLeft + col * cellW}
+            y={plot.top + row * cellH}
+          />
+        );
+      })}
+      {Array.from({ length: 4 }, (_, ring) => {
+        const t = (ring + 1) / 5;
+        const cx = plot.gridLeft + (plot.gridRight - plot.gridLeft) * 0.55;
+        const cy = plot.top + (plot.bottom - plot.top) * 0.48;
+        const rx = (plot.gridRight - plot.gridLeft) * (0.16 + t * 0.28);
+        const ry = (plot.bottom - plot.top) * (0.14 + t * 0.24);
+        return (
+          <ellipse
+            className={`${styles.line} ${chartClass(styles, ring % paletteClasses.length)}`}
+            cx={cx}
+            cy={cy}
+            fill="none"
+            key={`contour-ring-${ring}`}
+            rx={rx}
+            ry={ry}
+          />
+        );
+      })}
+      {showValues ? (
+        <text
+          className={styles.valueLabel}
+          textAnchor="middle"
+          x={(plot.gridLeft + plot.gridRight) / 2}
+          y={plot.top + 14}
+        >
+          {formatValue(max)} peak
+        </text>
+      ) : null}
+    </g>
+  );
+}
+
+function SurfacePlot({ data, plot, showValues, styles }: SpecializedChartProps) {
+  const cols = 8;
+  const rows = 6;
+  const values = data.length
+    ? data.map((item) => item.value)
+    : Array.from({ length: cols * rows }, (_, index) => 30 + ((index * 13) % 70));
+  const min = Math.min(...values);
+  const max = Math.max(...values);
+  const cellW = (plot.gridRight - plot.gridLeft) / cols;
+  const cellH = (plot.bottom - plot.top) / rows;
+
+  const project = (col: number, row: number, value: number) => {
+    const intensity = (value - min) / Math.max(1, max - min);
+    const x = plot.gridLeft + col * cellW + row * cellW * 0.18;
+    const y = plot.top + row * cellH * 0.72 + (1 - intensity) * cellH * 0.55;
+    return { x, y };
+  };
+
+  return (
+    <g>
+      {Array.from({ length: rows - 1 }, (_, row) =>
+        Array.from({ length: cols - 1 }, (_, col) => {
+          const i = row * cols + col;
+          const v00 = values[i % values.length];
+          const v10 = values[(i + 1) % values.length];
+          const v01 = values[(i + cols) % values.length];
+          const v11 = values[(i + cols + 1) % values.length];
+          const p00 = project(col, row, v00);
+          const p10 = project(col + 1, row, v10);
+          const p01 = project(col, row + 1, v01);
+          const p11 = project(col + 1, row + 1, v11);
+          const avg = (v00 + v10 + v01 + v11) / 4;
+          const band = Math.min(5, Math.floor(((avg - min) / Math.max(1, max - min)) * 6));
+          return (
+            <polygon
+              className={`${styles.area} ${chartClass(styles, band)}`}
+              key={`surface-${row}-${col}`}
+              opacity={0.55 + ((avg - min) / Math.max(1, max - min)) * 0.35}
+              points={`${p00.x},${p00.y} ${p10.x},${p10.y} ${p11.x},${p11.y} ${p01.x},${p01.y}`}
+            />
+          );
+        }),
+      )}
+      {showValues ? (
+        <text
+          className={styles.valueLabel}
+          textAnchor="middle"
+          x={(plot.gridLeft + plot.gridRight) / 2}
+          y={plot.top + 14}
+        >
+          Surface 2D projection
+        </text>
+      ) : null}
+    </g>
+  );
+}
+
+function BulletChart({ data, plot, showValues, styles, yMax, yMin }: SpecializedChartProps) {
+  const laneHeight = Math.min(28, ((plot.bottom - plot.top) / Math.max(data.length, 1)) * 0.62);
+
+  return (
+    <g>
+      {data.map((item, index) => {
+        const slot = (plot.bottom - plot.top) / Math.max(data.length, 1);
+        const y = plot.top + index * slot + (slot - laneHeight) / 2;
+        const max = Math.max(item.max ?? yMax, item.target ?? item.value, item.value, 1);
+        const scale = (value: number) =>
+          plot.gridLeft + ((value - yMin) / Math.max(1, max - yMin)) * (plot.gridRight - plot.gridLeft);
+        const actual = scale(item.value);
+        const target = scale(item.target ?? item.value * 0.85);
+        const qualitative = scale(item.max ?? max);
+        return (
+          <g key={item.label}>
+            <rect
+              className={`${styles.area} ${chartClass(styles, 5)}`}
+              height={laneHeight}
+              rx="4"
+              width={Math.max(4, qualitative - plot.gridLeft)}
+              x={plot.gridLeft}
+              y={y}
+            />
+            <rect
+              className={`${styles.bar} ${chartClass(styles, 0)}`}
+              height={laneHeight * 0.45}
+              rx="2"
+              width={Math.max(4, actual - plot.gridLeft)}
+              x={plot.gridLeft}
+              y={y + laneHeight * 0.275}
+            />
+            <line
+              className={`${styles.wick} ${chartClass(styles, 3)}`}
+              strokeWidth="3"
+              x1={target}
+              x2={target}
+              y1={y}
+              y2={y + laneHeight}
+            />
+            <text className={styles.axisLabel} dominantBaseline="middle" x={plot.gridLeft - 8} y={y + laneHeight / 2} textAnchor="end">
+              {item.label}
+            </text>
+            {showValues ? (
+              <text className={styles.valueLabel} x={actual + 6} y={y + laneHeight / 2 + 4}>
+                {formatValue(item.value)}
+              </text>
+            ) : null}
+          </g>
+        );
+      })}
+    </g>
+  );
+}
+
+function ParetoChart({ data, plot, showValues, styles }: SpecializedChartProps) {
+  const sorted = [...data].sort((a, b) => b.value - a.value);
+  const total = sorted.reduce((sum, item) => sum + Math.max(0, item.value), 0) || 1;
+  const valueMax = Math.max(1, ...sorted.map((item) => item.value));
+  let running = 0;
+  const bodyWidth = candlestickBodyWidth(plot, sorted.length);
+  const barHalfWidth = bodyWidth / 2;
+  const points = sorted.map((item, index) => {
+    running += Math.max(0, item.value);
+    const cumulative = (running / total) * 100;
+    const x = xForEdgeBarIndex(plot, index, sorted.length, barHalfWidth);
+    return { ...item, cumulative, x };
+  });
+  const linePoints = points
+    .map((item) => `${item.x},${yForDomain(item.cumulative, 0, 100, plot)}`)
+    .join(" ");
+
+  return (
+    <g>
+      {points.map((item) => {
+        const top = yForDomain(item.value, 0, valueMax, plot);
+        return (
+          <g key={item.label}>
+            <rect
+              className={`${styles.bar} ${chartClass(styles, 0)}`}
+              height={Math.max(4, plot.bottom - top)}
+              rx="2"
+              width={bodyWidth}
+              x={item.x - bodyWidth / 2}
+              y={top}
+            />
+            {showValues ? (
+              <text className={styles.valueLabel} textAnchor="middle" x={item.x} y={top - 6}>
+                {formatValue(item.value)}
+              </text>
+            ) : null}
+            <circle
+              className={`${styles.point} ${chartClass(styles, 1)}`}
+              cx={item.x}
+              cy={yForDomain(item.cumulative, 0, 100, plot)}
+              r="3.5"
+            />
+          </g>
+        );
+      })}
+      <polyline className={`${styles.line} ${chartClass(styles, 1)}`} fill="none" points={linePoints} />
+      <text className={styles.axisLabel} textAnchor="start" x={plot.gridRight + 6} y={plot.top + 4}>
+        %
+      </text>
     </g>
   );
 }
@@ -1387,6 +1866,24 @@ export function SpecializedChart(props: SpecializedChartProps) {
       return <Waterfall {...props} />;
     case "candlestick":
       return <Candlestick {...props} />;
+    case "ohlc":
+      return <OhlcChart {...props} />;
+    case "range-area":
+      return <RangeAreaChart {...props} />;
+    case "range-bar":
+      return <RangeBarChart {...props} />;
+    case "error-bar":
+      return <ErrorBarChart {...props} />;
+    case "parallel-coordinates":
+      return <ParallelCoordinates {...props} />;
+    case "contour":
+      return <ContourPlot {...props} />;
+    case "surface":
+      return <SurfacePlot {...props} />;
+    case "bullet":
+      return <BulletChart {...props} />;
+    case "pareto":
+      return <ParetoChart {...props} />;
     case "box-plot":
       return <BoxPlot {...props} />;
     case "treemap":

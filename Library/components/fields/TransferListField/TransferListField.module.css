@@ -1,0 +1,77 @@
+.root {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+  gap: 12px;
+  align-items: stretch;
+}
+
+.column {
+  display: grid;
+  grid-template-rows: auto minmax(180px, 1fr);
+  border: 1px solid var(--opus-border-strong);
+  border-radius: var(--opus-input-radius-large);
+  background: var(--opus-input-bg);
+  overflow: hidden;
+}
+
+.columnHeader {
+  padding: 10px 12px;
+  border-bottom: 1px solid var(--opus-border);
+  color: var(--opus-muted);
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.list {
+  margin: 0;
+  padding: 6px;
+  list-style: none;
+  overflow: auto;
+}
+
+.item {
+  width: 100%;
+  padding: 8px 10px;
+  border: 1px solid transparent;
+  border-radius: var(--opus-input-radius);
+  background: transparent;
+  color: var(--opus-text);
+  font-size: 0.82rem;
+  text-align: left;
+  cursor: pointer;
+}
+
+.item:hover {
+  background: color-mix(in srgb, var(--opus-accent-soft) 65%, transparent);
+}
+
+.itemActive {
+  border-color: color-mix(in srgb, var(--opus-accent) 45%, transparent);
+  background: var(--opus-accent-soft);
+  color: var(--opus-accent);
+}
+
+.controls {
+  display: grid;
+  gap: 8px;
+  align-content: center;
+}
+
+.controlButton {
+  min-width: 36px;
+  min-height: 32px;
+  border: 1px solid var(--opus-border-strong);
+  border-radius: var(--opus-input-radius);
+  background: var(--opus-input-bg);
+  color: var(--opus-text);
+  font-size: 0.9rem;
+  cursor: pointer;
+}
+
+.controlButton:hover {
+  border-color: color-mix(in srgb, var(--opus-accent) 45%, transparent);
+  background: var(--opus-accent-soft);
+  color: var(--opus-accent);
+}

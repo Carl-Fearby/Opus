@@ -3,18 +3,23 @@
   gap: 8px;
   width: 100%;
   min-width: 0;
+  max-width: 100%;
 }
 
-.content[data-size="small"] {
-  width: 180px;
+.content[data-size="small"]:not([data-fill="true"]) {
+  max-width: 180px;
 }
 
-.content[data-size="medium"] {
-  width: 240px;
+.content[data-size="medium"]:not([data-fill="true"]) {
+  max-width: 240px;
 }
 
-.content[data-size="large"] {
-  width: min(100%, 340px);
+.content[data-size="large"]:not([data-fill="true"]) {
+  max-width: 340px;
+}
+
+.content[data-fill="true"] {
+  max-width: 100%;
 }
 
 .caption {

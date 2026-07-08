@@ -6,7 +6,9 @@ import {
 } from "@/lib/layout/sectionLayout";
 import {
   buildDataGridColumns,
+  dataGridPivotConfig,
   dataGridRows,
+  dataGridTreeRows,
   formatDataGridColumnsForUsage,
   formatDataGridRowsForUsage,
 } from "./dataGridDemoData";
@@ -18,7 +20,7 @@ import {
   getChartPreviewData,
   getChartUsageDataMode,
 } from "./chartDemoData";
-import { worldMapRegionIds } from "opus-react";
+import { worldMapRegionIds } from "@/components/Chart/worldMapRegions";
 import { isChartSlug } from "./chartCatalog";
 import { formatModelAssetsForUsage } from "@/lib/models/vx27Assets";
 import {
@@ -236,7 +238,7 @@ function fieldProps(settings: FieldUsageSettings) {
 }
 
 function importLine(components: string[]): string {
-  return `import { ${components.join(", ")} } from "opus-react";`;
+  return `import { ${components.join(", ")} } from "@/components/fields";`;
 }
 
 function usageClientPrefix(includeUseState = true): string {
@@ -342,7 +344,6 @@ ${includeSeries ? `const series = ${formatChartSeriesForUsage(chartDemoSeries)};
     case "email-input":
     case "password-input":
     case "search-input":
-    case "telephone-input":
     case "url-input": {
       const s = settings as ControlSettingsBySlug["email-input"];
       const state = toStateName(s.label);
@@ -353,9 +354,7 @@ ${includeSeries ? `const series = ${formatChartSeriesForUsage(chartDemoSeries)};
             ? "password"
             : slug === "search-input"
               ? "search"
-              : slug === "telephone-input"
-                ? "tel"
-                : "url";
+              : "url";
       const props = [
         formatStringProp("id", id),
         ...fieldProps(s),
@@ -378,6 +377,21 @@ ${includeSeries ? `const series = ${formatChartSeriesForUsage(chartDemoSeries)};
       ];
       return controlledFieldUsage(["TextAreaField"], "TextAreaField", state, props);
     }
+    case "rich-text-field": {
+      const s = settings as ControlSettingsBySlug["rich-text-field"];
+      const state = toStateName(s.label);
+      const props = [
+        formatStringProp("id", id),
+        ...fieldProps(s),
+        formatNumberProp("minHeight", s.minHeight),
+        ...(s.placeholderEnabled ? [formatStringProp("placeholder", s.placeholder)] : []),
+        formatExpressionProp("value", state),
+        formatExpressionProp("onChange", `(html) => ${toSetter(state)}(html)`),
+      ];
+      return controlledFieldUsage(["RichTextField"], "RichTextField", state, props, {
+        initial: quote(s.value),
+      });
+    }
     case "select": {
       const s = settings as ControlSettingsBySlug["select"];
       const state = toStateName(s.label);
@@ -394,6 +408,21 @@ ${includeSeries ? `const series = ${formatChartSeriesForUsage(chartDemoSeries)};
       ];
       return controlledFieldUsage(["SelectField"], "SelectField", state, props, {
         initial: options[0] ? quote(options[0]) : '""',
+      });
+    }
+    case "country-picker": {
+      const s = settings as ControlSettingsBySlug["country-picker"];
+      const state = toStateName(s.label);
+      const props = [
+        formatStringProp("id", id),
+        ...fieldProps(s),
+        ...(s.placeholderEnabled ? [formatStringProp("placeholder", s.placeholder)] : []),
+        formatStringProp("searchPlaceholder", s.searchPlaceholder),
+        formatExpressionProp("value", state),
+        formatExpressionProp("onChange", `(code) => ${toSetter(state)}(code)`),
+      ];
+      return controlledFieldUsage(["CountryPickerField"], "CountryPickerField", state, props, {
+        initial: quote(s.value),
       });
     }
     case "date-picker":
@@ -595,7 +624,7 @@ ${includeSeries ? `const series = ${formatChartSeriesForUsage(chartDemoSeries)};
         formatExpressionProp("value", "accent"),
         formatExpressionProp("onChange", "setAccent"),
       ];
-      return `${usageClientPrefix()}\nimport { AccentColorPicker, createAccentStyle } from "opus-react";
+      return `${usageClientPrefix()}\nimport { AccentColorPicker, createAccentStyle } from "@/components/AccentColorPicker";
 
 const [accent, setAccent] = useState(${quote(s.value)});
 const accentStyle = createAccentStyle(accent);
@@ -620,7 +649,7 @@ ${formatSelfClosingElement("AccentColorPicker", props, "    ")}
       return `${usageClientPrefix()}\nimport { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { ${iconOption.importName} } from "@fortawesome/free-solid-svg-icons";
 import "@/lib/fontawesome";
-import { IconPicker } from "opus-react";
+import { IconPicker } from "@/components/IconPicker";
 
 const [icon, setIcon] = useState(${quote(s.value)});
 
@@ -1299,11 +1328,27 @@ const rows = ${rows};
         q1Q2SortFilter: s.q1Q2SortFilter,
         teamResizable: s.rowHeaderResizable,
       });
+      const demoRows = s.layout === "tree" ? dataGridTreeRows : dataGridRows;
       const props = [
         formatExpressionProp("columns", "columns"),
         formatExpressionProp("rows", "rows"),
         formatStringProp("caption", s.caption),
         ...(s.density !== "compact" ? [formatStringProp("density", s.density)] : []),
+        ...(s.layout !== "flat" ? [formatStringProp("layout", s.layout)] : []),
+        ...(s.layout === "grouped" ? [formatStringProp("groupBy", "group")] : []),
+        ...(s.layout === "pivot"
+          ? [formatExpressionProp("pivot", JSON.stringify(dataGridPivotConfig))]
+          : []),
+        ...(s.masterDetail && s.layout !== "pivot"
+          ? [formatExpressionProp("getDetailContent", "(row) => `Detail for ${row.values.team}`")]
+          : []),
+        ...(s.virtualized ? [formatBoolProp("virtualized", true)] : []),
+        ...(s.infiniteScroll && s.layout !== "tree" && s.layout !== "pivot"
+          ? [
+              formatBoolProp("hasMore", true),
+              formatExpressionProp("onLoadMore", "() => loadMore()"),
+            ]
+          : []),
         ...(s.striped ? [] : [formatBoolProp("striped", false)]),
         ...(s.bordered ? [] : [formatBoolProp("bordered", false)]),
         ...(s.stickyHeader ? [] : [formatBoolProp("stickyHeader", false)]),
@@ -1313,7 +1358,7 @@ const rows = ${rows};
 
 const columns = ${formatDataGridColumnsForUsage(columns)};
 
-const rows = ${formatDataGridRowsForUsage(dataGridRows)};
+const rows = ${formatDataGridRowsForUsage(demoRows)};
 
 <DataGrid${formatSelfClosing(props)}`;
     }
@@ -1627,6 +1672,232 @@ ${formatJsxParagraphContent(s.content)}
 
 <EmptyState${formatSelfClosing(props)}`;
     }
+    case "badge": {
+      const s = settings as ControlSettingsBySlug["badge"];
+      const props = [
+        formatStringProp("label", s.label),
+        ...(s.tone !== "neutral" ? [formatStringProp("tone", s.tone)] : []),
+        ...(s.variant !== "soft" ? [formatStringProp("variant", s.variant)] : []),
+        ...(s.size !== "md" ? [formatStringProp("size", s.size)] : []),
+        ...(s.dot ? [formatBoolProp("dot", true)] : []),
+      ];
+      return `${importLine(["Badge"])}\n\n<Badge${formatSelfClosing(props)}`;
+    }
+    case "avatar": {
+      const s = settings as ControlSettingsBySlug["avatar"];
+      const props = [
+        formatStringProp("name", s.name),
+        ...(s.size !== "md" ? [formatStringProp("size", s.size)] : []),
+        ...(s.shape !== "circle" ? [formatStringProp("shape", s.shape)] : []),
+        ...(s.srcEnabled && s.src ? [formatStringProp("src", s.src)] : []),
+      ];
+      return `${importLine(["Avatar"])}\n\n<Avatar${formatSelfClosing(props)}`;
+    }
+    case "avatar-group": {
+      const s = settings as ControlSettingsBySlug["avatar-group"];
+      const props = [
+        formatExpressionProp("items", "items"),
+        ...(s.max !== 4 ? [formatNumberProp("max", s.max)] : []),
+        ...(s.size !== "md" ? [formatStringProp("size", s.size)] : []),
+      ];
+      return `${importLine(["AvatarGroup"])}
+
+const items = [
+  { name: "Alex Morgan" },
+  { name: "Jamie Chen" },
+  { name: "Sam Rivera" },
+  { name: "Taylor Brooks" },
+];
+
+<AvatarGroup${formatSelfClosing(props)}`;
+    }
+    case "list": {
+      const s = settings as ControlSettingsBySlug["list"];
+      const props = [
+        formatExpressionProp("items", "items"),
+        ...(s.density !== "comfortable" ? [formatStringProp("density", s.density)] : []),
+        ...(s.ordered ? [formatBoolProp("ordered", true)] : []),
+      ];
+      return `${importLine(["List"])}
+
+const items = [
+  { title: "Design tokens", description: "Colour and spacing primitives.", meta: "Updated" },
+  { title: "Component library", description: "Reusable React primitives.", meta: "Live" },
+];
+
+<List${formatSelfClosing(props)}`;
+    }
+    case "description-list": {
+      const s = settings as ControlSettingsBySlug["description-list"];
+      const props = [
+        formatExpressionProp("items", "items"),
+        ...(s.layout !== "stacked" ? [formatStringProp("layout", s.layout)] : []),
+      ];
+      return `${importLine(["DescriptionList"])}
+
+const items = [
+  { term: "Owner", details: "Alex Morgan" },
+  { term: "Status", details: "In review" },
+];
+
+<DescriptionList${formatSelfClosing(props)}`;
+    }
+    case "divider": {
+      const s = settings as ControlSettingsBySlug["divider"];
+      const props = [
+        ...(s.orientation !== "horizontal" ? [formatStringProp("orientation", s.orientation)] : []),
+        ...(s.tone !== "default" ? [formatStringProp("tone", s.tone)] : []),
+        ...(s.labelEnabled && s.orientation === "horizontal" ? [formatStringProp("label", s.label)] : []),
+      ];
+      return `${importLine(["Divider"])}\n\n<Divider${formatSelfClosing(props)}`;
+    }
+    case "content-timeline": {
+      return `${importLine(["ContentTimeline"])}
+
+const items = [
+  { title: "Release published", description: "opus-react is on npm.", time: "09:40", status: "success" },
+  { title: "Review requested", description: "Design QA pending.", time: "11:15", status: "warning" },
+];
+
+<ContentTimeline items={items} />`;
+    }
+    case "tree-view": {
+      const s = settings as ControlSettingsBySlug["tree-view"];
+      return `${importLine(["TreeView"])}
+
+const nodes = [
+  { id: "product", label: "Product", children: [{ id: "overview", label: "Overview" }] },
+  { id: "engineering", label: "Engineering", children: [{ id: "docs", label: "Docs" }] },
+];
+
+<TreeView nodes={nodes}${s.expandRoots ? ' defaultExpandedIds={["product", "engineering"]}' : ""} />`;
+    }
+    case "masonry-grid": {
+      const s = settings as ControlSettingsBySlug["masonry-grid"];
+      const props = [
+        formatExpressionProp("items", "items"),
+        ...(s.columns !== 3 ? [formatNumberProp("columns", s.columns)] : []),
+        ...(s.gap !== 12 ? [formatNumberProp("gap", s.gap)] : []),
+      ];
+      return `${importLine(["MasonryGrid"])}
+
+const items = [
+  { title: "Badge tones", body: "Status chips.", height: 120 },
+  { title: "Avatar stacks", body: "Collaborator strips.", height: 160 },
+];
+
+<MasonryGrid${formatSelfClosing(props)}`;
+    }
+    case "property-grid": {
+      return `${importLine(["PropertyGrid"])}
+
+const items = [
+  { label: "Package", value: "opus-react", copyable: true },
+  { label: "Category", value: "content", copyable: true },
+];
+
+<PropertyGrid items={items} />`;
+    }
+    case "json-viewer": {
+      const s = settings as ControlSettingsBySlug["json-viewer"];
+      const props = [
+        formatExpressionProp("value", "value"),
+        ...(s.collapsedDepth !== 1 ? [formatNumberProp("collapsedDepth", s.collapsedDepth)] : []),
+      ];
+      return `${importLine(["JsonViewer"])}
+
+const value = { name: "opus-react", published: true };
+
+<JsonViewer${formatSelfClosing(props)}`;
+    }
+    case "statistic": {
+      const s = settings as ControlSettingsBySlug["statistic"];
+      const props = [
+        formatStringProp("label", s.label),
+        formatStringProp("value", s.value),
+        ...(s.prefix ? [formatStringProp("prefix", s.prefix)] : []),
+        ...(s.suffix ? [formatStringProp("suffix", s.suffix)] : []),
+        ...(s.trendEnabled ? [formatStringProp("trend", s.trend), formatStringProp("trendLabel", s.trendLabel)] : []),
+      ];
+      return `${importLine(["Statistic"])}\n\n<Statistic${formatSelfClosing(props)}`;
+    }
+
+    case "icon": {
+      const s = settings as ControlSettingsBySlug["icon"];
+      const props = [
+        formatStringProp("name", s.name),
+        ...(s.size !== "md" ? [formatStringProp("size", s.size)] : []),
+        ...(s.tone !== "default" ? [formatStringProp("tone", s.tone)] : []),
+        ...(s.labelEnabled ? [formatStringProp("label", s.label)] : []),
+      ];
+      return `${importLine(["Icon"])}\n\n<Icon${formatSelfClosing(props)}`;
+    }
+    case "spinner": {
+      const s = settings as ControlSettingsBySlug["spinner"];
+      const props = [
+        ...(s.size !== "md" ? [formatStringProp("size", s.size)] : []),
+        ...(s.tone !== "accent" ? [formatStringProp("tone", s.tone)] : []),
+        ...(s.label !== "Loading" ? [formatStringProp("label", s.label)] : []),
+      ];
+      return `${importLine(["Spinner"])}\n\n<Spinner${formatSelfClosing(props)}`;
+    }
+    case "portal": {
+      const s = settings as ControlSettingsBySlug["portal"];
+      return `${importLine(["Portal"])}\n\n<Portal${s.disabled ? " disabled" : ""}>\n  <div>{${JSON.stringify(s.message)}}</div>\n</Portal>`;
+    }
+    case "portal-host": {
+      const s = settings as ControlSettingsBySlug["portal-host"];
+      return `${importLine(["Portal", "PortalHost"])}\n\n<PortalHost id=${JSON.stringify(s.hostId)}>\n  <Portal>\n    <div>{${JSON.stringify(s.message)}}</div>\n  </Portal>\n</PortalHost>`;
+    }
+    case "visually-hidden": {
+      const s = settings as ControlSettingsBySlug["visually-hidden"];
+      return `${importLine(["VisuallyHidden"])}\n\n<VisuallyHidden>${s.text}</VisuallyHidden>`;
+    }
+    case "focus-trap": {
+      const s = settings as ControlSettingsBySlug["focus-trap"];
+      return `${importLine(["FocusTrap"])}\n\n<FocusTrap${s.active ? "" : " active={false}"}>\n  <button type="button">Focus me</button>\n</FocusTrap>`;
+    }
+    case "keyboard-shortcut": {
+      const s = settings as ControlSettingsBySlug["keyboard-shortcut"];
+      const keys = s.keys.split(/\\s*\\+\\s*|\\s+/).filter(Boolean);
+      const props = [
+        formatExpressionProp("keys", JSON.stringify(keys.length ? keys : ["⌘", "K"])),
+        ...(s.size !== "md" ? [formatStringProp("size", s.size)] : []),
+      ];
+      return `${importLine(["KeyboardShortcut"])}\n\n<KeyboardShortcut${formatSelfClosing(props)}`;
+    }
+    case "hotkey-manager": {
+      const s = settings as ControlSettingsBySlug["hotkey-manager"];
+      return `${importLine(["HotkeyManager", "useHotkey"])}\n\n<HotkeyManager enabled={${s.enabled}}>\n  {/* useHotkey({ id: "save", key: ${JSON.stringify(s.key)}, meta: true }, handler) */}\n  {children}\n</HotkeyManager>`;
+    }
+    case "copy-button": {
+      const s = settings as ControlSettingsBySlug["copy-button"];
+      const props = [
+        formatStringProp("value", s.value),
+        ...(s.label !== "Copy" ? [formatStringProp("label", s.label)] : []),
+        ...(s.copiedLabel !== "Copied" ? [formatStringProp("copiedLabel", s.copiedLabel)] : []),
+      ];
+      return `${importLine(["CopyButton"])}\n\n<CopyButton${formatSelfClosing(props)}`;
+    }
+    case "clipboard": {
+      return `${importLine(["Clipboard", "useClipboard"])}\n\n<Clipboard>\n  {children}\n</Clipboard>`;
+    }
+    case "theme-provider": {
+      const s = settings as ControlSettingsBySlug["theme-provider"];
+      return `${importLine(["ThemeProvider"])}\n\n<ThemeProvider theme=${JSON.stringify(s.theme)}>\n  {children}\n</ThemeProvider>`;
+    }
+    case "theme-switcher": {
+      const s = settings as ControlSettingsBySlug["theme-switcher"];
+      return `${usageClientPrefix()}\n${importLine(["ThemeSwitcher"])}\n\nconst [theme, setTheme] = useState<"dark" | "light">(${JSON.stringify(s.theme)});\n\n<ThemeSwitcher label=${JSON.stringify(s.label)} value={theme} onChange={setTheme} />`;
+    }
+    case "resize-observer": {
+      return `${importLine(["ResizeObserver"])}\n\n<ResizeObserver>\n  {(size) => <div>{size.width} × {size.height}</div>}\n</ResizeObserver>`;
+    }
+    case "intersection-observer": {
+      const s = settings as ControlSettingsBySlug["intersection-observer"];
+      return `${importLine(["IntersectionObserver"])}\n\n<IntersectionObserver threshold={${s.threshold}}>\n  {(visible) => <div>{visible ? "Visible" : "Hidden"}</div>}\n</IntersectionObserver>`;
+    }
+
     case "sidebar": {
       const s = settings as ControlSettingsBySlug["sidebar"];
       const sidebarProps = [
