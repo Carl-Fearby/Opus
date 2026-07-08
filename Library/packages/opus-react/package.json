@@ -1,6 +1,6 @@
 {
   "name": "opus-react",
-  "version": "0.2.7",
+  "version": "0.2.15",
   "description": "Opus design system React components",
   "license": "UNLICENSED",
   "type": "module",
@@ -15,6 +15,7 @@
     },
     "./styles.css": "./dist/styles.css",
     "./index.css": "./dist/index.css",
+    "./flags.css": "./dist/flags.css",
     "./package.json": "./package.json"
   },
   "files": [
@@ -25,7 +26,7 @@
     "**/*.css"
   ],
   "scripts": {
-    "build": "tsup && node scripts/patch-css-exports.mjs",
+    "build": "tsup && node scripts/patch-css-exports.mjs && node scripts/copy-flag-icons.mjs",
     "dev": "tsup --watch",
     "prepublishOnly": "npm run build"
   },
@@ -45,6 +46,7 @@
     "@fortawesome/react-fontawesome": "^3.3.1"
   },
   "devDependencies": {
+    "flag-icons": "^7.5.0",
     "esbuild-css-modules-plugin": "^3.1.5",
     "lightningcss": "^1.32.0",
     "tsup": "^8.5.0",
