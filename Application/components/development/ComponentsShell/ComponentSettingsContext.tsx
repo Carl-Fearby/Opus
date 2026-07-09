@@ -6,6 +6,7 @@ import {
   useContext,
   useEffect,
   useMemo,
+  useRef,
   useState,
   type ReactNode,
 } from "react";
@@ -44,11 +45,14 @@ export function useComponentSettingsContext() {
 
 export function useComponentSettings(slug: ControlSlug, defaultSettings: ControlSettings) {
   const { activeSlug, register, settings, setSettings, unregister } = useComponentSettingsContext();
+  const defaultSettingsRef = useRef(defaultSettings);
+
+  defaultSettingsRef.current = defaultSettings;
 
   useEffect(() => {
-    register(slug, defaultSettings);
+    register(slug, defaultSettingsRef.current);
     return unregister;
-  }, [defaultSettings, register, slug, unregister]);
+  }, [register, slug, unregister]);
 
   if (activeSlug !== slug || !settings) {
     return {

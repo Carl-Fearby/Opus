@@ -22,6 +22,12 @@ import {
 } from "./chartDemoData";
 import { worldMapRegionIds } from "@/components/Chart/worldMapRegions";
 import { isChartSlug } from "./chartCatalog";
+import { parsePipelineStageCount } from "./pipelineDemoData";
+import { getDealsOverTimeDemoData } from "./dealsOverTimeDemoData";
+import { demoRecentActivity } from "./recentActivityDemoData";
+import { demoNotesActivity } from "./notesActivityDemoData";
+import { demoTopPerformingUsers } from "./topPerformingUsersDemoData";
+import { demoUpcomingTasks } from "./upcomingTasksDemoData";
 import { formatModelAssetsForUsage } from "@/lib/models/vx27Assets";
 import {
   gaugePreviewValue,
@@ -241,6 +247,24 @@ function importLine(components: string[]): string {
   return `import { ${components.join(", ")} } from "@/components/fields";`;
 }
 
+function wrapDashboardWidget(
+  content: string,
+  components: string[],
+  options?: { dataComponent?: string; title?: string; width?: string },
+) {
+  const containerProps = [
+    options?.title ? ` title=${quote(options.title)}` : "",
+    options?.dataComponent ? ` data-component=${quote(options.dataComponent)}` : "",
+    options?.width ? ` width=${quote(options.width)}` : "",
+  ].join("");
+
+  return `${importLine(["DashboardContentContainer", ...components])}
+
+<DashboardContentContainer${containerProps}>
+${content}
+</DashboardContentContainer>`;
+}
+
 function usageClientPrefix(includeUseState = true): string {
   return includeUseState ? `"use client";\n\nimport { useState } from "react";` : `"use client";`;
 }
@@ -377,6 +401,37 @@ ${includeSeries ? `const series = ${formatChartSeriesForUsage(chartDemoSeries)};
       ];
       return controlledFieldUsage(["TextAreaField"], "TextAreaField", state, props);
     }
+    case "note-composer": {
+      const s = settings as ControlSettingsBySlug["note-composer"];
+      return interactiveUsage({
+        components: ["NoteComposer"],
+        state: [
+          'const [note, setNote] = useState("");',
+          'const [lastAction, setLastAction] = useState("Waiting for action");',
+        ],
+        jsx: `(
+  <>
+    <NoteComposer
+      placeholder=${quote(s.placeholder)}
+      saveButtonLabel=${quote(s.saveButtonLabel)}
+      showAttach={${s.showAttach}}
+      showMention={${s.showMention}}
+      showEmoji={${s.showEmoji}}
+      value={note}
+      onChange={setNote}
+      onSave={(value) => {
+        setLastAction(\`Saved note: \${value}\`);
+        setNote("");
+      }}
+      onAttachClick={() => setLastAction("Attachment")}
+      onMentionClick={() => setLastAction("Mention")}
+      onEmojiSelect={(emoji) => setLastAction(\`Emoji: \${emoji}\`)}
+    />
+    <p>{lastAction}</p>
+  </>
+)`,
+      });
+    }
     case "rich-text-field": {
       const s = settings as ControlSettingsBySlug["rich-text-field"];
       const state = toStateName(s.label);
@@ -459,6 +514,7 @@ ${includeSeries ? `const series = ${formatChartSeriesForUsage(chartDemoSeries)};
         ...fieldProps(s),
         formatStringProp("name", `${id}-group`),
         formatStringProp("shape", s.shape),
+        ...(s.size && s.size !== "md" ? [formatStringProp("size", s.size)] : []),
         formatExpressionProp("value", state),
         formatExpressionProp("onChange", toSetter(state)),
       ];
@@ -507,6 +563,7 @@ ${includeSeries ? `const series = ${formatChartSeriesForUsage(chartDemoSeries)};
         formatStringProp("id", id),
         ...fieldProps(s),
         formatStringProp("shape", s.shape),
+        ...(s.size && s.size !== "md" ? [formatStringProp("size", s.size)] : []),
         formatExpressionProp("checked", state),
         formatExpressionProp("onChange", `(event) => ${toSetter(state)}(event.target.checked)`),
       ];
@@ -654,6 +711,31 @@ import { IconPicker } from "@/components/IconPicker";
 const [icon, setIcon] = useState(${quote(s.value)});
 
 return <IconPicker${formatSelfClosing(props)};`;
+    }
+    case "emoji-picker": {
+      const s = settings as ControlSettingsBySlug["emoji-picker"];
+      return interactiveUsage({
+        components: ["Button", "CatalogIcon", "EmojiPicker"],
+        state: [
+          `const [emoji, setEmoji] = useState(${quote(s.lastSelected)});`,
+          `const [open, setOpen] = useState(${s.open});`,
+        ],
+        jsx: `(
+  <div>
+    <EmojiPicker
+      closeOnEscape={${s.closeOnEscape}}
+      closeOnOutside={${s.closeOnOutside}}
+      open={open}
+      placement=${quote(s.placement)}
+      searchPlaceholder=${quote(s.searchPlaceholder)}
+      trigger={<Button variant="secondary"><CatalogIcon iconName="face-smile" /> Add emoji</Button>}
+      onOpenChange={setOpen}
+      onSelect={setEmoji}
+    />
+    <p>Selected: {emoji}</p>
+  </div>
+)`,
+      });
     }
     case "tooltip": {
       const s = settings as ControlSettingsBySlug["tooltip"];
@@ -1073,29 +1155,33 @@ ${formatJsxRichContent(s.content)}
       return `import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { ${iconOption.importName} } from "@fortawesome/free-solid-svg-icons";
 import "@/lib/fontawesome";
-${importLine(["StatCard"])}
-
-return <StatCard${formatSelfClosing(props)};`;
+${wrapDashboardWidget(`<StatCard${formatSelfClosing(props)} />`, ["StatCard"], { width: s.width ?? "widget" })}`;
     }
     case "sparkline": {
       const s = settings as ControlSettingsBySlug["sparkline"];
-      return `${importLine(["Sparkline"])}
+      return `const values = [18, 24, 21, 34, 29, 42, 38];
 
-const values = [18, 24, 21, 34, 29, 42, 38];
-
-return <Sparkline label=${quote(s.label)} palette=${quote(s.palette)} values={values} variant="labeled" />;`;
+${wrapDashboardWidget(
+        `<Sparkline label=${quote(s.label)} palette=${quote(s.palette)} values={values} variant="labeled" />`,
+        ["Sparkline"],
+        { width: s.width ?? "widget" },
+      )}`;
     }
     case "progress-ring": {
       const s = settings as ControlSettingsBySlug["progress-ring"];
-      return `${importLine(["ProgressRing"])}
-
-<ProgressRing label=${quote(s.label)} max={${s.max}} value={${s.value}} />`;
+      return wrapDashboardWidget(
+        `<ProgressRing label=${quote(s.label)} max={${s.max}} value={${s.value}} />`,
+        ["ProgressRing"],
+        { width: s.width ?? "widget" },
+      );
     }
     case "progress-bar": {
       const s = settings as ControlSettingsBySlug["progress-bar"];
-      return `${importLine(["ProgressBar"])}
-
-<ProgressBar label=${quote(s.label)} max={${s.max}} value={${s.value}} />`;
+      return wrapDashboardWidget(
+        `<ProgressBar label=${quote(s.label)} max={${s.max}} value={${s.value}} />`,
+        ["ProgressBar"],
+        { width: s.width ?? "widget" },
+      );
     }
     case "gauge":
     {
@@ -1126,9 +1212,7 @@ return <Sparkline label=${quote(s.label)} palette=${quote(s.palette)} values={va
           )
           .join(",\n");
 
-        return `${importLine(["Gauge"])}
-
-<Gauge${formatSelfClosing(props)}
+        return `${wrapDashboardWidget(`<Gauge${formatSelfClosing(props)}`, ["Gauge"], { width: s.width ?? "widget" })}
 
 // Optional footer metrics — pass any number of items, or omit entirely:
 // footer={[
@@ -1143,19 +1227,19 @@ ${footerLines},
         )
         .join(",\n");
 
-      return `${importLine(["Gauge"])}
-
-const footerMetrics = [
+      return `const footerMetrics = [
 ${footerBlock},
 ];
 
-<Gauge${formatSelfClosing(props)}`;
+${wrapDashboardWidget(`<Gauge${formatSelfClosing(props)}`, ["Gauge"], { width: s.width ?? "widget" })}`;
     }
     case "speedometer": {
       const s = settings as ControlSettingsBySlug["speedometer"];
-      return `${importLine(["Speedometer"])}
-
-<Speedometer label=${quote(s.label)} max={${s.max}} value={${s.value}} />`;
+      return wrapDashboardWidget(
+        `<Speedometer label=${quote(s.label)} max={${s.max}} value={${s.value}} />`,
+        ["Speedometer"],
+        { width: s.width ?? "widget" },
+      );
     }
     case "metric-tile": {
       const s = settings as ControlSettingsBySlug["metric-tile"];
@@ -1163,21 +1247,262 @@ ${footerBlock},
       return `import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { ${iconOption.importName} } from "@fortawesome/free-solid-svg-icons";
 import "@/lib/fontawesome";
-${importLine(["MetricTile"])}
+${wrapDashboardWidget(
+        `<MetricTile icon={<FontAwesomeIcon icon={${iconOption.importName}} />} label=${quote(s.label)} value=${quote(s.value)}${s.showSparkline ? " sparkline={[12, 18, 16, 24, 22, 30, 28]}" : ""} />`,
+        ["MetricTile"],
+        { width: s.width ?? "widget" },
+      )}`;
+    }
+    case "dashboard-content-container": {
+      const s = settings as ControlSettingsBySlug["dashboard-content-container"];
+      return `${importLine(["DashboardContentContainer", "StatusIndicator"])}
 
-return <MetricTile icon={<FontAwesomeIcon icon={${iconOption.importName}} />} label=${quote(s.label)} value=${quote(s.value)}${s.showSparkline ? " sparkline={[12, 18, 16, 24, 22, 30, 28]}" : ""} />;`;
+<DashboardContentContainer title=${quote(s.title)} width=${quote(s.width ?? "widget")}>
+  <StatusIndicator label="Systems healthy" status="success" />
+</DashboardContentContainer>`;
+    }
+    case "pipeline-overview": {
+      const s = settings as ControlSettingsBySlug["pipeline-overview"];
+      const stageCount = parsePipelineStageCount(s.stageCount);
+      const allStages = [
+        { id: "qualification", label: "Qualification", value: 842000, displayValue: "£842,000", percentage: 34 },
+        { id: "proposal", label: "Proposal", value: 621000, displayValue: "£621,000", percentage: 25 },
+        { id: "negotiation", label: "Negotiation", value: 542000, displayValue: "£542,000", percentage: 22 },
+        { id: "closing", label: "Closing", value: 331000, displayValue: "£331,000", percentage: 13 },
+        { id: "won", label: "Won", value: 144000, displayValue: "£144,000", percentage: 6 },
+      ];
+      const stages = allStages.slice(0, stageCount);
+      return `const stages = ${JSON.stringify(stages, null, 2)};
+
+${wrapDashboardWidget(
+        `<PipelineOverview
+  stages={stages}
+  totalLabel=${quote(s.totalLabel)}
+  totalValue=${quote(s.totalValue)}
+  period=${quote(s.period)}
+  onPeriodChange={(nextPeriod) => {
+    console.log("Period changed:", nextPeriod);
+  }}
+/>`,
+        ["PipelineOverview"],
+        { dataComponent: "pipeline-overview", title: s.title, width: s.width ?? "widget" },
+      )}`;
+    }
+    case "deals-over-time": {
+      const s = settings as ControlSettingsBySlug["deals-over-time"];
+      const data = getDealsOverTimeDemoData(s.period);
+      const maxValue = Math.max(1, Number(s.maxValue) || 100);
+      return `const dealsData = ${JSON.stringify(data, null, 2)};
+
+${wrapDashboardWidget(
+        `<DealsOverTime
+  title=${quote(s.title)}
+  data={dealsData}
+  maxValue={${maxValue}}
+  period=${quote(s.period)}
+  palette=${quote(s.palette ?? "purple")}
+  valueLabel=${quote(s.valueLabel)}
+  onPeriodChange={(nextPeriod) => {
+    console.log("Period changed:", nextPeriod);
+  }}
+/>`,
+        ["DealsOverTime"],
+        { dataComponent: "deals-over-time", width: s.width ?? "widget" },
+      )}`;
+    }
+    case "404-page": {
+      return `import { NotFoundPage } from "@/components/documentation/NotFoundPage";
+
+export function Example() {
+  return <NotFoundPage />;
+}`;
+    }
+    case "403-page": {
+      return `import { ForbiddenPage } from "@/components/documentation/ForbiddenPage";
+
+export function Example() {
+  return <ForbiddenPage />;
+}`;
+    }
+    case "dashboard-list-columns": {
+      const s = settings as ControlSettingsBySlug["dashboard-list-columns"];
+      const containerWidth = s.width === "widget" ? "widget" : "full";
+      return interactiveUsage({
+        components: [
+          "Columns",
+          "DashboardContentContainer",
+          "RecentActivity",
+          "TopPerformingUsers",
+          "UpcomingTasks",
+        ],
+        extraImports: [
+          'import { demoUpcomingTasks } from "./upcomingTasksDemoData";',
+          'import { demoRecentActivity } from "./recentActivityDemoData";',
+          'import { demoTopPerformingUsers } from "./topPerformingUsersDemoData";',
+        ],
+        state: [
+          'const [lastAction, setLastAction] = useState("Waiting for action");',
+          "const [tasks, setTasks] = useState(demoUpcomingTasks);",
+        ],
+        jsx: `(
+  <>
+    <Columns direction=${quote(s.layout === "stacked" ? "column" : "row")} columns={3} gap={16}>
+      <DashboardContentContainer data-component=${quote("upcoming-tasks")} width=${quote(containerWidth)}>
+        <UpcomingTasks
+          title=${quote(s.upcomingTasksTitle)}
+          footerLabel=${quote(s.upcomingTasksFooterLabel)}
+          checkboxSize=${quote(s.checkboxSize ?? "md")}
+          tasks={tasks}
+          onFooterClick={() => setLastAction(\`Last action: ${s.upcomingTasksFooterLabel}\`)}
+          onTaskClick={(task) => setLastAction(\`Last action: \${task.title}\`)}
+          onTaskCompleteChange={(task, completed) => {
+            setTasks((current) =>
+              current.map((entry) => (entry.id === task.id ? { ...entry, completed } : entry)),
+            );
+            setLastAction(completed ? \`Completed: \${task.title}\` : \`Reopened: \${task.title}\`);
+          }}
+        />
+      </DashboardContentContainer>
+      <DashboardContentContainer data-component=${quote("recent-activity")} width=${quote(containerWidth)}>
+        <RecentActivity
+          title=${quote(s.recentActivityTitle)}
+          footerLabel=${quote(s.recentActivityFooterLabel)}
+          items={demoRecentActivity}
+          onFooterClick={() => setLastAction(\`Last action: ${s.recentActivityFooterLabel}\`)}
+          onItemClick={(item) => setLastAction(\`Last action: \${item.title}\`)}
+        />
+      </DashboardContentContainer>
+      <DashboardContentContainer data-component=${quote("top-performing-users")} width=${quote(containerWidth)}>
+        <TopPerformingUsers
+          title=${quote(s.topPerformingUsersTitle)}
+          footerLabel=${quote(s.topPerformingUsersFooterLabel)}
+          users={demoTopPerformingUsers}
+          onFooterClick={() => setLastAction(\`Last action: ${s.topPerformingUsersFooterLabel}\`)}
+          onPersonClick={(person) => setLastAction(\`Last action: \${person.name}\`)}
+        />
+      </DashboardContentContainer>
+    </Columns>
+    <p>{lastAction}</p>
+  </>
+)`,
+      });
+    }
+    case "notes-activity": {
+      const s = settings as ControlSettingsBySlug["notes-activity"];
+      return interactiveUsage({
+        components: ["DashboardContentContainer", "NoteComposer", "NotesActivity"],
+        preamble: [`const activity = ${JSON.stringify(demoNotesActivity, null, 2)};`],
+        state: ['const [lastAction, setLastAction] = useState("Waiting for action");'],
+        jsx: `(
+  <>
+    <DashboardContentContainer data-component=${quote("notes-activity")} width=${quote(s.width ?? "widget")}>
+      <NotesActivity
+        composerPlaceholder=${quote(s.composerPlaceholder)}
+        footerLabel=${quote(s.footerLabel)}
+        items={activity}
+        saveButtonLabel=${quote(s.saveButtonLabel)}
+        onFooterClick={() => setLastAction(\`Last action: ${s.footerLabel}\`)}
+        onItemClick={(item) => setLastAction(\`Last action: \${item.body}\`)}
+        onNoteSave={(note) => setLastAction(\`Saved note: \${note}\`)}
+        onTabChange={(tab) => setLastAction(\`Tab: \${tab}\`)}
+      />
+    </DashboardContentContainer>
+    <p>{lastAction}</p>
+  </>
+)`,
+      });
+    }
+    case "upcoming-tasks": {
+      const s = settings as ControlSettingsBySlug["upcoming-tasks"];
+      return interactiveUsage({
+        components: ["DashboardContentContainer", "UpcomingTasks"],
+        preamble: [`const initialTasks = ${JSON.stringify(demoUpcomingTasks, null, 2)};`],
+        state: [
+          'const [lastAction, setLastAction] = useState("Waiting for action");',
+          "const [tasks, setTasks] = useState(initialTasks);",
+        ],
+        jsx: `(
+  <>
+    <DashboardContentContainer data-component=${quote("upcoming-tasks")} width=${quote(s.width ?? "widget")}>
+      <UpcomingTasks
+        title=${quote(s.title)}
+        footerLabel=${quote(s.footerLabel)}
+        checkboxSize=${quote(s.checkboxSize ?? "md")}
+        tasks={tasks}
+        onFooterClick={() => setLastAction(\`Last action: ${s.footerLabel}\`)}
+        onTaskClick={(task) => setLastAction(\`Last action: \${task.title}\`)}
+        onTaskCompleteChange={(task, completed) => {
+          setTasks((current) =>
+            current.map((entry) => (entry.id === task.id ? { ...entry, completed } : entry)),
+          );
+          setLastAction(completed ? \`Completed: \${task.title}\` : \`Reopened: \${task.title}\`);
+        }}
+      />
+    </DashboardContentContainer>
+    <p>{lastAction}</p>
+  </>
+)`,
+      });
+    }
+    case "recent-activity": {
+      const s = settings as ControlSettingsBySlug["recent-activity"];
+      return interactiveUsage({
+        components: ["DashboardContentContainer", "RecentActivity"],
+        preamble: [`const activity = ${JSON.stringify(demoRecentActivity, null, 2)};`],
+        state: ['const [lastAction, setLastAction] = useState("Waiting for action");'],
+        jsx: `(
+  <>
+    <DashboardContentContainer data-component=${quote("recent-activity")} width=${quote(s.width ?? "widget")}>
+      <RecentActivity
+        title=${quote(s.title)}
+        footerLabel=${quote(s.footerLabel)}
+        items={activity}
+        onFooterClick={() => setLastAction(\`Last action: ${s.footerLabel}\`)}
+        onItemClick={(item) => setLastAction(\`Last action: \${item.title}\`)}
+      />
+    </DashboardContentContainer>
+    <p>{lastAction}</p>
+  </>
+)`,
+      });
+    }
+    case "top-performing-users": {
+      const s = settings as ControlSettingsBySlug["top-performing-users"];
+      return interactiveUsage({
+        components: ["DashboardContentContainer", "TopPerformingUsers"],
+        preamble: [`const users = ${JSON.stringify(demoTopPerformingUsers, null, 2)};`],
+        state: ['const [lastAction, setLastAction] = useState("Waiting for action");'],
+        jsx: `(
+  <>
+    <DashboardContentContainer data-component=${quote("top-performing-users")} width=${quote(s.width ?? "widget")}>
+      <TopPerformingUsers
+        title=${quote(s.title)}
+        footerLabel=${quote(s.footerLabel)}
+        users={users}
+        onFooterClick={() => setLastAction(\`Last action: ${s.footerLabel}\`)}
+        onPersonClick={(person) => setLastAction(\`Last action: \${person.name}\`)}
+      />
+    </DashboardContentContainer>
+    <p>{lastAction}</p>
+  </>
+)`,
+      });
     }
     case "status-indicator": {
       const s = settings as ControlSettingsBySlug["status-indicator"];
-      return `${importLine(["StatusIndicator"])}
-
-<StatusIndicator label=${quote(s.label)} status=${quote(s.status)} />`;
+      return wrapDashboardWidget(
+        `<StatusIndicator label=${quote(s.label)} status=${quote(s.status)} />`,
+        ["StatusIndicator"],
+        { width: s.width ?? "widget" },
+      );
     }
     case "trend-badge": {
       const s = settings as ControlSettingsBySlug["trend-badge"];
-      return `${importLine(["TrendBadge"])}
-
-<TrendBadge direction=${quote(s.direction)} value=${quote(s.value)} />`;
+      return wrapDashboardWidget(
+        `<TrendBadge direction=${quote(s.direction)} value=${quote(s.value)} />`,
+        ["TrendBadge"],
+        { width: s.width ?? "widget" },
+      );
     }
     case "panel": {
       const s = settings as ControlSettingsBySlug["panel"];
@@ -1798,6 +2123,370 @@ const items = [
 
 <PropertyGrid items={items} />`;
     }
+    case "stack": {
+      const s = settings as ControlSettingsBySlug["stack"];
+      return `${importLine(["Stack"])}
+
+<Stack direction="${s.direction}" gap={${s.gap}}${s.wrap ? " wrap" : ""}>
+  <div>One</div>
+  <div>Two</div>
+  <div>Three</div>
+</Stack>`;
+    }
+    case "columns": {
+      const s = settings as ControlSettingsBySlug["columns"];
+      const directionProp = s.direction !== "row" ? ` direction="${s.direction}"` : "";
+      const columnsProp = s.columns !== 3 ? ` columns={${s.columns}}` : "";
+      const gapProp = s.gap !== 16 ? ` gap={${s.gap}}` : "";
+      return `${importLine(["Columns"])}
+
+<Columns${directionProp}${columnsProp}${gapProp}>
+  <div>One</div>
+  <div>Two</div>
+  <div>Three</div>
+</Columns>`;
+    }
+    case "grid": {
+      const s = settings as ControlSettingsBySlug["grid"];
+      return `${importLine(["Grid"])}
+
+<Grid columns={${s.columns}} gap={${s.gap}}>
+  <div>Alpha</div>
+  <div>Beta</div>
+  <div>Gamma</div>
+</Grid>`;
+    }
+    case "splitter": {
+      const s = settings as ControlSettingsBySlug["splitter"];
+      return `${importLine(["Splitter"])}
+
+<Splitter orientation="${s.orientation}" defaultSize={${s.defaultSize}}>
+  <div>Primary</div>
+  <div>Secondary</div>
+</Splitter>`;
+    }
+    case "resizable-panel": {
+      const s = settings as ControlSettingsBySlug["resizable-panel"];
+      return `${importLine(["ResizablePanel"])}
+
+<ResizablePanel defaultWidth={${s.defaultWidth}} defaultHeight={${s.defaultHeight}}>
+  Resizable content
+</ResizablePanel>`;
+    }
+    case "dock-layout": {
+      return `${importLine(["DockLayout"])}
+
+<DockLayout top="Toolbar" left="Files" right="Inspector" bottom="Console">
+  Editor
+</DockLayout>`;
+    }
+    case "scroll-area": {
+      const s = settings as ControlSettingsBySlug["scroll-area"];
+      return `${importLine(["ScrollArea"])}
+
+<ScrollArea maxHeight={${s.maxHeight}} orientation="${s.orientation}">
+  <div>Long content…</div>
+</ScrollArea>`;
+    }
+    case "aspect-ratio": {
+      const s = settings as ControlSettingsBySlug["aspect-ratio"];
+      return `${importLine(["AspectRatio"])}
+
+<AspectRatio ratio="${s.ratio}">
+  <img alt="" src="/hero.jpg" />
+</AspectRatio>`;
+    }
+    case "container": {
+      const s = settings as ControlSettingsBySlug["container"];
+      return `${importLine(["Container"])}
+
+<Container size="${s.size}"${s.padded ? "" : " padded={false}"}>
+  Page content
+</Container>`;
+    }
+    case "spacer": {
+      const s = settings as ControlSettingsBySlug["spacer"];
+      return `${importLine(["Spacer"])}
+
+<div>
+  <div>Above</div>
+  <Spacer axis="${s.axis}" size={${s.size}}${s.flex ? " flex" : ""} />
+  <div>Below</div>
+</div>`;
+    }
+    case "breadcrumb": {
+      const s = settings as ControlSettingsBySlug["breadcrumb"];
+      return `${importLine(["Breadcrumb"])}
+
+<Breadcrumb
+  separator="${s.separator}"
+  items={[
+    { id: "home", label: "Home" },
+    { id: "docs", label: "Docs" },
+    { id: "current", label: "Breadcrumb" },
+  ]}
+/>`;
+    }
+    case "pagination": {
+      const s = settings as ControlSettingsBySlug["pagination"];
+      return `${importLine(["Pagination"])}
+
+<Pagination page={${s.page}} pageCount={${s.pageCount}} onPageChange={(page) => console.log(page)} />`;
+    }
+    case "page-header": {
+      return `${importLine(["PageHeader", "Button"])}
+
+<PageHeader
+  title="Projects"
+  description="Track delivery across teams."
+  actions={<Button variant="primary">New project</Button>}
+/>`;
+    }
+    case "toolbar": {
+      const s = settings as ControlSettingsBySlug["toolbar"];
+      return `${importLine(["Toolbar", "Button"])}
+
+<Toolbar${s.dense ? " dense" : ""} start={<Button variant="secondary">Filter</Button>} end={<Button>Publish</Button>}>
+  <Button variant="light">Undo</Button>
+</Toolbar>`;
+    }
+    case "bottom-navigation": {
+      const s = settings as ControlSettingsBySlug["bottom-navigation"];
+      return `${importLine(["BottomNavigation"])}
+
+<BottomNavigation
+  value="${s.value}"
+  items={[
+    { id: "home", label: "Home", icon: "⌂" },
+    { id: "search", label: "Search", icon: "⌕" },
+  ]}
+  onChange={(id) => console.log(id)}
+/>`;
+    }
+    case "navigation-rail": {
+      const s = settings as ControlSettingsBySlug["navigation-rail"];
+      return `${importLine(["NavigationRail"])}
+
+<NavigationRail
+  value="${s.value}"${s.collapsed ? "\n  collapsed" : ""}
+  items={[
+    { id: "inbox", label: "Inbox", icon: "Inbox" },
+    { id: "projects", label: "Projects", icon: "Grid" },
+  ]}
+  onChange={(id) => console.log(id)}
+/>`;
+    }
+    case "split-button": {
+      const s = settings as ControlSettingsBySlug["split-button"];
+      return `${importLine(["SplitButton"])}
+
+<SplitButton
+  variant="${s.variant}"
+  actions={[
+    { id: "draft", label: "Save draft" },
+    { id: "schedule", label: "Schedule…" },
+  ]}
+>
+  Save
+</SplitButton>`;
+    }
+    case "fab": {
+      const s = settings as ControlSettingsBySlug["fab"];
+      return `${importLine(["FloatingActionButton"])}
+
+<FloatingActionButton label="Create" icon="+" size="${s.size}"${s.extended ? " extended" : ""} />`;
+    }
+    case "tile": {
+      const s = settings as ControlSettingsBySlug["tile"];
+      return `${importLine(["Tile"])}
+
+<Tile
+  label="${s.label}"
+  tone="${s.tone}"
+  icon="${s.icon}"
+  onClick={() => handleTile("${s.label.toLowerCase().replace(/\s+/g, "-")}")}
+/>`;
+    }
+    case "tiles": {
+      const s = settings as ControlSettingsBySlug["tiles"];
+      return `${importLine(["Tiles"])}
+
+const items = [
+  { id: "new-lead", label: "New Lead", icon: "user-plus", tone: "purple", onClick: () => handleTile("new-lead") },
+  { id: "add-contact", label: "Add Contact", icon: "user", tone: "blue", onClick: () => handleTile("add-contact") },
+];
+
+<Tiles items={items} layout="${s.layout}" />`;
+    }
+    case "stat-tile": {
+      const s = settings as ControlSettingsBySlug["stat-tile"];
+      return `${importLine(["StatTile"])}
+
+<StatTile
+  label="${s.label}"
+  value="${s.value}"
+  icon="${s.icon}"
+  tone="${s.tone}"
+  trend="${s.trend}"
+  trendValue="${s.trendValue}"
+  comparison="${s.comparison}"
+  onClick={() => handleStatTile("${s.label.toLowerCase().replace(/\s+/g, "-")}")}
+/>`;
+    }
+    case "stat-tiles": {
+      const s = settings as ControlSettingsBySlug["stat-tiles"];
+      return `${importLine(["StatTiles"])}
+
+const items = [
+  {
+    id: "total-contacts",
+    label: "Total Contacts",
+    value: "2,543",
+    icon: "user",
+    tone: "blue",
+    trend: "up",
+    trendValue: "12.5%",
+    comparison: "vs last 30 days",
+    onClick: () => handleStatTile("total-contacts"),
+  },
+  {
+    id: "revenue",
+    label: "Revenue",
+    value: "$128k",
+    icon: "chart-column",
+    tone: "purple",
+    trend: "up",
+    trendValue: "8.4%",
+    comparison: "vs last 30 days",
+    onClick: () => handleStatTile("revenue"),
+  },
+  {
+    id: "active-deals",
+    label: "Active Deals",
+    value: "86",
+    icon: "handshake",
+    tone: "blue",
+    trend: "down",
+    trendValue: "3.1%",
+    comparison: "vs last 30 days",
+    onClick: () => handleStatTile("active-deals"),
+  },
+  {
+    id: "new-leads",
+    label: "New Leads",
+    value: "412",
+    icon: "user-plus",
+    tone: "purple",
+    trend: "up",
+    trendValue: "18.2%",
+    comparison: "vs last 30 days",
+    onClick: () => handleStatTile("new-leads"),
+  },
+];
+
+<StatTiles items={items} layout="${s.layout}" />`;
+    }
+    case "property-inspector": {
+      return `${importLine(["PropertyInspector"])}
+
+const items = [
+  { id: "name", group: "Identity", label: "Name", value: "Orders board" },
+  { id: "featured", group: "State", label: "Featured", value: true },
+];
+
+<PropertyInspector items={items} searchable onChange={(id, value) => console.log(id, value)} />`;
+    }
+    case "filter-builder": {
+      return `${importLine(["FilterBuilder"])}
+
+const [conditions, setConditions] = useState([
+  { id: "f1", field: "status", operator: "eq", value: "open" },
+]);
+
+<FilterBuilder conditions={conditions} fields={["status", "owner"]} onChange={setConditions} />`;
+    }
+    case "query-builder": {
+      const s = settings as ControlSettingsBySlug["query-builder"];
+      return `${importLine(["QueryBuilder"])}
+
+const [group, setGroup] = useState({
+  id: "root",
+  combinator: "${s.combinator}",
+  rules: [{ id: "q1", field: "status", operator: "eq", value: "active" }],
+});
+
+<QueryBuilder fields={["status", "owner"]} group={group} onChange={setGroup} />`;
+    }
+    case "rule-builder": {
+      return `${importLine(["RuleBuilder"])}
+
+const [rules, setRules] = useState([
+  { id: "r1", name: "Escalate urgent", conditions: "priority >= 4", effect: "notify", enabled: true, priority: 1 },
+]);
+
+<RuleBuilder rules={rules} onChange={setRules} />`;
+    }
+    case "permissions-matrix": {
+      return `${importLine(["PermissionsMatrix"])}
+
+<PermissionsMatrix
+  roles={["Admin", "Editor"]}
+  resources={["Projects", "Billing"]}
+  permissions={{ Admin: { Projects: "admin", Billing: "write" }, Editor: { Projects: "write", Billing: "read" } }}
+  onChange={(role, resource, level) => console.log(role, resource, level)}
+/>`;
+    }
+    case "dual-list-builder": {
+      return `${importLine(["DualListBuilder"])}
+
+const available = [
+  { id: "design", label: "Design system" },
+  { id: "docs", label: "Documentation" },
+];
+const [selectedIds, setSelectedIds] = useState(["design"]);
+
+<DualListBuilder available={available} selectedIds={selectedIds} onChange={setSelectedIds} />`;
+    }
+    case "scheduler": {
+      const s = settings as ControlSettingsBySlug["scheduler"];
+      return `${importLine(["Scheduler"])}
+
+const events = [
+  { id: "s1", day: 0, startHour: 9, durationHours: 1, title: "Standup" },
+];
+
+<Scheduler events={events} startHour={${s.startHour}} endHour={${s.endHour}} />`;
+    }
+    case "kanban-board": {
+      return `${importLine(["KanbanBoard"])}
+
+const cards = { c1: { id: "c1", title: "Ship builders", meta: "Planning" } };
+const [columns, setColumns] = useState([
+  { id: "todo", title: "To do", cardIds: ["c1"] },
+  { id: "done", title: "Done", cardIds: [] },
+]);
+
+<KanbanBoard cards={cards} columns={columns} onChange={setColumns} />`;
+    }
+    case "calendar": {
+      return `${importLine(["Calendar"])}
+
+<Calendar
+  events={[{ id: "e1", date: "2026-07-12", title: "Design critique" }]}
+  onSelectDate={(date) => console.log(date)}
+/>`;
+    }
+    case "resource-planner": {
+      const s = settings as ControlSettingsBySlug["resource-planner"];
+      return `${importLine(["ResourcePlanner"])}
+
+<ResourcePlanner
+  startHour={${s.startHour}}
+  endHour={${s.endHour}}
+  resources={[{ id: "alex", label: "Alex Morgan" }]}
+  items={[{ id: "b1", resourceId: "alex", label: "Builders", start: 9, end: 12 }]}
+/>`;
+    }
     case "json-viewer": {
       const s = settings as ControlSettingsBySlug["json-viewer"];
       const props = [
@@ -1831,6 +2520,30 @@ const value = { name: "opus-react", published: true };
         ...(s.labelEnabled ? [formatStringProp("label", s.label)] : []),
       ];
       return `${importLine(["Icon"])}\n\n<Icon${formatSelfClosing(props)}`;
+    }
+    case "icon-badge": {
+      const s = settings as ControlSettingsBySlug["icon-badge"];
+      const props = [
+        formatStringProp("iconName", s.iconName),
+        formatStringProp("label", s.label),
+        ...(s.count ? [formatExpressionProp("count", String(s.count))] : []),
+        ...(s.max !== 99 ? [formatExpressionProp("max", String(s.max))] : []),
+        ...(s.size !== "md" ? [formatStringProp("size", s.size)] : []),
+        ...(s.tone !== "muted" ? [formatStringProp("tone", s.tone)] : []),
+        ...(s.urgency !== "standard" ? [formatStringProp("urgency", s.urgency)] : []),
+        ...(s.showZero ? [formatBoolProp("showZero", true)] : []),
+        formatExpressionProp("onClick", `() => setLastAction(\`Last action: ${s.label}\`)`),
+      ];
+      return interactiveUsage({
+        components: ["IconBadge"],
+        state: ['const [lastAction, setLastAction] = useState("Waiting for action");'],
+        jsx: `(
+  <>
+    <IconBadge${formatSelfClosing(props)}
+    <p>{lastAction}</p>
+  </>
+)`,
+      });
     }
     case "spinner": {
       const s = settings as ControlSettingsBySlug["spinner"];

@@ -1,16 +1,33 @@
 "use client";
 
+import dynamic from "next/dynamic";
 import Link from "next/link";
 import { useSetComponentsPageHeader } from "@/components/development/ComponentsThemeProvider";
 import { useComponentSettings } from "@/components/development/ComponentsShell/ComponentSettingsContext";
 import { componentRawPath } from "@/lib/controls/routes";
 import type { ControlDefinition, ControlSettings } from "@/lib/controls/types";
-import { ControlPreview } from "./ControlPreview";
+import { PreviewLoading } from "./PreviewLoading";
 import { PreviewStage } from "./PreviewStage";
 import { PreviewThemeControls } from "./PreviewThemeControls";
 import styles from "./ControlDetail.module.css";
-import { UsageCodeViewer } from "./UsageCodeViewer";
-import { ComponentDocumentation } from "@/components/control-detail/ComponentDocumentation/ComponentDocumentation";
+
+const ControlPreview = dynamic(
+  () => import("./ControlPreview").then((module) => module.ControlPreview),
+  { loading: () => <PreviewLoading /> },
+);
+
+const ComponentDocumentation = dynamic(
+  () =>
+    import("@/components/control-detail/ComponentDocumentation/ComponentDocumentation").then(
+      (module) => module.ComponentDocumentation,
+    ),
+  { loading: () => null },
+);
+
+const UsageCodeViewer = dynamic(
+  () => import("./UsageCodeViewer").then((module) => module.UsageCodeViewer),
+  { loading: () => null },
+);
 
 type ControlDetailProps = {
   control: ControlDefinition;
@@ -21,7 +38,6 @@ type ControlDetailProps = {
 export function ControlDetail({ control, defaultSettings, documentation }: ControlDetailProps) {
   useSetComponentsPageHeader(control.title, control.description);
   const { settings, setSettings } = useComponentSettings(control.slug, defaultSettings);
-
   return (
     <div className={styles.page}>
       <section className={styles.panel}>

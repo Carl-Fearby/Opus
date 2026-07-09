@@ -1,7 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useMemo, useState } from "react";
-import { CatalogIcon } from "opus-react";
+import { CatalogIcon } from "@/components/CatalogIcon";
 import {
   Button,
   Card,
@@ -64,6 +64,38 @@ import {
   List,
   DescriptionList,
   PropertyGrid,
+  Stack,
+  Columns,
+  Grid,
+  Splitter,
+  ResizablePanel,
+  DockLayout,
+  ScrollArea,
+  AspectRatio,
+  Container,
+  Spacer,
+  Breadcrumb,
+  Pagination,
+  PageHeader,
+  Toolbar,
+  BottomNavigation,
+  NavigationRail,
+  SplitButton,
+  FloatingActionButton,
+  Tiles,
+  StatTiles,
+  Tile,
+  StatTile,
+  PropertyInspector,
+  FilterBuilder,
+  QueryBuilder,
+  RuleBuilder,
+  PermissionsMatrix,
+  DualListBuilder,
+  Scheduler,
+  KanbanBoard,
+  Calendar,
+  ResourcePlanner,
   ContentTimeline,
   TreeView,
   MasonryGrid,
@@ -101,6 +133,14 @@ import {
   Tabs,
   Gauge,
   MetricTile,
+  NoteComposer,
+  DashboardContentContainer,
+  DealsOverTime,
+  PipelineOverview,
+  RecentActivity,
+  NotesActivity,
+  TopPerformingUsers,
+  UpcomingTasks,
   ProgressBar,
   ProgressRing,
   Sparkline,
@@ -109,13 +149,15 @@ import {
   TopNavigation,
   TrendBadge,
   useToast,
-} from "opus-react";
-import { AccentColorPicker, createAccentStyle } from "opus-react";
-import { IconPicker } from "opus-react";
-import { DEFAULT_TOAST_DURATION_MS } from "opus-react";
-import type { DateInputType } from "opus-react";
-import type { CommandPaletteItem, DropdownMenuItemData } from "opus-react";
-import type { AlertStatus } from "opus-react";
+} from "@/components/fields";
+import { AccentColorPicker, createAccentStyle } from "@/components/AccentColorPicker";
+import { IconPicker } from "@/components/IconPicker";
+import { IconBadge } from "@/components/IconBadge";
+import { EmojiPicker } from "@/components/EmojiPicker";
+import { DEFAULT_TOAST_DURATION_MS } from "@/components/ToastProvider";
+import type { DateInputType } from "@/components/fields";
+import type { CommandPaletteItem, DropdownMenuItemData } from "@/components/fields";
+import type { AlertStatus } from "@/components/fields/types";
 import { buildMegaMenuPreviewConfig } from "@/lib/controls/megaMenuDemo";
 import {
   demoAvatarGroupItems,
@@ -128,13 +170,57 @@ import {
   demoTreeViewNodes,
 } from "@/lib/controls/contentDemoData";
 import {
+  demoCalendarEvents,
+  demoDualListItems,
+  demoDualListSelected,
+  demoFilterConditions,
+  demoInspectorFields,
+  demoKanbanCards,
+  demoKanbanColumns,
+  demoPermissionResources,
+  demoPermissionRoles,
+  demoPermissions,
+  demoPropertyInspectorItems,
+  demoQueryGroup,
+  demoResourceItems,
+  demoResources,
+  demoRules,
+  demoSchedulerEvents,
+} from "@/lib/controls/buildersDemoData";
+import { layoutDemoTiles, layoutScrollLines } from "@/lib/controls/layoutDemoData";
+import {
+  demoBottomNavItems,
+  demoBreadcrumbItems,
+  demoRailItems,
+  demoSplitActions,
+} from "@/lib/controls/navigationExtrasDemoData";
+import {
+  withDemoStatTileHandlers,
+  withDemoTileHandlers,
+} from "@/lib/controls/tilesDemoData";
+import {
+  demoPipelineStages,
+  demoPipelineTotalValue,
+  parsePipelineStageCount,
+} from "@/lib/controls/pipelineDemoData";
+import {
+  dealsOverTimePeriodOptions,
+  getDealsOverTimeDemoData,
+} from "@/lib/controls/dealsOverTimeDemoData";
+import { demoRecentActivity } from "@/lib/controls/recentActivityDemoData";
+import { demoNotesActivity } from "@/lib/controls/notesActivityDemoData";
+import { demoTopPerformingUsers } from "@/lib/controls/topPerformingUsersDemoData";
+import { demoUpcomingTasks } from "@/lib/controls/upcomingTasksDemoData";
+import { ForbiddenPageContent } from "@/components/documentation/ForbiddenPage";
+import { NotFoundPageContent } from "@/components/documentation/NotFoundPage";
+import {
   gaugePreviewValue,
   getGaugeFooter,
   getGaugeTrackColor,
   getGaugeValueColor,
 } from "@/lib/controls/dashboardWidgetData";
 import { topNavigationDemoMenus } from "@/lib/controls/topNavigationDemo";
-import type { TopNavigationSelectItem } from "opus-react";
+import type { TopNavigationSelectItem } from "@/components/TopNavigation/TopNavigationContext";
 import type { ControlSettings, ControlSettingsBySlug, ControlSlug, ValueFieldSettings } from "@/lib/controls/types";
 import {
   getSectionDemoSlots,
@@ -158,9 +244,44 @@ import {
   treeSelectDemoNodes,
 } from "@/lib/controls/advancedFormDemoData";
 import { isChartSlug } from "@/lib/controls/chartCatalog";
-import { cartesianSpecializedVariants } from "opus-react";
+import { cartesianSpecializedVariants } from "@/components/Chart/SpecializedCharts";
 import { DashboardPreviewGrid } from "./DashboardPreviewGrid";
 import styles from "./ControlDetail.module.css";
+
+function parseCurrencySetting(value: string) {
+  const digits = value.replace(/[^0-9.-]/g, "");
+  const parsed = Number(digits);
+  return Number.isFinite(parsed) ? Math.max(0, parsed) : 0;
+}
+
+function formatCurrencySetting(value: number) {
+  return new Intl.NumberFormat("en-GB", {
+    currency: "GBP",
+    maximumFractionDigits: 0,
+    style: "currency",
+  }).format(value);
+}
+
+function normalizePercentages(values: number[]) {
+  const total = values.reduce((sum, value) => sum + value, 0);
+  if (total <= 0) {
+    return values.map(() => 0);
+  }
+
+  const exact = values.map((value) => (value / total) * 100);
+  const rounded = exact.map((value) => Math.floor(value));
+  let remainder = 100 - rounded.reduce((sum, value) => sum + value, 0);
+  const ranked = exact
+    .map((value, index) => ({ index, remainder: value - rounded[index] }))
+    .sort((a, b) => b.remainder - a.remainder);
+
+  for (let i = 0; i < ranked.length && remainder > 0; i += 1) {
+    rounded[ranked[i].index] += 1;
+    remainder -= 1;
+  }
+
+  return rounded;
+}
 
 const toastStatuses: AlertStatus[] = ["error", "success", "warning", "info"];
 const maximisableChartVariants = [
@@ -325,7 +446,7 @@ type ControlPreviewProps = {
   onSettingsChange: (next: ControlSettings) => void;
 };
 
-function fieldProps(settings: ControlSettingsBySlug[Exclude<ControlSlug, "button" | "submit-button" | "reset-button" | "theme-toggle" | "accent-color-picker" | "icon-picker" | "tooltip" | "dialog" | "drawer" | "dropdown-menu" | "context-menu" | "command-palette" | "modal" | "popover" | "alert" | "toast" | "tabs" | "card" | "stat-card" | "gauge" | "panel" | "section" | "table" | "data-grid" | "skeleton" | "bar-chart-vertical" | "bar-chart-horizontal" | "grouped-bar-chart" | "stacked-bar-chart" | "stacked-bar-chart-100" | "line-chart" | "multi-line-chart" | "area-chart" | "stacked-area-chart" | "spline-chart" | "pie-chart" | "donut-chart" | "scatter-plot" | "bubble-chart" | "radar-chart" | "polar-area-chart" | "funnel-chart" | "pyramid-chart" | "carousel" | "lightbox" | "image-thumbnail" | "image-gallery" | "model-viewer" | "model-lightbox" | "model-thumbnail" | "model-gallery" | "accordion" | "accordion-group" | "show-more" | "empty-state" | "sidebar" | "mega-menu" | "top-navigation">]) {
+function fieldProps(settings: ControlSettingsBySlug[Exclude<ControlSlug, "button" | "submit-button" | "reset-button" | "theme-toggle" | "accent-color-picker" | "icon-picker" | "tooltip" | "dialog" | "drawer" | "dropdown-menu" | "context-menu" | "command-palette" | "modal" | "popover" | "alert" | "toast" | "tabs" | "card" | "stat-card" | "gauge" | "panel" | "section" | "table" | "data-grid" | "skeleton" | "bar-chart-vertical" | "bar-chart-horizontal" | "grouped-bar-chart" | "stacked-bar-chart" | "stacked-bar-chart-100" | "line-chart" | "multi-line-chart" | "area-chart" | "stacked-area-chart" | "spline-chart" | "pie-chart" | "donut-chart" | "scatter-plot" | "bubble-chart" | "radar-chart" | "polar-area-chart" | "funnel-chart" | "pyramid-chart" | "carousel" | "lightbox" | "image-thumbnail" | "image-gallery" | "model-viewer" | "model-lightbox" | "model-thumbnail" | "model-gallery" | "accordion" | "accordion-group" | "show-more" | "empty-state" | "badge" | "avatar" | "avatar-group" | "list" | "description-list" | "divider" | "content-timeline" | "tree-view" | "masonry-grid" | "property-grid" | "json-viewer" | "statistic" | "icon" | "spinner" | "portal" | "portal-host" | "visually-hidden" | "focus-trap" | "keyboard-shortcut" | "hotkey-manager" | "copy-button" | "clipboard" | "theme-provider" | "theme-switcher" | "resize-observer" | "intersection-observer" | "sidebar" | "mega-menu" | "top-navigation">]) {
   return {
     error: settings.errorEnabled ? settings.error : undefined,
     help: settings.helpEnabled ? settings.help : undefined,
@@ -334,6 +455,313 @@ function fieldProps(settings: ControlSettingsBySlug[Exclude<ControlSlug, "button
     mode: settings.mode,
     required: settings.required,
   };
+}
+
+function TilesPreview({ settings }: { settings: ControlSettingsBySlug["tiles"] }) {
+  const [lastResult, setLastResult] = useState("Waiting for action");
+  const items = useMemo(
+    () => withDemoTileHandlers((item) => setLastResult(`Last action: ${item.label}`)),
+    [],
+  );
+
+  return (
+    <div className={styles.dialogPreview}>
+      <Tiles items={items} layout={settings.layout} />
+      <span className={styles.dialogResult}>{lastResult}</span>
+    </div>
+  );
+}
+
+function StatTilesPreview({ settings }: { settings: ControlSettingsBySlug["stat-tiles"] }) {
+  const [lastResult, setLastResult] = useState("Waiting for action");
+  const items = useMemo(
+    () => withDemoStatTileHandlers((item) => setLastResult(`Last action: ${item.label}`)),
+    [],
+  );
+
+  return (
+    <div className={styles.dialogPreview}>
+      <StatTiles items={items} layout={settings.layout} />
+      <span className={styles.dialogResult}>{lastResult}</span>
+    </div>
+  );
+}
+
+function TilePreview({ settings }: { settings: ControlSettingsBySlug["tile"] }) {
+  const [lastResult, setLastResult] = useState("Waiting for action");
+
+  return (
+    <div className={styles.dialogPreview}>
+      <Tile
+        icon={settings.icon}
+        label={settings.label}
+        tone={settings.tone}
+        onClick={() => setLastResult(`Last action: ${settings.label}`)}
+      />
+      <span className={styles.dialogResult}>{lastResult}</span>
+    </div>
+  );
+}
+
+function StatTilePreview({ settings }: { settings: ControlSettingsBySlug["stat-tile"] }) {
+  const [lastResult, setLastResult] = useState("Waiting for action");
+
+  return (
+    <div className={styles.dialogPreview}>
+      <StatTile
+        comparison={settings.comparison}
+        icon={settings.icon}
+        label={settings.label}
+        trend={settings.trend}
+        trendValue={settings.trendValue}
+        tone={settings.tone}
+        value={settings.value}
+        onClick={() => setLastResult(`Last action: ${settings.label}`)}
+      />
+      <span className={styles.dialogResult}>{lastResult}</span>
+    </div>
+  );
+}
+
+function IconBadgePreview({ settings }: { settings: ControlSettingsBySlug["icon-badge"] }) {
+  const [lastResult, setLastResult] = useState("Waiting for action");
+  const reportAction = (label: string) => setLastResult(`Last action: ${label}`);
+
+  if (settings.showToolbarDemo) {
+    return (
+      <div className={styles.dialogPreview}>
+        <div className={styles.iconBadgeToolbar}>
+          <IconBadge
+            count={8}
+            iconName="bell"
+            label="Notifications"
+            size={settings.size}
+            tone={settings.tone}
+            urgency="standard"
+            onClick={() => reportAction("Notifications")}
+          />
+          <IconBadge
+            count={3}
+            iconName="envelope"
+            label="Messages"
+            size={settings.size}
+            tone={settings.tone}
+            urgency="info"
+            onClick={() => reportAction("Messages")}
+          />
+          <IconBadge
+            count={5}
+            iconName="comment"
+            label="Comments"
+            size={settings.size}
+            tone={settings.tone}
+            urgency="standard"
+            onClick={() => reportAction("Comments")}
+          />
+          <IconBadge
+            count={2}
+            iconName="heart"
+            label="Favourites"
+            size={settings.size}
+            tone={settings.tone}
+            urgency="danger"
+            onClick={() => reportAction("Favourites")}
+          />
+          <IconBadge
+            count={1}
+            iconName="bookmark"
+            label="Saved items"
+            size={settings.size}
+            tone={settings.tone}
+            urgency="warning"
+            onClick={() => reportAction("Saved items")}
+          />
+          <IconBadge
+            count={12}
+            iconName="inbox"
+            label="Inbox"
+            size={settings.size}
+            tone={settings.tone}
+            urgency="success"
+            onClick={() => reportAction("Inbox")}
+          />
+          <IconBadge
+            count={100}
+            iconName="hashtag"
+            label="Hundreds"
+            size={settings.size}
+            tone={settings.tone}
+            urgency="standard"
+            onClick={() => reportAction("Hundreds")}
+          />
+          <IconBadge
+            count={1000}
+            iconName="fire"
+            label="Thousands"
+            size={settings.size}
+            tone={settings.tone}
+            urgency="danger"
+            onClick={() => reportAction("Thousands")}
+          />
+          <IconBadge
+            iconName="calendar"
+            label="Calendar"
+            size={settings.size}
+            tone={settings.tone}
+            onClick={() => reportAction("Calendar")}
+          />
+          <IconBadge
+            iconName="gear"
+            label="Settings"
+            size={settings.size}
+            tone={settings.tone}
+            onClick={() => reportAction("Settings")}
+          />
+          <span aria-hidden="true" className={styles.iconBadgeDivider} />
+          <IconBadge
+            iconName="sun"
+            label="Theme"
+            size={settings.size}
+            tone={settings.tone}
+            onClick={() => reportAction("Theme")}
+          />
+        </div>
+        <span className={styles.dialogResult}>{lastResult}</span>
+      </div>
+    );
+  }
+
+  return (
+    <div className={styles.dialogPreview}>
+      <IconBadge
+        count={settings.count}
+        iconName={settings.iconName}
+        label={settings.label}
+        max={settings.max}
+        showZero={settings.showZero}
+        size={settings.size}
+        tone={settings.tone}
+        urgency={settings.urgency}
+        onClick={() => reportAction(settings.label)}
+      />
+      <span className={styles.dialogResult}>{lastResult}</span>
+    </div>
+  );
+}
+
+function DashboardActionPreview({
+  children,
+}: {
+  children: (reportAction: (label: string) => void) => React.ReactNode;
+}) {
+  const [lastResult, setLastResult] = useState("Waiting for action");
+
+  return (
+    <div className={styles.dialogPreview}>
+      {children((label) => setLastResult(`Last action: ${label}`))}
+      <span className={styles.dialogResult}>{lastResult}</span>
+    </div>
+  );
+}
+
+function UpcomingTasksDashboardPreview({
+  settings,
+}: {
+  settings: ControlSettingsBySlug["upcoming-tasks"];
+}) {
+  const [tasks, setTasks] = useState(() => demoUpcomingTasks.map((task) => ({ ...task })));
+
+  return (
+    <DashboardActionPreview>
+      {(reportAction) => (
+        <DashboardPreviewGrid
+          containerDataComponent="upcoming-tasks"
+          containerWidth={settings.width ?? "widget"}
+          layout={settings.previewLayout}
+          renderItem={() => (
+            <UpcomingTasks
+              checkboxSize={settings.checkboxSize ?? "md"}
+              footerLabel={settings.footerLabel}
+              onFooterClick={() => reportAction(settings.footerLabel)}
+              onTaskClick={(task) => reportAction(task.title)}
+              onTaskCompleteChange={(task, completed) => {
+                setTasks((current) =>
+                  current.map((entry) => (entry.id === task.id ? { ...entry, completed } : entry)),
+                );
+                reportAction(completed ? `Completed: ${task.title}` : `Reopened: ${task.title}`);
+              }}
+              tasks={tasks}
+              title={settings.title}
+            />
+          )}
+        />
+      )}
+    </DashboardActionPreview>
+  );
+}
+
+function DashboardListColumnsDashboardPreview({
+  settings,
+}: {
+  settings: ControlSettingsBySlug["dashboard-list-columns"];
+}) {
+  const [tasks, setTasks] = useState(() => demoUpcomingTasks.map((task) => ({ ...task })));
+  const containerWidth = settings.width === "widget" ? "widget" : "full";
+
+  return (
+    <DashboardActionPreview>
+      {(reportAction) => (
+        <DashboardPreviewGrid
+          containerDataComponent="dashboard-list-columns"
+          containerWidth={settings.width ?? "full"}
+          layout={settings.previewLayout}
+          unwrapped
+          renderItem={() => (
+            <Columns
+              columns={3}
+              direction={settings.layout === "stacked" ? "column" : "row"}
+              gap={16}
+            >
+              <DashboardContentContainer data-component="upcoming-tasks" width={containerWidth}>
+                <UpcomingTasks
+                  checkboxSize={settings.checkboxSize ?? "md"}
+                  footerLabel={settings.upcomingTasksFooterLabel}
+                  onFooterClick={() => reportAction(settings.upcomingTasksFooterLabel)}
+                  onTaskClick={(task) => reportAction(task.title)}
+                  onTaskCompleteChange={(task, completed) => {
+                    setTasks((current) =>
+                      current.map((entry) => (entry.id === task.id ? { ...entry, completed } : entry)),
+                    );
+                    reportAction(completed ? `Completed: ${task.title}` : `Reopened: ${task.title}`);
+                  }}
+                  tasks={tasks}
+                  title={settings.upcomingTasksTitle}
+                />
+              </DashboardContentContainer>
+              <DashboardContentContainer data-component="recent-activity" width={containerWidth}>
+                <RecentActivity
+                  footerLabel={settings.recentActivityFooterLabel}
+                  items={demoRecentActivity}
+                  onFooterClick={() => reportAction(settings.recentActivityFooterLabel)}
+                  onItemClick={(item) => reportAction(item.title)}
+                  title={settings.recentActivityTitle}
+                />
+              </DashboardContentContainer>
+              <DashboardContentContainer data-component="top-performing-users" width={containerWidth}>
+                <TopPerformingUsers
+                  footerLabel={settings.topPerformingUsersFooterLabel}
+                  onFooterClick={() => reportAction(settings.topPerformingUsersFooterLabel)}
+                  onPersonClick={(person) => reportAction(person.name)}
+                  title={settings.topPerformingUsersTitle}
+                  users={demoTopPerformingUsers}
+                />
+              </DashboardContentContainer>
+            </Columns>
+          )}
+        />
+      )}
+    </DashboardActionPreview>
+  );
 }
 
 function DropdownMenuPreviewDemo({
@@ -1071,6 +1499,7 @@ function DataGridPreview({ settings: s }: { settings: ControlSettingsBySlug["dat
   );
 }
 
+
 function HotkeyManagerPreview({ enabled, hotkey }: { enabled: boolean; hotkey: string }) {
   const [count, setCount] = useState(0);
   const onFire = useCallback(() => {
@@ -1121,6 +1550,96 @@ function ClipboardPreviewInner({ value }: { value: string }) {
   );
 }
 
+function PropertyInspectorPreview({ searchable }: { searchable: boolean }) {
+  const [items, setItems] = useState(() => demoPropertyInspectorItems());
+  return (
+    <PropertyInspector
+      items={items}
+      searchable={searchable}
+      onChange={(id, value) =>
+        setItems((current) => current.map((item) => (item.id === id ? { ...item, value } : item)))
+      }
+    />
+  );
+}
+
+function FilterBuilderPreview() {
+  const [conditions, setConditions] = useState(demoFilterConditions);
+  return <FilterBuilder conditions={conditions} fields={demoInspectorFields} onChange={setConditions} />;
+}
+
+function QueryBuilderPreview({ combinator }: { combinator: "and" | "or" }) {
+  const [group, setGroup] = useState(() => ({ ...demoQueryGroup, combinator }));
+  useEffect(() => {
+    setGroup((current) => ({ ...current, combinator }));
+  }, [combinator]);
+  return <QueryBuilder fields={demoInspectorFields} group={group} onChange={setGroup} />;
+}
+
+function RuleBuilderPreview({ showDisabled }: { showDisabled: boolean }) {
+  const [rules, setRules] = useState(demoRules);
+  const visible = showDisabled ? rules : rules.filter((rule) => rule.enabled);
+  return (
+    <RuleBuilder
+      rules={visible}
+      onChange={(next) => {
+        if (showDisabled) {
+          setRules(next);
+          return;
+        }
+        const disabled = rules.filter((rule) => !rule.enabled);
+        setRules([...next, ...disabled].map((rule, index) => ({ ...rule, priority: index + 1 })));
+      }}
+    />
+  );
+}
+
+function PermissionsMatrixPreview() {
+  const [permissions, setPermissions] = useState(() => demoPermissions());
+  return (
+    <PermissionsMatrix
+      permissions={permissions}
+      resources={demoPermissionResources}
+      roles={demoPermissionRoles}
+      onChange={(role, resource, level) =>
+        setPermissions((current) => ({
+          ...current,
+          [role]: { ...current[role], [resource]: level },
+        }))
+      }
+    />
+  );
+}
+
+function DualListBuilderPreview({ selectedCount }: { selectedCount: number }) {
+  const [selectedIds, setSelectedIds] = useState(() => demoDualListSelected.slice(0, selectedCount));
+  useEffect(() => {
+    setSelectedIds(demoDualListSelected.slice(0, Math.max(selectedCount, 0)));
+  }, [selectedCount]);
+  return <DualListBuilder available={demoDualListItems} onChange={setSelectedIds} selectedIds={selectedIds} />;
+}
+
+function KanbanBoardPreview({ interactive }: { interactive: boolean }) {
+  const [columns, setColumns] = useState(demoKanbanColumns);
+  return (
+    <KanbanBoard
+      cards={demoKanbanCards}
+      columns={columns}
+      onChange={interactive ? setColumns : undefined}
+    />
+  );
+}
+
+function CalendarPreview({ showEvents }: { showEvents: boolean }) {
+  const [selectedDate, setSelectedDate] = useState<string | undefined>();
+  return (
+    <Calendar
+      events={showEvents ? demoCalendarEvents() : []}
+      onSelectDate={setSelectedDate}
+      selectedDate={selectedDate}
+    />
+  );
+}
 
 export function ControlPreview({ slug, settings, onSettingsChange }: ControlPreviewProps) {
   if (isChartSlug(slug)) {
@@ -1204,6 +1723,21 @@ export function ControlPreview({ slug, settings, onSettingsChange }: ControlPrev
           placeholder={s.placeholderEnabled ? s.placeholder : undefined}
           value={s.value}
           onChange={(event) => onSettingsChange({ ...s, value: event.target.value } as ControlSettings)}
+        />
+      );
+    }
+    case "note-composer": {
+      const s = settings as ControlSettingsBySlug["note-composer"];
+      return (
+        <NoteComposer
+          placeholder={s.placeholder}
+          saveButtonLabel={s.saveButtonLabel}
+          showAttach={s.showAttach}
+          showEmoji={s.showEmoji}
+          showMention={s.showMention}
+          value={s.value}
+          onChange={(value) => onSettingsChange({ ...s, value } as ControlSettings)}
+          onSave={() => onSettingsChange({ ...s, value: "" } as ControlSettings)}
         />
       );
     }
@@ -1411,6 +1945,7 @@ export function ControlPreview({ slug, settings, onSettingsChange }: ControlPrev
           id="preview-radio-group"
           name="preview-radio-group"
           shape={s.shape}
+          size={s.size ?? "md"}
           value={s.value}
           onChange={(value) => onSettingsChange({ ...s, value } as ControlSettings)}
         >
@@ -1455,6 +1990,7 @@ export function ControlPreview({ slug, settings, onSettingsChange }: ControlPrev
           id="preview-checkbox"
           checked={s.checked}
           shape={s.shape}
+          size={s.size ?? "md"}
           onChange={(event) =>
             onSettingsChange({ ...s, checked: event.target.checked } as ControlSettings)
           }
@@ -1606,6 +2142,32 @@ export function ControlPreview({ slug, settings, onSettingsChange }: ControlPrev
         />
       );
     }
+    case "emoji-picker": {
+      const s = settings as ControlSettingsBySlug["emoji-picker"];
+      return (
+        <div className={styles.emojiPickerDemo}>
+          <EmojiPicker
+            closeOnEscape={s.closeOnEscape}
+            closeOnOutside={s.closeOnOutside}
+            open={s.open}
+            placement={s.placement}
+            searchPlaceholder={s.searchPlaceholder}
+            trigger={
+              <Button variant="secondary">
+                <CatalogIcon iconName="face-smile" /> Add emoji
+              </Button>
+            }
+            onOpenChange={(open) => onSettingsChange({ ...s, open } as ControlSettings)}
+            onSelect={(emoji) =>
+              onSettingsChange({ ...s, lastSelected: emoji, open: false } as ControlSettings)
+            }
+          />
+          <p className={styles.emojiPickerSelection}>
+            Last selected: <span aria-hidden="true">{s.lastSelected}</span>
+          </p>
+        </div>
+      );
+    }
     case "tooltip": {
       const s = settings as ControlSettingsBySlug["tooltip"];
       return (
@@ -1693,6 +2255,7 @@ export function ControlPreview({ slug, settings, onSettingsChange }: ControlPrev
 
       return (
         <DashboardPreviewGrid
+          containerWidth={s.width ?? "widget"}
           layout={s.previewLayout}
           renderItem={() => (
             <StatCard
@@ -1711,17 +2274,16 @@ export function ControlPreview({ slug, settings, onSettingsChange }: ControlPrev
       const s = settings as ControlSettingsBySlug["sparkline"];
       return (
         <DashboardPreviewGrid
+          containerWidth={s.width ?? "widget"}
           layout={s.previewLayout}
           renderItem={() => (
-            <div className={styles.sparklineStandalone}>
-              <Sparkline
-                height={48}
-                label={s.label}
-                palette={s.palette}
-                values={[18, 24, 21, 34, 29, 42, 38]}
-                variant="labeled"
-              />
-            </div>
+            <Sparkline
+              height={48}
+              label={s.label}
+              palette={s.palette}
+              values={[18, 24, 21, 34, 29, 42, 38]}
+              variant="labeled"
+            />
           )}
         />
       );
@@ -1730,12 +2292,9 @@ export function ControlPreview({ slug, settings, onSettingsChange }: ControlPrev
       const s = settings as ControlSettingsBySlug["progress-ring"];
       return (
         <DashboardPreviewGrid
+          containerWidth={s.width ?? "widget"}
           layout={s.previewLayout}
-          renderItem={() => (
-            <div className={styles.dashboardWidgetSlot}>
-              <ProgressRing label={s.label} max={s.max} value={s.value} />
-            </div>
-          )}
+          renderItem={() => <ProgressRing label={s.label} max={s.max} value={s.value} />}
         />
       );
     }
@@ -1743,6 +2302,7 @@ export function ControlPreview({ slug, settings, onSettingsChange }: ControlPrev
       const s = settings as ControlSettingsBySlug["progress-bar"];
       return (
         <DashboardPreviewGrid
+          containerWidth={s.width ?? "widget"}
           layout={s.previewLayout}
           renderItem={() => <ProgressBar label={s.label} max={s.max} value={s.value} />}
         />
@@ -1770,6 +2330,7 @@ export function ControlPreview({ slug, settings, onSettingsChange }: ControlPrev
 
       return (
         <DashboardPreviewGrid
+          containerWidth={s.width ?? "widget"}
           layout={s.previewLayout}
           renderItem={() => <Gauge {...sharedGaugeProps} title={s.title} variant={s.variant} />}
         />
@@ -1779,12 +2340,9 @@ export function ControlPreview({ slug, settings, onSettingsChange }: ControlPrev
       const s = settings as ControlSettingsBySlug["speedometer"];
       return (
         <DashboardPreviewGrid
+          containerWidth={s.width ?? "widget"}
           layout={s.previewLayout}
-          renderItem={() => (
-            <div className={styles.dashboardWidgetSlot}>
-              <Speedometer label={s.label} max={s.max} value={s.value} />
-            </div>
-          )}
+          renderItem={() => <Speedometer label={s.label} max={s.max} value={s.value} />}
         />
       );
     }
@@ -1792,6 +2350,7 @@ export function ControlPreview({ slug, settings, onSettingsChange }: ControlPrev
       const s = settings as ControlSettingsBySlug["metric-tile"];
       return (
         <DashboardPreviewGrid
+          containerWidth={s.width ?? "widget"}
           layout={s.previewLayout}
           renderItem={() => (
             <MetricTile
@@ -1804,10 +2363,172 @@ export function ControlPreview({ slug, settings, onSettingsChange }: ControlPrev
         />
       );
     }
+    case "dashboard-content-container": {
+      const s = settings as ControlSettingsBySlug["dashboard-content-container"];
+      return (
+        <DashboardPreviewGrid
+          containerWidth={s.width ?? "widget"}
+          layout={s.previewLayout}
+          unwrapped
+          renderItem={() => (
+            <DashboardContentContainer title={s.title} width={s.width ?? "widget"}>
+              <StatusIndicator label="Systems healthy" status="success" />
+            </DashboardContentContainer>
+          )}
+        />
+      );
+    }
+    case "pipeline-overview": {
+      const s = settings as ControlSettingsBySlug["pipeline-overview"];
+      const stageCount = parsePipelineStageCount(s.stageCount);
+      const stageValues = [
+        parseCurrencySetting(s.qualificationValue),
+        parseCurrencySetting(s.proposalValue),
+        parseCurrencySetting(s.negotiationValue),
+        parseCurrencySetting(s.closingValue),
+        parseCurrencySetting(s.wonValue),
+      ].slice(0, stageCount);
+      const percentages = normalizePercentages(stageValues);
+      const stages = demoPipelineStages.slice(0, stageCount).map((stage, index) => ({
+        ...stage,
+        displayValue: formatCurrencySetting(stageValues[index] ?? 0),
+        percentage: percentages[index] ?? 0,
+        value: stageValues[index] ?? 0,
+      }));
+      const computedTotalValue = formatCurrencySetting(stageValues.reduce((sum, value) => sum + value, 0));
+      return (
+        <DashboardPreviewGrid
+          containerDataComponent="pipeline-overview"
+          containerTitle={s.title}
+          containerWidth={s.width ?? "widget"}
+          layout={s.previewLayout}
+          renderItem={() => (
+            <PipelineOverview
+              onPeriodChange={(period) => onSettingsChange({ ...s, period } as ControlSettings)}
+              period={s.period}
+              stages={stages}
+              totalLabel={s.totalLabel}
+              totalValue={s.totalValue || computedTotalValue || demoPipelineTotalValue}
+            />
+          )}
+        />
+      );
+    }
+    case "deals-over-time": {
+      const s = settings as ControlSettingsBySlug["deals-over-time"];
+      const maxValue = Math.max(1, Number(s.maxValue) || 100);
+      const data = getDealsOverTimeDemoData(s.period);
+      return (
+        <DashboardPreviewGrid
+          containerDataComponent="deals-over-time"
+          containerWidth={s.width ?? "widget"}
+          layout={s.previewLayout}
+          renderItem={() => (
+            <DealsOverTime
+              data={data}
+              maxValue={maxValue}
+              onPeriodChange={(period) => onSettingsChange({ ...s, period } as ControlSettings)}
+              palette={s.palette ?? "purple"}
+              period={s.period}
+              periodOptions={[...dealsOverTimePeriodOptions]}
+              title={s.title}
+              valueLabel={s.valueLabel}
+            />
+          )}
+        />
+      );
+    }
+    case "404-page": {
+      return <NotFoundPageContent />;
+    }
+    case "403-page": {
+      return <ForbiddenPageContent />;
+    }
+    case "dashboard-list-columns": {
+      const s = settings as ControlSettingsBySlug["dashboard-list-columns"];
+      return <DashboardListColumnsDashboardPreview settings={s} />;
+    }
+    case "notes-activity": {
+      const s = settings as ControlSettingsBySlug["notes-activity"];
+      return (
+        <DashboardActionPreview>
+          {(reportAction) => (
+            <DashboardPreviewGrid
+              containerDataComponent="notes-activity"
+              containerWidth={s.width ?? "widget"}
+              layout={s.previewLayout}
+              renderItem={() => (
+                <NotesActivity
+                  composerPlaceholder={s.composerPlaceholder}
+                  footerLabel={s.footerLabel}
+                  items={demoNotesActivity}
+                  onFooterClick={() => reportAction(s.footerLabel)}
+                  onItemClick={(item) => reportAction(item.body)}
+                  onNoteSave={(note) => reportAction(`Saved note: ${note}`)}
+                  onTabChange={(tab) => reportAction(`Tab: ${tab}`)}
+                  saveButtonLabel={s.saveButtonLabel}
+                />
+              )}
+            />
+          )}
+        </DashboardActionPreview>
+      );
+    }
+    case "upcoming-tasks": {
+      const s = settings as ControlSettingsBySlug["upcoming-tasks"];
+      return <UpcomingTasksDashboardPreview settings={s} />;
+    }
+    case "recent-activity": {
+      const s = settings as ControlSettingsBySlug["recent-activity"];
+      return (
+        <DashboardActionPreview>
+          {(reportAction) => (
+            <DashboardPreviewGrid
+              containerDataComponent="recent-activity"
+              containerWidth={s.width ?? "widget"}
+              layout={s.previewLayout}
+              renderItem={() => (
+                <RecentActivity
+                  footerLabel={s.footerLabel}
+                  items={demoRecentActivity}
+                  onFooterClick={() => reportAction(s.footerLabel)}
+                  onItemClick={(item) => reportAction(item.title)}
+                  title={s.title}
+                />
+              )}
+            />
+          )}
+        </DashboardActionPreview>
+      );
+    }
+    case "top-performing-users": {
+      const s = settings as ControlSettingsBySlug["top-performing-users"];
+      return (
+        <DashboardActionPreview>
+          {(reportAction) => (
+            <DashboardPreviewGrid
+              containerDataComponent="top-performing-users"
+              containerWidth={s.width ?? "widget"}
+              layout={s.previewLayout}
+              renderItem={() => (
+                <TopPerformingUsers
+                  footerLabel={s.footerLabel}
+                  onFooterClick={() => reportAction(s.footerLabel)}
+                  onPersonClick={(person) => reportAction(person.name)}
+                  title={s.title}
+                  users={demoTopPerformingUsers}
+                />
+              )}
+            />
+          )}
+        </DashboardActionPreview>
+      );
+    }
     case "status-indicator": {
       const s = settings as ControlSettingsBySlug["status-indicator"];
       return (
         <DashboardPreviewGrid
+          containerWidth={s.width ?? "widget"}
           layout={s.previewLayout}
           renderItem={() => <StatusIndicator label={s.label} status={s.status} />}
         />
@@ -1817,6 +2538,7 @@ export function ControlPreview({ slug, settings, onSettingsChange }: ControlPrev
       const s = settings as ControlSettingsBySlug["trend-badge"];
       return (
         <DashboardPreviewGrid
+          containerWidth={s.width ?? "widget"}
           layout={s.previewLayout}
           renderItem={() => <TrendBadge direction={s.direction} value={s.value} />}
         />
@@ -2146,6 +2868,296 @@ export function ControlPreview({ slug, settings, onSettingsChange }: ControlPrev
       const s = settings as ControlSettingsBySlug["property-grid"];
       return <PropertyGrid items={demoPropertyItems(s.copyable)} />;
     }
+    case "stack": {
+      const s = settings as ControlSettingsBySlug["stack"];
+      return (
+        <Stack direction={s.direction} gap={s.gap} wrap={s.wrap}>
+          {layoutDemoTiles.slice(0, 4).map((tile) => (
+            <div
+              key={tile}
+              style={{
+                padding: "10px 12px",
+                border: "1px solid var(--opus-border)",
+                borderRadius: 8,
+                background: "color-mix(in srgb, var(--opus-muted) 8%, transparent)",
+              }}
+            >
+              {tile}
+            </div>
+          ))}
+        </Stack>
+      );
+    }
+    case "columns": {
+      const s = settings as ControlSettingsBySlug["columns"];
+      return (
+        <Columns columns={s.columns} direction={s.direction} gap={s.gap}>
+          {layoutDemoTiles.map((tile) => (
+            <div
+              key={tile}
+              style={{
+                padding: "10px 12px",
+                border: "1px solid var(--opus-border)",
+                borderRadius: 8,
+                background: "color-mix(in srgb, var(--opus-muted) 8%, transparent)",
+              }}
+            >
+              {tile}
+            </div>
+          ))}
+        </Columns>
+      );
+    }
+    case "grid": {
+      const s = settings as ControlSettingsBySlug["grid"];
+      return (
+        <Grid columns={s.columns} gap={s.gap}>
+          {layoutDemoTiles.map((tile) => (
+            <div
+              key={tile}
+              style={{
+                padding: "14px 12px",
+                border: "1px solid var(--opus-border)",
+                borderRadius: 8,
+                background: "color-mix(in srgb, var(--opus-muted) 8%, transparent)",
+                textAlign: "center",
+              }}
+            >
+              {tile}
+            </div>
+          ))}
+        </Grid>
+      );
+    }
+    case "splitter": {
+      const s = settings as ControlSettingsBySlug["splitter"];
+      return (
+        <Splitter defaultSize={s.defaultSize} orientation={s.orientation}>
+          <div>Primary pane</div>
+          <div>Secondary pane</div>
+        </Splitter>
+      );
+    }
+    case "resizable-panel": {
+      const s = settings as ControlSettingsBySlug["resizable-panel"];
+      return (
+        <ResizablePanel defaultHeight={s.defaultHeight} defaultWidth={s.defaultWidth}>
+          Drag the corner handle to resize this panel.
+        </ResizablePanel>
+      );
+    }
+    case "dock-layout": {
+      const s = settings as ControlSettingsBySlug["dock-layout"];
+      return (
+        <DockLayout
+          bottom={s.showBottom ? "Bottom dock" : undefined}
+          left={s.showLeft ? "Left dock" : undefined}
+          right={s.showRight ? "Right dock" : undefined}
+          top={s.showTop ? "Top dock" : undefined}
+        >
+          Centre workspace
+        </DockLayout>
+      );
+    }
+    case "scroll-area": {
+      const s = settings as ControlSettingsBySlug["scroll-area"];
+      return (
+        <ScrollArea maxHeight={s.maxHeight} orientation={s.orientation}>
+          <div style={{ padding: 12, display: "grid", gap: 6 }}>
+            {layoutScrollLines.map((line) => (
+              <div key={line}>{line}</div>
+            ))}
+          </div>
+        </ScrollArea>
+      );
+    }
+    case "aspect-ratio": {
+      const s = settings as ControlSettingsBySlug["aspect-ratio"];
+      return (
+        <AspectRatio ratio={s.ratio}>
+          <div style={{ color: "var(--opus-muted)", fontSize: "0.85rem", fontWeight: 650 }}>{s.ratio}</div>
+        </AspectRatio>
+      );
+    }
+    case "container": {
+      const s = settings as ControlSettingsBySlug["container"];
+      return (
+        <Container padded={s.padded} size={s.size}>
+          <div
+            style={{
+              padding: 16,
+              border: "1px dashed var(--opus-border)",
+              borderRadius: 8,
+              textAlign: "center",
+            }}
+          >
+            Container size: {s.size}
+          </div>
+        </Container>
+      );
+    }
+    case "spacer": {
+      const s = settings as ControlSettingsBySlug["spacer"];
+      return (
+        <div style={{ display: "flex", flexDirection: s.axis === "x" ? "row" : "column", alignItems: "stretch" }}>
+          <div style={{ padding: 10, border: "1px solid var(--opus-border)", borderRadius: 8 }}>Above</div>
+          <Spacer axis={s.axis} flex={s.flex} size={s.size} />
+          <div style={{ padding: 10, border: "1px solid var(--opus-border)", borderRadius: 8 }}>Below</div>
+        </div>
+      );
+    }
+    case "breadcrumb": {
+      const s = settings as ControlSettingsBySlug["breadcrumb"];
+      return <Breadcrumb items={demoBreadcrumbItems} separator={s.separator} />;
+    }
+    case "pagination": {
+      const s = settings as ControlSettingsBySlug["pagination"];
+      return (
+        <Pagination
+          page={s.page}
+          pageCount={s.pageCount}
+          onPageChange={(page) => onSettingsChange({ ...s, page } as ControlSettings)}
+        />
+      );
+    }
+    case "page-header": {
+      const s = settings as ControlSettingsBySlug["page-header"];
+      return (
+        <PageHeader
+          actions={
+            s.showActions ? (
+              <>
+                <Button type="button" variant="secondary">
+                  Share
+                </Button>
+                <Button type="button" variant="primary">
+                  Edit
+                </Button>
+              </>
+            ) : undefined
+          }
+          breadcrumbs={s.showBreadcrumbs ? <Breadcrumb items={demoBreadcrumbItems} /> : undefined}
+          description="Composable page chrome for documentation and application shells."
+          eyebrow="Navigation"
+          title="Page header"
+        />
+      );
+    }
+    case "toolbar": {
+      const s = settings as ControlSettingsBySlug["toolbar"];
+      return (
+        <Toolbar
+          dense={s.dense}
+          end={<Button type="button" variant="primary">Publish</Button>}
+          start={<Button type="button" variant="secondary">Filter</Button>}
+        >
+          <Button type="button" variant="light">
+            Undo
+          </Button>
+          <Button type="button" variant="light">
+            Redo
+          </Button>
+        </Toolbar>
+      );
+    }
+    case "bottom-navigation": {
+      const s = settings as ControlSettingsBySlug["bottom-navigation"];
+      return (
+        <BottomNavigation
+          items={demoBottomNavItems}
+          value={s.value}
+          onChange={(value) => onSettingsChange({ ...s, value } as ControlSettings)}
+        />
+      );
+    }
+    case "navigation-rail": {
+      const s = settings as ControlSettingsBySlug["navigation-rail"];
+      return (
+        <NavigationRail
+          collapsed={s.collapsed}
+          items={demoRailItems}
+          value={s.value}
+          onChange={(value) => onSettingsChange({ ...s, value } as ControlSettings)}
+        />
+      );
+    }
+    case "split-button": {
+      const s = settings as ControlSettingsBySlug["split-button"];
+      return (
+        <SplitButton actions={demoSplitActions} variant={s.variant}>
+          Save
+        </SplitButton>
+      );
+    }
+    case "fab": {
+      const s = settings as ControlSettingsBySlug["fab"];
+      return (
+        <div style={{ position: "relative", minHeight: 120, width: "100%" }}>
+          <FloatingActionButton extended={s.extended} icon="+" label="Create" position="end" size={s.size} />
+        </div>
+      );
+    }
+    case "tile": {
+      const s = settings as ControlSettingsBySlug["tile"];
+      return <TilePreview settings={s} />;
+    }
+    case "tiles": {
+      const s = settings as ControlSettingsBySlug["tiles"];
+      return <TilesPreview settings={s} />;
+    }
+    case "stat-tile": {
+      const s = settings as ControlSettingsBySlug["stat-tile"];
+      return <StatTilePreview settings={s} />;
+    }
+    case "stat-tiles": {
+      const s = settings as ControlSettingsBySlug["stat-tiles"];
+      return <StatTilesPreview settings={s} />;
+    }
+    case "property-inspector": {
+      const s = settings as ControlSettingsBySlug["property-inspector"];
+      return <PropertyInspectorPreview searchable={s.searchable} />;
+    }
+    case "filter-builder": {
+      return <FilterBuilderPreview />;
+    }
+    case "query-builder": {
+      const s = settings as ControlSettingsBySlug["query-builder"];
+      return <QueryBuilderPreview combinator={s.combinator} />;
+    }
+    case "rule-builder": {
+      const s = settings as ControlSettingsBySlug["rule-builder"];
+      return <RuleBuilderPreview showDisabled={s.showDisabled} />;
+    }
+    case "permissions-matrix": {
+      return <PermissionsMatrixPreview />;
+    }
+    case "dual-list-builder": {
+      const s = settings as ControlSettingsBySlug["dual-list-builder"];
+      return <DualListBuilderPreview selectedCount={s.selectedCount} />;
+    }
+    case "scheduler": {
+      const s = settings as ControlSettingsBySlug["scheduler"];
+      return <Scheduler events={demoSchedulerEvents} endHour={s.endHour} startHour={s.startHour} />;
+    }
+    case "kanban-board": {
+      const s = settings as ControlSettingsBySlug["kanban-board"];
+      return <KanbanBoardPreview interactive={s.interactive} />;
+    }
+    case "calendar": {
+      const s = settings as ControlSettingsBySlug["calendar"];
+      return <CalendarPreview showEvents={s.showEvents} />;
+    }
+    case "resource-planner": {
+      const s = settings as ControlSettingsBySlug["resource-planner"];
+      return (
+        <ResourcePlanner
+          endHour={s.endHour}
+          items={demoResourceItems}
+          resources={demoResources}
+          startHour={s.startHour}
+        />
+      );
+    }
     case "json-viewer": {
       const s = settings as ControlSettingsBySlug["json-viewer"];
       return <JsonViewer collapsedDepth={s.collapsedDepth} value={demoJsonValue} />;
@@ -2163,6 +3175,7 @@ export function ControlPreview({ slug, settings, onSettingsChange }: ControlPrev
         />
       );
     }
+
     case "icon": {
       const s = settings as ControlSettingsBySlug["icon"];
       return (
@@ -2173,6 +3186,10 @@ export function ControlPreview({ slug, settings, onSettingsChange }: ControlPrev
           tone={s.tone}
         />
       );
+    }
+    case "icon-badge": {
+      const s = settings as ControlSettingsBySlug["icon-badge"];
+      return <IconBadgePreview settings={s} />;
     }
     case "spinner": {
       const s = settings as ControlSettingsBySlug["spinner"];

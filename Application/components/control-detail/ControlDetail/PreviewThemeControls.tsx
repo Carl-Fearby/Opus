@@ -1,6 +1,6 @@
 "use client";
 
-import { ThemeToggleField } from "opus-react";
+import { ThemeToggleField } from "@/components/fields";
 import { useComponentsTheme } from "@/components/development/ComponentsThemeProvider";
 import styles from "./ControlDetail.module.css";
 
@@ -13,7 +13,7 @@ export function PreviewThemeControls({
   id = "preview-theme-toggle",
   variant = "panel",
 }: PreviewThemeControlsProps) {
-  const { theme, setTheme } = useComponentsTheme();
+  const { previewTheme, setPreviewTheme } = useComponentsTheme();
 
   return (
     <div
@@ -24,17 +24,17 @@ export function PreviewThemeControls({
       }
     >
       <span className={styles.previewThemeLabel} id={`${id}-label`}>
-        Theme
+        Preview theme
       </span>
       <ThemeToggleField
         className={styles.previewThemeField}
         id={id}
-        label="Theme"
+        label="Preview theme"
         labelVisuallyHidden
         labelPosition="left"
         mode="flagged"
-        value={theme}
-        onChange={setTheme}
+        value={previewTheme}
+        onChange={setPreviewTheme}
       />
     </div>
   );

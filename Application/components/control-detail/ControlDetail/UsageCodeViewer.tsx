@@ -1,10 +1,18 @@
 "use client";
 
-import { useState } from "react";
+import { useMemo, useState } from "react";
+import dynamic from "next/dynamic";
 import type { ControlSettings, ControlSlug } from "@/lib/controls/types";
 import { generateUsageCode } from "@/lib/controls/generateUsageCode";
 import styles from "./ControlDetail.module.css";
-import { UsageCodeEditor } from "@/components/control-detail/UsageCodeEditor";
+
+const UsageCodeEditor = dynamic(
+  () => import("@/components/control-detail/UsageCodeEditor").then((module) => module.UsageCodeEditor),
+  {
+    loading: () => <pre className={styles.usageCodeFallback}>Loading editor…</pre>,
+    ssr: false,
+  },
+);
 
 type UsageCodeViewerProps = {
   slug: ControlSlug;
@@ -46,7 +54,7 @@ function UsageSection({ copied, code, description, onCopy, title }: UsageSection
 }
 
 export function UsageCodeViewer({ slug, settings }: UsageCodeViewerProps) {
-  const usage = generateUsageCode(slug, settings);
+  const usage = useMemo(() => generateUsageCode(slug, settings), [slug, settings]);
   const [copiedSection, setCopiedSection] = useState<"imports" | "jsx" | null>(null);
 
   const handleCopy = async (section: "imports" | "jsx", code: string) => {

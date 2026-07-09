@@ -3,21 +3,39 @@ export type DashboardCatalogEntry = {
   description: string;
   navigationGroup: string;
   settingsType:
+    | "dashboard-content-container"
+    | "deals-over-time"
     | "gauge"
     | "metric-tile"
+    | "pipeline-overview"
     | "progress-bar"
     | "progress-ring"
+    | "recent-activity"
     | "sparkline"
     | "speedometer"
     | "stat-card"
     | "status-indicator"
-    | "trend-badge";
+    | "top-performing-users"
+    | "trend-badge"
+    | "upcoming-tasks";
   slug: string;
   sourceFiles: string[];
   title: string;
 };
 
 export const dashboardCatalog = [
+  {
+    slug: "dashboard-content-container",
+    title: "Dashboard Content Container",
+    componentName: "DashboardContentContainer",
+    navigationGroup: "Dashboard",
+    description: "Neon glass dashboard section shell for wrapping widgets with a shared title, body, and footer layout.",
+    settingsType: "dashboard-content-container",
+    sourceFiles: [
+      "components/DashboardContentContainer/DashboardContentContainer.tsx",
+      "components/DashboardContentContainer/DashboardContentContainer.module.css",
+    ],
+  },
   {
     slug: "kpi-card",
     title: "KPI Card",
@@ -100,6 +118,66 @@ export const dashboardCatalog = [
       "components/MetricTile/MetricTile.tsx",
       "components/MetricTile/MetricTile.module.css",
       "components/dashboardMetricCardLayout/dashboardMetricCardLayout.module.css",
+    ],
+  },
+  {
+    slug: "pipeline-overview",
+    title: "Pipeline Overview",
+    componentName: "PipelineOverview",
+    navigationGroup: "Dashboard",
+    description: "Sales pipeline funnel card with stage legend, total value, and period selector.",
+    settingsType: "pipeline-overview",
+    sourceFiles: [
+      "components/PipelineOverview/PipelineOverview.tsx",
+      "components/PipelineOverview/PipelineOverview.module.css",
+    ],
+  },
+  {
+    slug: "deals-over-time",
+    title: "Deals Over Time",
+    componentName: "DealsOverTime",
+    navigationGroup: "Dashboard",
+    description: "Line chart dashboard widget for tracking deal volume over time with period selector and tooltip.",
+    settingsType: "deals-over-time",
+    sourceFiles: [
+      "components/DealsOverTime/DealsOverTime.tsx",
+      "components/DealsOverTime/DealsOverTime.module.css",
+    ],
+  },
+  {
+    slug: "upcoming-tasks",
+    title: "Upcoming Tasks",
+    componentName: "UpcomingTasks",
+    navigationGroup: "Dashboard",
+    description: "Task list dashboard widget with checkbox rows, due times, and footer link.",
+    settingsType: "upcoming-tasks",
+    sourceFiles: [
+      "components/UpcomingTasks/UpcomingTasks.tsx",
+      "components/UpcomingTasks/UpcomingTasks.module.css",
+    ],
+  },
+  {
+    slug: "recent-activity",
+    title: "Recent Activity",
+    componentName: "RecentActivity",
+    navigationGroup: "Dashboard",
+    description: "Activity feed dashboard widget with icon rows, timestamps, and footer link.",
+    settingsType: "recent-activity",
+    sourceFiles: [
+      "components/RecentActivity/RecentActivity.tsx",
+      "components/RecentActivity/RecentActivity.module.css",
+    ],
+  },
+  {
+    slug: "top-performing-users",
+    title: "Top Performing People",
+    componentName: "TopPerformingUsers",
+    navigationGroup: "Dashboard",
+    description: "Ranked people performance dashboard widget with avatars, gradient bars, and values.",
+    settingsType: "top-performing-users",
+    sourceFiles: [
+      "components/TopPerformingUsers/TopPerformingUsers.tsx",
+      "components/TopPerformingUsers/TopPerformingUsers.module.css",
     ],
   },
   {

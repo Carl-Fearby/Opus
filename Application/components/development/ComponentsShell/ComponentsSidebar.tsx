@@ -20,6 +20,15 @@ import styles from "./ComponentsShell.module.css";
 
 const SIDEBAR_GROUPS_STORAGE_KEY = "opus-components-sidebar-groups";
 
+const SIDEBAR_BOTTOM_CATEGORY_IDS = ["labs", "system"] as const satisfies readonly ComponentCategory[];
+
+const sidebarMainCategories = componentCategories.filter(
+  (category) => !SIDEBAR_BOTTOM_CATEGORY_IDS.includes(category.id as (typeof SIDEBAR_BOTTOM_CATEGORY_IDS)[number]),
+);
+const sidebarBottomCategories = SIDEBAR_BOTTOM_CATEGORY_IDS.map((id) =>
+  componentCategories.find((category) => category.id === id),
+).filter((category): category is (typeof componentCategories)[number] => Boolean(category));
+
 const categoryLabels = Object.fromEntries(
   componentCategories.map((category) => [category.id, category.label]),
 ) as Record<ComponentCategory, string>;
@@ -429,7 +438,7 @@ export function ComponentsSidebar() {
               <ComponentIcon icon={getOverviewIcon()} />
               <span>Overview</span>
             </Link>
-            {componentCategories.map((category) => (
+            {sidebarMainCategories.map((category) => (
               <NavGroup
                 key={category.id}
                 category={category.id}
@@ -439,6 +448,19 @@ export function ComponentsSidebar() {
                 onToggleSubgroup={toggleSubgroup}
                 onToggle={() => toggleGroup(category.id)}
               />
+            ))}
+            {sidebarBottomCategories.map((category) => (
+              <div key={category.id}>
+                <hr className={styles.sidebarDivider} />
+                <NavGroup
+                  category={category.id}
+                  label={category.label}
+                  open={Boolean(openGroups[category.id])}
+                  openGroups={openGroups}
+                  onToggleSubgroup={toggleSubgroup}
+                  onToggle={() => toggleGroup(category.id)}
+                />
+              </div>
             ))}
           </>
         )}

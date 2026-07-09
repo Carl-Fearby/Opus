@@ -1,13 +1,21 @@
 import type { ComponentCategory, ControlDefinition, ControlSlug } from "./types";
 import { formsControlOrder } from "./types";
+import { buildersCatalog } from "./buildersCatalog";
 import { chartCatalog } from "./chartCatalog";
 import { dashboardCatalog } from "./dashboardCatalog";
+import { labsCatalog } from "./labsCatalog";
+import { systemCatalog } from "./systemCatalog";
+import { layoutCatalog } from "./layoutCatalog";
+import { navigationExtrasCatalog } from "./navigationExtrasCatalog";
+import { tilesCatalog } from "./tilesCatalog";
 
 export const componentCategories: { id: ComponentCategory; label: string }[] = [
   { id: "content", label: "Content" },
   { id: "forms", label: "Forms" },
   { id: "graphs", label: "Graphs" },
+  { id: "labs", label: "Labs" },
   { id: "overlays", label: "Overlays" },
+  { id: "system", label: "System" },
 ].sort((a, b) => a.label.localeCompare(b.label)) as { id: ComponentCategory; label: string }[];
 
 export const categoryDescriptions: Record<ComponentCategory, string> = {
@@ -15,7 +23,9 @@ export const categoryDescriptions: Record<ComponentCategory, string> = {
     "Expandable sections, grouped accordions, alerts, navigation menus, empty states, sidebars, and show more / show less controls.",
   forms: "Inputs, selectors, toggles, buttons, and every field pattern used across Opus forms.",
   graphs: "Charts and visualisations for comparing, trending, segmenting, and exploring metric data.",
+  labs: "Experimental compositions that combine multiple library components into ready-made patterns.",
   overlays: "Tooltips, command palettes, modals, drawers, and toast notifications for contextual help and feedback.",
+  system: "Application-level pages such as error states and access-denied screens for route handlers and shells.",
 };
 
 const graphControls: ControlDefinition[] = chartCatalog.map((entry) => ({
@@ -24,9 +34,73 @@ const graphControls: ControlDefinition[] = chartCatalog.map((entry) => ({
   category: "graphs",
   componentName: "Chart",
   description: entry.description,
-  isNew: entry.isNew,
   navigationGroup: entry.navigationGroup,
   sourceFiles: ["components/Chart/Chart.tsx", "components/Chart/Chart.module.css", "components/Chart/SpecializedCharts.tsx"],
+  usesFieldShell: false,
+}));
+
+const buildersControls: ControlDefinition[] = buildersCatalog.map((entry) => ({
+  slug: entry.slug,
+  title: entry.title,
+  category: "content",
+  componentName: entry.componentName,
+  description: entry.description,
+  navigationGroup: entry.navigationGroup,
+  sourceFiles: entry.sourceFiles,
+  usesFieldShell: false,
+}));
+
+const layoutControls: ControlDefinition[] = layoutCatalog.map((entry) => ({
+  slug: entry.slug,
+  title: entry.title,
+  category: "content",
+  componentName: entry.componentName,
+  description: entry.description,
+  navigationGroup: entry.navigationGroup,
+  sourceFiles: entry.sourceFiles,
+  usesFieldShell: false,
+}));
+
+const navigationExtrasControls: ControlDefinition[] = navigationExtrasCatalog.map((entry) => ({
+  slug: entry.slug,
+  title: entry.title,
+  category: "content",
+  componentName: entry.componentName,
+  description: entry.description,
+  navigationGroup: entry.navigationGroup,
+  sourceFiles: entry.sourceFiles,
+  usesFieldShell: false,
+}));
+
+const tilesControls: ControlDefinition[] = tilesCatalog.map((entry) => ({
+  slug: entry.slug,
+  title: entry.title,
+  category: "content",
+  componentName: entry.componentName,
+  description: entry.description,
+  navigationGroup: entry.navigationGroup,
+  sourceFiles: entry.sourceFiles,
+  usesFieldShell: false,
+}));
+
+const labControls: ControlDefinition[] = labsCatalog.map((entry) => ({
+  slug: entry.slug,
+  title: entry.title,
+  category: "labs",
+  componentName: entry.componentName,
+  description: entry.description,
+  compositionParts: [...entry.compositionParts],
+  sourceFiles: entry.sourceFiles,
+  usesFieldShell: false,
+}));
+
+const systemControls: ControlDefinition[] = systemCatalog.map((entry) => ({
+  slug: entry.slug,
+  title: entry.title,
+  category: "system",
+  componentName: entry.componentName,
+  description: entry.description,
+  sourceFiles: entry.sourceFiles,
   usesFieldShell: false,
 }));
 
@@ -261,6 +335,20 @@ const formsControls: Record<(typeof formsControlOrder)[number], ControlDefinitio
     sourceFiles: ["components/fields/TextAreaField/TextAreaField.tsx", "components/fields/TextAreaField/TextAreaField.module.css"],
     usesFieldShell: true,
   },
+  "note-composer": {
+    slug: "note-composer",
+    title: "Note composer",
+    category: "forms",
+    componentName: "NoteComposer",
+    description: "Inset note entry box with attachment, mention, emoji picker, and save action.",
+    sourceFiles: [
+      "components/NoteComposer/NoteComposer.tsx",
+      "components/NoteComposer/NoteComposer.module.css",
+      "components/EmojiPicker/EmojiPicker.tsx",
+      "components/EmojiPicker/EmojiPicker.module.css",
+    ],
+    usesFieldShell: false,
+  },
   "rich-text-field": {
     slug: "rich-text-field",
     title: "Rich text field",
@@ -444,6 +532,22 @@ export const controls: ControlDefinition[] = [
     usesFieldShell: true,
   },
   {
+    slug: "emoji-picker",
+    title: "Emoji picker",
+    category: "forms",
+    componentName: "EmojiPicker",
+    description: "Categorized emoji picker with search, opened as a popover from a trigger button.",
+    sourceFiles: [
+      "components/EmojiPicker/EmojiPicker.tsx",
+      "components/EmojiPicker/EmojiPicker.module.css",
+      "lib/emojiCatalog.ts",
+      "lib/emojiCatalog.types.ts",
+      "lib/emojiCatalog.generated.ts",
+      "lib/emojiRecentStorage.ts",
+    ],
+    usesFieldShell: false,
+  },
+  {
     slug: "tooltip",
     title: "Tooltip",
     category: "overlays",
@@ -562,6 +666,12 @@ export const controls: ControlDefinition[] = [
     usesFieldShell: false,
   },
   ...dashboardControls,
+  ...labControls,
+  ...systemControls,
+  ...buildersControls,
+  ...layoutControls,
+  ...navigationExtrasControls,
+  ...tilesControls,
   {
     slug: "panel",
     title: "Panel",
@@ -875,6 +985,16 @@ export const controls: ControlDefinition[] = [
     description: "Catalog Font Awesome icon with size and tone tokens.",
     navigationGroup: "Utilities",
     sourceFiles: ["components/Icon/Icon.tsx", "components/Icon/Icon.module.css"],
+    usesFieldShell: false,
+  },
+  {
+    slug: "icon-badge",
+    title: "Icon badge",
+    category: "content",
+    componentName: "IconBadge",
+    description: "Notification-style icon with an optional count badge for toolbars and app headers.",
+    navigationGroup: "Utilities",
+    sourceFiles: ["components/IconBadge/IconBadge.tsx", "components/IconBadge/IconBadge.module.css"],
     usesFieldShell: false,
   },
   {

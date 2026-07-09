@@ -1,5 +1,5 @@
-import type { GaugeFooterItem } from "opus-react";
-import type { ChartPalette } from "opus-react";
+import type { GaugeFooterItem } from "@/components/Gauge";
+import type { ChartPalette } from "@/components/fields";
 import type { GaugeTrackTone, GaugeValueTone } from "./types";
 
 export const gaugePreviewValue = 75.55;

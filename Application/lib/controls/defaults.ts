@@ -70,6 +70,7 @@ export const defaultSettings: ControlSettingsBySlug = {
     mode: "flagged",
     checked: false,
     shape: "square",
+    size: "md",
   },
   switch: {
     ...baseFieldDefaults,
@@ -82,6 +83,7 @@ export const defaultSettings: ControlSettingsBySlug = {
     label: "Account type",
     value: "personal",
     shape: "round",
+    size: "md",
     error: "Please select an account type",
     optionErrorsEnabled: false,
     optionError: "This option needs review",
@@ -198,6 +200,14 @@ export const defaultSettings: ControlSettingsBySlug = {
     placeholder: "Type your message here...",
     placeholderEnabled: true,
   },
+  "note-composer": {
+    placeholder: "Add a note...",
+    saveButtonLabel: "Save Note",
+    showAttach: true,
+    showMention: true,
+    showEmoji: true,
+    value: "",
+  },
   "rich-text-field": {
     ...baseFieldDefaults,
     label: "Description",
@@ -297,6 +307,14 @@ export const defaultSettings: ControlSettingsBySlug = {
     helpEnabled: false,
     help: "Search and select an icon for this item.",
     value: "chart-column",
+  },
+  "emoji-picker": {
+    placement: "bottom",
+    searchPlaceholder: "Search emojis",
+    closeOnOutside: true,
+    closeOnEscape: true,
+    open: false,
+    lastSelected: "😀",
   },
   tooltip: {
     content: "Optional help text for this field",
@@ -424,6 +442,7 @@ export const defaultSettings: ControlSettingsBySlug = {
     density: "comfortable",
     icon: "chart-column",
     previewLayout: "single",
+    width: "widget",
   },
   "stat-card": {
     label: "Customers",
@@ -434,23 +453,27 @@ export const defaultSettings: ControlSettingsBySlug = {
     density: "comfortable",
     icon: "users",
     previewLayout: "single",
+    width: "widget",
   },
   sparkline: {
     label: "Weekly trend",
     palette: "opus",
     previewLayout: "single",
+    width: "widget",
   },
   "progress-ring": {
     label: "Quota",
     max: 100,
     previewLayout: "single",
     value: 72,
+    width: "widget",
   },
   "progress-bar": {
     label: "Sprint progress",
     max: 100,
     previewLayout: "single",
     value: 64,
+    width: "widget",
   },
   gauge: {
     title: "Gauge",
@@ -465,12 +488,14 @@ export const defaultSettings: ControlSettingsBySlug = {
     valueTone: "palette",
     variant: "half",
     previewLayout: "single",
+    width: "widget",
   },
   speedometer: {
     label: "Utilisation",
     max: 100,
     previewLayout: "single",
     value: 78,
+    width: "widget",
   },
   "metric-tile": {
     label: "MRR",
@@ -478,16 +503,87 @@ export const defaultSettings: ControlSettingsBySlug = {
     previewLayout: "single",
     showSparkline: true,
     value: "$84.2k",
+    width: "widget",
+  },
+  "pipeline-overview": {
+    closingValue: "£331,000",
+    title: "Pipeline Overview",
+    totalLabel: "Total Pipeline Value",
+    totalValue: "£2,480,000",
+    period: "This Month",
+    previewLayout: "single",
+    proposalValue: "£621,000",
+    qualificationValue: "£842,000",
+    negotiationValue: "£542,000",
+    stageCount: "5",
+    wonValue: "£144,000",
+    width: "widget",
+  },
+  "deals-over-time": {
+    title: "Deals Over Time",
+    period: "This Year",
+    maxValue: "100",
+    valueLabel: "Deals",
+    palette: "purple",
+    previewLayout: "single",
+    width: "widget",
+  },
+  "upcoming-tasks": {
+    title: "Upcoming Tasks",
+    footerLabel: "View all tasks",
+    checkboxSize: "md",
+    previewLayout: "single",
+    width: "widget",
+  },
+  "recent-activity": {
+    title: "Recent Activity",
+    footerLabel: "View all activity",
+    previewLayout: "single",
+    width: "widget",
+  },
+  "top-performing-users": {
+    title: "Top Performing People",
+    footerLabel: "View full report",
+    previewLayout: "single",
+    width: "widget",
+  },
+  "404-page": {},
+  "403-page": {},
+  "dashboard-list-columns": {
+    layout: "row",
+    previewLayout: "single",
+    width: "full",
+    checkboxSize: "md",
+    upcomingTasksTitle: "Upcoming Tasks",
+    upcomingTasksFooterLabel: "View all tasks",
+    recentActivityTitle: "Recent Activity",
+    recentActivityFooterLabel: "View all activity",
+    topPerformingUsersTitle: "Top Performing People",
+    topPerformingUsersFooterLabel: "View full report",
+  },
+  "notes-activity": {
+    composerPlaceholder: "Add a note...",
+    footerLabel: "View all notes & activity",
+    previewLayout: "single",
+    saveButtonLabel: "Save Note",
+    width: "widget",
+  },
+  "dashboard-content-container": {
+    previewLayout: "single",
+    title: "Dashboard section",
+    width: "widget",
   },
   "status-indicator": {
     label: "Systems healthy",
     previewLayout: "single",
     status: "success",
+    width: "widget",
   },
   "trend-badge": {
     direction: "up",
     previewLayout: "single",
     value: "12.4%",
+    width: "widget",
   },
   panel: {
     title: "Release readiness",
@@ -682,6 +778,130 @@ export const defaultSettings: ControlSettingsBySlug = {
   "property-grid": {
     copyable: true,
   },
+  stack: {
+    direction: "column",
+    gap: 12,
+    wrap: false,
+  },
+  columns: {
+    direction: "row",
+    columns: 3,
+    gap: 16,
+  },
+  grid: {
+    columns: 3,
+    gap: 12,
+  },
+  splitter: {
+    orientation: "horizontal",
+    defaultSize: 40,
+  },
+  "resizable-panel": {
+    defaultWidth: 320,
+    defaultHeight: 200,
+  },
+  "dock-layout": {
+    showLeft: true,
+    showRight: true,
+    showTop: true,
+    showBottom: true,
+  },
+  "scroll-area": {
+    maxHeight: 180,
+    orientation: "vertical",
+  },
+  "aspect-ratio": {
+    ratio: "16 / 9",
+  },
+  container: {
+    size: "md",
+    padded: true,
+  },
+  spacer: {
+    axis: "y",
+    size: 24,
+    flex: false,
+  },
+  breadcrumb: {
+    separator: "/",
+  },
+  pagination: {
+    page: 2,
+    pageCount: 8,
+  },
+  "page-header": {
+    showBreadcrumbs: true,
+    showActions: true,
+  },
+  toolbar: {
+    dense: false,
+  },
+  "bottom-navigation": {
+    value: "home",
+  },
+  "navigation-rail": {
+    collapsed: false,
+    value: "inbox",
+  },
+  "split-button": {
+    variant: "primary",
+  },
+  fab: {
+    extended: false,
+    size: "md",
+  },
+  tile: {
+    icon: "user-plus",
+    label: "New Lead",
+    tone: "purple",
+  },
+  tiles: {
+    layout: "fill",
+  },
+  "stat-tile": {
+    label: "Total Contacts",
+    value: "2,543",
+    trendValue: "12.5%",
+    trend: "up",
+    comparison: "vs last 30 days",
+    icon: "user",
+    tone: "blue",
+  },
+  "stat-tiles": {
+    layout: "fill",
+  },
+  "property-inspector": {
+    searchable: true,
+  },
+  "filter-builder": {
+    seedCount: 2,
+  },
+  "query-builder": {
+    combinator: "and",
+  },
+  "rule-builder": {
+    showDisabled: true,
+  },
+  "permissions-matrix": {
+    compact: false,
+  },
+  "dual-list-builder": {
+    selectedCount: 2,
+  },
+  scheduler: {
+    startHour: 9,
+    endHour: 17,
+  },
+  "kanban-board": {
+    interactive: true,
+  },
+  calendar: {
+    showEvents: true,
+  },
+  "resource-planner": {
+    startHour: 8,
+    endHour: 17,
+  },
   "json-viewer": {
     collapsedDepth: 1,
   },
@@ -700,6 +920,17 @@ export const defaultSettings: ControlSettingsBySlug = {
     tone: "accent",
     labelEnabled: true,
     label: "Favourite",
+  },
+  "icon-badge": {
+    iconName: "bell",
+    count: 8,
+    max: 99,
+    size: "md",
+    tone: "muted",
+    urgency: "standard",
+    label: "Notifications",
+    showZero: false,
+    showToolbarDemo: true,
   },
   spinner: {
     size: "md",

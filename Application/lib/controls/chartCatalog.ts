@@ -1,9 +1,8 @@
-import type { ChartVariant } from "opus-react";
+import type { ChartVariant } from "@/components/fields/types";
 
 export type ChartCatalogEntry = {
   description: string;
   /** Marks the sidebar nav entry with an orange asterisk. */
-  isNew?: boolean;
   navigationGroup: string;
   slug: string;
   title: string;

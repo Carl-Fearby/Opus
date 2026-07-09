@@ -4,7 +4,7 @@ import {
   type MegaMenuFeatured,
   type MegaMenuItem,
   type MegaMenuSection,
-} from "opus-react";
+} from "@/components/MegaMenu";
 import type { MegaMenuSettings } from "@/lib/controls/types";
 
 const editMenu = defaultMegaMenuMenus.find((menu) => menu.id === "edit");
