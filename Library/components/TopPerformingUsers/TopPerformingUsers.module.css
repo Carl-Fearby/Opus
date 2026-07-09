@@ -1,0 +1,83 @@
+.root {
+  display: grid;
+  gap: 12px;
+  min-width: 0;
+}
+
+.header {
+  min-width: 0;
+}
+
+.title {
+  margin: 0;
+  color: var(--dashboard-section-text);
+  font-size: 0.875rem;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+}
+
+.list {
+  min-width: 0;
+}
+
+.item {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 10px;
+  align-items: center;
+  min-height: 2.125rem;
+  min-width: 0;
+}
+
+.item:has(.itemAction) {
+  display: block;
+}
+
+.itemAction {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 10px;
+  align-items: center;
+}
+
+.row {
+  display: grid;
+  grid-template-columns: minmax(5.5rem, 0.9fr) minmax(0, 1.4fr) auto;
+  gap: 10px;
+  align-items: center;
+  min-width: 0;
+}
+
+.name {
+  color: var(--dashboard-section-text);
+  font-size: 0.76rem;
+  font-weight: 600;
+  line-height: 1.2;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.barTrack {
+  height: 0.42rem;
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--dashboard-section-text) 8%, transparent);
+  overflow: hidden;
+  min-width: 0;
+}
+
+.barFill {
+  display: block;
+  height: 100%;
+  border-radius: inherit;
+  background: linear-gradient(90deg, #3b82f6 0%, #8b5cf6 55%, #a855f7 100%);
+  box-shadow: 0 0 10px color-mix(in srgb, #8b5cf6 45%, transparent);
+}
+
+.value {
+  color: var(--dashboard-section-text);
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  white-space: nowrap;
+}

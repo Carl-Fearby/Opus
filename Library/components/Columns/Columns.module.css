@@ -1,0 +1,24 @@
+.root {
+  display: grid;
+  width: 100%;
+  min-width: 0;
+}
+
+.root[data-direction="row"] {
+  grid-template-columns: repeat(var(--columns-count), minmax(0, 1fr));
+}
+
+.root[data-direction="column"] {
+  grid-template-columns: minmax(0, 1fr);
+}
+
+.cell {
+  display: flex;
+  min-width: 0;
+}
+
+.cell > * {
+  flex: 1 1 auto;
+  width: 100%;
+  min-width: 0;
+}

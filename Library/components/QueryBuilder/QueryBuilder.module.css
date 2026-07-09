@@ -1,0 +1,151 @@
+.root {
+  width: 100%;
+  border: 1px solid var(--opus-border);
+  border-radius: var(--opus-input-radius-large, 6px);
+  background: color-mix(in srgb, var(--opus-panel) 92%, transparent);
+  overflow: hidden;
+}
+
+.toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 10px 12px;
+  border-bottom: 1px solid var(--opus-border);
+}
+
+.combinator {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--opus-muted);
+  font-size: 0.78rem;
+  font-weight: 650;
+}
+
+.add,
+.remove {
+  border: 1px solid var(--opus-border);
+  border-radius: 999px;
+  background: transparent;
+  color: var(--opus-muted);
+  font-size: 0.75rem;
+  font-weight: 650;
+  cursor: pointer;
+}
+
+.add {
+  padding: 5px 10px;
+}
+
+.remove {
+  width: 28px;
+  height: 28px;
+}
+
+.add:hover,
+.remove:hover {
+  color: var(--opus-text);
+  border-color: color-mix(in srgb, var(--opus-accent) 40%, var(--opus-border));
+}
+
+.empty {
+  margin: 0;
+  padding: 18px 12px;
+  color: var(--opus-muted);
+  font-size: 0.82rem;
+}
+
+.list {
+  margin: 0;
+  padding: 10px;
+  list-style: none;
+  display: grid;
+  gap: 8px;
+}
+
+.row {
+  display: grid;
+  grid-template-columns: 3.2rem minmax(0, 1fr) 5.5rem minmax(0, 1.2fr) auto;
+  gap: 8px;
+  align-items: center;
+}
+
+.chip,
+.chipSpacer {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 28px;
+  font-size: 0.68rem;
+  font-weight: 800;
+}
+
+.chip {
+  color: var(--opus-accent);
+}
+
+.select,
+.selectNarrow,
+.input {
+  min-width: 0;
+  padding: 7px 8px;
+  border: 1px solid var(--opus-border);
+  border-radius: 6px;
+  background: color-mix(in srgb, var(--opus-panel) 88%, transparent);
+  color: var(--opus-text);
+  font: inherit;
+  font-size: 0.8rem;
+}
+
+.output {
+  display: grid;
+  gap: 8px;
+  padding: 10px 12px 12px;
+  border-top: 1px solid var(--opus-border);
+  background: color-mix(in srgb, var(--opus-panel) 88%, #000 6%);
+}
+
+.outputLabel {
+  color: var(--opus-muted);
+  font-size: 0.68rem;
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.expression {
+  margin: 0;
+  color: var(--opus-text);
+  font-size: 0.82rem;
+  font-weight: 650;
+  line-height: 1.45;
+  word-break: break-word;
+}
+
+.payload {
+  margin: 0;
+  max-height: 160px;
+  overflow: auto;
+  padding: 8px 10px;
+  border: 1px solid var(--opus-border);
+  border-radius: 6px;
+  background: color-mix(in srgb, var(--opus-panel) 94%, #000 4%);
+  color: var(--opus-muted);
+  font-family: var(--font-ibm-plex-mono), ui-monospace, monospace;
+  font-size: 0.72rem;
+  line-height: 1.5;
+  white-space: pre-wrap;
+}
+
+@media (max-width: 720px) {
+  .row {
+    grid-template-columns: 3.2rem 1fr auto;
+  }
+
+  .selectNarrow,
+  .input {
+    grid-column: 2 / 3;
+  }
+}

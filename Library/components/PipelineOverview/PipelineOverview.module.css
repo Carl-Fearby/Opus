@@ -1,0 +1,192 @@
+.root {
+  display: grid;
+  gap: 14px;
+  min-width: 0;
+}
+
+.body {
+  display: grid;
+  grid-template-columns: 1.35fr 1fr;
+  column-gap: 14px;
+  align-items: center;
+  min-height: 0;
+}
+
+.funnel {
+  grid-column: 1;
+  display: flex;
+  align-items: stretch;
+  justify-content: center;
+  min-width: 0;
+  min-height: 100%;
+  height: 100%;
+}
+
+.funnelSvg {
+  display: block;
+  width: 100%;
+  height: 100%;
+  min-height: 100%;
+  overflow: visible;
+}
+
+.legend {
+  display: grid;
+  grid-template-rows: subgrid;
+  grid-row: 1 / -1;
+  grid-column: 2;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.legendItem {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 8px;
+  align-items: center;
+  margin: 0;
+  min-height: 0;
+}
+
+.legendDot {
+  width: 7px;
+  height: 7px;
+  border-radius: 999px;
+  background: var(--stage-dot);
+  box-shadow:
+    0 0 6px color-mix(in srgb, var(--stage-glow) 80%, transparent),
+    0 0 12px color-mix(in srgb, var(--stage-glow) 36%, transparent);
+}
+
+.legendCopy {
+  display: grid;
+  gap: 1px;
+  min-width: 0;
+}
+
+.legendLabel {
+  color: var(--dashboard-section-text);
+  font-size: 0.78rem;
+  font-weight: 600;
+  line-height: 1.2;
+}
+
+.legendValue {
+  color: var(--dashboard-section-muted);
+  font-size: 0.72rem;
+  font-weight: 500;
+  line-height: 1.2;
+}
+
+.footer {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.total {
+  display: grid;
+  gap: 4px;
+}
+
+.totalLabel {
+  color: var(--dashboard-section-muted);
+  font-size: 0.68rem;
+  font-weight: 500;
+}
+
+.totalValue {
+  color: var(--dashboard-section-text);
+  font-size: 1.125rem;
+  font-weight: 700;
+  letter-spacing: -0.03em;
+  line-height: 1;
+}
+
+.period {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  min-width: 7.25rem;
+  flex: 0 0 auto;
+}
+
+.periodLabel {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.periodSelect {
+  width: 100%;
+  appearance: none;
+  padding: 7px 24px 7px 10px;
+  border: 1px solid color-mix(in srgb, var(--dashboard-section-text) 14%, transparent);
+  border-radius: 8px;
+  background: color-mix(in srgb, var(--dashboard-section-panel) 90%, transparent);
+  color: var(--dashboard-section-text);
+  font: inherit;
+  font-size: 0.72rem;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.periodSelect:focus-visible {
+  outline: 2px solid color-mix(in srgb, #38bdf8 42%, transparent);
+  outline-offset: 2px;
+}
+
+.periodChevron {
+  position: absolute;
+  right: 9px;
+  pointer-events: none;
+  color: var(--dashboard-section-muted);
+  font-size: 0.65rem;
+}
+
+.periodChevron :global(svg) {
+  display: block;
+  width: 1em;
+  height: 1em;
+}
+
+@media (max-width: 720px) {
+  .body {
+    grid-template-columns: 1fr;
+    row-gap: 12px;
+  }
+
+  .funnel {
+    grid-row: auto !important;
+    grid-column: 1;
+    min-height: 11rem;
+  }
+
+  .legend {
+    grid-row: auto;
+    grid-column: 1;
+    grid-template-rows: none;
+    gap: 10px;
+  }
+
+  .legendItem {
+    grid-row: auto !important;
+  }
+
+  .footer {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .period {
+    width: 100%;
+  }
+}

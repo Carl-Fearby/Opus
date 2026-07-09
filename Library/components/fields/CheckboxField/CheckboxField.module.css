@@ -6,9 +6,17 @@
   position: relative;
   display: grid;
   place-items: center;
-  width: var(--opus-control-height);
-  height: var(--opus-control-height);
+  width: var(--choice-control-size);
+  height: var(--choice-control-size);
   color: var(--opus-text);
+}
+
+.toggleLabel {
+  position: relative;
+  display: grid;
+  place-items: center;
+  width: var(--choice-control-size);
+  height: var(--choice-control-size);
   cursor: pointer;
 }
 
@@ -25,8 +33,8 @@
 
 .visual {
   position: relative;
-  width: var(--opus-control-height);
-  height: var(--opus-control-height);
+  width: var(--choice-control-size);
+  height: var(--choice-control-size);
   border: 1px solid var(--opus-border-strong);
   background: var(--opus-input-bg);
   box-shadow:
@@ -51,10 +59,10 @@
   position: absolute;
   left: 50%;
   top: 45%;
-  width: 11px;
-  height: 6px;
-  border-left: 2px solid #ffffff;
-  border-bottom: 2px solid #ffffff;
+  width: var(--choice-control-tick-width);
+  height: var(--choice-control-tick-height);
+  border-left: var(--choice-control-tick-weight) solid #ffffff;
+  border-bottom: var(--choice-control-tick-weight) solid #ffffff;
   opacity: 0;
   transform: translate(-50%, -50%) rotate(-45deg);
 }
@@ -75,7 +83,7 @@
 
 .nativeInput:focus-visible + .visual {
   box-shadow:
-    0 0 0 4px color-mix(in srgb, var(--opus-accent) 24%, transparent),
+    0 0 0 var(--choice-control-focus-ring) color-mix(in srgb, var(--opus-accent) 24%, transparent),
     inset 0 0 0 1px rgba(255, 255, 255, 0.08);
 }
 

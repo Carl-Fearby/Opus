@@ -23,7 +23,7 @@ export function StatCard({
   value,
 }: StatCardProps) {
   return (
-    <article className={layout.shell} data-density={density}>
+    <div className={layout.shell} data-density={density}>
       <div className={layout.header}>
         <span className={layout.iconSlot}>
           {icon ?? <span aria-hidden="true" className={layout.iconPlaceholder} />}
@@ -42,6 +42,6 @@ export function StatCard({
       </div>
       <p className={layout.label}>{label}</p>
       <p className={layout.value}>{value}</p>
-    </article>
+    </div>
   );
 }

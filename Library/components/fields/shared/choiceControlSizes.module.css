@@ -1,0 +1,29 @@
+.sizeSm {
+  --choice-control-size: 1.125rem;
+  --choice-control-tick-width: 8px;
+  --choice-control-tick-height: 4.5px;
+  --choice-control-tick-weight: 1.5px;
+  --choice-control-dot-size: 7px;
+  --choice-control-focus-ring: 3px;
+  --opus-control-height: 1.125rem;
+}
+
+.sizeMd {
+  --choice-control-size: 1.375rem;
+  --choice-control-tick-width: 10px;
+  --choice-control-tick-height: 5.5px;
+  --choice-control-tick-weight: 1.75px;
+  --choice-control-dot-size: 9px;
+  --choice-control-focus-ring: 3px;
+  --opus-control-height: 1.375rem;
+}
+
+.sizeLg {
+  --choice-control-size: 1.75rem;
+  --choice-control-tick-width: 11px;
+  --choice-control-tick-height: 6px;
+  --choice-control-tick-weight: 2px;
+  --choice-control-dot-size: 11px;
+  --choice-control-focus-ring: 4px;
+  --opus-control-height: 1.75rem;
+}

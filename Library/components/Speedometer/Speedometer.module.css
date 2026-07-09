@@ -52,7 +52,7 @@
 }
 
 .center strong {
-  color: var(--opus-text);
+  color: var(--dashboard-section-text, var(--opus-text));
   font-size: 1.45rem;
   font-weight: 800;
   letter-spacing: -0.04em;
@@ -60,7 +60,7 @@
 }
 
 .center span {
-  color: var(--opus-muted);
+  color: var(--dashboard-section-muted, var(--opus-muted));
   font-size: 0.72rem;
   font-weight: 700;
 }

@@ -6,12 +6,13 @@
     "packages/*"
   ],
   "scripts": {
-    "dev": "next dev",
+    "dev": "next dev --turbo",
     "build": "next build",
     "build:lib": "npm run build -w opus-react",
     "start": "next start",
     "lint": "eslint",
-    "sync-versions": "node scripts/sync-version-log.mjs"
+    "sync-versions": "node scripts/sync-version-log.mjs",
+    "generate-emoji-catalog": "node scripts/generate-emoji-catalog.mjs"
   },
   "dependencies": {
     "@codemirror/lang-javascript": "^6.2.5",
@@ -29,6 +30,7 @@
     "three": "^0.185.1"
   },
   "devDependencies": {
+    "@emoji-mart/data": "^1.2.1",
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",

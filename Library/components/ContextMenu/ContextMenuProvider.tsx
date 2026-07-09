@@ -56,6 +56,12 @@ function resolveThemeFromNode(node: HTMLElement | null, fallback: Theme) {
       return theme;
     }
 
+    const shellTheme = current.getAttribute("data-shell-theme");
+
+    if (shellTheme === "light" || shellTheme === "dark") {
+      return shellTheme;
+    }
+
     current = current.parentElement;
   }
 

@@ -1,0 +1,154 @@
+.root {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: inherit;
+  cursor: default;
+}
+
+button.root {
+  border-radius: 10px;
+  cursor: pointer;
+}
+
+button.root:hover,
+button.root:focus-visible {
+  background: color-mix(in srgb, var(--opus-text) 6%, transparent);
+  outline: none;
+}
+
+.icon {
+  position: relative;
+  display: inline-grid;
+  place-items: center;
+  line-height: 1;
+  color: var(--opus-text);
+}
+
+.icon[data-size="sm"] {
+  font-size: 0.82rem;
+}
+
+.icon[data-size="md"] {
+  font-size: 1rem;
+}
+
+.icon[data-size="lg"] {
+  font-size: 1.2rem;
+}
+
+.root[data-size="sm"] {
+  width: 1.85rem;
+  height: 1.85rem;
+}
+
+.root[data-size="md"] {
+  width: 2.1rem;
+  height: 2.1rem;
+}
+
+.root[data-size="lg"] {
+  width: 2.4rem;
+  height: 2.4rem;
+}
+
+.icon[data-tone="muted"] {
+  color: color-mix(in srgb, var(--opus-text) 72%, var(--opus-muted));
+}
+
+.icon[data-tone="default"] {
+  color: var(--opus-text);
+}
+
+.icon[data-tone="accent"] {
+  color: var(--opus-accent);
+}
+
+.icon[data-tone="success"] {
+  color: #22c55e;
+}
+
+.icon[data-tone="warning"] {
+  color: #f59e0b;
+}
+
+.icon[data-tone="danger"] {
+  color: #f43f5e;
+}
+
+.icon :global(svg) {
+  display: block;
+  width: 1em;
+  height: 1em;
+}
+
+.badge {
+  position: absolute;
+  top: 0;
+  right: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 0.86rem;
+  height: 0.86rem;
+  padding: 0 0.2rem;
+  border-radius: 999px;
+  background: var(--icon-badge-bg, #8b5cf6);
+  color: var(--icon-badge-fg, #f8fafc);
+  font-size: 0.62rem;
+  font-weight: 700;
+  line-height: 1;
+  white-space: nowrap;
+  box-shadow: 0 0 0 1px color-mix(in srgb, var(--icon-badge-ring, #020617) 24%, transparent);
+  transform: translate(48%, -48%);
+  pointer-events: none;
+}
+
+.badge[data-urgency="standard"] {
+  --icon-badge-bg: #8b5cf6;
+  --icon-badge-fg: #f8fafc;
+  --icon-badge-ring: #020617;
+}
+
+.badge[data-urgency="danger"] {
+  --icon-badge-bg: #dc2626;
+  --icon-badge-fg: #ffffff;
+  --icon-badge-ring: #7f1d1d;
+}
+
+.badge[data-urgency="warning"] {
+  --icon-badge-bg: #d97706;
+  --icon-badge-fg: #ffffff;
+  --icon-badge-ring: #78350f;
+}
+
+.badge[data-urgency="success"] {
+  --icon-badge-bg: #16a34a;
+  --icon-badge-fg: #ffffff;
+  --icon-badge-ring: #14532d;
+}
+
+.badge[data-urgency="info"] {
+  --icon-badge-bg: #2563eb;
+  --icon-badge-fg: #ffffff;
+  --icon-badge-ring: #1e3a8a;
+}
+
+.root[data-size="sm"] .badge {
+  min-width: 0.78rem;
+  height: 0.78rem;
+  font-size: 0.58rem;
+  padding: 0 0.16rem;
+}
+
+.root[data-size="lg"] .badge {
+  min-width: 0.94rem;
+  height: 0.94rem;
+  font-size: 0.68rem;
+  padding: 0 0.22rem;
+}

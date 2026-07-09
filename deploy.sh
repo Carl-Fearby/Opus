@@ -1,21 +1,20 @@
 #!/usr/bin/env bash
 #
 # deploy.sh — bump, build, publish opus-react, update Application/package.json,
-#             reinstall from npm, then commit and push to git.
+#             sync Application docs/catalog from Library, reinstall from npm,
+#             then commit and push to git.
 #
 # Usage:
 #   ./deploy.sh                 # bump patch (0.2.12 -> 0.2.13), build, publish, update app
 #   ./deploy.sh patch|minor|major
 #   ./deploy.sh 0.3.0           # publish an explicit version
+#   ./deploy.sh --sync-app-only # local only: sync Application from Library (no publish)
 #
 # Flags:
-#   --skip-app        Don't update / reinstall opus-react in the Application
+#   --skip-app        Don't update / reinstall / sync the Application
 #   --skip-git        Don't commit or push to git after a successful deploy
 #   --dry-run         Bump + build only; do not publish, update app, or push git
-# Flags:
-#   --skip-app        Don't update / reinstall opus-react in the Application
-#   --skip-git        Don't commit or push to git after a successful deploy
-#   --dry-run         Bump + build only; do not publish, update app, or push git
+#   --sync-app-only   Sync Application catalog/previews from Library (no npm publish)
 #   --otp <code>      npm 2FA one-time password (only needed without NPM_TOKEN / .npmrc)
 #
 # Auth (no OTP prompt when configured):
@@ -65,11 +64,57 @@ has_npm_token() {
   [[ -n "${NPM_TOKEN:-}" ]]
 }
 
+sync_application_from_library() {
+  [[ -d "$APP_DIR" ]] || die "Application directory not found: ${APP_DIR}"
+
+  step "Syncing Application from Library"
+  cd "$APP_DIR"
+
+  if [[ -f "$APP_DIR/scripts/sync-from-library.mjs" ]]; then
+    node scripts/sync-from-library.mjs
+    ok "Catalog, previews, and component links synced"
+  else
+    die "Missing ${APP_DIR}/scripts/sync-from-library.mjs"
+  fi
+
+  if npm run sync-versions >/dev/null; then
+    ok "Version log synced"
+  else
+    die "Failed to sync version log into Application"
+  fi
+}
+
+stage_application_sync_files() {
+  local paths=(
+    "Application/lib/controls"
+    "Application/lib/ui"
+    "Application/lib/emojiCatalog.generated.ts"
+    "Application/lib/emojiCatalog.ts"
+    "Application/lib/emojiCatalog.types.ts"
+    "Application/lib/emojiRecentStorage.ts"
+    "Application/lib/theme/opusThemeTokens.ts"
+    "Application/lib/theme/useStoredTheme.ts"
+    "Application/lib/documentation/breadcrumbs.ts"
+    "Application/lib/documentation/versionLog.ts"
+    "Application/app/preview-theme.css"
+    "Application/components/control-detail"
+    "Application/components/development"
+    "Application/scripts/sync-from-library.mjs"
+  )
+
+  for path in "${paths[@]}"; do
+    if [[ -e "$ROOT_DIR/$path" ]]; then
+      git add "$path"
+    fi
+  done
+}
+
 # ---- parse args --------------------------------------------------------------
 BUMP="patch"
 SKIP_APP=false
 SKIP_GIT=false
 DRY_RUN=false
+SYNC_APP_ONLY=false
 OTP=""
 
 while [[ $# -gt 0 ]]; do
@@ -79,6 +124,7 @@ while [[ $# -gt 0 ]]; do
     --skip-app) SKIP_APP=true; shift ;;
     --skip-git) SKIP_GIT=true; shift ;;
     --dry-run)  DRY_RUN=true; shift ;;
+    --sync-app-only) SYNC_APP_ONLY=true; shift ;;
     --otp) OTP="${2:-}"; [[ -z "$OTP" ]] && die "--otp requires a value"; shift 2 ;;
     -h|--help)
       sed -n '2,22p' "${BASH_SOURCE[0]}" | sed 's/^# \{0,1\}//'
@@ -91,6 +137,13 @@ done
 command -v npm >/dev/null 2>&1 || die "npm is not installed or not on PATH"
 command -v git >/dev/null 2>&1 || die "git is not installed or not on PATH"
 load_npm_token
+
+if [[ "$SYNC_APP_ONLY" == true ]]; then
+  sync_application_from_library
+  printf "\n${BOLD}${GREEN}Done.${RESET} Application synced from Library."
+  info "Restart the Application dev server if it is running."
+  exit 0
+fi
 
 # ---- confirm npm auth --------------------------------------------------------
 step "Checking npm authentication"
@@ -124,14 +177,14 @@ fi
 
 # ---- publish -----------------------------------------------------------------
 step "Publishing ${PKG_NAME}@${NEW_VERSION} to npm"
-PUBLISH_ARGS=()
+PUBLISH_ARGS=(--access public)
 if [[ -n "$OTP" ]]; then
   PUBLISH_ARGS+=(--otp "$OTP")
 elif ! has_npm_token; then
   info "No NPM_TOKEN found — npm may prompt for your 2FA one-time password."
 fi
 
-# Ensure npm picks up the repo-root token when publishing from the package subdir.
+# Ensure npm picks up the repo-root token when publishing.
 if has_npm_token; then
   export NPM_CONFIG_USERCONFIG="$ROOT_DIR/.npmrc"
   if [[ ! -f "$NPM_CONFIG_USERCONFIG" ]]; then
@@ -139,9 +192,13 @@ if has_npm_token; then
   fi
 fi
 
-if ! npm publish ${PUBLISH_ARGS[@]+"${PUBLISH_ARGS[@]}"}; then
+# Publish the workspace package from the Library root. The Library package.json is
+# private (apps/docs only); opus-react itself is public. Publishing from the package
+# subdirectory can still trip EPRIVATE via the private workspace root.
+cd "$ROOT_DIR/Library"
+if ! npm publish -w "$PKG_NAME" ${PUBLISH_ARGS[@]+"${PUBLISH_ARGS[@]}"}; then
   die "Publish failed. The version has been bumped locally to ${NEW_VERSION}; \
-fix the issue and re-run 'npm publish' from ${PKG_DIR}, or re-run this script."
+fix the issue and re-run 'npm publish -w ${PKG_NAME} --access public' from ${ROOT_DIR}/Library, or re-run this script."
 fi
 ok "Published ${PKG_NAME}@${NEW_VERSION}"
 
@@ -188,6 +245,8 @@ console.log('    package.json: ' + prev + ' -> ^${NEW_VERSION}');
     else
       die "Failed to install ${PKG_NAME}@${NEW_VERSION} in the Application."
     fi
+
+    sync_application_from_library
   fi
 fi
 
@@ -221,9 +280,11 @@ else
     fi
   done
 
-  if [[ ${#STAGED[@]} -eq 0 ]]; then
-    warn "No deploy files found to commit."
-  elif git diff --cached --quiet; then
+  if [[ "$SKIP_APP" != true ]]; then
+    stage_application_sync_files
+  fi
+
+  if git diff --cached --quiet; then
     warn "No staged changes — versions may already be committed."
   else
     COMMIT_MSG="chore: release ${PKG_NAME}@${NEW_VERSION}"

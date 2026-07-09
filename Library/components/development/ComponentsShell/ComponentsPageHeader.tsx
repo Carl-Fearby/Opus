@@ -1,18 +1,17 @@
 "use client";
 
 import { useComponentsTheme } from "@/components/development/ComponentsThemeProvider";
+import { DocumentationBreadcrumbs } from "@/components/documentation/DocumentationBreadcrumbs";
 import styles from "./ComponentsShell.module.css";
 
 export function ComponentsPageHeader() {
   const { pageHeader } = useComponentsTheme();
-
-  if (!pageHeader.title) {
-    return null;
-  }
+  const currentLabel = pageHeader.title || undefined;
 
   return (
-    <div className={styles.pageHeader} data-theme="dark">
-      <h1>{pageHeader.title}</h1>
+    <div className={styles.pageHeader}>
+      <DocumentationBreadcrumbs currentLabel={currentLabel} />
+      {pageHeader.title ? <h1>{pageHeader.title}</h1> : null}
       {pageHeader.description ? <p>{pageHeader.description}</p> : null}
     </div>
   );

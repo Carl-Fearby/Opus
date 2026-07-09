@@ -1,0 +1,77 @@
+.root {
+  display: grid;
+  gap: 12px;
+  min-width: 0;
+}
+
+.header {
+  min-width: 0;
+}
+
+.title {
+  margin: 0;
+  color: var(--dashboard-section-text);
+  font-size: 0.875rem;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+}
+
+.list {
+  min-width: 0;
+  overflow: visible;
+}
+
+.item {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  gap: 10px;
+  align-items: center;
+  min-height: 2.125rem;
+  min-width: 0;
+}
+
+.itemAction,
+.itemBody {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 8px;
+  align-items: center;
+  min-width: 0;
+}
+
+.taskCheckbox {
+  position: relative;
+  z-index: 1;
+  align-self: center;
+  column-gap: 0 !important;
+}
+
+.copy {
+  display: grid;
+  gap: 2px;
+  min-width: 0;
+}
+
+.itemTitle {
+  color: var(--dashboard-section-text);
+  font-size: 0.78rem;
+  font-weight: 600;
+  line-height: 1.25;
+}
+
+.itemSubtitle {
+  color: var(--dashboard-section-muted);
+  font-size: 0.68rem;
+  font-weight: 500;
+  line-height: 1.25;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.time {
+  color: var(--dashboard-section-muted);
+  font-size: 0.68rem;
+  font-weight: 600;
+  white-space: nowrap;
+}

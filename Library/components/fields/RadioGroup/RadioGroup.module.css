@@ -10,7 +10,7 @@
 .option {
   display: grid;
   gap: 4px;
-  min-height: var(--opus-control-height);
+  min-height: var(--choice-control-size, var(--opus-control-height));
 }
 
 .choice {
@@ -19,7 +19,7 @@
   align-items: center;
   gap: 10px;
   width: 100%;
-  min-height: var(--opus-control-height);
+  min-height: var(--choice-control-size, var(--opus-control-height));
   color: var(--opus-text);
   font-size: var(--opus-control-font-size);
   cursor: pointer;
@@ -39,8 +39,8 @@
 .visual {
   position: relative;
   flex: 0 0 auto;
-  width: var(--opus-control-height);
-  height: var(--opus-control-height);
+  width: var(--choice-control-size, var(--opus-control-height));
+  height: var(--choice-control-size, var(--opus-control-height));
   border: 1px solid var(--opus-border-strong);
   background: var(--opus-input-bg);
   box-shadow:
@@ -63,7 +63,10 @@
 .visual::after {
   content: "";
   position: absolute;
-  inset: 8px;
+  left: 50%;
+  top: 50%;
+  width: var(--choice-control-dot-size);
+  height: var(--choice-control-dot-size);
   border-radius: inherit;
   background: linear-gradient(
     135deg,
@@ -71,6 +74,7 @@
     color-mix(in srgb, var(--opus-accent) 40%, #00d2ff)
   );
   opacity: 0;
+  transform: translate(-50%, -50%);
   transition: opacity 160ms ease;
 }
 
@@ -85,7 +89,7 @@
 
 .nativeInput:focus-visible + .visual {
   box-shadow:
-    0 0 0 4px color-mix(in srgb, var(--opus-accent) 24%, transparent),
+    0 0 0 var(--choice-control-focus-ring, 4px) color-mix(in srgb, var(--opus-accent) 24%, transparent),
     inset 0 0 0 1px rgba(255, 255, 255, 0.08);
 }
 

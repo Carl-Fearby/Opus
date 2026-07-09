@@ -1729,16 +1729,18 @@ export function ControlPreview({ slug, settings, onSettingsChange }: ControlPrev
     case "note-composer": {
       const s = settings as ControlSettingsBySlug["note-composer"];
       return (
-        <NoteComposer
-          placeholder={s.placeholder}
-          saveButtonLabel={s.saveButtonLabel}
-          showAttach={s.showAttach}
-          showEmoji={s.showEmoji}
-          showMention={s.showMention}
-          value={s.value}
-          onChange={(value) => onSettingsChange({ ...s, value } as ControlSettings)}
-          onSave={() => onSettingsChange({ ...s, value: "" } as ControlSettings)}
-        />
+        <DashboardContentContainer data-component="notes-activity" width="widget">
+          <NoteComposer
+            placeholder={s.placeholder}
+            saveButtonLabel={s.saveButtonLabel}
+            showAttach={s.showAttach}
+            showEmoji={s.showEmoji}
+            showMention={s.showMention}
+            value={s.value}
+            onChange={(value) => onSettingsChange({ ...s, value } as ControlSettings)}
+            onSave={() => onSettingsChange({ ...s, value: "" } as ControlSettings)}
+          />
+        </DashboardContentContainer>
       );
     }
     case "rich-text-field": {
@@ -2849,7 +2851,11 @@ export function ControlPreview({ slug, settings, onSettingsChange }: ControlPrev
     }
     case "content-timeline": {
       const s = settings as ControlSettingsBySlug["content-timeline"];
-      return <ContentTimeline items={demoContentTimelineItems(s.includeStatus)} />;
+      return (
+        <DashboardContentContainer data-component="notes-activity" width="widget">
+          <ContentTimeline items={demoContentTimelineItems(s.includeStatus)} variant="avatar" />
+        </DashboardContentContainer>
+      );
     }
     case "tree-view": {
       const s = settings as ControlSettingsBySlug["tree-view"];

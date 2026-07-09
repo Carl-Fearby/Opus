@@ -10,7 +10,19 @@ function resolveDocumentTheme(): Theme {
     return "dark";
   }
 
-  const themed = document.querySelector('[data-theme="light"], [data-theme="dark"]');
+  const rootTheme = document.documentElement.getAttribute("data-shell-theme");
+  if (rootTheme === "light" || rootTheme === "dark") {
+    return rootTheme;
+  }
+
+  const shellThemed = document.querySelector('[data-shell-theme="light"], [data-shell-theme="dark"]');
+  if (shellThemed) {
+    return shellThemed.getAttribute("data-shell-theme") === "light" ? "light" : "dark";
+  }
+
+  const themed = document.querySelector(
+    '[data-theme="light"]:not([data-preview-root]), [data-theme="dark"]:not([data-preview-root])',
+  );
 
   return themed?.getAttribute("data-theme") === "light" ? "light" : "dark";
 }

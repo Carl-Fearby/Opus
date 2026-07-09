@@ -1,15 +1,15 @@
 "use client";
 
-import { useCallback, useEffect, useState } from "react";
 import { AccentColorPicker, useAccentPreference } from "@/components/AccentColorPicker";
 import { OpusThemeProvider } from "@/components/OpusThemeProvider";
 import { ThemeToggleField } from "@/components/fields";
-import type { Theme } from "@/components/fields/types";
-import { currentVersion, versionLog } from "@/lib/documentation/versionLog";
+import type { VersionEntry } from "@/lib/documentation/versionLog";
+import { libraryVersion } from "@/lib/documentation/libraryVersion";
+import { versionLog } from "@/lib/documentation/versionLog";
 import { DocumentationTopBar } from "@/components/documentation/DocumentationTopBar";
+import { DocumentationBreadcrumbs } from "@/components/documentation/DocumentationBreadcrumbs";
+import { useStoredTheme } from "@/lib/theme/useStoredTheme";
 import styles from "./documentation.module.css";
-
-const THEME_STORAGE_KEY = "opus-components-theme";
 
 function formatReleasedDate(isoDate: string) {
   return new Intl.DateTimeFormat("en-GB", {
@@ -19,29 +19,45 @@ function formatReleasedDate(isoDate: string) {
   }).format(new Date(`${isoDate}T00:00:00`));
 }
 
-export function VersionPage() {
-  const [theme, setThemeState] = useState<Theme>("dark");
-  const { accent, accentStyle, setAccent } = useAccentPreference();
+function formatAlsoPublished(versions: string[]) {
+  if (versions.length === 0) {
+    return "";
+  }
 
-  useEffect(() => {
-    const timeout = window.setTimeout(() => {
-      const stored = window.localStorage.getItem(THEME_STORAGE_KEY);
-      if (stored === "light" || stored === "dark") {
-        setThemeState(stored);
-      }
-    }, 0);
+  if (versions.length === 1) {
+    return `Also published as v${versions[0]}.`;
+  }
 
-    return () => window.clearTimeout(timeout);
-  }, []);
+  return `Also published as v${versions[0]}–v${versions.at(-1)}.`;
+}
 
-  const setTheme = useCallback((next: Theme) => {
-    setThemeState(next);
-    window.localStorage.setItem(THEME_STORAGE_KEY, next);
-  }, []);
+function VersionEntryBody({ entry }: { entry: VersionEntry }) {
+  const changes = entry.changes ?? [];
 
   return (
-    <OpusThemeProvider theme={theme}>
-      <div className={styles.shell} data-theme={theme} style={accentStyle}>
+    <>
+      <p className={styles.versionSummary}>{entry.summary}</p>
+      {changes.length > 1 ? (
+        <ul className={styles.versionChanges}>
+          {changes.map((change) => (
+            <li key={change}>{change}</li>
+          ))}
+        </ul>
+      ) : null}
+      {entry.alsoPublished?.length ? (
+        <p className={styles.versionAlsoPublished}>{formatAlsoPublished(entry.alsoPublished)}</p>
+      ) : null}
+    </>
+  );
+}
+
+export function VersionPage() {
+  const [theme, setTheme] = useStoredTheme();
+  const { accent, accentStyle, setAccent } = useAccentPreference();
+
+  return (
+    <OpusThemeProvider applyToDocument={false} theme={theme}>
+      <div className={styles.shell} style={accentStyle}>
         <DocumentationTopBar
           current="version"
           trailing={
@@ -59,11 +75,12 @@ export function VersionPage() {
           }
         />
         <div className={styles.versionPage}>
+          <DocumentationBreadcrumbs />
           <div className={styles.versionIntro}>
-            <p className={styles.versionEyebrow}>Release history</p>
-            <h1 className={styles.versionTitle}>Version {currentVersion}</h1>
+            <p className={styles.versionEyebrow}>opus-react</p>
+            <h1 className={styles.versionTitle}>v{libraryVersion}</h1>
             <p className={styles.versionDescription}>
-              Opus versions are generated from git commits. Run{" "}
+              Shipped changes grouped by library release. Run{" "}
               <code className={styles.versionInlineCode}>npm run sync-versions</code> after shipping
               changes to refresh this log.
             </p>
@@ -77,11 +94,7 @@ export function VersionPage() {
                     {formatReleasedDate(entry.releasedAt)}
                   </time>
                 </div>
-                <p className={styles.versionSummary}>{entry.summary}</p>
-                <p className={styles.versionCommit}>
-                  Commit{" "}
-                  <code className={styles.versionInlineCode}>{entry.commitShort}</code>
-                </p>
+                <VersionEntryBody entry={entry} />
               </li>
             ))}
           </ol>

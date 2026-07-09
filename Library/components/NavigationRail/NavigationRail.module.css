@@ -1,0 +1,65 @@
+.root {
+  display: grid;
+  gap: 4px;
+  width: 168px;
+  padding: 8px;
+  border: 1px solid var(--opus-border);
+  border-radius: var(--opus-input-radius-large, 6px);
+  background: color-mix(in srgb, var(--opus-panel) 94%, transparent);
+}
+
+.root[data-collapsed="true"] {
+  width: 64px;
+}
+
+.item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-height: 40px;
+  padding: 8px 10px;
+  border-radius: 8px;
+  color: var(--opus-muted);
+  text-decoration: none;
+  font-size: 0.82rem;
+  font-weight: 650;
+}
+
+.root[data-collapsed="true"] .item {
+  justify-content: center;
+  padding-inline: 8px;
+}
+
+.item:hover {
+  color: var(--opus-text);
+  background: color-mix(in srgb, var(--opus-accent) 10%, transparent);
+}
+
+.active {
+  color: var(--opus-accent);
+  background: color-mix(in srgb, var(--opus-accent) 14%, transparent);
+}
+
+.icon {
+  font-size: 1rem;
+  line-height: 1;
+}
+
+.label {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.srOnly {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}

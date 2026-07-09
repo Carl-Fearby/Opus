@@ -5,6 +5,11 @@ const nextConfig: NextConfig = {
   async redirects() {
     return [
       {
+        source: "/documentation/components/lab",
+        destination: "/documentation/components/labs",
+        permanent: true,
+      },
+      {
         source: "/development/components",
         destination: "/documentation/components",
         permanent: true,

@@ -1,7 +1,7 @@
 "use client";
 
 import type { ReactNode } from "react";
-import { useComponentsTheme } from "@/components/development/ComponentsThemeProvider";
+import { PreviewThemeBoundary } from "./PreviewThemeBoundary";
 import styles from "./ControlDetail.module.css";
 
 type PreviewStageProps = {
@@ -9,11 +9,5 @@ type PreviewStageProps = {
 };
 
 export function PreviewStage({ children }: PreviewStageProps) {
-  const { theme } = useComponentsTheme();
-
-  return (
-    <div className={styles.previewStage} data-theme={theme}>
-      {children}
-    </div>
-  );
+  return <PreviewThemeBoundary className={styles.previewStage}>{children}</PreviewThemeBoundary>;
 }

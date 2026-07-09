@@ -2,6 +2,11 @@
   box-sizing: border-box;
 }
 
+html.opus-no-transitions,
+html.opus-no-transitions * {
+  transition: none !important;
+}
+
 html,
 body,
 #__next {
@@ -12,15 +17,28 @@ body,
 }
 
 body {
+  font-family: var(--font-space-grotesk), system-ui, sans-serif;
+}
+
+html[data-shell-theme="dark"] body,
+html:not([data-shell-theme]) body {
   color: #f5f7ff;
   background:
     radial-gradient(circle at top left, rgba(107, 70, 255, 0.28), transparent 28%),
     radial-gradient(circle at top right, rgba(14, 165, 233, 0.2), transparent 25%),
     linear-gradient(180deg, #07081a 0%, #0d1028 35%, #10132b 100%);
-  font-family: var(--font-space-grotesk), system-ui, sans-serif;
 }
 
-body::before {
+html[data-shell-theme="light"] body {
+  color: #17132f;
+  background:
+    radial-gradient(circle at top left, rgba(107, 70, 255, 0.12), transparent 28%),
+    radial-gradient(circle at top right, rgba(14, 165, 233, 0.08), transparent 25%),
+    linear-gradient(180deg, #f9f8ff 0%, #eef1ff 35%, #e7ebff 100%);
+}
+
+html[data-shell-theme="dark"] body::before,
+html:not([data-shell-theme]) body::before {
   content: "";
   position: fixed;
   inset: 0;
@@ -31,6 +49,14 @@ body::before {
   background-size: 44px 44px;
   mask-image: linear-gradient(180deg, rgba(0, 0, 0, 0.65), transparent 90%);
   opacity: 0.45;
+}
+
+html[data-shell-theme="light"] body::before {
+  background:
+    linear-gradient(rgba(107, 70, 255, 0.04) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(107, 70, 255, 0.04) 1px, transparent 1px);
+  mask-image: linear-gradient(180deg, rgba(0, 0, 0, 0.35), transparent 90%);
+  opacity: 0.35;
 }
 
 button,
@@ -47,6 +73,7 @@ textarea {
   outline: none;
 }
 
+[data-shell-theme="light"],
 [data-theme="light"] {
   --opus-control-font-size: 0.86rem;
   --opus-control-height: 28px;
@@ -83,6 +110,7 @@ textarea {
   --opus-menu-glass-border: rgba(126, 103, 255, 0.3);
 }
 
+[data-shell-theme="dark"],
 [data-theme="dark"] {
   --opus-control-font-size: 0.86rem;
   --opus-control-height: 28px;

@@ -1,0 +1,107 @@
+.root {
+  width: 100%;
+  border: 1px solid var(--opus-border);
+  border-radius: var(--opus-input-radius-large, 6px);
+  background: color-mix(in srgb, var(--opus-panel) 92%, transparent);
+  overflow: hidden;
+}
+
+.scroll {
+  overflow: auto;
+}
+
+.header,
+.row {
+  display: grid;
+  min-width: 640px;
+}
+
+.corner,
+.hour,
+.resource {
+  padding: 8px;
+  border-bottom: 1px solid var(--opus-border);
+  border-right: 1px solid color-mix(in srgb, var(--opus-border) 70%, transparent);
+  color: var(--opus-muted);
+  font-size: 0.72rem;
+  font-weight: 700;
+}
+
+.corner,
+.hour {
+  background: color-mix(in srgb, var(--opus-muted) 8%, transparent);
+  text-align: center;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+}
+
+.corner {
+  text-align: left;
+  position: sticky;
+  left: 0;
+  z-index: 1;
+}
+
+.resource {
+  display: flex;
+  align-items: center;
+  color: var(--opus-text);
+  font-size: 0.8rem;
+  position: sticky;
+  left: 0;
+  z-index: 1;
+  background: color-mix(in srgb, var(--opus-panel) 96%, transparent);
+}
+
+.track {
+  position: relative;
+  min-height: 56px;
+  border-bottom: 1px solid var(--opus-border);
+}
+
+.lanes {
+  display: grid;
+  height: 100%;
+  min-height: 56px;
+}
+
+.lane {
+  border-right: 1px solid color-mix(in srgb, var(--opus-border) 55%, transparent);
+}
+
+.block {
+  position: absolute;
+  top: 10px;
+  bottom: 10px;
+  display: flex;
+  align-items: center;
+  padding: 0 8px;
+  border-radius: 6px;
+  border: 1px solid transparent;
+  color: var(--opus-text);
+  font-size: 0.72rem;
+  font-weight: 650;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.block[data-tone="accent"] {
+  background: color-mix(in srgb, var(--opus-accent) 20%, transparent);
+  border-color: color-mix(in srgb, var(--opus-accent) 40%, transparent);
+}
+
+.block[data-tone="success"] {
+  background: color-mix(in srgb, #22c55e 20%, transparent);
+  border-color: color-mix(in srgb, #22c55e 40%, transparent);
+}
+
+.block[data-tone="warning"] {
+  background: color-mix(in srgb, #f59e0b 20%, transparent);
+  border-color: color-mix(in srgb, #f59e0b 40%, transparent);
+}
+
+.block[data-tone="danger"] {
+  background: color-mix(in srgb, #ef4444 20%, transparent);
+  border-color: color-mix(in srgb, #ef4444 40%, transparent);
+}

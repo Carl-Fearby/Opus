@@ -1,29 +1,30 @@
 .tile {
-  position: relative;
+  width: 100%;
+  min-width: 0;
 }
 
-.sparklineRail {
-  position: absolute;
-  top: 18px;
-  right: 20px;
+.topRow {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 7rem);
+  gap: 8px;
+  align-items: center;
+  min-width: 0;
+}
+
+.sparklineSlot {
   display: flex;
-  width: 120px;
-  height: calc(2.5rem + 10px + 0.84rem + 10px + 1.75rem);
   align-items: center;
   justify-content: flex-end;
-  pointer-events: none;
+  width: 100%;
+  min-width: 0;
+  max-width: 7rem;
+  height: 3.5rem;
+  overflow: hidden;
 }
 
-.tile[data-density="compact"] .sparklineRail {
-  top: 14px;
-  right: 16px;
-  height: calc(2.5rem + 8px + 0.84rem + 8px + 1.45rem);
-}
-
-.sparklineReserve {
+.sparklineSlot :global(svg) {
   display: block;
-  width: 120px;
-  height: 72px;
-  flex-shrink: 0;
-  visibility: hidden;
+  width: 100%;
+  max-width: 7rem;
+  height: 100%;
 }

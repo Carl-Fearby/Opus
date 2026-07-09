@@ -1,0 +1,37 @@
+.row {
+  --tile-size: 96px;
+  position: relative;
+  display: grid;
+  grid-auto-flow: column;
+  grid-auto-columns: var(--tile-size);
+  justify-content: start;
+  gap: 12px;
+  width: 100%;
+  min-width: 0;
+  overflow-x: auto;
+  padding: 0;
+  background: transparent;
+  border: 0;
+}
+
+.row[data-layout="fill"] {
+  grid-auto-columns: unset;
+  justify-content: stretch;
+}
+
+.tile {
+  width: var(--tile-size);
+  height: var(--tile-size);
+}
+
+.row[data-layout="fill"] .tile {
+  width: 100%;
+  height: auto;
+  aspect-ratio: 1 / 1;
+}
+
+@media (max-width: 900px) {
+  .row {
+    --tile-size: 92px;
+  }
+}

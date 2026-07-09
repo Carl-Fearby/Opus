@@ -28,6 +28,15 @@
   align-self: start;
 }
 
+.previewLoading {
+  display: grid;
+  place-items: center;
+  min-height: 12rem;
+  color: var(--opus-muted);
+  font-size: 0.84rem;
+  font-weight: 600;
+}
+
 .previewToolbar {
   display: inline-flex;
   align-items: center;
@@ -70,6 +79,7 @@
   border-radius: var(--opus-input-radius);
   background: color-mix(in srgb, var(--opus-panel) 92%, transparent);
   color: var(--opus-text);
+  isolation: isolate;
 }
 
 .previewBody > * {
@@ -117,6 +127,17 @@
   color: var(--opus-muted);
   font-size: 0.78rem;
   line-height: 1.45;
+}
+
+.usageCodeFallback {
+  margin: 0;
+  padding: 10px 12px;
+  border: 1px solid color-mix(in srgb, var(--opus-border) 72%, transparent);
+  border-radius: var(--opus-input-radius);
+  background: color-mix(in srgb, var(--opus-panel) 92%, transparent);
+  color: var(--opus-muted);
+  font-family: var(--font-ibm-plex-mono), monospace;
+  font-size: 0.78rem;
 }
 
 .usageSection {
@@ -215,6 +236,36 @@
   font-size: 0.86rem;
   font-weight: 600;
   line-height: 1.2;
+}
+
+.emojiPickerDemo {
+  display: grid;
+  gap: 10px;
+  justify-items: start;
+}
+
+.emojiPickerSelection {
+  margin: 0;
+  color: var(--opus-muted);
+  font-size: 0.82rem;
+}
+
+.iconBadgeToolbar {
+  display: inline-flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 8px;
+  border: 1px solid color-mix(in srgb, var(--opus-border) 72%, transparent);
+  border-radius: 12px;
+  background: color-mix(in srgb, var(--opus-panel) 88%, transparent);
+}
+
+.iconBadgeDivider {
+  width: 1px;
+  align-self: stretch;
+  margin: 4px 2px;
+  background: color-mix(in srgb, var(--opus-border) 88%, transparent);
 }
 
 .dismissedHint {
@@ -355,29 +406,57 @@
   min-width: 0;
 }
 
+.dashboardPreviewItem > [data-component="dashboard-content-container"],
+.dashboardPreviewItem > [data-component="pipeline-overview"],
+.dashboardPreviewItem > [data-component="deals-over-time"],
+.dashboardPreviewItem > [data-component="upcoming-tasks"],
+.dashboardPreviewItem > [data-component="recent-activity"],
+.dashboardPreviewItem > [data-component="notes-activity"],
+.dashboardPreviewItem > [data-component="top-performing-users"] {
+  width: 100%;
+  min-width: 0;
+}
+
+.dashboardPreviewItem > [data-component="dashboard-content-container"][data-width="widget"],
+.dashboardPreviewItem > [data-component="pipeline-overview"][data-width="widget"],
+.dashboardPreviewItem > [data-component="deals-over-time"][data-width="widget"],
+.dashboardPreviewItem > [data-component="upcoming-tasks"][data-width="widget"],
+.dashboardPreviewItem > [data-component="recent-activity"][data-width="widget"],
+.dashboardPreviewItem > [data-component="notes-activity"][data-width="widget"],
+.dashboardPreviewItem > [data-component="top-performing-users"][data-width="widget"] {
+  flex: 0 1 auto;
+  max-width: 24.5rem;
+}
+
+.dashboardPreviewItem > [data-component="deals-over-time"][data-width="widget"] {
+  max-width: 32rem;
+}
+
+.dashboardPreviewItem > [data-component="notes-activity"][data-width="widget"] {
+  max-width: 28rem;
+}
+
+.dashboardPreviewItem > [data-component="dashboard-content-container"][data-width="full"],
+.dashboardPreviewItem > [data-component="pipeline-overview"][data-width="full"],
+.dashboardPreviewItem > [data-component="deals-over-time"][data-width="full"],
+.dashboardPreviewItem > [data-component="upcoming-tasks"][data-width="full"],
+.dashboardPreviewItem > [data-component="recent-activity"][data-width="full"],
+.dashboardPreviewItem > [data-component="notes-activity"][data-width="full"],
+.dashboardPreviewItem > [data-component="top-performing-users"][data-width="full"],
+.dashboardPreviewItem [data-component="upcoming-tasks"][data-width="full"],
+.dashboardPreviewItem [data-component="recent-activity"][data-width="full"],
+.dashboardPreviewItem [data-component="notes-activity"][data-width="full"],
+.dashboardPreviewItem [data-component="top-performing-users"][data-width="full"] {
+  flex: 1 1 auto;
+  max-width: none;
+}
+
 .dashboardWidgetSlot {
   display: flex;
   align-items: center;
   justify-content: center;
   width: 100%;
   min-width: 0;
-}
-
-.dashboardPreviewItem > .sparklineStandalone {
-  flex: 0 1 auto;
-  align-self: start;
-}
-
-.sparklineStandalone {
-  display: grid;
-  gap: 10px;
-  align-content: start;
-  width: 100%;
-  padding: 18px 20px;
-  border: 1px solid color-mix(in srgb, var(--opus-border) 88%, transparent);
-  border-radius: var(--opus-input-radius-large);
-  background: color-mix(in srgb, var(--opus-panel) 96%, transparent);
-  box-shadow: var(--opus-shadow);
 }
 
 .dashboardWidgetSlot > * {

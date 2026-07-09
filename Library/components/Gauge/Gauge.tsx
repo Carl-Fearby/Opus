@@ -109,7 +109,7 @@ export function Gauge({
   variant = "half",
 }: GaugeProps) {
   return (
-    <section className={styles.widget} data-density={density} data-variant={variant}>
+    <div className={styles.widget} data-density={density} data-variant={variant}>
       <header className={styles.header}>
         <div className={styles.heading}>
           <h3 className={styles.title}>{title}</h3>
@@ -150,6 +150,6 @@ export function Gauge({
           ))}
         </footer>
       ) : null}
-    </section>
+    </div>
   );
 }

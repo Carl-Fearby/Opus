@@ -6,8 +6,7 @@ import type { Theme } from "@/components/fields";
 import { OpusThemeProvider } from "@/components/OpusThemeProvider";
 import { ToastProvider } from "@/components/ToastProvider";
 import { ContextMenuProvider } from "@/components/ContextMenu";
-
-const THEME_STORAGE_KEY = "opus-components-theme";
+import { useStoredPreviewTheme, useStoredTheme } from "@/lib/theme/useStoredTheme";
 
 type ComponentsThemeContextValue = {
   pageHeader: {
@@ -16,8 +15,10 @@ type ComponentsThemeContextValue = {
   };
   accent: string;
   accentStyle: CSSProperties;
+  previewTheme: Theme;
   setPageHeader: (header: { description?: string; title: string }) => void;
   setAccent: (accent: string) => void;
+  setPreviewTheme: (theme: Theme) => void;
   setTheme: (theme: Theme) => void;
   theme: Theme;
 };
@@ -47,25 +48,10 @@ export function useSetComponentsPageHeader(title: string, description?: string) 
 }
 
 export function ComponentsThemeProvider({ children }: { children: ReactNode }) {
-  const [theme, setThemeState] = useState<Theme>("dark");
+  const [theme, setTheme] = useStoredTheme();
+  const [previewTheme, setPreviewTheme] = useStoredPreviewTheme();
   const [pageHeader, setPageHeaderState] = useState(defaultPageHeader);
   const { accent, accentStyle, setAccent } = useAccentPreference();
-
-  useEffect(() => {
-    const timeout = window.setTimeout(() => {
-      const stored = window.localStorage.getItem(THEME_STORAGE_KEY);
-      if (stored === "light" || stored === "dark") {
-        setThemeState(stored);
-      }
-    }, 0);
-
-    return () => window.clearTimeout(timeout);
-  }, []);
-
-  const setTheme = useCallback((next: Theme) => {
-    setThemeState(next);
-    window.localStorage.setItem(THEME_STORAGE_KEY, next);
-  }, []);
 
   const setPageHeader = useCallback((header: { description?: string; title: string }) => {
     const nextDescription = header.description ?? "";
@@ -83,13 +69,23 @@ export function ComponentsThemeProvider({ children }: { children: ReactNode }) {
   }, []);
 
   const contextValue = useMemo(
-    () => ({ accent, accentStyle, pageHeader, setAccent, setPageHeader, setTheme, theme }),
-    [accent, accentStyle, pageHeader, setAccent, setPageHeader, setTheme, theme],
+    () => ({
+      accent,
+      accentStyle,
+      pageHeader,
+      previewTheme,
+      setAccent,
+      setPageHeader,
+      setPreviewTheme,
+      setTheme,
+      theme,
+    }),
+    [accent, accentStyle, pageHeader, previewTheme, setAccent, setPageHeader, setPreviewTheme, setTheme, theme],
   );
 
   return (
     <ComponentsThemeContext.Provider value={contextValue}>
-      <OpusThemeProvider theme={theme}>
+      <OpusThemeProvider applyToDocument={false} theme={theme}>
         <div style={accentStyle}>
           <ToastProvider>
             <ContextMenuProvider>{children}</ContextMenuProvider>

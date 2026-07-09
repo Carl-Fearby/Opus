@@ -1,4 +1,4 @@
-import type { AccordionGroupType, AvatarShape, AvatarSize, BadgeSize, BadgeTone, BadgeVariant, ButtonVariant, ChartPalette, ChartVariant, ChipInputPreset, ChipInputVariant, ChoiceShape, ContentTimelineStatus, DescriptionListLayout, DialogActionSet, DividerOrientation, DividerTone, DrawerSide, DropdownMenuPlacement, FieldMode, ImageThumbnailSize, LabelPosition, ModalSize, ModelThumbnailSize, PopoverPlacement, SidebarSide, SkeletonAnimation, SkeletonVariant, AlertStatus, StatisticTrend, SurfaceDensity, SurfaceTone, TableDensity, TabsOrientation, TabsVariant, Theme, ToastHorizontalPosition, ToastVerticalPosition } from "@/components/fields";
+import type { AccordionGroupType, AvatarShape, AvatarSize, BadgeSize, BadgeTone, BadgeVariant, ButtonVariant, ChartPalette, ChartVariant, ChipInputPreset, ChipInputVariant, ChoiceControlSize, ChoiceShape, ContentTimelineStatus, DescriptionListLayout, DialogActionSet, DividerOrientation, DividerTone, DrawerSide, DropdownMenuPlacement, FieldMode, ImageThumbnailSize, LabelPosition, ModalSize, ModelThumbnailSize, PopoverPlacement, SidebarSide, SkeletonAnimation, SkeletonVariant, AlertStatus, StatisticTrend, SurfaceDensity, SurfaceTone, TableDensity, TabsOrientation, TabsVariant, Theme, ToastHorizontalPosition, ToastVerticalPosition } from "@/components/fields";
 import type {
   SectionColumns,
   SectionGap,
@@ -6,9 +6,15 @@ import type {
   SectionSidebarRatio,
   SectionStackBelow,
 } from "@/lib/layout/sectionLayout";
+import type { BuildersControlSlug } from "./buildersCatalog";
 import type { ChartControlSlug } from "./chartCatalog";
 import type { DashboardControlSlug } from "./dashboardCatalog";
-import type { DashboardPreviewLayout } from "./dashboardPreview";
+import type { DashboardPreviewLayout, DashboardSectionWidth } from "./dashboardPreview";
+import type { LabsControlSlug } from "./labsCatalog";
+import type { SystemControlSlug } from "./systemCatalog";
+import type { LayoutControlSlug } from "./layoutCatalog";
+import type { NavigationExtrasControlSlug } from "./navigationExtrasCatalog";
+import type { TilesControlSlug } from "./tilesCatalog";
 
 export type FontAwesomeIconName = string;
 
@@ -37,6 +43,7 @@ export type ControlSlug =
   | "select"
   | "text-input"
   | "textarea"
+  | "note-composer"
   | "rich-text-field"
   | "filter-select"
   | "multi-select"
@@ -52,6 +59,7 @@ export type ControlSlug =
   | "theme-toggle"
   | "accent-color-picker"
   | "icon-picker"
+  | "emoji-picker"
   | "tooltip"
   | "dialog"
   | "drawer"
@@ -91,9 +99,14 @@ export type ControlSlug =
   | "tree-view"
   | "masonry-grid"
   | "property-grid"
+  | BuildersControlSlug
+  | LayoutControlSlug
+  | NavigationExtrasControlSlug
+  | TilesControlSlug
   | "json-viewer"
   | "statistic"
   | "icon"
+  | "icon-badge"
   | "spinner"
   | "portal"
   | "portal-host"
@@ -111,9 +124,11 @@ export type ControlSlug =
   | "mega-menu"
   | "top-navigation"
   | ChartControlSlug
-  | DashboardControlSlug;
+  | DashboardControlSlug
+  | LabsControlSlug
+  | SystemControlSlug;
 
-export type ComponentCategory = "forms" | "overlays" | "content" | "graphs";
+export type ComponentCategory = "content" | "forms" | "graphs" | "labs" | "overlays" | "system";
 
 export type BaseFieldSettings = {
   mode: FieldMode;
@@ -144,6 +159,15 @@ export type TextareaSettings = BaseFieldSettings & {
   placeholderEnabled: boolean;
 };
 
+export type NoteComposerSettings = {
+  placeholder: string;
+  saveButtonLabel: string;
+  showAttach: boolean;
+  showEmoji: boolean;
+  showMention: boolean;
+  value: string;
+};
+
 export type RichTextFieldSettings = BaseFieldSettings & {
   value: string;
   placeholder: string;
@@ -159,6 +183,7 @@ export type SelectSettings = BaseFieldSettings & {
 export type RadioGroupSettings = BaseFieldSettings & {
   value: string;
   shape: ChoiceShape;
+  size: ChoiceControlSize;
   optionErrorsEnabled: boolean;
   optionError: string;
 };
@@ -176,6 +201,7 @@ export type ChipInputSettings = BaseFieldSettings & {
 export type CheckboxSettings = BaseFieldSettings & {
   checked: boolean;
   shape: ChoiceShape;
+  size: ChoiceControlSize;
 };
 
 export type SwitchSettings = BaseFieldSettings & {
@@ -297,6 +323,15 @@ export type IconPickerSettings = {
   helpEnabled: boolean;
   help: string;
   value: string;
+};
+
+export type EmojiPickerSettings = {
+  closeOnEscape: boolean;
+  closeOnOutside: boolean;
+  lastSelected: string;
+  open: boolean;
+  placement: "bottom" | "top";
+  searchPlaceholder: string;
 };
 
 export type TooltipSettings = {
@@ -528,6 +563,7 @@ export type StatCardSettings = {
   showChange: boolean;
   trend: StatCardTrend;
   value: string;
+  width: DashboardSectionWidth;
 };
 
 export type GaugeFooterItem = {
@@ -553,12 +589,14 @@ export type GaugeSettings = {
   trackTone: GaugeTrackTone;
   valueTone: GaugeValueTone;
   variant: "full" | "half";
+  width: DashboardSectionWidth;
 };
 
 export type SparklineSettings = {
   label: string;
   palette: ChartPalette;
   previewLayout: DashboardPreviewLayout;
+  width: DashboardSectionWidth;
 };
 
 export type ProgressRingSettings = {
@@ -566,6 +604,7 @@ export type ProgressRingSettings = {
   max: number;
   previewLayout: DashboardPreviewLayout;
   value: number;
+  width: DashboardSectionWidth;
 };
 
 export type ProgressBarSettings = {
@@ -573,6 +612,7 @@ export type ProgressBarSettings = {
   max: number;
   previewLayout: DashboardPreviewLayout;
   value: number;
+  width: DashboardSectionWidth;
 };
 
 export type SpeedometerSettings = {
@@ -580,6 +620,7 @@ export type SpeedometerSettings = {
   max: number;
   previewLayout: DashboardPreviewLayout;
   value: number;
+  width: DashboardSectionWidth;
 };
 
 export type MetricTileSettings = {
@@ -588,18 +629,90 @@ export type MetricTileSettings = {
   previewLayout: DashboardPreviewLayout;
   showSparkline: boolean;
   value: string;
+  width: DashboardSectionWidth;
+};
+
+export type PipelineOverviewSettings = {
+  closingValue: string;
+  negotiationValue: string;
+  period: string;
+  previewLayout: DashboardPreviewLayout;
+  proposalValue: string;
+  qualificationValue: string;
+  stageCount: string;
+  title: string;
+  totalLabel: string;
+  totalValue: string;
+  width: DashboardSectionWidth;
+  wonValue: string;
+};
+
+export type DealsOverTimeSettings = {
+  maxValue: string;
+  palette: "blue" | "purple";
+  period: string;
+  previewLayout: DashboardPreviewLayout;
+  title: string;
+  valueLabel: string;
+  width: DashboardSectionWidth;
+};
+
+export type DashboardListWidgetSettings = {
+  footerLabel: string;
+  previewLayout: DashboardPreviewLayout;
+  title: string;
+  width: DashboardSectionWidth;
+};
+
+export type DashboardListColumnsLayout = "row" | "stacked";
+
+export type ErrorPageSettings = {};
+
+export type DashboardListColumnsSettings = {
+  checkboxSize: ChoiceControlSize;
+  layout: DashboardListColumnsLayout;
+  previewLayout: DashboardPreviewLayout;
+  recentActivityFooterLabel: string;
+  recentActivityTitle: string;
+  topPerformingUsersFooterLabel: string;
+  topPerformingUsersTitle: string;
+  upcomingTasksFooterLabel: string;
+  upcomingTasksTitle: string;
+  width: DashboardSectionWidth;
+};
+
+export type NotesActivitySettings = {
+  composerPlaceholder: string;
+  footerLabel: string;
+  previewLayout: DashboardPreviewLayout;
+  saveButtonLabel: string;
+  width: DashboardSectionWidth;
+};
+
+export type UpcomingTasksSettings = DashboardListWidgetSettings & {
+  checkboxSize: ChoiceControlSize;
+};
+export type RecentActivitySettings = DashboardListWidgetSettings;
+export type TopPerformingUsersSettings = DashboardListWidgetSettings;
+
+export type DashboardContentContainerSettings = {
+  previewLayout: DashboardPreviewLayout;
+  title: string;
+  width: DashboardSectionWidth;
 };
 
 export type StatusIndicatorSettings = {
   label: string;
   previewLayout: DashboardPreviewLayout;
   status: "error" | "neutral" | "success" | "warning";
+  width: DashboardSectionWidth;
 };
 
 export type TrendBadgeSettings = {
   direction: StatCardTrend;
   previewLayout: DashboardPreviewLayout;
   value: string;
+  width: DashboardSectionWidth;
 };
 
 export type CarouselSettings = {
@@ -740,6 +853,164 @@ export type PropertyGridSettings = {
   copyable: boolean;
 };
 
+export type StackSettings = {
+  direction: "row" | "column";
+  gap: number;
+  wrap: boolean;
+};
+
+export type ColumnsSettings = {
+  columns: number;
+  direction: "row" | "column";
+  gap: number;
+};
+
+export type GridSettings = {
+  columns: number;
+  gap: number;
+};
+
+export type SplitterSettings = {
+  orientation: "horizontal" | "vertical";
+  defaultSize: number;
+};
+
+export type ResizablePanelSettings = {
+  defaultWidth: number;
+  defaultHeight: number;
+};
+
+export type DockLayoutSettings = {
+  showLeft: boolean;
+  showRight: boolean;
+  showTop: boolean;
+  showBottom: boolean;
+};
+
+export type ScrollAreaSettings = {
+  maxHeight: number;
+  orientation: "vertical" | "horizontal" | "both";
+};
+
+export type AspectRatioSettings = {
+  ratio: "16 / 9" | "4 / 3" | "1 / 1" | "9 / 16";
+};
+
+export type ContainerSettings = {
+  size: "sm" | "md" | "lg" | "xl" | "full";
+  padded: boolean;
+};
+
+export type SpacerSettings = {
+  axis: "x" | "y" | "both";
+  size: number;
+  flex: boolean;
+};
+
+export type BreadcrumbSettings = {
+  separator: string;
+};
+
+export type PaginationSettings = {
+  page: number;
+  pageCount: number;
+};
+
+export type PageHeaderSettings = {
+  showBreadcrumbs: boolean;
+  showActions: boolean;
+};
+
+export type ToolbarSettings = {
+  dense: boolean;
+};
+
+export type BottomNavigationSettings = {
+  value: string;
+};
+
+export type NavigationRailSettings = {
+  collapsed: boolean;
+  value: string;
+};
+
+export type SplitButtonSettings = {
+  variant: ButtonVariant;
+};
+
+export type FabSettings = {
+  extended: boolean;
+  size: "sm" | "md" | "lg";
+};
+
+export type TileSettings = {
+  icon: FontAwesomeIconName;
+  label: string;
+  tone: "purple" | "blue";
+};
+
+export type TilesLayout = "fill" | "fixed";
+
+export type TilesSettings = {
+  layout: TilesLayout;
+};
+
+export type StatTileSettings = {
+  comparison: string;
+  icon: FontAwesomeIconName;
+  label: string;
+  tone: "purple" | "blue";
+  trend: "up" | "down";
+  trendValue: string;
+  value: string;
+};
+
+export type StatTilesSettings = {
+  layout: TilesLayout;
+};
+
+export type PropertyInspectorSettings = {
+  searchable: boolean;
+};
+
+export type FilterBuilderSettings = {
+  seedCount: number;
+};
+
+export type QueryBuilderSettings = {
+  combinator: "and" | "or";
+};
+
+export type RuleBuilderSettings = {
+  showDisabled: boolean;
+};
+
+export type PermissionsMatrixSettings = {
+  compact: boolean;
+};
+
+export type DualListBuilderSettings = {
+  selectedCount: number;
+};
+
+export type SchedulerSettings = {
+  startHour: number;
+  endHour: number;
+};
+
+export type KanbanBoardSettings = {
+  interactive: boolean;
+};
+
+export type CalendarSettings = {
+  showEvents: boolean;
+};
+
+export type ResourcePlannerSettings = {
+  startHour: number;
+  endHour: number;
+};
+
 export type JsonViewerSettings = {
   collapsedDepth: number;
 };
@@ -760,6 +1031,18 @@ export type IconSettings = {
   tone: "default" | "muted" | "accent" | "success" | "warning" | "danger";
   labelEnabled: boolean;
   label: string;
+};
+
+export type IconBadgeSettings = {
+  count: number;
+  iconName: string;
+  label: string;
+  max: number;
+  showToolbarDemo: boolean;
+  showZero: boolean;
+  size: "sm" | "md" | "lg";
+  tone: "default" | "muted" | "accent" | "success" | "warning" | "danger";
+  urgency: "standard" | "danger" | "warning" | "success" | "info";
 };
 
 export type SpinnerSettings = {
@@ -888,6 +1171,7 @@ export type ControlSettingsBySlug = {
   select: SelectSettings;
   "text-input": TextInputSettings;
   textarea: TextareaSettings;
+  "note-composer": NoteComposerSettings;
   "rich-text-field": RichTextFieldSettings;
   "filter-select": FilterSelectSettings;
   "multi-select": MultiSelectSettings;
@@ -903,6 +1187,7 @@ export type ControlSettingsBySlug = {
   "theme-toggle": ThemeToggleSettings;
   "accent-color-picker": AccentColorPickerSettings;
   "icon-picker": IconPickerSettings;
+  "emoji-picker": EmojiPickerSettings;
   tooltip: TooltipSettings;
   dialog: DialogSettings;
   drawer: DrawerSettings;
@@ -942,9 +1227,42 @@ export type ControlSettingsBySlug = {
   "tree-view": TreeViewSettings;
   "masonry-grid": MasonryGridSettings;
   "property-grid": PropertyGridSettings;
+  stack: StackSettings;
+  columns: ColumnsSettings;
+  grid: GridSettings;
+  splitter: SplitterSettings;
+  "resizable-panel": ResizablePanelSettings;
+  "dock-layout": DockLayoutSettings;
+  "scroll-area": ScrollAreaSettings;
+  "aspect-ratio": AspectRatioSettings;
+  container: ContainerSettings;
+  spacer: SpacerSettings;
+  breadcrumb: BreadcrumbSettings;
+  pagination: PaginationSettings;
+  "page-header": PageHeaderSettings;
+  toolbar: ToolbarSettings;
+  "bottom-navigation": BottomNavigationSettings;
+  "navigation-rail": NavigationRailSettings;
+  "split-button": SplitButtonSettings;
+  fab: FabSettings;
+  tile: TileSettings;
+  tiles: TilesSettings;
+  "stat-tile": StatTileSettings;
+  "stat-tiles": StatTilesSettings;
+  "property-inspector": PropertyInspectorSettings;
+  "filter-builder": FilterBuilderSettings;
+  "query-builder": QueryBuilderSettings;
+  "rule-builder": RuleBuilderSettings;
+  "permissions-matrix": PermissionsMatrixSettings;
+  "dual-list-builder": DualListBuilderSettings;
+  scheduler: SchedulerSettings;
+  "kanban-board": KanbanBoardSettings;
+  calendar: CalendarSettings;
+  "resource-planner": ResourcePlannerSettings;
   "json-viewer": JsonViewerSettings;
   statistic: StatisticSettings;
   icon: IconSettings;
+  "icon-badge": IconBadgeSettings;
   spinner: SpinnerSettings;
   portal: PortalSettings;
   "portal-host": PortalHostSettings;
@@ -970,6 +1288,16 @@ export type ControlSettingsBySlug = {
   "progress-bar": ProgressBarSettings;
   speedometer: SpeedometerSettings;
   "metric-tile": MetricTileSettings;
+  "dashboard-content-container": DashboardContentContainerSettings;
+  "pipeline-overview": PipelineOverviewSettings;
+  "deals-over-time": DealsOverTimeSettings;
+  "upcoming-tasks": UpcomingTasksSettings;
+  "recent-activity": RecentActivitySettings;
+  "top-performing-users": TopPerformingUsersSettings;
+  "dashboard-list-columns": DashboardListColumnsSettings;
+  "notes-activity": NotesActivitySettings;
+  "404-page": ErrorPageSettings;
+  "403-page": ErrorPageSettings;
   "status-indicator": StatusIndicatorSettings;
   "trend-badge": TrendBadgeSettings;
 };
@@ -982,6 +1310,8 @@ export type ControlDefinition<S extends ControlSlug = ControlSlug> = {
   category: ComponentCategory;
   componentName: string;
   description: string;
+  /** Catalog slugs for sub-components used in compositions. */
+  compositionParts?: ControlSlug[];
   /** Marks the sidebar nav entry with an orange asterisk for discoverability. */
   isNew?: boolean;
   navigationGroup?: string;
@@ -1014,6 +1344,7 @@ export const formsControlOrder = [
   "select",
   "text-input",
   "textarea",
+  "note-composer",
   "rich-text-field",
   "filter-select",
   "multi-select",

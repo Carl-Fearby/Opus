@@ -18,10 +18,12 @@ export function ComponentsHubOverview() {
     <div className={styles.hubPage}>
       <section className={styles.hubIntro} aria-label="How to browse">
         <p>
-          Use the sidebar to explore <strong>Content</strong>, <strong>Forms</strong>, and{" "}
+          Use the sidebar to explore <strong>Content</strong>, <strong>Forms</strong>,{" "}
+          <strong>Graphs</strong>, <strong>Labs</strong>, <strong>System</strong>, and{" "}
           <strong>Overlays</strong>. Under Content, open groups such as Accordion, Data, Images, and
-          Navigation. The search field above the menu lists matching components in a flat list without
-          the tree.
+          Navigation. Labs holds combined compositions built from multiple components. System holds
+          route-level pages such as 404 and 403. The search field above the menu lists matching
+          components in a flat list without the tree.
         </p>
       </section>
 

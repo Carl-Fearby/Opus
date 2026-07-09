@@ -4,18 +4,10 @@
   gap: 18px;
   min-width: 0;
   width: 100%;
-  padding: 20px;
-  border: 1px solid color-mix(in srgb, var(--opus-border) 88%, transparent);
-  border-radius: var(--opus-input-radius-large);
-  background:
-    radial-gradient(circle at 30% 20%, color-mix(in srgb, var(--opus-accent) 10%, transparent), transparent 34%),
-    color-mix(in srgb, var(--opus-panel) 98%, transparent);
-  box-shadow: var(--opus-shadow);
 }
 
 .widget[data-density="compact"] {
   gap: 14px;
-  padding: 16px;
 }
 
 .header {
@@ -40,13 +32,13 @@
 }
 
 .title {
-  color: var(--opus-text);
+  color: var(--dashboard-section-text, var(--opus-text));
   font-size: 1rem;
   font-weight: 800;
 }
 
 .subtitle {
-  color: var(--opus-muted);
+  color: var(--dashboard-section-muted, var(--opus-muted));
   font-size: 0.8rem;
   font-weight: 650;
   line-height: 1.4;

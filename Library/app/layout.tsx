@@ -2,6 +2,9 @@ import type { Metadata } from "next";
 import { IBM_Plex_Mono, Space_Grotesk } from "next/font/google";
 import "../packages/opus-react/dist/flags.css";
 import "./globals.css";
+import "./preview-theme.css";
+import { ThemeBootstrapScript } from "@/components/theme/ThemeBootstrapScript";
+import { readServerPreviewTheme, readServerTheme } from "@/lib/theme/readServerTheme";
 
 const spaceGrotesk = Space_Grotesk({
   variable: "--font-space-grotesk",
@@ -19,14 +22,25 @@ export const metadata: Metadata = {
   description: "Opus form component library demo",
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const theme = await readServerTheme();
+  const previewTheme = await readServerPreviewTheme();
+
   return (
-    <html lang="en-GB">
+    <html
+      data-preview-theme={previewTheme}
+      data-shell-theme={theme}
+      data-theme={theme}
+      lang="en-GB"
+      style={{ colorScheme: theme }}
+      suppressHydrationWarning
+    >
       <body className={`${spaceGrotesk.variable} ${ibmPlexMono.variable}`}>
+        <ThemeBootstrapScript />
         {children}
       </body>
     </html>

@@ -1,0 +1,46 @@
+.root {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  flex-wrap: wrap;
+}
+
+.button {
+  min-width: 34px;
+  height: 34px;
+  padding: 0 8px;
+  border: 1px solid var(--opus-border);
+  border-radius: 8px;
+  background: transparent;
+  color: var(--opus-text);
+  font: inherit;
+  font-size: 0.82rem;
+  font-weight: 650;
+  cursor: pointer;
+}
+
+.button:hover:not(:disabled) {
+  border-color: color-mix(in srgb, var(--opus-accent) 40%, var(--opus-border));
+}
+
+.button:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.button:focus-visible,
+.active {
+  outline: none;
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--opus-accent) 24%, transparent);
+}
+
+.active {
+  background: color-mix(in srgb, var(--opus-accent) 16%, transparent);
+  border-color: color-mix(in srgb, var(--opus-accent) 45%, var(--opus-border));
+}
+
+.ellipsis {
+  min-width: 24px;
+  text-align: center;
+  color: var(--opus-muted);
+}

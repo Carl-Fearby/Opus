@@ -67,6 +67,9 @@ cpSync(join(libraryDir, "lib", "theme", "useStoredTheme.ts"), join(appDir, "lib"
 cpSync(join(libraryDir, "lib", "documentation", "breadcrumbs.ts"), join(appDir, "lib", "documentation", "breadcrumbs.ts"), {
   force: true,
 });
+cpSync(join(libraryDir, "app", "preview-theme.css"), join(appDir, "app", "preview-theme.css"), {
+  force: true,
+});
 
 syncDirectory(join(libraryDir, "components", "control-detail"), join(appDir, "components", "control-detail"));
 syncDirectory(join(libraryDir, "components", "development"), join(appDir, "components", "development"));

@@ -16,6 +16,7 @@ type RangeFieldProps = {
   mode?: FieldMode;
   step?: number;
   value: number;
+  valueUnit?: string;
   onChange: ChangeEventHandler<HTMLInputElement>;
 };
 
@@ -30,14 +31,16 @@ export function RangeField({
   mode = "stacked",
   step = 1,
   value,
+  valueUnit = "%",
   onChange,
 }: RangeFieldProps) {
   const shellAria = useFieldShellAria();
   const progress = ((value - min) / (max - min)) * 100;
   const rangeStyle = { "--range-progress": `${progress}%` } as CSSProperties;
-  const formattedValue = formatByStep(value, step);
-  const formattedMin = formatByStep(min, step);
-  const formattedMax = formatByStep(max, step);
+  const formatValue = (nextValue: number) => `${formatByStep(nextValue, step)}${valueUnit}`;
+  const formattedValue = formatValue(value);
+  const formattedMin = formatValue(min);
+  const formattedMax = formatValue(max);
 
   return (
     <FieldShell
@@ -55,14 +58,14 @@ export function RangeField({
             <span>{label}</span>
             {help ? <Tooltip content={help} label={`Help for ${label}`} /> : null}
           </label>
-          <span className={styles.value}>{formattedValue}%</span>
+          <span className={styles.value}>{formattedValue}</span>
         </div>
         <input
           aria-invalid={error ? "true" : undefined}
           aria-valuemin={min}
           aria-valuemax={max}
           aria-valuenow={value}
-          aria-valuetext={`${formattedValue}%`}
+          aria-valuetext={formattedValue}
           className={`${styles.slider} ${error ? styles.error : ""}`}
           id={id}
           max={max}
@@ -75,8 +78,8 @@ export function RangeField({
           {...fieldInputAriaProps(shellAria, { invalid: Boolean(error) })}
         />
         <div className={styles.footer}>
-          <span>{formattedMin}%</span>
-          <span>{formattedMax}%</span>
+          <span>{formattedMin}</span>
+          <span>{formattedMax}</span>
         </div>
       </div>
     </FieldShell>

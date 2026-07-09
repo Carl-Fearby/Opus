@@ -1,0 +1,63 @@
+.root {
+  display: grid;
+  grid-template-rows: auto minmax(0, 1fr) auto;
+  width: 100%;
+  min-height: 240px;
+  border: 1px solid var(--opus-border);
+  border-radius: var(--opus-input-radius-large, 6px);
+  overflow: hidden;
+  background: color-mix(in srgb, var(--opus-panel) 92%, transparent);
+}
+
+.top,
+.bottom,
+.left,
+.right,
+.center {
+  min-width: 0;
+  min-height: 0;
+}
+
+.top,
+.bottom {
+  padding: 10px 12px;
+  background: color-mix(in srgb, var(--opus-muted) 8%, transparent);
+  border-bottom: 1px solid var(--opus-border);
+  color: var(--opus-muted);
+  font-size: 0.78rem;
+  font-weight: 650;
+}
+
+.bottom {
+  border-bottom: 0;
+  border-top: 1px solid var(--opus-border);
+}
+
+.middle {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  min-height: 0;
+}
+
+.left,
+.right {
+  width: min(180px, 34vw);
+  padding: 12px;
+  border-right: 1px solid var(--opus-border);
+  background: color-mix(in srgb, var(--opus-muted) 6%, transparent);
+  color: var(--opus-text);
+  font-size: 0.82rem;
+  overflow: auto;
+}
+
+.right {
+  border-right: 0;
+  border-left: 1px solid var(--opus-border);
+}
+
+.center {
+  padding: 12px;
+  overflow: auto;
+  color: var(--opus-text);
+  font-size: 0.85rem;
+}

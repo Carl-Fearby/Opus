@@ -1,0 +1,29 @@
+.root {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  min-height: 48px;
+  padding: 8px 10px;
+  border: 1px solid var(--opus-border);
+  border-radius: var(--opus-input-radius-large, 6px);
+  background: color-mix(in srgb, var(--opus-panel) 92%, transparent);
+}
+
+.root[data-dense="true"] {
+  min-height: 40px;
+  padding: 6px 8px;
+  gap: 6px;
+}
+
+.cluster {
+  display: inline-flex;
+  align-items: center;
+  gap: inherit;
+  min-width: 0;
+  flex-wrap: wrap;
+}
+
+.end {
+  margin-left: auto;
+}

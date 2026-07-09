@@ -1,0 +1,104 @@
+.root {
+  position: relative;
+  display: inline-flex;
+  align-items: stretch;
+  vertical-align: middle;
+}
+
+.main,
+.caret {
+  border: 1px solid transparent;
+  background: var(--opus-accent);
+  color: #fff;
+  font: inherit;
+  font-size: 0.84rem;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.main {
+  padding: 0 14px;
+  min-height: var(--opus-control-height, 36px);
+  border-radius: var(--opus-input-radius, 6px) 0 0 var(--opus-input-radius, 6px);
+}
+
+.caret {
+  width: 34px;
+  border-left: 1px solid color-mix(in srgb, #fff 28%, transparent);
+  border-radius: 0 var(--opus-input-radius, 6px) var(--opus-input-radius, 6px) 0;
+}
+
+.root[data-variant="secondary"] .main,
+.root[data-variant="secondary"] .caret,
+.root[data-variant="light"] .main,
+.root[data-variant="light"] .caret {
+  background: transparent;
+  color: var(--opus-text);
+  border-color: var(--opus-border);
+}
+
+.root[data-variant="secondary"] .caret,
+.root[data-variant="light"] .caret {
+  border-left-color: var(--opus-border);
+}
+
+.root[data-variant="danger"] .main,
+.root[data-variant="danger"] .caret {
+  background: #ef4444;
+}
+
+.root[data-variant="success"] .main,
+.root[data-variant="success"] .caret {
+  background: #22c55e;
+}
+
+.main:disabled,
+.caret:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+.main:focus-visible,
+.caret:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--opus-accent) 24%, transparent);
+  z-index: 1;
+}
+
+.menu {
+  position: absolute;
+  top: calc(100% + 4px);
+  right: 0;
+  z-index: 20;
+  min-width: 100%;
+  margin: 0;
+  padding: 6px;
+  list-style: none;
+  border: 1px solid var(--opus-border);
+  border-radius: 8px;
+  background: var(--opus-panel, #fff);
+  box-shadow: 0 10px 28px color-mix(in srgb, #000 16%, transparent);
+}
+
+.menuItem {
+  display: block;
+  width: 100%;
+  padding: 8px 10px;
+  border: 0;
+  border-radius: 6px;
+  background: transparent;
+  color: var(--opus-text);
+  font: inherit;
+  font-size: 0.82rem;
+  text-align: left;
+  cursor: pointer;
+}
+
+.menuItem:hover:not(:disabled) {
+  background: color-mix(in srgb, var(--opus-accent) 12%, transparent);
+}
+
+.menuItem:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}

@@ -1,3 +1,4 @@
+[data-shell-theme="light"],
 [data-theme="light"] {
   --opus-control-font-size: 0.86rem;
   --opus-control-height: 28px;
@@ -34,6 +35,7 @@
   --opus-menu-glass-border: rgba(126, 103, 255, 0.3);
 }
 
+[data-shell-theme="dark"],
 [data-theme="dark"] {
   --opus-control-font-size: 0.86rem;
   --opus-control-height: 28px;

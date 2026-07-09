@@ -1,0 +1,211 @@
+.root {
+  display: grid;
+  gap: 10px;
+  width: 100%;
+  min-width: 0;
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  min-width: 0;
+}
+
+.title {
+  margin: 0;
+  min-width: 0;
+  color: var(--dashboard-section-text);
+  font-size: 0.875rem;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+}
+
+.period {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  min-width: 8.5rem;
+  flex: 0 0 auto;
+}
+
+.period::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  right: 12px;
+  width: 7px;
+  height: 7px;
+  border-right: 1.5px solid var(--dashboard-section-muted);
+  border-bottom: 1.5px solid var(--dashboard-section-muted);
+  transform: translateY(-65%) rotate(45deg);
+  pointer-events: none;
+}
+
+.periodLabel {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.periodSelect {
+  width: 100%;
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  padding: 7px 30px 7px 12px;
+  border: 1px solid color-mix(in srgb, var(--dashboard-section-text) 16%, transparent);
+  border-radius: 8px;
+  background: color-mix(in srgb, var(--dashboard-section-panel) 92%, transparent);
+  color: var(--dashboard-section-text);
+  font: inherit;
+  font-size: 0.72rem;
+  font-weight: 600;
+  line-height: 1.2;
+  cursor: pointer;
+}
+
+.periodSelect:focus-visible {
+  outline: 2px solid color-mix(in srgb, #38bdf8 42%, transparent);
+  outline-offset: 2px;
+}
+
+.periodSelect::-ms-expand {
+  display: none;
+}
+
+.chartWrap {
+  position: relative;
+  width: 100%;
+  min-width: 0;
+}
+
+.chart {
+  display: block;
+  height: 188px;
+  max-width: 100%;
+  overflow: visible;
+}
+
+.gridLine {
+  stroke: color-mix(in srgb, #94a3b8 18%, transparent);
+  stroke-width: 1;
+}
+
+.axisLabel {
+  fill: color-mix(in srgb, var(--dashboard-section-muted) 88%, #94a3b8 12%);
+  font-size: 10.5px;
+  font-weight: 500;
+}
+
+.lineGlowSoft {
+  fill: none;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-width: 4;
+  opacity: 0.55;
+}
+
+.lineGlowMid {
+  fill: none;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-width: 2.25;
+  opacity: 0.42;
+}
+
+.line {
+  fill: none;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-width: 1.15;
+}
+
+.area {
+  stroke: none;
+}
+
+.pointGlow {
+  opacity: 0.95;
+  transition: opacity 120ms ease;
+}
+
+.pointGlow[data-active="true"] {
+  opacity: 1;
+}
+
+.pointRing {
+  fill: #070d18;
+  stroke-width: 1.5;
+  transition: r 120ms ease, stroke-width 120ms ease, stroke 120ms ease;
+}
+
+.pointRing[data-active="true"] {
+  stroke-width: 1.75;
+}
+
+.pointCore {
+  transition: r 120ms ease, fill 120ms ease;
+}
+
+.pointSolid {
+  transition: fill 120ms ease;
+}
+
+.hitTarget {
+  fill: transparent;
+  stroke: none;
+  cursor: pointer;
+}
+
+.tooltip {
+  position: absolute;
+  left: var(--tooltip-x);
+  top: var(--tooltip-y);
+  z-index: 2;
+  display: grid;
+  gap: 2px;
+  min-width: 5.5rem;
+  padding: 8px 10px;
+  border: 1px solid color-mix(in srgb, var(--tooltip-accent, #9b8cff) 22%, transparent);
+  border-radius: 10px;
+  background: color-mix(in srgb, #111827 94%, var(--tooltip-accent, #312e81) 6%);
+  box-shadow:
+    0 10px 24px color-mix(in srgb, #020617 55%, transparent),
+    0 0 0 1px color-mix(in srgb, var(--tooltip-accent, #7c5cff) 12%, transparent);
+  pointer-events: none;
+  transform: translate(-50%, calc(-100% - 14px));
+}
+
+.tooltip::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  bottom: -6px;
+  width: 10px;
+  height: 10px;
+  border-right: 1px solid color-mix(in srgb, var(--tooltip-accent, #9b8cff) 22%, transparent);
+  border-bottom: 1px solid color-mix(in srgb, var(--tooltip-accent, #9b8cff) 22%, transparent);
+  background: inherit;
+  transform: translateX(-50%) rotate(45deg);
+}
+
+.tooltipDate {
+  color: color-mix(in srgb, var(--dashboard-section-muted) 90%, var(--tooltip-accent, #c4b5fd) 10%);
+  font-size: 0.68rem;
+  font-weight: 500;
+}
+
+.tooltipValue {
+  color: var(--dashboard-section-text);
+  font-size: 0.82rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+}

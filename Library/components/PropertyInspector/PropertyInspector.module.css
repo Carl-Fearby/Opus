@@ -1,0 +1,106 @@
+.root {
+  width: 100%;
+  border: 1px solid var(--opus-border);
+  border-radius: var(--opus-input-radius-large, 6px);
+  overflow: hidden;
+  background: color-mix(in srgb, var(--opus-panel) 92%, transparent);
+}
+
+.searchRow {
+  padding: 10px 12px;
+  border-bottom: 1px solid var(--opus-border);
+}
+
+.search,
+.input,
+.select {
+  width: 100%;
+  min-width: 0;
+  padding: 7px 10px;
+  border: 1px solid var(--opus-border);
+  border-radius: 6px;
+  background: color-mix(in srgb, var(--opus-panel) 88%, transparent);
+  color: var(--opus-text);
+  font: inherit;
+  font-size: 0.82rem;
+}
+
+.search:focus-visible,
+.input:focus-visible,
+.select:focus-visible {
+  outline: none;
+  border-color: color-mix(in srgb, var(--opus-accent) 55%, var(--opus-border));
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--opus-accent) 22%, transparent);
+}
+
+.groupHeader {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+  padding: 8px 12px;
+  border: 0;
+  border-bottom: 1px solid var(--opus-border);
+  background: color-mix(in srgb, var(--opus-muted) 10%, transparent);
+  color: var(--opus-muted);
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  cursor: pointer;
+  text-align: left;
+}
+
+.groupHeader:hover {
+  color: var(--opus-text);
+}
+
+.group:last-child .rows .row:last-child {
+  border-bottom: 0;
+}
+
+.row {
+  display: grid;
+  grid-template-columns: minmax(7rem, 11rem) minmax(0, 1fr);
+  border-bottom: 1px solid var(--opus-border);
+}
+
+.label {
+  padding: 9px 12px;
+  color: var(--opus-muted);
+  font-size: 0.78rem;
+  font-weight: 650;
+}
+
+.valueCell {
+  display: flex;
+  align-items: center;
+  min-width: 0;
+  padding: 6px 10px;
+}
+
+.value {
+  min-width: 0;
+  overflow: hidden;
+  color: var(--opus-text);
+  font-family: var(--font-ibm-plex-mono), ui-monospace, monospace;
+  font-size: 0.8rem;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.checkbox {
+  width: 16px;
+  height: 16px;
+  accent-color: var(--opus-accent);
+}
+
+@media (max-width: 560px) {
+  .row {
+    grid-template-columns: 1fr;
+  }
+
+  .label {
+    padding-bottom: 2px;
+  }
+}

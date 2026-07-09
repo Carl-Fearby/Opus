@@ -1,0 +1,41 @@
+.banner {
+  position: fixed;
+  top: 12px;
+  left: 50%;
+  z-index: 1200;
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  max-width: min(92vw, 34rem);
+  padding: 10px 12px 10px 14px;
+  border: 1px solid color-mix(in srgb, var(--opus-accent) 42%, transparent);
+  border-radius: 12px;
+  background: color-mix(in srgb, var(--opus-panel) 92%, #0b1024);
+  box-shadow: 0 10px 30px color-mix(in srgb, #020617 28%, transparent);
+  transform: translateX(-50%);
+}
+
+.message {
+  margin: 0;
+  color: var(--opus-text);
+  font-size: 0.84rem;
+  line-height: 1.35;
+}
+
+.refreshButton {
+  flex-shrink: 0;
+  padding: 6px 12px;
+  border: 0;
+  border-radius: 8px;
+  background: var(--opus-accent);
+  color: var(--opus-accent-contrast, #fff);
+  font-size: 0.78rem;
+  font-weight: 650;
+  cursor: pointer;
+}
+
+.refreshButton:hover,
+.refreshButton:focus-visible {
+  filter: brightness(1.05);
+  outline: none;
+}

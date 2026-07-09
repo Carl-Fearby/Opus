@@ -14,6 +14,12 @@
     color 220ms ease;
 }
 
+.shell[data-shell-theme="light"],
+html[data-shell-theme="light"] .shell {
+  --opus-page-bg: linear-gradient(180deg, #f9f8ff 0%, #e7ebff 100%);
+  color: #17132f;
+}
+
 .body {
   display: grid;
   grid-template-columns: 240px minmax(0, 1fr);
@@ -89,6 +95,19 @@
   transition: background 220ms ease;
 }
 
+.settingsSidebar[data-shell-theme="light"],
+html[data-shell-theme="light"] .settingsSidebar {
+  --opus-panel: rgba(250, 249, 255, 0.98);
+  --opus-border: rgba(88, 72, 168, 0.16);
+  --opus-border-strong: rgba(88, 72, 168, 0.28);
+  --opus-text: #17132f;
+  --opus-muted: rgba(38, 32, 72, 0.68);
+  --opus-input-bg: rgba(255, 255, 255, 0.92);
+  --opus-input-fill: rgba(248, 247, 255, 0.96);
+  --opus-shadow: 0 28px 110px rgba(38, 32, 72, 0.12);
+  color: var(--opus-text);
+}
+
 .settingsSidebarHeader {
   flex-shrink: 0;
   padding: 18px 14px 12px;
@@ -109,6 +128,28 @@
   min-height: 0;
   overflow-y: auto;
   padding: 12px 14px 18px;
+}
+
+.settingsCompositionLinks {
+  display: grid;
+  gap: 12px;
+  margin-top: 16px;
+  padding-top: 16px;
+  border-top: 1px solid color-mix(in srgb, var(--opus-border) 88%, transparent);
+}
+
+.settingsLoading,
+.catalogLoading {
+  color: var(--opus-muted);
+  font-size: 0.78rem;
+  font-weight: 600;
+}
+
+.catalogLoading {
+  display: grid;
+  place-items: start;
+  min-height: 12rem;
+  padding: 8px 0;
 }
 
 .settingsGrid {
@@ -146,7 +187,10 @@
   min-height: 0;
   overflow: hidden;
   background: color-mix(in srgb, var(--opus-panel) 90%, transparent);
-  transition: background 220ms ease;
+  color: var(--opus-text);
+  transition:
+    background 220ms ease,
+    color 220ms ease;
 }
 
 .sidebarSearch {
@@ -248,6 +292,14 @@
   color: var(--opus-text);
 }
 
+.pageHeader[data-shell-theme="light"],
+html[data-shell-theme="light"] .pageHeader {
+  --opus-border: rgba(88, 72, 168, 0.16);
+  --opus-text: #17132f;
+  --opus-muted: rgba(38, 32, 72, 0.68);
+  background: color-mix(in srgb, rgba(250, 249, 255, 0.95) 90%, transparent);
+}
+
 .pageHeader h1 {
   margin: 0;
   color: var(--opus-accent);
@@ -278,6 +330,14 @@
   transition:
     background 220ms ease,
     color 220ms ease;
+}
+
+.shell[data-shell-theme="light"] .content,
+html[data-shell-theme="light"] .shell .content {
+  --opus-page-bg: linear-gradient(180deg, #f9f8ff 0%, #e7ebff 100%);
+  --opus-border: rgba(88, 72, 168, 0.16);
+  --opus-text: #17132f;
+  --opus-muted: rgba(38, 32, 72, 0.68);
 }
 
 .contentBody {
@@ -326,6 +386,13 @@
 .navGroup {
   display: grid;
   gap: 4px;
+}
+
+.sidebarDivider {
+  height: 1px;
+  margin: 10px 0;
+  border: 0;
+  background: color-mix(in srgb, var(--opus-border) 88%, transparent);
 }
 
 .navGroupHeader {

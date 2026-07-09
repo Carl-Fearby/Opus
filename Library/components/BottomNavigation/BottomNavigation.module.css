@@ -1,0 +1,48 @@
+.root {
+  display: grid;
+  grid-auto-flow: column;
+  grid-auto-columns: 1fr;
+  width: 100%;
+  border: 1px solid var(--opus-border);
+  border-radius: var(--opus-input-radius-large, 6px);
+  background: color-mix(in srgb, var(--opus-panel) 94%, transparent);
+  overflow: hidden;
+}
+
+.item {
+  display: grid;
+  justify-items: center;
+  gap: 4px;
+  padding: 10px 8px;
+  color: var(--opus-muted);
+  text-decoration: none;
+  font-size: 0.72rem;
+  font-weight: 700;
+  border-right: 1px solid color-mix(in srgb, var(--opus-border) 70%, transparent);
+}
+
+.item:last-child {
+  border-right: 0;
+}
+
+.item:hover {
+  color: var(--opus-text);
+  background: color-mix(in srgb, var(--opus-accent) 8%, transparent);
+}
+
+.active {
+  color: var(--opus-accent);
+  background: color-mix(in srgb, var(--opus-accent) 12%, transparent);
+}
+
+.icon {
+  font-size: 1rem;
+  line-height: 1;
+}
+
+.label {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}

@@ -1,0 +1,51 @@
+.root {
+  position: relative;
+  min-width: 0;
+  border: 1px solid var(--opus-border);
+  border-radius: var(--opus-input-radius-large, 6px);
+  background: color-mix(in srgb, var(--opus-panel) 92%, transparent);
+  overflow: hidden;
+}
+
+.body {
+  height: 100%;
+  overflow: auto;
+  padding: 12px;
+}
+
+.handle {
+  position: absolute;
+  right: 4px;
+  bottom: 4px;
+  width: 14px;
+  height: 14px;
+  padding: 0;
+  border: 0;
+  border-radius: 3px;
+  background:
+    linear-gradient(
+      135deg,
+      transparent 45%,
+      color-mix(in srgb, var(--opus-muted) 55%, transparent) 45%,
+      color-mix(in srgb, var(--opus-muted) 55%, transparent) 55%,
+      transparent 55%
+    ),
+    linear-gradient(
+      135deg,
+      transparent 65%,
+      color-mix(in srgb, var(--opus-muted) 55%, transparent) 65%,
+      color-mix(in srgb, var(--opus-muted) 55%, transparent) 75%,
+      transparent 75%
+    );
+  cursor: nwse-resize;
+}
+
+.handle:hover,
+.handle:focus-visible {
+  background-color: color-mix(in srgb, var(--opus-accent) 18%, transparent);
+}
+
+.handle:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--opus-accent) 24%, transparent);
+}

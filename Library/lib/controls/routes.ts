@@ -10,7 +10,9 @@ export const CATEGORY_PATHS: Record<ComponentCategory, string> = {
   content: `${COMPONENTS_BASE_PATH}/content`,
   forms: `${COMPONENTS_BASE_PATH}/forms`,
   graphs: `${COMPONENTS_BASE_PATH}/graphs`,
+  labs: `${COMPONENTS_BASE_PATH}/labs`,
   overlays: `${COMPONENTS_BASE_PATH}/overlays`,
+  system: `${COMPONENTS_BASE_PATH}/system`,
 };
 
 export function componentPath(slug?: string) {
@@ -41,6 +43,14 @@ export function getCategoryFromPath(pathname: string): ComponentCategory | null 
 
   if (pathname === CATEGORY_PATHS.graphs) {
     return "graphs";
+  }
+
+  if (pathname === CATEGORY_PATHS.labs) {
+    return "labs";
+  }
+
+  if (pathname === CATEGORY_PATHS.system) {
+    return "system";
   }
 
   if (pathname === CATEGORY_PATHS.overlays) {

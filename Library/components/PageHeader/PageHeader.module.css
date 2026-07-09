@@ -1,0 +1,57 @@
+.root {
+  display: grid;
+  gap: 10px;
+  width: 100%;
+  padding-bottom: 12px;
+  border-bottom: 1px solid var(--opus-border);
+}
+
+.breadcrumbs {
+  min-width: 0;
+}
+
+.row {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.copy {
+  min-width: 0;
+  display: grid;
+  gap: 4px;
+}
+
+.eyebrow {
+  margin: 0;
+  color: var(--opus-muted);
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.title {
+  margin: 0;
+  color: var(--opus-text);
+  font-size: 1.35rem;
+  font-weight: 750;
+  line-height: 1.2;
+}
+
+.description {
+  margin: 0;
+  color: var(--opus-muted);
+  font-size: 0.88rem;
+  line-height: 1.45;
+  max-width: 46rem;
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  align-items: center;
+}

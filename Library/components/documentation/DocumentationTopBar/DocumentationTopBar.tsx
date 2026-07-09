@@ -5,6 +5,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import type { ReactNode } from "react";
 import { DOCUMENTATION_BASE_PATH } from "@/lib/documentation/routes";
+import { libraryVersion } from "@/lib/documentation/libraryVersion";
 import styles from "./TopBar.module.css";
 
 type DocumentationNavProps = {
@@ -66,7 +67,7 @@ type DocumentationTopBarProps = {
 
 export function DocumentationTopBar({ current, trailing }: DocumentationTopBarProps) {
   return (
-    <header className={styles.topBar}>
+    <header className={styles.topBar} data-shell-theme="dark">
       <div className={styles.topBarRow}>
         <div className={styles.topBarStart}>
           <Link className={styles.logoLink} href="/">
@@ -81,11 +82,16 @@ export function DocumentationTopBar({ current, trailing }: DocumentationTopBarPr
           </Link>
           <DocumentationNav current={current} />
         </div>
-        {trailing ? (
-          <div className={styles.topBarTrailing}>
-            {trailing}
-          </div>
-        ) : null}
+        <div className={styles.topBarTrailing}>
+          <Link
+            className={styles.versionBadge}
+            href="/documentation/version"
+            title="View library version history"
+          >
+            opus-react v{libraryVersion}
+          </Link>
+          {trailing}
+        </div>
       </div>
     </header>
   );

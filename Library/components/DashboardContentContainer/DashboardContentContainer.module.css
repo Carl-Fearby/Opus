@@ -1,0 +1,86 @@
+.container {
+  --dashboard-section-bg: #070d18;
+  --dashboard-section-border: color-mix(in srgb, #60a5fa 20%, transparent);
+  --dashboard-section-text: #f8fafc;
+  --dashboard-section-muted: color-mix(in srgb, #f8fafc 56%, transparent);
+  --dashboard-section-panel: color-mix(in srgb, #0f172a 90%, #1e293b 10%);
+  display: grid;
+  gap: 14px;
+  max-width: 100%;
+  min-width: 0;
+  padding: 14px 16px 12px;
+  border: 1px solid var(--dashboard-section-border);
+  border-radius: 14px;
+  background:
+    radial-gradient(85% 65% at 14% 0%, color-mix(in srgb, #9333ea 16%, transparent), transparent 58%),
+    radial-gradient(72% 58% at 100% 100%, color-mix(in srgb, #0284c7 12%, transparent), transparent 62%),
+    linear-gradient(180deg, color-mix(in srgb, var(--dashboard-section-bg) 94%, #ffffff 3%), var(--dashboard-section-bg));
+  box-shadow:
+    inset 0 1px 0 color-mix(in srgb, #ffffff 6%, transparent),
+    0 12px 28px color-mix(in srgb, #020617 68%, transparent);
+  color: var(--dashboard-section-text);
+  box-sizing: border-box;
+  flex: 0 0 auto;
+  overflow: hidden;
+}
+
+.container > * {
+  min-width: 0;
+}
+
+.container[data-width="widget"] {
+  width: 100%;
+  max-width: 24.5rem;
+}
+
+.container[data-component="deals-over-time"][data-width="widget"] {
+  max-width: 32rem;
+}
+
+.container[data-component="notes-activity"][data-width="widget"] {
+  max-width: 28rem;
+}
+
+.container[data-width="full"] {
+  width: 100%;
+  max-width: none;
+  flex: 1 1 auto;
+  align-self: stretch;
+}
+
+:global([data-preview-root][data-theme="light"]) .container,
+:global([data-theme="light"]) .container {
+  --dashboard-section-bg: #f8fbff;
+  --dashboard-section-border: color-mix(in srgb, #60a5fa 28%, transparent);
+  --dashboard-section-text: #0f172a;
+  --dashboard-section-muted: color-mix(in srgb, #0f172a 58%, transparent);
+  --dashboard-section-panel: #ffffff;
+  box-shadow:
+    inset 0 1px 0 color-mix(in srgb, #ffffff 90%, transparent),
+    0 8px 20px color-mix(in srgb, #0284c7 10%, transparent);
+}
+
+:global([data-preview-root][data-theme="dark"]) .container {
+  --dashboard-section-bg: #070d18;
+  --dashboard-section-border: color-mix(in srgb, #60a5fa 20%, transparent);
+  --dashboard-section-text: #f8fafc;
+  --dashboard-section-muted: color-mix(in srgb, #f8fafc 56%, transparent);
+  --dashboard-section-panel: color-mix(in srgb, #0f172a 90%, #1e293b 10%);
+  box-shadow:
+    inset 0 1px 0 color-mix(in srgb, #ffffff 6%, transparent),
+    0 12px 28px color-mix(in srgb, #020617 68%, transparent);
+}
+
+.title {
+  margin: 0;
+  color: var(--dashboard-section-text);
+  font-size: 0.875rem;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+}
+
+@media (max-width: 720px) {
+  .container[data-width="widget"] {
+    width: 100%;
+  }
+}

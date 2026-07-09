@@ -1,0 +1,117 @@
+.root {
+  width: 100%;
+  border: 1px solid var(--opus-border);
+  border-radius: var(--opus-input-radius-large, 6px);
+  background: color-mix(in srgb, var(--opus-panel) 92%, transparent);
+  overflow: hidden;
+}
+
+.toolbar {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 12px;
+  border-bottom: 1px solid var(--opus-border);
+}
+
+.label {
+  text-align: center;
+  color: var(--opus-text);
+  font-size: 0.9rem;
+  font-weight: 700;
+}
+
+.nav {
+  width: 32px;
+  height: 32px;
+  border: 1px solid var(--opus-border);
+  border-radius: 8px;
+  background: transparent;
+  color: var(--opus-muted);
+  font-size: 1.1rem;
+  cursor: pointer;
+}
+
+.nav:hover {
+  color: var(--opus-text);
+  border-color: color-mix(in srgb, var(--opus-accent) 40%, var(--opus-border));
+}
+
+.weekdays,
+.grid {
+  display: grid;
+  grid-template-columns: repeat(7, minmax(0, 1fr));
+}
+
+.weekday {
+  padding: 8px 4px;
+  color: var(--opus-muted);
+  font-size: 0.68rem;
+  font-weight: 700;
+  text-align: center;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.day,
+.empty {
+  min-height: 64px;
+  border-top: 1px solid color-mix(in srgb, var(--opus-border) 70%, transparent);
+  border-right: 1px solid color-mix(in srgb, var(--opus-border) 70%, transparent);
+}
+
+.day {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 6px;
+  padding: 8px;
+  background: transparent;
+  color: var(--opus-text);
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+
+.day:hover {
+  background: color-mix(in srgb, var(--opus-accent) 8%, transparent);
+}
+
+.today {
+  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--opus-accent) 45%, transparent);
+}
+
+.selected {
+  background: color-mix(in srgb, var(--opus-accent) 14%, transparent);
+}
+
+.dayNumber {
+  font-size: 0.78rem;
+  font-weight: 650;
+}
+
+.dots {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+}
+
+.dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 999px;
+  background: var(--opus-accent);
+}
+
+.dot[data-tone="success"] {
+  background: #22c55e;
+}
+
+.dot[data-tone="warning"] {
+  background: #f59e0b;
+}
+
+.dot[data-tone="danger"] {
+  background: #ef4444;
+}

@@ -1,0 +1,108 @@
+.root {
+  --note-composer-text: var(--dashboard-section-text, var(--opus-text));
+  --note-composer-muted: var(--dashboard-section-muted, var(--opus-muted));
+  --note-composer-panel: var(--dashboard-section-panel, var(--opus-input-bg));
+  --note-composer-border: var(
+    --dashboard-section-border,
+    color-mix(in srgb, var(--opus-border) 72%, transparent)
+  );
+  display: grid;
+  gap: 10px;
+  width: 100%;
+  min-width: 0;
+  padding: 12px;
+  border: 1px solid color-mix(in srgb, var(--note-composer-text) 12%, transparent);
+  border-radius: 12px;
+  background: color-mix(in srgb, var(--note-composer-panel) 88%, transparent);
+  box-sizing: border-box;
+}
+
+.textarea {
+  width: 100%;
+  min-height: 4.5rem;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: var(--note-composer-text);
+  font: inherit;
+  font-size: 0.78rem;
+  line-height: 1.45;
+  resize: vertical;
+}
+
+.textarea::placeholder {
+  color: color-mix(in srgb, var(--note-composer-muted) 72%, transparent);
+}
+
+.textarea:focus {
+  outline: none;
+}
+
+.footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.tools {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.toolButton {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.75rem;
+  height: 1.75rem;
+  padding: 0;
+  border: 0;
+  border-radius: 8px;
+  background: transparent;
+  color: var(--note-composer-muted);
+  font-size: 0.78rem;
+  cursor: pointer;
+}
+
+.toolButton:hover,
+.toolButton:focus-visible {
+  color: var(--note-composer-text);
+  background: color-mix(in srgb, var(--note-composer-text) 6%, transparent);
+  outline: none;
+}
+
+.saveButton {
+  min-height: 2rem;
+  padding: 0 14px;
+  border: 0;
+  border-radius: 8px;
+  background: #7c3aed;
+  color: #f8fafc;
+  font: inherit;
+  font-size: 0.72rem;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.saveButton:hover {
+  background: #6d28d9;
+}
+
+.saveButton:focus-visible {
+  outline: 2px solid color-mix(in srgb, #a855f7 55%, transparent);
+  outline-offset: 2px;
+}
+
+.saveButton:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+.toolButton :global(svg) {
+  display: block;
+  width: 1em;
+  height: 1em;
+}

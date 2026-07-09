@@ -10,6 +10,10 @@ export type { AccentColor } from "../../../components/AccentColorPicker";
 
 export { CatalogIcon } from "../../../components/CatalogIcon";
 export { IconPicker } from "../../../components/IconPicker";
+export { IconBadge } from "../../../components/IconBadge";
+export type { IconBadgeProps, IconBadgeUrgency } from "../../../components/IconBadge";
+export { EmojiPicker } from "../../../components/EmojiPicker";
+export type { EmojiPickerPlacement, EmojiPickerProps } from "../../../components/EmojiPicker";
 
 export { cartesianSpecializedVariants } from "../../../components/Chart/SpecializedCharts";
 export { worldMapRegionIds } from "../../../components/Chart/worldMapRegions";

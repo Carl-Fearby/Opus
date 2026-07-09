@@ -46,20 +46,23 @@ export const demoDescriptionListItems: DescriptionListItem[] = [
 
 export const demoContentTimelineItems = (includeStatus: boolean): ContentTimelineItem[] => [
   {
-    title: "Release published",
-    description: "opus-react 0.2.20 is available on npm.",
+    avatarName: "Alex Morgan",
+    title: "Alex Morgan",
+    description: "Release published — opus-react 0.2.20 is available on npm.",
     time: "09:40",
     status: includeStatus ? "success" : "default",
   },
   {
-    title: "Review requested",
-    description: "Design QA on the content component batch.",
+    avatarName: "Jamie Lee",
+    title: "Jamie Lee",
+    description: "Review requested for the content component batch.",
     time: "11:15",
     status: includeStatus ? "warning" : "default",
   },
   {
-    title: "Issue opened",
-    description: "JSON Viewer expand depth defaults to 1.",
+    avatarName: "Sam Patel",
+    title: "Sam Patel",
+    description: "Issue opened for JSON Viewer expand depth defaults.",
     time: "13:02",
     status: includeStatus ? "muted" : "default",
   },

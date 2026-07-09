@@ -3,17 +3,15 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import type { ReactNode } from "react";
-import { useCallback, useEffect, useState } from "react";
 import { AccentColorPicker, useAccentPreference } from "opus-react";
 import { ThemeToggleField } from "opus-react";
 import { OpusThemeProvider } from "opus-react";
-import type { Theme } from "opus-react";
 import type { GuidePage } from "@/lib/documentation/content";
 import { guidePath } from "@/lib/documentation/routes";
 import { DocumentationTopBar } from "@/components/documentation/DocumentationTopBar";
+import { DocumentationBreadcrumbs } from "@/components/documentation/DocumentationBreadcrumbs";
+import { useStoredTheme } from "@/lib/theme/useStoredTheme";
 import styles from "./documentation.module.css";
-
-const THEME_STORAGE_KEY = "opus-components-theme";
 
 type GuideShellProps = {
   children: ReactNode;
@@ -22,28 +20,12 @@ type GuideShellProps = {
 
 export function GuideShell({ children, pages }: GuideShellProps) {
   const pathname = usePathname();
-  const [theme, setThemeState] = useState<Theme>("dark");
+  const [theme, setTheme] = useStoredTheme();
   const { accent, accentStyle, setAccent } = useAccentPreference();
-
-  useEffect(() => {
-    const timeout = window.setTimeout(() => {
-      const stored = window.localStorage.getItem(THEME_STORAGE_KEY);
-      if (stored === "light" || stored === "dark") {
-        setThemeState(stored);
-      }
-    }, 0);
-
-    return () => window.clearTimeout(timeout);
-  }, []);
-
-  const setTheme = useCallback((next: Theme) => {
-    setThemeState(next);
-    window.localStorage.setItem(THEME_STORAGE_KEY, next);
-  }, []);
 
   return (
     <OpusThemeProvider theme={theme}>
-      <div className={styles.shell} data-theme={theme} style={accentStyle}>
+      <div className={styles.shell} style={accentStyle}>
         <DocumentationTopBar
           current="guide"
           trailing={
@@ -87,7 +69,10 @@ export function GuideShell({ children, pages }: GuideShellProps) {
               </ul>
             </nav>
           </aside>
-          <main className={styles.content}>{children}</main>
+          <main className={styles.content}>
+            <DocumentationBreadcrumbs guidePages={pages} />
+            {children}
+          </main>
         </div>
       </div>
     </OpusThemeProvider>

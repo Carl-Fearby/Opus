@@ -10,7 +10,9 @@ import {
 } from "@/components/fields";
 import {
   dashboardPreviewLayoutOptions,
+  dashboardWidthOptions,
   type DashboardPreviewLayout,
+  type DashboardSectionWidth,
 } from "@/lib/controls/dashboardPreview";
 
 const panelFieldProps = {
@@ -167,6 +169,30 @@ export function DashboardPreviewLayoutSetting({
       onChange={(event) => {
         const match = dashboardPreviewLayoutOptions.find((option) => option.label === event.target.value);
         onChange((match?.value ?? "single") as DashboardPreviewLayout);
+      }}
+    />
+  );
+}
+
+export function DashboardWidthSetting({
+  value,
+  onChange,
+}: {
+  value: DashboardSectionWidth;
+  onChange: (value: DashboardSectionWidth) => void;
+}) {
+  const id = settingFieldId("Width");
+
+  return (
+    <SelectField
+      {...panelFieldProps}
+      id={id}
+      label="Width"
+      options={dashboardWidthOptions.map((option) => option.label)}
+      value={dashboardWidthOptions.find((option) => option.value === value)?.label ?? "Widget"}
+      onChange={(event) => {
+        const match = dashboardWidthOptions.find((option) => option.label === event.target.value);
+        onChange((match?.value ?? "widget") as DashboardSectionWidth);
       }}
     />
   );

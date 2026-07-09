@@ -1,0 +1,9 @@
+.container {
+  width: 100%;
+  margin-inline: auto;
+  min-width: 0;
+}
+
+.container[data-padded="true"] {
+  padding-inline: clamp(12px, 3vw, 24px);
+}

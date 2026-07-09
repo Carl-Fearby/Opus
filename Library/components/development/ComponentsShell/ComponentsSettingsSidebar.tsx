@@ -1,9 +1,16 @@
 "use client";
 
+import dynamic from "next/dynamic";
 import { useCallback, useRef } from "react";
-import { ControlSettingsPanel } from "@/components/control-detail/ControlDetail/ControlSettingsPanel";
 import { OpusThemeProvider } from "@/components/OpusThemeProvider";
+import {
+  CompositionPartsList,
+  CompositionUsageList,
+} from "@/components/control-detail/ControlDetail/CompositionPartsList";
 import { useComponentsTheme } from "@/components/development/ComponentsThemeProvider";
+import { getCompositionParents } from "@/lib/controls/compositionGraph";
+import { controlHasSettingsPanel } from "@/lib/controls/controlSettingsPanel";
+import { getControl } from "@/lib/controls/registry";
 import {
   clampSettingsWidth,
   SETTINGS_WIDTH_KEY,
@@ -11,8 +18,16 @@ import {
 } from "./ComponentSettingsContext";
 import styles from "./ComponentsShell.module.css";
 
+const ControlSettingsPanel = dynamic(
+  () =>
+    import("@/components/control-detail/ControlDetail/ControlSettingsPanel").then(
+      (module) => module.ControlSettingsPanel,
+    ),
+  { loading: () => <p className={styles.settingsLoading}>Loading settings…</p> },
+);
+
 export function ComponentsSettingsSidebar() {
-  const { accentStyle } = useComponentsTheme();
+  const { accentStyle, theme } = useComponentsTheme();
   const {
     activeSlug,
     isResizing,
@@ -85,9 +100,13 @@ export function ComponentsSettingsSidebar() {
     [setSettingsWidth, settingsWidth],
   );
 
-  if (!activeSlug || !settings) {
+  if (!activeSlug || !settings || !controlHasSettingsPanel(activeSlug)) {
     return null;
   }
+
+  const control = getControl(activeSlug);
+  const compositionParents = getCompositionParents(activeSlug).map((entry) => entry.slug);
+  const hasCompositionLinks = Boolean(control?.compositionParts?.length || compositionParents.length);
 
   return (
     <div className={styles.settingsSidebarWrap}>
@@ -106,7 +125,6 @@ export function ComponentsSettingsSidebar() {
       <aside
         aria-label="Component settings"
         className={styles.settingsSidebar}
-        data-theme="dark"
         data-resizing={isResizing ? "true" : undefined}
         style={accentStyle}
       >
@@ -114,8 +132,18 @@ export function ComponentsSettingsSidebar() {
           <h2 className={styles.settingsSidebarTitle}>Settings</h2>
         </div>
         <div className={styles.settingsSidebarBody}>
-          <OpusThemeProvider theme="dark">
+          <OpusThemeProvider theme={theme}>
             <ControlSettingsPanel slug={activeSlug} settings={settings} onChange={setSettings} />
+            {hasCompositionLinks ? (
+              <div className={styles.settingsCompositionLinks}>
+                {control?.compositionParts?.length ? (
+                  <CompositionPartsList parts={control.compositionParts} />
+                ) : null}
+                {compositionParents.length ? (
+                  <CompositionUsageList parents={compositionParents} />
+                ) : null}
+              </div>
+            ) : null}
           </OpusThemeProvider>
         </div>
       </aside>

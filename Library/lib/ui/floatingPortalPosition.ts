@@ -1,10 +1,52 @@
 import type { DropdownMenuPlacement } from "@/components/fields/types";
 
+export type EmojiPickerPlacement = "bottom" | "top";
+
 export type FloatingPortalStyle = {
   left: number;
   top: number;
   width?: number;
 };
+
+export function resolveEmojiPickerPortalStyle(
+  anchorRect: DOMRect,
+  panelRect: DOMRect | null,
+  placement: EmojiPickerPlacement,
+): FloatingPortalStyle {
+  const gap = 8;
+  const viewportPadding = 16;
+  const panelWidth = panelRect?.width ?? Math.min(352, window.innerWidth - viewportPadding * 2);
+  const panelHeight = panelRect?.height ?? 0;
+
+  let top =
+    placement === "bottom" ? anchorRect.bottom + gap : anchorRect.top - gap - panelHeight;
+  let left = anchorRect.left;
+
+  if (
+    placement === "top" &&
+    top < viewportPadding &&
+    anchorRect.bottom + gap + panelHeight <= window.innerHeight - viewportPadding
+  ) {
+    top = anchorRect.bottom + gap;
+  } else if (
+    placement === "bottom" &&
+    top + panelHeight > window.innerHeight - viewportPadding &&
+    anchorRect.top - gap - panelHeight >= viewportPadding
+  ) {
+    top = anchorRect.top - gap - panelHeight;
+  }
+
+  left = Math.min(
+    Math.max(left, viewportPadding),
+    window.innerWidth - panelWidth - viewportPadding,
+  );
+  top = Math.min(
+    Math.max(top, viewportPadding),
+    Math.max(viewportPadding, window.innerHeight - panelHeight - viewportPadding),
+  );
+
+  return { left, top, width: panelWidth };
+}
 
 export function resolveDropdownPortalStyle(
   anchorRect: DOMRect,

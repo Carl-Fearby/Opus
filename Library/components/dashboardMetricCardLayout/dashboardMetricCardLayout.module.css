@@ -1,17 +1,12 @@
 .shell {
   display: grid;
   gap: 10px;
+  width: 100%;
   min-width: 0;
-  padding: 18px 20px;
-  border: 1px solid color-mix(in srgb, var(--opus-border) 88%, transparent);
-  border-radius: var(--opus-input-radius-large);
-  background: color-mix(in srgb, var(--opus-panel) 96%, transparent);
-  box-shadow: var(--opus-shadow);
 }
 
 .shell[data-density="compact"] {
   gap: 8px;
-  padding: 14px 16px;
 }
 
 .header {
@@ -70,7 +65,7 @@
 
 .label {
   margin: 0;
-  color: var(--opus-muted);
+  color: var(--dashboard-section-muted, var(--opus-muted));
   font-size: 0.84rem;
   font-weight: 650;
 }
@@ -78,11 +73,12 @@
 .value {
   margin: 0;
   min-width: 0;
-  color: var(--opus-text);
-  font-size: 1.75rem;
+  overflow-wrap: anywhere;
+  color: var(--dashboard-section-text, var(--opus-text));
+  font-size: clamp(1.25rem, 5vw, 1.75rem);
   font-weight: 800;
   letter-spacing: -0.03em;
-  line-height: 1;
+  line-height: 1.1;
 }
 
 .shell[data-density="compact"] .value {

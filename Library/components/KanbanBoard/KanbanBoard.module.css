@@ -1,0 +1,91 @@
+.root {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 12px;
+  width: 100%;
+  align-items: start;
+}
+
+.column {
+  display: grid;
+  gap: 8px;
+  min-height: 280px;
+  padding: 10px;
+  border: 1px solid var(--opus-border);
+  border-radius: var(--opus-input-radius-large, 6px);
+  background: color-mix(in srgb, var(--opus-panel) 92%, transparent);
+}
+
+.columnHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.columnTitle {
+  margin: 0;
+  color: var(--opus-text);
+  font-size: 0.82rem;
+  font-weight: 700;
+}
+
+.count {
+  min-width: 1.5rem;
+  padding: 2px 6px;
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--opus-muted) 14%, transparent);
+  color: var(--opus-muted);
+  font-size: 0.7rem;
+  font-weight: 700;
+  text-align: center;
+}
+
+.cards {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: grid;
+  gap: 8px;
+  min-height: 120px;
+}
+
+.card {
+  padding: 10px;
+  border: 1px solid var(--opus-border);
+  border-radius: 8px;
+  background: color-mix(in srgb, var(--opus-panel) 98%, transparent);
+  cursor: grab;
+}
+
+.card:active {
+  cursor: grabbing;
+}
+
+.card[data-tone="accent"] {
+  border-color: color-mix(in srgb, var(--opus-accent) 45%, var(--opus-border));
+}
+
+.card[data-tone="success"] {
+  border-color: color-mix(in srgb, #22c55e 45%, var(--opus-border));
+}
+
+.card[data-tone="warning"] {
+  border-color: color-mix(in srgb, #f59e0b 45%, var(--opus-border));
+}
+
+.card[data-tone="danger"] {
+  border-color: color-mix(in srgb, #ef4444 45%, var(--opus-border));
+}
+
+.cardTitle {
+  color: var(--opus-text);
+  font-size: 0.82rem;
+  font-weight: 650;
+}
+
+.cardMeta {
+  margin-top: 4px;
+  color: var(--opus-muted);
+  font-size: 0.72rem;
+}

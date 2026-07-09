@@ -4,7 +4,8 @@ import type { ReactNode } from "react";
 import { createContext, useContext, useId } from "react";
 import styles from "./RadioGroup.module.css";
 import { FieldShell, fieldInputAriaProps, useFieldShellAria } from "@/components/fields/FieldShell";
-import type { ChoiceShape, FieldMode, LabelPosition } from "@/components/fields/types";
+import { choiceControlSizeClassName } from "@/components/fields/shared/choiceControlSizes";
+import type { ChoiceControlSize, ChoiceShape, FieldMode, LabelPosition } from "@/components/fields/types";
 
 type RadioGroupContextValue = {
   name: string;
@@ -26,6 +27,7 @@ type RadioGroupProps = {
   name: string;
   onChange: (value: string) => void;
   shape?: ChoiceShape;
+  size?: ChoiceControlSize;
   value: string | null;
 };
 
@@ -40,6 +42,7 @@ export function RadioGroup({
   name,
   onChange,
   shape = "round",
+  size = "md",
   value,
 }: RadioGroupProps) {
   const autoId = useId();
@@ -55,7 +58,7 @@ export function RadioGroup({
       }}
     >
       <FieldShell
-        className={styles.shell}
+        className={[styles.shell, choiceControlSizeClassName[size]].filter(Boolean).join(" ")}
         error={error}
         flaggedAlign="start"
         help={help}

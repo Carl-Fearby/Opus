@@ -1,0 +1,12 @@
+.spacer {
+  flex-shrink: 0;
+  display: block;
+}
+
+.spacer[data-axis="x"] {
+  height: 1px;
+}
+
+.spacer[data-axis="y"] {
+  width: 1px;
+}

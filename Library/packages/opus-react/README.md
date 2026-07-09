@@ -1,8 +1,16 @@
 # opus-react
 
-A React component library for the **Opus Design System** — a modern, themeable UI kit for building professional business applications.
+React component library for the **Opus Design System** — a themeable UI kit for professional business applications.
 
-Opus includes form controls, overlays, navigation, data display, charts, dashboard widgets, and utility components with built-in light and dark themes, smooth rounded styling, and runtime accent colour support.
+Includes form controls, overlays, navigation, data display, charts, dashboard widgets, layout primitives, and utilities. Ships with light and dark themes, CSS variable tokens, runtime accent colour support, and full TypeScript definitions.
+
+**Current version:** `0.2.22`
+
+## Requirements
+
+- React `^18.2.0` or `^19.0.0`
+- React DOM `^18.2.0` or `^19.0.0`
+- `three` `^0.185.0` — optional, only needed for 3D model components
 
 ## Install
 
@@ -16,7 +24,7 @@ Peer dependencies:
 npm install react react-dom
 ```
 
-Optional dependency for 3D model components:
+Optional peer for 3D model viewers:
 
 ```bash
 npm install three
@@ -24,7 +32,7 @@ npm install three
 
 ## Quick start
 
-Import the Opus styles and wrap your application with `OpusThemeProvider`.
+Import Opus styles, then wrap your app with `OpusThemeProvider`.
 
 ```tsx
 import "opus-react/styles.css";
@@ -42,22 +50,34 @@ export function App() {
 }
 ```
 
-`OpusThemeProvider` sets `data-theme` on `document.documentElement` by default, so themed CSS variables apply everywhere — including portalled content such as modals, drawers, and toasts.
+### Styles
 
-Country flags for `PhoneNumberField` are bundled into `opus-react/index.css` — no separate flag package import is required.
+| Import | Purpose |
+| --- | --- |
+| `opus-react/styles.css` | Theme tokens (`--opus-*` CSS variables) for light and dark mode |
+| `opus-react/index.css` | Component CSS modules plus bundled country-flag assets for `PhoneNumberField` |
+| `opus-react/flags.css` | Standalone flag stylesheet (optional — already included in `index.css`) |
+
+`OpusThemeProvider` sets `data-theme` on `document.documentElement` by default, so themed CSS variables apply everywhere — including portalled content such as modals, drawers, and toasts.
 
 ## Next.js
 
-Add `opus-react` to `transpilePackages`.
+Add `opus-react` to `transpilePackages`:
 
 ```ts
 // next.config.ts
-
 const nextConfig = {
   transpilePackages: ["opus-react"],
 };
 
 export default nextConfig;
+```
+
+Import styles in your root layout:
+
+```tsx
+import "opus-react/styles.css";
+import "opus-react/index.css";
 ```
 
 ## Theme provider
@@ -74,18 +94,13 @@ export function App() {
 }
 ```
 
-Available themes:
+Available themes: `"light"` | `"dark"`
 
-```tsx
-theme="light"
-theme="dark"
-```
-
-By default, the provider writes `data-theme` to `<html>` so CSS tokens resolve across the whole page, including portals. Pass `applyToDocument={false}` if you manage `data-theme` yourself (for example, on a scoped container in embedded widgets).
+Pass `applyToDocument={false}` if you manage `data-theme` yourself (for example on a scoped container in embedded widgets).
 
 ## Accent colour
 
-Opus supports runtime accent colours.
+Opus supports runtime accent colours via CSS variables.
 
 ```tsx
 import { OpusThemeProvider, createAccentStyle } from "opus-react";
@@ -101,7 +116,7 @@ export function App() {
 }
 ```
 
-You can also use the included accent colour picker.
+Or use the included picker:
 
 ```tsx
 import { AccentColorPicker } from "opus-react";
@@ -111,60 +126,101 @@ import { AccentColorPicker } from "opus-react";
 
 ## What's included
 
-### Form components
+### Forms
 
-- Text field
-- Textarea
-- Select
-- Checkbox
-- Radio group
-- Switch
-- Range slider
-- Number input
-- Date picker
-- File upload
-- Chip input / tag input
-- Colour picker
-- Form labels
-- Helper text
-- Error states
+- `Button`, `TextField`, `TextAreaField`, `RichTextField`
+- `SelectField`, `FilterSelectField`, `MultiSelectField`, `TreeSelectField`, `CascaderField`
+- `CheckboxField`, `RadioGroup`, `SwitchField`
+- `NumberField`, `RangeField`, `SliderRangeField`, `RatingField`
+- `DateField`, `ColorField`, `FileField`, `HiddenField`
+- `ChipInput`, `PhoneNumberField`, `CountryPickerField`
+- `PasswordStrengthField`, `TransferListField`, `SegmentedControlField`
+- `ThemeToggleField`, `FieldShell`
 
-### Overlays
+### Overlays and feedback
 
-- Modal
-- Dialog
-- Drawer
-- Popover
-- Toast
+- `Modal`, `Dialog`, `Drawer`, `Popover`
+- `DropdownMenu`, `ContextMenuProvider`, `CommandPalette`
+- `Tooltip`, `Toast`, `ToastProvider`, `Alert`
 
-### Content and layout
+### Content and data
 
-- Card
-- Table
-- Data grid
-- Tabs
-- Accordion
+- `Card`, `Panel`, `Section`, `Table`, `DataGrid`
+- `Tabs`, `Accordion`, `AccordionGroup`, `ShowMore`
+- `Badge`, `Avatar`, `AvatarGroup`, `List`, `DescriptionList`
+- `PropertyGrid`, `Statistic`, `EmptyState`, `Skeleton`
+- `ContentTimeline`, `TreeView`, `MasonryGrid`, `JsonViewer`
+
+### Layout
+
+- `Stack`, `Columns`, `Grid`, `Splitter`, `ResizablePanel`
+- `DockLayout`, `ScrollArea`, `AspectRatio`, `Container`, `Spacer`
+- `Breadcrumb`, `Pagination`, `PageHeader`, `Toolbar`
+- `BottomNavigation`, `NavigationRail`, `SplitButton`, `FloatingActionButton`
 
 ### Navigation
 
-- Sidebar
-- Top navigation
-- Mega menu
+- `Sidebar`, `SidebarLayout`, `TopNavigation`, `MegaMenu`
 
-### Data visualisation
+### Charts and metrics
 
-- Charts
-- Gauges
-- KPI cards
-- Dashboard widgets
+- `Chart` — bar, line, area, pie, donut, scatter, funnel, radar, sankey, treemap, and more
+- `Gauge`, `Sparkline`, `ProgressRing`, `ProgressBar`, `Speedometer`
+- `StatCard`, `MetricTile`, `StatusIndicator`, `TrendBadge`
+- `Tiles`, `Tile`, `StatTile`, `StatTiles`
+
+### Dashboard widgets
+
+- `DashboardContentContainer`
+- `PipelineOverview`, `DealsOverTime`
+- `UpcomingTasks`, `RecentActivity`, `TopPerformingUsers`
+
+Compose dashboard rows with `Columns`:
+
+```tsx
+import {
+  Columns,
+  DashboardContentContainer,
+  UpcomingTasks,
+  RecentActivity,
+  TopPerformingUsers,
+} from "opus-react";
+
+<Columns direction="row" columns={3} gap={16}>
+  <DashboardContentContainer data-component="upcoming-tasks" width="full">
+    <UpcomingTasks title="Upcoming Tasks" tasks={tasks} />
+  </DashboardContentContainer>
+  <DashboardContentContainer data-component="recent-activity" width="full">
+    <RecentActivity title="Recent Activity" items={activity} />
+  </DashboardContentContainer>
+  <DashboardContentContainer data-component="top-performing-users" width="full">
+    <TopPerformingUsers title="Top Performing People" users={people} />
+  </DashboardContentContainer>
+</Columns>;
+```
+
+### Media and 3D
+
+- `Carousel`, `Lightbox`, `ImageThumbnail`, `ImageGallery`
+- `ModelViewer`, `ModelLightbox`, `ModelThumbnail`, `ModelGallery` (requires `three`)
+
+### Builders and planning
+
+- `FilterBuilder`, `QueryBuilder`, `RuleBuilder`
+- `PermissionsMatrix`, `DualListBuilder`
+- `Scheduler`, `KanbanBoard`, `Calendar`, `ResourcePlanner`
+- `PropertyInspector`
 
 ### Utilities
 
-- `AccentColorPicker`
-- `IconPicker`
-- `CatalogIcon`
-- Theme helpers
-- Accent style helpers
+- `OpusThemeProvider`, `useOpusTheme`
+- `AccentColorPicker`, `createAccentStyle`, `useAccentPreference`
+- `IconPicker`, `CatalogIcon`, `Icon`
+- `Portal`, `FocusTrap`, `VisuallyHidden`
+- `HotkeyManager`, `useHotkey`, `KeyboardShortcut`
+- `Clipboard`, `CopyButton`
+- `ThemeProvider`, `ThemeSwitcher`
+- `ResizeObserver`, `IntersectionObserver`, `Spinner`
 
 ## Examples
 
@@ -173,11 +229,11 @@ import { AccentColorPicker } from "opus-react";
 ```tsx
 import { Button } from "opus-react";
 
-<Button variant="primary">Create project</Button>;
-<Button variant="secondary">Cancel</Button>;
+<Button variant="primary">Create project</Button>
+<Button variant="secondary">Cancel</Button>
 ```
 
-### Text field with error
+### Text field with validation
 
 ```tsx
 import { TextField } from "opus-react";
@@ -186,75 +242,94 @@ import { TextField } from "opus-react";
   label="Email address"
   placeholder="you@example.com"
   error="Enter a valid email address"
-/>;
+/>
 ```
 
-### Chip input
+### Toast notifications
 
 ```tsx
-import { ChipInput } from "opus-react";
+import { OpusThemeProvider, ToastProvider, useToast, Button } from "opus-react";
 
-<ChipInput
-  label="Tags"
-  placeholder="Type and press Enter"
-  value={tags}
-  onChange={setTags}
-/>;
+function NotifyButton() {
+  const { showToast } = useToast();
+
+  return (
+    <Button
+      variant="primary"
+      onClick={() => showToast({ title: "Saved", description: "Your changes were saved." })}
+    >
+      Save
+    </Button>
+  );
+}
+
+export function App() {
+  return (
+    <OpusThemeProvider theme="dark">
+      <ToastProvider>
+        <NotifyButton />
+      </ToastProvider>
+    </OpusThemeProvider>
+  );
+}
 ```
 
-### Accent colour picker
+### Chart
 
 ```tsx
-import { AccentColorPicker } from "opus-react";
+import { Chart } from "opus-react";
 
-<AccentColorPicker value="#8f6cff" onChange={setAccent} />;
+<Chart
+  variant="bar-chart-vertical"
+  title="Revenue by region"
+  data={[
+    { label: "EMEA", value: 42 },
+    { label: "APAC", value: 28 },
+    { label: "AMER", value: 35 },
+  ]}
+/>
 ```
 
-## Publishing
+## TypeScript
 
-From the monorepo root:
+Type definitions ship with the package (`dist/index.d.ts`). Component prop types and shared tokens (for example `ChartVariant`, `ButtonVariant`, `Theme`) are exported from `opus-react`.
+
+## Package exports
+
+```json
+{
+  ".": "./dist/index.js",
+  "./styles.css": "./dist/styles.css",
+  "./index.css": "./dist/index.css",
+  "./flags.css": "./dist/flags.css"
+}
+```
+
+ESM and CommonJS builds are both published.
+
+## Not included in the package
+
+The published npm package does **not** include:
+
+- Documentation site shells and routing
+- Component preview / settings tooling
+- Generated usage-code helpers
+- Internal monorepo build scripts
+
+Those live in the Opus Library workspace and are for development and docs only.
+
+## Publishing (maintainers)
+
+From the Library workspace root:
 
 ```bash
+cd Library
 npm run build:lib
 npm publish -w opus-react --access public
 ```
 
-Before publishing, set the package name in:
+`prepublishOnly` runs the package build automatically. Bump the version in `packages/opus-react/package.json` before publishing.
 
-```txt
-packages/opus-react/package.json
-```
+## License
 
-For example:
-
-```json
-{
-  "name": "@your-org/opus-react"
-}
-```
-
-## Not included in the package
-
-The published package does not include:
-
-- Documentation site shells
-- Control preview tooling
-- Generated usage-code tooling
-- Internal build scripts
-
-## Keywords
-
-```txt
-react
-components
-ui
-design-system
-component-library
-forms
-charts
-dashboard
-dark-theme
-light-theme
-typescript
-opus
-```
+UNLICENSED — see `package.json`.

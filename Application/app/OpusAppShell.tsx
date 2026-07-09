@@ -1,8 +1,13 @@
 "use client";
 
-import { OpusThemeProvider } from "opus-react";
 import type { ReactNode } from "react";
+import { DeployUpdateNotifier } from "@/components/DeployUpdateNotifier";
 
 export function OpusAppShell({ children }: { children: ReactNode }) {
-  return <OpusThemeProvider theme="dark">{children}</OpusThemeProvider>;
+  return (
+    <>
+      <DeployUpdateNotifier />
+      {children}
+    </>
+  );
 }

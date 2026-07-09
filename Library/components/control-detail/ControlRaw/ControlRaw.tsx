@@ -2,8 +2,8 @@
 
 import { useState } from "react";
 import { ControlPreview } from "@/components/control-detail/ControlDetail/ControlPreview";
+import { PreviewThemeBoundary } from "@/components/control-detail/ControlDetail/PreviewThemeBoundary";
 import { PreviewThemeControls } from "@/components/control-detail/ControlDetail/PreviewThemeControls";
-import { useComponentsTheme } from "@/components/development/ComponentsThemeProvider";
 import { decodeRawSettingsParam } from "@/lib/controls/rawSettings";
 import {
   formatRawPreviewCanvasLabel,
@@ -25,7 +25,6 @@ type ControlRawProps = {
 };
 
 export function ControlRaw({ defaultSettings, encodedSettings, slug }: ControlRawProps) {
-  const { theme } = useComponentsTheme();
   const [settings, setSettings] = useState<ControlSettings>(() =>
     decodeRawSettingsParam(encodedSettings, defaultSettings),
   );
@@ -91,9 +90,9 @@ export function ControlRaw({ defaultSettings, encodedSettings, slug }: ControlRa
       <div className={styles.canvasArea} ref={areaRef}>
         <div className={styles.viewportStage}>
           {canvasSize.full || canvasSize.width === null || canvasSize.height === null ? (
-            <div className={styles.canvas} data-full="true" data-raw-preview-root data-theme={theme}>
+            <PreviewThemeBoundary className={styles.canvas} data-full="true" data-raw-preview-root>
               {preview}
-            </div>
+            </PreviewThemeBoundary>
           ) : (
             <div
               className={styles.viewportFrame}
@@ -102,12 +101,11 @@ export function ControlRaw({ defaultSettings, encodedSettings, slug }: ControlRa
                 width: canvasSize.width * scale,
               }}
             >
-              <div
+              <PreviewThemeBoundary
                 className={styles.canvas}
                 data-fixed-width="true"
                 data-orientation={orientation}
                 data-raw-preview-root
-                data-theme={theme}
                 style={{
                   height: canvasSize.height,
                   transform: scale < 1 ? `scale(${scale})` : undefined,
@@ -116,7 +114,7 @@ export function ControlRaw({ defaultSettings, encodedSettings, slug }: ControlRa
                 }}
               >
                 {preview}
-              </div>
+              </PreviewThemeBoundary>
             </div>
           )}
         </div>
