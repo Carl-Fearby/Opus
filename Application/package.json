@@ -6,7 +6,8 @@
     "dev": "next dev",
     "build": "next build --webpack",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "sync-versions": "npm run sync-versions --prefix ../Library && cp ../Library/lib/documentation/versionLog.ts lib/documentation/versionLog.ts"
   },
   "dependencies": {
     "@codemirror/lang-javascript": "^6.2.5",
@@ -17,7 +18,7 @@
     "@uiw/codemirror-theme-vscode": "^4.25.10",
     "@uiw/react-codemirror": "^4.25.10",
     "next": "16.0.1",
-    "opus-react": "^0.2.26",
+    "opus-react": "^0.2.27",
     "react": "19.2.0",
     "react-dom": "19.2.0",
     "react-markdown": "^10.1.0",
