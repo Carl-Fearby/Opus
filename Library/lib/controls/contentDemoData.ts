@@ -1,4 +1,5 @@
 import type {
+  ContentTimelineGroup,
   ContentTimelineItem,
   DescriptionListItem,
   ListItem,
@@ -6,7 +7,8 @@ import type {
   PropertyGridItem,
   TreeViewNode,
   AvatarGroupItem,
-} from "@/components/fields";
+} from "opus-react";
+import type { ContentTimelineRowStyle } from "./types";
 
 export const demoAvatarGroupItems: AvatarGroupItem[] = [
   { name: "Alex Morgan" },
@@ -44,29 +46,85 @@ export const demoDescriptionListItems: DescriptionListItem[] = [
   { term: "Workspace", details: "Opus Product" },
 ];
 
-export const demoContentTimelineItems = (includeStatus: boolean): ContentTimelineItem[] => [
+const demoContentTimelineRowTemplates = [
   {
     avatarName: "Alex Morgan",
-    title: "Alex Morgan",
+    avatarTitle: "Alex Morgan",
+    eventTitle: "Release published",
     description: "Release published — opus-react 0.2.20 is available on npm.",
+    tags: [
+      { label: "Release", tone: "green" as const },
+      { label: "npm", tone: "purple" as const },
+    ],
     time: "09:40",
-    status: includeStatus ? "success" : "default",
+    statusKey: "success" as const,
   },
   {
     avatarName: "Jamie Lee",
-    title: "Jamie Lee",
+    avatarTitle: "Jamie Lee",
+    eventTitle: "Review requested",
     description: "Review requested for the content component batch.",
+    tags: [{ label: "Review", tone: "orange" as const }],
     time: "11:15",
-    status: includeStatus ? "warning" : "default",
+    statusKey: "warning" as const,
   },
   {
     avatarName: "Sam Patel",
-    title: "Sam Patel",
-    description: "Issue opened for JSON Viewer expand depth defaults.",
+    avatarTitle: "Sam Patel",
+    eventTitle: "Issue opened",
+    description: "JSON Viewer expand depth defaults need review.",
+    tags: [{ label: "Bug", tone: "purple" as const }],
     time: "13:02",
-    status: includeStatus ? "muted" : "default",
+    statusKey: "muted" as const,
   },
 ];
+
+export const demoContentTimelineItems = (
+  includeStatus: boolean,
+  rowStyles: [ContentTimelineRowStyle, ContentTimelineRowStyle, ContentTimelineRowStyle] = [
+    "avatar",
+    "avatar",
+    "status",
+  ],
+  includeTags = true,
+): ContentTimelineItem[] =>
+  demoContentTimelineRowTemplates.map((row, index) => {
+    const useAvatar = rowStyles[index] === "avatar";
+    const status = includeStatus ? row.statusKey : "default";
+    const tags = includeTags ? row.tags : undefined;
+
+    if (useAvatar) {
+      return {
+        avatarName: row.avatarName,
+        title: row.avatarTitle,
+        description: row.description,
+        tags,
+        time: row.time,
+        status,
+      };
+    }
+
+    return {
+      title: row.eventTitle,
+      description: row.description,
+      tags,
+      time: row.time,
+      status,
+    };
+  });
+
+export function demoContentTimelineGroups(
+  includeStatus: boolean,
+  rowStyles: [ContentTimelineRowStyle, ContentTimelineRowStyle, ContentTimelineRowStyle],
+  includeTags = true,
+): ContentTimelineGroup[] {
+  const items = demoContentTimelineItems(includeStatus, rowStyles, includeTags);
+
+  return [
+    { label: "Today", items: items.slice(0, 2) },
+    { label: "Earlier", items: items.slice(2) },
+  ];
+}
 
 export const demoTreeViewNodes: TreeViewNode[] = [
   {

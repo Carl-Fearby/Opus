@@ -4,10 +4,6 @@
 
 .standalone {
   overflow: hidden;
-  border: 1px solid var(--opus-border);
-  border-radius: var(--opus-input-radius-large);
-  background: color-mix(in srgb, var(--opus-panel) 92%, transparent);
-  box-shadow: var(--opus-shadow);
 }
 
 .standalone .item {

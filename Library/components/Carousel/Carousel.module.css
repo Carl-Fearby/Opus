@@ -1,11 +1,9 @@
 .carousel {
   width: 100%;
   overflow: hidden;
-  border: 1px solid color-mix(in srgb, var(--opus-border) 76%, transparent);
   background:
     linear-gradient(135deg, color-mix(in srgb, var(--opus-accent) 14%, transparent), transparent 42%),
     color-mix(in srgb, var(--opus-panel) 94%, transparent);
-  box-shadow: var(--opus-shadow);
 }
 
 .stage {

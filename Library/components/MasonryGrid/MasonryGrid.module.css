@@ -8,8 +8,6 @@
   break-inside: avoid;
   page-break-inside: avoid;
   padding: 16px;
-  border: 1px solid var(--opus-border);
-  border-radius: var(--opus-input-radius-large, 6px);
   background:
     linear-gradient(180deg, color-mix(in srgb, var(--opus-accent) 8%, transparent), transparent 48%),
     color-mix(in srgb, var(--opus-panel) 94%, transparent);

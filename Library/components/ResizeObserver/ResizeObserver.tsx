@@ -1,19 +1,25 @@
 "use client";
 
-import { useEffect, useRef, useState, type ReactNode, type RefObject } from "react";
+import {
+  useEffect,
+  useRef,
+  useState,
+  type HTMLAttributes,
+  type ReactNode,
+  type RefObject,
+} from "react";
 
 export type ElementSize = {
   height: number;
   width: number;
 };
 
-type ResizeObserverProps = {
+type ResizeObserverProps = Omit<HTMLAttributes<HTMLDivElement>, "children"> & {
   children: (size: ElementSize) => ReactNode;
-  className?: string;
   onResize?: (size: ElementSize) => void;
 };
 
-export function ResizeObserver({ children, className, onResize }: ResizeObserverProps) {
+export function ResizeObserver({ children, className, onResize, style, ...rest }: ResizeObserverProps) {
   const ref = useRef<HTMLDivElement | null>(null);
   const [size, setSize] = useState<ElementSize>({ width: 0, height: 0 });
 
@@ -41,7 +47,7 @@ export function ResizeObserver({ children, className, onResize }: ResizeObserver
   }, [onResize]);
 
   return (
-    <div className={className} ref={ref}>
+    <div className={className} ref={ref} style={style} {...rest}>
       {children(size)}
     </div>
   );

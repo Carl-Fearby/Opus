@@ -42,32 +42,26 @@ export function UsageCodeViewer({ category, slug, settings }: UsageCodeViewerPro
 
   return (
     <ControlDetailPanel
-      actions={<OpenInPlaygroundLink category={category} settings={settings} slug={slug} />}
+      actions={
+        <>
+          <button
+            aria-label={copied ? "Copied usage code" : "Copy usage code"}
+            className={`${styles.panelActionButton} ${copied ? styles.usageCopyButtonCopied : ""}`}
+            onClick={() => void handleCopy()}
+            type="button"
+          >
+            {copied ? "Copied" : "Copy"}
+          </button>
+          <OpenInPlaygroundLink category={category} settings={settings} slug={slug} />
+        </>
+      }
       className={styles.sourcePanel}
       title="Usage"
     >
       <p className={styles.usageHint}>
         Copy this complete component into a page file. Edit and run it in the Playground.
       </p>
-      <section className={styles.usageSection}>
-        <div className={styles.usageSectionHeading}>
-          <div className={styles.usageSectionCopy}>
-            <h3 className={styles.usageSectionTitle}>Component</h3>
-            <p className={styles.usageSectionHint}>
-              A working example with imports, state, and render logic for your current settings.
-            </p>
-          </div>
-          <button
-            aria-label={copied ? "Copied component code" : "Copy component code"}
-            className={`${styles.usageCopyButton} ${copied ? styles.usageCopyButtonCopied : ""}`}
-            onClick={() => void handleCopy()}
-            type="button"
-          >
-            {copied ? "Copied" : "Copy"}
-          </button>
-        </div>
-        <UsageCodeEditor code={usage.full} />
-      </section>
+      <UsageCodeEditor code={usage.full} />
     </ControlDetailPanel>
   );
 }

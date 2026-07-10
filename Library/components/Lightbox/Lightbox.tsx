@@ -7,6 +7,7 @@ import type { ReactNode } from "react";
 import { faXmark } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import type { GalleryImage } from "@/components/fields/types";
+import { Portal } from "@/components/Portal";
 import "@/lib/fontawesome";
 import { useOverlayAccessibility } from "@/lib/a11y/useOverlayAccessibility";
 import styles from "./Lightbox.module.css";
@@ -105,39 +106,41 @@ export function Lightbox({
       </button>
 
       {isOpen || isRendered ? (
-        <div
-          className={styles.overlay}
-          data-state={isOpen ? "open" : "closing"}
-          onMouseDown={(event) => {
-            if (dismissOnBackdrop && event.target === event.currentTarget) {
-              setOpen(false);
-            }
-          }}
-        >
+        <Portal>
           <div
-            ref={panelRef}
-            aria-label={dialogLabel}
-            aria-modal="true"
-            className={styles.frame}
-            role="dialog"
+            className={styles.overlay}
+            data-state={isOpen ? "open" : "closing"}
+            onMouseDown={(event) => {
+              if (dismissOnBackdrop && event.target === event.currentTarget) {
+                setOpen(false);
+              }
+            }}
           >
-            <button
-              ref={closeRef}
-              aria-label="Close lightbox"
-              className={styles.close}
-              type="button"
-              onClick={() => setOpen(false)}
+            <div
+              ref={panelRef}
+              aria-label={dialogLabel}
+              aria-modal="true"
+              className={styles.frame}
+              role="dialog"
             >
-              <FontAwesomeIcon aria-hidden="true" className={styles.closeIcon} icon={faXmark} />
-            </button>
-            <figure className={styles.panel}>
-              <img alt={image.alt} className={styles.image} src={image.src} />
-              {showCaption && image.caption ? (
-                <figcaption className={styles.caption}>{image.caption}</figcaption>
-              ) : null}
-            </figure>
+              <button
+                ref={closeRef}
+                aria-label="Close lightbox"
+                className={styles.close}
+                type="button"
+                onClick={() => setOpen(false)}
+              >
+                <FontAwesomeIcon aria-hidden="true" className={styles.closeIcon} icon={faXmark} />
+              </button>
+              <figure className={styles.panel}>
+                <img alt={image.alt} className={styles.image} src={image.src} />
+                {showCaption && image.caption ? (
+                  <figcaption className={styles.caption}>{image.caption}</figcaption>
+                ) : null}
+              </figure>
+            </div>
           </div>
-        </div>
+        </Portal>
       ) : null}
     </div>
   );

@@ -30,6 +30,11 @@
   --surface-accent: var(--opus-border-strong);
 }
 
+.panel[data-bordered="false"] {
+  border-color: transparent;
+  box-shadow: none;
+}
+
 .panel[data-density="compact"] {
   --surface-pad: 12px;
 }

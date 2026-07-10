@@ -1,13 +1,22 @@
 .playground {
-  display: grid;
-  grid-template-rows: auto minmax(0, 1fr);
-  min-height: calc(100vh - 72px);
+  display: flex;
+  flex-direction: column;
+  height: 100dvh;
+  max-height: 100dvh;
+  overflow: hidden;
   background: var(--opus-shell-bg, #0b1020);
 }
 
 .body {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  display: flex;
+  flex: 1 1 auto;
+  flex-direction: column;
+  min-height: 0;
+}
+
+.splitter {
+  flex: 1 1 auto;
+  height: 100%;
   min-height: 0;
 }
 
@@ -16,10 +25,7 @@
   grid-template-rows: auto minmax(0, 1fr);
   min-width: 0;
   min-height: 0;
-}
-
-.pane + .pane {
-  border-left: 1px solid color-mix(in srgb, var(--opus-border, rgba(255, 255, 255, 0.12)) 80%, transparent);
+  height: 100%;
 }
 
 .paneHeader {
@@ -47,8 +53,27 @@
   font-size: 0.74rem;
 }
 
+.paneActions {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  flex-shrink: 0;
+}
+
 .paneBody {
+  display: flex;
+  flex: 1 1 auto;
+  flex-direction: column;
   min-height: 0;
+  overflow: hidden;
+}
+
+.editorPane .paneBody {
+  overflow: hidden;
+}
+
+.previewPane .paneBody {
+  display: block;
   overflow: auto;
 }
 
@@ -59,31 +84,35 @@
 
 .editorPane :global(.codeEditor) {
   max-height: none;
-  min-height: 100%;
   border: 0;
   border-radius: 0;
   box-shadow: none;
 }
 
 .previewPane {
-  background:
-    radial-gradient(circle at top, color-mix(in srgb, var(--opus-accent, #7c3aed) 10%, transparent), transparent 42%),
-    color-mix(in srgb, var(--opus-panel, rgba(12, 18, 36, 0.92)) 92%, transparent);
+  background: color-mix(in srgb, var(--opus-panel, rgba(12, 18, 36, 0.92)) 92%, transparent);
 }
 
 .previewSurface {
   min-height: 100%;
   padding: 24px;
+  border-radius: 0;
+  background: color-mix(in srgb, var(--opus-panel) 92%, transparent);
+  color: var(--opus-text);
+  isolation: isolate;
 }
 
-.previewError {
-  margin: 0;
-  padding: 20px;
+.previewErrorEditor {
+  display: flex;
+  flex: 1 1 auto;
+  flex-direction: column;
+  min-height: 0;
+  height: 100%;
+  overflow: hidden;
+}
+
+.previewErrorEditor :global(.cm-content) {
   color: #ffb4b4;
-  font-family: var(--font-ibm-plex-mono), monospace;
-  font-size: 0.78rem;
-  line-height: 1.5;
-  white-space: pre-wrap;
 }
 
 .resetButton {
@@ -103,16 +132,4 @@
 
 .resetButton:hover {
   background: color-mix(in srgb, var(--opus-accent-soft, rgba(124, 58, 237, 0.12)) 55%, transparent);
-}
-
-@media (max-width: 960px) {
-  .body {
-    grid-template-columns: 1fr;
-    grid-template-rows: minmax(280px, 42vh) minmax(280px, 1fr);
-  }
-
-  .pane + .pane {
-    border-left: 0;
-    border-top: 1px solid color-mix(in srgb, var(--opus-border, rgba(255, 255, 255, 0.12)) 80%, transparent);
-  }
 }

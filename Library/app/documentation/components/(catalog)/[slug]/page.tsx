@@ -38,10 +38,15 @@ export default async function ControlPage({ params, searchParams }: ControlPageP
     notFound();
   }
 
+  const defaultSettings =
+    category === "labs" && slug === "user-profile"
+      ? { ...getDefaultSettings(slug as ControlSlug), wrapInContainer: true }
+      : getDefaultSettings(slug as ControlSlug);
+
   return (
     <ControlDetail
       control={control}
-      defaultSettings={getDefaultSettings(slug as ControlSlug)}
+      defaultSettings={defaultSettings}
       documentation={getComponentDocumentation(slug as ControlSlug)?.content}
     />
   );

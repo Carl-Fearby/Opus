@@ -1,6 +1,6 @@
 import type { ControlSlug } from "./types";
 
-const SLUGS_WITHOUT_SETTINGS_PANEL = new Set<ControlSlug>(["404-page", "403-page"]);
+const SLUGS_WITHOUT_SETTINGS_PANEL = new Set<ControlSlug>(["404-page", "403-page", "app-setup"]);
 
 export function controlHasSettingsPanel(slug: ControlSlug): boolean {
   return !SLUGS_WITHOUT_SETTINGS_PANEL.has(slug);

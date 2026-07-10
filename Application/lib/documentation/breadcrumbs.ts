@@ -1,10 +1,12 @@
 import type { BreadcrumbItem } from "opus-react";
-import { componentCategories } from "@/lib/controls/registry";
-import { getControl } from "@/lib/controls/registry";
+import { componentCategories, getControl, getNavigationGroupBySlug } from "@/lib/controls/registry";
 import {
   CATEGORY_PATHS,
   COMPONENTS_BASE_PATH,
+  categorySubgroupPath,
   getCategoryFromPath,
+  getCategorySubgroupFromPath,
+  navigationGroupToSlug,
 } from "@/lib/controls/routes";
 import {
   DOCUMENTATION_BASE_PATH,
@@ -79,6 +81,17 @@ export function buildDocumentationBreadcrumbs(
       return items;
     }
 
+    const subgroup = getCategorySubgroupFromPath(pathname);
+    if (subgroup) {
+      const groupLabel =
+        getNavigationGroupBySlug(subgroup.category, subgroup.groupSlug) ?? subgroup.groupSlug;
+      items.push(
+        crumb(subgroup.category, categoryLabel(subgroup.category), CATEGORY_PATHS[subgroup.category]),
+      );
+      items.push(crumb("current", options.currentLabel ?? groupLabel));
+      return items;
+    }
+
     if (pathname === COMPONENTS_BASE_PATH) {
       items.push(crumb("current", options.currentLabel ?? "Overview"));
       return items;
@@ -93,6 +106,15 @@ export function buildDocumentationBreadcrumbs(
         items.push(
           crumb(control.category, categoryLabel(control.category), CATEGORY_PATHS[control.category]),
         );
+        if (control.navigationGroup) {
+          items.push(
+            crumb(
+              navigationGroupToSlug(control.navigationGroup),
+              control.navigationGroup,
+              categorySubgroupPath(control.category, control.navigationGroup),
+            ),
+          );
+        }
       }
       items.push(crumb("current", options.currentLabel ?? `${control?.title ?? slug} (raw)`));
       return items;
@@ -104,6 +126,15 @@ export function buildDocumentationBreadcrumbs(
         items.push(
           crumb(control.category, categoryLabel(control.category), CATEGORY_PATHS[control.category]),
         );
+        if (control.navigationGroup) {
+          items.push(
+            crumb(
+              navigationGroupToSlug(control.navigationGroup),
+              control.navigationGroup,
+              categorySubgroupPath(control.category, control.navigationGroup),
+            ),
+          );
+        }
         items.push(crumb("current", options.currentLabel ?? control.title));
         return items;
       }

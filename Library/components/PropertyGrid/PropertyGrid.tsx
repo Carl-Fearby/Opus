@@ -10,10 +10,11 @@ export type PropertyGridItem = {
 };
 
 type PropertyGridProps = {
+  bordered?: boolean;
   items: PropertyGridItem[];
 };
 
-export function PropertyGrid({ items }: PropertyGridProps) {
+export function PropertyGrid({ bordered = false, items }: PropertyGridProps) {
   const [copiedIndex, setCopiedIndex] = useState<number | null>(null);
 
   async function copyValue(value: string, index: number) {
@@ -27,7 +28,7 @@ export function PropertyGrid({ items }: PropertyGridProps) {
   }
 
   return (
-    <div className={styles.grid} role="table" aria-label="Properties">
+    <div className={styles.grid} data-bordered={bordered} role="table" aria-label="Properties">
       {items.map((item, index) => (
         <div className={styles.row} key={`${item.label}-${index}`} role="row">
           <div className={styles.label} role="rowheader">

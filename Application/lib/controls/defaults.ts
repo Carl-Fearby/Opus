@@ -611,6 +611,9 @@ export const defaultSettings: ControlSettingsBySlug = {
   },
   "404-page": {},
   "403-page": {},
+  "app-setup": {
+    theme: "dark",
+  },
   "dashboard-list-columns": {
     layout: "row",
     previewLayout: "single",
@@ -655,6 +658,7 @@ export const defaultSettings: ControlSettingsBySlug = {
     tone: "default",
     density: "comfortable",
     divided: true,
+    bordered: true,
     footer: "Panel footer content can hold metadata, hints, or actions.",
   },
   section: {
@@ -828,7 +832,10 @@ export const defaultSettings: ControlSettingsBySlug = {
     label: "Or continue",
   },
   "content-timeline": {
+    includeGroups: false,
     includeStatus: true,
+    includeTags: true,
+    rowStyles: ["avatar", "avatar", "status"],
   },
   "tree-view": {
     expandRoots: true,
@@ -839,6 +846,7 @@ export const defaultSettings: ControlSettingsBySlug = {
   },
   "property-grid": {
     copyable: true,
+    bordered: false,
   },
   stack: {
     direction: "column",
@@ -958,7 +966,9 @@ export const defaultSettings: ControlSettingsBySlug = {
     interactive: true,
   },
   calendar: {
+    openDayOnSelect: true,
     showEvents: true,
+    showMonthYearPicker: true,
   },
   "resource-planner": {
     startHour: 8,
@@ -998,6 +1008,12 @@ export const defaultSettings: ControlSettingsBySlug = {
     size: "md",
     tone: "accent",
     label: "Loading",
+  },
+  clock: {
+    showAnalog: true,
+    showDate: true,
+    showDigital: true,
+    size: "md",
   },
   portal: {
     disabled: false,

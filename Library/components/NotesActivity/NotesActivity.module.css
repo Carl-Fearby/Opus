@@ -51,23 +51,8 @@
 
 .feed {
   display: grid;
-  gap: 16px;
+  gap: 0;
   min-width: 0;
-}
-
-.dateGroup {
-  display: grid;
-  gap: 10px;
-  min-width: 0;
-}
-
-.dateLabel {
-  margin: 0;
-  color: var(--dashboard-section-muted);
-  font-size: 0.68rem;
-  font-weight: 700;
-  letter-spacing: 0.04em;
-  text-transform: uppercase;
 }
 
 .footer {

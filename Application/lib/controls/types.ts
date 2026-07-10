@@ -109,6 +109,7 @@ export type ControlSlug =
   | "icon"
   | "icon-badge"
   | "spinner"
+  | "clock"
   | "portal"
   | "portal-host"
   | "visually-hidden"
@@ -491,6 +492,7 @@ export type PanelSettings = {
   tone: SurfaceTone;
   density: SurfaceDensity;
   divided: boolean;
+  bordered: boolean;
   footer: string;
 };
 
@@ -685,6 +687,10 @@ export type DashboardListWidgetSettings = {
 export type DashboardListColumnsLayout = "row" | "stacked";
 
 export type ErrorPageSettings = {};
+
+export type AppSetupSettings = {
+  theme: "dark" | "light";
+};
 
 export type DashboardListColumnsSettings = {
   checkboxSize: ChoiceControlSize;
@@ -897,8 +903,13 @@ export type DividerSettings = {
   label: string;
 };
 
+export type ContentTimelineRowStyle = "avatar" | "status";
+
 export type ContentTimelineSettings = {
+  includeGroups: boolean;
   includeStatus: boolean;
+  includeTags: boolean;
+  rowStyles: [ContentTimelineRowStyle, ContentTimelineRowStyle, ContentTimelineRowStyle];
 };
 
 export type TreeViewSettings = {
@@ -911,6 +922,7 @@ export type MasonryGridSettings = {
 };
 
 export type PropertyGridSettings = {
+  bordered: boolean;
   copyable: boolean;
 };
 
@@ -1064,7 +1076,9 @@ export type KanbanBoardSettings = {
 };
 
 export type CalendarSettings = {
+  openDayOnSelect: boolean;
   showEvents: boolean;
+  showMonthYearPicker: boolean;
 };
 
 export type ResourcePlannerSettings = {
@@ -1110,6 +1124,13 @@ export type SpinnerSettings = {
   size: "sm" | "md" | "lg";
   tone: "accent" | "muted" | "inverse";
   label: string;
+};
+
+export type ClockSettings = {
+  showAnalog: boolean;
+  showDate: boolean;
+  showDigital: boolean;
+  size: "sm" | "md" | "lg";
 };
 
 export type PortalSettings = {
@@ -1326,6 +1347,7 @@ export type ControlSettingsBySlug = {
   icon: IconSettings;
   "icon-badge": IconBadgeSettings;
   spinner: SpinnerSettings;
+  clock: ClockSettings;
   portal: PortalSettings;
   "portal-host": PortalHostSettings;
   "visually-hidden": VisuallyHiddenSettings;
@@ -1362,6 +1384,7 @@ export type ControlSettingsBySlug = {
   "notes-activity": NotesActivitySettings;
   "404-page": ErrorPageSettings;
   "403-page": ErrorPageSettings;
+  "app-setup": AppSetupSettings;
   "status-indicator": StatusIndicatorSettings;
   "trend-badge": TrendBadgeSettings;
 };

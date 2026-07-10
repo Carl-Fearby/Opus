@@ -5,5 +5,9 @@ export default function PlaygroundLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  return <ComponentsThemeProvider>{children}</ComponentsThemeProvider>;
+  return (
+    <ComponentsThemeProvider>
+      <div style={{ height: "100dvh", overflow: "hidden" }}>{children}</div>
+    </ComponentsThemeProvider>
+  );
 }

@@ -4,6 +4,7 @@ import type { ReactNode } from "react";
 import { useEffect, useId, useRef, useState } from "react";
 import type { ModalSize } from "@/components/fields/types";
 import { Button } from "@/components/fields/Button";
+import { Portal } from "@/components/Portal";
 import { useOverlayAccessibility } from "@/lib/a11y/useOverlayAccessibility";
 import styles from "./Modal.module.css";
 
@@ -90,66 +91,68 @@ export function Modal({
   }
 
   return (
-    <div
-      className={styles.backdrop}
-      data-dismissible={dismissOnBackdrop}
-      data-phase={phase}
-      onMouseDown={(event) => {
-        if (event.currentTarget === event.target && dismissOnBackdrop) {
-          onClose();
-        }
-      }}
-    >
-      <section
-        ref={panelRef}
-        aria-describedby={description ? descriptionId : undefined}
-        aria-labelledby={titleId}
-        aria-modal="true"
-        className={styles.modal}
+    <Portal>
+      <div
+        className={styles.backdrop}
+        data-dismissible={dismissOnBackdrop}
         data-phase={phase}
-        data-size={size}
-        role="dialog"
+        onMouseDown={(event) => {
+          if (event.currentTarget === event.target && dismissOnBackdrop) {
+            onClose();
+          }
+        }}
       >
-        <header className={styles.header}>
-          <div className={styles.heading}>
-            <h2 className={styles.title} id={titleId}>
-              {title}
-            </h2>
-            {description ? (
-              <p className={styles.description} id={descriptionId}>
-                {description}
-              </p>
+        <section
+          ref={panelRef}
+          aria-describedby={description ? descriptionId : undefined}
+          aria-labelledby={titleId}
+          aria-modal="true"
+          className={styles.modal}
+          data-phase={phase}
+          data-size={size}
+          role="dialog"
+        >
+          <header className={styles.header}>
+            <div className={styles.heading}>
+              <h2 className={styles.title} id={titleId}>
+                {title}
+              </h2>
+              {description ? (
+                <p className={styles.description} id={descriptionId}>
+                  {description}
+                </p>
+              ) : null}
+            </div>
+            {closeButton ? (
+              <button
+                ref={closeRef}
+                aria-label="Close modal"
+                className={styles.close}
+                onClick={onClose}
+                type="button"
+              >
+                <svg aria-hidden="true" className={styles.closeIcon} viewBox="0 0 16 16">
+                  <path
+                    d="M4.5 4.5 11.5 11.5M11.5 4.5 4.5 11.5"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeLinecap="round"
+                    strokeWidth="1.75"
+                  />
+                </svg>
+              </button>
             ) : null}
-          </div>
-          {closeButton ? (
-            <button
-              ref={closeRef}
-              aria-label="Close modal"
-              className={styles.close}
-              onClick={onClose}
-              type="button"
-            >
-              <svg aria-hidden="true" className={styles.closeIcon} viewBox="0 0 16 16">
-                <path
-                  d="M4.5 4.5 11.5 11.5M11.5 4.5 4.5 11.5"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeLinecap="round"
-                  strokeWidth="1.75"
-                />
-              </svg>
-            </button>
+          </header>
+          <div className={styles.body}>{children}</div>
+          {footer || actions ? (
+            <footer className={styles.footer}>
+              {footer ? <div className={styles.footerContent}>{footer}</div> : null}
+              {actions ? <div className={styles.actions}>{actions}</div> : null}
+            </footer>
           ) : null}
-        </header>
-        <div className={styles.body}>{children}</div>
-        {footer || actions ? (
-          <footer className={styles.footer}>
-            {footer ? <div className={styles.footerContent}>{footer}</div> : null}
-            {actions ? <div className={styles.actions}>{actions}</div> : null}
-          </footer>
-        ) : null}
-      </section>
-    </div>
+        </section>
+      </div>
+    </Portal>
   );
 }
 

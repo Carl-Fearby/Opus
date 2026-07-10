@@ -1,7 +1,7 @@
 export const DEFAULT_PLAYGROUND_CODE = `"use client";
 
 import { useState } from "react";
-import { Button } from "@/components/fields";
+import { Button } from "opus-react";
 
 export default function Example() {
   const [count, setCount] = useState(0);

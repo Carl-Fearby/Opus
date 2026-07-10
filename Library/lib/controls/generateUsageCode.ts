@@ -20,9 +20,9 @@ import {
   getChartPreviewData,
   getChartUsageDataMode,
 } from "./chartDemoData";
-import { worldMapRegionIds } from "@/components/Chart/worldMapRegions";
+import { worldMapRegionIds } from "opus-react";
 import { isChartSlug } from "./chartCatalog";
-import { parsePipelineStageCount } from "./pipelineDemoData";
+import { formatPipelineStagesForUsage, formatPipelineTotalValue } from "./pipelineDemoData";
 import { getDealsOverTimeDemoData } from "./dealsOverTimeDemoData";
 import { demoRecentActivity } from "./recentActivityDemoData";
 import { demoNotesActivity } from "./notesActivityDemoData";
@@ -32,8 +32,52 @@ import {
   formatUserProfileUsageAfterState,
   parseUserProfileMenuItems,
 } from "./userProfileDemoData";
+import {
+  formatAvatarGroupItemsForUsage,
+  formatBottomNavItemsForUsage,
+  formatBreadcrumbItemsForUsage,
+  formatCalendarEventsForUsage,
+  formatCascaderOptionsForUsage,
+  formatContentTimelineGroupsForUsage,
+  formatContentTimelineItemsForUsage,
+  formatDescriptionListItemsForUsage,
+  formatDockLayoutProps,
+  formatDualListAvailableForUsage,
+  formatDualListSelectedForUsage,
+  formatFilterConditionsForUsage,
+  formatFilterSelectGroupsForUsage,
+  formatInspectorFieldsForUsage,
+  formatJsonValueForUsage,
+  formatKanbanCardsForUsage,
+  formatKanbanColumnsForUsage,
+  formatLayoutTileChildren,
+  formatListItemsForUsage,
+  formatMasonryItemsForUsage,
+  formatMultiSelectOptionsForUsage,
+  formatObjectLiteral,
+  formatPermissionsForUsage,
+  formatPermissionsResourcesForUsage,
+  formatPermissionsRolesForUsage,
+  formatPropertyInspectorItemsForUsage,
+  formatPropertyItemsForUsage,
+  formatQueryGroupForUsage,
+  formatRailItemsForUsage,
+  formatResourcePlannerItemsForUsage,
+  formatResourcePlannerResourcesForUsage,
+  formatRulesForUsage,
+  formatSchedulerEventsForUsage,
+  formatScrollAreaContent,
+  formatSegmentedControlOptionsForUsage,
+  formatSplitActionsForUsage,
+  formatStatTilesForUsage,
+  formatTilesForUsage,
+  formatTransferListAvailableForUsage,
+  formatTreeSelectNodesForUsage,
+  formatTreeViewNodesForUsage,
+} from "./usageDemoFormatters";
 import { demoUpcomingTasks } from "./upcomingTasksDemoData";
 import { formatModelAssetsForUsage } from "@/lib/models/vx27Assets";
+import { formatIconBadgeToolbarUsage } from "./iconBadgeDemoData";
 import {
   gaugePreviewValue,
   getGaugeFooter,
@@ -50,6 +94,8 @@ import {
   topNavigationDemoMenus,
 } from "./topNavigationDemo";
 import { formatFullUsageComponent, splitUsageCode } from "./usageCode";
+import { generateAppSetupPlaygroundCode } from "./appSetupBoilerplate";
+import { generate403PlaygroundCode, generate404PlaygroundCode } from "./errorPageBoilerplate";
 
 const radioOptions = [
   { label: "Personal", value: "personal" },
@@ -254,7 +300,7 @@ function fieldProps(settings: FieldUsageSettings) {
 }
 
 function importLine(components: string[]): string {
-  return `import { ${components.join(", ")} } from "@/components/fields";`;
+  return `import { ${components.join(", ")} } from "opus-react";`;
 }
 
 function wrapDashboardWidget(
@@ -316,12 +362,17 @@ function interactiveUsage({
     .join("\n");
   const trimmedJsx = jsx.trim();
   const returnBody = trimmedJsx.startsWith("(")
-    ? `${trimmedJsx};`
-    : trimmedJsx.endsWith(";")
-      ? trimmedJsx
-      : `${trimmedJsx};`;
+    ? trimmedJsx.replace(/;$/, "")
+    : trimmedJsx.startsWith("<")
+      ? `(\n${trimmedJsx
+          .split("\n")
+          .map((line) => (line ? `  ${line}` : line))
+          .join("\n")}\n)`
+      : trimmedJsx.endsWith(";")
+        ? trimmedJsx.slice(0, -1)
+        : trimmedJsx;
 
-  return `${importsBlock}\n\nreturn ${returnBody}`;
+  return `${importsBlock}\n\nreturn ${returnBody};`;
 }
 
 function generateUsageCodeContent(
@@ -684,6 +735,179 @@ ${includeSeries ? `const series = ${formatChartSeriesForUsage(chartDemoSeries)};
       ];
       return `${importLine(["HiddenField"])}\n\n<HiddenField${formatSelfClosing(props)}`;
     }
+    case "filter-select": {
+      const s = settings as ControlSettingsBySlug["filter-select"];
+      const state = toStateName(s.label);
+      const props = [
+        formatStringProp("id", id),
+        ...fieldProps(s),
+        formatExpressionProp("groups", "groups"),
+        formatExpressionProp("value", state),
+        formatExpressionProp("onChange", toSetter(state)),
+      ];
+      return `${usageClientPrefix()}
+${importLine(["FilterSelectField"])}
+
+const groups = ${formatFilterSelectGroupsForUsage()};
+const [${state}, ${toSetter(state)}] = useState(${formatObjectLiteral(s.value)});
+
+<FilterSelectField${formatSelfClosing(props)}`;
+    }
+    case "multi-select": {
+      const s = settings as ControlSettingsBySlug["multi-select"];
+      const state = toStateName(s.label);
+      const props = [
+        formatStringProp("id", id),
+        ...fieldProps(s),
+        formatExpressionProp("options", "options"),
+        formatExpressionProp("value", state),
+        formatExpressionProp("onChange", toSetter(state)),
+      ];
+      return `${usageClientPrefix()}
+${importLine(["MultiSelectField"])}
+
+const options = ${formatMultiSelectOptionsForUsage(s.options)};
+const [${state}, ${toSetter(state)}] = useState(${formatObjectLiteral(s.value)});
+
+<MultiSelectField${formatSelfClosing(props)}`;
+    }
+    case "transfer-list": {
+      const s = settings as ControlSettingsBySlug["transfer-list"];
+      const state = toStateName(s.label);
+      const props = [
+        formatStringProp("id", id),
+        ...fieldProps(s),
+        formatExpressionProp("available", "available"),
+        formatExpressionProp("selected", state),
+        formatExpressionProp("onChange", toSetter(state)),
+      ];
+      return `${usageClientPrefix()}
+${importLine(["TransferListField"])}
+
+const available = ${formatTransferListAvailableForUsage(s.available)};
+const [${state}, ${toSetter(state)}] = useState(${formatObjectLiteral(s.selected)});
+
+<TransferListField${formatSelfClosing(props)}`;
+    }
+    case "password-strength-field": {
+      const s = settings as ControlSettingsBySlug["password-strength-field"];
+      const state = toStateName(s.label);
+      const props = [
+        formatStringProp("id", id),
+        ...fieldProps(s),
+        ...(s.showRequirements ? [formatBoolProp("showRequirements", true)] : []),
+        formatExpressionProp("value", state),
+        formatExpressionProp("onChange", `(value) => ${toSetter(state)}(value)`),
+      ];
+      return controlledFieldUsage(["PasswordStrengthField"], "PasswordStrengthField", state, props, {
+        initial: quote(s.value),
+      });
+    }
+    case "rating-input": {
+      const s = settings as ControlSettingsBySlug["rating-input"];
+      const state = toStateName(s.label);
+      const props = [
+        formatStringProp("id", id),
+        ...fieldProps(s),
+        formatNumberProp("max", s.max),
+        formatStringProp("variant", s.variant),
+        formatExpressionProp("value", state),
+        formatExpressionProp("onChange", toSetter(state)),
+      ];
+      return controlledFieldUsage(["RatingField"], "RatingField", state, props, {
+        initial: String(s.value),
+      });
+    }
+    case "segmented-control": {
+      const s = settings as ControlSettingsBySlug["segmented-control"];
+      const state = toStateName(s.label);
+      const props = [
+        formatStringProp("id", id),
+        ...fieldProps(s),
+        formatExpressionProp("options", "options"),
+        formatExpressionProp("value", state),
+        formatExpressionProp("onChange", toSetter(state)),
+      ];
+      return `${usageClientPrefix()}
+${importLine(["SegmentedControlField"])}
+
+const options = ${formatSegmentedControlOptionsForUsage(s.options)};
+const [${state}, ${toSetter(state)}] = useState(${quote(s.value)});
+
+<SegmentedControlField${formatSelfClosing(props)}`;
+    }
+    case "slider-range": {
+      const s = settings as ControlSettingsBySlug["slider-range"];
+      const state = toStateName(s.label);
+      const props = [
+        formatStringProp("id", id),
+        ...fieldProps(s),
+        formatNumberProp("min", s.min),
+        formatNumberProp("max", s.max),
+        formatNumberProp("step", s.step),
+        formatExpressionProp("value", state),
+        formatExpressionProp("onChange", toSetter(state)),
+      ];
+      return controlledFieldUsage(["SliderRangeField"], "SliderRangeField", state, props, {
+        initial: formatObjectLiteral(s.value),
+      });
+    }
+    case "phone-number-input": {
+      const s = settings as ControlSettingsBySlug["phone-number-input"];
+      const phoneState = toStateName(s.label);
+      const countryState = `${phoneState}CountryCode`;
+      const props = [
+        formatStringProp("id", id),
+        ...fieldProps(s),
+        formatExpressionProp("countryCode", countryState),
+        formatExpressionProp("value", phoneState),
+        formatExpressionProp("onChange", `(value) => ${toSetter(phoneState)}(value)`),
+        formatExpressionProp("onCountryCodeChange", `(code) => ${toSetter(countryState)}(code)`),
+      ];
+      return `${usageClientPrefix()}
+${importLine(["PhoneNumberField"])}
+
+const [${phoneState}, ${toSetter(phoneState)}] = useState(${quote(s.value)});
+const [${countryState}, ${toSetter(countryState)}] = useState(${quote(s.countryCode)});
+
+<PhoneNumberField${formatSelfClosing(props)}`;
+    }
+    case "tree-select": {
+      const s = settings as ControlSettingsBySlug["tree-select"];
+      const state = toStateName(s.label);
+      const props = [
+        formatStringProp("id", id),
+        ...fieldProps(s),
+        formatExpressionProp("nodes", "nodes"),
+        formatExpressionProp("value", state),
+        formatExpressionProp("onChange", toSetter(state)),
+      ];
+      return `${usageClientPrefix()}
+${importLine(["TreeSelectField"])}
+
+const nodes = ${formatTreeSelectNodesForUsage()};
+const [${state}, ${toSetter(state)}] = useState(${quote(s.value)});
+
+<TreeSelectField${formatSelfClosing(props)}`;
+    }
+    case "cascader": {
+      const s = settings as ControlSettingsBySlug["cascader"];
+      const state = toStateName(s.label);
+      const props = [
+        formatStringProp("id", id),
+        ...fieldProps(s),
+        formatExpressionProp("options", "options"),
+        formatExpressionProp("value", state),
+        formatExpressionProp("onChange", toSetter(state)),
+      ];
+      return `${usageClientPrefix()}
+${importLine(["CascaderField"])}
+
+const options = ${formatCascaderOptionsForUsage()};
+const [${state}, ${toSetter(state)}] = useState(${formatObjectLiteral(s.value)});
+
+<CascaderField${formatSelfClosing(props)}`;
+    }
     case "button":
     case "submit-button":
     case "reset-button": {
@@ -722,7 +946,7 @@ ${includeSeries ? `const series = ${formatChartSeriesForUsage(chartDemoSeries)};
         formatExpressionProp("value", "accent"),
         formatExpressionProp("onChange", "setAccent"),
       ];
-      return `${usageClientPrefix()}\nimport { AccentColorPicker, createAccentStyle } from "@/components/AccentColorPicker";
+      return `${usageClientPrefix()}\nimport { AccentColorPicker, createAccentStyle } from "opus-react";
 
 const [accent, setAccent] = useState(${quote(s.value)});
 const accentStyle = createAccentStyle(accent);
@@ -747,7 +971,7 @@ ${formatSelfClosingElement("AccentColorPicker", props, "    ")}
       return `${usageClientPrefix()}\nimport { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { ${iconOption.importName} } from "@fortawesome/free-solid-svg-icons";
 import "@/lib/fontawesome";
-import { IconPicker } from "@/components/IconPicker";
+import { IconPicker } from "opus-react";
 
 const [icon, setIcon] = useState(${quote(s.value)});
 
@@ -1304,22 +1528,13 @@ ${wrapDashboardWidget(
     }
     case "pipeline-overview": {
       const s = settings as ControlSettingsBySlug["pipeline-overview"];
-      const stageCount = parsePipelineStageCount(s.stageCount);
-      const allStages = [
-        { id: "qualification", label: "Qualification", value: 842000, displayValue: "£842,000", percentage: 34 },
-        { id: "proposal", label: "Proposal", value: 621000, displayValue: "£621,000", percentage: 25 },
-        { id: "negotiation", label: "Negotiation", value: 542000, displayValue: "£542,000", percentage: 22 },
-        { id: "closing", label: "Closing", value: 331000, displayValue: "£331,000", percentage: 13 },
-        { id: "won", label: "Won", value: 144000, displayValue: "£144,000", percentage: 6 },
-      ];
-      const stages = allStages.slice(0, stageCount);
-      return `const stages = ${JSON.stringify(stages, null, 2)};
+      return `const stages = ${formatPipelineStagesForUsage(s)};
 
 ${wrapDashboardWidget(
         `<PipelineOverview
   stages={stages}
   totalLabel=${quote(s.totalLabel)}
-  totalValue=${quote(s.totalValue)}
+  totalValue=${quote(formatPipelineTotalValue(s))}
   period=${quote(s.period)}
   onPeriodChange={(nextPeriod) => {
     console.log("Period changed:", nextPeriod);
@@ -1352,18 +1567,14 @@ ${wrapDashboardWidget(
       )}`;
     }
     case "404-page": {
-      return `import { NotFoundPage } from "@/components/documentation/NotFoundPage";
-
-export function Example() {
-  return <NotFoundPage />;
-}`;
+      return generate404PlaygroundCode();
     }
     case "403-page": {
-      return `import { ForbiddenPage } from "@/components/documentation/ForbiddenPage";
-
-export function Example() {
-  return <ForbiddenPage />;
-}`;
+      return generate403PlaygroundCode();
+    }
+    case "app-setup": {
+      const s = settings as ControlSettingsBySlug["app-setup"];
+      return generateAppSetupPlaygroundCode(s);
     }
     case "dashboard-list-columns": {
       const s = settings as ControlSettingsBySlug["dashboard-list-columns"];
@@ -1551,6 +1762,11 @@ export function Example() {
       const widgetBlock = `<UserProfileWidget
 ${propsBlock}
 />`;
+      const indentContainerChild = (block: string) =>
+        block
+          .split("\n")
+          .map((line) => (line ? `  ${line}` : line))
+          .join("\n");
       const fragmentContent = s.photoUploadEnabled
         ? `<>
   ${widgetBlock}
@@ -1558,21 +1774,25 @@ ${propsBlock}
 </>`
         : widgetBlock;
       const returnContent = s.photoUploadEnabled ? `(\n  ${fragmentContent}\n)` : widgetBlock;
+      const wrapped = s.wrapInContainer ?? category === "labs";
+      const containerContent = s.photoUploadEnabled
+        ? `${indentContainerChild(widgetBlock)}\n${indentContainerChild(modalBlock)}`
+        : indentContainerChild(widgetBlock);
       const components = s.photoUploadEnabled
-        ? category === "labs"
+        ? wrapped
           ? ["DashboardContentContainer", "UserProfileWidget", "ProfilePhotoUploadModal"]
           : ["UserProfileWidget", "ProfilePhotoUploadModal"]
-        : category === "labs"
+        : wrapped
           ? ["DashboardContentContainer", "UserProfileWidget"]
           : ["UserProfileWidget"];
 
-      if (category === "labs") {
+      if (wrapped) {
         return interactiveUsage({
           afterState,
           components,
           state,
           jsx: `<DashboardContentContainer data-component=${quote("user-profile")} width=${quote(s.width ?? "widget")}>
-  ${fragmentContent}
+${containerContent}
 </DashboardContentContainer>`,
         });
       }
@@ -1644,6 +1864,7 @@ ${propsBlock}
         ...(s.tone !== "default" ? [formatStringProp("tone", s.tone)] : []),
         ...(s.density !== "comfortable" ? [formatStringProp("density", s.density)] : []),
         ...(s.divided ? [] : [formatBoolProp("divided", false)]),
+        ...(s.bordered ? [] : [formatBoolProp("bordered", false)]),
         formatStringProp("footer", s.footer),
       ];
       return `${importLine(["Panel"])}
@@ -2159,12 +2380,7 @@ ${formatJsxParagraphContent(s.content)}
       ];
       return `${importLine(["AvatarGroup"])}
 
-const items = [
-  { name: "Alex Morgan" },
-  { name: "Jamie Chen" },
-  { name: "Sam Rivera" },
-  { name: "Taylor Brooks" },
-];
+const items = ${formatAvatarGroupItemsForUsage()};
 
 <AvatarGroup${formatSelfClosing(props)}`;
     }
@@ -2177,10 +2393,7 @@ const items = [
       ];
       return `${importLine(["List"])}
 
-const items = [
-  { title: "Design tokens", description: "Colour and spacing primitives.", meta: "Updated" },
-  { title: "Component library", description: "Reusable React primitives.", meta: "Live" },
-];
+const items = ${formatListItemsForUsage(s.showIcons)};
 
 <List${formatSelfClosing(props)}`;
     }
@@ -2192,10 +2405,7 @@ const items = [
       ];
       return `${importLine(["DescriptionList"])}
 
-const items = [
-  { term: "Owner", details: "Alex Morgan" },
-  { term: "Status", details: "In review" },
-];
+const items = ${formatDescriptionListItemsForUsage()};
 
 <DescriptionList${formatSelfClosing(props)}`;
     }
@@ -2209,12 +2419,19 @@ const items = [
       return `${importLine(["Divider"])}\n\n<Divider${formatSelfClosing(props)}`;
     }
     case "content-timeline": {
+      const s = settings as ControlSettingsBySlug["content-timeline"];
+
+      if (s.includeGroups) {
+        return `${importLine(["ContentTimeline"])}
+
+const groups = ${formatContentTimelineGroupsForUsage(s.includeStatus, s.rowStyles, s.includeTags)};
+
+<ContentTimeline groups={groups} />`;
+      }
+
       return `${importLine(["ContentTimeline"])}
 
-const items = [
-  { title: "Release published", description: "opus-react is on npm.", time: "09:40", status: "success" },
-  { title: "Review requested", description: "Design QA pending.", time: "11:15", status: "warning" },
-];
+const items = ${formatContentTimelineItemsForUsage(s.includeStatus, s.rowStyles, s.includeTags)};
 
 <ContentTimeline items={items} />`;
     }
@@ -2222,10 +2439,7 @@ const items = [
       const s = settings as ControlSettingsBySlug["tree-view"];
       return `${importLine(["TreeView"])}
 
-const nodes = [
-  { id: "product", label: "Product", children: [{ id: "overview", label: "Overview" }] },
-  { id: "engineering", label: "Engineering", children: [{ id: "docs", label: "Docs" }] },
-];
+const nodes = ${formatTreeViewNodesForUsage()};
 
 <TreeView nodes={nodes}${s.expandRoots ? ' defaultExpandedIds={["product", "engineering"]}' : ""} />`;
     }
@@ -2238,31 +2452,24 @@ const nodes = [
       ];
       return `${importLine(["MasonryGrid"])}
 
-const items = [
-  { title: "Badge tones", body: "Status chips.", height: 120 },
-  { title: "Avatar stacks", body: "Collaborator strips.", height: 160 },
-];
+const items = ${formatMasonryItemsForUsage()};
 
 <MasonryGrid${formatSelfClosing(props)}`;
     }
     case "property-grid": {
+      const s = settings as ControlSettingsBySlug["property-grid"];
       return `${importLine(["PropertyGrid"])}
 
-const items = [
-  { label: "Package", value: "opus-react", copyable: true },
-  { label: "Category", value: "content", copyable: true },
-];
+const items = ${formatPropertyItemsForUsage(s.copyable)};
 
-<PropertyGrid items={items} />`;
+<PropertyGrid items={items}${s.bordered ? " bordered" : ""} />`;
     }
     case "stack": {
       const s = settings as ControlSettingsBySlug["stack"];
       return `${importLine(["Stack"])}
 
 <Stack direction="${s.direction}" gap={${s.gap}}${s.wrap ? " wrap" : ""}>
-  <div>One</div>
-  <div>Two</div>
-  <div>Three</div>
+${formatLayoutTileChildren(4)}
 </Stack>`;
     }
     case "columns": {
@@ -2273,9 +2480,7 @@ const items = [
       return `${importLine(["Columns"])}
 
 <Columns${directionProp}${columnsProp}${gapProp}>
-  <div>One</div>
-  <div>Two</div>
-  <div>Three</div>
+${formatLayoutTileChildren()}
 </Columns>`;
     }
     case "grid": {
@@ -2283,9 +2488,7 @@ const items = [
       return `${importLine(["Grid"])}
 
 <Grid columns={${s.columns}} gap={${s.gap}}>
-  <div>Alpha</div>
-  <div>Beta</div>
-  <div>Gamma</div>
+${formatLayoutTileChildren()}
 </Grid>`;
     }
     case "splitter": {
@@ -2306,10 +2509,12 @@ const items = [
 </ResizablePanel>`;
     }
     case "dock-layout": {
+      const s = settings as ControlSettingsBySlug["dock-layout"];
+      const dockProps = formatDockLayoutProps(s);
       return `${importLine(["DockLayout"])}
 
-<DockLayout top="Toolbar" left="Files" right="Inspector" bottom="Console">
-  Editor
+<DockLayout${dockProps ? ` ${dockProps}` : ""}>
+  Centre workspace
 </DockLayout>`;
     }
     case "scroll-area": {
@@ -2317,7 +2522,9 @@ const items = [
       return `${importLine(["ScrollArea"])}
 
 <ScrollArea maxHeight={${s.maxHeight}} orientation="${s.orientation}">
-  <div>Long content…</div>
+  <div style={{ padding: 12, display: "grid", gap: 6 }}>
+${formatScrollAreaContent()}
+  </div>
 </ScrollArea>`;
     }
     case "aspect-ratio": {
@@ -2352,11 +2559,7 @@ const items = [
 
 <Breadcrumb
   separator="${s.separator}"
-  items={[
-    { id: "home", label: "Home" },
-    { id: "docs", label: "Docs" },
-    { id: "current", label: "Breadcrumb" },
-  ]}
+  items={${formatBreadcrumbItemsForUsage()}}
 />`;
     }
     case "pagination": {
@@ -2366,12 +2569,19 @@ const items = [
 <Pagination page={${s.page}} pageCount={${s.pageCount}} onPageChange={(page) => console.log(page)} />`;
     }
     case "page-header": {
-      return `${importLine(["PageHeader", "Button"])}
+      const s = settings as ControlSettingsBySlug["page-header"];
+      const breadcrumbs = s.showBreadcrumbs
+        ? `\n  breadcrumbs={<Breadcrumb items={${formatBreadcrumbItemsForUsage()}} />}`
+        : "";
+      const actions = s.showActions
+        ? `\n  actions={<><Button type="button" variant="secondary">Share</Button><Button type="button" variant="primary">Edit</Button></>}`
+        : "";
+      return `${importLine(["PageHeader", "Button", "Breadcrumb"])}
 
 <PageHeader
-  title="Projects"
-  description="Track delivery across teams."
-  actions={<Button variant="primary">New project</Button>}
+  eyebrow="Navigation"
+  title="Page header"
+  description="Composable page chrome for documentation and application shells."${breadcrumbs}${actions}
 />`;
     }
     case "toolbar": {
@@ -2388,10 +2598,7 @@ const items = [
 
 <BottomNavigation
   value="${s.value}"
-  items={[
-    { id: "home", label: "Home", icon: "⌂" },
-    { id: "search", label: "Search", icon: "⌕" },
-  ]}
+  items={${formatBottomNavItemsForUsage()}}
   onChange={(id) => console.log(id)}
 />`;
     }
@@ -2401,10 +2608,7 @@ const items = [
 
 <NavigationRail
   value="${s.value}"${s.collapsed ? "\n  collapsed" : ""}
-  items={[
-    { id: "inbox", label: "Inbox", icon: "Inbox" },
-    { id: "projects", label: "Projects", icon: "Grid" },
-  ]}
+  items={${formatRailItemsForUsage()}}
   onChange={(id) => console.log(id)}
 />`;
     }
@@ -2414,10 +2618,7 @@ const items = [
 
 <SplitButton
   variant="${s.variant}"
-  actions={[
-    { id: "draft", label: "Save draft" },
-    { id: "schedule", label: "Schedule…" },
-  ]}
+  actions={${formatSplitActionsForUsage()}}
 >
   Save
 </SplitButton>`;
@@ -2441,12 +2642,11 @@ const items = [
     }
     case "tiles": {
       const s = settings as ControlSettingsBySlug["tiles"];
-      return `${importLine(["Tiles"])}
+      return `${usageClientPrefix()}
+${importLine(["Tiles"])}
 
-const items = [
-  { id: "new-lead", label: "New Lead", icon: "user-plus", tone: "purple", onClick: () => handleTile("new-lead") },
-  { id: "add-contact", label: "Add Contact", icon: "user", tone: "blue", onClick: () => handleTile("add-contact") },
-];
+const handleTile = (id) => console.log(id);
+const items = ${formatTilesForUsage()};
 
 <Tiles items={items} layout="${s.layout}" />`;
     }
@@ -2467,115 +2667,67 @@ const items = [
     }
     case "stat-tiles": {
       const s = settings as ControlSettingsBySlug["stat-tiles"];
-      return `${importLine(["StatTiles"])}
+      return `${usageClientPrefix()}
+${importLine(["StatTiles"])}
 
-const items = [
-  {
-    id: "total-contacts",
-    label: "Total Contacts",
-    value: "2,543",
-    icon: "user",
-    tone: "blue",
-    trend: "up",
-    trendValue: "12.5%",
-    comparison: "vs last 30 days",
-    onClick: () => handleStatTile("total-contacts"),
-  },
-  {
-    id: "revenue",
-    label: "Revenue",
-    value: "$128k",
-    icon: "chart-column",
-    tone: "purple",
-    trend: "up",
-    trendValue: "8.4%",
-    comparison: "vs last 30 days",
-    onClick: () => handleStatTile("revenue"),
-  },
-  {
-    id: "active-deals",
-    label: "Active Deals",
-    value: "86",
-    icon: "handshake",
-    tone: "blue",
-    trend: "down",
-    trendValue: "3.1%",
-    comparison: "vs last 30 days",
-    onClick: () => handleStatTile("active-deals"),
-  },
-  {
-    id: "new-leads",
-    label: "New Leads",
-    value: "412",
-    icon: "user-plus",
-    tone: "purple",
-    trend: "up",
-    trendValue: "18.2%",
-    comparison: "vs last 30 days",
-    onClick: () => handleStatTile("new-leads"),
-  },
-];
+const handleStatTile = (id) => console.log(id);
+const items = ${formatStatTilesForUsage()};
 
 <StatTiles items={items} layout="${s.layout}" />`;
     }
     case "property-inspector": {
+      const s = settings as ControlSettingsBySlug["property-inspector"];
       return `${importLine(["PropertyInspector"])}
 
-const items = [
-  { id: "name", group: "Identity", label: "Name", value: "Orders board" },
-  { id: "featured", group: "State", label: "Featured", value: true },
-];
+const items = ${formatPropertyInspectorItemsForUsage()};
 
-<PropertyInspector items={items} searchable onChange={(id, value) => console.log(id, value)} />`;
+<PropertyInspector items={items}${s.searchable ? " searchable" : ""} onChange={(id, value) => console.log(id, value)} />`;
     }
     case "filter-builder": {
-      return `${importLine(["FilterBuilder"])}
+      return `${usageClientPrefix()}
+${importLine(["FilterBuilder"])}
 
-const [conditions, setConditions] = useState([
-  { id: "f1", field: "status", operator: "eq", value: "open" },
-]);
+const [conditions, setConditions] = useState(${formatFilterConditionsForUsage()});
 
-<FilterBuilder conditions={conditions} fields={["status", "owner"]} onChange={setConditions} />`;
+<FilterBuilder conditions={conditions} fields={${formatInspectorFieldsForUsage()}} onChange={setConditions} />`;
     }
     case "query-builder": {
       const s = settings as ControlSettingsBySlug["query-builder"];
-      return `${importLine(["QueryBuilder"])}
+      return `${usageClientPrefix()}
+${importLine(["QueryBuilder"])}
 
-const [group, setGroup] = useState({
-  id: "root",
-  combinator: "${s.combinator}",
-  rules: [{ id: "q1", field: "status", operator: "eq", value: "active" }],
-});
+const [group, setGroup] = useState(${formatQueryGroupForUsage(s.combinator)});
 
-<QueryBuilder fields={["status", "owner"]} group={group} onChange={setGroup} />`;
+<QueryBuilder fields={${formatInspectorFieldsForUsage()}} group={group} onChange={setGroup} />`;
     }
     case "rule-builder": {
-      return `${importLine(["RuleBuilder"])}
+      const s = settings as ControlSettingsBySlug["rule-builder"];
+      return `${usageClientPrefix()}
+${importLine(["RuleBuilder"])}
 
-const [rules, setRules] = useState([
-  { id: "r1", name: "Escalate urgent", conditions: "priority >= 4", effect: "notify", enabled: true, priority: 1 },
-]);
+const [rules, setRules] = useState(${formatRulesForUsage(s.showDisabled)});
 
 <RuleBuilder rules={rules} onChange={setRules} />`;
     }
     case "permissions-matrix": {
       return `${importLine(["PermissionsMatrix"])}
 
+const permissions = ${formatPermissionsForUsage()};
+
 <PermissionsMatrix
-  roles={["Admin", "Editor"]}
-  resources={["Projects", "Billing"]}
-  permissions={{ Admin: { Projects: "admin", Billing: "write" }, Editor: { Projects: "write", Billing: "read" } }}
+  roles={${formatPermissionsRolesForUsage()}}
+  resources={${formatPermissionsResourcesForUsage()}}
+  permissions={permissions}
   onChange={(role, resource, level) => console.log(role, resource, level)}
 />`;
     }
     case "dual-list-builder": {
-      return `${importLine(["DualListBuilder"])}
+      const s = settings as ControlSettingsBySlug["dual-list-builder"];
+      return `${usageClientPrefix()}
+${importLine(["DualListBuilder"])}
 
-const available = [
-  { id: "design", label: "Design system" },
-  { id: "docs", label: "Documentation" },
-];
-const [selectedIds, setSelectedIds] = useState(["design"]);
+const available = ${formatDualListAvailableForUsage()};
+const [selectedIds, setSelectedIds] = useState(${formatDualListSelectedForUsage(s.selectedCount)});
 
 <DualListBuilder available={available} selectedIds={selectedIds} onChange={setSelectedIds} />`;
     }
@@ -2583,30 +2735,41 @@ const [selectedIds, setSelectedIds] = useState(["design"]);
       const s = settings as ControlSettingsBySlug["scheduler"];
       return `${importLine(["Scheduler"])}
 
-const events = [
-  { id: "s1", day: 0, startHour: 9, durationHours: 1, title: "Standup" },
-];
+const events = ${formatSchedulerEventsForUsage()};
 
 <Scheduler events={events} startHour={${s.startHour}} endHour={${s.endHour}} />`;
     }
     case "kanban-board": {
-      return `${importLine(["KanbanBoard"])}
+      const s = settings as ControlSettingsBySlug["kanban-board"];
+      return `${usageClientPrefix()}
+${importLine(["KanbanBoard"])}
 
-const cards = { c1: { id: "c1", title: "Ship builders", meta: "Planning" } };
-const [columns, setColumns] = useState([
-  { id: "todo", title: "To do", cardIds: ["c1"] },
-  { id: "done", title: "Done", cardIds: [] },
-]);
+const cards = ${formatKanbanCardsForUsage()};
+const [columns, setColumns] = useState(${formatKanbanColumnsForUsage()});
 
-<KanbanBoard cards={cards} columns={columns} onChange={setColumns} />`;
+<KanbanBoard cards={cards} columns={columns}${s.interactive ? " onChange={setColumns}" : ""} />`;
     }
     case "calendar": {
-      return `${importLine(["Calendar"])}
+      const s = settings as ControlSettingsBySlug["calendar"];
+      const events = s.showEvents ? formatCalendarEventsForUsage() : "[]";
+      return `${importLine(["Calendar", "useState"])}
 
-<Calendar
-  events={[{ id: "e1", date: "2026-07-12", title: "Design critique" }]}
-  onSelectDate={(date) => console.log(date)}
-/>`;
+function CalendarExample() {
+  const [selectedDate, setSelectedDate] = useState<string>();
+
+  return (
+    <>
+      <Calendar
+        events={${events}}
+        onSelectDate={setSelectedDate}${s.openDayOnSelect ? "" : "\n        openDayOnSelect={false}"}
+        selectedDate={selectedDate}${s.showMonthYearPicker ? "" : "\n        showMonthYearPicker={false}"}
+      />
+      <p>{selectedDate ? \`Opened or selected: \${selectedDate}\` : "Click a day to open its schedule."}</p>
+    </>
+  );
+}
+
+<CalendarExample />`;
     }
     case "resource-planner": {
       const s = settings as ControlSettingsBySlug["resource-planner"];
@@ -2615,8 +2778,8 @@ const [columns, setColumns] = useState([
 <ResourcePlanner
   startHour={${s.startHour}}
   endHour={${s.endHour}}
-  resources={[{ id: "alex", label: "Alex Morgan" }]}
-  items={[{ id: "b1", resourceId: "alex", label: "Builders", start: 9, end: 12 }]}
+  resources={${formatResourcePlannerResourcesForUsage()}}
+  items={${formatResourcePlannerItemsForUsage()}}
 />`;
     }
     case "json-viewer": {
@@ -2627,7 +2790,7 @@ const [columns, setColumns] = useState([
       ];
       return `${importLine(["JsonViewer"])}
 
-const value = { name: "opus-react", published: true };
+const value = ${formatJsonValueForUsage()};
 
 <JsonViewer${formatSelfClosing(props)}`;
     }
@@ -2655,6 +2818,18 @@ const value = { name: "opus-react", published: true };
     }
     case "icon-badge": {
       const s = settings as ControlSettingsBySlug["icon-badge"];
+
+      if (s.showToolbarDemo) {
+        return interactiveUsage({
+          components: ["IconBadge"],
+          state: [
+            'const [lastAction, setLastAction] = useState("Waiting for action");',
+            'const reportAction = (label: string) => setLastAction(`Last action: ${label}`);',
+          ],
+          jsx: formatIconBadgeToolbarUsage(s.size, s.tone),
+        });
+      }
+
       const props = [
         formatStringProp("iconName", s.iconName),
         formatStringProp("label", s.label),
@@ -2685,6 +2860,16 @@ const value = { name: "opus-react", published: true };
         ...(s.label !== "Loading" ? [formatStringProp("label", s.label)] : []),
       ];
       return `${importLine(["Spinner"])}\n\n<Spinner${formatSelfClosing(props)}`;
+    }
+    case "clock": {
+      const s = settings as ControlSettingsBySlug["clock"];
+      const props = [
+        ...(s.size !== "md" ? [formatStringProp("size", s.size)] : []),
+        ...(s.showAnalog ? [] : [formatBoolProp("showAnalog", false)]),
+        ...(s.showDigital ? [] : [formatBoolProp("showDigital", false)]),
+        ...(s.showDate ? [] : [formatBoolProp("showDate", false)]),
+      ];
+      return `${importLine(["Clock"])}\n\n<Clock${formatSelfClosing(props)}`;
     }
     case "portal": {
       const s = settings as ControlSettingsBySlug["portal"];
@@ -2736,7 +2921,38 @@ const value = { name: "opus-react", published: true };
       return `${usageClientPrefix()}\n${importLine(["ThemeSwitcher"])}\n\nconst [theme, setTheme] = useState<"dark" | "light">(${JSON.stringify(s.theme)});\n\n<ThemeSwitcher label=${JSON.stringify(s.label)} value={theme} onChange={setTheme} />`;
     }
     case "resize-observer": {
-      return `${importLine(["ResizeObserver"])}\n\n<ResizeObserver>\n  {(size) => <div>{size.width} × {size.height}</div>}\n</ResizeObserver>`;
+      const s = settings as ControlSettingsBySlug["resize-observer"];
+      return interactiveUsage({
+        components: ["ResizeObserver"],
+        state: [],
+        jsx: `(
+  <div data-fit-content="true">
+    <ResizeObserver
+      style={{
+        boxSizing: "border-box",
+        resize: "both",
+        overflow: "auto",
+        minWidth: 160,
+        minHeight: 90,
+        width: 240,
+        height: 120,
+        padding: 12,
+        border: "1px dashed var(--opus-accent)",
+        borderRadius: 12,
+      }}
+    >
+      {(size) => (
+        <>
+          <div style={{ color: "var(--opus-muted)", marginBottom: 8 }}>${s.hint}</div>
+          <strong>
+            {size.width} × {size.height}
+          </strong>
+        </>
+      )}
+    </ResizeObserver>
+  </div>
+)`,
+      });
     }
     case "intersection-observer": {
       const s = settings as ControlSettingsBySlug["intersection-observer"];
@@ -2848,9 +3064,26 @@ export function generateFullUsageCode(
   settings: ControlSettings,
   category?: ComponentCategory,
 ) {
-  return formatFullUsageComponent(generateUsageCodeContent(slug, settings, category));
+  const content = generateUsageCodeContent(slug, settings, category);
+  if (/export\s+default\s+function/.test(content.trim())) {
+    return content.trim();
+  }
+
+  return formatFullUsageComponent(content);
+}
+
+export function generatePlaygroundSeedCode(
+  slug: ControlSlug,
+  settings: ControlSettings,
+  category?: ComponentCategory,
+) {
+  return generateFullUsageCode(slug, settings, category);
 }
 
 export function generateUsageCode(slug: ControlSlug, settings: ControlSettings, category?: ComponentCategory) {
-  return splitUsageCode(generateUsageCodeContent(slug, settings, category));
+  const full = generateFullUsageCode(slug, settings, category);
+  return {
+    ...splitUsageCode(full),
+    full,
+  };
 }

@@ -4,6 +4,7 @@ import { useMemo, useState } from "react";
 import { CatalogIcon } from "@/components/CatalogIcon";
 import { ContentTimeline, type ContentTimelineItem } from "@/components/ContentTimeline";
 import { NoteComposer } from "@/components/NoteComposer";
+import type { ContentTimelineStatus } from "@/components/fields/types";
 import styles from "./NotesActivity.module.css";
 
 export type NotesActivityTagTone = "blue" | "green" | "orange" | "purple";
@@ -20,6 +21,7 @@ export type NotesActivityItem = {
   dateGroup: string;
   id: string;
   kind: "activity" | "note";
+  status?: ContentTimelineStatus;
   tags?: NotesActivityTag[];
   time: string;
 };
@@ -57,15 +59,29 @@ function groupItemsByDate(items: NotesActivityItem[]) {
 }
 
 function toTimelineItems(items: NotesActivityItem[]): ContentTimelineItem[] {
-  return items.map((item) => ({
-    avatarName: item.author,
-    avatarSrc: item.avatarSrc,
-    description: item.body,
-    id: item.id,
-    tags: item.tags,
-    time: item.time,
-    title: item.author,
-  }));
+  return items.map((item) => {
+    const shared = {
+      description: item.body,
+      id: item.id,
+      tags: item.tags,
+      time: item.time,
+    };
+
+    if (item.kind === "note") {
+      return {
+        ...shared,
+        avatarName: item.author,
+        avatarSrc: item.avatarSrc,
+        title: item.author,
+      };
+    }
+
+    return {
+      ...shared,
+      status: item.status ?? "default",
+      title: item.author,
+    };
+  });
 }
 
 export function NotesActivity({
@@ -152,20 +168,17 @@ export function NotesActivity({
       ) : null}
 
       <div className={styles.feed}>
-        {groupedItems.map((group) => (
-          <section className={styles.dateGroup} key={group.dateGroup}>
-            <h4 className={styles.dateLabel}>{group.dateGroup}</h4>
-            <ContentTimeline
-              items={toTimelineItems(group.items)}
-              onItemClick={
-                handleTimelineClick
-                  ? (timelineItem) => handleTimelineClick(timelineItem)
-                  : undefined
-              }
-              variant="avatar"
-            />
-          </section>
-        ))}
+        <ContentTimeline
+          groups={groupedItems.map((group) => ({
+            items: toTimelineItems(group.items),
+            label: group.dateGroup,
+          }))}
+          onItemClick={
+            handleTimelineClick
+              ? (timelineItem) => handleTimelineClick(timelineItem)
+              : undefined
+          }
+        />
       </div>
 
       <footer className={styles.footer}>

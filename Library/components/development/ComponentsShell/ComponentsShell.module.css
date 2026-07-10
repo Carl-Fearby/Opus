@@ -509,6 +509,67 @@ html[data-shell-theme="light"] .shell .content {
   gap: 2px;
 }
 
+.navSubsectionHeader {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  margin: 6px 0 2px;
+}
+
+.navSubsectionHeadingLink {
+  display: inline-flex;
+  flex: 1;
+  min-width: 0;
+  align-items: center;
+  gap: 8px;
+  padding: 7px 10px;
+  border: 1px solid transparent;
+  border-radius: var(--opus-input-radius);
+  color: var(--opus-accent);
+  font-size: 0.68rem;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+  line-height: 1.4;
+  text-decoration: none;
+  text-transform: uppercase;
+  transition:
+    background 160ms ease,
+    border-color 160ms ease,
+    color 160ms ease;
+}
+
+.navSubsectionHeadingLink:hover {
+  border-color: var(--opus-border);
+  background: color-mix(in srgb, var(--opus-accent-soft) 50%, transparent);
+}
+
+.navSubsectionHeadingLinkActive {
+  border-color: color-mix(in srgb, var(--opus-accent) 45%, transparent);
+  background: var(--opus-accent-soft);
+}
+
+.navSubsectionChevronButton {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: 28px;
+  height: 28px;
+  padding: 0;
+  border: 1px solid transparent;
+  border-radius: var(--opus-input-radius);
+  background: transparent;
+  cursor: pointer;
+  transition:
+    background 160ms ease,
+    border-color 160ms ease;
+}
+
+.navSubsectionChevronButton:hover {
+  border-color: var(--opus-border);
+  background: color-mix(in srgb, var(--opus-accent-soft) 50%, transparent);
+}
+
 .navSubsectionButton {
   display: flex;
   width: 100%;

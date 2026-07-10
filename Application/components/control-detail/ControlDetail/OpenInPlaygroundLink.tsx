@@ -12,11 +12,14 @@ type OpenInPlaygroundLinkProps = {
 };
 
 export function OpenInPlaygroundLink({ category, settings, slug }: OpenInPlaygroundLinkProps) {
+  const seed = { category, settings, slug };
+
   return (
     <Link
       className={styles.panelActionButton}
       href={buildPlaygroundHref(slug, category)}
-      onClick={() => storePlaygroundSeed({ category, settings, slug })}
+      onMouseDown={() => storePlaygroundSeed(seed)}
+      onClick={() => storePlaygroundSeed(seed)}
     >
       Open in Playground
     </Link>

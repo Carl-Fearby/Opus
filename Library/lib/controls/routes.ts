@@ -37,6 +37,36 @@ export function categoryPath(category: ComponentCategory) {
   return CATEGORY_PATHS[category];
 }
 
+export function navigationGroupToSlug(label: string) {
+  return label
+    .toLowerCase()
+    .replace(/\//g, " ")
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-|-$/g, "");
+}
+
+export function categorySubgroupPath(category: ComponentCategory, navigationGroup: string) {
+  return `${CATEGORY_PATHS[category]}/${navigationGroupToSlug(navigationGroup)}`;
+}
+
+export function getCategorySubgroupFromPath(pathname: string): {
+  category: ComponentCategory;
+  groupSlug: string;
+} | null {
+  for (const [category, basePath] of Object.entries(CATEGORY_PATHS) as [ComponentCategory, string][]) {
+    if (!pathname.startsWith(`${basePath}/`)) {
+      continue;
+    }
+
+    const groupSlug = pathname.slice(basePath.length + 1);
+    if (groupSlug && !groupSlug.includes("/")) {
+      return { category, groupSlug };
+    }
+  }
+
+  return null;
+}
+
 export function getCategoryFromPath(pathname: string): ComponentCategory | null {
   if (pathname === CATEGORY_PATHS.content) {
     return "content";
@@ -69,6 +99,11 @@ export function getActiveCategoryFromPath(pathname: string): ComponentCategory |
   const categoryFromPath = getCategoryFromPath(pathname);
   if (categoryFromPath) {
     return categoryFromPath;
+  }
+
+  const subgroup = getCategorySubgroupFromPath(pathname);
+  if (subgroup) {
+    return subgroup.category;
   }
 
   if (!pathname.startsWith(`${COMPONENTS_BASE_PATH}/`)) {

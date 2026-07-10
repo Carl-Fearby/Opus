@@ -9,6 +9,7 @@ export type SplitterProps = {
   children: [ReactNode, ReactNode];
   className?: string;
   defaultSize?: number;
+  flush?: boolean;
   minSize?: number;
   onSizeChange?: (size: number) => void;
   orientation?: SplitterOrientation;
@@ -20,6 +21,7 @@ export function Splitter({
   children,
   className,
   defaultSize = 40,
+  flush = false,
   minSize = 15,
   onSizeChange,
   orientation = "horizontal",
@@ -79,6 +81,7 @@ export function Splitter({
     <div
       aria-labelledby={labelId}
       className={[styles.root, className].filter(Boolean).join(" ")}
+      data-flush={flush ? "" : undefined}
       data-orientation={orientation}
       ref={rootRef}
       style={style}

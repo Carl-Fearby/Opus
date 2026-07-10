@@ -2,9 +2,11 @@
 
 import dynamic from "next/dynamic";
 import Link from "next/link";
+import { useEffect } from "react";
 import { useSetComponentsPageHeader } from "@/components/development/ComponentsThemeProvider";
 import { useComponentSettings } from "@/components/development/ComponentsShell/ComponentSettingsContext";
 import { componentRawPath } from "@/lib/controls/routes";
+import { storePlaygroundSeed } from "@/lib/playground/playgroundNavigation";
 import type { ControlDefinition, ControlSettings } from "@/lib/controls/types";
 import { ControlDetailPanel } from "./ControlDetailPanel";
 import { OpenInPlaygroundLink } from "./OpenInPlaygroundLink";
@@ -40,6 +42,10 @@ type ControlDetailProps = {
 export function ControlDetail({ control, defaultSettings, documentation }: ControlDetailProps) {
   useSetComponentsPageHeader(control.title, control.description);
   const { settings, setSettings } = useComponentSettings(control.slug, defaultSettings);
+
+  useEffect(() => {
+    storePlaygroundSeed({ category: control.category, settings, slug: control.slug });
+  }, [control.category, control.slug, settings]);
 
   const panelActions = (
     <>

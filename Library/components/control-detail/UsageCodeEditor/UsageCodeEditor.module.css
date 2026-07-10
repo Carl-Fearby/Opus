@@ -15,9 +15,14 @@
   background: transparent;
 }
 
-.codeEditor :global(.cm-scroller) {
+.codeEditor:not([data-fill-height="true"]) :global(.cm-scroller) {
   overflow: visible;
   font-family: inherit;
+}
+
+.codeEditor[data-fill-height="true"] :global(.cm-scroller) {
+  font-family: inherit;
+  overflow: auto !important;
 }
 
 .codeEditor :global(.cm-content) {
@@ -64,8 +69,39 @@
   display: block;
 }
 
-.codeEditor[data-editable="true"] :global(.cm-scroller) {
+.codeEditor[data-editable="true"]:not([data-fill-height="true"]) :global(.cm-scroller) {
   overflow: auto;
+}
+
+.codeEditor[data-fill-height="true"] {
+  display: flex;
+  flex: 1 1 auto;
+  flex-direction: column;
+  height: 100%;
+  max-height: none;
+  min-height: 0;
+  overflow: hidden;
+}
+
+.codeEditor[data-fill-height="true"] > :global(div) {
+  display: flex;
+  flex: 1 1 auto;
+  flex-direction: column;
+  height: 100%;
+  min-height: 0;
+  overflow: hidden;
+}
+
+.codeEditor[data-fill-height="true"] :global(.cm-editor) {
+  flex: 1 1 auto;
+  height: 100% !important;
+  max-height: 100%;
+  min-height: 0;
+  overflow: hidden;
+}
+
+.codeEditor[data-fill-height="true"] :global(.cm-gutters) {
+  flex-shrink: 0;
 }
 
 .codeEditor :global(.cm-focused) {

@@ -2,10 +2,16 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
-import type { ReactNode } from "react";
+import { usePathname, useRouter } from "next/navigation";
+import { useMemo, type ReactNode } from "react";
 import opusReactPackage from "opus-react/package.json";
 import { DOCUMENTATION_BASE_PATH, PLAYGROUND_BASE_PATH } from "@/lib/documentation/routes";
+import {
+  resolveComponentsHref,
+  resolveComponentsHrefFromLocation,
+  resolvePlaygroundHref,
+  resolvePlaygroundHrefFromLocation,
+} from "@/lib/playground/playgroundNavigation";
 import styles from "./TopBar.module.css";
 
 const LIBRARY_VERSION = opusReactPackage.version;
@@ -13,6 +19,54 @@ const LIBRARY_VERSION = opusReactPackage.version;
 type DocumentationNavProps = {
   current?: "home" | "components" | "guide" | "playground" | "version";
 };
+
+function ComponentsNavLink({ isActive }: { isActive: boolean }) {
+  const pathname = usePathname();
+  const router = useRouter();
+  const href = useMemo(() => resolveComponentsHrefFromLocation(pathname, null), [pathname]);
+
+  return (
+    <Link
+      aria-current={isActive ? "page" : undefined}
+      className={isActive ? styles.navLinkActive : styles.navLink}
+      href={href}
+      onClick={(event) => {
+        const category = new URLSearchParams(window.location.search).get("category");
+        const nextHref = resolveComponentsHref(pathname, category);
+        if (nextHref !== href) {
+          event.preventDefault();
+          router.push(nextHref);
+        }
+      }}
+    >
+      Components
+    </Link>
+  );
+}
+
+function PlaygroundNavLink({ isActive }: { isActive: boolean }) {
+  const pathname = usePathname();
+  const router = useRouter();
+  const href = useMemo(() => resolvePlaygroundHrefFromLocation(pathname, null), [pathname]);
+
+  return (
+    <Link
+      aria-current={isActive ? "page" : undefined}
+      className={isActive ? styles.navLinkActive : styles.navLink}
+      href={href}
+      onClick={(event) => {
+        const category = new URLSearchParams(window.location.search).get("category");
+        const nextHref = resolvePlaygroundHref(pathname, category);
+        if (nextHref !== href) {
+          event.preventDefault();
+          router.push(nextHref);
+        }
+      }}
+    >
+      Playground
+    </Link>
+  );
+}
 
 export function DocumentationNav({ current }: DocumentationNavProps) {
   const pathname = usePathname();
@@ -46,20 +100,8 @@ export function DocumentationNav({ current }: DocumentationNavProps) {
       >
         Guide
       </Link>
-      <Link
-        aria-current={active === "components" ? "page" : undefined}
-        className={active === "components" ? styles.navLinkActive : styles.navLink}
-        href="/documentation/components"
-      >
-        Components
-      </Link>
-      <Link
-        aria-current={active === "playground" ? "page" : undefined}
-        className={active === "playground" ? styles.navLinkActive : styles.navLink}
-        href={PLAYGROUND_BASE_PATH}
-      >
-        Playground
-      </Link>
+      <ComponentsNavLink isActive={active === "components"} />
+      <PlaygroundNavLink isActive={active === "playground"} />
       <Link
         aria-current={active === "version" ? "page" : undefined}
         className={active === "version" ? styles.navLinkActive : styles.navLink}

@@ -140,48 +140,6 @@
   font-size: 0.78rem;
 }
 
-.usageSection {
-  display: grid;
-  gap: 6px;
-}
-
-.usageSection + .usageSection {
-  margin-top: 14px;
-  padding-top: 14px;
-  border-top: 1px solid color-mix(in srgb, var(--opus-border) 72%, transparent);
-}
-
-.usageSectionHeading {
-  display: flex;
-  align-items: flex-start;
-  justify-content: space-between;
-  gap: 12px;
-}
-
-.usageSectionCopy {
-  display: grid;
-  gap: 4px;
-  min-width: 0;
-}
-
-.usageSectionTitle {
-  margin: 0;
-  color: var(--opus-text);
-  font-size: 0.78rem;
-  font-weight: 700;
-  letter-spacing: 0.08em;
-  line-height: 1.2;
-  text-transform: uppercase;
-}
-
-.usageSectionHint {
-  margin: 0;
-  color: var(--opus-muted);
-  font-size: 0.74rem;
-  line-height: 1.4;
-}
-
-.usageCopyButton,
 .panelActionButton {
   flex-shrink: 0;
   padding: 4px 10px;
@@ -202,14 +160,12 @@
     background 160ms ease;
 }
 
-.usageCopyButton:hover,
 .panelActionButton:hover {
   border-color: color-mix(in srgb, var(--opus-accent) 45%, var(--opus-border));
   background: color-mix(in srgb, var(--opus-accent-soft) 55%, transparent);
   color: var(--opus-text);
 }
 
-.usageCopyButton:focus-visible,
 .panelActionButton:focus-visible {
   outline: 2px solid color-mix(in srgb, var(--opus-accent) 65%, transparent);
   outline-offset: 2px;
@@ -250,22 +206,14 @@
   font-size: 0.82rem;
 }
 
-.iconBadgeToolbar {
+.dialogResult {
+  margin: 8px 0 0;
   display: inline-flex;
-  flex-wrap: wrap;
   align-items: center;
-  gap: 6px;
-  padding: 4px 8px;
-  border: 1px solid color-mix(in srgb, var(--opus-border) 72%, transparent);
-  border-radius: 12px;
-  background: color-mix(in srgb, var(--opus-panel) 88%, transparent);
-}
-
-.iconBadgeDivider {
-  width: 1px;
-  align-self: stretch;
-  margin: 4px 2px;
-  background: color-mix(in srgb, var(--opus-border) 88%, transparent);
+  min-height: var(--opus-control-height);
+  color: var(--opus-muted);
+  font-size: 0.82rem;
+  font-weight: 600;
 }
 
 .dismissedHint {
@@ -273,6 +221,13 @@
   color: var(--opus-muted);
   font-size: 0.84rem;
   line-height: 1.45;
+}
+
+.iconBadgeToolbar {
+  display: inline-flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px;
 }
 
 .toastPreview {
@@ -336,15 +291,6 @@
   color: var(--opus-accent);
   font-family: var(--font-ibm-plex-mono), monospace;
   font-size: 0.78rem;
-}
-
-.dialogResult {
-  display: inline-flex;
-  align-items: center;
-  min-height: var(--opus-control-height);
-  color: var(--opus-muted);
-  font-size: 0.84rem;
-  font-weight: 600;
 }
 
 .modalHtmlDemo {

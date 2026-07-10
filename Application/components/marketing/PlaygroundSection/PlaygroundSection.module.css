@@ -1,0 +1,249 @@
+.section {
+  padding: 88px 24px;
+}
+
+.inner {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: 40px;
+  align-items: center;
+  max-width: var(--opus-max-width);
+  margin: 0 auto;
+}
+
+.eyebrow {
+  margin: 0 0 12px;
+  color: var(--opus-cyan);
+  font-family: var(--font-ibm-plex-mono), monospace;
+  font-size: 0.78rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.copy h2 {
+  margin: 0;
+  font-size: clamp(1.9rem, 3vw, 2.8rem);
+  line-height: 1.08;
+  letter-spacing: -0.03em;
+}
+
+.copy > p {
+  margin: 16px 0 0;
+  color: var(--opus-muted);
+  font-size: 1.02rem;
+}
+
+.list {
+  display: grid;
+  gap: 10px;
+  margin: 24px 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.list li {
+  position: relative;
+  padding-left: 18px;
+  color: var(--opus-muted);
+}
+
+.list li::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0.62em;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--opus-accent), var(--opus-cyan));
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-top: 28px;
+}
+
+.primary,
+.secondary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 46px;
+  padding: 0 18px;
+  border-radius: 999px;
+  font-weight: 600;
+}
+
+.primary {
+  background: linear-gradient(135deg, var(--opus-accent), #6b46ff);
+}
+
+.secondary {
+  border: 1px solid var(--opus-border);
+  background: rgba(255, 255, 255, 0.03);
+  color: var(--opus-text);
+}
+
+.mock {
+  overflow: hidden;
+  border: 1px solid var(--opus-border-strong);
+  border-radius: 24px;
+  background: color-mix(in srgb, var(--opus-panel) 88%, transparent);
+  box-shadow: var(--opus-shadow);
+}
+
+.mockTop {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 14px 16px;
+  border-bottom: 1px solid var(--opus-border);
+}
+
+.mockTop span {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.12);
+}
+
+.mockTab {
+  width: auto !important;
+  height: auto !important;
+  margin-left: 8px;
+  padding: 6px 10px !important;
+  border-radius: 999px !important;
+  color: var(--opus-muted);
+  font-family: var(--font-ibm-plex-mono), monospace;
+  font-size: 0.68rem;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.mockTab[data-active="true"] {
+  background: rgba(143, 108, 255, 0.18) !important;
+  color: var(--opus-text);
+}
+
+.mockBody {
+  display: flex;
+  min-height: 320px;
+}
+
+.mockPane {
+  display: grid;
+  grid-template-rows: auto 1fr;
+  flex: 1 1 0;
+  min-width: 0;
+}
+
+.mockPaneLabel {
+  padding: 10px 14px;
+  border-bottom: 1px solid var(--opus-border);
+  color: var(--opus-muted);
+  font-family: var(--font-ibm-plex-mono), monospace;
+  font-size: 0.68rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.mockCode {
+  display: grid;
+  gap: 10px;
+  padding: 16px;
+}
+
+.mockCode span {
+  display: block;
+  height: 10px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.mockCode span:nth-child(1) {
+  width: 72%;
+}
+
+.mockCode span:nth-child(2) {
+  width: 54%;
+}
+
+.mockCode span:nth-child(3) {
+  width: 88%;
+}
+
+.mockCode span[data-accent="true"] {
+  background: linear-gradient(90deg, rgba(143, 108, 255, 0.55), rgba(34, 211, 238, 0.25));
+}
+
+.mockCode span:nth-child(4) {
+  width: 64%;
+}
+
+.mockCode span:nth-child(5) {
+  width: 46%;
+}
+
+.mockHandle {
+  flex: 0 0 8px;
+  background: color-mix(in srgb, var(--opus-muted) 16%, transparent);
+}
+
+.mockPreview {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 28px 20px;
+}
+
+.mockAvatar {
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, rgba(143, 108, 255, 0.8), rgba(34, 211, 238, 0.45));
+}
+
+.mockProfile {
+  display: grid;
+  gap: 8px;
+  flex: 1 1 auto;
+}
+
+.mockProfile span {
+  display: block;
+  height: 10px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.mockProfile span:first-child {
+  width: 72%;
+}
+
+.mockProfile span:last-child {
+  width: 48%;
+}
+
+@media (max-width: 980px) {
+  .inner {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 560px) {
+  .section {
+    padding-inline: 18px;
+  }
+
+  .mockBody {
+    flex-direction: column;
+    min-height: 380px;
+  }
+
+  .mockHandle {
+    flex-basis: 8px;
+    width: 100%;
+  }
+}

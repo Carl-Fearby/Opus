@@ -41,7 +41,7 @@ export function compilePlaygroundCode(code: string): ComponentType {
     "exports",
     "module",
     ...scopeKeys,
-    `${transformed.code}\n;return module.exports.default ?? exports.default;`,
+    `${transformed.code}\n;return module.exports.default ?? exports.default ?? module.exports.Example ?? exports.Example;`,
   );
 
   const component = runner(exports, module, ...scopeValues) as ComponentType | undefined;

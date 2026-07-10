@@ -3,8 +3,6 @@
   gap: 4px;
   width: 168px;
   padding: 8px;
-  border: 1px solid var(--opus-border);
-  border-radius: var(--opus-input-radius-large, 6px);
   background: color-mix(in srgb, var(--opus-panel) 94%, transparent);
 }
 

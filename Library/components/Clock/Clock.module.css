@@ -1,0 +1,183 @@
+.root {
+  --clock-size: 260px;
+  --clock-tick-origin: 121px;
+  --clock-hour-hand: 66px;
+  --clock-minute-hand: 88px;
+  --clock-second-hand: 99px;
+  --clock-number-radius: 92px;
+  --clock-text: #f8fafc;
+  --clock-muted: #94a3b8;
+  --clock-face-border: rgba(255, 255, 255, 0.13);
+  --clock-face-bg: radial-gradient(circle at 40% 32%, #26364d 0%, #111c2e 45%, #08111f 100%);
+  --clock-face-shadow:
+    0 24px 60px rgba(0, 0, 0, 0.4),
+    inset 0 0 35px rgba(0, 0, 0, 0.45),
+    inset 0 1px 1px rgba(255, 255, 255, 0.1);
+  --clock-tick: #cbd5e1;
+  --clock-tick-opacity: 0.35;
+  --clock-number: #e2e8f0;
+  --clock-hour-hand-color: #f8fafc;
+  --clock-minute-hand-color: #cbd5e1;
+  --clock-hand-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  color: var(--clock-text);
+  font: inherit;
+}
+
+:global([data-preview-root][data-theme="light"]) .root,
+:global([data-theme="light"]) .root {
+  --clock-text: var(--opus-text);
+  --clock-muted: var(--opus-muted);
+  --clock-face-border: color-mix(in srgb, var(--opus-border) 85%, transparent);
+  --clock-face-bg: radial-gradient(circle at 40% 32%, #ffffff 0%, #f4f7fb 42%, #e6ebf3 100%);
+  --clock-face-shadow:
+    0 20px 48px color-mix(in srgb, var(--opus-text) 10%, transparent),
+    inset 0 0 28px color-mix(in srgb, var(--opus-text) 6%, transparent),
+    inset 0 1px 1px rgba(255, 255, 255, 0.95);
+  --clock-tick: color-mix(in srgb, var(--opus-text) 42%, transparent);
+  --clock-tick-opacity: 0.45;
+  --clock-number: var(--opus-text);
+  --clock-hour-hand-color: var(--opus-text);
+  --clock-minute-hand-color: color-mix(in srgb, var(--opus-text) 62%, var(--opus-muted));
+  --clock-hand-shadow: 0 2px 8px color-mix(in srgb, var(--opus-text) 14%, transparent);
+}
+
+.root[data-size="sm"] {
+  --clock-size: 180px;
+  --clock-tick-origin: 81px;
+  --clock-hour-hand: 46px;
+  --clock-minute-hand: 61px;
+  --clock-second-hand: 69px;
+  --clock-number-radius: 64px;
+}
+
+.root[data-size="lg"] {
+  --clock-size: 320px;
+  --clock-tick-origin: 151px;
+  --clock-hour-hand: 81px;
+  --clock-minute-hand: 108px;
+  --clock-second-hand: 122px;
+  --clock-number-radius: 113px;
+}
+
+.loading {
+  color: var(--clock-muted);
+  font-size: 14px;
+}
+
+.face {
+  position: relative;
+  width: var(--clock-size);
+  height: var(--clock-size);
+  border: 1px solid var(--clock-face-border);
+  border-radius: 50%;
+  background: var(--clock-face-bg);
+  box-shadow: var(--clock-face-shadow);
+}
+
+.tick {
+  position: absolute;
+  top: 9px;
+  left: 50%;
+  width: 1px;
+  height: 5px;
+  border-radius: 999px;
+  background: var(--clock-tick);
+  opacity: var(--clock-tick-opacity);
+  transform-origin: 50% var(--clock-tick-origin);
+}
+
+.tick[data-hour-mark="true"] {
+  width: 3px;
+  height: 12px;
+  opacity: 1;
+}
+
+.number {
+  position: absolute;
+  width: 28px;
+  height: 28px;
+  display: grid;
+  place-items: center;
+  color: var(--clock-number);
+  font-size: 13px;
+  font-weight: 650;
+  transform: translate(-50%, -50%);
+}
+
+.hand {
+  position: absolute;
+  left: 50%;
+  bottom: 50%;
+  border-radius: 999px;
+  transform-origin: 50% 100%;
+  box-shadow: var(--clock-hand-shadow);
+}
+
+.hourHand {
+  width: 7px;
+  height: var(--clock-hour-hand);
+  background: var(--clock-hour-hand-color);
+}
+
+.minuteHand {
+  width: 5px;
+  height: var(--clock-minute-hand);
+  background: var(--clock-minute-hand-color);
+}
+
+.secondHand {
+  width: 2px;
+  height: var(--clock-second-hand);
+  background: var(--opus-accent);
+  box-shadow: 0 0 12px color-mix(in srgb, var(--opus-accent) 80%, transparent);
+}
+
+.centreDot {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 18px;
+  height: 18px;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  background: var(--opus-accent);
+  box-shadow: 0 0 18px color-mix(in srgb, var(--opus-accent) 65%, transparent);
+  transform: translate(-50%, -50%);
+}
+
+.centreDotInner {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--opus-accent-contrast);
+}
+
+.digitalTime {
+  margin-top: 30px;
+  font-size: clamp(36px, 10vw, 52px);
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -0.04em;
+  line-height: 1;
+}
+
+.root[data-analog="false"] .digitalTime,
+.root[data-analog="false"][data-digital="true"] .digitalTime {
+  margin-top: 0;
+}
+
+.root[data-analog="false"][data-digital="false"] .date {
+  margin-top: 0;
+}
+
+.date {
+  margin-top: 13px;
+  color: var(--clock-muted);
+  font-size: 14px;
+  text-align: center;
+}

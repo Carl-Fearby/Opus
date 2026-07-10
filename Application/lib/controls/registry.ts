@@ -25,7 +25,7 @@ export const categoryDescriptions: Record<ComponentCategory, string> = {
   graphs: "Charts and visualisations for comparing, trending, segmenting, and exploring metric data.",
   labs: "Experimental compositions that combine multiple library components into ready-made patterns.",
   overlays: "Tooltips, command palettes, modals, drawers, and toast notifications for contextual help and feedback.",
-  system: "Application-level pages such as error states and access-denied screens for route handlers and shells.",
+  system: "Application shells, setup boilerplates, and route-level pages such as error and access-denied states.",
 };
 
 const graphControls: ControlDefinition[] = chartCatalog.map((entry) => ({
@@ -1022,6 +1022,15 @@ export const controls: ControlDefinition[] = [
     usesFieldShell: false,
   },
   {
+    slug: "clock",
+    title: "Clock",
+    category: "content",
+    componentName: "Clock",
+    description: "Analog clock with live digital time and optional date.",
+    sourceFiles: ["components/Clock/Clock.tsx", "components/Clock/Clock.module.css"],
+    usesFieldShell: false,
+  },
+  {
     slug: "portal",
     title: "Portal",
     category: "content",
@@ -1210,6 +1219,27 @@ export function getControlSectionsByCategory(category: ComponentCategory): {
       .sort(([a], [b]) => a.localeCompare(b))
       .map(([label, controls]) => ({ label, controls })),
   ];
+}
+
+export function getNavigationGroupsForCategory(category: ComponentCategory): string[] {
+  return getControlSectionsByCategory(category)
+    .map((section) => section.label)
+    .filter((label): label is string => Boolean(label));
+}
+
+export function getNavigationGroupBySlug(category: ComponentCategory, groupSlug: string): string | null {
+  return (
+    getNavigationGroupsForCategory(category).find(
+      (label) => label.toLowerCase().replace(/\//g, " ").replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "") === groupSlug,
+    ) ?? null
+  );
+}
+
+export function getControlsForNavigationGroup(
+  category: ComponentCategory,
+  navigationGroup: string,
+): ControlDefinition[] {
+  return getControlsByCategory(category).filter((control) => control.navigationGroup === navigationGroup);
 }
 
 export function getControl(slug: string, options?: { category?: ComponentCategory }): ControlDefinition | undefined {

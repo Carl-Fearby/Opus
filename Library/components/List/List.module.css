@@ -5,9 +5,6 @@
   display: grid;
   gap: 0;
   width: 100%;
-  border: 1px solid var(--opus-border);
-  border-radius: var(--opus-input-radius-large, 6px);
-  background: color-mix(in srgb, var(--opus-panel) 88%, transparent);
   overflow: hidden;
 }
 

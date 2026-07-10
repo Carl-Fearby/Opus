@@ -10,6 +10,7 @@ import {
 } from "react";
 import { faMagnifyingGlass } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { Portal } from "@/components/Portal";
 import { useOverlayAccessibility } from "@/lib/a11y/useOverlayAccessibility";
 import styles from "./CommandPalette.module.css";
 
@@ -241,24 +242,25 @@ export function CommandPalette({
   }
 
   return (
-    <div
-      className={styles.backdrop}
-      data-dismissible={dismissOnBackdrop}
-      data-phase={phase}
-      onMouseDown={(event) => {
-        if (event.currentTarget === event.target && dismissOnBackdrop) {
-          onClose();
-        }
-      }}
-    >
+    <Portal>
       <div
-        ref={panelRef}
-        aria-labelledby={titleId}
-        aria-modal="true"
-        className={styles.panel}
+        className={styles.backdrop}
+        data-dismissible={dismissOnBackdrop}
         data-phase={phase}
-        role="dialog"
+        onMouseDown={(event) => {
+          if (event.currentTarget === event.target && dismissOnBackdrop) {
+            onClose();
+          }
+        }}
       >
+        <div
+          ref={panelRef}
+          aria-labelledby={titleId}
+          aria-modal="true"
+          className={styles.panel}
+          data-phase={phase}
+          role="dialog"
+        >
         <h2 className={styles.visuallyHidden} id={titleId}>
           Command palette
         </h2>
@@ -343,5 +345,6 @@ export function CommandPalette({
         </footer>
       </div>
     </div>
+    </Portal>
   );
 }

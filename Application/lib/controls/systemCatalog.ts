@@ -1,13 +1,25 @@
 export type SystemCatalogEntry = {
   componentName: string;
   description: string;
-  settingsType: "403-page" | "404-page";
+  settingsType: "403-page" | "404-page" | "app-setup";
   slug: string;
   sourceFiles: string[];
   title: string;
 };
 
 export const systemCatalog = [
+  {
+    slug: "app-setup",
+    title: "App setup",
+    componentName: "AppSetupGuide",
+    description:
+      "Copy-paste Next.js root layout and client shell with Opus styles, theme provider, and portal host wiring.",
+    settingsType: "app-setup",
+    sourceFiles: [
+      "components/documentation/AppSetupGuide/AppSetupGuide.tsx",
+      "components/documentation/AppSetupGuide/AppSetupGuide.module.css",
+    ],
+  },
   {
     slug: "404-page",
     title: "404 Page",

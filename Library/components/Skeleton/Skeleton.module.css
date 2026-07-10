@@ -22,7 +22,6 @@
   flex-direction: column;
   gap: 14px;
   padding: 16px;
-  border: 1px solid color-mix(in srgb, var(--opus-border) 76%, transparent);
   background: color-mix(in srgb, var(--opus-panel) 92%, transparent);
 }
 
@@ -35,7 +34,6 @@
   flex-direction: column;
   gap: 1px;
   overflow: hidden;
-  border: 1px solid color-mix(in srgb, var(--opus-border) 76%, transparent);
   background: color-mix(in srgb, var(--opus-border) 42%, transparent);
 }
 

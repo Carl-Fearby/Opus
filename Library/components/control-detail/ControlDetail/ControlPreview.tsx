@@ -1,7 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useMemo, useState } from "react";
-import { CatalogIcon } from "@/components/CatalogIcon";
+import { CatalogIcon } from "opus-react";
 import {
   Button,
   Card,
@@ -103,6 +103,7 @@ import {
   JsonViewer,
   Icon,
   Spinner,
+  Clock,
   Portal,
   PortalHost,
   VisuallyHidden,
@@ -152,18 +153,20 @@ import {
   TopNavigation,
   TrendBadge,
   useToast,
-} from "@/components/fields";
-import { ImageCropUploadWidget } from "@/components/ImageCropUploadWidget";
-import { IconPicker } from "@/components/IconPicker";
-import { IconBadge } from "@/components/IconBadge";
-import { EmojiPicker } from "@/components/EmojiPicker";
-import { DEFAULT_TOAST_DURATION_MS } from "@/components/ToastProvider";
-import type { DateInputType } from "@/components/fields";
-import type { CommandPaletteItem, DropdownMenuItemData } from "@/components/fields";
-import type { AlertStatus } from "@/components/fields/types";
+} from "opus-react";
+import { ImageCropUploadWidget } from "opus-react";
+import { IconPicker } from "opus-react";
+import { AccentColorPicker, createAccentStyle } from "opus-react";
+import { IconBadge } from "opus-react";
+import { EmojiPicker } from "opus-react";
+import { DEFAULT_TOAST_DURATION_MS } from "opus-react";
+import type { DateInputType } from "opus-react";
+import type { CommandPaletteItem, DropdownMenuItemData } from "opus-react";
+import type { AlertStatus } from "opus-react";
 import { buildMegaMenuPreviewConfig } from "@/lib/controls/megaMenuDemo";
 import {
   demoAvatarGroupItems,
+  demoContentTimelineGroups,
   demoContentTimelineItems,
   demoDescriptionListItems,
   demoJsonValue,
@@ -215,7 +218,12 @@ import { demoNotesActivity } from "@/lib/controls/notesActivityDemoData";
 import { demoTopPerformingUsers } from "@/lib/controls/topPerformingUsersDemoData";
 import { parseUserProfileMenuItems } from "@/lib/controls/userProfileDemoData";
 import { demoUpcomingTasks } from "@/lib/controls/upcomingTasksDemoData";
+import {
+  iconBadgeToolbarDemoItems,
+  iconBadgeToolbarThemeItem,
+} from "@/lib/controls/iconBadgeDemoData";
 import { ForbiddenPageContent } from "@/components/documentation/ForbiddenPage";
+import { AppSetupGuide } from "@/components/documentation/AppSetupGuide";
 import { NotFoundPageContent } from "@/components/documentation/NotFoundPage";
 import {
   gaugePreviewValue,
@@ -224,7 +232,7 @@ import {
   getGaugeValueColor,
 } from "@/lib/controls/dashboardWidgetData";
 import { topNavigationDemoMenus } from "@/lib/controls/topNavigationDemo";
-import type { TopNavigationSelectItem } from "@/components/TopNavigation/TopNavigationContext";
+import type { TopNavigationSelectItem } from "opus-react";
 import type { ComponentCategory, ControlSettings, ControlSettingsBySlug, ControlSlug, ValueFieldSettings } from "@/lib/controls/types";
 import {
   getSectionDemoSlots,
@@ -248,7 +256,7 @@ import {
   treeSelectDemoNodes,
 } from "@/lib/controls/advancedFormDemoData";
 import { isChartSlug } from "@/lib/controls/chartCatalog";
-import { cartesianSpecializedVariants } from "@/components/Chart/SpecializedCharts";
+import { cartesianSpecializedVariants } from "opus-react";
 import { DashboardPreviewGrid } from "./DashboardPreviewGrid";
 import styles from "./ControlDetail.module.css";
 
@@ -530,109 +538,34 @@ function StatTilePreview({ settings }: { settings: ControlSettingsBySlug["stat-t
 }
 
 function IconBadgePreview({ settings }: { settings: ControlSettingsBySlug["icon-badge"] }) {
-  const [lastResult, setLastResult] = useState("Waiting for action");
-  const reportAction = (label: string) => setLastResult(`Last action: ${label}`);
+  const [lastAction, setLastAction] = useState("Waiting for action");
+  const reportAction = (label: string) => setLastAction(`Last action: ${label}`);
 
   if (settings.showToolbarDemo) {
     return (
       <div className={styles.dialogPreview}>
         <div className={styles.iconBadgeToolbar}>
+          {iconBadgeToolbarDemoItems.map((item) => (
+            <IconBadge
+              key={item.actionLabel}
+              count={item.count}
+              iconName={item.iconName}
+              label={item.label}
+              size={settings.size}
+              tone={settings.tone}
+              urgency={item.urgency}
+              onClick={() => reportAction(item.actionLabel)}
+            />
+          ))}
           <IconBadge
-            count={8}
-            iconName="bell"
-            label="Notifications"
+            iconName={iconBadgeToolbarThemeItem.iconName}
+            label={iconBadgeToolbarThemeItem.label}
             size={settings.size}
             tone={settings.tone}
-            urgency="standard"
-            onClick={() => reportAction("Notifications")}
-          />
-          <IconBadge
-            count={3}
-            iconName="envelope"
-            label="Messages"
-            size={settings.size}
-            tone={settings.tone}
-            urgency="info"
-            onClick={() => reportAction("Messages")}
-          />
-          <IconBadge
-            count={5}
-            iconName="comment"
-            label="Comments"
-            size={settings.size}
-            tone={settings.tone}
-            urgency="standard"
-            onClick={() => reportAction("Comments")}
-          />
-          <IconBadge
-            count={2}
-            iconName="heart"
-            label="Favourites"
-            size={settings.size}
-            tone={settings.tone}
-            urgency="danger"
-            onClick={() => reportAction("Favourites")}
-          />
-          <IconBadge
-            count={1}
-            iconName="bookmark"
-            label="Saved items"
-            size={settings.size}
-            tone={settings.tone}
-            urgency="warning"
-            onClick={() => reportAction("Saved items")}
-          />
-          <IconBadge
-            count={12}
-            iconName="inbox"
-            label="Inbox"
-            size={settings.size}
-            tone={settings.tone}
-            urgency="success"
-            onClick={() => reportAction("Inbox")}
-          />
-          <IconBadge
-            count={100}
-            iconName="hashtag"
-            label="Hundreds"
-            size={settings.size}
-            tone={settings.tone}
-            urgency="standard"
-            onClick={() => reportAction("Hundreds")}
-          />
-          <IconBadge
-            count={1000}
-            iconName="fire"
-            label="Thousands"
-            size={settings.size}
-            tone={settings.tone}
-            urgency="danger"
-            onClick={() => reportAction("Thousands")}
-          />
-          <IconBadge
-            iconName="calendar"
-            label="Calendar"
-            size={settings.size}
-            tone={settings.tone}
-            onClick={() => reportAction("Calendar")}
-          />
-          <IconBadge
-            iconName="gear"
-            label="Settings"
-            size={settings.size}
-            tone={settings.tone}
-            onClick={() => reportAction("Settings")}
-          />
-          <span aria-hidden="true" className={styles.iconBadgeDivider} />
-          <IconBadge
-            iconName="sun"
-            label="Theme"
-            size={settings.size}
-            tone={settings.tone}
-            onClick={() => reportAction("Theme")}
+            onClick={() => reportAction(iconBadgeToolbarThemeItem.actionLabel)}
           />
         </div>
-        <span className={styles.dialogResult}>{lastResult}</span>
+        <span className={styles.dialogResult}>{lastAction}</span>
       </div>
     );
   }
@@ -650,8 +583,35 @@ function IconBadgePreview({ settings }: { settings: ControlSettingsBySlug["icon-
         urgency={settings.urgency}
         onClick={() => reportAction(settings.label)}
       />
-      <span className={styles.dialogResult}>{lastResult}</span>
+      <span className={styles.dialogResult}>{lastAction}</span>
     </div>
+  );
+}
+
+function NoteComposerPreview({ settings }: { settings: ControlSettingsBySlug["note-composer"] }) {
+  const [note, setNote] = useState("");
+  const [lastAction, setLastAction] = useState("Waiting for action");
+
+  return (
+    <>
+      <NoteComposer
+        placeholder={settings.placeholder}
+        saveButtonLabel={settings.saveButtonLabel}
+        showAttach={settings.showAttach}
+        showEmoji={settings.showEmoji}
+        showMention={settings.showMention}
+        value={note}
+        onAttachClick={() => setLastAction("Attachment")}
+        onChange={setNote}
+        onEmojiSelect={(emoji) => setLastAction(`Emoji: ${emoji}`)}
+        onMentionClick={() => setLastAction("Mention")}
+        onSave={(value) => {
+          setLastAction(`Saved note: ${value}`);
+          setNote("");
+        }}
+      />
+      <p className={styles.dialogResult}>{lastAction}</p>
+    </>
   );
 }
 
@@ -733,7 +693,9 @@ function UserProfileWidgetPreview({
     </>
   );
 
-  if (category === "labs") {
+  const wrapped = settings.wrapInContainer ?? category === "labs";
+
+  if (wrapped) {
     return (
       <DashboardContentContainer data-component="user-profile" width={settings.width ?? "widget"}>
         {content}
@@ -1710,14 +1672,37 @@ function KanbanBoardPreview({ interactive }: { interactive: boolean }) {
   );
 }
 
-function CalendarPreview({ showEvents }: { showEvents: boolean }) {
+function CalendarPreview({
+  showEvents,
+  showMonthYearPicker,
+  openDayOnSelect,
+}: {
+  showEvents: boolean;
+  showMonthYearPicker: boolean;
+  openDayOnSelect: boolean;
+}) {
   const [selectedDate, setSelectedDate] = useState<string | undefined>();
+  const [lastAction, setLastAction] = useState("Click a day to open its schedule.");
+
   return (
-    <Calendar
-      events={showEvents ? demoCalendarEvents() : []}
-      onSelectDate={setSelectedDate}
-      selectedDate={selectedDate}
-    />
+    <div className={styles.dialogPreview}>
+      <Calendar
+        events={showEvents ? demoCalendarEvents() : []}
+        onBookEvent={(event) => setLastAction(`Booked "${event.title}" on ${event.date}`)}
+        onSelectDate={(date) => {
+          setSelectedDate(date);
+          if (openDayOnSelect) {
+            setLastAction(`Opened ${date}`);
+          } else {
+            setLastAction(`Selected: ${date}`);
+          }
+        }}
+        openDayOnSelect={openDayOnSelect}
+        selectedDate={selectedDate}
+        showMonthYearPicker={showMonthYearPicker}
+      />
+      <span className={styles.dialogResult}>{lastAction}</span>
+    </div>
   );
 }
 
@@ -1813,20 +1798,7 @@ export function ControlPreview({ category, slug, settings, onSettingsChange }: C
     }
     case "note-composer": {
       const s = settings as ControlSettingsBySlug["note-composer"];
-      return (
-        <DashboardContentContainer data-component="notes-activity" width="widget">
-          <NoteComposer
-            placeholder={s.placeholder}
-            saveButtonLabel={s.saveButtonLabel}
-            showAttach={s.showAttach}
-            showEmoji={s.showEmoji}
-            showMention={s.showMention}
-            value={s.value}
-            onChange={(value) => onSettingsChange({ ...s, value } as ControlSettings)}
-            onSave={() => onSettingsChange({ ...s, value: "" } as ControlSettings)}
-          />
-        </DashboardContentContainer>
-      );
+      return <NoteComposerPreview settings={s} />;
     }
     case "rich-text-field": {
       const s = settings as ControlSettingsBySlug["rich-text-field"];
@@ -2552,6 +2524,9 @@ export function ControlPreview({ category, slug, settings, onSettingsChange }: C
     case "403-page": {
       return <ForbiddenPageContent />;
     }
+    case "app-setup": {
+      return <AppSetupGuide />;
+    }
     case "dashboard-list-columns": {
       const s = settings as ControlSettingsBySlug["dashboard-list-columns"];
       return <DashboardListColumnsDashboardPreview settings={s} />;
@@ -2705,6 +2680,7 @@ export function ControlPreview({ category, slug, settings, onSettingsChange }: C
       const s = settings as ControlSettingsBySlug["panel"];
       return (
         <Panel
+          bordered={s.bordered}
           density={s.density}
           description={s.description}
           divided={s.divided}
@@ -3006,10 +2982,19 @@ export function ControlPreview({ category, slug, settings, onSettingsChange }: C
     }
     case "content-timeline": {
       const s = settings as ControlSettingsBySlug["content-timeline"];
+
+      if (s.includeGroups) {
+        return (
+          <ContentTimeline
+            groups={demoContentTimelineGroups(s.includeStatus, s.rowStyles, s.includeTags)}
+          />
+        );
+      }
+
       return (
-        <DashboardContentContainer data-component="notes-activity" width="widget">
-          <ContentTimeline items={demoContentTimelineItems(s.includeStatus)} variant="avatar" />
-        </DashboardContentContainer>
+        <ContentTimeline
+          items={demoContentTimelineItems(s.includeStatus, s.rowStyles, s.includeTags)}
+        />
       );
     }
     case "tree-view": {
@@ -3027,7 +3012,7 @@ export function ControlPreview({ category, slug, settings, onSettingsChange }: C
     }
     case "property-grid": {
       const s = settings as ControlSettingsBySlug["property-grid"];
-      return <PropertyGrid items={demoPropertyItems(s.copyable)} />;
+      return <PropertyGrid bordered={s.bordered} items={demoPropertyItems(s.copyable)} />;
     }
     case "stack": {
       const s = settings as ControlSettingsBySlug["stack"];
@@ -3306,7 +3291,13 @@ export function ControlPreview({ category, slug, settings, onSettingsChange }: C
     }
     case "calendar": {
       const s = settings as ControlSettingsBySlug["calendar"];
-      return <CalendarPreview showEvents={s.showEvents} />;
+      return (
+        <CalendarPreview
+          openDayOnSelect={s.openDayOnSelect}
+          showEvents={s.showEvents}
+          showMonthYearPicker={s.showMonthYearPicker}
+        />
+      );
     }
     case "resource-planner": {
       const s = settings as ControlSettingsBySlug["resource-planner"];
@@ -3356,6 +3347,17 @@ export function ControlPreview({ category, slug, settings, onSettingsChange }: C
       const s = settings as ControlSettingsBySlug["spinner"];
       return <Spinner label={s.label} size={s.size} tone={s.tone} />;
     }
+    case "clock": {
+      const s = settings as ControlSettingsBySlug["clock"];
+      return (
+        <Clock
+          showAnalog={s.showAnalog}
+          showDate={s.showDate}
+          showDigital={s.showDigital}
+          size={s.size}
+        />
+      );
+    }
     case "portal": {
       const s = settings as ControlSettingsBySlug["portal"];
       return (
@@ -3370,7 +3372,6 @@ export function ControlPreview({ category, slug, settings, onSettingsChange }: C
                 zIndex: 80,
                 padding: "10px 14px",
                 borderRadius: 10,
-                border: "1px solid var(--opus-border)",
                 background: "var(--opus-panel)",
                 boxShadow: "var(--opus-shadow)",
               }}
@@ -3392,7 +3393,6 @@ export function ControlPreview({ category, slug, settings, onSettingsChange }: C
                 marginTop: 12,
                 padding: "10px 14px",
                 borderRadius: 10,
-                border: "1px dashed var(--opus-accent)",
                 color: "var(--opus-text)",
               }}
             >
@@ -3427,7 +3427,6 @@ export function ControlPreview({ category, slug, settings, onSettingsChange }: C
               display: "grid",
               gap: 10,
               padding: 14,
-              border: "1px solid var(--opus-border)",
               borderRadius: 12,
               maxWidth: 280,
             }}
@@ -3467,7 +3466,7 @@ export function ControlPreview({ category, slug, settings, onSettingsChange }: C
       const s = settings as ControlSettingsBySlug["theme-provider"];
       return (
         <ThemeProvider applyToDocument={false} theme={s.theme}>
-          <div data-theme={s.theme} style={{ padding: 16, borderRadius: 12, border: "1px solid var(--opus-border)", background: "var(--opus-panel)", color: "var(--opus-text)" }}>
+          <div data-theme={s.theme} style={{ padding: 16, borderRadius: 12, background: "var(--opus-panel)", color: "var(--opus-text)" }}>
             Theme provider value: <strong>{s.theme}</strong>
           </div>
         </ThemeProvider>
@@ -3486,34 +3485,37 @@ export function ControlPreview({ category, slug, settings, onSettingsChange }: C
     case "resize-observer": {
       const s = settings as ControlSettingsBySlug["resize-observer"];
       return (
-        <ResizeObserver>
-          {(size) => (
-            <div
-              style={{
-                resize: "both",
-                overflow: "auto",
-                minWidth: 160,
-                minHeight: 90,
-                width: 240,
-                height: 120,
-                padding: 12,
-                border: "1px dashed var(--opus-accent)",
-                borderRadius: 12,
-              }}
-            >
-              <div style={{ color: "var(--opus-muted)", marginBottom: 8 }}>{s.hint}</div>
-              <strong>
-                {size.width} × {size.height}
-              </strong>
-            </div>
-          )}
-        </ResizeObserver>
+        <div data-fit-content="true">
+          <ResizeObserver
+            style={{
+              boxSizing: "border-box",
+              resize: "both",
+              overflow: "auto",
+              minWidth: 160,
+              minHeight: 90,
+              width: 240,
+              height: 120,
+              padding: 12,
+              border: "1px dashed var(--opus-accent)",
+              borderRadius: 12,
+            }}
+          >
+            {(size) => (
+              <>
+                <div style={{ color: "var(--opus-muted)", marginBottom: 8 }}>{s.hint}</div>
+                <strong>
+                  {size.width} × {size.height}
+                </strong>
+              </>
+            )}
+          </ResizeObserver>
+        </div>
       );
     }
     case "intersection-observer": {
       const s = settings as ControlSettingsBySlug["intersection-observer"];
       return (
-        <div style={{ maxHeight: 180, overflow: "auto", border: "1px solid var(--opus-border)", borderRadius: 12, padding: 12 }}>
+        <div style={{ maxHeight: 180, overflow: "auto", borderRadius: 12, padding: 12 }}>
           <div style={{ height: 160, color: "var(--opus-muted)" }}>Scroll down…</div>
           <IntersectionObserver threshold={s.threshold}>
             {(visible) => (
@@ -3522,7 +3524,6 @@ export function ControlPreview({ category, slug, settings, onSettingsChange }: C
                   padding: 16,
                   borderRadius: 10,
                   background: visible ? "color-mix(in srgb, var(--opus-accent) 18%, transparent)" : "var(--opus-panel)",
-                  border: "1px solid var(--opus-border)",
                 }}
               >
                 Target is {visible ? "visible" : "hidden"}

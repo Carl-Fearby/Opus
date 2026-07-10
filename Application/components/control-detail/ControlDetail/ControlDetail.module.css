@@ -206,22 +206,14 @@
   font-size: 0.82rem;
 }
 
-.iconBadgeToolbar {
+.dialogResult {
+  margin: 8px 0 0;
   display: inline-flex;
-  flex-wrap: wrap;
   align-items: center;
-  gap: 6px;
-  padding: 4px 8px;
-  border: 1px solid color-mix(in srgb, var(--opus-border) 72%, transparent);
-  border-radius: 12px;
-  background: color-mix(in srgb, var(--opus-panel) 88%, transparent);
-}
-
-.iconBadgeDivider {
-  width: 1px;
-  align-self: stretch;
-  margin: 4px 2px;
-  background: color-mix(in srgb, var(--opus-border) 88%, transparent);
+  min-height: var(--opus-control-height);
+  color: var(--opus-muted);
+  font-size: 0.82rem;
+  font-weight: 600;
 }
 
 .dismissedHint {
@@ -229,6 +221,13 @@
   color: var(--opus-muted);
   font-size: 0.84rem;
   line-height: 1.45;
+}
+
+.iconBadgeToolbar {
+  display: inline-flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px;
 }
 
 .toastPreview {
@@ -292,15 +291,6 @@
   color: var(--opus-accent);
   font-family: var(--font-ibm-plex-mono), monospace;
   font-size: 0.78rem;
-}
-
-.dialogResult {
-  display: inline-flex;
-  align-items: center;
-  min-height: var(--opus-control-height);
-  color: var(--opus-muted);
-  font-size: 0.84rem;
-  font-weight: 600;
 }
 
 .modalHtmlDemo {

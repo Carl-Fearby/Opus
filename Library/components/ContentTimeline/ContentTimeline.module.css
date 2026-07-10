@@ -3,22 +3,31 @@
   padding: 0;
   list-style: none;
   display: grid;
-  gap: 0;
+  grid-template-columns: 2rem minmax(0, 1fr);
+  column-gap: 10px;
   width: 100%;
+}
+
+.groupLabel {
+  grid-column: 1 / -1;
+  margin: 0;
+  color: var(--dashboard-section-muted, var(--opus-muted));
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.groupLabel:not(:first-child) {
+  padding-top: 4px;
 }
 
 .item {
   display: grid;
-  grid-template-columns: 20px minmax(0, 1fr);
-  gap: 14px;
+  grid-column: 1 / -1;
+  grid-template-columns: subgrid;
   align-items: stretch;
   min-width: 0;
-}
-
-.list[data-variant="avatar"] .item,
-.item[data-variant="avatar"] {
-  grid-template-columns: 2rem minmax(0, 1fr);
-  gap: 10px;
 }
 
 .item[data-clickable="true"] {
@@ -36,16 +45,21 @@
 }
 
 .rail {
-  position: relative;
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding-top: 4px;
+  width: 100%;
+  min-width: 0;
+  align-self: stretch;
 }
 
-.list[data-variant="avatar"] .rail,
-.item[data-variant="avatar"] .rail {
-  padding-top: 0;
+.markerSlot {
+  width: 2rem;
+  height: 2rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
 }
 
 .dot {
@@ -78,31 +92,16 @@
 }
 
 .line {
-  flex: 1;
+  flex: 1 1 auto;
   width: 2px;
-  margin-top: 6px;
-  min-height: 18px;
-  background: color-mix(in srgb, var(--opus-border) 90%, transparent);
-}
-
-.list[data-variant="avatar"] .line,
-.item[data-variant="avatar"] .line {
-  width: 1px;
-  margin-top: 8px;
-  margin-bottom: 6px;
-  min-height: 12px;
-  background: color-mix(in srgb, var(--dashboard-section-text, var(--opus-border)) 14%, transparent);
+  min-height: 16px;
+  background: color-mix(in srgb, var(--opus-border) 92%, transparent);
 }
 
 .body {
-  padding-bottom: 22px;
-  min-width: 0;
-}
-
-.list[data-variant="avatar"] .body,
-.item[data-variant="avatar"] .body {
   padding-top: 5px;
   padding-bottom: 18px;
+  min-width: 0;
 }
 
 .item:last-child .body {
@@ -124,11 +123,6 @@
   line-height: 1.2;
 }
 
-.list[data-variant="default"] .title {
-  font-size: 0.92rem;
-  font-weight: 650;
-}
-
 .time {
   color: var(--dashboard-section-muted, var(--opus-muted));
   font-size: 0.68rem;
@@ -136,20 +130,11 @@
   white-space: nowrap;
 }
 
-.list[data-variant="default"] .time {
-  font-size: 0.76rem;
-  font-weight: 400;
-}
-
 .description {
   margin: 6px 0 0;
   color: var(--dashboard-section-muted, var(--opus-muted));
   font-size: 0.74rem;
   line-height: 1.45;
-}
-
-.list[data-variant="default"] .description {
-  font-size: 0.84rem;
 }
 
 .tags {

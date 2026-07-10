@@ -114,14 +114,111 @@ export const demoKanbanColumns: KanbanColumn[] = [
 
 export const demoCalendarEvents = (): CalendarEvent[] => {
   const now = new Date();
-  const y = now.getFullYear();
-  const m = now.getMonth();
-  const pad = (n: number) => String(n).padStart(2, "0");
+  const year = now.getFullYear();
+  const month = now.getMonth();
+  const nextMonth = month === 11 ? 0 : month + 1;
+  const nextYear = month === 11 ? year + 1 : year;
+  const pad = (value: number) => String(value).padStart(2, "0");
+  const dayKey = (day: number, monthIndex = month, yearValue = year) =>
+    `${yearValue}-${pad(monthIndex + 1)}-${pad(day)}`;
+
   return [
-    { id: "e1", date: `${y}-${pad(m + 1)}-03`, title: "Sprint planning", tone: "accent" },
-    { id: "e2", date: `${y}-${pad(m + 1)}-12`, title: "Design critique", tone: "success" },
-    { id: "e3", date: `${y}-${pad(m + 1)}-18`, title: "Release freeze", tone: "warning" },
-    { id: "e4", date: `${y}-${pad(m + 1)}-22`, title: "Incident review", tone: "danger" },
+    {
+      id: "e1",
+      date: dayKey(3),
+      endTime: "11:30",
+      startTime: "10:00",
+      title: "Sprint planning",
+      tone: "accent",
+    },
+    {
+      id: "e2",
+      date: dayKey(12),
+      endTime: "15:00",
+      startTime: "14:00",
+      title: "Design critique",
+      tone: "success",
+    },
+    {
+      id: "e3",
+      date: dayKey(18),
+      endTime: "17:00",
+      startTime: "09:00",
+      title: "Release freeze",
+      tone: "warning",
+    },
+    {
+      id: "e4",
+      date: dayKey(27),
+      endTime: "09:30",
+      startTime: "09:00",
+      title: "Stand-up",
+      tone: "accent",
+    },
+    {
+      id: "e5",
+      date: dayKey(27),
+      endTime: "11:00",
+      startTime: "10:00",
+      title: "Design review",
+      tone: "success",
+    },
+    {
+      id: "e6",
+      date: dayKey(27),
+      endTime: "12:00",
+      startTime: "11:30",
+      title: "Customer call",
+      tone: "warning",
+    },
+    {
+      id: "e7",
+      date: dayKey(27),
+      endTime: "13:30",
+      startTime: "12:30",
+      title: "Lunch and learn",
+      tone: "accent",
+    },
+    {
+      id: "e8",
+      date: dayKey(27),
+      endTime: "15:00",
+      startTime: "14:00",
+      title: "Incident review",
+      tone: "danger",
+    },
+    {
+      id: "e9",
+      date: dayKey(27),
+      endTime: "16:00",
+      startTime: "15:30",
+      title: "Release sign-off",
+      tone: "warning",
+    },
+    {
+      id: "e10",
+      date: dayKey(27),
+      endTime: "17:30",
+      startTime: "16:30",
+      title: "Retro",
+      tone: "success",
+    },
+    {
+      id: "e11",
+      date: dayKey(5, nextMonth, nextYear),
+      endTime: "11:00",
+      startTime: "09:30",
+      title: "Sprint kickoff",
+      tone: "accent",
+    },
+    {
+      id: "e12",
+      date: dayKey(15, nextMonth, nextYear),
+      endTime: "16:00",
+      startTime: "14:00",
+      title: "Roadmap review",
+      tone: "success",
+    },
   ];
 };
 

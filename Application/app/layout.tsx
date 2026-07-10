@@ -20,8 +20,12 @@ const ibmPlexMono = IBM_Plex_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Opus",
-  description: "Opus form component library demo",
+  title: {
+    default: "Opus — Design system for modern business apps",
+    template: "%s · Opus",
+  },
+  description:
+    "Opus is a themeable React component library for forms, dashboards, overlays, and data-rich interfaces — with live documentation and a Code Playground.",
 };
 
 export default async function RootLayout({

@@ -65,10 +65,20 @@
 
 .compactControl.labelLeft {
   grid-template-columns: minmax(0, 1fr) var(--opus-control-height) !important;
+  grid-template-areas:
+    "label control"
+    "error .";
 }
 
 .compactControl.labelRight {
   grid-template-columns: var(--opus-control-height) minmax(0, 1fr) !important;
+  grid-template-areas:
+    "control label"
+    ". error";
+}
+
+.compactControl.labelRight .errorFlagged {
+  text-align: right;
 }
 
 .compactControl .controlFlagged {
@@ -91,6 +101,22 @@
 .fitContent.labelRight {
   grid-template-columns: auto auto;
   align-items: center;
+}
+
+.fitContent.labelLeft {
+  grid-template-areas:
+    "label control"
+    "error .";
+}
+
+.fitContent.labelRight {
+  grid-template-areas:
+    "control label"
+    ". error";
+}
+
+.fitContent.labelRight .errorFlagged {
+  text-align: right;
 }
 
 .fitContent .label,

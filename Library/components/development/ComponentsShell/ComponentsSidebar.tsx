@@ -2,23 +2,41 @@
 
 import Link from "next/link";
 import { usePathname, useSearchParams } from "next/navigation";
-import { useCallback, useEffect, useId, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { faMagnifyingGlass } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import type { IconDefinition } from "@fortawesome/fontawesome-svg-core";
 import { ComponentIcon } from "@/components/development/ComponentIcon";
 import { getCategoryIcon, getComponentIcon, getNavigationGroupIcon, getOverviewIcon } from "@/lib/controls/componentIcons";
 import type { ComponentCategory, ControlDefinition } from "@/lib/controls/types";
-import { componentCategories, getControl, getControlSectionsByCategory, getControlsByCategory } from "@/lib/controls/registry";
+import {
+  componentCategories,
+  getControl,
+  getControlSectionsByCategory,
+  getControlsByCategory,
+  getNavigationGroupBySlug,
+} from "@/lib/controls/registry";
 import {
   categoryPath,
+  categorySubgroupPath,
   componentPath,
   COMPONENTS_BASE_PATH,
   getActiveCategoryFromPath,
+  getCategorySubgroupFromPath,
+  navigationGroupToSlug,
 } from "@/lib/controls/routes";
 import styles from "./ComponentsShell.module.css";
 
+const SIDEBAR_SEARCH_ID = "components-sidebar-search";
 const SIDEBAR_GROUPS_STORAGE_KEY = "opus-components-sidebar-groups";
+
+function navGroupListId(category: ComponentCategory) {
+  return `sidebar-group-${category}`;
+}
+
+function navSubgroupListId(category: ComponentCategory, label: string) {
+  return `sidebar-subgroup-${category}-${navigationGroupToSlug(label)}`;
+}
 
 const SIDEBAR_BOTTOM_CATEGORY_IDS = ["labs", "system"] as const satisfies readonly ComponentCategory[];
 
@@ -158,7 +176,7 @@ function NavGroup({
   onToggle: () => void;
 }) {
   const pathname = usePathname();
-  const listId = useId();
+  const listId = navGroupListId(category);
   const sections = getControlSectionsByCategory(category);
   const isCategoryOverview = pathname === categoryPath(category);
 
@@ -240,26 +258,41 @@ function NavSubgroup({
   open: boolean;
   onToggle: () => void;
 }) {
-  const listId = useId();
+  const pathname = usePathname();
+  const listId = navSubgroupListId(category, label);
+  const subgroupPath = categorySubgroupPath(category, label);
+  const isSubgroupOverview = pathname === subgroupPath;
 
   return (
     <>
-      <button
-        aria-controls={listId}
-        aria-expanded={open}
-        className={styles.navSubsectionButton}
-        type="button"
-        onClick={onToggle}
-      >
-        <span className={styles.navSubsectionLabel}>
+      <div className={styles.navSubsectionHeader}>
+        <Link
+          aria-current={isSubgroupOverview ? "page" : undefined}
+          className={[
+            styles.navSubsectionHeadingLink,
+            isSubgroupOverview ? styles.navSubsectionHeadingLinkActive : "",
+          ]
+            .filter(Boolean)
+            .join(" ")}
+          href={subgroupPath}
+        >
           <ComponentIcon compact icon={getNavigationGroupIcon(label)} />
           <span>{label}</span>
-        </span>
-        <span
-          aria-hidden="true"
-          className={open ? styles.navGroupChevronOpen : styles.navGroupChevron}
-        />
-      </button>
+        </Link>
+        <button
+          aria-controls={listId}
+          aria-expanded={open}
+          aria-label={`${open ? "Collapse" : "Expand"} ${label}`}
+          className={styles.navSubsectionChevronButton}
+          onClick={onToggle}
+          type="button"
+        >
+          <span
+            aria-hidden="true"
+            className={open ? styles.navGroupChevronOpen : styles.navGroupChevron}
+          />
+        </button>
+      </div>
       <div className={styles.navSubsectionItemsWrap} data-open={open ? "true" : "false"}>
         <div className={styles.navSubsectionItems} id={listId} inert={!open || undefined}>
           {controls.map((control) => (
@@ -281,7 +314,6 @@ function NavSubgroup({
 export function ComponentsSidebar() {
   const pathname = usePathname();
   const searchParams = useSearchParams();
-  const searchId = useId();
   const isOverview = pathname === COMPONENTS_BASE_PATH;
   const [openGroups, setOpenGroups] = useState<OpenSidebarGroups>({});
   const [hydrated, setHydrated] = useState(false);
@@ -343,7 +375,17 @@ export function ComponentsSidebar() {
         const activeControl = segment
           ? getControl(segment, categoryFromQuery ? { category: categoryFromQuery } : undefined) ?? getControl(segment)
           : undefined;
-        if (
+        const subgroup = getCategorySubgroupFromPath(pathname);
+        if (subgroup) {
+          const label = getNavigationGroupBySlug(subgroup.category, subgroup.groupSlug);
+          if (label) {
+            const subgroupKey = `${subgroup.category}:${label}`;
+            if (!next[subgroupKey]) {
+              next = { ...next, [subgroupKey]: true };
+              changed = true;
+            }
+          }
+        } else if (
           activeControl?.navigationGroup &&
           activeControl.category === activeCategory
         ) {
@@ -387,14 +429,14 @@ export function ComponentsSidebar() {
   return (
     <aside className={styles.sidebar}>
       <div className={styles.sidebarSearch} role="search">
-        <label className={styles.sidebarSearchWrap} htmlFor={searchId}>
+        <label className={styles.sidebarSearchWrap} htmlFor={SIDEBAR_SEARCH_ID}>
           <span aria-hidden="true" className={styles.sidebarSearchIcon}>
             <FontAwesomeIcon className={styles.sidebarSearchIconSvg} icon={faMagnifyingGlass} />
           </span>
           <input
             aria-controls={isSearching ? "components-sidebar-search-results" : undefined}
             className={styles.sidebarSearchInput}
-            id={searchId}
+            id={SIDEBAR_SEARCH_ID}
             onChange={(event) => setQuery(event.target.value)}
             onKeyDown={(event) => {
               if (event.key === "Escape") {

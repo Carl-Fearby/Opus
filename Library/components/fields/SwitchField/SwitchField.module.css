@@ -6,6 +6,7 @@
   display: flex;
   align-items: center;
   gap: 12px;
+  width: fit-content;
   min-height: var(--opus-control-height);
   color: var(--opus-text);
   font-size: var(--opus-control-font-size);
@@ -35,10 +36,15 @@
   background: linear-gradient(180deg, #ffffff, #d7dff9);
   transform: translateY(-50%);
   transition: transform 160ms ease;
+  pointer-events: none;
 }
 
 .track:checked {
   background: linear-gradient(135deg, var(--opus-accent), color-mix(in srgb, var(--opus-accent) 40%, #00d2ff));
+}
+
+.track:checked::before {
+  transform: translateY(-50%) translateX(var(--opus-switch-travel, 22px));
 }
 
 .error {

@@ -4,6 +4,7 @@ import styles from "./Panel.module.css";
 
 type PanelProps = {
   actions?: ReactNode;
+  bordered?: boolean;
   children: ReactNode;
   density?: SurfaceDensity;
   description?: string;
@@ -15,6 +16,7 @@ type PanelProps = {
 
 export function Panel({
   actions,
+  bordered = true,
   children,
   density = "comfortable",
   description,
@@ -24,7 +26,13 @@ export function Panel({
   tone = "default",
 }: PanelProps) {
   return (
-    <section className={styles.panel} data-density={density} data-divided={divided} data-tone={tone}>
+    <section
+      className={styles.panel}
+      data-bordered={bordered}
+      data-density={density}
+      data-divided={divided}
+      data-tone={tone}
+    >
       <header className={styles.header}>
         <div className={styles.heading}>
           <h2 className={styles.title}>{title}</h2>

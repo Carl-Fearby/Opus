@@ -3,9 +3,6 @@
   max-height: 420px;
   overflow: auto;
   padding: 12px;
-  border: 1px solid var(--opus-border);
-  border-radius: var(--opus-input-radius-large, 6px);
-  background: color-mix(in srgb, var(--opus-panel) 94%, #000 4%);
   font-family: var(--font-ibm-plex-mono), ui-monospace, monospace;
   font-size: 0.78rem;
   line-height: 1.55;

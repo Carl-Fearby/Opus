@@ -3,12 +3,13 @@
 import * as React from "react";
 import { useCallback, useEffect, useId, useMemo, useRef, useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { AccentColorPicker, createAccentStyle } from "@/components/AccentColorPicker";
-import { Chart } from "@/components/Chart";
-import { ForbiddenPage } from "@/components/documentation/ForbiddenPage";
-import { NotFoundPage } from "@/components/documentation/NotFoundPage";
-import { IconPicker } from "@/components/IconPicker";
-import * as Fields from "@/components/fields";
+import { AccentColorPicker, createAccentStyle } from "opus-react";
+import { Chart } from "opus-react";
+import { ErrorPage } from "@/components/documentation/ErrorPage";
+import { ForbiddenPage, ForbiddenPageContent } from "@/components/documentation/ForbiddenPage";
+import { NotFoundPage, NotFoundPageContent } from "@/components/documentation/NotFoundPage";
+import { IconPicker } from "opus-react";
+import * as Fields from "opus-react";
 import { demoNotesActivity } from "@/lib/controls/notesActivityDemoData";
 import { demoRecentActivity } from "@/lib/controls/recentActivityDemoData";
 import { demoTopPerformingUsers } from "@/lib/controls/topPerformingUsersDemoData";
@@ -28,8 +29,11 @@ export function createPlaygroundScope() {
     AccentColorPicker,
     createAccentStyle,
     IconPicker,
+    ErrorPage,
     ForbiddenPage,
+    ForbiddenPageContent,
     NotFoundPage,
+    NotFoundPageContent,
     FontAwesomeIcon,
     demoUpcomingTasks,
     demoRecentActivity,

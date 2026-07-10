@@ -1,6 +1,12 @@
 import type { NextConfig } from "next";
 import { readFileSync } from "node:fs";
-import { join } from "node:path";
+import { dirname, join } from "node:path";
+import { fileURLToPath } from "node:url";
+
+const appDir = dirname(fileURLToPath(import.meta.url));
+
+// Turbopack requires a project-relative path (not absolute).
+const opusReactEntry = "./node_modules/opus-react/dist/index.js";
 
 function resolveBuildVersion() {
   if (process.env.NEXT_PUBLIC_BUILD_VERSION) {
@@ -27,7 +33,21 @@ const nextConfig: NextConfig = {
   env: {
     NEXT_PUBLIC_BUILD_VERSION: buildVersion,
   },
-  transpilePackages: ["opus-react"],
+  // Use the pre-built opus-react bundle so CSS module hashes stay identical on server and client.
+  // transpilePackages follows package source maps back into ../Library and recompiles modules.
+  turbopack: {
+    root: appDir,
+    resolveAlias: {
+      "opus-react": opusReactEntry,
+    },
+  },
+  webpack: (config) => {
+    config.resolve.alias = {
+      ...config.resolve.alias,
+      "opus-react$": join(appDir, "node_modules/opus-react/dist/index.js"),
+    };
+    return config;
+  },
   // This app is a faithful fork of the Opus documentation site, which is run
   // via `next dev`. A few preview helpers carry latent type mismatches that the
   // dev server tolerates; don't let them block the production build.

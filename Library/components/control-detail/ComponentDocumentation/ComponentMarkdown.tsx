@@ -24,6 +24,25 @@ function resolveComponentHref(href: string) {
   return href;
 }
 
+function stripStaticCodeFromComponentDocs(content: string): string {
+  let result = content;
+
+  result = result.replace(/^## (Usage|Import)\s*\n[\s\S]*?(?=^## |\Z)/gm, "");
+  result = result.replace(/```[\s\S]*?```\s*/g, "");
+  result = result.replace(/\n{3,}/g, "\n\n").trim();
+
+  return result;
+}
+
+export function prepareComponentDocumentation(content: string): string {
+  const linked = content.replace(
+    /\]\(\/documentation\/components\/([^)]+)\)/g,
+    (_, slug: string) => `](${componentPath(slug)})`,
+  );
+
+  return stripStaticCodeFromComponentDocs(linked);
+}
+
 const markdownComponents: Components = {
   a: ({ href = "", children, ...props }) => {
     const resolved = resolveComponentHref(href);
@@ -50,10 +69,11 @@ type ComponentMarkdownProps = {
 };
 
 export function ComponentMarkdown({ className, content }: ComponentMarkdownProps) {
-  const normalized = content.replace(
-    /\]\(\/documentation\/components\/([^)]+)\)/g,
-    (_, slug: string) => `](${componentPath(slug)})`,
-  );
+  const normalized = prepareComponentDocumentation(content);
+
+  if (!normalized) {
+    return null;
+  }
 
   return (
     <div className={[docStyles.markdown, styles.componentDocsMarkdown, className].filter(Boolean).join(" ")}>

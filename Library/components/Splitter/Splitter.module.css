@@ -9,6 +9,21 @@
   background: color-mix(in srgb, var(--opus-panel) 92%, transparent);
 }
 
+.root[data-flush] {
+  min-height: 0;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+}
+
+.root[data-flush] .pane {
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  overflow: hidden;
+  padding: 0;
+}
+
 .root[data-orientation="horizontal"] {
   flex-direction: row;
 }

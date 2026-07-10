@@ -6,6 +6,7 @@ import type { DialogActionSet, AlertStatus } from "@/components/fields/types";
 import { AlertStatusIcon } from "@/components/AlertStatusIcon";
 import { Button } from "@/components/fields/Button";
 import type { ButtonVariant } from "@/components/fields/Button";
+import { Portal } from "@/components/Portal";
 import { useOverlayAccessibility } from "@/lib/a11y/useOverlayAccessibility";
 import styles from "./Dialog.module.css";
 
@@ -129,47 +130,49 @@ export function Dialog({
   const actions = getActions(actionSet, status);
 
   return (
-    <div
-      className={styles.backdrop}
-      data-dismissible={dismissOnBackdrop}
-      data-phase={phase}
-      onMouseDown={(event) => {
-        if (event.currentTarget === event.target && dismissOnBackdrop) {
-          onClose("dismiss");
-        }
-      }}
-    >
-      <section
-        ref={panelRef}
-        aria-describedby={descriptionId}
-        aria-labelledby={titleId}
-        aria-modal="true"
-        className={styles.dialog}
+    <Portal>
+      <div
+        className={styles.backdrop}
+        data-dismissible={dismissOnBackdrop}
         data-phase={phase}
-        data-status={status}
-        role="dialog"
+        onMouseDown={(event) => {
+          if (event.currentTarget === event.target && dismissOnBackdrop) {
+            onClose("dismiss");
+          }
+        }}
       >
-        <div aria-hidden="true" className={styles.icon}>
-          <AlertStatusIcon markClassName={styles.iconMark} status={status} svgClassName={styles.iconSvg} />
-        </div>
-        <div className={styles.content}>
-          <h2 className={styles.title} id={titleId}>
-            {title}
-          </h2>
-          <p className={styles.description} id={descriptionId}>
-            <span className={styles.visuallyHidden}>{status}: </span>
-            {description}
-          </p>
-          {children ? <div className={styles.body}>{children}</div> : null}
-          <div className={styles.actions}>
-            {actions.map((action) => (
-              <Button key={action.label} variant={action.variant} onClick={() => onClose(action.result)}>
-                {action.label}
-              </Button>
-            ))}
+        <section
+          ref={panelRef}
+          aria-describedby={descriptionId}
+          aria-labelledby={titleId}
+          aria-modal="true"
+          className={styles.dialog}
+          data-phase={phase}
+          data-status={status}
+          role="dialog"
+        >
+          <div aria-hidden="true" className={styles.icon}>
+            <AlertStatusIcon markClassName={styles.iconMark} status={status} svgClassName={styles.iconSvg} />
           </div>
-        </div>
-      </section>
-    </div>
+          <div className={styles.content}>
+            <h2 className={styles.title} id={titleId}>
+              {title}
+            </h2>
+            <p className={styles.description} id={descriptionId}>
+              <span className={styles.visuallyHidden}>{status}: </span>
+              {description}
+            </p>
+            {children ? <div className={styles.body}>{children}</div> : null}
+            <div className={styles.actions}>
+              {actions.map((action) => (
+                <Button key={action.label} variant={action.variant} onClick={() => onClose(action.result)}>
+                  {action.label}
+                </Button>
+              ))}
+            </div>
+          </div>
+        </section>
+      </div>
+    </Portal>
   );
 }

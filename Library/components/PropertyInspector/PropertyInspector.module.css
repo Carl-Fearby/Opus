@@ -1,7 +1,5 @@
 .root {
   width: 100%;
-  border: 1px solid var(--opus-border);
-  border-radius: var(--opus-input-radius-large, 6px);
   overflow: hidden;
   background: color-mix(in srgb, var(--opus-panel) 92%, transparent);
 }

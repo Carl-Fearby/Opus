@@ -3,8 +3,6 @@
   grid-template-rows: auto minmax(0, 1fr) auto;
   width: 100%;
   min-height: 240px;
-  border: 1px solid var(--opus-border);
-  border-radius: var(--opus-input-radius-large, 6px);
   overflow: hidden;
   background: color-mix(in srgb, var(--opus-panel) 92%, transparent);
 }

@@ -43,7 +43,7 @@ const pipelineValueOptions = [
   "£1,050,000",
 ].map((value) => ({ label: value, value }));
 
-import { IconPicker } from "@/components/IconPicker";
+import { IconPicker } from "opus-react";
 import shellStyles from "@/components/development/ComponentsShell/ComponentsShell.module.css";
 
 const buttonVariants = [
@@ -2632,6 +2632,11 @@ export function ControlSettingsPanel({ slug, settings, onChange }: ControlSettin
             value={s.width ?? "widget"}
             onChange={(width) => onChange({ ...s, width } as ControlSettings)}
           />
+          <SettingToggle
+            label="Inside widget container"
+            checked={s.wrapInContainer ?? false}
+            onChange={(wrapInContainer) => onChange({ ...s, wrapInContainer } as ControlSettings)}
+          />
           <div className={shellStyles.settingsFullWidth}>
             <SettingInput label="Name" value={s.name} onChange={(name) => onChange({ ...s, name } as ControlSettings)} />
           </div>
@@ -2944,6 +2949,11 @@ export function ControlSettingsPanel({ slug, settings, onChange }: ControlSettin
             label="Divided"
             checked={s.divided}
             onChange={(divided) => onChange({ ...s, divided } as ControlSettings)}
+          />
+          <SettingToggle
+            label="Border"
+            checked={s.bordered}
+            onChange={(bordered) => onChange({ ...s, bordered } as ControlSettings)}
           />
           <div className={shellStyles.settingsFullWidth}>
             <SettingInput
@@ -4110,8 +4120,36 @@ export function ControlSettingsPanel({ slug, settings, onChange }: ControlSettin
     }
     case "content-timeline": {
       const s = settings as ControlSettingsBySlug["content-timeline"];
+      const rowStyleOptions = [
+        { label: "Avatar", value: "avatar" },
+        { label: "Status dot", value: "status" },
+      ];
+
       return (
         <div className={shellStyles.settingsGrid}>
+          {s.rowStyles.map((rowStyle, index) => (
+            <SettingSelect
+              key={`content-timeline-row-${index + 1}`}
+              label={`Row ${index + 1}`}
+              value={rowStyle}
+              options={rowStyleOptions}
+              onChange={(value) => {
+                const next = [...s.rowStyles] as typeof s.rowStyles;
+                next[index] = value as (typeof s.rowStyles)[number];
+                onChange({ ...s, rowStyles: next } as ControlSettings);
+              }}
+            />
+          ))}
+          <SettingToggle
+            label="Tags"
+            checked={s.includeTags ?? true}
+            onChange={(includeTags) => onChange({ ...s, includeTags } as ControlSettings)}
+          />
+          <SettingToggle
+            label="Group labels"
+            checked={s.includeGroups ?? false}
+            onChange={(includeGroups) => onChange({ ...s, includeGroups } as ControlSettings)}
+          />
           <SettingToggle
             label="Status accents"
             checked={s.includeStatus}
@@ -4165,6 +4203,11 @@ export function ControlSettingsPanel({ slug, settings, onChange }: ControlSettin
       const s = settings as ControlSettingsBySlug["property-grid"];
       return (
         <div className={shellStyles.settingsGrid}>
+          <SettingToggle
+            label="Border"
+            checked={s.bordered}
+            onChange={(bordered) => onChange({ ...s, bordered } as ControlSettings)}
+          />
           <SettingToggle
             label="Copyable rows"
             checked={s.copyable}
@@ -4841,9 +4884,19 @@ export function ControlSettingsPanel({ slug, settings, onChange }: ControlSettin
       return (
         <div className={shellStyles.settingsGrid}>
           <SettingToggle
+            label="Open day modal"
+            checked={s.openDayOnSelect}
+            onChange={(openDayOnSelect) => onChange({ ...s, openDayOnSelect } as ControlSettings)}
+          />
+          <SettingToggle
             label="Show events"
             checked={s.showEvents}
             onChange={(showEvents) => onChange({ ...s, showEvents } as ControlSettings)}
+          />
+          <SettingToggle
+            label="Month/year picker"
+            checked={s.showMonthYearPicker}
+            onChange={(showMonthYearPicker) => onChange({ ...s, showMonthYearPicker } as ControlSettings)}
           />
         </div>
       );
@@ -5095,6 +5148,38 @@ export function ControlSettingsPanel({ slug, settings, onChange }: ControlSettin
             ]}
           />
           <SettingInput label="Label" value={s.label} onChange={(label) => onChange({ ...s, label } as ControlSettings)} />
+        </div>
+      );
+    }
+    case "clock": {
+      const s = settings as ControlSettingsBySlug["clock"];
+      return (
+        <div className={shellStyles.settingsGrid}>
+          <SettingSelect
+            label="Size"
+            value={s.size}
+            onChange={(size) => onChange({ ...s, size: size as typeof s.size } as ControlSettings)}
+            options={[
+              { label: "Small", value: "sm" },
+              { label: "Medium", value: "md" },
+              { label: "Large", value: "lg" },
+            ]}
+          />
+          <SettingToggle
+            label="Show analog"
+            checked={s.showAnalog}
+            onChange={(showAnalog) => onChange({ ...s, showAnalog } as ControlSettings)}
+          />
+          <SettingToggle
+            label="Show digital"
+            checked={s.showDigital}
+            onChange={(showDigital) => onChange({ ...s, showDigital } as ControlSettings)}
+          />
+          <SettingToggle
+            label="Show date"
+            checked={s.showDate}
+            onChange={(showDate) => onChange({ ...s, showDate } as ControlSettings)}
+          />
         </div>
       );
     }

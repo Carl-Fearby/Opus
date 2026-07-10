@@ -108,7 +108,7 @@ export const buildersCatalog = [
     title: "Calendar",
     componentName: "Calendar",
     navigationGroup: "Planning",
-    description: "Month calendar with selectable days and event dots.",
+    description: "Month calendar with selectable days, event labels, and month/year navigation.",
     sourceFiles: ["components/Calendar/Calendar.tsx", "components/Calendar/Calendar.module.css"],
   },
   {
