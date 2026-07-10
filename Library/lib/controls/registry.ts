@@ -272,6 +272,20 @@ const formsControls: Record<(typeof formsControlOrder)[number], ControlDefinitio
     sourceFiles: ["components/fields/FileField/FileField.tsx", "components/fields/FileField/FileField.module.css"],
     usesFieldShell: true,
   },
+  "image-crop-upload": {
+    slug: "image-crop-upload",
+    title: "Image crop upload",
+    category: "forms",
+    componentName: "ImageCropUploadField",
+    description:
+      "Profile photo uploader with circular mask, drag-to-position, zoom controls, and canvas crop before upload.",
+    sourceFiles: [
+      "components/fields/ImageCropUploadField/ImageCropUploadField.tsx",
+      "components/fields/ImageCropUploadField/ImageCropUploadField.module.css",
+      "components/fields/ImageCropUploadField/cropCircularImage.ts",
+    ],
+    usesFieldShell: true,
+  },
   "hidden-input": {
     slug: "hidden-input",
     title: "Hidden input",
@@ -1159,7 +1173,12 @@ export const controls: ControlDefinition[] = [
   },
 ];
 
-const controlMap = new Map(controls.map((control) => [control.slug, control]));
+const controlMap = new Map<ControlSlug, ControlDefinition>();
+for (const control of controls) {
+  if (!controlMap.has(control.slug)) {
+    controlMap.set(control.slug, control);
+  }
+}
 
 export function getControlsByCategory(category: ComponentCategory): ControlDefinition[] {
   return controls
@@ -1193,10 +1212,14 @@ export function getControlSectionsByCategory(category: ComponentCategory): {
   ];
 }
 
-export function getControl(slug: string): ControlDefinition | undefined {
+export function getControl(slug: string, options?: { category?: ComponentCategory }): ControlDefinition | undefined {
+  if (options?.category) {
+    return controls.find((control) => control.slug === slug && control.category === options.category);
+  }
+
   return controlMap.get(slug as ControlSlug);
 }
 
 export function getAllSlugs(): ControlSlug[] {
-  return controls.map((control) => control.slug);
+  return [...new Set(controls.map((control) => control.slug))];
 }

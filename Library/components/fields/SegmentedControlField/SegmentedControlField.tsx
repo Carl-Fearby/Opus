@@ -1,7 +1,8 @@
 "use client";
 
 import { FieldShell, fieldInputAriaProps, useFieldShellAria } from "@/components/fields/FieldShell";
-import type { FieldMode, LabelPosition } from "@/components/fields/types";
+import type { FieldMode, InputControlSize, LabelPosition } from "@/components/fields/types";
+import { inputControlSizeClassName } from "../shared/inputControlSizes";
 import styles from "./SegmentedControlField.module.css";
 
 type SegmentedControlFieldProps = {
@@ -13,6 +14,7 @@ type SegmentedControlFieldProps = {
   mode?: FieldMode;
   options: string[];
   required?: boolean;
+  size?: InputControlSize;
   value: string;
   onChange: (value: string) => void;
 };
@@ -26,6 +28,7 @@ export function SegmentedControlField({
   mode = "stacked",
   options,
   required,
+  size = "md",
   value,
   onChange,
 }: SegmentedControlFieldProps) {
@@ -42,7 +45,7 @@ export function SegmentedControlField({
       required={required}
     >
       <div
-        className={styles.root}
+        className={`${styles.root} ${inputControlSizeClassName[size]}`}
         role="radiogroup"
         {...fieldInputAriaProps(shellAria, { invalid: Boolean(error) })}
       >

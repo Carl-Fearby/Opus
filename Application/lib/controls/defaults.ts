@@ -1,5 +1,6 @@
 import type { ControlSettingsBySlug, ControlSlug } from "./types";
 import { chartDefaults } from "./chartDefaults";
+import { defaultUserProfileMenuItemsJson, defaultUserProfilePhotoSrc, defaultUserProfilePhotoUploadMenuItemId } from "./userProfileDemoData";
 
 const now = new Date();
 
@@ -46,6 +47,7 @@ const baseFieldDefaults = {
   helpEnabled: false,
   help: "Optional help text for this field",
   required: false,
+  size: "md" as const,
 };
 
 export const defaultSettings: ControlSettingsBySlug = {
@@ -53,16 +55,19 @@ export const defaultSettings: ControlSettingsBySlug = {
     variant: "primary",
     label: "Button",
     disabled: false,
+    size: "md",
   },
   "submit-button": {
     variant: "primary",
     label: "Submit",
     disabled: false,
+    size: "md",
   },
   "reset-button": {
     variant: "secondary",
     label: "Reset",
     disabled: false,
+    size: "md",
   },
   checkbox: {
     ...baseFieldDefaults,
@@ -142,12 +147,28 @@ export const defaultSettings: ControlSettingsBySlug = {
   "search-input": {
     ...baseFieldDefaults,
     label: "Search",
-    value: "Search query",
+    value: "",
+    placeholder: "Search contacts, companies, deals…",
+    placeholderEnabled: true,
   },
   "file-upload": {
     ...baseFieldDefaults,
     label: "Upload a file",
     fileName: "",
+  },
+  "image-crop-upload": {
+    ...baseFieldDefaults,
+    label: "Profile photo",
+    value: "",
+    uploadLabel: "Browse image",
+    cropButtonLabel: "Apply crop",
+    changeButtonLabel: "Change photo",
+    zoomLabel: "Zoom",
+    viewportSize: 240,
+    outputSize: 256,
+    minZoom: 1,
+    maxZoom: 3,
+    zoomStep: 0.05,
   },
   "hidden-input": {
     ...baseFieldDefaults,
@@ -544,6 +565,46 @@ export const defaultSettings: ControlSettingsBySlug = {
   "top-performing-users": {
     title: "Top Performing People",
     footerLabel: "View full report",
+    previewLayout: "single",
+    width: "widget",
+  },
+  "user-profile": {
+    name: "Carl Fearby",
+    role: "Administrator",
+    src: defaultUserProfilePhotoSrc,
+    srcEnabled: true,
+    avatarSize: "md",
+    menuItemsJson: defaultUserProfileMenuItemsJson,
+    photoUploadEnabled: true,
+    photoUploadMenuItemId: defaultUserProfilePhotoUploadMenuItemId,
+    photoUploadTitle: "Update profile photo",
+    photoUploadDescription: "",
+    photoUploadLabel: "Profile photo",
+    photoUploadUploadLabel: "Browse image",
+    photoUploadCropButtonLabel: "Apply crop",
+    photoUploadChangeButtonLabel: "Change photo",
+    photoUploadZoomLabel: "Zoom",
+    photoUploadViewportSize: 240,
+    photoUploadOutputSize: 256,
+    photoUploadMinZoom: 1,
+    photoUploadMaxZoom: 3,
+    photoUploadZoomStep: 0.05,
+    previewLayout: "single",
+    width: "widget",
+  },
+  "profile-photo-upload": {
+    title: "Update profile photo",
+    label: "Profile photo",
+    value: "",
+    uploadLabel: "Browse image",
+    cropButtonLabel: "Apply crop",
+    changeButtonLabel: "Change photo",
+    zoomLabel: "Zoom",
+    viewportSize: 240,
+    outputSize: 256,
+    minZoom: 1,
+    maxZoom: 3,
+    zoomStep: 0.05,
     previewLayout: "single",
     width: "widget",
   },

@@ -5,12 +5,12 @@
 }
 
 .symbol {
-  min-width: 34px;
-  min-height: 34px;
+  min-width: var(--opus-control-height);
+  min-height: var(--opus-control-height);
   border: 0;
   background: transparent;
   color: color-mix(in srgb, var(--opus-muted) 70%, transparent);
-  font-size: 1.35rem;
+  font-size: calc(var(--opus-control-font-size) + 0.5rem);
   line-height: 1;
   cursor: pointer;
 }
@@ -20,13 +20,13 @@
 }
 
 .numeric {
-  min-width: 34px;
-  min-height: 34px;
+  min-width: var(--opus-control-height);
+  min-height: var(--opus-control-height);
   border: 1px solid var(--opus-border-strong);
   border-radius: var(--opus-input-radius);
   background: var(--opus-input-bg);
   color: var(--opus-text);
-  font-size: 0.82rem;
+  font-size: var(--opus-control-font-size);
   font-weight: 600;
   cursor: pointer;
 }

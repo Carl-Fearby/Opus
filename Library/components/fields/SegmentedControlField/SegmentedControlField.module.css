@@ -9,13 +9,13 @@
 }
 
 .segment {
-  min-height: 30px;
-  padding: 0 14px;
+  min-height: var(--opus-control-height);
+  padding: 0 var(--opus-control-padding-x, 14px);
   border: 0;
   border-radius: calc(var(--opus-input-radius-large) - 2px);
   background: transparent;
   color: var(--opus-muted);
-  font-size: 0.8rem;
+  font-size: var(--opus-control-font-size);
   font-weight: 600;
   cursor: pointer;
 }

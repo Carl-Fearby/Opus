@@ -14,7 +14,7 @@
 .track {
   appearance: none;
   position: relative;
-  width: 50px;
+  width: var(--opus-switch-width, 50px);
   height: var(--opus-control-height);
   margin: 0;
   border-radius: 999px;
@@ -29,8 +29,8 @@
   position: absolute;
   top: 50%;
   left: 4px;
-  width: 20px;
-  height: 20px;
+  width: var(--opus-switch-thumb, 20px);
+  height: var(--opus-switch-thumb, 20px);
   border-radius: 999px;
   background: linear-gradient(180deg, #ffffff, #d7dff9);
   transform: translateY(-50%);
@@ -39,10 +39,6 @@
 
 .track:checked {
   background: linear-gradient(135deg, var(--opus-accent), color-mix(in srgb, var(--opus-accent) 40%, #00d2ff));
-}
-
-.track:checked::before {
-  transform: translate(22px, -50%);
 }
 
 .error {

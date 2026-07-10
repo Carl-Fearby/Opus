@@ -3,7 +3,7 @@
   align-items: center;
   justify-content: center;
   min-height: var(--opus-control-height);
-  padding: 0 12px;
+  padding: 0 var(--opus-button-padding-x, 12px);
   border: 1px solid transparent;
   border-radius: var(--opus-input-radius);
   cursor: pointer;

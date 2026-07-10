@@ -2,8 +2,9 @@
 
 import { useEffect, useMemo, useRef, useState } from "react";
 import { FieldShell, fieldInputAriaProps, useFieldShellAria } from "@/components/fields/FieldShell";
-import type { FieldMode, LabelPosition } from "@/components/fields/types";
+import type { FieldMode, InputControlSize, LabelPosition } from "@/components/fields/types";
 import shared from "../shared/fieldControl.module.css";
+import { inputControlSizeClassName } from "../shared/inputControlSizes";
 import styles from "./TreeSelectField.module.css";
 
 export type TreeSelectNode = {
@@ -22,6 +23,7 @@ type TreeSelectFieldProps = {
   nodes: TreeSelectNode[];
   placeholder?: string;
   required?: boolean;
+  size?: InputControlSize;
   value: string | null;
   onChange: (value: string | null) => void;
 };
@@ -81,6 +83,7 @@ export function TreeSelectField({
   nodes,
   placeholder = "Select an item…",
   required,
+  size = "md",
   value,
   onChange,
 }: TreeSelectFieldProps) {
@@ -129,6 +132,7 @@ export function TreeSelectField({
           aria-expanded={open}
           aria-haspopup="tree"
           className={[
+            inputControlSizeClassName[size],
             shared.trigger,
             open ? shared.triggerOpen : "",
             error ? shared.triggerError : "",

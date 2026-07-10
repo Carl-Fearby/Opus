@@ -12,7 +12,7 @@ export type {
   ChipInputVariant,
   ChoiceControlSize,
   ChoiceOption,
-  ChoiceShape, ContentTimelineStatus, DescriptionListLayout, DialogActionSet, DividerOrientation, DividerTone, DrawerSide, DropdownMenuPlacement, EmptyStateIcon, FieldMode, GalleryImage, ImageThumbnailSize, LabelPosition, ModalSize, ModelAsset, ModelThumbnailSize, PopoverPlacement, SidebarSide, SkeletonAnimation, SkeletonVariant, StatisticTrend, SurfaceDensity, SurfaceTone, TableDensity, TabsOrientation, TabsVariant, Theme, ToastHorizontalPosition, ToastVerticalPosition, ToastViewportPosition } from "./types";
+  ChoiceShape, ContentTimelineStatus, DescriptionListLayout, DialogActionSet, DividerOrientation, DividerTone, DrawerSide, DropdownMenuPlacement, EmptyStateIcon, FieldMode, GalleryImage, ImageThumbnailSize, InputControlSize, LabelPosition, ModalSize, ModelAsset, ModelThumbnailSize, PopoverPlacement, SidebarSide, SkeletonAnimation, SkeletonVariant, StatisticTrend, SurfaceDensity, SurfaceTone, TableDensity, TabsOrientation, TabsVariant, Theme, ToastHorizontalPosition, ToastVerticalPosition, ToastViewportPosition } from "./types";
 export { Button } from "./Button";
 export type { ButtonVariant } from "./Button";
 export { FieldShell, fieldInputAriaProps, useFieldShellAria } from "./FieldShell";
@@ -22,6 +22,8 @@ export { DateField } from "./DateField";
 export type { DateInputType } from "./DateField";
 export { HiddenField } from "./HiddenField";
 export { FileField } from "./FileField";
+export { ImageCropUploadField } from "./ImageCropUploadField";
+export type { ImageCropUploadFieldProps, ImageCropUploadResult } from "./ImageCropUploadField";
 export { NumberField } from "./NumberField";
 export { Radio, RadioGroup } from "./RadioGroup";
 export { ChipInputField, ChipInput } from "./ChipInputField";
@@ -198,6 +200,11 @@ export { NotesActivity } from "../NotesActivity";
 export type { NotesActivityItem, NotesActivityProps } from "../NotesActivity";
 export { TopPerformingUsers } from "../TopPerformingUsers";
 export type { TopPerformingUserItem, TopPerformingUsersProps } from "../TopPerformingUsers";
+export { UserProfileWidget } from "../UserProfileWidget";
+export type { UserProfileMenuItem, UserProfilePhotoUploadOptions, UserProfileWidgetProps } from "../UserProfileWidget";
+export { ProfilePhotoUploadModal } from "../UserProfileWidget";
+export { ImageCropUploadWidget } from "../ImageCropUploadWidget";
+export type { ImageCropUploadWidgetProps } from "../ImageCropUploadWidget";
 export {
   DashboardContentContainer,
 } from "../DashboardContentContainer";

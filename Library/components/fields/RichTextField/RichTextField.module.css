@@ -44,13 +44,13 @@
 }
 
 .blockSelect {
-  min-height: 26px;
-  padding: 0 6px;
+  min-height: calc(var(--opus-control-height) - 2px);
+  padding: 0 var(--opus-control-padding-x, 6px);
   border: 1px solid var(--opus-border-strong);
   border-radius: 5px;
   background: var(--opus-input-bg);
   color: var(--opus-text);
-  font-size: 0.72rem;
+  font-size: calc(var(--opus-control-font-size) - 0.14rem);
   font-weight: 600;
   cursor: pointer;
 }
@@ -70,8 +70,8 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 24px;
-  height: 24px;
+  width: calc(var(--opus-control-height) - 4px);
+  height: calc(var(--opus-control-height) - 4px);
   border: 1px solid transparent;
   border-radius: 5px;
   background: transparent;

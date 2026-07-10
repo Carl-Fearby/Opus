@@ -2,8 +2,9 @@
 
 import { useId, useRef, useState, type KeyboardEvent } from "react";
 import styles from "./ChipInputField.module.css";
+import { inputControlSizeClassName } from "../shared/inputControlSizes";
 import { FieldShell, fieldInputAriaProps, useFieldShellAria } from "@/components/fields/FieldShell";
-import type { ChipInputVariant, FieldMode, LabelPosition } from "@/components/fields/types";
+import type { ChipInputVariant, FieldMode, InputControlSize, LabelPosition } from "@/components/fields/types";
 
 const CHIP_COMMIT_KEYS = new Set(["Enter", "Tab", ","]);
 
@@ -19,6 +20,7 @@ type ChipInputProps = {
   placeholder?: string;
   readOnly?: boolean;
   required?: boolean;
+  size?: InputControlSize;
   value: string[];
   variant?: ChipInputVariant;
 };
@@ -35,6 +37,7 @@ export function ChipInput({
   placeholder = "Add item…",
   readOnly = false,
   required,
+  size = "md",
   value,
   variant = "soft",
 }: ChipInputProps) {
@@ -109,6 +112,7 @@ export function ChipInput({
         aria-label={`${label} values`}
         className={[
           styles.field,
+          inputControlSizeClassName[size],
           error ? styles.error : "",
           disabled ? styles.disabled : "",
           readOnly ? styles.readOnly : "",

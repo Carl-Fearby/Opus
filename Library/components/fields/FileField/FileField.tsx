@@ -1,8 +1,9 @@
 "use client";
 
 import styles from "./FileField.module.css";
+import { inputControlSizeClassName } from "../shared/inputControlSizes";
 import { FieldShell, fieldInputAriaProps, useFieldShellAria } from "@/components/fields/FieldShell";
-import type { FieldMode, LabelPosition } from "@/components/fields/types";
+import type { FieldMode, InputControlSize, LabelPosition } from "@/components/fields/types";
 import {
   useRef,
   useState,
@@ -20,6 +21,7 @@ type FileFieldProps = {
   labelPosition?: LabelPosition;
   mode?: FieldMode;
   onChange: ChangeEventHandler<HTMLInputElement>;
+  size?: InputControlSize;
   fileName?: string;
 };
 
@@ -55,6 +57,7 @@ export function FileField({
   labelPosition = "left",
   mode = "stacked",
   onChange,
+  size = "md",
 }: FileFieldProps) {
   const shellAria = useFieldShellAria();
   const inputRef = useRef<HTMLInputElement>(null);
@@ -113,7 +116,7 @@ export function FileField({
       labelTag="div"
       mode={mode}
     >
-      <div className={styles.wrapper}>
+      <div className={`${styles.wrapper} ${inputControlSizeClassName[size]}`}>
         <label
           className={`${styles.drop} ${isDragging ? styles.dragging : ""} ${error ? styles.dropError : ""}`}
           htmlFor={id}

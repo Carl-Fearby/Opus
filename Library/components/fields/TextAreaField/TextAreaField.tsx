@@ -1,7 +1,8 @@
 import { useId, type ChangeEventHandler } from "react";
 import styles from "./TextAreaField.module.css";
+import { inputControlSizeClassName } from "../shared/inputControlSizes";
 import { FieldShell, fieldInputAriaProps, useFieldShellAria } from "@/components/fields/FieldShell";
-import type { FieldMode, LabelPosition } from "@/components/fields/types";
+import type { FieldMode, InputControlSize, LabelPosition } from "@/components/fields/types";
 
 type TextAreaFieldProps = {
   error?: string;
@@ -13,6 +14,7 @@ type TextAreaFieldProps = {
   mode?: FieldMode;
   placeholder?: string;
   required?: boolean;
+  size?: InputControlSize;
   value: string;
   onChange: ChangeEventHandler<HTMLTextAreaElement>;
 };
@@ -27,6 +29,7 @@ export function TextAreaField({
   mode = "stacked",
   placeholder,
   required,
+  size = "md",
   value,
   onChange,
 }: TextAreaFieldProps) {
@@ -51,7 +54,7 @@ export function TextAreaField({
       suppressErrorDisplay={showCharCount}
     >
       <div className={styles.field}>
-        <div className={styles.inputWrap}>
+        <div className={`${styles.inputWrap} ${inputControlSizeClassName[size]}`}>
           <textarea
             aria-invalid={error ? "true" : undefined}
             className={[

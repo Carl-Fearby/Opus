@@ -1,4 +1,6 @@
 import type { ButtonHTMLAttributes, ReactNode } from "react";
+import { inputControlSizeClassName } from "../shared/inputControlSizes";
+import type { InputControlSize } from "@/components/fields/types";
 import styles from "./Button.module.css";
 
 export type ButtonVariant =
@@ -14,13 +16,28 @@ export type ButtonVariant =
 
 type ButtonProps = ButtonHTMLAttributes<HTMLButtonElement> & {
   children: ReactNode;
+  size?: InputControlSize;
   variant?: ButtonVariant;
 };
 
-export function Button({ children, className, variant = "primary", type = "button", ...props }: ButtonProps) {
+export function Button({
+  children,
+  className,
+  size = "md",
+  variant = "primary",
+  type = "button",
+  ...props
+}: ButtonProps) {
   return (
     <button
-      className={[styles.button, styles[variant], className ?? ""].filter(Boolean).join(" ")}
+      className={[
+        styles.button,
+        styles[variant],
+        inputControlSizeClassName[size],
+        className ?? "",
+      ]
+        .filter(Boolean)
+        .join(" ")}
       type={type}
       {...props}
     >

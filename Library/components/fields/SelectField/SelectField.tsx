@@ -1,6 +1,7 @@
 import styles from "./SelectField.module.css";
+import { inputControlSizeClassName } from "../shared/inputControlSizes";
 import { FieldShell, fieldInputAriaProps, useFieldShellAria } from "@/components/fields/FieldShell";
-import type { FieldMode, LabelPosition } from "@/components/fields/types";
+import type { FieldMode, InputControlSize, LabelPosition } from "@/components/fields/types";
 import type { ChangeEventHandler } from "react";
 
 type SelectFieldProps = {
@@ -12,6 +13,7 @@ type SelectFieldProps = {
   mode?: FieldMode;
   options: string[];
   required?: boolean;
+  size?: InputControlSize;
   value: string;
   onChange: ChangeEventHandler<HTMLSelectElement>;
 };
@@ -25,6 +27,7 @@ export function SelectField({
   mode = "stacked",
   options,
   required,
+  size = "md",
   value,
   onChange,
 }: SelectFieldProps) {
@@ -40,7 +43,7 @@ export function SelectField({
       mode={mode}
       required={required}
     >
-      <div className={styles.wrap}>
+      <div className={`${styles.wrap} ${inputControlSizeClassName[size]}`}>
         <select
           aria-invalid={error ? "true" : undefined}
           className={`${styles.select} ${error ? styles.error : ""}`}

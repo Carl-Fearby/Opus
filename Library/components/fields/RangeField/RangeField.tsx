@@ -1,8 +1,9 @@
 import styles from "./RangeField.module.css";
+import { inputControlSizeClassName } from "../shared/inputControlSizes";
 import { Tooltip } from "@/components/Tooltip";
 import { FieldShell, fieldInputAriaProps, useFieldShellAria } from "@/components/fields/FieldShell";
 import { formatByStep } from "@/components/fields/numericUtils";
-import type { FieldMode, LabelPosition } from "@/components/fields/types";
+import type { FieldMode, InputControlSize, LabelPosition } from "@/components/fields/types";
 import type { ChangeEventHandler, CSSProperties } from "react";
 
 type RangeFieldProps = {
@@ -14,6 +15,7 @@ type RangeFieldProps = {
   max?: number;
   min?: number;
   mode?: FieldMode;
+  size?: InputControlSize;
   step?: number;
   value: number;
   valueUnit?: string;
@@ -29,6 +31,7 @@ export function RangeField({
   max = 100,
   min = 0,
   mode = "stacked",
+  size = "md",
   step = 1,
   value,
   valueUnit = "%",
@@ -52,7 +55,7 @@ export function RangeField({
       labelVisuallyHidden
       mode={mode}
     >
-      <div className={styles.wrap} style={rangeStyle}>
+      <div className={`${styles.wrap} ${inputControlSizeClassName[size]}`} style={rangeStyle}>
         <div className={styles.topRow}>
           <label className={styles.fieldLabel} htmlFor={id}>
             <span>{label}</span>

@@ -15,14 +15,14 @@
   align-items: center;
   gap: 6px;
   color: var(--opus-text);
-  font-size: 0.86rem;
+  font-size: var(--opus-control-font-size);
   font-weight: 600;
   line-height: 1.2;
 }
 
 .value {
   color: var(--opus-text);
-  font-size: 0.92rem;
+  font-size: calc(var(--opus-control-font-size) + 0.06rem);
   font-weight: 700;
   font-variant-numeric: tabular-nums;
 }
@@ -39,14 +39,14 @@
 .slider {
   appearance: none;
   width: 100%;
-  height: 28px;
+  height: var(--opus-control-height);
   margin: 0;
   background: transparent;
   cursor: pointer;
 }
 
 .slider::-webkit-slider-runnable-track {
-  height: 8px;
+  height: var(--opus-range-track, 8px);
   border-radius: 999px;
   background: linear-gradient(
     to right,
@@ -59,9 +59,9 @@
 
 .slider::-webkit-slider-thumb {
   appearance: none;
-  width: 22px;
-  height: 22px;
-  margin-top: -7px;
+  width: var(--opus-range-thumb, 22px);
+  height: var(--opus-range-thumb, 22px);
+  margin-top: calc((var(--opus-range-track, 8px) - var(--opus-range-thumb, 22px)) / 2);
   border: 3px solid var(--opus-accent);
   border-radius: 999px;
   background: #ffffff;
@@ -69,21 +69,21 @@
 }
 
 .slider::-moz-range-track {
-  height: 8px;
+  height: var(--opus-range-track, 8px);
   border: 0;
   border-radius: 999px;
   background: color-mix(in srgb, var(--opus-muted) 24%, var(--opus-input-bg));
 }
 
 .slider::-moz-range-progress {
-  height: 8px;
+  height: var(--opus-range-track, 8px);
   border-radius: 999px;
   background: var(--opus-accent);
 }
 
 .slider::-moz-range-thumb {
-  width: 22px;
-  height: 22px;
+  width: var(--opus-range-thumb, 22px);
+  height: var(--opus-range-thumb, 22px);
   border: 3px solid var(--opus-accent);
   border-radius: 999px;
   background: #ffffff;

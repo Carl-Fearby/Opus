@@ -5,13 +5,13 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import type { ReactNode } from "react";
 import opusReactPackage from "opus-react/package.json";
-import { DOCUMENTATION_BASE_PATH } from "@/lib/documentation/routes";
+import { DOCUMENTATION_BASE_PATH, PLAYGROUND_BASE_PATH } from "@/lib/documentation/routes";
 import styles from "./TopBar.module.css";
 
 const LIBRARY_VERSION = opusReactPackage.version;
 
 type DocumentationNavProps = {
-  current?: "home" | "components" | "guide" | "version";
+  current?: "home" | "components" | "guide" | "playground" | "version";
 };
 
 export function DocumentationNav({ current }: DocumentationNavProps) {
@@ -22,7 +22,9 @@ export function DocumentationNav({ current }: DocumentationNavProps) {
       ? "components"
       : pathname.startsWith("/documentation/guide")
         ? "guide"
-        : pathname.startsWith("/documentation/version")
+        : pathname.startsWith(PLAYGROUND_BASE_PATH)
+          ? "playground"
+          : pathname.startsWith("/documentation/version")
           ? "version"
           : pathname === DOCUMENTATION_BASE_PATH
             ? "home"
@@ -52,6 +54,13 @@ export function DocumentationNav({ current }: DocumentationNavProps) {
         Components
       </Link>
       <Link
+        aria-current={active === "playground" ? "page" : undefined}
+        className={active === "playground" ? styles.navLinkActive : styles.navLink}
+        href={PLAYGROUND_BASE_PATH}
+      >
+        Playground
+      </Link>
+      <Link
         aria-current={active === "version" ? "page" : undefined}
         className={active === "version" ? styles.navLinkActive : styles.navLink}
         href="/documentation/version"
@@ -63,7 +72,7 @@ export function DocumentationNav({ current }: DocumentationNavProps) {
 }
 
 type DocumentationTopBarProps = {
-  current: "home" | "components" | "guide" | "version";
+  current: "home" | "components" | "guide" | "playground" | "version";
   trailing?: ReactNode;
 };
 

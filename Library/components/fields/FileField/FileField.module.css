@@ -10,8 +10,8 @@
   align-items: center;
   justify-content: center;
   gap: 14px;
-  min-height: 96px;
-  padding: 16px 20px;
+  min-height: var(--opus-file-min-height, 96px);
+  padding: var(--opus-file-padding-y, 16px) var(--opus-file-padding-x, 20px);
   border-radius: var(--opus-input-radius-large);
   border: 1px dashed var(--opus-border-strong);
   background: var(--opus-input-fill);
@@ -52,7 +52,7 @@
 
 .title {
   color: var(--opus-text);
-  font-size: 0.9rem;
+  font-size: var(--opus-control-font-size);
   line-height: 1.35;
 }
 
@@ -70,12 +70,13 @@
   display: inline-flex;
   justify-content: center;
   margin-top: 2px;
-  padding: 7px 14px;
+  min-height: var(--opus-control-height);
+  padding: 0 var(--opus-control-padding-x, 14px);
   border-radius: var(--opus-input-radius);
   border: 1px solid var(--opus-border-strong);
   background: transparent;
   color: var(--opus-accent);
-  font-size: 0.82rem;
+  font-size: var(--opus-control-font-size);
   font-weight: 600;
 }
 

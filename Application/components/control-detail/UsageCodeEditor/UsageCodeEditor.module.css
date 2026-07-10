@@ -51,8 +51,21 @@
   background: color-mix(in srgb, var(--opus-accent) 24%, transparent) !important;
 }
 
-.codeEditor :global(.cm-cursor) {
-  display: none;
+.codeEditor[data-editable="true"] {
+  max-height: none;
+  min-height: 100%;
+}
+
+.codeEditor[data-editable="true"] :global(.cm-editor) {
+  min-height: inherit;
+}
+
+.codeEditor[data-editable="true"] :global(.cm-cursor) {
+  display: block;
+}
+
+.codeEditor[data-editable="true"] :global(.cm-scroller) {
+  overflow: auto;
 }
 
 .codeEditor :global(.cm-focused) {

@@ -2,7 +2,8 @@
 
 import { useMemo, type CSSProperties } from "react";
 import { FieldShell, fieldInputAriaProps, useFieldShellAria } from "@/components/fields/FieldShell";
-import type { FieldMode, LabelPosition } from "@/components/fields/types";
+import type { FieldMode, InputControlSize, LabelPosition } from "@/components/fields/types";
+import { inputControlSizeClassName } from "../shared/inputControlSizes";
 import styles from "./SliderRangeField.module.css";
 
 type SliderRangeFieldProps = {
@@ -15,6 +16,7 @@ type SliderRangeFieldProps = {
   min?: number;
   mode?: FieldMode;
   required?: boolean;
+  size?: InputControlSize;
   step?: number;
   value: [number, number];
   onChange: (value: [number, number]) => void;
@@ -34,6 +36,7 @@ export function SliderRangeField({
   min = 0,
   mode = "stacked",
   required,
+  size = "md",
   step = 1,
   value,
   onChange,
@@ -71,7 +74,7 @@ export function SliderRangeField({
       mode={mode}
       required={required}
     >
-      <div className={styles.root} {...fieldInputAriaProps(shellAria, { invalid: Boolean(error) })}>
+      <div className={`${styles.root} ${inputControlSizeClassName[size]}`} {...fieldInputAriaProps(shellAria, { invalid: Boolean(error) })}>
         <div className={styles.header}>
           <span className={styles.value}>
             {start} – {end}

@@ -17,7 +17,9 @@ export type DashboardCatalogEntry = {
     | "status-indicator"
     | "top-performing-users"
     | "trend-badge"
-    | "upcoming-tasks";
+    | "upcoming-tasks"
+    | "user-profile"
+    | "profile-photo-upload";
   slug: string;
   sourceFiles: string[];
   title: string;
@@ -178,6 +180,37 @@ export const dashboardCatalog = [
     sourceFiles: [
       "components/TopPerformingUsers/TopPerformingUsers.tsx",
       "components/TopPerformingUsers/TopPerformingUsers.module.css",
+    ],
+  },
+  {
+    slug: "user-profile",
+    title: "User Profile",
+    componentName: "UserProfileWidget",
+    navigationGroup: "Dashboard",
+    description:
+      "Signed-in user profile chip with optional photo, name, role, and chevron menu driven by a JSON menu config.",
+    settingsType: "user-profile",
+    sourceFiles: [
+      "components/UserProfileWidget/UserProfileWidget.tsx",
+      "components/UserProfileWidget/UserProfileWidget.module.css",
+      "components/UserProfileWidget/ProfilePhotoUploadModal.tsx",
+      "components/Avatar/Avatar.tsx",
+      "components/DropdownMenu/DropdownMenu.tsx",
+    ],
+  },
+  {
+    slug: "profile-photo-upload",
+    title: "Profile Photo Upload",
+    componentName: "ImageCropUploadWidget",
+    navigationGroup: "Dashboard",
+    description:
+      "Profile photo upload widget with circular crop mask, drag positioning, zoom controls, and canvas export before upload.",
+    settingsType: "profile-photo-upload",
+    sourceFiles: [
+      "components/ImageCropUploadWidget/ImageCropUploadWidget.tsx",
+      "components/ImageCropUploadWidget/ImageCropUploadWidget.module.css",
+      "components/fields/ImageCropUploadField/ImageCropUploadField.tsx",
+      "components/fields/ImageCropUploadField/cropCircularImage.ts",
     ],
   },
   {

@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useSearchParams } from "next/navigation";
 import { useCallback, useEffect, useId, useMemo, useState } from "react";
 import { faMagnifyingGlass } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -32,6 +32,10 @@ const sidebarBottomCategories = SIDEBAR_BOTTOM_CATEGORY_IDS.map((id) =>
 const categoryLabels = Object.fromEntries(
   componentCategories.map((category) => [category.id, category.label]),
 ) as Record<ComponentCategory, string>;
+
+function controlDetailPath(control: ControlDefinition) {
+  return componentPath(control.slug, control.category === "labs" ? { category: "labs" } : undefined);
+}
 
 function normalise(value: string) {
   return value.trim().toLowerCase();
@@ -205,8 +209,8 @@ function NavGroup({
                 <div className={styles.navSubsectionItemsFlat}>
                   {section.controls.map((control) => (
                     <NavLink
-                      key={control.slug}
-                      href={componentPath(control.slug)}
+                      key={`${category}:${control.slug}`}
+                      href={controlDetailPath(control)}
                       icon={getComponentIcon(control.slug)}
                       isNew={control.isNew}
                       label={control.title}
@@ -224,6 +228,7 @@ function NavGroup({
 }
 
 function NavSubgroup({
+  category,
   controls,
   label,
   open,
@@ -259,8 +264,8 @@ function NavSubgroup({
         <div className={styles.navSubsectionItems} id={listId} inert={!open || undefined}>
           {controls.map((control) => (
             <NavLink
-              key={control.slug}
-              href={componentPath(control.slug)}
+              key={`${category}:${control.slug}`}
+              href={controlDetailPath(control)}
               icon={getComponentIcon(control.slug)}
               isNew={control.isNew}
               label={control.title}
@@ -275,13 +280,21 @@ function NavSubgroup({
 
 export function ComponentsSidebar() {
   const pathname = usePathname();
+  const searchParams = useSearchParams();
   const searchId = useId();
   const isOverview = pathname === COMPONENTS_BASE_PATH;
   const [openGroups, setOpenGroups] = useState<OpenSidebarGroups>({});
   const [hydrated, setHydrated] = useState(false);
   const [query, setQuery] = useState("");
+  const categoryFromQuery = searchParams.get("category") as ComponentCategory | null;
 
-  const activeCategory = useMemo(() => getActiveCategoryFromPath(pathname), [pathname]);
+  const activeCategory = useMemo(() => {
+    if (categoryFromQuery && componentCategories.some((category) => category.id === categoryFromQuery)) {
+      return categoryFromQuery;
+    }
+
+    return getActiveCategoryFromPath(pathname);
+  }, [categoryFromQuery, pathname]);
   const normalisedQuery = normalise(query);
   const isSearching = normalisedQuery.length > 0;
 
@@ -327,7 +340,9 @@ export function ComponentsSidebar() {
         }
 
         const segment = pathname.slice(`${COMPONENTS_BASE_PATH}/`.length).split("/")[0];
-        const activeControl = segment ? getControl(segment) : undefined;
+        const activeControl = segment
+          ? getControl(segment, categoryFromQuery ? { category: categoryFromQuery } : undefined) ?? getControl(segment)
+          : undefined;
         if (
           activeControl?.navigationGroup &&
           activeControl.category === activeCategory
@@ -349,7 +364,7 @@ export function ComponentsSidebar() {
     }, 0);
 
     return () => window.clearTimeout(timeout);
-  }, [activeCategory, hydrated, pathname]);
+  }, [activeCategory, categoryFromQuery, hydrated, pathname]);
 
   const toggleGroup = useCallback((category: ComponentCategory) => {
     setOpenGroups((current) => {
@@ -411,8 +426,8 @@ export function ComponentsSidebar() {
             ) : null}
             {searchResults.map((control) => (
               <NavLink
-                key={control.slug}
-                href={componentPath(control.slug)}
+                key={`${control.category}:${control.slug}`}
+                href={controlDetailPath(control)}
                 icon={getComponentIcon(control.slug)}
                 isNew={control.isNew}
                 label={control.title}

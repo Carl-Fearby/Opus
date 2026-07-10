@@ -1,6 +1,7 @@
 import styles from "./SwitchField.module.css";
+import { inputControlSizeClassName } from "../shared/inputControlSizes";
 import { FieldShell, fieldInputAriaProps, useFieldShellAria } from "@/components/fields/FieldShell";
-import type { FieldMode, LabelPosition } from "@/components/fields/types";
+import type { FieldMode, InputControlSize, LabelPosition } from "@/components/fields/types";
 import type { ChangeEventHandler } from "react";
 
 type SwitchFieldProps = {
@@ -11,6 +12,7 @@ type SwitchFieldProps = {
   label: string;
   labelPosition?: LabelPosition;
   mode?: FieldMode;
+  size?: InputControlSize;
   onChange: ChangeEventHandler<HTMLInputElement>;
 };
 
@@ -22,6 +24,7 @@ export function SwitchField({
   label,
   labelPosition = "left",
   mode = "flagged",
+  size = "md",
   onChange,
 }: SwitchFieldProps) {
   const shellAria = useFieldShellAria();
@@ -39,7 +42,7 @@ export function SwitchField({
       labelTag="label"
       mode={mode}
     >
-      <div className={styles.toggle}>
+      <div className={`${styles.toggle} ${inputControlSizeClassName[size]}`}>
         <input
           aria-checked={checked}
           aria-invalid={error ? "true" : undefined}

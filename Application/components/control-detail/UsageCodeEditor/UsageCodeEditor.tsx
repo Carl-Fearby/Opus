@@ -9,32 +9,49 @@ import styles from "./UsageCodeEditor.module.css";
 
 type UsageCodeEditorProps = {
   code: string;
+  editable?: boolean;
+  maxHeight?: string;
+  minHeight?: string;
+  onChange?: (value: string) => void;
 };
 
-export function UsageCodeEditor({ code }: UsageCodeEditorProps) {
+export function UsageCodeEditor({
+  code,
+  editable = false,
+  maxHeight = "320px",
+  minHeight,
+  onChange,
+}: UsageCodeEditorProps) {
   const extensions = useMemo(
     () => [javascript({ jsx: true, typescript: true }), EditorView.lineWrapping],
     [],
   );
 
   return (
-    <div aria-label="Generated usage code" className={styles.codeEditor} role="region">
+    <div
+      aria-label={editable ? "Editable code editor" : "Generated usage code"}
+      className={styles.codeEditor}
+      data-editable={editable ? "true" : undefined}
+      role="region"
+    >
       <CodeMirror
         basicSetup={{
-          autocompletion: false,
+          autocompletion: editable,
           foldGutter: false,
           highlightActiveLine: true,
           highlightActiveLineGutter: true,
-          highlightSelectionMatches: false,
+          highlightSelectionMatches: editable,
           lineNumbers: true,
-          searchKeymap: false,
+          searchKeymap: editable,
         }}
-        editable={false}
+        editable={editable}
         extensions={extensions}
         height="auto"
-        maxHeight="320px"
+        maxHeight={maxHeight}
+        minHeight={minHeight}
         theme={vscodeDark}
         value={code}
+        onChange={editable ? onChange : undefined}
       />
     </div>
   );

@@ -1,0 +1,91 @@
+.root {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  min-width: 0;
+  padding: 2px 0;
+}
+
+.copy {
+  display: grid;
+  gap: 2px;
+  min-width: 0;
+}
+
+.name {
+  overflow: hidden;
+  color: var(--dashboard-section-text);
+  font-size: 0.86rem;
+  font-weight: 700;
+  line-height: 1.2;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.role {
+  overflow: hidden;
+  color: var(--dashboard-section-muted);
+  font-size: 0.72rem;
+  font-weight: 500;
+  line-height: 1.2;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.chevronButton {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: 28px;
+  height: 28px;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  border-radius: 6px;
+  background: transparent;
+  color: color-mix(in srgb, var(--dashboard-section-text) 82%, transparent);
+  cursor: pointer;
+  transition: background 160ms ease;
+}
+
+.chevronButton:hover {
+  background: color-mix(in srgb, var(--dashboard-section-panel) 72%, transparent);
+}
+
+.chevronButton:focus-visible {
+  outline: 2px solid color-mix(in srgb, var(--opus-accent, #7c3aed) 55%, transparent);
+  outline-offset: 2px;
+}
+
+.chevron {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 16px;
+  height: 16px;
+  font-size: 0.72rem;
+  line-height: 0;
+}
+
+.avatarButton {
+  display: inline-flex;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  border-radius: 999px;
+  background: transparent;
+  cursor: pointer;
+  transition: box-shadow 160ms ease;
+}
+
+.avatarButton:hover {
+  box-shadow: 0 0 0 2px color-mix(in srgb, var(--opus-accent, #7c3aed) 28%, transparent);
+}
+
+.avatarButton:focus-visible {
+  outline: 2px solid color-mix(in srgb, var(--opus-accent, #7c3aed) 55%, transparent);
+  outline-offset: 2px;
+}

@@ -1,4 +1,4 @@
-import type { AccordionGroupType, AvatarShape, AvatarSize, BadgeSize, BadgeTone, BadgeVariant, ButtonVariant, ChartPalette, ChartVariant, ChipInputPreset, ChipInputVariant, ChoiceControlSize, ChoiceShape, ContentTimelineStatus, DescriptionListLayout, DialogActionSet, DividerOrientation, DividerTone, DrawerSide, DropdownMenuPlacement, FieldMode, ImageThumbnailSize, LabelPosition, ModalSize, ModelThumbnailSize, PopoverPlacement, SidebarSide, SkeletonAnimation, SkeletonVariant, AlertStatus, StatisticTrend, SurfaceDensity, SurfaceTone, TableDensity, TabsOrientation, TabsVariant, Theme, ToastHorizontalPosition, ToastVerticalPosition } from "@/components/fields";
+import type { AccordionGroupType, AvatarShape, AvatarSize, BadgeSize, BadgeTone, BadgeVariant, ButtonVariant, ChartPalette, ChartVariant, ChipInputPreset, ChipInputVariant, ChoiceControlSize, ChoiceShape, ContentTimelineStatus, DescriptionListLayout, DialogActionSet, DividerOrientation, DividerTone, DrawerSide, DropdownMenuPlacement, FieldMode, ImageThumbnailSize, InputControlSize, LabelPosition, ModalSize, ModelThumbnailSize, PopoverPlacement, SidebarSide, SkeletonAnimation, SkeletonVariant, AlertStatus, StatisticTrend, SurfaceDensity, SurfaceTone, TableDensity, TabsOrientation, TabsVariant, Theme, ToastHorizontalPosition, ToastVerticalPosition } from "@/components/fields";
 import type {
   SectionColumns,
   SectionGap,
@@ -36,6 +36,7 @@ export type ControlSlug =
   | "url-input"
   | "search-input"
   | "file-upload"
+  | "image-crop-upload"
   | "hidden-input"
   | "number-input"
   | "password-input"
@@ -139,10 +140,13 @@ export type BaseFieldSettings = {
   helpEnabled: boolean;
   help: string;
   required: boolean;
+  size: InputControlSize;
 };
 
 export type ValueFieldSettings = BaseFieldSettings & {
   value: string;
+  placeholder?: string;
+  placeholderEnabled?: boolean;
 };
 
 export type TextInputSettings = BaseFieldSettings & {
@@ -283,6 +287,19 @@ export type FileUploadSettings = BaseFieldSettings & {
   fileName: string;
 };
 
+export type ImageCropUploadSettings = BaseFieldSettings & {
+  changeButtonLabel: string;
+  cropButtonLabel: string;
+  maxZoom: number;
+  minZoom: number;
+  outputSize: number;
+  uploadLabel: string;
+  value: string;
+  viewportSize: number;
+  zoomLabel: string;
+  zoomStep: number;
+};
+
 export type ColorPickerSettings = BaseFieldSettings & {
   value: string;
 };
@@ -296,6 +313,7 @@ export type ButtonSettings = {
   variant: ButtonVariant;
   label: string;
   disabled: boolean;
+  size: InputControlSize;
 };
 
 export type ThemeToggleSettings = {
@@ -694,6 +712,48 @@ export type UpcomingTasksSettings = DashboardListWidgetSettings & {
 };
 export type RecentActivitySettings = DashboardListWidgetSettings;
 export type TopPerformingUsersSettings = DashboardListWidgetSettings;
+
+export type UserProfileWidgetSettings = {
+  avatarSize: AvatarSize;
+  menuItemsJson: string;
+  name: string;
+  photoUploadChangeButtonLabel: string;
+  photoUploadCropButtonLabel: string;
+  photoUploadDescription: string;
+  photoUploadEnabled: boolean;
+  photoUploadLabel: string;
+  photoUploadMenuItemId: string;
+  photoUploadMaxZoom: number;
+  photoUploadMinZoom: number;
+  photoUploadOutputSize: number;
+  photoUploadTitle: string;
+  photoUploadUploadLabel: string;
+  photoUploadViewportSize: number;
+  photoUploadZoomLabel: string;
+  photoUploadZoomStep: number;
+  previewLayout: DashboardPreviewLayout;
+  role: string;
+  src: string;
+  srcEnabled: boolean;
+  width: DashboardSectionWidth;
+};
+
+export type ProfilePhotoUploadWidgetSettings = {
+  changeButtonLabel: string;
+  cropButtonLabel: string;
+  label: string;
+  maxZoom: number;
+  minZoom: number;
+  outputSize: number;
+  previewLayout: DashboardPreviewLayout;
+  title: string;
+  uploadLabel: string;
+  value: string;
+  viewportSize: number;
+  width: DashboardSectionWidth;
+  zoomLabel: string;
+  zoomStep: number;
+};
 
 export type DashboardContentContainerSettings = {
   previewLayout: DashboardPreviewLayout;
@@ -1164,6 +1224,7 @@ export type ControlSettingsBySlug = {
   "url-input": ValueFieldSettings;
   "search-input": ValueFieldSettings;
   "file-upload": FileUploadSettings;
+  "image-crop-upload": ImageCropUploadSettings;
   "hidden-input": HiddenInputSettings;
   "number-input": NumberInputSettings;
   "password-input": ValueFieldSettings;
@@ -1294,6 +1355,8 @@ export type ControlSettingsBySlug = {
   "upcoming-tasks": UpcomingTasksSettings;
   "recent-activity": RecentActivitySettings;
   "top-performing-users": TopPerformingUsersSettings;
+  "user-profile": UserProfileWidgetSettings;
+  "profile-photo-upload": ProfilePhotoUploadWidgetSettings;
   "dashboard-list-columns": DashboardListColumnsSettings;
   "notes-activity": NotesActivitySettings;
   "404-page": ErrorPageSettings;
@@ -1337,6 +1400,7 @@ export const formsControlOrder = [
   "url-input",
   "search-input",
   "file-upload",
+  "image-crop-upload",
   "hidden-input",
   "number-input",
   "password-input",

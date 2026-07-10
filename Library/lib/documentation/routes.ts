@@ -2,6 +2,7 @@ export const DOCUMENTATION_BASE_PATH = "/documentation";
 export const COMPONENTS_BASE_PATH = `${DOCUMENTATION_BASE_PATH}/components`;
 export const GUIDE_BASE_PATH = `${DOCUMENTATION_BASE_PATH}/guide`;
 export const VERSION_BASE_PATH = `${DOCUMENTATION_BASE_PATH}/version`;
+export const PLAYGROUND_BASE_PATH = `${DOCUMENTATION_BASE_PATH}/playground`;
 
 export function documentationPath() {
   return DOCUMENTATION_BASE_PATH;
@@ -17,4 +18,8 @@ export function guidePath(slug?: string) {
 
 export function isGuidePath(pathname: string) {
   return pathname === GUIDE_BASE_PATH || pathname.startsWith(`${GUIDE_BASE_PATH}/`);
+}
+
+export function isPlaygroundPath(pathname: string) {
+  return pathname === PLAYGROUND_BASE_PATH || pathname.startsWith(`${PLAYGROUND_BASE_PATH}/`);
 }

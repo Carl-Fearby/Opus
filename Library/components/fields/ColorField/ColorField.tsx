@@ -1,6 +1,7 @@
 import styles from "./ColorField.module.css";
+import { inputControlSizeClassName } from "../shared/inputControlSizes";
 import { FieldShell, fieldInputAriaProps, useFieldShellAria } from "@/components/fields/FieldShell";
-import type { FieldMode, LabelPosition } from "@/components/fields/types";
+import type { FieldMode, InputControlSize, LabelPosition } from "@/components/fields/types";
 import type { ChangeEventHandler } from "react";
 
 type ColorFieldProps = {
@@ -11,6 +12,7 @@ type ColorFieldProps = {
   labelPosition?: LabelPosition;
   mode?: FieldMode;
   onChange: ChangeEventHandler<HTMLInputElement>;
+  size?: InputControlSize;
   value: string;
 };
 
@@ -22,6 +24,7 @@ export function ColorField({
   labelPosition = "left",
   mode = "stacked",
   onChange,
+  size = "md",
   value,
 }: ColorFieldProps) {
   const shellAria = useFieldShellAria();
@@ -36,7 +39,15 @@ export function ColorField({
       labelTag="div"
       mode={mode}
     >
-      <div className={`${styles.picker} ${error ? styles.error : ""}`}>
+      <div
+        className={[
+          styles.picker,
+          inputControlSizeClassName[size],
+          error ? styles.error : "",
+        ]
+          .filter(Boolean)
+          .join(" ")}
+      >
         <input
           aria-invalid={error ? "true" : undefined}
           aria-valuetext={value.toUpperCase()}

@@ -1,7 +1,8 @@
 "use client";
 
 import { FieldShell, fieldInputAriaProps, useFieldShellAria } from "@/components/fields/FieldShell";
-import type { FieldMode, LabelPosition } from "@/components/fields/types";
+import type { FieldMode, InputControlSize, LabelPosition } from "@/components/fields/types";
+import { inputControlSizeClassName } from "../shared/inputControlSizes";
 import styles from "./RatingField.module.css";
 
 export type RatingVariant = "stars" | "hearts" | "numeric";
@@ -15,6 +16,7 @@ type RatingFieldProps = {
   max?: number;
   mode?: FieldMode;
   required?: boolean;
+  size?: InputControlSize;
   value: number;
   variant?: RatingVariant;
   onChange: (value: number) => void;
@@ -39,6 +41,7 @@ export function RatingField({
   max = 5,
   mode = "stacked",
   required,
+  size = "md",
   value,
   variant = "stars",
   onChange,
@@ -58,7 +61,7 @@ export function RatingField({
     >
       <div
         aria-label={`${label}: ${value} of ${max}`}
-        className={styles.root}
+        className={`${styles.root} ${inputControlSizeClassName[size]}`}
         role={variant === "numeric" ? "radiogroup" : "group"}
         {...fieldInputAriaProps(shellAria, { invalid: Boolean(error) })}
       >

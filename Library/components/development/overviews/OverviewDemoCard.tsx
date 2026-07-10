@@ -6,6 +6,7 @@ import { useState } from "react";
 import { ControlPreview } from "@/components/control-detail/ControlDetail/ControlPreview";
 import { PreviewStage } from "@/components/control-detail/ControlDetail/PreviewStage";
 import { PreviewThemeControls } from "@/components/control-detail/ControlDetail/PreviewThemeControls";
+import { OpenInPlaygroundLink } from "@/components/control-detail/ControlDetail/OpenInPlaygroundLink";
 import previewStyles from "@/components/control-detail/ControlDetail/ControlDetail.module.css";
 import { getDefaultSettings } from "@/lib/controls/defaults";
 import { getControl } from "@/lib/controls/registry";
@@ -15,11 +16,12 @@ import styles from "./overview.module.css";
 
 type OverviewDemoCardProps = {
   children?: ReactNode;
+  previewCategory?: "labs";
   slug: ControlSlug;
   title?: string;
 };
 
-export function OverviewDemoCard({ children, slug, title }: OverviewDemoCardProps) {
+export function OverviewDemoCard({ children, previewCategory, slug, title }: OverviewDemoCardProps) {
   const control = getControl(slug);
   const [settings, setSettings] = useState<ControlSettings>(() => getDefaultSettings(slug));
 
@@ -33,7 +35,8 @@ export function OverviewDemoCard({ children, slug, title }: OverviewDemoCardProp
         <span className="opus-panel-title">{title ?? control.title}</span>
         <div className={previewStyles.previewToolbar}>
           <PreviewThemeControls id={`preview-theme-toggle-${slug}`} />
-          <Link className={styles.moreLink} href={componentPath(slug)}>
+          <OpenInPlaygroundLink category={previewCategory} settings={settings} slug={slug} />
+          <Link className={styles.moreLink} href={componentPath(slug, { category: previewCategory })}>
             More
           </Link>
         </div>
@@ -41,7 +44,12 @@ export function OverviewDemoCard({ children, slug, title }: OverviewDemoCardProp
       <div className={styles.demoCardBody}>
         <PreviewStage>
           {children ?? (
-            <ControlPreview slug={slug} settings={settings} onSettingsChange={setSettings} />
+            <ControlPreview
+              category={previewCategory}
+              slug={slug}
+              settings={settings}
+              onSettingsChange={setSettings}
+            />
           )}
         </PreviewStage>
       </div>

@@ -1,6 +1,7 @@
 import styles from "./HiddenField.module.css";
+import { inputControlSizeClassName } from "../shared/inputControlSizes";
 import { FieldShell } from "@/components/fields/FieldShell";
-import type { FieldMode, LabelPosition } from "@/components/fields/types";
+import type { FieldMode, InputControlSize, LabelPosition } from "@/components/fields/types";
 
 type HiddenFieldProps = {
   help?: string;
@@ -10,6 +11,7 @@ type HiddenFieldProps = {
   mode?: FieldMode;
   name?: string;
   required?: boolean;
+  size?: InputControlSize;
   value: string;
 };
 
@@ -21,6 +23,7 @@ export function HiddenField({
   mode = "stacked",
   name,
   required,
+  size = "md",
   value,
 }: HiddenFieldProps) {
   const fieldName = name ?? id;
@@ -34,7 +37,7 @@ export function HiddenField({
       mode={mode}
       required={required}
     >
-      <div className={styles.preview}>
+      <div className={`${styles.preview} ${inputControlSizeClassName[size]}`}>
         <input
           id={id}
           name={fieldName}

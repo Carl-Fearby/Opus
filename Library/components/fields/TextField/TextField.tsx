@@ -1,10 +1,12 @@
 import { useState } from "react";
 import type { ChangeEventHandler } from "react";
-import styles from "./TextField.module.css";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faMagnifyingGlass } from "@fortawesome/free-solid-svg-icons";
 import shared from "../shared/fieldControl.module.css";
+import { inputControlSizeClassName } from "../shared/inputControlSizes";
 import { PasswordToggle } from "../shared/PasswordToggle";
 import { FieldShell, fieldInputAriaProps, useFieldShellAria } from "@/components/fields/FieldShell";
-import type { FieldMode, LabelPosition } from "@/components/fields/types";
+import type { FieldMode, InputControlSize, LabelPosition } from "@/components/fields/types";
 
 type TextFieldProps = {
   error?: string;
@@ -15,6 +17,7 @@ type TextFieldProps = {
   mode?: FieldMode;
   placeholder?: string;
   required?: boolean;
+  size?: InputControlSize;
   type: "email" | "password" | "search" | "tel" | "text" | "url";
   value: string;
   onChange: ChangeEventHandler<HTMLInputElement>;
@@ -29,6 +32,7 @@ export function TextField({
   mode = "stacked",
   placeholder,
   required,
+  size = "md",
   type,
   value,
   onChange,
@@ -36,14 +40,20 @@ export function TextField({
   const shellAria = useFieldShellAria();
   const [revealed, setRevealed] = useState(false);
   const isPassword = type === "password";
+  const isSearch = type === "search";
   const inputType = isPassword && revealed ? "text" : type;
+  const sizeClass = inputControlSizeClassName[size];
 
   const inputEl = (
     <input
       aria-invalid={error ? "true" : undefined}
-      className={`${styles.input} ${error ? styles.error : ""} ${
-        isPassword ? shared.passwordInput : ""
-      }`}
+      className={[
+        isSearch ? shared.searchInput : shared.input,
+        error ? shared.error : "",
+        isPassword ? shared.passwordInput : "",
+      ]
+        .filter(Boolean)
+        .join(" ")}
       id={id}
       placeholder={placeholder}
       onChange={onChange}
@@ -63,8 +73,23 @@ export function TextField({
       mode={mode}
       required={required}
     >
-      {isPassword ? (
-        <div className={shared.passwordWrap}>
+      {isSearch ? (
+        <div
+          className={[
+            sizeClass,
+            shared.searchWrap,
+            error ? shared.searchWrapError : "",
+          ]
+            .filter(Boolean)
+            .join(" ")}
+        >
+          <span aria-hidden="true" className={shared.prefixIcon}>
+            <FontAwesomeIcon className={shared.prefixIconSvg} icon={faMagnifyingGlass} />
+          </span>
+          {inputEl}
+        </div>
+      ) : isPassword ? (
+        <div className={`${shared.passwordWrap} ${sizeClass}`}>
           {inputEl}
           <PasswordToggle
             controlsId={id}
@@ -73,7 +98,7 @@ export function TextField({
           />
         </div>
       ) : (
-        inputEl
+        <div className={sizeClass}>{inputEl}</div>
       )}
     </FieldShell>
   );

@@ -3,6 +3,7 @@ export type FieldMode = "stacked" | "flagged";
 export type LabelPosition = "left" | "right";
 export type ChoiceShape = "round" | "square";
 export type ChoiceControlSize = "lg" | "md" | "sm";
+export type InputControlSize = "lg" | "md" | "sm";
 export type ChipInputVariant = "filled" | "outlined" | "soft" | "glass" | "gradient";
 export type ChipInputPreset = "chip-input" | "tag-input" | "token-input";
 

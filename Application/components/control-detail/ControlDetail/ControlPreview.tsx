@@ -17,6 +17,7 @@ import {
   DateField,
   DropdownMenu,
   FileField,
+  ImageCropUploadField,
   HiddenField,
   ImageGallery,
   ImageThumbnail,
@@ -141,6 +142,8 @@ import {
   NotesActivity,
   TopPerformingUsers,
   UpcomingTasks,
+  UserProfileWidget,
+  ProfilePhotoUploadModal,
   ProgressBar,
   ProgressRing,
   Sparkline,
@@ -150,7 +153,7 @@ import {
   TrendBadge,
   useToast,
 } from "@/components/fields";
-import { AccentColorPicker, createAccentStyle } from "@/components/AccentColorPicker";
+import { ImageCropUploadWidget } from "@/components/ImageCropUploadWidget";
 import { IconPicker } from "@/components/IconPicker";
 import { IconBadge } from "@/components/IconBadge";
 import { EmojiPicker } from "@/components/EmojiPicker";
@@ -210,6 +213,7 @@ import {
 import { demoRecentActivity } from "@/lib/controls/recentActivityDemoData";
 import { demoNotesActivity } from "@/lib/controls/notesActivityDemoData";
 import { demoTopPerformingUsers } from "@/lib/controls/topPerformingUsersDemoData";
+import { parseUserProfileMenuItems } from "@/lib/controls/userProfileDemoData";
 import { demoUpcomingTasks } from "@/lib/controls/upcomingTasksDemoData";
 import { ForbiddenPageContent } from "@/components/documentation/ForbiddenPage";
 import { NotFoundPageContent } from "@/components/documentation/NotFoundPage";
@@ -221,7 +225,7 @@ import {
 } from "@/lib/controls/dashboardWidgetData";
 import { topNavigationDemoMenus } from "@/lib/controls/topNavigationDemo";
 import type { TopNavigationSelectItem } from "@/components/TopNavigation/TopNavigationContext";
-import type { ControlSettings, ControlSettingsBySlug, ControlSlug, ValueFieldSettings } from "@/lib/controls/types";
+import type { ComponentCategory, ControlSettings, ControlSettingsBySlug, ControlSlug, ValueFieldSettings } from "@/lib/controls/types";
 import {
   getSectionDemoSlots,
   getSectionLayoutConfigFromSettings,
@@ -441,6 +445,7 @@ const galleryImagesWithAltCaptions = galleryImages.map((image) => ({
 import { vx27ModelAssets as modelAssets } from "@/lib/models/vx27Assets";
 
 type ControlPreviewProps = {
+  category?: ComponentCategory;
   slug: ControlSlug;
   settings: ControlSettings;
   onSettingsChange: (next: ControlSettings) => void;
@@ -454,6 +459,7 @@ function fieldProps(settings: ControlSettingsBySlug[Exclude<ControlSlug, "button
     labelPosition: settings.labelPosition,
     mode: settings.mode,
     required: settings.required,
+    size: settings.size ?? "md",
   };
 }
 
@@ -662,6 +668,80 @@ function DashboardActionPreview({
       <span className={styles.dialogResult}>{lastResult}</span>
     </div>
   );
+}
+
+function UserProfileWidgetPreview({
+  category,
+  onSettingsChange,
+  reportAction,
+  settings,
+}: {
+  category: ComponentCategory;
+  onSettingsChange: (settings: ControlSettings) => void;
+  reportAction: (label: string) => void;
+  settings: ControlSettingsBySlug["user-profile"];
+}) {
+  const [photoUploadOpen, setPhotoUploadOpen] = useState(false);
+  const openPhotoUpload = () => setPhotoUploadOpen(true);
+  const menuItems = parseUserProfileMenuItems(settings.menuItemsJson).map((item) => ({
+    ...item,
+    onSelect: () => {
+      if (settings.photoUploadEnabled && item.id === settings.photoUploadMenuItemId) {
+        openPhotoUpload();
+      }
+
+      reportAction(item.label);
+    },
+  }));
+
+  const content = (
+    <>
+      <UserProfileWidget
+        avatarSize={settings.avatarSize}
+        menuItems={menuItems}
+        name={settings.name}
+        role={settings.role}
+        src={settings.srcEnabled ? settings.src : undefined}
+        onAvatarClick={settings.photoUploadEnabled ? openPhotoUpload : undefined}
+      />
+      {settings.photoUploadEnabled ? (
+        <ProfilePhotoUploadModal
+          fieldId="profile-photo-upload"
+          open={photoUploadOpen}
+          options={{
+            changeButtonLabel: settings.photoUploadChangeButtonLabel,
+            cropButtonLabel: settings.photoUploadCropButtonLabel,
+            description: settings.photoUploadDescription || undefined,
+            label: settings.photoUploadLabel,
+            maxZoom: settings.photoUploadMaxZoom,
+            minZoom: settings.photoUploadMinZoom,
+            outputSize: settings.photoUploadOutputSize,
+            title: settings.photoUploadTitle,
+            uploadLabel: settings.photoUploadUploadLabel,
+            viewportSize: settings.photoUploadViewportSize,
+            zoomLabel: settings.photoUploadZoomLabel,
+            zoomStep: settings.photoUploadZoomStep,
+          }}
+          value={settings.srcEnabled ? settings.src : undefined}
+          onClose={() => setPhotoUploadOpen(false)}
+          onPhotoChange={(previewUrl) => {
+            onSettingsChange({ ...settings, src: previewUrl, srcEnabled: true } as ControlSettings);
+            reportAction("Photo updated");
+          }}
+        />
+      ) : null}
+    </>
+  );
+
+  if (category === "labs") {
+    return (
+      <DashboardContentContainer data-component="user-profile" width={settings.width ?? "widget"}>
+        {content}
+      </DashboardContentContainer>
+    );
+  }
+
+  return <DashboardPreviewGrid layout={settings.previewLayout} unwrapped renderItem={() => content} />;
 }
 
 function UpcomingTasksDashboardPreview({
@@ -1641,7 +1721,7 @@ function CalendarPreview({ showEvents }: { showEvents: boolean }) {
   );
 }
 
-export function ControlPreview({ slug, settings, onSettingsChange }: ControlPreviewProps) {
+export function ControlPreview({ category, slug, settings, onSettingsChange }: ControlPreviewProps) {
   if (isChartSlug(slug)) {
     const s = settings as ControlSettingsBySlug[typeof slug];
     const canMaximise = maximisableChartVariants.includes(
@@ -1707,6 +1787,11 @@ export function ControlPreview({ slug, settings, onSettingsChange }: ControlPrev
         <TextField
           {...fieldProps(s)}
           id={`preview-${slug}`}
+          placeholder={
+            "placeholderEnabled" in s && s.placeholderEnabled
+              ? s.placeholder
+              : undefined
+          }
           type={textFieldTypes[slug]}
           value={s.value}
           onChange={(event) => onSettingsChange({ ...s, value: event.target.value } as ControlSettings)}
@@ -2060,6 +2145,27 @@ export function ControlPreview({ slug, settings, onSettingsChange }: ControlPrev
         />
       );
     }
+    case "image-crop-upload": {
+      const s = settings as ControlSettingsBySlug["image-crop-upload"];
+      return (
+        <ImageCropUploadField
+          {...fieldProps(s)}
+          id="preview-image-crop-upload"
+          changeButtonLabel={s.changeButtonLabel}
+          cropButtonLabel={s.cropButtonLabel}
+          maxZoom={s.maxZoom}
+          minZoom={s.minZoom}
+          outputSize={s.outputSize}
+          uploadLabel={s.uploadLabel}
+          value={s.value || undefined}
+          viewportSize={s.viewportSize}
+          zoomLabel={s.zoomLabel}
+          zoomStep={s.zoomStep}
+          onChange={(value) => onSettingsChange({ ...s, value } as ControlSettings)}
+          onCrop={({ previewUrl }) => onSettingsChange({ ...s, value: previewUrl } as ControlSettings)}
+        />
+      );
+    }
     case "color-picker": {
       const s = settings as ControlSettingsBySlug["color-picker"];
       return (
@@ -2092,7 +2198,7 @@ export function ControlPreview({ slug, settings, onSettingsChange }: ControlPrev
       const s = settings as ControlSettingsBySlug["button"];
       const buttonType = slug === "submit-button" ? "submit" : slug === "reset-button" ? "reset" : "button";
       return (
-        <Button disabled={s.disabled} type={buttonType} variant={s.variant}>
+        <Button disabled={s.disabled} size={s.size ?? "md"} type={buttonType} variant={s.variant}>
           {s.label}
         </Button>
       );
@@ -2473,6 +2579,55 @@ export function ControlPreview({ slug, settings, onSettingsChange }: ControlPrev
               )}
             />
           )}
+        </DashboardActionPreview>
+      );
+    }
+    case "user-profile": {
+      const s = settings as ControlSettingsBySlug["user-profile"];
+      return (
+        <DashboardActionPreview>
+          {(reportAction) => (
+            <UserProfileWidgetPreview
+              category={category}
+              reportAction={reportAction}
+              settings={s}
+              onSettingsChange={onSettingsChange}
+            />
+          )}
+        </DashboardActionPreview>
+      );
+    }
+    case "profile-photo-upload": {
+      const s = settings as ControlSettingsBySlug["profile-photo-upload"];
+      return (
+        <DashboardActionPreview>
+          {(reportAction) => {
+            const widget = (
+              <ImageCropUploadWidget
+                changeButtonLabel={s.changeButtonLabel}
+                cropButtonLabel={s.cropButtonLabel}
+                label={s.label}
+                maxZoom={s.maxZoom}
+                minZoom={s.minZoom}
+                outputSize={s.outputSize}
+                title={s.title}
+                uploadLabel={s.uploadLabel}
+                value={s.value || undefined}
+                viewportSize={s.viewportSize}
+                zoomLabel={s.zoomLabel}
+                zoomStep={s.zoomStep}
+                onChange={(value) => onSettingsChange({ ...s, value } as ControlSettings)}
+                onCrop={({ previewUrl }) => {
+                  onSettingsChange({ ...s, value: previewUrl } as ControlSettings);
+                  reportAction("Photo cropped");
+                }}
+              />
+            );
+
+            return (
+              <DashboardPreviewGrid layout={s.previewLayout} unwrapped renderItem={() => widget} />
+            );
+          }}
         </DashboardActionPreview>
       );
     }

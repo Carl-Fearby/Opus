@@ -2,8 +2,9 @@
 
 import { useEffect, useMemo, useRef, useState } from "react";
 import { FieldShell, fieldInputAriaProps, useFieldShellAria } from "@/components/fields/FieldShell";
-import type { FieldMode, LabelPosition } from "@/components/fields/types";
+import type { FieldMode, InputControlSize, LabelPosition } from "@/components/fields/types";
 import shared from "../shared/fieldControl.module.css";
+import { inputControlSizeClassName } from "../shared/inputControlSizes";
 import styles from "./CountryPickerField.module.css";
 import { countries as allCountries, type PhoneCountry } from "../PhoneNumberField/countries";
 
@@ -22,6 +23,7 @@ type CountryPickerFieldProps = {
   placeholder?: string;
   required?: boolean;
   searchPlaceholder?: string;
+  size?: InputControlSize;
   value: string;
   onChange: (countryCode: string) => void;
 };
@@ -37,6 +39,7 @@ export function CountryPickerField({
   placeholder = "Select country…",
   required,
   searchPlaceholder = "Search countries…",
+  size = "md",
   value,
   onChange,
 }: CountryPickerFieldProps) {
@@ -108,6 +111,7 @@ export function CountryPickerField({
           aria-haspopup="listbox"
           aria-label={activeCountry ? `Country: ${activeCountry.label}` : placeholder}
           className={[
+            inputControlSizeClassName[size],
             shared.trigger,
             open ? shared.triggerOpen : "",
             error ? shared.triggerError : "",

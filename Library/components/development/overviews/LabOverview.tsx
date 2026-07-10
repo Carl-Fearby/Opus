@@ -25,7 +25,7 @@ export function LabOverview() {
       <section className={styles.demoSection}>
         <div className={styles.demoGrid}>
           {compositions.map((control) => (
-            <OverviewDemoCard key={control.slug} slug={control.slug} />
+            <OverviewDemoCard key={control.slug} previewCategory="labs" slug={control.slug} />
           ))}
         </div>
       </section>

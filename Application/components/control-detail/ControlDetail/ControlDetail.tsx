@@ -6,6 +6,8 @@ import { useSetComponentsPageHeader } from "@/components/development/ComponentsT
 import { useComponentSettings } from "@/components/development/ComponentsShell/ComponentSettingsContext";
 import { componentRawPath } from "@/lib/controls/routes";
 import type { ControlDefinition, ControlSettings } from "@/lib/controls/types";
+import { ControlDetailPanel } from "./ControlDetailPanel";
+import { OpenInPlaygroundLink } from "./OpenInPlaygroundLink";
 import { PreviewLoading } from "./PreviewLoading";
 import { PreviewStage } from "./PreviewStage";
 import { PreviewThemeControls } from "./PreviewThemeControls";
@@ -38,33 +40,40 @@ type ControlDetailProps = {
 export function ControlDetail({ control, defaultSettings, documentation }: ControlDetailProps) {
   useSetComponentsPageHeader(control.title, control.description);
   const { settings, setSettings } = useComponentSettings(control.slug, defaultSettings);
+
+  const panelActions = (
+    <>
+      <PreviewThemeControls id={`preview-theme-toggle-${control.slug}`} />
+      <OpenInPlaygroundLink category={control.category} settings={settings} slug={control.slug} />
+      <Link
+        className={styles.panelActionButton}
+        href={componentRawPath(control.slug, settings)}
+        rel="noopener noreferrer"
+        target="_blank"
+      >
+        Open Preview
+      </Link>
+    </>
+  );
+
   return (
     <div className={styles.page}>
-      <section className={styles.panel}>
-        <div className="opus-panel-heading">
-          <h2 className="opus-panel-title">Preview</h2>
-          <div className={styles.previewToolbar}>
-            <PreviewThemeControls id={`preview-theme-toggle-${control.slug}`} />
-            <Link
-              className={styles.panelActionButton}
-              href={componentRawPath(control.slug, settings)}
-              rel="noopener noreferrer"
-              target="_blank"
-            >
-              Open Preview
-            </Link>
-          </div>
-        </div>
+      <ControlDetailPanel actions={panelActions} title="Preview">
         <div className={styles.previewBody}>
           <PreviewStage>
-            <ControlPreview slug={control.slug} settings={settings} onSettingsChange={setSettings} />
+            <ControlPreview
+              category={control.category}
+              slug={control.slug}
+              settings={settings}
+              onSettingsChange={setSettings}
+            />
           </PreviewStage>
         </div>
-      </section>
+      </ControlDetailPanel>
 
       {documentation ? <ComponentDocumentation content={documentation} /> : null}
 
-      <UsageCodeViewer slug={control.slug} settings={settings} />
+      <UsageCodeViewer category={control.category} settings={settings} slug={control.slug} />
     </div>
   );
 }

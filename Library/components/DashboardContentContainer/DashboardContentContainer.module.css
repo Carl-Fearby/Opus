@@ -41,6 +41,14 @@
   max-width: 28rem;
 }
 
+.container[data-component="user-profile"][data-width="widget"] {
+  max-width: 18rem;
+}
+
+.container[data-component="profile-photo-upload"][data-width="widget"] {
+  max-width: 28rem;
+}
+
 .container[data-width="full"] {
   width: 100%;
   max-width: none;

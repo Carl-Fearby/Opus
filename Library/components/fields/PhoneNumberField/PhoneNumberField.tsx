@@ -2,8 +2,9 @@
 
 import { useEffect, useMemo, useRef, useState } from "react";
 import { FieldShell, fieldInputAriaProps, useFieldShellAria } from "@/components/fields/FieldShell";
-import type { FieldMode, LabelPosition } from "@/components/fields/types";
+import type { FieldMode, InputControlSize, LabelPosition } from "@/components/fields/types";
 import shared from "../shared/fieldControl.module.css";
+import { inputControlSizeClassName } from "../shared/inputControlSizes";
 import styles from "./PhoneNumberField.module.css";
 import { countries as allCountries, type PhoneCountry } from "./countries";
 
@@ -24,6 +25,7 @@ type PhoneNumberFieldProps = {
   mode?: FieldMode;
   placeholder?: string;
   required?: boolean;
+  size?: InputControlSize;
   value: string;
   onChange: (value: string) => void;
   onCountryCodeChange: (countryCode: string) => void;
@@ -40,6 +42,7 @@ export function PhoneNumberField({
   mode = "stacked",
   placeholder = "7123 456789",
   required,
+  size = "md",
   value,
   onChange,
   onCountryCodeChange,
@@ -107,13 +110,13 @@ export function PhoneNumberField({
       mode={mode}
       required={required}
     >
-      <div className={styles.root} ref={rootRef}>
+      <div className={`${styles.root} ${inputControlSizeClassName[size]}`} ref={rootRef}>
         <div className={styles.countryWrap}>
           <button
             aria-expanded={open}
             aria-haspopup="listbox"
             aria-label={`Country code: ${activeCountry.label} ${activeCountry.dialCode}`}
-            className={[shared.trigger, styles.country, open ? shared.triggerOpen : ""]
+            className={[inputControlSizeClassName[size], shared.trigger, styles.country, open ? shared.triggerOpen : ""]
               .filter(Boolean)
               .join(" ")}
             type="button"

@@ -2,8 +2,9 @@
 
 import { useEffect, useMemo, useRef, useState } from "react";
 import { FieldShell, fieldInputAriaProps, useFieldShellAria } from "@/components/fields/FieldShell";
-import type { FieldMode, LabelPosition } from "@/components/fields/types";
+import type { FieldMode, InputControlSize, LabelPosition } from "@/components/fields/types";
 import shared from "../shared/fieldControl.module.css";
+import { inputControlSizeClassName } from "../shared/inputControlSizes";
 import styles from "./FilterSelectField.module.css";
 
 export type FilterSelectGroup = {
@@ -22,6 +23,7 @@ type FilterSelectFieldProps = {
   placeholder?: string;
   required?: boolean;
   searchPlaceholder?: string;
+  size?: InputControlSize;
   value: string[];
   onChange: (value: string[]) => void;
 };
@@ -37,6 +39,7 @@ export function FilterSelectField({
   placeholder = "Select filters…",
   required,
   searchPlaceholder = "Search…",
+  size = "md",
   value,
   onChange,
 }: FilterSelectFieldProps) {
@@ -116,6 +119,7 @@ export function FilterSelectField({
           aria-expanded={open}
           aria-haspopup="listbox"
           className={[
+            inputControlSizeClassName[size],
             shared.trigger,
             open ? shared.triggerOpen : "",
             error ? shared.triggerError : "",

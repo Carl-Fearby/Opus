@@ -78,6 +78,7 @@
 [data-preview-root][data-theme="light"] [data-component="upcoming-tasks"],
 [data-preview-root][data-theme="light"] [data-component="recent-activity"],
 [data-preview-root][data-theme="light"] [data-component="top-performing-users"],
+[data-preview-root][data-theme="light"] [data-component="user-profile"],
 [data-preview-root][data-theme="light"] [data-component="notes-activity"] {
   --dashboard-section-bg: #f8fbff;
   --dashboard-section-border: #60a5fa47;
@@ -95,6 +96,7 @@
 [data-preview-root][data-theme="dark"] [data-component="upcoming-tasks"],
 [data-preview-root][data-theme="dark"] [data-component="recent-activity"],
 [data-preview-root][data-theme="dark"] [data-component="top-performing-users"],
+[data-preview-root][data-theme="dark"] [data-component="user-profile"],
 [data-preview-root][data-theme="dark"] [data-component="notes-activity"] {
   --dashboard-section-bg: #070d18;
   --dashboard-section-border: #60a5fa33;

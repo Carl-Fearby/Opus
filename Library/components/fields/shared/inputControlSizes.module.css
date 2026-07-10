@@ -1,0 +1,56 @@
+.sizeSm {
+  --opus-control-height: 24px;
+  --opus-control-padding-x: 8px;
+  --opus-control-padding-y: 6px;
+  --opus-control-font-size: 0.78rem;
+  --opus-control-prefix-gap: 6px;
+  --opus-control-prefix-size: 12px;
+  --opus-control-suffix-inset: 30px;
+  --opus-button-padding-x: 10px;
+  --opus-switch-width: 42px;
+  --opus-switch-thumb: 16px;
+  --opus-switch-travel: 18px;
+  --opus-range-thumb: 18px;
+  --opus-range-track: 6px;
+  --opus-file-min-height: 80px;
+  --opus-file-padding-y: 12px;
+  --opus-file-padding-x: 16px;
+}
+
+.sizeMd {
+  --opus-control-height: 28px;
+  --opus-control-padding-x: 10px;
+  --opus-control-padding-y: 8px;
+  --opus-control-font-size: 0.86rem;
+  --opus-control-prefix-gap: 8px;
+  --opus-control-prefix-size: 14px;
+  --opus-control-suffix-inset: 38px;
+  --opus-button-padding-x: 12px;
+  --opus-switch-width: 50px;
+  --opus-switch-thumb: 20px;
+  --opus-switch-travel: 22px;
+  --opus-range-thumb: 22px;
+  --opus-range-track: 8px;
+  --opus-file-min-height: 96px;
+  --opus-file-padding-y: 16px;
+  --opus-file-padding-x: 20px;
+}
+
+.sizeLg {
+  --opus-control-height: 36px;
+  --opus-control-padding-x: 14px;
+  --opus-control-padding-y: 10px;
+  --opus-control-font-size: 0.95rem;
+  --opus-control-prefix-gap: 10px;
+  --opus-control-prefix-size: 16px;
+  --opus-control-suffix-inset: 44px;
+  --opus-button-padding-x: 16px;
+  --opus-switch-width: 58px;
+  --opus-switch-thumb: 24px;
+  --opus-switch-travel: 26px;
+  --opus-range-thumb: 26px;
+  --opus-range-track: 10px;
+  --opus-file-min-height: 112px;
+  --opus-file-padding-y: 20px;
+  --opus-file-padding-x: 24px;
+}

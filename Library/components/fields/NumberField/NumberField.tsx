@@ -2,9 +2,10 @@
 
 import { useEffect, useState, type ChangeEventHandler, type FocusEventHandler } from "react";
 import styles from "./NumberField.module.css";
+import { inputControlSizeClassName } from "../shared/inputControlSizes";
 import { FieldShell, fieldInputAriaProps, useFieldShellAria } from "@/components/fields/FieldShell";
 import { formatByStep, roundToStep } from "@/components/fields/numericUtils";
-import type { FieldMode, LabelPosition } from "@/components/fields/types";
+import type { FieldMode, InputControlSize, LabelPosition } from "@/components/fields/types";
 
 type NumberFieldProps = {
   error?: string;
@@ -16,6 +17,7 @@ type NumberFieldProps = {
   min?: number;
   mode?: FieldMode;
   onChange: ChangeEventHandler<HTMLInputElement>;
+  size?: InputControlSize;
   step?: number;
   value: number;
 };
@@ -65,6 +67,7 @@ export function NumberField({
   min,
   mode = "stacked",
   onChange,
+  size = "md",
   step = 1,
   value,
 }: NumberFieldProps) {
@@ -128,7 +131,15 @@ export function NumberField({
       labelPosition={labelPosition}
       mode={mode}
     >
-      <div className={`${styles.stepper} ${error ? styles.error : ""}`}>
+      <div
+        className={[
+          styles.stepper,
+          inputControlSizeClassName[size],
+          error ? styles.error : "",
+        ]
+          .filter(Boolean)
+          .join(" ")}
+      >
         <button
           aria-controls={id}
           aria-label={`Decrease ${label}`}

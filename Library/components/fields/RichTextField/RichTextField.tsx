@@ -32,7 +32,8 @@ import {
   faUnderline,
 } from "@fortawesome/free-solid-svg-icons";
 import { FieldShell, fieldInputAriaProps, useFieldShellAria } from "@/components/fields/FieldShell";
-import type { FieldMode, LabelPosition } from "@/components/fields/types";
+import type { FieldMode, InputControlSize, LabelPosition } from "@/components/fields/types";
+import { inputControlSizeClassName } from "../shared/inputControlSizes";
 import { Tooltip } from "@/components/Tooltip";
 import styles from "./RichTextField.module.css";
 
@@ -109,6 +110,7 @@ type RichTextFieldProps = {
   placeholder?: string;
   readOnly?: boolean;
   required?: boolean;
+  size?: InputControlSize;
   value: string;
   onChange: (html: string) => void;
 };
@@ -141,6 +143,7 @@ export function RichTextField({
   placeholder,
   readOnly = false,
   required,
+  size = "md",
   value,
   onChange,
 }: RichTextFieldProps) {
@@ -461,7 +464,7 @@ export function RichTextField({
       required={required}
     >
       <div className={styles.field}>
-        <div className={[styles.editorShell, error ? styles.error : ""].filter(Boolean).join(" ")}>
+        <div className={[styles.editorShell, inputControlSizeClassName[size], error ? styles.error : ""].filter(Boolean).join(" ")}>
           <div aria-label="Formatting toolbar" className={styles.toolbar} role="toolbar">
             <ToolbarButton
               disabled={!canUndo}

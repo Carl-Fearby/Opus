@@ -2,7 +2,8 @@
 
 import { useState } from "react";
 import { FieldShell, fieldInputAriaProps, useFieldShellAria } from "@/components/fields/FieldShell";
-import type { FieldMode, LabelPosition } from "@/components/fields/types";
+import type { FieldMode, InputControlSize, LabelPosition } from "@/components/fields/types";
+import { inputControlSizeClassName } from "../shared/inputControlSizes";
 import styles from "./TransferListField.module.css";
 
 type TransferListFieldProps = {
@@ -14,6 +15,7 @@ type TransferListFieldProps = {
   labelPosition?: LabelPosition;
   mode?: FieldMode;
   required?: boolean;
+  size?: InputControlSize;
   selected: string[];
   onChange: (selected: string[]) => void;
 };
@@ -27,6 +29,7 @@ export function TransferListField({
   labelPosition = "left",
   mode = "stacked",
   required,
+  size = "md",
   selected,
   onChange,
 }: TransferListFieldProps) {
@@ -80,7 +83,7 @@ export function TransferListField({
       required={required}
     >
       <div
-        className={styles.root}
+        className={`${styles.root} ${inputControlSizeClassName[size]}`}
         {...fieldInputAriaProps(shellAria, { invalid: Boolean(error) })}
       >
         <ListColumn

@@ -1,0 +1,315 @@
+.root {
+  display: grid;
+  gap: 12px;
+  width: 100%;
+}
+
+.drop {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+  min-height: var(--opus-file-min-height, 96px);
+  padding: var(--opus-file-padding-y, 16px) var(--opus-file-padding-x, 20px);
+  border-radius: var(--opus-input-radius-large);
+  border: 1px dashed var(--opus-border-strong);
+  background: var(--opus-input-fill);
+  cursor: pointer;
+  transition:
+    border-color 160ms ease,
+    background-color 160ms ease;
+}
+
+.drop:hover,
+.dragging {
+  border-color: var(--opus-accent);
+  background: color-mix(in srgb, var(--opus-accent-soft) 72%, var(--opus-input-fill));
+}
+
+.dropError {
+  border-color: color-mix(in srgb, var(--opus-error) 55%, var(--opus-border-strong));
+}
+
+.dropIcon {
+  display: grid;
+  place-items: center;
+  flex: 0 0 auto;
+  color: var(--opus-accent);
+}
+
+.dropIconSvg {
+  width: 32px;
+  height: 32px;
+}
+
+.dropContent {
+  display: grid;
+  gap: 4px;
+  justify-items: center;
+  text-align: center;
+}
+
+.dropTitle {
+  color: var(--opus-text);
+  font-size: var(--opus-control-font-size);
+  line-height: 1.35;
+}
+
+.dropTitle strong {
+  font-weight: 700;
+}
+
+.dropHint {
+  color: var(--opus-muted);
+  font-size: 0.78rem;
+  line-height: 1.2;
+}
+
+.dropAction {
+  display: inline-flex;
+  justify-content: center;
+  margin-top: 2px;
+  min-height: var(--opus-control-height);
+  padding: 0 var(--opus-control-padding-x, 14px);
+  border-radius: var(--opus-input-radius);
+  border: 1px solid var(--opus-border-strong);
+  background: transparent;
+  color: var(--opus-accent);
+  font-size: var(--opus-control-font-size);
+  font-weight: 600;
+}
+
+.hiddenInput {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.previewCard,
+.editor {
+  display: grid;
+  gap: 12px;
+  padding: 14px;
+  border-radius: var(--opus-input-radius-large);
+  border: 1px solid var(--opus-border-strong);
+  background: color-mix(in srgb, var(--opus-panel) 88%, transparent);
+}
+
+.previewRow {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.previewImage {
+  width: 72px;
+  height: 72px;
+  border-radius: 999px;
+  object-fit: cover;
+  border: 1px solid color-mix(in srgb, var(--opus-border) 80%, transparent);
+}
+
+.previewCopy {
+  display: grid;
+  gap: 4px;
+  min-width: 0;
+}
+
+.previewTitle {
+  color: var(--opus-text);
+  font-size: var(--opus-control-font-size);
+  font-weight: 600;
+}
+
+.previewHint {
+  color: var(--opus-muted);
+  font-size: 0.78rem;
+  line-height: 1.35;
+}
+
+.viewport {
+  position: relative;
+  margin: 0 auto;
+  overflow: hidden;
+  border-radius: 999px;
+  border: 1px solid color-mix(in srgb, var(--opus-border) 80%, transparent);
+  background:
+    linear-gradient(45deg, color-mix(in srgb, var(--opus-muted) 16%, transparent) 25%, transparent 25%, transparent 75%, color-mix(in srgb, var(--opus-muted) 16%, transparent) 75%),
+    linear-gradient(45deg, color-mix(in srgb, var(--opus-muted) 16%, transparent) 25%, transparent 25%, transparent 75%, color-mix(in srgb, var(--opus-muted) 16%, transparent) 75%);
+  background-size: 16px 16px;
+  background-position:
+    0 0,
+    8px 8px;
+  touch-action: none;
+  cursor: grab;
+}
+
+.viewportDragging {
+  cursor: grabbing;
+}
+
+.viewportImage {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  max-width: none;
+  transform-origin: center center;
+  user-select: none;
+  pointer-events: none;
+}
+
+.viewportRing {
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--opus-accent) 45%, transparent);
+  pointer-events: none;
+}
+
+.zoomRow {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: center;
+  gap: 10px;
+}
+
+.zoomButton {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: var(--opus-control-height);
+  min-height: var(--opus-control-height);
+  border-radius: var(--opus-input-radius);
+  border: 1px solid var(--opus-border-strong);
+  background: var(--opus-input-fill);
+  color: var(--opus-text);
+  font-size: 1rem;
+  font-weight: 700;
+  line-height: 1;
+}
+
+.zoomButton:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+.zoomSlider {
+  width: 100%;
+  accent-color: var(--opus-accent);
+}
+
+.zoomLabel {
+  margin: 0;
+  color: var(--opus-muted);
+  font-size: 0.78rem;
+  text-align: center;
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.instruction {
+  margin: 0;
+  color: var(--opus-muted);
+  font-size: 0.78rem;
+  line-height: 1.4;
+  text-align: center;
+}
+
+.root[data-embedded="true"] .editor,
+.root[data-embedded="true"] .previewCard {
+  gap: 16px;
+  padding: 0;
+  border: 0;
+  background: transparent;
+}
+
+.root[data-embedded="true"] .drop {
+  border-color: color-mix(in srgb, var(--opus-border) 55%, transparent);
+  background: color-mix(in srgb, var(--opus-input-fill) 72%, transparent);
+}
+
+.root[data-embedded="true"] .previewRow {
+  justify-content: center;
+}
+
+.root[data-embedded="true"] .previewImage {
+  border: 0;
+}
+
+.previewFrame {
+  position: relative;
+  display: inline-flex;
+  flex-shrink: 0;
+}
+
+.previewCameraButton {
+  position: absolute;
+  left: 50%;
+  bottom: 12px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: #fff;
+  transform: translateX(-50%);
+  cursor: pointer;
+  filter: drop-shadow(0 1px 2px rgb(0 0 0 / 0.55));
+}
+
+.previewCameraButton svg {
+  display: block;
+  width: 36px;
+  height: 36px;
+}
+
+.previewCameraButton:hover {
+  filter: drop-shadow(0 1px 2px rgb(0 0 0 / 0.55)) brightness(1.08);
+}
+
+.previewCameraButton:focus-visible {
+  outline: 2px solid rgb(255 255 255 / 0.85);
+  outline-offset: 2px;
+}
+
+.root[data-embedded="true"] .viewport {
+  border: 0;
+  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--opus-border) 45%, transparent);
+}
+
+.root[data-embedded="true"] .viewportRing {
+  box-shadow: none;
+}
+
+.root[data-embedded="true"] .zoomButton {
+  border: 0;
+  background: color-mix(in srgb, var(--opus-input-fill) 80%, transparent);
+}
+
+.changeLink {
+  justify-self: center;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: var(--opus-accent);
+  font-size: var(--opus-control-font-size);
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.changeLink:hover {
+  text-decoration: underline;
+}

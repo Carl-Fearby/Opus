@@ -87,11 +87,13 @@ function CommonFieldSettings({
   settings,
   onChange,
   includeValue = true,
+  showDensity = true,
   showErrorSettings = true,
 }: {
   settings: BaseFieldSettings & Record<string, unknown>;
   onChange: (next: BaseFieldSettings & Record<string, unknown>) => void;
   includeValue?: boolean;
+  showDensity?: boolean;
   showErrorSettings?: boolean;
 }) {
   return (
@@ -116,6 +118,18 @@ function CommonFieldSettings({
           { label: "Right", value: "right" },
         ]}
       />
+      {showDensity ? (
+        <SettingSelect
+          label="Density"
+          value={settings.size ?? "md"}
+          onChange={(size) => onChange({ ...settings, size: size as typeof settings.size })}
+          options={[
+            { label: "Compact", value: "sm" },
+            { label: "Comfortable", value: "md" },
+            { label: "Spacious", value: "lg" },
+          ]}
+        />
+      ) : null}
       <SettingInput
         label="Label"
         value={settings.label}
@@ -358,6 +372,24 @@ export function ControlSettingsPanel({ slug, settings, onChange }: ControlSettin
                 }
               />
             </div>
+          ) : null}
+          {slug === "search-input" ? (
+            <>
+              <SettingToggle
+                label="Show placeholder"
+                checked={(s as ControlSettingsBySlug["search-input"]).placeholderEnabled ?? false}
+                onChange={(placeholderEnabled) =>
+                  onChange({ ...s, placeholderEnabled } as ControlSettings)
+                }
+              />
+              {(s as ControlSettingsBySlug["search-input"]).placeholderEnabled ? (
+                <SettingInput
+                  label="Placeholder"
+                  value={(s as ControlSettingsBySlug["search-input"]).placeholder ?? ""}
+                  onChange={(placeholder) => onChange({ ...s, placeholder } as ControlSettings)}
+                />
+              ) : null}
+            </>
           ) : null}
         </div>
       );
@@ -763,16 +795,6 @@ export function ControlSettingsPanel({ slug, settings, onChange }: ControlSettin
               { label: "Square", value: "square" },
             ]}
           />
-          <SettingSelect
-            label="Size"
-            value={s.size ?? "md"}
-            onChange={(size) => onChange({ ...s, size: size as typeof s.size } as ControlSettings)}
-            options={[
-              { label: "Small", value: "sm" },
-              { label: "Medium", value: "md" },
-              { label: "Large", value: "lg" },
-            ]}
-          />
           <SettingToggle
             label="Show global error"
             checked={s.errorEnabled}
@@ -910,16 +932,6 @@ export function ControlSettingsPanel({ slug, settings, onChange }: ControlSettin
               { label: "Round", value: "round" },
             ]}
           />
-          <SettingSelect
-            label="Size"
-            value={s.size ?? "md"}
-            onChange={(size) => onChange({ ...s, size: size as typeof s.size } as ControlSettings)}
-            options={[
-              { label: "Small", value: "sm" },
-              { label: "Medium", value: "md" },
-              { label: "Large", value: "lg" },
-            ]}
-          />
         </div>
       );
     }
@@ -1038,6 +1050,59 @@ export function ControlSettingsPanel({ slug, settings, onChange }: ControlSettin
         </div>
       );
     }
+    case "image-crop-upload": {
+      const s = settings as ControlSettingsBySlug["image-crop-upload"];
+      return (
+        <div className={shellStyles.settingsGrid}>
+          <CommonFieldSettings settings={s} onChange={(next) => onChange({ ...s, ...next })} />
+          <SettingInput
+            label="Upload label"
+            value={s.uploadLabel}
+            onChange={(uploadLabel) => onChange({ ...s, uploadLabel } as ControlSettings)}
+          />
+          <SettingInput
+            label="Crop button label"
+            value={s.cropButtonLabel}
+            onChange={(cropButtonLabel) => onChange({ ...s, cropButtonLabel } as ControlSettings)}
+          />
+          <SettingInput
+            label="Change button label"
+            value={s.changeButtonLabel}
+            onChange={(changeButtonLabel) => onChange({ ...s, changeButtonLabel } as ControlSettings)}
+          />
+          <SettingInput
+            label="Zoom label"
+            value={s.zoomLabel}
+            onChange={(zoomLabel) => onChange({ ...s, zoomLabel } as ControlSettings)}
+          />
+          <SettingInput
+            label="Viewport size (px)"
+            value={String(s.viewportSize)}
+            onChange={(viewportSize) => onChange({ ...s, viewportSize: Number(viewportSize) || 240 } as ControlSettings)}
+          />
+          <SettingInput
+            label="Output size (px)"
+            value={String(s.outputSize)}
+            onChange={(outputSize) => onChange({ ...s, outputSize: Number(outputSize) || 256 } as ControlSettings)}
+          />
+          <SettingInput
+            label="Min zoom"
+            value={String(s.minZoom)}
+            onChange={(minZoom) => onChange({ ...s, minZoom: Number(minZoom) || 1 } as ControlSettings)}
+          />
+          <SettingInput
+            label="Max zoom"
+            value={String(s.maxZoom)}
+            onChange={(maxZoom) => onChange({ ...s, maxZoom: Number(maxZoom) || 3 } as ControlSettings)}
+          />
+          <SettingInput
+            label="Zoom step"
+            value={String(s.zoomStep)}
+            onChange={(zoomStep) => onChange({ ...s, zoomStep: Number(zoomStep) || 0.05 } as ControlSettings)}
+          />
+        </div>
+      );
+    }
     case "hidden-input": {
       const s = settings as ControlSettingsBySlug["hidden-input"];
       return (
@@ -1066,6 +1131,16 @@ export function ControlSettingsPanel({ slug, settings, onChange }: ControlSettin
       const s = settings as ControlSettingsBySlug["button"];
       return (
         <div className={shellStyles.settingsGrid}>
+          <SettingSelect
+            label="Density"
+            value={s.size ?? "md"}
+            onChange={(size) => onChange({ ...s, size: size as typeof s.size } as ControlSettings)}
+            options={[
+              { label: "Compact", value: "sm" },
+              { label: "Comfortable", value: "md" },
+              { label: "Spacious", value: "lg" },
+            ]}
+          />
           <SettingSelect
             label="Variant"
             value={s.variant}
@@ -2542,6 +2617,179 @@ export function ControlSettingsPanel({ slug, settings, onChange }: ControlSettin
               onChange={(footerLabel) => onChange({ ...s, footerLabel } as ControlSettings)}
             />
           </div>
+        </div>
+      );
+    }
+    case "user-profile": {
+      const s = settings as ControlSettingsBySlug["user-profile"];
+      return (
+        <div className={shellStyles.settingsGrid}>
+          <DashboardPreviewLayoutSetting
+            value={s.previewLayout}
+            onChange={(previewLayout) => onChange({ ...s, previewLayout } as ControlSettings)}
+          />
+          <DashboardWidthSetting
+            value={s.width ?? "widget"}
+            onChange={(width) => onChange({ ...s, width } as ControlSettings)}
+          />
+          <div className={shellStyles.settingsFullWidth}>
+            <SettingInput label="Name" value={s.name} onChange={(name) => onChange({ ...s, name } as ControlSettings)} />
+          </div>
+          <div className={shellStyles.settingsFullWidth}>
+            <SettingInput label="Role" value={s.role} onChange={(role) => onChange({ ...s, role } as ControlSettings)} />
+          </div>
+          <SettingSelect
+            label="Avatar size"
+            value={s.avatarSize}
+            onChange={(avatarSize) => onChange({ ...s, avatarSize: avatarSize as typeof s.avatarSize } as ControlSettings)}
+            options={[
+              { label: "Small", value: "sm" },
+              { label: "Medium", value: "md" },
+              { label: "Large", value: "lg" },
+              { label: "Extra large", value: "xl" },
+            ]}
+          />
+          <SettingToggle
+            label="Show photo"
+            checked={s.srcEnabled}
+            onChange={(srcEnabled) => onChange({ ...s, srcEnabled } as ControlSettings)}
+          />
+          {s.srcEnabled ? (
+            <div className={shellStyles.settingsFullWidth}>
+              <SettingInput
+                label="Photo URL"
+                value={s.src}
+                onChange={(src) => onChange({ ...s, src } as ControlSettings)}
+              />
+            </div>
+          ) : null}
+          <SettingToggle
+            label="Enable photo upload"
+            checked={s.photoUploadEnabled}
+            onChange={(photoUploadEnabled) => onChange({ ...s, photoUploadEnabled } as ControlSettings)}
+          />
+          {s.photoUploadEnabled ? (
+            <>
+              <SettingInput
+                label="Photo upload menu item id"
+                value={s.photoUploadMenuItemId}
+                onChange={(photoUploadMenuItemId) =>
+                  onChange({ ...s, photoUploadMenuItemId } as ControlSettings)
+                }
+              />
+              <div className={shellStyles.settingsFullWidth}>
+                <SettingInput
+                  label="Photo upload title"
+                  value={s.photoUploadTitle}
+                  onChange={(photoUploadTitle) => onChange({ ...s, photoUploadTitle } as ControlSettings)}
+                />
+              </div>
+              <div className={shellStyles.settingsFullWidth}>
+                <SettingInput
+                  label="Photo upload description"
+                  value={s.photoUploadDescription}
+                  onChange={(photoUploadDescription) => onChange({ ...s, photoUploadDescription } as ControlSettings)}
+                />
+              </div>
+              <SettingInput
+                label="Photo upload label"
+                value={s.photoUploadLabel}
+                onChange={(photoUploadLabel) => onChange({ ...s, photoUploadLabel } as ControlSettings)}
+              />
+              <SettingInput
+                label="Upload label"
+                value={s.photoUploadUploadLabel}
+                onChange={(photoUploadUploadLabel) => onChange({ ...s, photoUploadUploadLabel } as ControlSettings)}
+              />
+              <SettingInput
+                label="Crop button label"
+                value={s.photoUploadCropButtonLabel}
+                onChange={(photoUploadCropButtonLabel) =>
+                  onChange({ ...s, photoUploadCropButtonLabel } as ControlSettings)
+                }
+              />
+              <SettingInput
+                label="Change button label"
+                value={s.photoUploadChangeButtonLabel}
+                onChange={(photoUploadChangeButtonLabel) =>
+                  onChange({ ...s, photoUploadChangeButtonLabel } as ControlSettings)
+                }
+              />
+            </>
+          ) : null}
+          <div className={shellStyles.settingsFullWidth}>
+            <SettingTextarea
+              label="Menu items (JSON)"
+              value={s.menuItemsJson}
+              onChange={(menuItemsJson) => onChange({ ...s, menuItemsJson } as ControlSettings)}
+            />
+          </div>
+        </div>
+      );
+    }
+    case "profile-photo-upload": {
+      const s = settings as ControlSettingsBySlug["profile-photo-upload"];
+      return (
+        <div className={shellStyles.settingsGrid}>
+          <DashboardPreviewLayoutSetting
+            value={s.previewLayout}
+            onChange={(previewLayout) => onChange({ ...s, previewLayout } as ControlSettings)}
+          />
+          <DashboardWidthSetting
+            value={s.width ?? "widget"}
+            onChange={(width) => onChange({ ...s, width } as ControlSettings)}
+          />
+          <div className={shellStyles.settingsFullWidth}>
+            <SettingInput label="Title" value={s.title} onChange={(title) => onChange({ ...s, title } as ControlSettings)} />
+          </div>
+          <div className={shellStyles.settingsFullWidth}>
+            <SettingInput label="Field label" value={s.label} onChange={(label) => onChange({ ...s, label } as ControlSettings)} />
+          </div>
+          <SettingInput
+            label="Upload label"
+            value={s.uploadLabel}
+            onChange={(uploadLabel) => onChange({ ...s, uploadLabel } as ControlSettings)}
+          />
+          <SettingInput
+            label="Crop button label"
+            value={s.cropButtonLabel}
+            onChange={(cropButtonLabel) => onChange({ ...s, cropButtonLabel } as ControlSettings)}
+          />
+          <SettingInput
+            label="Change button label"
+            value={s.changeButtonLabel}
+            onChange={(changeButtonLabel) => onChange({ ...s, changeButtonLabel } as ControlSettings)}
+          />
+          <SettingInput
+            label="Zoom label"
+            value={s.zoomLabel}
+            onChange={(zoomLabel) => onChange({ ...s, zoomLabel } as ControlSettings)}
+          />
+          <SettingInput
+            label="Viewport size (px)"
+            value={String(s.viewportSize)}
+            onChange={(viewportSize) => onChange({ ...s, viewportSize: Number(viewportSize) || 240 } as ControlSettings)}
+          />
+          <SettingInput
+            label="Output size (px)"
+            value={String(s.outputSize)}
+            onChange={(outputSize) => onChange({ ...s, outputSize: Number(outputSize) || 256 } as ControlSettings)}
+          />
+          <SettingInput
+            label="Min zoom"
+            value={String(s.minZoom)}
+            onChange={(minZoom) => onChange({ ...s, minZoom: Number(minZoom) || 1 } as ControlSettings)}
+          />
+          <SettingInput
+            label="Max zoom"
+            value={String(s.maxZoom)}
+            onChange={(maxZoom) => onChange({ ...s, maxZoom: Number(maxZoom) || 3 } as ControlSettings)}
+          />
+          <SettingInput
+            label="Zoom step"
+            value={String(s.zoomStep)}
+            onChange={(zoomStep) => onChange({ ...s, zoomStep: Number(zoomStep) || 0.05 } as ControlSettings)}
+          />
         </div>
       );
     }

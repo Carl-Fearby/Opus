@@ -33,12 +33,12 @@
 
 .item {
   width: 100%;
-  padding: 8px 10px;
+  padding: calc(var(--opus-control-padding-y, 8px) / 2) var(--opus-control-padding-x, 10px);
   border: 1px solid transparent;
   border-radius: var(--opus-input-radius);
   background: transparent;
   color: var(--opus-text);
-  font-size: 0.82rem;
+  font-size: var(--opus-control-font-size);
   text-align: left;
   cursor: pointer;
 }
@@ -60,13 +60,13 @@
 }
 
 .controlButton {
-  min-width: 36px;
-  min-height: 32px;
+  min-width: var(--opus-control-height);
+  min-height: var(--opus-control-height);
   border: 1px solid var(--opus-border-strong);
   border-radius: var(--opus-input-radius);
   background: var(--opus-input-bg);
   color: var(--opus-text);
-  font-size: 0.9rem;
+  font-size: var(--opus-control-font-size);
   cursor: pointer;
 }
 

@@ -2,8 +2,9 @@
 
 import { useEffect, useMemo, useRef, useState } from "react";
 import { FieldShell, fieldInputAriaProps, useFieldShellAria } from "@/components/fields/FieldShell";
-import type { FieldMode, LabelPosition } from "@/components/fields/types";
+import type { FieldMode, InputControlSize, LabelPosition } from "@/components/fields/types";
 import shared from "../shared/fieldControl.module.css";
+import { inputControlSizeClassName } from "../shared/inputControlSizes";
 import styles from "./MultiSelectField.module.css";
 
 type MultiSelectFieldProps = {
@@ -16,6 +17,7 @@ type MultiSelectFieldProps = {
   options: string[];
   placeholder?: string;
   required?: boolean;
+  size?: InputControlSize;
   value: string[];
   onChange: (value: string[]) => void;
 };
@@ -30,6 +32,7 @@ export function MultiSelectField({
   options,
   placeholder = "Select options…",
   required,
+  size = "md",
   value,
   onChange,
 }: MultiSelectFieldProps) {
@@ -91,6 +94,7 @@ export function MultiSelectField({
           aria-expanded={open}
           aria-haspopup="listbox"
           className={[
+            inputControlSizeClassName[size],
             shared.trigger,
             open ? shared.triggerOpen : "",
             error ? shared.triggerError : "",

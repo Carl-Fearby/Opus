@@ -6,7 +6,7 @@
   gap: 10px;
   width: 100%;
   min-height: var(--opus-control-height);
-  padding: 0 10px;
+  padding: 0 var(--opus-control-padding-x, 10px);
   border: 1px solid var(--opus-border-strong);
   border-radius: var(--opus-input-radius);
   background: var(--opus-input-fill);

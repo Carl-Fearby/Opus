@@ -1,4 +1,4 @@
-import type { ControlSettings, ControlSettingsBySlug, ControlSlug } from "./types";
+import type { ComponentCategory, ControlSettings, ControlSettingsBySlug, ControlSlug } from "./types";
 import {
   getSectionDemoSlots,
   getSectionLayoutConfigFromSettings,
@@ -27,6 +27,11 @@ import { getDealsOverTimeDemoData } from "./dealsOverTimeDemoData";
 import { demoRecentActivity } from "./recentActivityDemoData";
 import { demoNotesActivity } from "./notesActivityDemoData";
 import { demoTopPerformingUsers } from "./topPerformingUsersDemoData";
+import {
+  formatUserProfilePhotoUploadModalUsage,
+  formatUserProfileUsageAfterState,
+  parseUserProfileMenuItems,
+} from "./userProfileDemoData";
 import { demoUpcomingTasks } from "./upcomingTasksDemoData";
 import { formatModelAssetsForUsage } from "@/lib/models/vx27Assets";
 import {
@@ -44,7 +49,7 @@ import {
   formatTopNavigationMenusForUsage,
   topNavigationDemoMenus,
 } from "./topNavigationDemo";
-import { splitUsageCode } from "./usageCode";
+import { formatFullUsageComponent, splitUsageCode } from "./usageCode";
 
 const radioOptions = [
   { label: "Personal", value: "personal" },
@@ -61,6 +66,7 @@ type FieldUsageSettings = {
   labelPosition: string;
   mode: string;
   required?: boolean;
+  size?: string;
 };
 
 function toStateName(label: string): string {
@@ -240,6 +246,10 @@ function fieldProps(settings: FieldUsageSettings) {
     props.push(formatStringProp("help", settings.help ?? ""));
   }
 
+  if (settings.size && settings.size !== "md") {
+    props.push(formatStringProp("size", settings.size));
+  }
+
   return props;
 }
 
@@ -287,19 +297,21 @@ function controlledFieldUsage(
 }
 
 function interactiveUsage({
+  afterState = [],
   components,
   extraImports = [],
   preamble = [],
   state = [],
   jsx,
 }: {
+  afterState?: string[];
   components: string[];
   extraImports?: string[];
   preamble?: string[];
   state: string[];
   jsx: string;
 }): string {
-  const importsBlock = [usageClientPrefix(), ...extraImports, importLine(components), ...preamble, ...state]
+  const importsBlock = [usageClientPrefix(), ...extraImports, importLine(components), ...preamble, ...state, ...afterState]
     .filter(Boolean)
     .join("\n");
   const trimmedJsx = jsx.trim();
@@ -312,7 +324,11 @@ function interactiveUsage({
   return `${importsBlock}\n\nreturn ${returnBody}`;
 }
 
-function generateUsageCodeContent(slug: ControlSlug, settings: ControlSettings): string {
+function generateUsageCodeContent(
+  slug: ControlSlug,
+  settings: ControlSettings,
+  category?: ComponentCategory,
+): string {
   const id = slug;
 
   if (isChartSlug(slug)) {
@@ -383,6 +399,9 @@ ${includeSeries ? `const series = ${formatChartSeriesForUsage(chartDemoSeries)};
         formatStringProp("id", id),
         ...fieldProps(s),
         formatStringProp("type", inputType),
+        ...(slug === "search-input" && s.placeholderEnabled
+          ? [formatStringProp("placeholder", s.placeholder ?? "")]
+          : []),
         formatExpressionProp("value", state),
         formatExpressionProp("onChange", `(event) => ${toSetter(state)}(event.target.value)`),
       ];
@@ -619,6 +638,27 @@ ${includeSeries ? `const series = ${formatChartSeriesForUsage(chartDemoSeries)};
       ];
       return controlledFieldUsage(["FileField"], "FileField", state, props);
     }
+    case "image-crop-upload": {
+      const s = settings as ControlSettingsBySlug["image-crop-upload"];
+      const state = toStateName(s.label);
+      const props = [
+        formatStringProp("id", id),
+        ...fieldProps(s),
+        formatStringProp("uploadLabel", s.uploadLabel),
+        formatStringProp("cropButtonLabel", s.cropButtonLabel),
+        formatStringProp("changeButtonLabel", s.changeButtonLabel),
+        formatStringProp("zoomLabel", s.zoomLabel),
+        formatNumberProp("viewportSize", s.viewportSize),
+        formatNumberProp("outputSize", s.outputSize),
+        formatNumberProp("minZoom", s.minZoom),
+        formatNumberProp("maxZoom", s.maxZoom),
+        formatNumberProp("zoomStep", s.zoomStep),
+        formatExpressionProp("value", state),
+        formatExpressionProp("onChange", toSetter(state)),
+        formatExpressionProp("onCrop", `({ previewUrl }) => ${toSetter(state)}(previewUrl)`),
+      ];
+      return controlledFieldUsage(["ImageCropUploadField"], "ImageCropUploadField", state, props, { initial: '""' });
+    }
     case "color-picker": {
       const s = settings as ControlSettingsBySlug["color-picker"];
       const state = toStateName(s.label);
@@ -652,6 +692,7 @@ ${includeSeries ? `const series = ${formatChartSeriesForUsage(chartDemoSeries)};
       const props = [
         formatStringProp("variant", s.variant),
         ...(buttonType !== "button" ? [formatStringProp("type", buttonType)] : []),
+        ...(s.size && s.size !== "md" ? [formatStringProp("size", s.size)] : []),
         ...(s.disabled ? [formatBoolProp("disabled", true)] : []),
       ];
       if (!props.length) {
@@ -1483,6 +1524,97 @@ export function Example() {
         onPersonClick={(person) => setLastAction(\`Last action: \${person.name}\`)}
       />
     </DashboardContentContainer>
+    <p>{lastAction}</p>
+  </>
+)`,
+      });
+    }
+    case "user-profile": {
+      const s = settings as ControlSettingsBySlug["user-profile"];
+      const menuItems = parseUserProfileMenuItems(s.menuItemsJson);
+      const fieldId = "profile-photo-upload";
+      const widgetProps = [
+        formatStringProp("name", s.name),
+        formatStringProp("role", s.role),
+        formatStringProp("avatarSize", s.avatarSize),
+        formatExpressionProp("src", "photo"),
+        formatExpressionProp("menuItems", "menuItems"),
+        ...(s.photoUploadEnabled ? [formatExpressionProp("onAvatarClick", "openPhotoUpload")] : []),
+      ];
+      const afterState = formatUserProfileUsageAfterState(menuItems, s.photoUploadEnabled, s.photoUploadMenuItemId);
+      const propsBlock = widgetProps.map((prop) => `  ${prop}`).join("\n");
+      const photoUploadState = s.photoUploadEnabled ? "const [photoUploadOpen, setPhotoUploadOpen] = useState(false);" : "";
+      const state = [`const [photo, setPhoto] = useState(${s.srcEnabled && s.src ? quote(s.src) : '""'});`, photoUploadState].filter(Boolean);
+      const modalBlock = s.photoUploadEnabled
+        ? formatUserProfilePhotoUploadModalUsage(fieldId, s.photoUploadTitle)
+        : "";
+      const widgetBlock = `<UserProfileWidget
+${propsBlock}
+/>`;
+      const fragmentContent = s.photoUploadEnabled
+        ? `<>
+  ${widgetBlock}
+  ${modalBlock}
+</>`
+        : widgetBlock;
+      const returnContent = s.photoUploadEnabled ? `(\n  ${fragmentContent}\n)` : widgetBlock;
+      const components = s.photoUploadEnabled
+        ? category === "labs"
+          ? ["DashboardContentContainer", "UserProfileWidget", "ProfilePhotoUploadModal"]
+          : ["UserProfileWidget", "ProfilePhotoUploadModal"]
+        : category === "labs"
+          ? ["DashboardContentContainer", "UserProfileWidget"]
+          : ["UserProfileWidget"];
+
+      if (category === "labs") {
+        return interactiveUsage({
+          afterState,
+          components,
+          state,
+          jsx: `<DashboardContentContainer data-component=${quote("user-profile")} width=${quote(s.width ?? "widget")}>
+  ${fragmentContent}
+</DashboardContentContainer>`,
+        });
+      }
+
+      return interactiveUsage({
+        afterState,
+        components,
+        state,
+        jsx: returnContent,
+      });
+    }
+    case "profile-photo-upload": {
+      const s = settings as ControlSettingsBySlug["profile-photo-upload"];
+      const widgetProps = `title=${quote(s.title)}
+        label=${quote(s.label)}
+        uploadLabel=${quote(s.uploadLabel)}
+        cropButtonLabel=${quote(s.cropButtonLabel)}
+        changeButtonLabel=${quote(s.changeButtonLabel)}
+        zoomLabel=${quote(s.zoomLabel)}
+        viewportSize={${s.viewportSize}}
+        outputSize={${s.outputSize}}
+        minZoom={${s.minZoom}}
+        maxZoom={${s.maxZoom}}
+        zoomStep={${s.zoomStep}}
+        value={photo}
+        onChange={setPhoto}
+        onCrop={({ previewUrl }) => {
+          setPhoto(previewUrl);
+          setLastAction("Last action: Photo cropped");
+        }}`;
+
+      return interactiveUsage({
+        components: ["ImageCropUploadWidget"],
+        state: [
+          'const [lastAction, setLastAction] = useState("Waiting for action");',
+          'const [photo, setPhoto] = useState("");',
+        ],
+        jsx: `(
+  <>
+    <ImageCropUploadWidget
+      ${widgetProps}
+    />
     <p>{lastAction}</p>
   </>
 )`,
@@ -2711,6 +2843,14 @@ ${navProps}
   }
 }
 
-export function generateUsageCode(slug: ControlSlug, settings: ControlSettings) {
-  return splitUsageCode(generateUsageCodeContent(slug, settings));
+export function generateFullUsageCode(
+  slug: ControlSlug,
+  settings: ControlSettings,
+  category?: ComponentCategory,
+) {
+  return formatFullUsageComponent(generateUsageCodeContent(slug, settings, category));
+}
+
+export function generateUsageCode(slug: ControlSlug, settings: ControlSettings, category?: ComponentCategory) {
+  return splitUsageCode(generateUsageCodeContent(slug, settings, category));
 }

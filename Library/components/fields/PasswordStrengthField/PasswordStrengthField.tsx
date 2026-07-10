@@ -5,8 +5,9 @@ import { useMemo, useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCheck, faXmark } from "@fortawesome/free-solid-svg-icons";
 import { FieldShell, fieldInputAriaProps, useFieldShellAria } from "@/components/fields/FieldShell";
-import type { FieldMode, LabelPosition } from "@/components/fields/types";
+import type { FieldMode, InputControlSize, LabelPosition } from "@/components/fields/types";
 import shared from "../shared/fieldControl.module.css";
+import { inputControlSizeClassName } from "../shared/inputControlSizes";
 import { PasswordToggle } from "../shared/PasswordToggle";
 import styles from "./PasswordStrengthField.module.css";
 
@@ -43,6 +44,7 @@ type PasswordStrengthFieldProps = {
   required?: boolean;
   requirements?: PasswordRequirement[];
   showRequirements?: boolean;
+  size?: InputControlSize;
   value: string;
   onChange: (value: string) => void;
 };
@@ -58,6 +60,7 @@ export function PasswordStrengthField({
   required,
   requirements = defaultRequirements,
   showRequirements = true,
+  size = "md",
   value,
   onChange,
 }: PasswordStrengthFieldProps) {
@@ -82,7 +85,7 @@ export function PasswordStrengthField({
       required={required}
     >
       <div className={styles.root}>
-        <div className={shared.passwordWrap}>
+        <div className={`${shared.passwordWrap} ${inputControlSizeClassName[size]}`}>
           <input
             aria-invalid={error ? "true" : undefined}
             autoComplete="new-password"

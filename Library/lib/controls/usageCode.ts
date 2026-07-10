@@ -1,4 +1,5 @@
 export type UsageCode = {
+  full: string;
   imports: string;
   jsx: string;
 };
@@ -40,17 +41,86 @@ function stripCommonIndent(value: string): string {
   return lines.map((line) => (line.trim() ? line.slice(indent) : line)).join("\n");
 }
 
-export function splitUsageCode(code: string): UsageCode {
+function indentBlock(text: string, spaces: number): string {
+  const pad = " ".repeat(spaces);
+  return text
+    .split("\n")
+    .map((line) => (line ? `${pad}${line}` : line))
+    .join("\n");
+}
+
+function splitModuleAndFunctionLines(header: string) {
+  const moduleLines: string[] = [];
+  const functionLines: string[] = [];
+
+  for (const line of header.split("\n")) {
+    const trimmed = line.trim();
+    if (!trimmed) {
+      continue;
+    }
+
+    if (trimmed === '"use client";' || trimmed.startsWith("import ") || trimmed.startsWith("//")) {
+      moduleLines.push(line);
+      continue;
+    }
+
+    functionLines.push(line);
+  }
+
+  return { functionLines, moduleLines };
+}
+
+export function formatFullUsageComponent(code: string): string {
   const trimmed = code.trim();
   if (!trimmed) {
-    return { imports: "", jsx: "" };
+    return "";
+  }
+
+  if (/export\s+default\s+function/.test(trimmed)) {
+    return trimmed;
   }
 
   const returnIndex = trimmed.search(/\n\s*return\s+/);
   if (returnIndex !== -1) {
-    return {
+    const header = trimmed.slice(0, returnIndex).trim();
+    const returnStatement = trimmed.slice(returnIndex + 1).trim();
+    const returnBody = returnStatement
+      .replace(/^return\s+/, "")
+      .trim()
+      .replace(/;$/, "");
+    const { functionLines, moduleLines } = splitModuleAndFunctionLines(header);
+    const functionBody = functionLines.map((line) => `  ${line}`).join("\n");
+
+    return `${moduleLines.join("\n")}\n\nexport default function Example() {\n${functionBody}${functionBody ? "\n" : ""}  return ${returnBody};\n}`;
+  }
+
+  const split = splitUsageCode(trimmed);
+  if (!split.jsx) {
+    return trimmed;
+  }
+
+  const { functionLines, moduleLines } = splitModuleAndFunctionLines(split.imports);
+  const functionBody = functionLines.map((line) => `  ${line}`).join("\n");
+
+  return `${moduleLines.join("\n")}\n\nexport default function Example() {\n${functionBody}${functionBody ? "\n" : ""}  return (\n${indentBlock(split.jsx.trim(), 4)}\n  );\n}`;
+}
+
+export function splitUsageCode(code: string): UsageCode {
+  const trimmed = code.trim();
+  if (!trimmed) {
+    return { full: "", imports: "", jsx: "" };
+  }
+
+  const returnIndex = trimmed.search(/\n\s*return\s+/);
+  if (returnIndex !== -1) {
+    const split = {
       imports: trimmed.slice(0, returnIndex).trim(),
       jsx: normalizeJsx(trimmed.slice(returnIndex + 1).trim()),
+    };
+
+    return {
+      ...split,
+      full: formatFullUsageComponent(trimmed),
     };
   }
 
@@ -82,11 +152,20 @@ export function splitUsageCode(code: string): UsageCode {
   }
 
   if (jsxStart === -1) {
-    return { imports: trimmed, jsx: "" };
+    return {
+      full: formatFullUsageComponent(trimmed),
+      imports: trimmed,
+      jsx: "",
+    };
   }
 
-  return {
+  const split = {
     imports: lines.slice(0, jsxStart).join("\n").trim(),
     jsx: lines.slice(jsxStart).join("\n").trim(),
+  };
+
+  return {
+    ...split,
+    full: formatFullUsageComponent(trimmed),
   };
 }

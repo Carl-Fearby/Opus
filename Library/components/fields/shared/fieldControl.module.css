@@ -1,7 +1,7 @@
 .input {
   width: 100%;
   min-height: var(--opus-control-height);
-  padding: 0 10px;
+  padding: 0 var(--opus-control-padding-x, 10px);
   border: 1px solid var(--opus-border-strong);
   border-radius: var(--opus-input-radius);
   background: var(--opus-input-bg);
@@ -13,6 +13,74 @@
   transition:
     border-color 160ms ease,
     box-shadow 160ms ease;
+}
+
+.searchWrap {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  align-items: center;
+  gap: var(--opus-control-prefix-gap, 8px);
+  width: 100%;
+  min-height: var(--opus-control-height);
+  padding: 0 var(--opus-control-padding-x, 10px);
+  border: 1px solid var(--opus-border-strong);
+  border-radius: var(--opus-input-radius);
+  background: var(--opus-input-bg);
+  color: var(--opus-text);
+  font-size: var(--opus-control-font-size);
+  box-shadow:
+    0 1px 0 rgba(255, 255, 255, 0.05) inset,
+    0 14px 30px rgba(0, 0, 0, 0.06);
+  cursor: text;
+  transition:
+    border-color 160ms ease,
+    box-shadow 160ms ease;
+}
+
+.searchWrap:focus-within {
+  border-color: var(--opus-accent);
+  box-shadow:
+    0 0 0 4px color-mix(in srgb, var(--opus-accent) 22%, transparent),
+    0 14px 30px rgba(0, 0, 0, 0.06);
+}
+
+.searchWrapError {
+  border-color: color-mix(in srgb, var(--opus-error) 75%, transparent);
+}
+
+.prefixIcon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: var(--opus-control-prefix-size, 14px);
+  height: var(--opus-control-prefix-size, 14px);
+  color: var(--opus-muted);
+  line-height: 0;
+}
+
+.prefixIconSvg {
+  width: var(--opus-control-prefix-size, 14px);
+  height: var(--opus-control-prefix-size, 14px);
+}
+
+.searchInput {
+  width: 100%;
+  min-width: 0;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  font-weight: 500;
+}
+
+.searchInput:focus {
+  outline: none;
+}
+
+.searchInput::placeholder {
+  color: color-mix(in srgb, var(--opus-muted) 80%, transparent);
 }
 
 .input:focus {
@@ -39,7 +107,7 @@
 }
 
 .passwordInput {
-  padding-right: 38px;
+  padding-right: var(--opus-control-suffix-inset, 38px);
 }
 
 .passwordToggleSlot {
@@ -85,7 +153,7 @@
   gap: 8px;
   width: 100%;
   min-height: var(--opus-control-height);
-  padding: 0 10px;
+  padding: 0 var(--opus-control-padding-x, 10px);
   border: 1px solid var(--opus-border-strong);
   border-radius: var(--opus-input-radius);
   background: var(--opus-input-bg);
