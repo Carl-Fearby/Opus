@@ -1,4 +1,4 @@
-import type { UpcomingTaskItem } from "@/components/UpcomingTasks";
+import type { UpcomingTaskItem } from "opus-react";
 
 export const demoUpcomingTasks: UpcomingTaskItem[] = [
   {

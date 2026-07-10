@@ -1,4 +1,4 @@
-import type { DealsOverTimePoint } from "@/components/DealsOverTime";
+import type { DealsOverTimePoint } from "opus-react";
 
 export const dealsOverTimePeriodOptions = [
   "This Month",

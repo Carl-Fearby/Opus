@@ -1,4 +1,5 @@
 #!/usr/bin/env node
+import { spawnSync } from "node:child_process";
 import { cpSync, existsSync, lstatSync, readdirSync, symlinkSync } from "node:fs";
 import { dirname, join, relative } from "node:path";
 import { fileURLToPath } from "node:url";
@@ -75,5 +76,14 @@ syncDirectory(join(libraryDir, "components", "control-detail"), join(appDir, "co
 syncDirectory(join(libraryDir, "components", "development"), join(appDir, "components", "development"));
 
 linkMissingComponents();
+
+const rewire = spawnSync("node", ["scripts/rewire-imports.mjs"], {
+  cwd: appDir,
+  stdio: "inherit",
+});
+
+if (rewire.status !== 0) {
+  process.exit(rewire.status ?? 1);
+}
 
 console.log("Done. Restart the Application dev server if it is running.");

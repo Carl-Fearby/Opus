@@ -1,4 +1,4 @@
-import type { NotesActivityItem } from "@/components/NotesActivity";
+import type { NotesActivityItem } from "opus-react";
 
 export const demoNotesActivity: NotesActivityItem[] = [
   {

@@ -1,4 +1,4 @@
-import type { BreadcrumbItem } from "@/components/Breadcrumb";
+import type { BreadcrumbItem } from "opus-react";
 import { componentCategories } from "@/lib/controls/registry";
 import { getControl } from "@/lib/controls/registry";
 import {

@@ -1,4 +1,4 @@
-import type { BreadcrumbItem, BottomNavigationItem, NavigationRailItem, SplitButtonAction } from "@/components/fields";
+import type { BreadcrumbItem, BottomNavigationItem, NavigationRailItem, SplitButtonAction } from "opus-react";
 
 export const demoBreadcrumbItems: BreadcrumbItem[] = [
   { id: "home", label: "Home" },

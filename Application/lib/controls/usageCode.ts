@@ -70,57 +70,17 @@ function splitModuleAndFunctionLines(header: string) {
   return { functionLines, moduleLines };
 }
 
-export function formatFullUsageComponent(code: string): string {
+function splitUsageCodeParts(code: string): Pick<UsageCode, "imports" | "jsx"> {
   const trimmed = code.trim();
   if (!trimmed) {
-    return "";
-  }
-
-  if (/export\s+default\s+function/.test(trimmed)) {
-    return trimmed;
+    return { imports: "", jsx: "" };
   }
 
   const returnIndex = trimmed.search(/\n\s*return\s+/);
   if (returnIndex !== -1) {
-    const header = trimmed.slice(0, returnIndex).trim();
-    const returnStatement = trimmed.slice(returnIndex + 1).trim();
-    const returnBody = returnStatement
-      .replace(/^return\s+/, "")
-      .trim()
-      .replace(/;$/, "");
-    const { functionLines, moduleLines } = splitModuleAndFunctionLines(header);
-    const functionBody = functionLines.map((line) => `  ${line}`).join("\n");
-
-    return `${moduleLines.join("\n")}\n\nexport default function Example() {\n${functionBody}${functionBody ? "\n" : ""}  return ${returnBody};\n}`;
-  }
-
-  const split = splitUsageCode(trimmed);
-  if (!split.jsx) {
-    return trimmed;
-  }
-
-  const { functionLines, moduleLines } = splitModuleAndFunctionLines(split.imports);
-  const functionBody = functionLines.map((line) => `  ${line}`).join("\n");
-
-  return `${moduleLines.join("\n")}\n\nexport default function Example() {\n${functionBody}${functionBody ? "\n" : ""}  return (\n${indentBlock(split.jsx.trim(), 4)}\n  );\n}`;
-}
-
-export function splitUsageCode(code: string): UsageCode {
-  const trimmed = code.trim();
-  if (!trimmed) {
-    return { full: "", imports: "", jsx: "" };
-  }
-
-  const returnIndex = trimmed.search(/\n\s*return\s+/);
-  if (returnIndex !== -1) {
-    const split = {
+    return {
       imports: trimmed.slice(0, returnIndex).trim(),
       jsx: normalizeJsx(trimmed.slice(returnIndex + 1).trim()),
-    };
-
-    return {
-      ...split,
-      full: formatFullUsageComponent(trimmed),
     };
   }
 
@@ -153,19 +113,76 @@ export function splitUsageCode(code: string): UsageCode {
 
   if (jsxStart === -1) {
     return {
-      full: formatFullUsageComponent(trimmed),
       imports: trimmed,
       jsx: "",
     };
   }
 
-  const split = {
+  return {
     imports: lines.slice(0, jsxStart).join("\n").trim(),
     jsx: lines.slice(jsxStart).join("\n").trim(),
   };
+}
+
+function formatReturnBody(returnBody: string): string {
+  const trimmed = returnBody.trim().replace(/;$/, "");
+
+  if (trimmed.startsWith("(") && trimmed.endsWith(")")) {
+    const inner = stripCommonIndent(trimmed.slice(1, -1).trim());
+    if (!inner) {
+      return "()";
+    }
+
+    return `(\n${indentBlock(inner, 4)}\n  )`;
+  }
+
+  if (trimmed.startsWith("<")) {
+    return `(\n${indentBlock(trimmed, 4)}\n  )`;
+  }
+
+  return trimmed;
+}
+
+export function formatFullUsageComponent(code: string): string {
+  const trimmed = code.trim();
+  if (!trimmed) {
+    return "";
+  }
+
+  if (/export\s+default\s+function/.test(trimmed)) {
+    return trimmed;
+  }
+
+  const returnIndex = trimmed.search(/\n\s*return\s+/);
+  if (returnIndex !== -1) {
+    const header = trimmed.slice(0, returnIndex).trim();
+    const returnStatement = trimmed.slice(returnIndex + 1).trim();
+    const returnBody = returnStatement
+      .replace(/^return\s+/, "")
+      .trim()
+      .replace(/;$/, "");
+    const { functionLines, moduleLines } = splitModuleAndFunctionLines(header);
+    const functionBody = functionLines.map((line) => `  ${line}`).join("\n");
+
+    return `${moduleLines.join("\n")}\n\nexport default function Example() {\n${functionBody}${functionBody ? "\n" : ""}  return ${formatReturnBody(returnBody)};\n}`;
+  }
+
+  const split = splitUsageCodeParts(trimmed);
+  if (!split.jsx) {
+    return trimmed;
+  }
+
+  const { functionLines, moduleLines } = splitModuleAndFunctionLines(split.imports);
+  const functionBody = functionLines.map((line) => `  ${line}`).join("\n");
+
+  return `${moduleLines.join("\n")}\n\nexport default function Example() {\n${functionBody}${functionBody ? "\n" : ""}  return (\n${indentBlock(split.jsx.trim(), 4)}\n  );\n}`;
+}
+
+export function splitUsageCode(code: string): UsageCode {
+  const split = splitUsageCodeParts(code);
 
   return {
     ...split,
-    full: formatFullUsageComponent(trimmed),
+    full: formatFullUsageComponent(code),
   };
 }

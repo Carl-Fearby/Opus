@@ -591,6 +591,7 @@ export const defaultSettings: ControlSettingsBySlug = {
     photoUploadZoomStep: 0.05,
     previewLayout: "single",
     width: "widget",
+    wrapInContainer: false,
   },
   "profile-photo-upload": {
     title: "Update profile photo",

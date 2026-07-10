@@ -6,7 +6,7 @@ import type {
   PropertyGridItem,
   TreeViewNode,
   AvatarGroupItem,
-} from "@/components/fields";
+} from "opus-react";
 
 export const demoAvatarGroupItems: AvatarGroupItem[] = [
   { name: "Alex Morgan" },

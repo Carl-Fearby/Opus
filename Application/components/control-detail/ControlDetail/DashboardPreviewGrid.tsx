@@ -1,7 +1,7 @@
 "use client";
 
 import type { ReactNode } from "react";
-import { DashboardContentContainer } from "@/components/DashboardContentContainer";
+import { DashboardContentContainer } from "opus-react";
 import {
   dashboardPreviewCount,
   type DashboardPreviewLayout,

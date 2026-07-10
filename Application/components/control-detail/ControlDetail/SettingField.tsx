@@ -7,7 +7,7 @@ import {
   SwitchField,
   TextAreaField,
   TextField,
-} from "@/components/fields";
+} from "opus-react";
 import {
   dashboardPreviewLayoutOptions,
   dashboardWidthOptions,

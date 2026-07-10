@@ -1,6 +1,6 @@
-import type { CascaderOption } from "@/components/fields/CascaderField";
-import type { FilterSelectGroup } from "@/components/fields/FilterSelectField";
-import type { TreeSelectNode } from "@/components/fields/TreeSelectField";
+import type { CascaderOption } from "opus-react";
+import type { FilterSelectGroup } from "opus-react";
+import type { TreeSelectNode } from "opus-react";
 
 export const filterSelectDemoGroups: FilterSelectGroup[] = [
   {

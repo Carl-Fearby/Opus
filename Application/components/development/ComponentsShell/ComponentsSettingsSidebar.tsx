@@ -2,7 +2,7 @@
 
 import dynamic from "next/dynamic";
 import { useCallback, useRef } from "react";
-import { OpusThemeProvider } from "@/components/OpusThemeProvider";
+import { OpusThemeProvider } from "opus-react";
 import {
   CompositionPartsList,
   CompositionUsageList,

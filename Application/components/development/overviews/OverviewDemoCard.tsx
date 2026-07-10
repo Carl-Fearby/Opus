@@ -23,7 +23,13 @@ type OverviewDemoCardProps = {
 
 export function OverviewDemoCard({ children, previewCategory, slug, title }: OverviewDemoCardProps) {
   const control = getControl(slug);
-  const [settings, setSettings] = useState<ControlSettings>(() => getDefaultSettings(slug));
+  const [settings, setSettings] = useState<ControlSettings>(() => {
+    const defaults = getDefaultSettings(slug);
+    if (previewCategory === "labs" && slug === "user-profile") {
+      return { ...defaults, wrapInContainer: true };
+    }
+    return defaults;
+  });
 
   if (!control) {
     return null;

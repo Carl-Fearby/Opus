@@ -1,7 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useMemo, useState } from "react";
-import { CatalogIcon } from "@/components/CatalogIcon";
+import { CatalogIcon } from "opus-react";
 import {
   Button,
   Card,
@@ -152,15 +152,15 @@ import {
   TopNavigation,
   TrendBadge,
   useToast,
-} from "@/components/fields";
-import { ImageCropUploadWidget } from "@/components/ImageCropUploadWidget";
-import { IconPicker } from "@/components/IconPicker";
-import { IconBadge } from "@/components/IconBadge";
-import { EmojiPicker } from "@/components/EmojiPicker";
-import { DEFAULT_TOAST_DURATION_MS } from "@/components/ToastProvider";
-import type { DateInputType } from "@/components/fields";
-import type { CommandPaletteItem, DropdownMenuItemData } from "@/components/fields";
-import type { AlertStatus } from "@/components/fields/types";
+} from "opus-react";
+import { ImageCropUploadWidget } from "opus-react";
+import { IconPicker } from "opus-react";
+import { IconBadge } from "opus-react";
+import { EmojiPicker } from "opus-react";
+import { DEFAULT_TOAST_DURATION_MS } from "opus-react";
+import type { DateInputType } from "opus-react";
+import type { CommandPaletteItem, DropdownMenuItemData } from "opus-react";
+import type { AlertStatus } from "opus-react";
 import { buildMegaMenuPreviewConfig } from "@/lib/controls/megaMenuDemo";
 import {
   demoAvatarGroupItems,
@@ -224,7 +224,7 @@ import {
   getGaugeValueColor,
 } from "@/lib/controls/dashboardWidgetData";
 import { topNavigationDemoMenus } from "@/lib/controls/topNavigationDemo";
-import type { TopNavigationSelectItem } from "@/components/TopNavigation/TopNavigationContext";
+import type { TopNavigationSelectItem } from "opus-react";
 import type { ComponentCategory, ControlSettings, ControlSettingsBySlug, ControlSlug, ValueFieldSettings } from "@/lib/controls/types";
 import {
   getSectionDemoSlots,
@@ -248,7 +248,7 @@ import {
   treeSelectDemoNodes,
 } from "@/lib/controls/advancedFormDemoData";
 import { isChartSlug } from "@/lib/controls/chartCatalog";
-import { cartesianSpecializedVariants } from "@/components/Chart/SpecializedCharts";
+import { cartesianSpecializedVariants } from "opus-react";
 import { DashboardPreviewGrid } from "./DashboardPreviewGrid";
 import styles from "./ControlDetail.module.css";
 
@@ -733,7 +733,9 @@ function UserProfileWidgetPreview({
     </>
   );
 
-  if (category === "labs") {
+  const wrapped = settings.wrapInContainer ?? category === "labs";
+
+  if (wrapped) {
     return (
       <DashboardContentContainer data-component="user-profile" width={settings.width ?? "widget"}>
         {content}

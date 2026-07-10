@@ -1,6 +1,6 @@
-import type { ChartDatum, ChartSeries } from "@/components/Chart";
-import { demoSankeyLinks } from "@/components/Chart/sankeyLayout";
-import type { ChartVariant } from "@/components/fields";
+import type { ChartDatum, ChartSeries } from "opus-react";
+import { demoSankeyLinks } from "opus-react";
+import type { ChartVariant } from "opus-react";
 import type { ChartControlSlug } from "./chartCatalog";
 
 const monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];

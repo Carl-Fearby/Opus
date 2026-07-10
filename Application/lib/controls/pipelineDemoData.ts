@@ -1,4 +1,4 @@
-import type { PipelineStage } from "@/components/PipelineOverview";
+import type { PipelineStage } from "opus-react";
 
 export const demoPipelineStages: PipelineStage[] = [
   {

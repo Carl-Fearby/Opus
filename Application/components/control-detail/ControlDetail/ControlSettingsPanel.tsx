@@ -43,7 +43,7 @@ const pipelineValueOptions = [
   "£1,050,000",
 ].map((value) => ({ label: value, value }));
 
-import { IconPicker } from "@/components/IconPicker";
+import { IconPicker } from "opus-react";
 import shellStyles from "@/components/development/ComponentsShell/ComponentsShell.module.css";
 
 const buttonVariants = [
@@ -2631,6 +2631,11 @@ export function ControlSettingsPanel({ slug, settings, onChange }: ControlSettin
           <DashboardWidthSetting
             value={s.width ?? "widget"}
             onChange={(width) => onChange({ ...s, width } as ControlSettings)}
+          />
+          <SettingToggle
+            label="Inside widget container"
+            checked={s.wrapInContainer ?? false}
+            onChange={(wrapInContainer) => onChange({ ...s, wrapInContainer } as ControlSettings)}
           />
           <div className={shellStyles.settingsFullWidth}>
             <SettingInput label="Name" value={s.name} onChange={(name) => onChange({ ...s, name } as ControlSettings)} />

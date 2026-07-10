@@ -1,10 +1,10 @@
-import type { DropdownMenuItemData } from "@/components/DropdownMenu";
+import type { DropdownMenuItemData } from "opus-react";
 import {
   defaultTopNavigationBarMenus,
   type TopNavigationBarMenu,
   type TopNavigationDropdownMenu,
   type TopNavigationMegaMenu,
-} from "@/components/TopNavigation";
+} from "opus-react";
 import { formatMegaMenuMenusForUsage } from "./megaMenuDemo";
 
 export const topNavigationDemoMenus: TopNavigationBarMenu[] = defaultTopNavigationBarMenus;

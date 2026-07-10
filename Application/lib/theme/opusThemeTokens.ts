@@ -1,5 +1,5 @@
 import type { CSSProperties } from "react";
-import type { Theme } from "@/components/fields/types";
+import type { Theme } from "opus-react";
 
 const lightThemeTokens = {
   "--opus-control-font-size": "0.86rem",

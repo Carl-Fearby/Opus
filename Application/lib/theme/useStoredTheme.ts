@@ -1,7 +1,7 @@
 "use client";
 
 import { useCallback, useSyncExternalStore } from "react";
-import type { Theme } from "@/components/fields/types";
+import type { Theme } from "opus-react";
 import {
   PREVIEW_THEME_STORAGE_KEY,
   THEME_CHANGE_EVENT,

@@ -1,13 +1,19 @@
 "use client";
 
 import styles from "../ControlDetail/ControlDetail.module.css";
-import { ComponentMarkdown } from "./ComponentMarkdown";
+import { ComponentMarkdown, prepareComponentDocumentation } from "./ComponentMarkdown";
 
 type ComponentDocumentationProps = {
   content: string;
 };
 
 export function ComponentDocumentation({ content }: ComponentDocumentationProps) {
+  const prepared = prepareComponentDocumentation(content);
+
+  if (!prepared) {
+    return null;
+  }
+
   return (
     <section aria-labelledby="component-docs-heading" className={`${styles.panel} ${styles.docsPanel}`}>
       <div className="opus-panel-heading">

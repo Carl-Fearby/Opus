@@ -1,4 +1,4 @@
-import type { AccordionGroupType, AvatarShape, AvatarSize, BadgeSize, BadgeTone, BadgeVariant, ButtonVariant, ChartPalette, ChartVariant, ChipInputPreset, ChipInputVariant, ChoiceControlSize, ChoiceShape, ContentTimelineStatus, DescriptionListLayout, DialogActionSet, DividerOrientation, DividerTone, DrawerSide, DropdownMenuPlacement, FieldMode, ImageThumbnailSize, InputControlSize, LabelPosition, ModalSize, ModelThumbnailSize, PopoverPlacement, SidebarSide, SkeletonAnimation, SkeletonVariant, AlertStatus, StatisticTrend, SurfaceDensity, SurfaceTone, TableDensity, TabsOrientation, TabsVariant, Theme, ToastHorizontalPosition, ToastVerticalPosition } from "@/components/fields";
+import type { AccordionGroupType, AvatarShape, AvatarSize, BadgeSize, BadgeTone, BadgeVariant, ButtonVariant, ChartPalette, ChartVariant, ChipInputPreset, ChipInputVariant, ChoiceControlSize, ChoiceShape, ContentTimelineStatus, DescriptionListLayout, DialogActionSet, DividerOrientation, DividerTone, DrawerSide, DropdownMenuPlacement, FieldMode, ImageThumbnailSize, InputControlSize, LabelPosition, ModalSize, ModelThumbnailSize, PopoverPlacement, SidebarSide, SkeletonAnimation, SkeletonVariant, AlertStatus, StatisticTrend, SurfaceDensity, SurfaceTone, TableDensity, TabsOrientation, TabsVariant, Theme, ToastHorizontalPosition, ToastVerticalPosition } from "opus-react";
 import type {
   SectionColumns,
   SectionGap,
@@ -736,6 +736,7 @@ export type UserProfileWidgetSettings = {
   src: string;
   srcEnabled: boolean;
   width: DashboardSectionWidth;
+  wrapInContainer?: boolean;
 };
 
 export type ProfilePhotoUploadWidgetSettings = {

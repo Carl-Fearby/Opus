@@ -1,4 +1,4 @@
-import type { StatTileItem, TileItem } from "@/components/fields";
+import type { StatTileItem, TileItem } from "opus-react";
 
 export const demoTiles: TileItem[] = [
   { id: "new-lead", label: "New Lead", icon: "user-plus", tone: "purple" },

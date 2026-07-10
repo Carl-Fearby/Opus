@@ -191,11 +191,5 @@ export function getComponentDocumentationMarkdown(slug: ControlSlug): string | n
     "## Overview",
     "",
     control.description,
-    "",
-    "## Import",
-    "",
-    "```tsx",
-    `import { ${control.componentName} } from "@/components/fields";`,
-    "```",
   ].join("\n");
 }

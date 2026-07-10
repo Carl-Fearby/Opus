@@ -1,4 +1,4 @@
-import type { RecentActivityItem } from "@/components/RecentActivity";
+import type { RecentActivityItem } from "opus-react";
 
 export const demoRecentActivity: RecentActivityItem[] = [
   {

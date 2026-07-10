@@ -34,7 +34,7 @@ import {
   TreeSelectField,
   type ChoiceShape,
   type LabelPosition,
-} from "@/components/fields";
+} from "opus-react";
 import {
   cascaderDemoOptions,
   filterSelectDemoGroups,

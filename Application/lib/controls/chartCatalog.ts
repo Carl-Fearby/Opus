@@ -1,4 +1,4 @@
-import type { ChartVariant } from "@/components/fields/types";
+import type { ChartVariant } from "opus-react";
 
 export type ChartCatalogEntry = {
   description: string;

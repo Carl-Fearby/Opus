@@ -20,7 +20,7 @@ import {
   getChartPreviewData,
   getChartUsageDataMode,
 } from "./chartDemoData";
-import { worldMapRegionIds } from "@/components/Chart/worldMapRegions";
+import { worldMapRegionIds } from "opus-react";
 import { isChartSlug } from "./chartCatalog";
 import { parsePipelineStageCount } from "./pipelineDemoData";
 import { getDealsOverTimeDemoData } from "./dealsOverTimeDemoData";
@@ -254,7 +254,7 @@ function fieldProps(settings: FieldUsageSettings) {
 }
 
 function importLine(components: string[]): string {
-  return `import { ${components.join(", ")} } from "@/components/fields";`;
+  return `import { ${components.join(", ")} } from "opus-react";`;
 }
 
 function wrapDashboardWidget(
@@ -316,12 +316,17 @@ function interactiveUsage({
     .join("\n");
   const trimmedJsx = jsx.trim();
   const returnBody = trimmedJsx.startsWith("(")
-    ? `${trimmedJsx};`
-    : trimmedJsx.endsWith(";")
-      ? trimmedJsx
-      : `${trimmedJsx};`;
+    ? trimmedJsx.replace(/;$/, "")
+    : trimmedJsx.startsWith("<")
+      ? `(\n${trimmedJsx
+          .split("\n")
+          .map((line) => (line ? `  ${line}` : line))
+          .join("\n")}\n)`
+      : trimmedJsx.endsWith(";")
+        ? trimmedJsx.slice(0, -1)
+        : trimmedJsx;
 
-  return `${importsBlock}\n\nreturn ${returnBody}`;
+  return `${importsBlock}\n\nreturn ${returnBody};`;
 }
 
 function generateUsageCodeContent(
@@ -722,7 +727,7 @@ ${includeSeries ? `const series = ${formatChartSeriesForUsage(chartDemoSeries)};
         formatExpressionProp("value", "accent"),
         formatExpressionProp("onChange", "setAccent"),
       ];
-      return `${usageClientPrefix()}\nimport { AccentColorPicker, createAccentStyle } from "@/components/AccentColorPicker";
+      return `${usageClientPrefix()}\nimport { AccentColorPicker, createAccentStyle } from "opus-react";
 
 const [accent, setAccent] = useState(${quote(s.value)});
 const accentStyle = createAccentStyle(accent);
@@ -747,7 +752,7 @@ ${formatSelfClosingElement("AccentColorPicker", props, "    ")}
       return `${usageClientPrefix()}\nimport { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { ${iconOption.importName} } from "@fortawesome/free-solid-svg-icons";
 import "@/lib/fontawesome";
-import { IconPicker } from "@/components/IconPicker";
+import { IconPicker } from "opus-react";
 
 const [icon, setIcon] = useState(${quote(s.value)});
 
@@ -1551,6 +1556,11 @@ export function Example() {
       const widgetBlock = `<UserProfileWidget
 ${propsBlock}
 />`;
+      const indentContainerChild = (block: string) =>
+        block
+          .split("\n")
+          .map((line) => (line ? `  ${line}` : line))
+          .join("\n");
       const fragmentContent = s.photoUploadEnabled
         ? `<>
   ${widgetBlock}
@@ -1558,21 +1568,25 @@ ${propsBlock}
 </>`
         : widgetBlock;
       const returnContent = s.photoUploadEnabled ? `(\n  ${fragmentContent}\n)` : widgetBlock;
+      const wrapped = s.wrapInContainer ?? category === "labs";
+      const containerContent = s.photoUploadEnabled
+        ? `${indentContainerChild(widgetBlock)}\n${indentContainerChild(modalBlock)}`
+        : indentContainerChild(widgetBlock);
       const components = s.photoUploadEnabled
-        ? category === "labs"
+        ? wrapped
           ? ["DashboardContentContainer", "UserProfileWidget", "ProfilePhotoUploadModal"]
           : ["UserProfileWidget", "ProfilePhotoUploadModal"]
-        : category === "labs"
+        : wrapped
           ? ["DashboardContentContainer", "UserProfileWidget"]
           : ["UserProfileWidget"];
 
-      if (category === "labs") {
+      if (wrapped) {
         return interactiveUsage({
           afterState,
           components,
           state,
           jsx: `<DashboardContentContainer data-component=${quote("user-profile")} width=${quote(s.width ?? "widget")}>
-  ${fragmentContent}
+${containerContent}
 </DashboardContentContainer>`,
         });
       }

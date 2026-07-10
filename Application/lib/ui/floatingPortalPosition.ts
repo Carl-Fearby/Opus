@@ -1,4 +1,4 @@
-import type { DropdownMenuPlacement } from "@/components/fields/types";
+import type { DropdownMenuPlacement } from "opus-react";
 
 export type EmojiPickerPlacement = "bottom" | "top";
 

@@ -1,11 +1,11 @@
 "use client";
 
 import { createContext, useCallback, useContext, useEffect, useMemo, useState, type CSSProperties, type ReactNode } from "react";
-import { useAccentPreference } from "@/components/AccentColorPicker";
-import type { Theme } from "@/components/fields";
-import { OpusThemeProvider } from "@/components/OpusThemeProvider";
-import { ToastProvider } from "@/components/ToastProvider";
-import { ContextMenuProvider } from "@/components/ContextMenu";
+import { useAccentPreference } from "opus-react";
+import type { Theme } from "opus-react";
+import { OpusThemeProvider } from "opus-react";
+import { ToastProvider } from "opus-react";
+import { ContextMenuProvider } from "opus-react";
 import { useStoredPreviewTheme, useStoredTheme } from "@/lib/theme/useStoredTheme";
 
 type ComponentsThemeContextValue = {

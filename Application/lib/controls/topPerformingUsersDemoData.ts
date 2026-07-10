@@ -1,4 +1,4 @@
-import type { TopPerformingUserItem } from "@/components/TopPerformingUsers";
+import type { TopPerformingUserItem } from "opus-react";
 
 export const demoTopPerformingUsers: TopPerformingUserItem[] = [
   { id: "user-1", name: "Carl Fearby", value: 842000, displayValue: "£842,000" },

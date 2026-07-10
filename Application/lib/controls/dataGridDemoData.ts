@@ -1,4 +1,4 @@
-import type { DataGridColumn, DataGridRow } from "@/components/DataGrid";
+import type { DataGridColumn, DataGridRow } from "opus-react";
 
 export const dataGridRowGroups = [
   "Buttons",

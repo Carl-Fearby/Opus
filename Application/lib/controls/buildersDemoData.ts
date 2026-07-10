@@ -11,7 +11,7 @@ import type {
   ResourcePlannerResource,
   RuleDefinition,
   SchedulerEvent,
-} from "@/components/fields";
+} from "opus-react";
 
 export const demoInspectorFields: string[] = ["status", "owner", "priority", "tags", "created"];
 
