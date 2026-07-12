@@ -213,6 +213,7 @@ const componentIcons: Record<ControlSlug, IconDefinition> = {
   popover: faMessage,
   "radio-group": faCircleDot,
   "chip-input": faTags,
+  "choice-chips": faTags,
   "range-slider": faSliders,
   "reset-button": faRotateLeft,
   "search-input": faMagnifyingGlass,

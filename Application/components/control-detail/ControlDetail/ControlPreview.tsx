@@ -9,6 +9,7 @@ import {
   Chart,
   CheckboxField,
   ChipInput,
+  ChoiceChips,
   ColorField,
   CommandPalette,
   ContextMenuProvider,
@@ -349,6 +350,22 @@ function parseChipValues(value: string[] | string) {
     .split(",")
     .map((entry) => entry.trim())
     .filter(Boolean);
+}
+
+function parseChoiceChipOptions(options: string) {
+  return options
+    .split(",")
+    .map((option) => option.trim())
+    .filter(Boolean)
+    .map((option) => {
+      const [label, rawValue] = option.split(":").map((part) => part.trim());
+      const value = rawValue || label.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
+
+      return {
+        label,
+        value,
+      };
+    });
 }
 
 const dropdownMenuItemsBase: DropdownMenuItemData[] = [
@@ -2036,6 +2053,27 @@ export function ControlPreview({ category, slug, settings, onSettingsChange }: C
             onSettingsChange({
               ...s,
               value,
+            } as ControlSettings)
+          }
+        />
+      );
+    }
+    case "choice-chips": {
+      const s = settings as ControlSettingsBySlug["choice-chips"];
+
+      return (
+        <ChoiceChips
+          {...fieldProps(s)}
+          disabled={s.disabled}
+          id="preview-choice-chips"
+          options={parseChoiceChipOptions(s.options)}
+          selectionMode={s.selectionMode}
+          value={s.value}
+          variant={s.variant}
+          onChange={(value) =>
+            onSettingsChange({
+              ...s,
+              value: Array.isArray(value) ? value : [value],
             } as ControlSettings)
           }
         />

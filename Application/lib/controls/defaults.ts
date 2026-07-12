@@ -104,6 +104,16 @@ export const defaultSettings: ControlSettingsBySlug = {
     disabled: false,
     readOnly: false,
   },
+  "choice-chips": {
+    ...baseFieldDefaults,
+    label: "Interests",
+    value: ["design", "frontend"],
+    options: "Design:design, Frontend:frontend, Research:research, Strategy:strategy",
+    selectionMode: "multiple",
+    variant: "soft",
+    disabled: false,
+    error: "Please select at least one interest",
+  },
   "color-picker": {
     ...baseFieldDefaults,
     label: "Choose a colour",

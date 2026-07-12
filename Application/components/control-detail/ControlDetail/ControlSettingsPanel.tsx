@@ -909,6 +909,68 @@ export function ControlSettingsPanel({ slug, settings, onChange }: ControlSettin
         </div>
       );
     }
+    case "choice-chips": {
+      const s = settings as ControlSettingsBySlug["choice-chips"];
+
+      return (
+        <div className={shellStyles.settingsGrid}>
+          <CommonFieldSettings
+            includeValue={false}
+            settings={s}
+            onChange={(next) => onChange({ ...s, ...next })}
+          />
+          <SettingSelect
+            label="Selection mode"
+            value={s.selectionMode}
+            onChange={(selectionMode) =>
+              onChange({ ...s, selectionMode: selectionMode as typeof s.selectionMode } as ControlSettings)
+            }
+            options={[
+              { label: "Multiple", value: "multiple" },
+              { label: "Single", value: "single" },
+            ]}
+          />
+          <SettingSelect
+            label="Variant"
+            value={s.variant}
+            onChange={(variant) => onChange({ ...s, variant: variant as typeof s.variant } as ControlSettings)}
+            options={[
+              { label: "Filled", value: "filled" },
+              { label: "Outlined", value: "outlined" },
+              { label: "Soft", value: "soft" },
+              { label: "Glass", value: "glass" },
+            ]}
+          />
+          <div className={shellStyles.settingsFullWidth}>
+            <SettingTextarea
+              label="Options (Label:value, comma separated)"
+              value={s.options}
+              onChange={(options) => onChange({ ...s, options } as ControlSettings)}
+            />
+          </div>
+          <div className={shellStyles.settingsFullWidth}>
+            <SettingTextarea
+              label="Selected values (one per line)"
+              value={s.value.join("\n")}
+              onChange={(text) =>
+                onChange({
+                  ...s,
+                  value: text
+                    .split("\n")
+                    .map((entry) => entry.trim())
+                    .filter(Boolean),
+                } as ControlSettings)
+              }
+            />
+          </div>
+          <SettingToggle
+            label="Disabled"
+            checked={s.disabled}
+            onChange={(disabled) => onChange({ ...s, disabled } as ControlSettings)}
+          />
+        </div>
+      );
+    }
     case "checkbox": {
       const s = settings as ControlSettingsBySlug["checkbox"];
       return (

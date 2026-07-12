@@ -38,6 +38,7 @@ import {
   formatBreadcrumbItemsForUsage,
   formatCalendarEventsForUsage,
   formatCascaderOptionsForUsage,
+  formatChoiceChipOptionsForUsage,
   formatContentTimelineGroupsForUsage,
   formatContentTimelineItemsForUsage,
   formatDescriptionListItemsForUsage,
@@ -625,6 +626,29 @@ ${includeSeries ? `const series = ${formatChartSeriesForUsage(chartDemoSeries)};
       return controlledFieldUsage(["ChipInput"], "ChipInput", state, props, {
         initial: `[${chips.map((chip) => quote(chip)).join(", ")}]`,
       });
+    }
+    case "choice-chips": {
+      const s = settings as ControlSettingsBySlug["choice-chips"];
+      const state = toStateName(s.label);
+      const props = [
+        formatStringProp("id", id),
+        ...fieldProps(s),
+        formatExpressionProp("options", "options"),
+        ...(s.selectionMode !== "multiple" ? [formatStringProp("selectionMode", s.selectionMode)] : []),
+        ...(s.variant !== "soft" ? [formatStringProp("variant", s.variant)] : []),
+        ...(s.disabled ? [formatBoolProp("disabled", true)] : []),
+        formatExpressionProp("value", state),
+        formatExpressionProp("onChange", `(next) => ${toSetter(state)}(Array.isArray(next) ? next : [next])`),
+      ];
+
+      return `${usageClientPrefix()}
+${importLine(["ChoiceChips"])}
+
+const options = ${formatChoiceChipOptionsForUsage(s.options)};
+
+const [${state}, ${toSetter(state)}] = useState([${s.value.map((value) => quote(value)).join(", ")}]);
+
+<ChoiceChips${formatSelfClosing(props)}`;
     }
     case "checkbox": {
       const s = settings as ControlSettingsBySlug["checkbox"];

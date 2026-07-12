@@ -26,6 +26,7 @@ export type ControlSlug =
   | "switch"
   | "radio-group"
   | "chip-input"
+  | "choice-chips"
   | "color-picker"
   | "date-picker"
   | "time-picker"
@@ -201,6 +202,14 @@ export type ChipInputSettings = BaseFieldSettings & {
   preset: ChipInputPreset;
   disabled: boolean;
   readOnly: boolean;
+};
+
+export type ChoiceChipsSettings = BaseFieldSettings & {
+  disabled: boolean;
+  options: string;
+  selectionMode: "multiple" | "single";
+  value: string[];
+  variant: "filled" | "outlined" | "soft" | "glass";
 };
 
 export type CheckboxSettings = BaseFieldSettings & {
@@ -1236,6 +1245,7 @@ export type ControlSettingsBySlug = {
   switch: SwitchSettings;
   "radio-group": RadioGroupSettings;
   "chip-input": ChipInputSettings;
+  "choice-chips": ChoiceChipsSettings;
   "color-picker": ColorPickerSettings;
   "date-picker": ValueFieldSettings;
   "time-picker": ValueFieldSettings;
@@ -1414,6 +1424,7 @@ export const formsControlOrder = [
   "switch",
   "radio-group",
   "chip-input",
+  "choice-chips",
   "color-picker",
   "date-picker",
   "time-picker",

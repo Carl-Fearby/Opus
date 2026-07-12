@@ -280,6 +280,32 @@ export function formatSegmentedControlOptionsForUsage(options: string) {
   return formatObjectLiteral(parsed.length ? parsed : ["Monthly", "Quarterly", "Yearly"]);
 }
 
+export function formatChoiceChipOptionsForUsage(options: string) {
+  const parsed = options
+    .split(",")
+    .map((option) => option.trim())
+    .filter(Boolean)
+    .map((option) => {
+      const [label, rawValue] = option.split(":").map((part) => part.trim());
+      const value = rawValue || label.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
+
+      return {
+        label,
+        value,
+      };
+    });
+
+  return formatObjectLiteral(
+    parsed.length
+      ? parsed
+      : [
+          { label: "Design", value: "design" },
+          { label: "Frontend", value: "frontend" },
+          { label: "Research", value: "research" },
+        ],
+  );
+}
+
 export function formatDockLayoutProps(settings: ControlSettingsBySlug["dock-layout"]) {
   const props = [
     settings.showTop ? 'top="Top dock"' : "",

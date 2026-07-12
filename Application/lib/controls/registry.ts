@@ -182,6 +182,18 @@ const formsControls: Record<(typeof formsControlOrder)[number], ControlDefinitio
     ],
     usesFieldShell: true,
   },
+  "choice-chips": {
+    slug: "choice-chips",
+    title: "Choice chips",
+    category: "forms",
+    componentName: "ChoiceChips",
+    description: "Selectable chip group for compact single or multiple choice decisions.",
+    sourceFiles: [
+      "components/fields/ChoiceChipsField/ChoiceChipsField.tsx",
+      "components/fields/ChoiceChipsField/ChoiceChipsField.module.css",
+    ],
+    usesFieldShell: true,
+  },
   "color-picker": {
     slug: "color-picker",
     title: "Colour picker",
