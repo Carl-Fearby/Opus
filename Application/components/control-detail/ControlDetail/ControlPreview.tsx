@@ -3590,13 +3590,19 @@ export function ControlPreview({ category, slug, settings, onSettingsChange }: C
             side={s.side}
           >
             <SidebarNav aria-label="Primary">
-              <SidebarLink active={s.activeItem === "overview"}>Overview</SidebarLink>
-              <SidebarGroup defaultOpen={s.groupOpen} label="Library">
-                <SidebarLink active={s.activeItem === "library"}>Components</SidebarLink>
-                <SidebarLink>Templates</SidebarLink>
-                <SidebarLink>Tokens</SidebarLink>
+              <SidebarLink active={s.activeItem === "overview"} icon={<CatalogIcon iconName="grid-2" />}>
+                Overview
+              </SidebarLink>
+              <SidebarGroup defaultOpen={s.groupOpen} icon={<CatalogIcon iconName="layer-group" />} label="Library">
+                <SidebarLink active={s.activeItem === "library"} icon={<CatalogIcon iconName="cube" />}>
+                  Components
+                </SidebarLink>
+                <SidebarLink icon={<CatalogIcon iconName="copy" />}>Templates</SidebarLink>
+                <SidebarLink icon={<CatalogIcon iconName="swatchbook" />}>Tokens</SidebarLink>
               </SidebarGroup>
-              <SidebarLink active={s.activeItem === "settings"}>Settings</SidebarLink>
+              <SidebarLink active={s.activeItem === "settings"} icon={<CatalogIcon iconName="gear" />}>
+                Settings
+              </SidebarLink>
             </SidebarNav>
           </Sidebar>
         </SidebarLayout>

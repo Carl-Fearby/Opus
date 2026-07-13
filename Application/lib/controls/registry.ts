@@ -1167,7 +1167,7 @@ export const controls: ControlDefinition[] = [
     title: "Sidebar",
     category: "content",
     componentName: "Sidebar",
-    description: "Persistent navigation rail with optional header, grouped links, and layout shell.",
+    description: "Icon-led side navigation surface with optional header, grouped links, and no container chrome.",
     navigationGroup: "Navigation",
     sourceFiles: ["components/Sidebar/Sidebar.tsx", "components/Sidebar/Sidebar.module.css"],
     usesFieldShell: false,

@@ -1,9 +1,11 @@
 "use client";
 
-import { useMemo } from "react";
+import { useCallback, useEffect, useMemo, useRef } from "react";
 import CodeMirror from "@uiw/react-codemirror";
 import { javascript } from "@codemirror/lang-javascript";
-import { EditorView } from "@codemirror/view";
+import { selectAll } from "@codemirror/commands";
+import { EditorSelection } from "@codemirror/state";
+import { EditorView, keymap } from "@codemirror/view";
 import { vscodeDark } from "@uiw/codemirror-theme-vscode";
 import styles from "./UsageCodeEditor.module.css";
 
@@ -14,6 +16,7 @@ type UsageCodeEditorProps = {
   maxHeight?: string;
   minHeight?: string;
   onChange?: (value: string) => void;
+  onSelectAllReady?: (selectAll: () => void) => void;
 };
 
 export function UsageCodeEditor({
@@ -23,9 +26,37 @@ export function UsageCodeEditor({
   maxHeight = "320px",
   minHeight,
   onChange,
+  onSelectAllReady,
 }: UsageCodeEditorProps) {
+  const editorViewRef = useRef<EditorView | null>(null);
+  const selectAllCode = useCallback(() => {
+    const view = editorViewRef.current;
+
+    if (!view) {
+      return;
+    }
+
+    view.focus();
+    view.dispatch({
+      selection: EditorSelection.single(0, view.state.doc.length),
+      scrollIntoView: true,
+    });
+  }, []);
+
+  useEffect(() => {
+    onSelectAllReady?.(selectAllCode);
+
+    return () => {
+      onSelectAllReady?.(() => undefined);
+    };
+  }, [onSelectAllReady, selectAllCode]);
+
   const extensions = useMemo(() => {
-    const base = [javascript({ jsx: true, typescript: true }), EditorView.lineWrapping];
+    const base = [
+      javascript({ jsx: true, typescript: true }),
+      keymap.of([{ key: "Mod-a", run: selectAll }]),
+      EditorView.lineWrapping,
+    ];
 
     if (fillHeight) {
       base.push(
@@ -58,6 +89,29 @@ export function UsageCodeEditor({
       data-editable={editable ? "true" : undefined}
       data-fill-height={fillHeight ? "true" : undefined}
       role="region"
+      onKeyDownCapture={(event) => {
+        if (event.key.toLowerCase() !== "a" || (!event.metaKey && !event.ctrlKey)) {
+          return;
+        }
+
+        const view = editorViewRef.current;
+        if (!view) {
+          return;
+        }
+
+        event.preventDefault();
+        event.stopPropagation();
+        selectAllCode();
+      }}
+      onMouseDown={(event) => {
+        const target = event.target as HTMLElement;
+
+        if (target.closest(".cm-editor")) {
+          return;
+        }
+
+        window.requestAnimationFrame(() => editorViewRef.current?.focus());
+      }}
     >
       <CodeMirror
         basicSetup={{
@@ -76,6 +130,9 @@ export function UsageCodeEditor({
         minHeight={fillHeight ? undefined : minHeight}
         theme={vscodeDark}
         value={code}
+        onCreateEditor={(view) => {
+          editorViewRef.current = view;
+        }}
         onChange={editable ? onChange : undefined}
       />
     </div>

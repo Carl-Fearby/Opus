@@ -9,13 +9,13 @@ export const emojiCategories: EmojiCategory[] = [...generatedEmojiCategories];
 export const RECENT_EMOJI_CATEGORY = {
   iconName: "clock-rotate-left",
   id: "recent",
-  label: "Recently used",
+  label: "Frequently used",
 } as const;
 
 export function getRecentEmojiEntries(recentEmojis: readonly string[]): EmojiEntry[] {
   return recentEmojis.map((emoji) => ({
     emoji,
-    keywords: ["recent", "recently used"],
+    keywords: ["frequent", "frequently used", "recent", "recently used"],
   }));
 }
 
