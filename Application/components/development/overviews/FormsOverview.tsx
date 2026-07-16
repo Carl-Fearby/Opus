@@ -560,7 +560,7 @@ export function FormsOverview() {
         error={shared.errorText("Please select a department")}
         nodes={treeSelectDemoNodes}
         value={department}
-        onChange={setDepartment}
+        onChange={(value) => setDepartment(value ?? "")}
       />
     ),
     cascader: (

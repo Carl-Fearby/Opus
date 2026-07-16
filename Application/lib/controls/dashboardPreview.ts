@@ -1,4 +1,5 @@
 export type DashboardPreviewLayout = "single" | "double" | "triple";
+export type DashboardSectionHeight = "auto" | "full";
 export type DashboardSectionWidth = "full" | "widget";
 
 export const dashboardPreviewLayoutOptions = [
@@ -11,6 +12,11 @@ export const dashboardWidthOptions = [
   { label: "Widget", value: "widget" },
   { label: "Full width", value: "full" },
 ] as const satisfies readonly { label: string; value: DashboardSectionWidth }[];
+
+export const dashboardHeightOptions = [
+  { label: "Auto", value: "auto" },
+  { label: "Fill available", value: "full" },
+] as const satisfies readonly { label: string; value: DashboardSectionHeight }[];
 
 export function dashboardPreviewCount(layout: DashboardPreviewLayout): number {
   switch (layout) {

@@ -7,13 +7,13 @@ import { faMagnifyingGlass } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import type { IconDefinition } from "@fortawesome/fontawesome-svg-core";
 import { ComponentIcon } from "@/components/development/ComponentIcon";
+import { CustomScrollbar } from "opus-react";
 import { getCategoryIcon, getComponentIcon, getNavigationGroupIcon, getOverviewIcon } from "@/lib/controls/componentIcons";
 import type { ComponentCategory, ControlDefinition } from "@/lib/controls/types";
 import {
   componentCategories,
   getControl,
   getControlSectionsByCategory,
-  getControlsByCategory,
   getNavigationGroupBySlug,
 } from "@/lib/controls/registry";
 import {
@@ -29,6 +29,7 @@ import styles from "./ComponentsShell.module.css";
 
 const SIDEBAR_SEARCH_ID = "components-sidebar-search";
 const SIDEBAR_GROUPS_STORAGE_KEY = "opus-components-sidebar-groups";
+const RELATIONSHIPS_PATH = `${COMPONENTS_BASE_PATH}/relationships`;
 
 function navGroupListId(category: ComponentCategory) {
   return `sidebar-group-${category}`;
@@ -52,7 +53,7 @@ const categoryLabels = Object.fromEntries(
 ) as Record<ComponentCategory, string>;
 
 function controlDetailPath(control: ControlDefinition) {
-  return componentPath(control.slug, control.category === "labs" ? { category: "labs" } : undefined);
+  return componentPath(control.slug);
 }
 
 function normalise(value: string) {
@@ -79,7 +80,12 @@ function matchesOverview(query: string) {
   return "overview components documentation".includes(query);
 }
 
+function matchesRelationships(query: string) {
+  return "relationships relationship composition built from tree graph dependencies".includes(query);
+}
+
 type OpenSidebarGroups = Record<string, boolean>;
+type ControlSection = ReturnType<typeof getControlSectionsByCategory>[number];
 
 function readOpenGroups(): OpenSidebarGroups {
   if (typeof window === "undefined") {
@@ -162,22 +168,29 @@ function NavLink({
 
 function NavGroup({
   category,
+  forceOpen,
   label,
   open,
   openGroups,
+  sections: filteredSections,
+  onNavigate,
   onToggleSubgroup,
   onToggle,
 }: {
   category: ComponentCategory;
+  forceOpen?: boolean;
   label: string;
   open: boolean;
   openGroups: OpenSidebarGroups;
+  sections?: ControlSection[];
+  onNavigate?: () => void;
   onToggleSubgroup: (key: string) => void;
   onToggle: () => void;
 }) {
   const pathname = usePathname();
   const listId = navGroupListId(category);
-  const sections = getControlSectionsByCategory(category);
+  const sections = filteredSections ?? getControlSectionsByCategory(category);
+  const isOpen = forceOpen || open;
   const isCategoryOverview = pathname === categoryPath(category);
 
   return (
@@ -193,33 +206,37 @@ function NavGroup({
             .filter(Boolean)
             .join(" ")}
           href={categoryPath(category)}
+          onClick={onNavigate}
         >
           <ComponentIcon icon={getCategoryIcon(category)} />
           <span>{label}</span>
         </Link>
         <button
           aria-controls={listId}
-          aria-expanded={open}
-          aria-label={`${open ? "Collapse" : "Expand"} ${label}`}
+          aria-expanded={isOpen}
+          aria-label={`${isOpen ? "Collapse" : "Expand"} ${label}`}
           className={styles.navGroupChevronButton}
           onClick={onToggle}
           type="button"
+          disabled={forceOpen}
         >
           <span
             aria-hidden="true"
-            className={open ? styles.navGroupChevronOpen : styles.navGroupChevron}
+            className={isOpen ? styles.navGroupChevronOpen : styles.navGroupChevron}
           />
         </button>
       </div>
-      <div className={styles.navGroupItemsWrap} data-open={open ? "true" : "false"}>
-        <div className={styles.navGroupItems} id={listId} inert={!open || undefined}>
+      <div className={styles.navGroupItemsWrap} data-open={isOpen ? "true" : "false"}>
+        <div className={styles.navGroupItems} id={listId} inert={!isOpen || undefined}>
           {sections.map((section) => (
             <div className={styles.navSubsection} key={section.label ?? "ungrouped"}>
               {section.label ? (
                 <NavSubgroup
                   category={category}
                   controls={section.controls}
+                  forceOpen={forceOpen}
                   label={section.label}
+                  onNavigate={onNavigate}
                   open={Boolean(openGroups[`${category}:${section.label}`])}
                   onToggle={() => onToggleSubgroup(`${category}:${section.label}`)}
                 />
@@ -233,6 +250,7 @@ function NavGroup({
                       isNew={control.isNew}
                       label={control.title}
                       nested
+                      onNavigate={onNavigate}
                     />
                   ))}
                 </div>
@@ -248,19 +266,24 @@ function NavGroup({
 function NavSubgroup({
   category,
   controls,
+  forceOpen,
   label,
+  onNavigate,
   open,
   onToggle,
 }: {
   category: ComponentCategory;
   controls: ReturnType<typeof getControlSectionsByCategory>[number]["controls"];
+  forceOpen?: boolean;
   label: string;
+  onNavigate?: () => void;
   open: boolean;
   onToggle: () => void;
 }) {
   const pathname = usePathname();
   const listId = navSubgroupListId(category, label);
   const subgroupPath = categorySubgroupPath(category, label);
+  const isOpen = forceOpen || open;
   const isSubgroupOverview = pathname === subgroupPath;
 
   return (
@@ -275,26 +298,28 @@ function NavSubgroup({
             .filter(Boolean)
             .join(" ")}
           href={subgroupPath}
+          onClick={onNavigate}
         >
           <ComponentIcon compact icon={getNavigationGroupIcon(label)} />
           <span>{label}</span>
         </Link>
         <button
           aria-controls={listId}
-          aria-expanded={open}
-          aria-label={`${open ? "Collapse" : "Expand"} ${label}`}
+          aria-expanded={isOpen}
+          aria-label={`${isOpen ? "Collapse" : "Expand"} ${label}`}
           className={styles.navSubsectionChevronButton}
           onClick={onToggle}
           type="button"
+          disabled={forceOpen}
         >
           <span
             aria-hidden="true"
-            className={open ? styles.navGroupChevronOpen : styles.navGroupChevron}
+            className={isOpen ? styles.navGroupChevronOpen : styles.navGroupChevron}
           />
         </button>
       </div>
-      <div className={styles.navSubsectionItemsWrap} data-open={open ? "true" : "false"}>
-        <div className={styles.navSubsectionItems} id={listId} inert={!open || undefined}>
+      <div className={styles.navSubsectionItemsWrap} data-open={isOpen ? "true" : "false"}>
+        <div className={styles.navSubsectionItems} id={listId} inert={!isOpen || undefined}>
           {controls.map((control) => (
             <NavLink
               key={`${category}:${control.slug}`}
@@ -303,6 +328,7 @@ function NavSubgroup({
               isNew={control.isNew}
               label={control.title}
               nested
+              onNavigate={onNavigate}
             />
           ))}
         </div>
@@ -315,6 +341,7 @@ export function ComponentsSidebar() {
   const pathname = usePathname();
   const searchParams = useSearchParams();
   const isOverview = pathname === COMPONENTS_BASE_PATH;
+  const isRelationships = pathname === RELATIONSHIPS_PATH;
   const [openGroups, setOpenGroups] = useState<OpenSidebarGroups>({});
   const [hydrated, setHydrated] = useState(false);
   const [query, setQuery] = useState("");
@@ -330,22 +357,31 @@ export function ComponentsSidebar() {
   const normalisedQuery = normalise(query);
   const isSearching = normalisedQuery.length > 0;
 
-  const allControls = useMemo(
-    () => componentCategories.flatMap((category) => getControlsByCategory(category.id)),
-    [],
-  );
-
-  const searchResults = useMemo(() => {
+  const searchGroups = useMemo(() => {
     if (!isSearching) {
       return [];
     }
 
-    return allControls
-      .filter((control) => matchesControl(control, normalisedQuery))
-      .sort((a, b) => a.title.localeCompare(b.title));
-  }, [allControls, isSearching, normalisedQuery]);
+    return componentCategories
+      .map((category) => {
+        const sections = getControlSectionsByCategory(category.id)
+          .map((section) => ({
+            ...section,
+            controls: section.controls.filter((control) => matchesControl(control, normalisedQuery)),
+          }))
+          .filter((section) => section.controls.length > 0);
+
+        return {
+          category: category.id,
+          label: category.label,
+          sections,
+        };
+      })
+      .filter((group) => group.sections.length > 0);
+  }, [isSearching, normalisedQuery]);
 
   const showOverviewInSearch = isSearching && matchesOverview(normalisedQuery);
+  const showRelationshipsInSearch = isSearching && matchesRelationships(normalisedQuery);
 
   useEffect(() => {
     const timeout = window.setTimeout(() => {
@@ -450,6 +486,7 @@ export function ComponentsSidebar() {
           />
         </label>
       </div>
+      <CustomScrollbar className={styles.navScroll} label="Components navigation" orientation="vertical">
       <nav className={styles.nav} aria-label="Components">
         {isSearching ? (
           <div className={styles.sidebarSearchResults} id="components-sidebar-search-results">
@@ -466,18 +503,34 @@ export function ComponentsSidebar() {
                 <span>Overview</span>
               </Link>
             ) : null}
-            {searchResults.map((control) => (
-              <NavLink
-                key={`${control.category}:${control.slug}`}
-                href={controlDetailPath(control)}
-                icon={getComponentIcon(control.slug)}
-                isNew={control.isNew}
-                label={control.title}
-                nested
+            {showRelationshipsInSearch ? (
+              <Link
+                aria-current={isRelationships ? "page" : undefined}
+                className={[styles.navHeadingLink, isRelationships ? styles.navHeadingLinkActive : ""]
+                  .filter(Boolean)
+                  .join(" ")}
+                href={RELATIONSHIPS_PATH}
+                onClick={clearSearch}
+              >
+                <ComponentIcon icon={getComponentIcon("tree-view")} />
+                <span>Relationships</span>
+              </Link>
+            ) : null}
+            {searchGroups.map((group) => (
+              <NavGroup
+                key={group.category}
+                category={group.category}
+                forceOpen
+                label={group.label}
+                open
+                openGroups={openGroups}
+                sections={group.sections}
                 onNavigate={clearSearch}
+                onToggleSubgroup={toggleSubgroup}
+                onToggle={() => toggleGroup(group.category)}
               />
             ))}
-            {!showOverviewInSearch && searchResults.length === 0 ? (
+            {!showOverviewInSearch && !showRelationshipsInSearch && searchGroups.length === 0 ? (
               <p className={styles.sidebarSearchEmpty} role="status">
                 No components match &ldquo;{query.trim()}&rdquo;.
               </p>
@@ -495,6 +548,11 @@ export function ComponentsSidebar() {
               <ComponentIcon icon={getOverviewIcon()} />
               <span>Overview</span>
             </Link>
+            <NavLink
+              href={RELATIONSHIPS_PATH}
+              icon={getComponentIcon("tree-view")}
+              label="Relationships"
+            />
             {sidebarMainCategories.map((category) => (
               <NavGroup
                 key={category.id}
@@ -522,6 +580,7 @@ export function ComponentsSidebar() {
           </>
         )}
       </nav>
+      </CustomScrollbar>
     </aside>
   );
 }

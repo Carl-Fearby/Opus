@@ -8,6 +8,7 @@ import { ComponentsSidebar } from "./ComponentsSidebar";
 import { ComponentSettingsProvider, useComponentSettingsContext } from "./ComponentSettingsContext";
 import { ComponentsSettingsSidebar } from "./ComponentsSettingsSidebar";
 import { controlHasSettingsPanel } from "@/lib/controls/controlSettingsPanel";
+import { CustomScrollbar } from "opus-react";
 import styles from "./ComponentsShell.module.css";
 
 function ComponentsShellBody({ children }: { children: ReactNode }) {
@@ -26,7 +27,9 @@ function ComponentsShellBody({ children }: { children: ReactNode }) {
       <ComponentsSidebar />
       <main className={styles.content} id="main-content" style={accentStyle}>
         <ComponentsPageHeader />
-        <div className={styles.contentBody}>{children}</div>
+        <CustomScrollbar className={styles.contentBody} label="Component documentation" orientation="vertical">
+          <div className={styles.contentBodyInner}>{children}</div>
+        </CustomScrollbar>
       </main>
       <ComponentsSettingsSidebar />
     </div>

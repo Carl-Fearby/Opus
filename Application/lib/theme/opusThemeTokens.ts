@@ -64,5 +64,5 @@ const darkThemeTokens = {
 } as const satisfies Record<string, string>;
 
 export function opusThemeTokens(theme: Theme): CSSProperties {
-  return theme === "light" ? lightThemeTokens : darkThemeTokens;
+  return (theme === "light" ? lightThemeTokens : darkThemeTokens) as CSSProperties;
 }

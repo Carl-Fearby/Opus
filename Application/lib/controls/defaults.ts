@@ -1,6 +1,10 @@
 import type { ControlSettingsBySlug, ControlSlug } from "./types";
 import { chartDefaults } from "./chartDefaults";
-import { defaultUserProfileMenuItemsJson, defaultUserProfilePhotoSrc, defaultUserProfilePhotoUploadMenuItemId } from "./userProfileDemoData";
+import {
+  defaultUserProfileMenuItemsJson,
+  defaultUserProfilePhotoSrc,
+  defaultUserProfilePhotoUploadMenuItemId,
+} from "./userProfileDemoData";
 
 const now = new Date();
 
@@ -25,11 +29,15 @@ function toMonthValue(date: Date) {
 }
 
 function toWeekValue(date: Date) {
-  const target = new Date(Date.UTC(date.getFullYear(), date.getMonth(), date.getDate()));
+  const target = new Date(
+    Date.UTC(date.getFullYear(), date.getMonth(), date.getDate()),
+  );
   const dayNumber = target.getUTCDay() || 7;
   target.setUTCDate(target.getUTCDate() + 4 - dayNumber);
   const yearStart = new Date(Date.UTC(target.getUTCFullYear(), 0, 1));
-  const week = Math.ceil(((target.getTime() - yearStart.getTime()) / 86400000 + 1) / 7);
+  const week = Math.ceil(
+    ((target.getTime() - yearStart.getTime()) / 86400000 + 1) / 7,
+  );
   return `${target.getUTCFullYear()}-W${pad(week)}`;
 }
 
@@ -108,7 +116,8 @@ export const defaultSettings: ControlSettingsBySlug = {
     ...baseFieldDefaults,
     label: "Interests",
     value: ["design", "frontend"],
-    options: "Design:design, Frontend:frontend, Research:research, Strategy:strategy",
+    options:
+      "Design:design, Frontend:frontend, Research:research, Strategy:strategy",
     selectionMode: "multiple",
     variant: "soft",
     disabled: false,
@@ -261,7 +270,8 @@ export const defaultSettings: ControlSettingsBySlug = {
   "transfer-list": {
     ...baseFieldDefaults,
     label: "Office locations",
-    available: "Amsterdam, Berlin, Copenhagen, Dublin, Helsinki, Lisbon, Madrid, Oslo, Prague, Stockholm",
+    available:
+      "Amsterdam, Berlin, Copenhagen, Dublin, Helsinki, Lisbon, Madrid, Oslo, Prague, Stockholm",
     selected: ["London", "Paris"],
   },
   "password-strength-field": {
@@ -429,7 +439,7 @@ export const defaultSettings: ControlSettingsBySlug = {
     showArrow: true,
     open: false,
   },
-  "alert": {
+  alert: {
     status: "error",
     title: "There was a problem with your submission.",
     description: "Please correct the errors below and try again.",
@@ -474,6 +484,7 @@ export const defaultSettings: ControlSettingsBySlug = {
     icon: "chart-column",
     previewLayout: "single",
     width: "widget",
+    wrapInContainer: true,
   },
   "stat-card": {
     label: "Customers",
@@ -485,12 +496,14 @@ export const defaultSettings: ControlSettingsBySlug = {
     icon: "users",
     previewLayout: "single",
     width: "widget",
+    wrapInContainer: true,
   },
   sparkline: {
     label: "Weekly trend",
     palette: "opus",
     previewLayout: "single",
     width: "widget",
+    wrapInContainer: true,
   },
   "progress-ring": {
     label: "Quota",
@@ -498,6 +511,7 @@ export const defaultSettings: ControlSettingsBySlug = {
     previewLayout: "single",
     value: 72,
     width: "widget",
+    wrapInContainer: true,
   },
   "progress-bar": {
     label: "Sprint progress",
@@ -505,13 +519,15 @@ export const defaultSettings: ControlSettingsBySlug = {
     previewLayout: "single",
     value: 64,
     width: "widget",
+    wrapInContainer: true,
   },
   gauge: {
     title: "Gauge",
     subtitle: "Supporting description for the gauge",
     change: "+10%",
     changeTrend: "up",
-    summary: "You earn $3287 today, its higher than last month. Keep up your good work!",
+    summary:
+      "You earn $3287 today, its higher than last month. Keep up your good work!",
     density: "comfortable",
     footerMetricCount: 3,
     palette: "opus",
@@ -520,6 +536,7 @@ export const defaultSettings: ControlSettingsBySlug = {
     variant: "half",
     previewLayout: "single",
     width: "widget",
+    wrapInContainer: true,
   },
   speedometer: {
     label: "Utilisation",
@@ -527,6 +544,7 @@ export const defaultSettings: ControlSettingsBySlug = {
     previewLayout: "single",
     value: 78,
     width: "widget",
+    wrapInContainer: true,
   },
   "metric-tile": {
     label: "MRR",
@@ -535,6 +553,7 @@ export const defaultSettings: ControlSettingsBySlug = {
     showSparkline: true,
     value: "$84.2k",
     width: "widget",
+    wrapInContainer: true,
   },
   "pipeline-overview": {
     closingValue: "£331,000",
@@ -549,6 +568,7 @@ export const defaultSettings: ControlSettingsBySlug = {
     stageCount: "5",
     wonValue: "£144,000",
     width: "widget",
+    wrapInContainer: true,
   },
   "deals-over-time": {
     title: "Deals Over Time",
@@ -558,6 +578,7 @@ export const defaultSettings: ControlSettingsBySlug = {
     palette: "purple",
     previewLayout: "single",
     width: "widget",
+    wrapInContainer: true,
   },
   "upcoming-tasks": {
     title: "Upcoming Tasks",
@@ -565,18 +586,21 @@ export const defaultSettings: ControlSettingsBySlug = {
     checkboxSize: "md",
     previewLayout: "single",
     width: "widget",
+    wrapInContainer: true,
   },
   "recent-activity": {
     title: "Recent Activity",
     footerLabel: "View all activity",
     previewLayout: "single",
     width: "widget",
+    wrapInContainer: true,
   },
   "top-performing-users": {
     title: "Top Performing People",
     footerLabel: "View full report",
     previewLayout: "single",
     width: "widget",
+    wrapInContainer: true,
   },
   "user-profile": {
     name: "Carl Fearby",
@@ -601,7 +625,7 @@ export const defaultSettings: ControlSettingsBySlug = {
     photoUploadZoomStep: 0.05,
     previewLayout: "single",
     width: "widget",
-    wrapInContainer: false,
+    wrapInContainer: true,
   },
   "profile-photo-upload": {
     title: "Update profile photo",
@@ -618,6 +642,7 @@ export const defaultSettings: ControlSettingsBySlug = {
     zoomStep: 0.05,
     previewLayout: "single",
     width: "widget",
+    wrapInContainer: true,
   },
   "404-page": {},
   "403-page": {},
@@ -637,13 +662,112 @@ export const defaultSettings: ControlSettingsBySlug = {
     topPerformingUsersFooterLabel: "View full report",
   },
   "notes-activity": {
+    addNoteButtonLabel: "Add note",
+    addNoteModalDescription:
+      "Capture supporting detail, attach files, or mention teammates.",
+    addNoteModalTitle: "Add a note",
+    activityFooterLabel: "View all activities",
     composerPlaceholder: "Add a note...",
-    footerLabel: "View all notes & activity",
+    density: "comfortable",
+    height: "auto",
+    notesFooterLabel: "View all notes",
     previewLayout: "single",
     saveButtonLabel: "Save Note",
     width: "widget",
+    wrapInContainer: true,
+  },
+  "lab-dashboard-list-columns": {
+    layout: "row",
+    previewLayout: "single",
+    width: "full",
+    checkboxSize: "md",
+    upcomingTasksTitle: "Upcoming Tasks",
+    upcomingTasksFooterLabel: "View all tasks",
+    recentActivityTitle: "Recent Activity",
+    recentActivityFooterLabel: "View all activity",
+    topPerformingUsersTitle: "Top Performing People",
+    topPerformingUsersFooterLabel: "View full report",
+  },
+  "lab-notes-activity": {
+    addNoteButtonLabel: "Add note",
+    addNoteModalDescription:
+      "Capture supporting detail, attach files, or mention teammates.",
+    addNoteModalTitle: "Add a note",
+    activityFooterLabel: "View all activities",
+    composerPlaceholder: "Add a note...",
+    density: "comfortable",
+    height: "auto",
+    notesFooterLabel: "View all notes",
+    previewLayout: "single",
+    saveButtonLabel: "Save Note",
+    width: "widget",
+    wrapInContainer: true,
+  },
+  "lab-sidebar": {
+    side: "left",
+    collapsed: false,
+    density: "comfortable",
+    showHeader: false,
+    headerTitle: "Opus",
+    showFooter: false,
+    footerText: "Signed in as Alex Morgan",
+    activeItem: "library",
+    groupOpen: true,
+    paddingBottom: false,
+    paddingLeft: false,
+    paddingRight: false,
+    paddingTop: false,
+    persistState: true,
+    height: "auto",
+    wrapInContainer: true,
+  },
+  "lab-test-layout": {
+    defaultLeftWidth: 260,
+    defaultRightWidth: 260,
+    handleBackground: "subtle",
+    handleBorderRadius: 12,
+    handleHeight: "medium",
+    handleMarginBlock: 12,
+    height: "full",
+    maxLeftWidth: 360,
+    maxRightWidth: 480,
+    minLeftWidth: 120,
+    minRightWidth: 220,
+    persist: true,
+    showLeft: true,
+    showRight: true,
+  },
+  "lab-user-profile": {
+    name: "Carl Fearby",
+    role: "Administrator",
+    src: defaultUserProfilePhotoSrc,
+    srcEnabled: true,
+    avatarSize: "md",
+    menuItemsJson: defaultUserProfileMenuItemsJson,
+    photoUploadEnabled: true,
+    photoUploadMenuItemId: defaultUserProfilePhotoUploadMenuItemId,
+    photoUploadTitle: "Update profile photo",
+    photoUploadDescription: "",
+    photoUploadLabel: "Profile photo",
+    photoUploadUploadLabel: "Browse image",
+    photoUploadCropButtonLabel: "Apply crop",
+    photoUploadChangeButtonLabel: "Change photo",
+    photoUploadZoomLabel: "Zoom",
+    photoUploadViewportSize: 240,
+    photoUploadOutputSize: 256,
+    photoUploadMinZoom: 1,
+    photoUploadMaxZoom: 3,
+    photoUploadZoomStep: 0.05,
+    previewLayout: "single",
+    width: "widget",
+    wrapInContainer: true,
   },
   "dashboard-content-container": {
+    height: "auto",
+    paddingBottom: true,
+    paddingLeft: true,
+    paddingRight: true,
+    paddingTop: true,
     previewLayout: "single",
     title: "Dashboard section",
     width: "widget",
@@ -653,16 +777,19 @@ export const defaultSettings: ControlSettingsBySlug = {
     previewLayout: "single",
     status: "success",
     width: "widget",
+    wrapInContainer: true,
   },
   "trend-badge": {
     direction: "up",
     previewLayout: "single",
     value: "12.4%",
     width: "widget",
+    wrapInContainer: true,
   },
   panel: {
     title: "Release readiness",
-    description: "A structural panel for settings, grouped content, and page sections.",
+    description:
+      "A structural panel for settings, grouped content, and page sections.",
     content:
       "Panels are broader layout primitives than cards. Use them for page sections, settings groups, and structured content blocks.",
     tone: "default",
@@ -673,16 +800,19 @@ export const defaultSettings: ControlSettingsBySlug = {
   },
   section: {
     title: "Page layout",
-    description: "Responsive rows and columns that stack on mobile and expand on larger screens.",
+    description:
+      "Responsive rows and columns that stack on mobile and expand on larger screens.",
     sidebar: "none",
     columns: 3,
     gap: "md",
     stackBelow: "mobile",
     sidebarRatio: "1:2",
     sidebarTitle: "Sidebar",
-    sidebarContent: "Navigation, filters, or supporting controls beside the main content area.",
+    sidebarContent:
+      "Navigation, filters, or supporting controls beside the main content area.",
     columnOneTitle: "Primary column",
-    columnOneContent: "Main content area. On mobile this stacks above the secondary column.",
+    columnOneContent:
+      "Main content area. On mobile this stacks above the secondary column.",
     columnTwoTitle: "Secondary column",
     columnTwoContent: "Supporting content beside the primary column.",
     columnThreeTitle: "Third column",
@@ -800,7 +930,8 @@ export const defaultSettings: ControlSettingsBySlug = {
   },
   "empty-state": {
     title: "No components yet",
-    description: "Create your first component to start building your library and sharing patterns across teams.",
+    description:
+      "Create your first component to start building your library and sharing patterns across teams.",
     density: "comfortable",
     showIcon: true,
     icon: "inbox",
@@ -876,6 +1007,11 @@ export const defaultSettings: ControlSettingsBySlug = {
     orientation: "horizontal",
     defaultSize: 40,
   },
+  "resize-handle": {
+    background: "subtle",
+    height: "medium",
+    orientation: "vertical",
+  },
   "resizable-panel": {
     defaultWidth: 320,
     defaultHeight: 200,
@@ -886,9 +1022,38 @@ export const defaultSettings: ControlSettingsBySlug = {
     showTop: true,
     showBottom: true,
   },
+  "three-pane-layout": {
+    defaultLeftWidth: 220,
+    defaultRightWidth: 260,
+    handleBackground: "subtle",
+    handleBorderRadius: 0,
+    handleHeight: "medium",
+    handleMarginBlock: 0,
+    height: "full",
+    maxLeftWidth: 420,
+    maxRightWidth: 460,
+    minLeftWidth: 140,
+    minRightWidth: 160,
+    persist: true,
+    showLeft: true,
+    showRight: true,
+  },
   "scroll-area": {
+    autoHide: true,
     maxHeight: 180,
     orientation: "vertical",
+    thickness: 12,
+  },
+  "custom-scrollbar": {
+    autoHide: true,
+    horizontalThumbShape: "round",
+    horizontalTrackShape: "round",
+    maxHeight: 220,
+    minThumbSize: 32,
+    orientation: "vertical",
+    thickness: 12,
+    verticalThumbShape: "round",
+    verticalTrackShape: "round",
   },
   "aspect-ratio": {
     ratio: "16 / 9",
@@ -1073,12 +1238,19 @@ export const defaultSettings: ControlSettingsBySlug = {
     side: "left",
     collapsed: false,
     density: "comfortable",
-    showHeader: true,
+    showHeader: false,
     headerTitle: "Opus",
-    showFooter: true,
+    showFooter: false,
     footerText: "Signed in as Alex Morgan",
     activeItem: "library",
     groupOpen: true,
+    paddingBottom: false,
+    paddingLeft: false,
+    paddingRight: false,
+    paddingTop: false,
+    persistState: true,
+    height: "auto",
+    wrapInContainer: false,
   },
   "mega-menu": {
     closeOnEscape: true,
@@ -1103,6 +1275,8 @@ export const defaultSettings: ControlSettingsBySlug = {
   },
 };
 
-export function getDefaultSettings<S extends ControlSlug>(slug: S): ControlSettingsBySlug[S] {
+export function getDefaultSettings<S extends ControlSlug>(
+  slug: S,
+): ControlSettingsBySlug[S] {
   return structuredClone(defaultSettings[slug]);
 }

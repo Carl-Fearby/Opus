@@ -10,6 +10,7 @@ import styles from "./ControlDetail.module.css";
 
 type DashboardPreviewGridProps = {
   containerDataComponent?: string;
+  containerHeight?: "auto" | "full";
   containerTitle?: string;
   containerWidth?: "full" | "widget";
   layout: DashboardPreviewLayout;
@@ -19,6 +20,7 @@ type DashboardPreviewGridProps = {
 
 export function DashboardPreviewGrid({
   containerDataComponent,
+  containerHeight = "auto",
   containerTitle,
   containerWidth = "widget",
   layout,
@@ -36,6 +38,7 @@ export function DashboardPreviewGrid({
           ) : (
             <DashboardContentContainer
               data-component={containerDataComponent}
+              height={containerHeight}
               title={containerTitle}
               width={containerWidth}
             >

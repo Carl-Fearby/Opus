@@ -8,6 +8,7 @@ export { COMPONENTS_BASE_PATH };
 
 export const CATEGORY_PATHS: Record<ComponentCategory, string> = {
   content: `${COMPONENTS_BASE_PATH}/content`,
+  dashboard: `${COMPONENTS_BASE_PATH}/dashboard`,
   forms: `${COMPONENTS_BASE_PATH}/forms`,
   graphs: `${COMPONENTS_BASE_PATH}/graphs`,
   labs: `${COMPONENTS_BASE_PATH}/labs`,
@@ -15,13 +16,8 @@ export const CATEGORY_PATHS: Record<ComponentCategory, string> = {
   system: `${COMPONENTS_BASE_PATH}/system`,
 };
 
-export function componentPath(slug?: string, options?: { category?: ComponentCategory }) {
-  const base = slug ? `${COMPONENTS_BASE_PATH}/${slug}` : COMPONENTS_BASE_PATH;
-  if (!options?.category) {
-    return base;
-  }
-
-  return `${base}?category=${options.category}`;
+export function componentPath(slug?: string) {
+  return slug ? `${COMPONENTS_BASE_PATH}/${slug}` : COMPONENTS_BASE_PATH;
 }
 
 export function componentRawPath(slug: string, settings?: ControlSettings) {
@@ -70,6 +66,10 @@ export function getCategorySubgroupFromPath(pathname: string): {
 export function getCategoryFromPath(pathname: string): ComponentCategory | null {
   if (pathname === CATEGORY_PATHS.content) {
     return "content";
+  }
+
+  if (pathname === CATEGORY_PATHS.dashboard) {
+    return "dashboard";
   }
 
   if (pathname === CATEGORY_PATHS.forms) {

@@ -90,7 +90,12 @@ export function ControlRaw({ defaultSettings, encodedSettings, slug }: ControlRa
       <div className={styles.canvasArea} ref={areaRef}>
         <div className={styles.viewportStage}>
           {canvasSize.full || canvasSize.width === null || canvasSize.height === null ? (
-            <PreviewThemeBoundary className={styles.canvas} data-full="true" data-raw-preview-root>
+            <PreviewThemeBoundary
+              className={styles.canvas}
+              data-borderless={slug === "lab-test-layout" ? "true" : "false"}
+              data-full="true"
+              data-raw-preview-root
+            >
               {preview}
             </PreviewThemeBoundary>
           ) : (
@@ -103,6 +108,7 @@ export function ControlRaw({ defaultSettings, encodedSettings, slug }: ControlRa
             >
               <PreviewThemeBoundary
                 className={styles.canvas}
+                data-borderless={slug === "lab-test-layout" ? "true" : "false"}
                 data-fixed-width="true"
                 data-orientation={orientation}
                 data-raw-preview-root

@@ -316,3 +316,25 @@ export function formatDockLayoutProps(settings: ControlSettingsBySlug["dock-layo
 
   return props.join(" ");
 }
+
+export function formatThreePaneLayoutProps(settings: ControlSettingsBySlug["three-pane-layout"]) {
+  const props = [
+    'storageKey="workspace-layout"',
+    settings.persist ? "" : "persist={false}",
+    `defaultLeftWidth={${settings.defaultLeftWidth}}`,
+    `defaultRightWidth={${settings.defaultRightWidth}}`,
+    `handleBackground="${settings.handleBackground}"`,
+    `handleBorderRadius={${settings.handleBorderRadius ?? 0}}`,
+    `handleHeight="${settings.handleHeight}"`,
+    `handleMarginBlock={${settings.handleMarginBlock ?? 0}}`,
+    settings.height === "full" ? 'style={{ height: "100%" }}' : "",
+    `minLeftWidth={${settings.minLeftWidth}}`,
+    `maxLeftWidth={${settings.maxLeftWidth}}`,
+    `minRightWidth={${settings.minRightWidth}}`,
+    `maxRightWidth={${settings.maxRightWidth}}`,
+    settings.showLeft ? 'left={<nav>Navigation</nav>}' : "",
+    settings.showRight ? 'right={<aside>Inspector</aside>}' : "",
+  ].filter(Boolean);
+
+  return props.join("\n  ");
+}

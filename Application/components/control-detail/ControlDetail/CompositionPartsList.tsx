@@ -3,21 +3,29 @@
 import Link from "next/link";
 import { ComponentIcon } from "@/components/development/ComponentIcon";
 import { getComponentIcon } from "@/lib/controls/componentIcons";
+import { getCompositionChildren } from "@/lib/controls/compositionGraph";
 import { getControl } from "@/lib/controls/registry";
 import { componentPath } from "@/lib/controls/routes";
-import type { ControlSlug } from "@/lib/controls/types";
+import type { ControlDefinition, ControlSlug } from "@/lib/controls/types";
 import styles from "./CompositionPartsList.module.css";
 
 type CompositionLinksPanelProps = {
+  controls?: ControlDefinition[];
   hint?: string;
   slugs: ControlSlug[];
   title: string;
 };
 
-export function CompositionLinksPanel({ hint, slugs, title }: CompositionLinksPanelProps) {
-  const entries = slugs
-    .map((slug) => getControl(slug))
-    .filter((control): control is NonNullable<typeof control> => Boolean(control));
+function controlHref(control: ControlDefinition) {
+  return componentPath(control.slug);
+}
+
+export function CompositionLinksPanel({ controls: resolvedControls, hint, slugs, title }: CompositionLinksPanelProps) {
+  const entries =
+    resolvedControls ??
+    slugs
+      .map((slug) => getControl(slug))
+      .filter((control): control is NonNullable<typeof control> => Boolean(control));
 
   if (entries.length === 0) {
     return null;
@@ -31,8 +39,8 @@ export function CompositionLinksPanel({ hint, slugs, title }: CompositionLinksPa
       </div>
       <ul className={styles.list}>
         {entries.map((control) => (
-          <li key={control.slug}>
-            <Link className={styles.link} href={componentPath(control.slug)}>
+          <li key={`${control.category}:${control.slug}`}>
+            <Link className={styles.link} href={controlHref(control)}>
               <ComponentIcon compact icon={getComponentIcon(control.slug)} />
               <span className={styles.label}>{control.title}</span>
             </Link>
@@ -43,9 +51,10 @@ export function CompositionLinksPanel({ hint, slugs, title }: CompositionLinksPa
   );
 }
 
-export function CompositionPartsList({ parts }: { parts: ControlSlug[] }) {
+export function CompositionPartsList({ control, parts }: { control?: ControlDefinition; parts: ControlSlug[] }) {
   return (
     <CompositionLinksPanel
+      controls={control ? getCompositionChildren(control) : undefined}
       hint="Open a sub-component to view its docs and settings."
       slugs={parts}
       title="Built from"
@@ -53,9 +62,10 @@ export function CompositionPartsList({ parts }: { parts: ControlSlug[] }) {
   );
 }
 
-export function CompositionUsageList({ parents }: { parents: ControlSlug[] }) {
+export function CompositionUsageList({ controls, parents }: { controls?: ControlDefinition[]; parents: ControlSlug[] }) {
   return (
     <CompositionLinksPanel
+      controls={controls}
       hint="Parent compositions that include this component."
       slugs={parents}
       title="Used in"

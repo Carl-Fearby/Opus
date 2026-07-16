@@ -7,8 +7,11 @@ export type LayoutCatalogEntry = {
     | "columns"
     | "grid"
     | "splitter"
+    | "resize-handle"
     | "resizable-panel"
     | "dock-layout"
+    | "three-pane-layout"
+    | "custom-scrollbar"
     | "scroll-area"
     | "aspect-ratio"
     | "container"
@@ -51,6 +54,14 @@ export const layoutCatalog = [
     sourceFiles: ["components/Splitter/Splitter.tsx", "components/Splitter/Splitter.module.css"],
   },
   {
+    slug: "resize-handle",
+    title: "Resize Handle",
+    componentName: "ResizeHandle",
+    navigationGroup: "Layout",
+    description: "Shared keyboard-accessible separator handle used by resizable layouts.",
+    sourceFiles: ["components/ResizeHandle/ResizeHandle.tsx", "components/ResizeHandle/ResizeHandle.module.css"],
+  },
+  {
     slug: "resizable-panel",
     title: "Resizable Panel",
     componentName: "ResizablePanel",
@@ -70,12 +81,38 @@ export const layoutCatalog = [
     sourceFiles: ["components/DockLayout/DockLayout.tsx", "components/DockLayout/DockLayout.module.css"],
   },
   {
+    slug: "three-pane-layout",
+    title: "Three Pane Layout",
+    componentName: "ThreePaneLayout",
+    navigationGroup: "Layout",
+    description: "Application shell with optional persisted, resizable left and right sidebars around a main content pane.",
+    sourceFiles: [
+      "components/ThreePaneLayout/ThreePaneLayout.tsx",
+      "components/ThreePaneLayout/ThreePaneLayout.module.css",
+    ],
+  },
+  {
+    slug: "custom-scrollbar",
+    title: "Custom Scrollbar",
+    componentName: "CustomScrollbar",
+    navigationGroup: "Layout",
+    description: "Custom draggable scrollbar with accessible keyboard controls and native wheel, touch, and trackpad behaviour.",
+    sourceFiles: [
+      "components/CustomScrollbar/CustomScrollbar.tsx",
+      "components/CustomScrollbar/CustomScrollbar.module.css",
+    ],
+  },
+  {
     slug: "scroll-area",
     title: "Scroll Area",
     componentName: "ScrollArea",
     navigationGroup: "Layout",
-    description: "Clipped scrollable region with styled scrollbars and max-height control.",
-    sourceFiles: ["components/ScrollArea/ScrollArea.tsx", "components/ScrollArea/ScrollArea.module.css"],
+    description: "Accessible scroll region with custom draggable tracks, keyboard controls, and native wheel, touch, and trackpad scrolling.",
+    sourceFiles: [
+      "components/CustomScrollbar/CustomScrollbar.tsx",
+      "components/CustomScrollbar/CustomScrollbar.module.css",
+      "components/ScrollArea/ScrollArea.tsx",
+    ],
   },
   {
     slug: "aspect-ratio",

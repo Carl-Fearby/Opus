@@ -9,8 +9,10 @@ import {
   TextField,
 } from "opus-react";
 import {
+  dashboardHeightOptions,
   dashboardPreviewLayoutOptions,
   dashboardWidthOptions,
+  type DashboardSectionHeight,
   type DashboardPreviewLayout,
   type DashboardSectionWidth,
 } from "@/lib/controls/dashboardPreview";
@@ -193,6 +195,30 @@ export function DashboardWidthSetting({
       onChange={(event) => {
         const match = dashboardWidthOptions.find((option) => option.label === event.target.value);
         onChange((match?.value ?? "widget") as DashboardSectionWidth);
+      }}
+    />
+  );
+}
+
+export function DashboardHeightSetting({
+  value,
+  onChange,
+}: {
+  value: DashboardSectionHeight;
+  onChange: (value: DashboardSectionHeight) => void;
+}) {
+  const id = settingFieldId("Height");
+
+  return (
+    <SelectField
+      {...panelFieldProps}
+      id={id}
+      label="Height"
+      options={dashboardHeightOptions.map((option) => option.label)}
+      value={dashboardHeightOptions.find((option) => option.value === value)?.label ?? "Auto"}
+      onChange={(event) => {
+        const match = dashboardHeightOptions.find((option) => option.label === event.target.value);
+        onChange((match?.value ?? "auto") as DashboardSectionHeight);
       }}
     />
   );

@@ -2,7 +2,7 @@ export type LabsCatalogEntry = {
   componentName: string;
   compositionParts: readonly string[];
   description: string;
-  settingsType: "dashboard-list-columns" | "notes-activity" | "user-profile";
+  settingsType: "dashboard-list-columns" | "notes-activity" | "sidebar" | "three-pane-layout" | "user-profile";
   slug: string;
   sourceFiles: string[];
   title: string;
@@ -10,7 +10,7 @@ export type LabsCatalogEntry = {
 
 export const labsCatalog = [
   {
-    slug: "dashboard-list-columns",
+    slug: "lab-dashboard-list-columns",
     title: "Dashboard List Columns",
     componentName: "Columns",
     description:
@@ -33,7 +33,7 @@ export const labsCatalog = [
     ],
   },
   {
-    slug: "notes-activity",
+    slug: "lab-notes-activity",
     title: "Notes & Activity",
     componentName: "NotesActivity",
     description:
@@ -50,7 +50,37 @@ export const labsCatalog = [
     ],
   },
   {
-    slug: "user-profile",
+    slug: "lab-sidebar",
+    title: "Sidebar",
+    componentName: "Sidebar",
+    description:
+      "Documentation-style side navigation composed as a reusable Labs widget with optional dashboard container chrome.",
+    settingsType: "sidebar",
+    compositionParts: ["dashboard-content-container", "sidebar"],
+    sourceFiles: [
+      "components/Sidebar/Sidebar.tsx",
+      "components/Sidebar/Sidebar.module.css",
+      "components/DashboardContentContainer/DashboardContentContainer.tsx",
+    ],
+  },
+  {
+    slug: "lab-test-layout",
+    title: "Test Layout",
+    componentName: "ThreePaneLayout",
+    description:
+      "Three-pane CRM workspace with grouped side navigation, a fluid content canvas, and Notes & Activity.",
+    settingsType: "three-pane-layout",
+    compositionParts: ["three-pane-layout", "resize-handle", "sidebar", "content-timeline", "note-composer"],
+    sourceFiles: [
+      "components/ThreePaneLayout/ThreePaneLayout.tsx",
+      "components/ThreePaneLayout/ThreePaneLayout.module.css",
+      "components/ResizeHandle/ResizeHandle.tsx",
+      "components/Sidebar/Sidebar.tsx",
+      "components/NotesActivity/NotesActivity.tsx",
+    ],
+  },
+  {
+    slug: "lab-user-profile",
     title: "User Profile",
     componentName: "UserProfileWidget",
     description:

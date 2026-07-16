@@ -99,7 +99,7 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import type { ComponentCategory, ControlSlug } from "./types";
 
-const componentIcons: Record<ControlSlug, IconDefinition> = {
+const componentIcons: Record<string, IconDefinition> = {
   accordion: faList,
   "accordion-group": faLayerGroup,
   button: faSquare,
@@ -117,6 +117,11 @@ const componentIcons: Record<ControlSlug, IconDefinition> = {
   "dashboard-content-container": faBorderAll,
   "dashboard-list-columns": faTableColumns,
   "notes-activity": faComments,
+  "lab-dashboard-list-columns": faTableColumns,
+  "lab-notes-activity": faComments,
+  "lab-sidebar": faTableColumns,
+  "lab-test-layout": faTableColumns,
+  "lab-user-profile": faCircleUser,
   "404-page": faMagnifyingGlass,
   "403-page": faLock,
   "app-setup": faGears,
@@ -147,9 +152,12 @@ const componentIcons: Record<ControlSlug, IconDefinition> = {
   columns: faTableColumns,
   grid: faBorderAll,
   splitter: faGripLinesVertical,
+  "resize-handle": faGripLinesVertical,
   "resizable-panel": faUpRightAndDownLeftFromCenter,
   "dock-layout": faTableColumns,
+  "three-pane-layout": faTableColumns,
   "scroll-area": faMaximize,
+  "custom-scrollbar": faBars,
   "aspect-ratio": faExpandAlt,
   container: faObjectGroup,
   spacer: faMinus,
@@ -282,6 +290,7 @@ const componentIcons: Record<ControlSlug, IconDefinition> = {
 
 const categoryIcons: Record<ComponentCategory, IconDefinition> = {
   content: faLayerGroup,
+  dashboard: faGrip,
   forms: faClipboardList,
   graphs: faChartLine,
   labs: faFlask,

@@ -109,7 +109,7 @@ export function buildDocumentationBreadcrumbs(
         if (control.navigationGroup) {
           items.push(
             crumb(
-              navigationGroupToSlug(control.navigationGroup),
+              `group-${control.category}-${navigationGroupToSlug(control.navigationGroup)}`,
               control.navigationGroup,
               categorySubgroupPath(control.category, control.navigationGroup),
             ),
@@ -129,7 +129,7 @@ export function buildDocumentationBreadcrumbs(
         if (control.navigationGroup) {
           items.push(
             crumb(
-              navigationGroupToSlug(control.navigationGroup),
+              `group-${control.category}-${navigationGroupToSlug(control.navigationGroup)}`,
               control.navigationGroup,
               categorySubgroupPath(control.category, control.navigationGroup),
             ),

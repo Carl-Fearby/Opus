@@ -1,4 +1,44 @@
-import type { AccordionGroupType, AvatarShape, AvatarSize, BadgeSize, BadgeTone, BadgeVariant, ButtonVariant, ChartPalette, ChartVariant, ChipInputPreset, ChipInputVariant, ChoiceControlSize, ChoiceShape, ContentTimelineStatus, DescriptionListLayout, DialogActionSet, DividerOrientation, DividerTone, DrawerSide, DropdownMenuPlacement, FieldMode, ImageThumbnailSize, InputControlSize, LabelPosition, ModalSize, ModelThumbnailSize, PopoverPlacement, SidebarSide, SkeletonAnimation, SkeletonVariant, AlertStatus, StatisticTrend, SurfaceDensity, SurfaceTone, TableDensity, TabsOrientation, TabsVariant, Theme, ToastHorizontalPosition, ToastVerticalPosition } from "opus-react";
+import type {
+  AccordionGroupType,
+  AvatarShape,
+  AvatarSize,
+  BadgeSize,
+  BadgeTone,
+  BadgeVariant,
+  ButtonVariant,
+  ChartPalette,
+  ChartVariant,
+  ChipInputPreset,
+  ChipInputVariant,
+  ChoiceControlSize,
+  ChoiceShape,
+  DescriptionListLayout,
+  DialogActionSet,
+  DividerOrientation,
+  DividerTone,
+  DrawerSide,
+  DropdownMenuPlacement,
+  FieldMode,
+  ImageThumbnailSize,
+  InputControlSize,
+  LabelPosition,
+  ModalSize,
+  ModelThumbnailSize,
+  PopoverPlacement,
+  SidebarSide,
+  SkeletonAnimation,
+  SkeletonVariant,
+  AlertStatus,
+  StatisticTrend,
+  SurfaceDensity,
+  SurfaceTone,
+  TableDensity,
+  TabsOrientation,
+  TabsVariant,
+  Theme,
+  ToastHorizontalPosition,
+  ToastVerticalPosition,
+} from "opus-react";
 import type {
   SectionColumns,
   SectionGap,
@@ -9,7 +49,11 @@ import type {
 import type { BuildersControlSlug } from "./buildersCatalog";
 import type { ChartControlSlug } from "./chartCatalog";
 import type { DashboardControlSlug } from "./dashboardCatalog";
-import type { DashboardPreviewLayout, DashboardSectionWidth } from "./dashboardPreview";
+import type {
+  DashboardPreviewLayout,
+  DashboardSectionHeight,
+  DashboardSectionWidth,
+} from "./dashboardPreview";
 import type { LabsControlSlug } from "./labsCatalog";
 import type { SystemControlSlug } from "./systemCatalog";
 import type { LayoutControlSlug } from "./layoutCatalog";
@@ -131,7 +175,8 @@ export type ControlSlug =
   | LabsControlSlug
   | SystemControlSlug;
 
-export type ComponentCategory = "content" | "forms" | "graphs" | "labs" | "overlays" | "system";
+export type ComponentCategory =
+  "content" | "dashboard" | "forms" | "graphs" | "labs" | "overlays" | "system";
 
 export type BaseFieldSettings = {
   mode: FieldMode;
@@ -593,6 +638,7 @@ export type StatCardSettings = {
   trend: StatCardTrend;
   value: string;
   width: DashboardSectionWidth;
+  wrapInContainer?: boolean;
 };
 
 export type GaugeFooterItem = {
@@ -603,7 +649,8 @@ export type GaugeFooterItem = {
 };
 
 export type GaugeTrackTone = "neutral" | "soft" | "contrast" | "palette";
-export type GaugeValueTone = "palette" | "accent" | "red" | "orange" | "blue" | "green";
+export type GaugeValueTone =
+  "palette" | "accent" | "red" | "orange" | "blue" | "green";
 
 export type GaugeSettings = {
   change: string;
@@ -619,6 +666,7 @@ export type GaugeSettings = {
   valueTone: GaugeValueTone;
   variant: "full" | "half";
   width: DashboardSectionWidth;
+  wrapInContainer?: boolean;
 };
 
 export type SparklineSettings = {
@@ -626,6 +674,7 @@ export type SparklineSettings = {
   palette: ChartPalette;
   previewLayout: DashboardPreviewLayout;
   width: DashboardSectionWidth;
+  wrapInContainer?: boolean;
 };
 
 export type ProgressRingSettings = {
@@ -634,6 +683,7 @@ export type ProgressRingSettings = {
   previewLayout: DashboardPreviewLayout;
   value: number;
   width: DashboardSectionWidth;
+  wrapInContainer?: boolean;
 };
 
 export type ProgressBarSettings = {
@@ -642,6 +692,7 @@ export type ProgressBarSettings = {
   previewLayout: DashboardPreviewLayout;
   value: number;
   width: DashboardSectionWidth;
+  wrapInContainer?: boolean;
 };
 
 export type SpeedometerSettings = {
@@ -650,6 +701,7 @@ export type SpeedometerSettings = {
   previewLayout: DashboardPreviewLayout;
   value: number;
   width: DashboardSectionWidth;
+  wrapInContainer?: boolean;
 };
 
 export type MetricTileSettings = {
@@ -659,6 +711,7 @@ export type MetricTileSettings = {
   showSparkline: boolean;
   value: string;
   width: DashboardSectionWidth;
+  wrapInContainer?: boolean;
 };
 
 export type PipelineOverviewSettings = {
@@ -674,6 +727,7 @@ export type PipelineOverviewSettings = {
   totalValue: string;
   width: DashboardSectionWidth;
   wonValue: string;
+  wrapInContainer?: boolean;
 };
 
 export type DealsOverTimeSettings = {
@@ -684,6 +738,7 @@ export type DealsOverTimeSettings = {
   title: string;
   valueLabel: string;
   width: DashboardSectionWidth;
+  wrapInContainer?: boolean;
 };
 
 export type DashboardListWidgetSettings = {
@@ -691,11 +746,12 @@ export type DashboardListWidgetSettings = {
   previewLayout: DashboardPreviewLayout;
   title: string;
   width: DashboardSectionWidth;
+  wrapInContainer?: boolean;
 };
 
 export type DashboardListColumnsLayout = "row" | "stacked";
 
-export type ErrorPageSettings = {};
+export type ErrorPageSettings = Record<string, unknown>;
 
 export type AppSetupSettings = {
   theme: "dark" | "light";
@@ -715,11 +771,18 @@ export type DashboardListColumnsSettings = {
 };
 
 export type NotesActivitySettings = {
+  addNoteButtonLabel: string;
+  addNoteModalDescription: string;
+  addNoteModalTitle: string;
+  activityFooterLabel: string;
   composerPlaceholder: string;
-  footerLabel: string;
+  density: SurfaceDensity;
+  height: DashboardSectionHeight;
+  notesFooterLabel: string;
   previewLayout: DashboardPreviewLayout;
   saveButtonLabel: string;
   width: DashboardSectionWidth;
+  wrapInContainer?: boolean;
 };
 
 export type UpcomingTasksSettings = DashboardListWidgetSettings & {
@@ -767,11 +830,17 @@ export type ProfilePhotoUploadWidgetSettings = {
   value: string;
   viewportSize: number;
   width: DashboardSectionWidth;
+  wrapInContainer?: boolean;
   zoomLabel: string;
   zoomStep: number;
 };
 
 export type DashboardContentContainerSettings = {
+  height: DashboardSectionHeight;
+  paddingBottom: boolean;
+  paddingLeft: boolean;
+  paddingRight: boolean;
+  paddingTop: boolean;
   previewLayout: DashboardPreviewLayout;
   title: string;
   width: DashboardSectionWidth;
@@ -782,6 +851,7 @@ export type StatusIndicatorSettings = {
   previewLayout: DashboardPreviewLayout;
   status: "error" | "neutral" | "success" | "warning";
   width: DashboardSectionWidth;
+  wrapInContainer?: boolean;
 };
 
 export type TrendBadgeSettings = {
@@ -789,6 +859,7 @@ export type TrendBadgeSettings = {
   previewLayout: DashboardPreviewLayout;
   value: string;
   width: DashboardSectionWidth;
+  wrapInContainer?: boolean;
 };
 
 export type CarouselSettings = {
@@ -918,7 +989,11 @@ export type ContentTimelineSettings = {
   includeGroups: boolean;
   includeStatus: boolean;
   includeTags: boolean;
-  rowStyles: [ContentTimelineRowStyle, ContentTimelineRowStyle, ContentTimelineRowStyle];
+  rowStyles: [
+    ContentTimelineRowStyle,
+    ContentTimelineRowStyle,
+    ContentTimelineRowStyle,
+  ];
 };
 
 export type TreeViewSettings = {
@@ -957,6 +1032,12 @@ export type SplitterSettings = {
   defaultSize: number;
 };
 
+export type ResizeHandleSettings = {
+  background: "accent" | "contrast" | "none" | "subtle";
+  height: "full" | "medium" | "short" | "tall";
+  orientation: "horizontal" | "vertical";
+};
+
 export type ResizablePanelSettings = {
   defaultWidth: number;
   defaultHeight: number;
@@ -969,9 +1050,37 @@ export type DockLayoutSettings = {
   showBottom: boolean;
 };
 
+export type ThreePaneLayoutSettings = {
+  defaultLeftWidth: number;
+  defaultRightWidth: number;
+  handleBackground: "accent" | "contrast" | "none" | "subtle";
+  handleBorderRadius: number;
+  handleHeight: "full" | "medium" | "short" | "tall";
+  handleMarginBlock: number;
+  height: "auto" | "full";
+  maxLeftWidth: number;
+  maxRightWidth: number;
+  minLeftWidth: number;
+  minRightWidth: number;
+  layoutResetKey?: number;
+  persist: boolean;
+  showLeft: boolean;
+  showRight: boolean;
+};
+
 export type ScrollAreaSettings = {
+  autoHide: boolean;
   maxHeight: number;
   orientation: "vertical" | "horizontal" | "both";
+  thickness: number;
+};
+
+export type CustomScrollbarSettings = ScrollAreaSettings & {
+  horizontalThumbShape: "round" | "square";
+  horizontalTrackShape: "round" | "square";
+  minThumbSize: number;
+  verticalThumbShape: "round" | "square";
+  verticalTrackShape: "round" | "square";
 };
 
 export type AspectRatioSettings = {
@@ -1206,11 +1315,19 @@ export type SidebarSettings = {
   headerTitle: string;
   showFooter: boolean;
   footerText: string;
-  activeItem: "overview" | "library" | "settings";
+  activeItem: "overview" | "library" | "templates" | "tokens" | "settings";
   groupOpen: boolean;
+  paddingBottom: boolean;
+  paddingLeft: boolean;
+  paddingRight: boolean;
+  paddingTop: boolean;
+  persistState: boolean;
+  height: DashboardSectionHeight;
+  wrapInContainer?: boolean;
 };
 
-export type TopNavigationActiveMenu = "app" | "edit" | "file" | "help" | "none" | "view" | "window";
+export type TopNavigationActiveMenu =
+  "app" | "edit" | "file" | "help" | "none" | "view" | "window";
 
 export type TopNavigationSettings = {
   activeMenu: TopNavigationActiveMenu;
@@ -1289,7 +1406,7 @@ export type ControlSettingsBySlug = {
   "command-palette": CommandPaletteSettings;
   modal: ModalSettings;
   popover: PopoverSettings;
-  "alert": AlertSettings;
+  alert: AlertSettings;
   toast: ToastSettings;
   tabs: TabsSettings;
   card: CardSettings;
@@ -1324,8 +1441,11 @@ export type ControlSettingsBySlug = {
   columns: ColumnsSettings;
   grid: GridSettings;
   splitter: SplitterSettings;
+  "resize-handle": ResizeHandleSettings;
   "resizable-panel": ResizablePanelSettings;
   "dock-layout": DockLayoutSettings;
+  "three-pane-layout": ThreePaneLayoutSettings;
+  "custom-scrollbar": CustomScrollbarSettings;
   "scroll-area": ScrollAreaSettings;
   "aspect-ratio": AspectRatioSettings;
   container: ContainerSettings;
@@ -1374,30 +1494,35 @@ export type ControlSettingsBySlug = {
   "mega-menu": MegaMenuSettings;
   "top-navigation": TopNavigationSettings;
 } & Record<ChartControlSlug, ChartSettings> & {
-  "kpi-card": StatCardSettings;
-  "stat-card": StatCardSettings;
-  gauge: GaugeSettings;
-  sparkline: SparklineSettings;
-  "progress-ring": ProgressRingSettings;
-  "progress-bar": ProgressBarSettings;
-  speedometer: SpeedometerSettings;
-  "metric-tile": MetricTileSettings;
-  "dashboard-content-container": DashboardContentContainerSettings;
-  "pipeline-overview": PipelineOverviewSettings;
-  "deals-over-time": DealsOverTimeSettings;
-  "upcoming-tasks": UpcomingTasksSettings;
-  "recent-activity": RecentActivitySettings;
-  "top-performing-users": TopPerformingUsersSettings;
-  "user-profile": UserProfileWidgetSettings;
-  "profile-photo-upload": ProfilePhotoUploadWidgetSettings;
-  "dashboard-list-columns": DashboardListColumnsSettings;
-  "notes-activity": NotesActivitySettings;
-  "404-page": ErrorPageSettings;
-  "403-page": ErrorPageSettings;
-  "app-setup": AppSetupSettings;
-  "status-indicator": StatusIndicatorSettings;
-  "trend-badge": TrendBadgeSettings;
-};
+    "kpi-card": StatCardSettings;
+    "stat-card": StatCardSettings;
+    gauge: GaugeSettings;
+    sparkline: SparklineSettings;
+    "progress-ring": ProgressRingSettings;
+    "progress-bar": ProgressBarSettings;
+    speedometer: SpeedometerSettings;
+    "metric-tile": MetricTileSettings;
+    "dashboard-content-container": DashboardContentContainerSettings;
+    "pipeline-overview": PipelineOverviewSettings;
+    "deals-over-time": DealsOverTimeSettings;
+    "upcoming-tasks": UpcomingTasksSettings;
+    "recent-activity": RecentActivitySettings;
+    "top-performing-users": TopPerformingUsersSettings;
+    "user-profile": UserProfileWidgetSettings;
+    "profile-photo-upload": ProfilePhotoUploadWidgetSettings;
+    "dashboard-list-columns": DashboardListColumnsSettings;
+    "notes-activity": NotesActivitySettings;
+    "lab-dashboard-list-columns": DashboardListColumnsSettings;
+    "lab-notes-activity": NotesActivitySettings;
+    "lab-sidebar": SidebarSettings;
+    "lab-test-layout": ThreePaneLayoutSettings;
+    "lab-user-profile": UserProfileWidgetSettings;
+    "404-page": ErrorPageSettings;
+    "403-page": ErrorPageSettings;
+    "app-setup": AppSetupSettings;
+    "status-indicator": StatusIndicatorSettings;
+    "trend-badge": TrendBadgeSettings;
+  };
 
 export type ControlSettings = ControlSettingsBySlug[ControlSlug];
 
