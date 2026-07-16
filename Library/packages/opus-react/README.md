@@ -160,7 +160,7 @@ import { AccentColorPicker } from "opus-react";
 
 ### Navigation
 
-- `Sidebar`, `SidebarLayout`, `TopNavigation`, `MegaMenu`
+- `Sidebar`, `TopNavigation`, `MegaMenu`
 
 ### Charts and metrics
 

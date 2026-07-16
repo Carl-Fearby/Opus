@@ -38,10 +38,12 @@ import {
   formatBreadcrumbItemsForUsage,
   formatCalendarEventsForUsage,
   formatCascaderOptionsForUsage,
+  formatChoiceChipOptionsForUsage,
   formatContentTimelineGroupsForUsage,
   formatContentTimelineItemsForUsage,
   formatDescriptionListItemsForUsage,
   formatDockLayoutProps,
+  formatThreePaneLayoutProps,
   formatDualListAvailableForUsage,
   formatDualListSelectedForUsage,
   formatFilterConditionsForUsage,
@@ -181,18 +183,6 @@ function formatSelfClosingElement(tagName: string, props: string[], indent = "")
   return `${indent}<${tagName}\n${props.map((prop) => `${indent}  ${prop}`).join("\n")}\n${indent}/>`;
 }
 
-function formatOpeningElement(tagName: string, props: string[], indent = ""): string {
-  if (!props.length) {
-    return `${indent}<${tagName}>`;
-  }
-
-  if (props.length === 1) {
-    return `${indent}<${tagName} ${props[0]}>`;
-  }
-
-  return `${indent}<${tagName}\n${props.map((prop) => `${indent}  ${prop}`).join("\n")}\n${indent}>`;
-}
-
 function formatOpeningProps(props: string[]): string {
   if (!props.length) {
     return "";
@@ -306,11 +296,18 @@ function importLine(components: string[]): string {
 function wrapDashboardWidget(
   content: string,
   components: string[],
-  options?: { dataComponent?: string; title?: string; width?: string },
+  options?: { dataComponent?: string; height?: string; title?: string; width?: string; wrap?: boolean },
 ) {
+  if (options?.wrap === false) {
+    return `${importLine(components)}
+
+${content}`;
+  }
+
   const containerProps = [
     options?.title ? ` title=${quote(options.title)}` : "",
     options?.dataComponent ? ` data-component=${quote(options.dataComponent)}` : "",
+    options?.height && options.height !== "auto" ? ` height=${quote(options.height)}` : "",
     options?.width ? ` width=${quote(options.width)}` : "",
   ].join("");
 
@@ -318,6 +315,24 @@ function wrapDashboardWidget(
 
 <DashboardContentContainer${containerProps}>
 ${content}
+</DashboardContentContainer>`;
+}
+
+function maybeWrapDashboardContent(
+  content: string,
+  options: { dataComponent: string; height?: string; width: string; wrap: boolean },
+) {
+  if (!options.wrap) {
+    return content;
+  }
+
+  const heightProp = options.height && options.height !== "auto" ? ` height=${quote(options.height)}` : "";
+
+  return `<DashboardContentContainer data-component=${quote(options.dataComponent)}${heightProp} width=${quote(options.width)}>
+${content
+  .split("\n")
+  .map((line) => (line ? `  ${line}` : line))
+  .join("\n")}
 </DashboardContentContainer>`;
 }
 
@@ -357,7 +372,8 @@ function interactiveUsage({
   state: string[];
   jsx: string;
 }): string {
-  const importsBlock = [usageClientPrefix(), ...extraImports, importLine(components), ...preamble, ...state, ...afterState]
+  const includeUseState = [...state, ...afterState].some((line) => line.includes("useState"));
+  const importsBlock = [usageClientPrefix(includeUseState), ...extraImports, importLine(components), ...preamble, ...state, ...afterState]
     .filter(Boolean)
     .join("\n");
   const trimmedJsx = jsx.trim();
@@ -477,29 +493,23 @@ ${includeSeries ? `const series = ${formatChartSeriesForUsage(chartDemoSeries)};
         components: ["NoteComposer"],
         state: [
           'const [note, setNote] = useState("");',
-          'const [lastAction, setLastAction] = useState("Waiting for action");',
         ],
-        jsx: `(
-  <>
-    <NoteComposer
-      placeholder=${quote(s.placeholder)}
-      saveButtonLabel=${quote(s.saveButtonLabel)}
-      showAttach={${s.showAttach}}
-      showMention={${s.showMention}}
-      showEmoji={${s.showEmoji}}
-      value={note}
-      onChange={setNote}
-      onSave={(value) => {
-        setLastAction(\`Saved note: \${value}\`);
-        setNote("");
-      }}
-      onAttachClick={() => setLastAction("Attachment")}
-      onMentionClick={() => setLastAction("Mention")}
-      onEmojiSelect={(emoji) => setLastAction(\`Emoji: \${emoji}\`)}
-    />
-    <p>{lastAction}</p>
-  </>
-)`,
+        jsx: `<NoteComposer
+  placeholder=${quote(s.placeholder)}
+  saveButtonLabel=${quote(s.saveButtonLabel)}
+  showAttach={${s.showAttach}}
+  showMention={${s.showMention}}
+  showEmoji={${s.showEmoji}}
+  value={note}
+  onChange={setNote}
+  onSave={(value) => {
+    console.log("Saved note", value);
+    setNote("");
+  }}
+  onAttachClick={() => console.log("Attachment")}
+  onMentionClick={() => console.log("Mention")}
+  onEmojiSelect={(emoji) => console.log("Emoji", emoji)}
+/>`,
       });
     }
     case "rich-text-field": {
@@ -625,6 +635,29 @@ ${includeSeries ? `const series = ${formatChartSeriesForUsage(chartDemoSeries)};
       return controlledFieldUsage(["ChipInput"], "ChipInput", state, props, {
         initial: `[${chips.map((chip) => quote(chip)).join(", ")}]`,
       });
+    }
+    case "choice-chips": {
+      const s = settings as ControlSettingsBySlug["choice-chips"];
+      const state = toStateName(s.label);
+      const props = [
+        formatStringProp("id", id),
+        ...fieldProps(s),
+        formatExpressionProp("options", "options"),
+        ...(s.selectionMode !== "multiple" ? [formatStringProp("selectionMode", s.selectionMode)] : []),
+        ...(s.variant !== "soft" ? [formatStringProp("variant", s.variant)] : []),
+        ...(s.disabled ? [formatBoolProp("disabled", true)] : []),
+        formatExpressionProp("value", state),
+        formatExpressionProp("onChange", `(next) => ${toSetter(state)}(Array.isArray(next) ? next : [next])`),
+      ];
+
+      return `${usageClientPrefix()}
+${importLine(["ChoiceChips"])}
+
+const options = ${formatChoiceChipOptionsForUsage(s.options)};
+
+const [${state}, ${toSetter(state)}] = useState([${s.value.map((value) => quote(value)).join(", ")}]);
+
+<ChoiceChips${formatSelfClosing(props)}`;
     }
     case "checkbox": {
       const s = settings as ControlSettingsBySlug["checkbox"];
@@ -886,7 +919,7 @@ const [${countryState}, ${toSetter(countryState)}] = useState(${quote(s.countryC
 ${importLine(["TreeSelectField"])}
 
 const nodes = ${formatTreeSelectNodesForUsage()};
-const [${state}, ${toSetter(state)}] = useState(${quote(s.value)});
+const [${state}, ${toSetter(state)}] = useState<string | null>(${s.value ? quote(s.value) : "null"});
 
 <TreeSelectField${formatSelfClosing(props)}`;
     }
@@ -1420,7 +1453,10 @@ ${formatJsxRichContent(s.content)}
       return `import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { ${iconOption.importName} } from "@fortawesome/free-solid-svg-icons";
 import "@/lib/fontawesome";
-${wrapDashboardWidget(`<StatCard${formatSelfClosing(props)} />`, ["StatCard"], { width: s.width ?? "widget" })}`;
+${wrapDashboardWidget(`<StatCard${formatSelfClosing(props)} />`, ["StatCard"], {
+  width: s.width ?? "widget",
+  wrap: s.wrapInContainer ?? true,
+})}`;
     }
     case "sparkline": {
       const s = settings as ControlSettingsBySlug["sparkline"];
@@ -1429,7 +1465,7 @@ ${wrapDashboardWidget(`<StatCard${formatSelfClosing(props)} />`, ["StatCard"], {
 ${wrapDashboardWidget(
         `<Sparkline label=${quote(s.label)} palette=${quote(s.palette)} values={values} variant="labeled" />`,
         ["Sparkline"],
-        { width: s.width ?? "widget" },
+        { width: s.width ?? "widget", wrap: s.wrapInContainer ?? true },
       )}`;
     }
     case "progress-ring": {
@@ -1437,7 +1473,7 @@ ${wrapDashboardWidget(
       return wrapDashboardWidget(
         `<ProgressRing label=${quote(s.label)} max={${s.max}} value={${s.value}} />`,
         ["ProgressRing"],
-        { width: s.width ?? "widget" },
+        { width: s.width ?? "widget", wrap: s.wrapInContainer ?? true },
       );
     }
     case "progress-bar": {
@@ -1445,7 +1481,7 @@ ${wrapDashboardWidget(
       return wrapDashboardWidget(
         `<ProgressBar label=${quote(s.label)} max={${s.max}} value={${s.value}} />`,
         ["ProgressBar"],
-        { width: s.width ?? "widget" },
+        { width: s.width ?? "widget", wrap: s.wrapInContainer ?? true },
       );
     }
     case "gauge":
@@ -1477,7 +1513,10 @@ ${wrapDashboardWidget(
           )
           .join(",\n");
 
-        return `${wrapDashboardWidget(`<Gauge${formatSelfClosing(props)}`, ["Gauge"], { width: s.width ?? "widget" })}
+        return `${wrapDashboardWidget(`<Gauge${formatSelfClosing(props)}`, ["Gauge"], {
+          width: s.width ?? "widget",
+          wrap: s.wrapInContainer ?? true,
+        })}
 
 // Optional footer metrics — pass any number of items, or omit entirely:
 // footer={[
@@ -1496,14 +1535,17 @@ ${footerLines},
 ${footerBlock},
 ];
 
-${wrapDashboardWidget(`<Gauge${formatSelfClosing(props)}`, ["Gauge"], { width: s.width ?? "widget" })}`;
+${wrapDashboardWidget(`<Gauge${formatSelfClosing(props)}`, ["Gauge"], {
+  width: s.width ?? "widget",
+  wrap: s.wrapInContainer ?? true,
+})}`;
     }
     case "speedometer": {
       const s = settings as ControlSettingsBySlug["speedometer"];
       return wrapDashboardWidget(
         `<Speedometer label=${quote(s.label)} max={${s.max}} value={${s.value}} />`,
         ["Speedometer"],
-        { width: s.width ?? "widget" },
+        { width: s.width ?? "widget", wrap: s.wrapInContainer ?? true },
       );
     }
     case "metric-tile": {
@@ -1515,14 +1557,14 @@ import "@/lib/fontawesome";
 ${wrapDashboardWidget(
         `<MetricTile icon={<FontAwesomeIcon icon={${iconOption.importName}} />} label=${quote(s.label)} value=${quote(s.value)}${s.showSparkline ? " sparkline={[12, 18, 16, 24, 22, 30, 28]}" : ""} />`,
         ["MetricTile"],
-        { width: s.width ?? "widget" },
+        { width: s.width ?? "widget", wrap: s.wrapInContainer ?? true },
       )}`;
     }
     case "dashboard-content-container": {
       const s = settings as ControlSettingsBySlug["dashboard-content-container"];
       return `${importLine(["DashboardContentContainer", "StatusIndicator"])}
 
-<DashboardContentContainer title=${quote(s.title)} width=${quote(s.width ?? "widget")}>
+<DashboardContentContainer${(s.height ?? "auto") !== "auto" ? ` height=${quote(s.height)}` : ""} title=${quote(s.title)} width=${quote(s.width ?? "widget")}>
   <StatusIndicator label="Systems healthy" status="success" />
 </DashboardContentContainer>`;
     }
@@ -1541,7 +1583,12 @@ ${wrapDashboardWidget(
   }}
 />`,
         ["PipelineOverview"],
-        { dataComponent: "pipeline-overview", title: s.title, width: s.width ?? "widget" },
+        {
+          dataComponent: "pipeline-overview",
+          title: s.title,
+          width: s.width ?? "widget",
+          wrap: s.wrapInContainer ?? true,
+        },
       )}`;
     }
     case "deals-over-time": {
@@ -1563,7 +1610,7 @@ ${wrapDashboardWidget(
   }}
 />`,
         ["DealsOverTime"],
-        { dataComponent: "deals-over-time", width: s.width ?? "widget" },
+        { dataComponent: "deals-over-time", width: s.width ?? "widget", wrap: s.wrapInContainer ?? true },
       )}`;
     }
     case "404-page": {
@@ -1576,7 +1623,7 @@ ${wrapDashboardWidget(
       const s = settings as ControlSettingsBySlug["app-setup"];
       return generateAppSetupPlaygroundCode(s);
     }
-    case "dashboard-list-columns": {
+    case "lab-dashboard-list-columns": {
       const s = settings as ControlSettingsBySlug["dashboard-list-columns"];
       const containerWidth = s.width === "widget" ? "widget" : "full";
       return interactiveUsage({
@@ -1593,154 +1640,294 @@ ${wrapDashboardWidget(
           'import { demoTopPerformingUsers } from "./topPerformingUsersDemoData";',
         ],
         state: [
-          'const [lastAction, setLastAction] = useState("Waiting for action");',
           "const [tasks, setTasks] = useState(demoUpcomingTasks);",
         ],
-        jsx: `(
-  <>
-    <Columns direction=${quote(s.layout === "stacked" ? "column" : "row")} columns={3} gap={16}>
-      <DashboardContentContainer data-component=${quote("upcoming-tasks")} width=${quote(containerWidth)}>
-        <UpcomingTasks
-          title=${quote(s.upcomingTasksTitle)}
-          footerLabel=${quote(s.upcomingTasksFooterLabel)}
-          checkboxSize=${quote(s.checkboxSize ?? "md")}
-          tasks={tasks}
-          onFooterClick={() => setLastAction(\`Last action: ${s.upcomingTasksFooterLabel}\`)}
-          onTaskClick={(task) => setLastAction(\`Last action: \${task.title}\`)}
-          onTaskCompleteChange={(task, completed) => {
-            setTasks((current) =>
-              current.map((entry) => (entry.id === task.id ? { ...entry, completed } : entry)),
-            );
-            setLastAction(completed ? \`Completed: \${task.title}\` : \`Reopened: \${task.title}\`);
-          }}
-        />
-      </DashboardContentContainer>
-      <DashboardContentContainer data-component=${quote("recent-activity")} width=${quote(containerWidth)}>
-        <RecentActivity
-          title=${quote(s.recentActivityTitle)}
-          footerLabel=${quote(s.recentActivityFooterLabel)}
-          items={demoRecentActivity}
-          onFooterClick={() => setLastAction(\`Last action: ${s.recentActivityFooterLabel}\`)}
-          onItemClick={(item) => setLastAction(\`Last action: \${item.title}\`)}
-        />
-      </DashboardContentContainer>
-      <DashboardContentContainer data-component=${quote("top-performing-users")} width=${quote(containerWidth)}>
-        <TopPerformingUsers
-          title=${quote(s.topPerformingUsersTitle)}
-          footerLabel=${quote(s.topPerformingUsersFooterLabel)}
-          users={demoTopPerformingUsers}
-          onFooterClick={() => setLastAction(\`Last action: ${s.topPerformingUsersFooterLabel}\`)}
-          onPersonClick={(person) => setLastAction(\`Last action: \${person.name}\`)}
-        />
-      </DashboardContentContainer>
-    </Columns>
-    <p>{lastAction}</p>
-  </>
-)`,
+        jsx: `<Columns direction=${quote(s.layout === "stacked" ? "column" : "row")} columns={3} gap={16}>
+  <DashboardContentContainer data-component=${quote("upcoming-tasks")} width=${quote(containerWidth)}>
+    <UpcomingTasks
+      title=${quote(s.upcomingTasksTitle)}
+      footerLabel=${quote(s.upcomingTasksFooterLabel)}
+      checkboxSize=${quote(s.checkboxSize ?? "md")}
+      tasks={tasks}
+      onFooterClick={() => console.log(${quote(s.upcomingTasksFooterLabel)})}
+      onTaskClick={(task) => console.log(task.title)}
+      onTaskCompleteChange={(task, completed) => {
+        setTasks((current) =>
+          current.map((entry) => (entry.id === task.id ? { ...entry, completed } : entry)),
+        );
+        console.log(completed ? \`Completed: \${task.title}\` : \`Reopened: \${task.title}\`);
+      }}
+    />
+  </DashboardContentContainer>
+  <DashboardContentContainer data-component=${quote("recent-activity")} width=${quote(containerWidth)}>
+    <RecentActivity
+      title=${quote(s.recentActivityTitle)}
+      footerLabel=${quote(s.recentActivityFooterLabel)}
+      items={demoRecentActivity}
+      onFooterClick={() => console.log(${quote(s.recentActivityFooterLabel)})}
+      onItemClick={(item) => console.log(item.title)}
+    />
+  </DashboardContentContainer>
+  <DashboardContentContainer data-component=${quote("top-performing-users")} width=${quote(containerWidth)}>
+    <TopPerformingUsers
+      title=${quote(s.topPerformingUsersTitle)}
+      footerLabel=${quote(s.topPerformingUsersFooterLabel)}
+      users={demoTopPerformingUsers}
+      onFooterClick={() => console.log(${quote(s.topPerformingUsersFooterLabel)})}
+      onPersonClick={(person) => console.log(person.name)}
+    />
+  </DashboardContentContainer>
+</Columns>`,
       });
     }
-    case "notes-activity": {
+    case "lab-notes-activity": {
       const s = settings as ControlSettingsBySlug["notes-activity"];
+      const wrap = s.wrapInContainer ?? true;
+      const widget = `<NotesActivity
+  addNoteButtonLabel=${quote(s.addNoteButtonLabel ?? "Add note")}
+  addNoteModalDescription=${quote(s.addNoteModalDescription ?? "Capture supporting detail, attach files, or mention teammates.")}
+  addNoteModalTitle=${quote(s.addNoteModalTitle ?? "Add a note")}
+  activityFooterLabel=${quote(s.activityFooterLabel)}
+  composerPlaceholder=${quote(s.composerPlaceholder)}
+  density=${quote(s.density)}
+  items={activity}
+  noteAuthorName="Carl Fearby"
+  notesFooterLabel=${quote(s.notesFooterLabel)}
+  saveButtonLabel=${quote(s.saveButtonLabel)}
+  onActivityFooterClick={() => console.log(${quote(s.activityFooterLabel)})}
+  onItemClick={(item) => console.log(item.body)}
+  onNoteAttachClick={() => console.log("Attach file")}
+  onNoteEmojiSelect={(emoji) => console.log("Emoji", emoji)}
+  onNoteMentionClick={() => console.log("Mention teammate")}
+  onNotesFooterClick={() => console.log(${quote(s.notesFooterLabel)})}
+  onNoteSave={(note, parentNote) =>
+    console.log("Saved note", note, parentNote ? \`on \${parentNote.author}\` : "as a top-level note")
+  }
+  onTabChange={(tab) => console.log("Tab", tab)}
+/>`;
       return interactiveUsage({
-        components: ["DashboardContentContainer", "NoteComposer", "NotesActivity"],
+        components: wrap ? ["DashboardContentContainer", "NoteComposer", "NotesActivity"] : ["NoteComposer", "NotesActivity"],
         preamble: [`const activity = ${JSON.stringify(demoNotesActivity, null, 2)};`],
-        state: ['const [lastAction, setLastAction] = useState("Waiting for action");'],
-        jsx: `(
-  <>
-    <DashboardContentContainer data-component=${quote("notes-activity")} width=${quote(s.width ?? "widget")}>
-      <NotesActivity
-        composerPlaceholder=${quote(s.composerPlaceholder)}
-        footerLabel=${quote(s.footerLabel)}
-        items={activity}
-        saveButtonLabel=${quote(s.saveButtonLabel)}
-        onFooterClick={() => setLastAction(\`Last action: ${s.footerLabel}\`)}
-        onItemClick={(item) => setLastAction(\`Last action: \${item.body}\`)}
-        onNoteSave={(note) => setLastAction(\`Saved note: \${note}\`)}
-        onTabChange={(tab) => setLastAction(\`Tab: \${tab}\`)}
-      />
-    </DashboardContentContainer>
-    <p>{lastAction}</p>
-  </>
-)`,
+        state: [],
+        jsx: maybeWrapDashboardContent(widget, {
+          dataComponent: "notes-activity",
+          height: s.height,
+          width: s.width ?? "widget",
+          wrap,
+        }),
+      });
+    }
+    case "lab-test-layout": {
+      const s = settings as ControlSettingsBySlug["lab-test-layout"];
+      return interactiveUsage({
+        components: ["CatalogIcon", "DashboardContentContainer", "Icon", "NotesActivity", "Sidebar", "ThreePaneLayout", "Tooltip"],
+        preamble: [
+          `const menu = [
+  {
+    id: "crm", label: "CRM", type: "group", defaultOpen: true,
+    children: [
+      {
+        id: "contacts", label: "Contacts", icon: "users", type: "group", defaultOpen: true,
+        children: [
+          { id: "all-contacts", label: "All Contacts", icon: "address-book" },
+          { id: "contact-lists", label: "Contact Lists", icon: "rectangle-list" },
+        ],
+      },
+      {
+        id: "companies", label: "Companies", icon: "building", type: "group",
+        children: [
+          { id: "all-companies", label: "All Companies", icon: "building" },
+          { id: "company-segments", label: "Company Segments", icon: "layer-group" },
+        ],
+      },
+      { id: "deals", label: "Deals", icon: "dollar-sign" },
+      { id: "tasks", label: "Tasks", icon: "list-check" },
+    ],
+  },
+  {
+    id: "analytics", label: "Analytics", type: "group", defaultOpen: true,
+    children: [{ id: "reports", label: "Reports", icon: "chart-column" }, { id: "charts", label: "Charts", icon: "chart-line" }],
+  },
+  {
+    id: "settings", label: "Settings", type: "group", defaultOpen: true,
+    children: [{ id: "users", label: "Users", icon: "users" }, { id: "integrations", label: "Integrations", icon: "puzzle-piece" }],
+  },
+];`,
+          `const activity = ${JSON.stringify(demoNotesActivity, null, 2)};`,
+        ],
+        state: [
+          "const [sidebarCollapsed, setSidebarCollapsed] = useState(false);",
+          "const [rightCollapsed, setRightCollapsed] = useState(false);",
+          'const [rightTab, setRightTab] = useState("notes");',
+          'const [workspaceLabel, setWorkspaceLabel] = useState("CRM");',
+        ],
+        jsx: `<div style={{ height: "100%" }}>
+  <ThreePaneLayout
+    defaultLeftWidth={${s.defaultLeftWidth}}
+    defaultRightWidth={${s.defaultRightWidth}}
+    handleBackground=${quote(s.handleBackground)}
+    handleBorderRadius={${s.handleBorderRadius ?? 12}}
+    handleHeight=${quote(s.handleHeight)}
+    handleMarginBlock={${s.handleMarginBlock ?? 12}}
+    leftCollapsed={sidebarCollapsed}
+    minLeftWidth={${s.minLeftWidth === 180 ? 120 : s.minLeftWidth}}
+    onLeftCollapsedChange={setSidebarCollapsed}
+    onRightCollapsedChange={setRightCollapsed}
+    minRightWidth={${Math.max(s.minRightWidth, 220)}}
+    persist={${s.persist}}
+    storageKey="crm-test-layout"
+    rightCollapsed={rightCollapsed}
+    style={{ height: "100%" }}
+    left={
+      <DashboardContentContainer data-component="sidebar" height="full" width="full">
+        <Sidebar
+          collapsed={sidebarCollapsed}
+          defaultActiveItem="all-contacts"
+          footer={
+            <button
+              aria-label={sidebarCollapsed ? "Expand sidebar" : "Collapse sidebar"}
+              onClick={() => setSidebarCollapsed((current) => !current)}
+              style={{ alignItems: "center", background: "transparent", border: 0, color: "inherit", display: "flex", gap: 8, height: 32, justifyContent: sidebarCollapsed ? "center" : "flex-start", padding: "0 8px", width: "100%" }}
+              title={sidebarCollapsed ? "Expand sidebar" : "Collapse sidebar"}
+              type="button"
+            >
+              <Icon name={sidebarCollapsed ? "indent" : "outdent"} size="sm" />
+              {sidebarCollapsed ? null : <span>Collapse</span>}
+            </button>
+          }
+          menu={menu}
+          onSelect={(item) => setWorkspaceLabel(String(item.label))}
+          persistState={${s.persist}}
+          renderIcon={(name) => <CatalogIcon iconName={name} />}
+          storageKey="crm-test-layout-menu"
+        />
+      </DashboardContentContainer>
+    }
+    right={
+      <DashboardContentContainer data-component="notes-activity" height="full" width="full">
+        <div style={{ display: "grid", gridTemplateRows: "minmax(0, 1fr) auto", height: "100%", minHeight: 0, overflow: "hidden" }}>
+          {rightCollapsed ? (
+            <nav aria-label="Notes and activity shortcuts" style={{ alignItems: "center", display: "flex", flexDirection: "column", gap: 8, width: "100%" }}>
+              {[
+                { icon: "note-sticky", label: "Notes", tab: "notes" },
+                { icon: "clock-rotate-left", label: "Activity", tab: "activity" },
+              ].map((item) => (
+                <Tooltip content={item.label} key={item.tab} placement="left">
+                  <button
+                    aria-label={\`Open \${item.label}\`}
+                    onClick={() => { setRightTab(item.tab); setRightCollapsed(false); }}
+                    style={{ alignItems: "center", background: "transparent", border: "1px solid transparent", borderRadius: 8, color: "inherit", display: "inline-flex", height: 32, justifyContent: "center", padding: 0, width: 32 }}
+                    type="button"
+                  >
+                    <Icon name={item.icon} size="sm" />
+                  </button>
+                </Tooltip>
+              ))}
+            </nav>
+          ) : (
+            <NotesActivity
+              activeTab={rightTab}
+              items={activity}
+              notesFooterLabel="View all notes"
+              activityFooterLabel="View all activities"
+              onTabChange={setRightTab}
+              saveButtonLabel="Save"
+            />
+          )}
+          <button
+            aria-label={rightCollapsed ? "Expand notes and activity" : "Collapse notes and activity"}
+            onClick={() => setRightCollapsed((current) => !current)}
+            style={{ alignItems: "center", background: "transparent", border: 0, borderTop: "1px solid var(--opus-border)", color: "inherit", display: "flex", flexShrink: 0, gap: 8, height: 40, justifyContent: rightCollapsed ? "center" : "flex-end", margin: rightCollapsed ? "0 auto" : 0, padding: rightCollapsed ? 0 : "8px 8px 0", width: rightCollapsed ? 28 : "100%" }}
+            type="button"
+          >
+            <Icon name={rightCollapsed ? "outdent" : "indent"} size="sm" />
+            {rightCollapsed ? null : <span>Collapse</span>}
+          </button>
+        </div>
+      </DashboardContentContainer>
+    }
+  >
+    <main style={{ padding: 28 }}>
+      <p style={{ color: "var(--opus-accent)", fontWeight: 700 }}>{workspaceLabel} workspace</p>
+      <h2>Demo content</h2>
+      <p>The centre workspace remains fluid between both resizable panes.</p>
+    </main>
+  </ThreePaneLayout>
+</div>`,
       });
     }
     case "upcoming-tasks": {
       const s = settings as ControlSettingsBySlug["upcoming-tasks"];
+      const wrap = s.wrapInContainer ?? true;
+      const widget = `<UpcomingTasks
+  title=${quote(s.title)}
+  footerLabel=${quote(s.footerLabel)}
+  checkboxSize=${quote(s.checkboxSize ?? "md")}
+  tasks={tasks}
+  onFooterClick={() => console.log(${quote(s.footerLabel)})}
+  onTaskClick={(task) => console.log(task.title)}
+  onTaskCompleteChange={(task, completed) => {
+    setTasks((current) =>
+      current.map((entry) => (entry.id === task.id ? { ...entry, completed } : entry)),
+    );
+    console.log(completed ? \`Completed: \${task.title}\` : \`Reopened: \${task.title}\`);
+  }}
+/>`;
       return interactiveUsage({
-        components: ["DashboardContentContainer", "UpcomingTasks"],
+        components: wrap ? ["DashboardContentContainer", "UpcomingTasks"] : ["UpcomingTasks"],
         preamble: [`const initialTasks = ${JSON.stringify(demoUpcomingTasks, null, 2)};`],
-        state: [
-          'const [lastAction, setLastAction] = useState("Waiting for action");',
-          "const [tasks, setTasks] = useState(initialTasks);",
-        ],
-        jsx: `(
-  <>
-    <DashboardContentContainer data-component=${quote("upcoming-tasks")} width=${quote(s.width ?? "widget")}>
-      <UpcomingTasks
-        title=${quote(s.title)}
-        footerLabel=${quote(s.footerLabel)}
-        checkboxSize=${quote(s.checkboxSize ?? "md")}
-        tasks={tasks}
-        onFooterClick={() => setLastAction(\`Last action: ${s.footerLabel}\`)}
-        onTaskClick={(task) => setLastAction(\`Last action: \${task.title}\`)}
-        onTaskCompleteChange={(task, completed) => {
-          setTasks((current) =>
-            current.map((entry) => (entry.id === task.id ? { ...entry, completed } : entry)),
-          );
-          setLastAction(completed ? \`Completed: \${task.title}\` : \`Reopened: \${task.title}\`);
-        }}
-      />
-    </DashboardContentContainer>
-    <p>{lastAction}</p>
-  </>
-)`,
+        state: ["const [tasks, setTasks] = useState(initialTasks);"],
+        jsx: maybeWrapDashboardContent(widget, {
+          dataComponent: "upcoming-tasks",
+          width: s.width ?? "widget",
+          wrap,
+        }),
       });
     }
     case "recent-activity": {
       const s = settings as ControlSettingsBySlug["recent-activity"];
+      const wrap = s.wrapInContainer ?? true;
+      const widget = `<RecentActivity
+  title=${quote(s.title)}
+  footerLabel=${quote(s.footerLabel)}
+  items={activity}
+  onFooterClick={() => console.log(${quote(s.footerLabel)})}
+  onItemClick={(item) => console.log(item.title)}
+/>`;
       return interactiveUsage({
-        components: ["DashboardContentContainer", "RecentActivity"],
+        components: wrap ? ["DashboardContentContainer", "RecentActivity"] : ["RecentActivity"],
         preamble: [`const activity = ${JSON.stringify(demoRecentActivity, null, 2)};`],
-        state: ['const [lastAction, setLastAction] = useState("Waiting for action");'],
-        jsx: `(
-  <>
-    <DashboardContentContainer data-component=${quote("recent-activity")} width=${quote(s.width ?? "widget")}>
-      <RecentActivity
-        title=${quote(s.title)}
-        footerLabel=${quote(s.footerLabel)}
-        items={activity}
-        onFooterClick={() => setLastAction(\`Last action: ${s.footerLabel}\`)}
-        onItemClick={(item) => setLastAction(\`Last action: \${item.title}\`)}
-      />
-    </DashboardContentContainer>
-    <p>{lastAction}</p>
-  </>
-)`,
+        state: [],
+        jsx: maybeWrapDashboardContent(widget, {
+      dataComponent: "recent-activity",
+      width: s.width ?? "widget",
+      wrap,
+    }),
       });
     }
     case "top-performing-users": {
       const s = settings as ControlSettingsBySlug["top-performing-users"];
+      const wrap = s.wrapInContainer ?? true;
+      const widget = `<TopPerformingUsers
+  title=${quote(s.title)}
+  footerLabel=${quote(s.footerLabel)}
+  users={users}
+  onFooterClick={() => console.log(${quote(s.footerLabel)})}
+  onPersonClick={(person) => console.log(person.name)}
+/>`;
       return interactiveUsage({
-        components: ["DashboardContentContainer", "TopPerformingUsers"],
+        components: wrap ? ["DashboardContentContainer", "TopPerformingUsers"] : ["TopPerformingUsers"],
         preamble: [`const users = ${JSON.stringify(demoTopPerformingUsers, null, 2)};`],
-        state: ['const [lastAction, setLastAction] = useState("Waiting for action");'],
-        jsx: `(
-  <>
-    <DashboardContentContainer data-component=${quote("top-performing-users")} width=${quote(s.width ?? "widget")}>
-      <TopPerformingUsers
-        title=${quote(s.title)}
-        footerLabel=${quote(s.footerLabel)}
-        users={users}
-        onFooterClick={() => setLastAction(\`Last action: ${s.footerLabel}\`)}
-        onPersonClick={(person) => setLastAction(\`Last action: \${person.name}\`)}
-      />
-    </DashboardContentContainer>
-    <p>{lastAction}</p>
-  </>
-)`,
+        state: [],
+        jsx: maybeWrapDashboardContent(widget, {
+      dataComponent: "top-performing-users",
+      width: s.width ?? "widget",
+      wrap,
+    }),
       });
     }
-    case "user-profile": {
+    case "user-profile":
+    case "lab-user-profile": {
       const s = settings as ControlSettingsBySlug["user-profile"];
       const menuItems = parseUserProfileMenuItems(s.menuItemsJson);
       const fieldId = "profile-photo-upload";
@@ -1774,7 +1961,7 @@ ${propsBlock}
 </>`
         : widgetBlock;
       const returnContent = s.photoUploadEnabled ? `(\n  ${fragmentContent}\n)` : widgetBlock;
-      const wrapped = s.wrapInContainer ?? category === "labs";
+      const wrapped = s.wrapInContainer ?? true;
       const containerContent = s.photoUploadEnabled
         ? `${indentContainerChild(widgetBlock)}\n${indentContainerChild(modalBlock)}`
         : indentContainerChild(widgetBlock);
@@ -1806,38 +1993,35 @@ ${containerContent}
     }
     case "profile-photo-upload": {
       const s = settings as ControlSettingsBySlug["profile-photo-upload"];
-      const widgetProps = `title=${quote(s.title)}
-        label=${quote(s.label)}
-        uploadLabel=${quote(s.uploadLabel)}
-        cropButtonLabel=${quote(s.cropButtonLabel)}
-        changeButtonLabel=${quote(s.changeButtonLabel)}
-        zoomLabel=${quote(s.zoomLabel)}
-        viewportSize={${s.viewportSize}}
-        outputSize={${s.outputSize}}
-        minZoom={${s.minZoom}}
-        maxZoom={${s.maxZoom}}
-        zoomStep={${s.zoomStep}}
-        value={photo}
-        onChange={setPhoto}
-        onCrop={({ previewUrl }) => {
-          setPhoto(previewUrl);
-          setLastAction("Last action: Photo cropped");
-        }}`;
+      const wrap = s.wrapInContainer ?? true;
+      const widget = `<ImageCropUploadWidget
+  title=${quote(s.title)}
+  label=${quote(s.label)}
+  uploadLabel=${quote(s.uploadLabel)}
+  cropButtonLabel=${quote(s.cropButtonLabel)}
+  changeButtonLabel=${quote(s.changeButtonLabel)}
+  zoomLabel=${quote(s.zoomLabel)}
+  viewportSize={${s.viewportSize}}
+  outputSize={${s.outputSize}}
+  minZoom={${s.minZoom}}
+  maxZoom={${s.maxZoom}}
+  zoomStep={${s.zoomStep}}
+  value={photo}
+  onChange={setPhoto}
+  onCrop={({ previewUrl }) => {
+    setPhoto(previewUrl);
+    console.log("Photo cropped");
+  }}
+/>`;
 
       return interactiveUsage({
-        components: ["ImageCropUploadWidget"],
-        state: [
-          'const [lastAction, setLastAction] = useState("Waiting for action");',
-          'const [photo, setPhoto] = useState("");',
-        ],
-        jsx: `(
-  <>
-    <ImageCropUploadWidget
-      ${widgetProps}
-    />
-    <p>{lastAction}</p>
-  </>
-)`,
+        components: wrap ? ["DashboardContentContainer", "ImageCropUploadWidget"] : ["ImageCropUploadWidget"],
+        state: ['const [photo, setPhoto] = useState("");'],
+        jsx: maybeWrapDashboardContent(widget, {
+      dataComponent: "profile-photo-upload",
+      width: s.width ?? "widget",
+      wrap,
+    }),
       });
     }
     case "status-indicator": {
@@ -1845,7 +2029,7 @@ ${containerContent}
       return wrapDashboardWidget(
         `<StatusIndicator label=${quote(s.label)} status=${quote(s.status)} />`,
         ["StatusIndicator"],
-        { width: s.width ?? "widget" },
+        { width: s.width ?? "widget", wrap: s.wrapInContainer ?? true },
       );
     }
     case "trend-badge": {
@@ -1853,7 +2037,7 @@ ${containerContent}
       return wrapDashboardWidget(
         `<TrendBadge direction=${quote(s.direction)} value=${quote(s.value)} />`,
         ["TrendBadge"],
-        { width: s.width ?? "widget" },
+        { width: s.width ?? "widget", wrap: s.wrapInContainer ?? true },
       );
     }
     case "panel": {
@@ -2500,6 +2684,95 @@ ${formatLayoutTileChildren()}
   <div>Secondary</div>
 </Splitter>`;
     }
+    case "resize-handle": {
+      const s = settings as ControlSettingsBySlug["resize-handle"];
+      const isHorizontal = s.orientation === "horizontal";
+      const primaryLabel = "Pane A";
+      const stateName = isHorizontal ? "topHeight" : "leftWidth";
+      const setterName = isHorizontal ? "setTopHeight" : "setLeftWidth";
+      const minName = isHorizontal ? "MIN_TOP_HEIGHT" : "MIN_LEFT_WIDTH";
+      const maxName = isHorizontal ? "MAX_TOP_HEIGHT" : "MAX_LEFT_WIDTH";
+      const startCoordinate = isHorizontal ? "startY" : "startX";
+      const startSize = isHorizontal ? "startHeight" : "startWidth";
+      const clientCoordinate = isHorizontal ? "clientY" : "clientX";
+      const cssTemplate = isHorizontal
+        ? `gridTemplateRows: ${stateName} + "px 8px minmax(0, 1fr)"`
+        : `gridTemplateColumns: ${stateName} + "px 8px minmax(0, 1fr)"`;
+      const containerSize = isHorizontal ? "height: 320" : "minHeight: 220";
+      const firstPane = "Pane A";
+      const secondPane = "Pane B";
+      const decreaseKey = isHorizontal ? "ArrowUp" : "ArrowLeft";
+      const increaseKey = isHorizontal ? "ArrowDown" : "ArrowRight";
+      const initialSize = isHorizontal ? 96 : 260;
+      const minSize = isHorizontal ? 64 : 160;
+      const maxSize = isHorizontal ? 180 : 420;
+      return `${usageClientPrefix()}
+${importLine(["ResizeHandle"])}
+
+const ${minName} = ${minSize};
+const ${maxName} = ${maxSize};
+
+export default function ResizeHandleExample() {
+  const [${stateName}, ${setterName}] = useState(${initialSize});
+
+  const clampSize = (size) => Math.min(Math.max(size, ${minName}), ${maxName});
+  const resizeBy = (delta) => ${setterName}((current) => clampSize(current + delta));
+
+  const startResize = (event) => {
+    event.preventDefault();
+    const ${startCoordinate} = event.${clientCoordinate};
+    const ${startSize} = ${stateName};
+
+    const handlePointerMove = (moveEvent) => {
+      ${setterName}(clampSize(${startSize} + moveEvent.${clientCoordinate} - ${startCoordinate}));
+    };
+
+    const stopResize = () => {
+      window.removeEventListener("pointermove", handlePointerMove);
+      window.removeEventListener("pointerup", stopResize);
+    };
+
+    window.addEventListener("pointermove", handlePointerMove);
+    window.addEventListener("pointerup", stopResize, { once: true });
+  };
+
+  const handleKeyDown = (event) => {
+    if (event.key === "${decreaseKey}") {
+      event.preventDefault();
+      resizeBy(-16);
+    }
+
+    if (event.key === "${increaseKey}") {
+      event.preventDefault();
+      resizeBy(16);
+    }
+  };
+
+  return (
+    <div
+      style={{
+        display: "grid",
+        ${cssTemplate},
+        ${containerSize},
+      }}
+    >
+      <aside style={{ padding: 16 }}>${firstPane}</aside>
+      <ResizeHandle
+        aria-label="Resize ${primaryLabel}"
+        aria-valuemax={${maxName}}
+        aria-valuemin={${minName}}
+        aria-valuenow={${stateName}}
+        background="${s.background}"
+        height="${s.height}"
+        orientation="${s.orientation}"
+        onKeyDown={handleKeyDown}
+        onPointerDown={startResize}
+      />
+      <main style={{ padding: 16 }}>${secondPane}</main>
+    </div>
+  );
+}`;
+    }
     case "resizable-panel": {
       const s = settings as ControlSettingsBySlug["resizable-panel"];
       return `${importLine(["ResizablePanel"])}
@@ -2516,6 +2789,20 @@ ${formatLayoutTileChildren()}
 <DockLayout${dockProps ? ` ${dockProps}` : ""}>
   Centre workspace
 </DockLayout>`;
+    }
+    case "three-pane-layout": {
+      const s = settings as ControlSettingsBySlug["three-pane-layout"];
+      const layoutProps = formatThreePaneLayoutProps(s);
+      return `${importLine(["ThreePaneLayout"])}
+
+<ThreePaneLayout
+  ${layoutProps}
+>
+  <section>
+    <h2>Workspace</h2>
+    <p>Main content stays fluid while sidebars keep persisted widths.</p>
+  </section>
+</ThreePaneLayout>`;
     }
     case "scroll-area": {
       const s = settings as ControlSettingsBySlug["scroll-area"];
@@ -2822,10 +3109,7 @@ const value = ${formatJsonValueForUsage()};
       if (s.showToolbarDemo) {
         return interactiveUsage({
           components: ["IconBadge"],
-          state: [
-            'const [lastAction, setLastAction] = useState("Waiting for action");',
-            'const reportAction = (label: string) => setLastAction(`Last action: ${label}`);',
-          ],
+          state: [],
           jsx: formatIconBadgeToolbarUsage(s.size, s.tone),
         });
       }
@@ -2839,18 +3123,9 @@ const value = ${formatJsonValueForUsage()};
         ...(s.tone !== "muted" ? [formatStringProp("tone", s.tone)] : []),
         ...(s.urgency !== "standard" ? [formatStringProp("urgency", s.urgency)] : []),
         ...(s.showZero ? [formatBoolProp("showZero", true)] : []),
-        formatExpressionProp("onClick", `() => setLastAction(\`Last action: ${s.label}\`)`),
+        formatExpressionProp("onClick", `() => console.log(${quote(s.label)})`),
       ];
-      return interactiveUsage({
-        components: ["IconBadge"],
-        state: ['const [lastAction, setLastAction] = useState("Waiting for action");'],
-        jsx: `(
-  <>
-    <IconBadge${formatSelfClosing(props)}
-    <p>{lastAction}</p>
-  </>
-)`,
-      });
+      return `${importLine(["IconBadge"])}\n\n<IconBadge${formatSelfClosing(props)}`;
     }
     case "spinner": {
       const s = settings as ControlSettingsBySlug["spinner"];
@@ -2959,37 +3234,98 @@ const value = ${formatJsonValueForUsage()};
       return `${importLine(["IntersectionObserver"])}\n\n<IntersectionObserver threshold={${s.threshold}}>\n  {(visible) => <div>{visible ? "Visible" : "Hidden"}</div>}\n</IntersectionObserver>`;
     }
 
-    case "sidebar": {
+    case "sidebar":
+    case "lab-sidebar": {
       const s = settings as ControlSettingsBySlug["sidebar"];
+      const wrapped = s.wrapInContainer ?? category === "labs";
       const sidebarProps = [
         ...(s.side !== "left" ? [formatStringProp("side", s.side)] : []),
         ...(s.collapsed ? [formatBoolProp("collapsed", true)] : []),
         ...(s.density !== "comfortable" ? [formatStringProp("density", s.density)] : []),
+        formatStringProp("defaultActiveItem", s.activeItem),
         ...(s.showHeader ? [formatExpressionProp("header", `<SidebarHeader title=${quote(s.headerTitle)} />`)] : []),
         ...(s.showFooter ? [formatStringProp("footer", s.footerText)] : []),
+        ...(s.persistState ? [formatBoolProp("persistState", true)] : []),
       ];
-      return `${importLine([
+      const sidebarMarkup = `<Sidebar${formatSelfClosing([
+        ...sidebarProps,
+        formatExpressionProp("menu", "menu"),
+        formatExpressionProp("renderIcon", `(iconName) => <CatalogIcon iconName={iconName} />`),
+        formatExpressionProp("onSelect", "handleMenuSelect"),
+      ])}`;
+      const sidebarContainerHeight = (s.height ?? "auto") !== "auto" ? ` height=${quote(s.height)}` : "";
+      const returnMarkup = wrapped
+        ? `<DashboardContentContainer data-component="sidebar"${sidebarContainerHeight} width="widget">
+    ${sidebarMarkup
+        .split("\n")
+        .map((line) => (line ? `  ${line}` : line))
+        .join("\n")}
+  </DashboardContentContainer>`
+        : sidebarMarkup
+      .split("\n")
+      .map((line) => (line ? `  ${line}` : line))
+      .join("\n");
+      return `${usageClientPrefix(false)}
+${importLine([
+        "CatalogIcon",
+        ...(wrapped ? ["DashboardContentContainer"] : []),
         "Sidebar",
-        "SidebarGroup",
         "SidebarHeader",
-        "SidebarLayout",
-        "SidebarLink",
-        "SidebarNav",
       ])}
 
-<SidebarLayout main="Main content area"${s.side !== "left" ? ` side=${quote(s.side)}` : ""}>
-${formatOpeningElement("Sidebar", sidebarProps, "  ")}
-    <SidebarNav aria-label="Primary">
-      <SidebarLink${s.activeItem === "overview" ? ' active' : ""}>Overview</SidebarLink>
-      <SidebarGroup label="Library"${s.groupOpen ? "" : " defaultOpen={false}"}>
-        <SidebarLink${s.activeItem === "library" ? ' active' : ""}>Components</SidebarLink>
-        <SidebarLink>Templates</SidebarLink>
-        <SidebarLink>Tokens</SidebarLink>
-      </SidebarGroup>
-      <SidebarLink${s.activeItem === "settings" ? ' active' : ""}>Settings</SidebarLink>
-    </SidebarNav>
-  </Sidebar>
-</SidebarLayout>`;
+const handleMenuSelect = (item) => {
+  console.log("Menu callback", item.label);
+};
+
+const handleItemSelect = (label) => {
+  console.log("Item callback", label);
+};
+
+const menu = [
+  {
+    id: "overview",
+    label: "Overview",
+    icon: "grid-2",
+    onSelect: () => handleItemSelect("Overview"),
+  },
+  {
+    type: "group",
+    id: "library-group",
+    label: "Library",
+    icon: "layer-group",
+    defaultOpen: ${s.groupOpen},
+    children: [
+      {
+        id: "library",
+        label: "Components",
+        icon: "cube",
+        onSelect: () => handleItemSelect("Components"),
+      },
+      {
+        id: "templates",
+        label: "Templates",
+        icon: "copy",
+        onSelect: () => handleItemSelect("Templates"),
+      },
+      {
+        id: "tokens",
+        label: "Tokens",
+        icon: "swatchbook",
+        onSelect: () => handleItemSelect("Tokens"),
+      },
+    ],
+  },
+  {
+    id: "settings",
+    label: "Settings",
+    icon: "gear",
+    onSelect: () => handleItemSelect("Settings"),
+  },
+];
+
+return (
+  ${returnMarkup}
+);`;
     }
     case "mega-menu": {
       const s = settings as ControlSettingsBySlug["mega-menu"];
@@ -3038,20 +3374,14 @@ ${formatMegaMenuMenusForUsage([previewMenu], { includeFeatured: s.featured })},
         ],
         state: [
           `const [activeMenu, setActiveMenu] = useState<string | null>(${s.activeMenu === "none" ? "null" : quote(s.activeMenu)});`,
-          `const [lastAction, setLastAction] = useState("Waiting for action");`,
           "",
           "const handleSelect = (menuId: string, item: { id: string; label: string }) => {",
-          "  setLastAction(`${menuId}: ${item.label}`);",
+          "  console.log(`${menuId}: ${item.label}`);",
           "};",
         ],
-        jsx: `(
-  <>
-    <TopNavigation
+        jsx: `<TopNavigation
 ${navProps}
-    />
-    <p>{lastAction}</p>
-  </>
-)`,
+/>`,
       });
     }
     default:

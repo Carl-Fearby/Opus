@@ -1,7 +1,7 @@
 export type DashboardCatalogEntry = {
   componentName: string;
   description: string;
-  navigationGroup: string;
+  navigationGroup?: string;
   settingsType:
     | "dashboard-content-container"
     | "deals-over-time"
@@ -30,7 +30,6 @@ export const dashboardCatalog = [
     slug: "dashboard-content-container",
     title: "Dashboard Content Container",
     componentName: "DashboardContentContainer",
-    navigationGroup: "Dashboard",
     description: "Neon glass dashboard section shell for wrapping widgets with a shared title, body, and footer layout.",
     settingsType: "dashboard-content-container",
     sourceFiles: [
@@ -42,7 +41,6 @@ export const dashboardCatalog = [
     slug: "kpi-card",
     title: "KPI Card",
     componentName: "StatCard",
-    navigationGroup: "Dashboard",
     description: "Primary KPI card for headline metrics with optional trend.",
     settingsType: "stat-card",
     sourceFiles: [
@@ -55,7 +53,6 @@ export const dashboardCatalog = [
     slug: "stat-card",
     title: "Stat Card",
     componentName: "StatCard",
-    navigationGroup: "Dashboard",
     description: "Compact KPI tile with label, value, and optional trend badge for dashboard summaries.",
     settingsType: "stat-card",
     sourceFiles: [
@@ -68,7 +65,6 @@ export const dashboardCatalog = [
     slug: "sparkline",
     title: "Sparkline",
     componentName: "Sparkline",
-    navigationGroup: "Dashboard",
     description: "Compact inline trend line for embedding in metric tiles and dashboard cards.",
     settingsType: "sparkline",
     sourceFiles: ["components/Sparkline/Sparkline.tsx", "components/Sparkline/Sparkline.module.css"],
@@ -77,7 +73,6 @@ export const dashboardCatalog = [
     slug: "progress-ring",
     title: "Progress Ring",
     componentName: "ProgressRing",
-    navigationGroup: "Dashboard",
     description: "Circular progress ring for completion and quota tracking.",
     settingsType: "progress-ring",
     sourceFiles: ["components/ProgressRing/ProgressRing.tsx", "components/ProgressRing/ProgressRing.module.css"],
@@ -86,7 +81,6 @@ export const dashboardCatalog = [
     slug: "progress-bar",
     title: "Progress Bar",
     componentName: "ProgressBar",
-    navigationGroup: "Dashboard",
     description: "Horizontal progress bar for goal and quota completion.",
     settingsType: "progress-bar",
     sourceFiles: ["components/ProgressBar/ProgressBar.tsx", "components/ProgressBar/ProgressBar.module.css"],
@@ -95,7 +89,6 @@ export const dashboardCatalog = [
     slug: "gauge",
     title: "Gauge",
     componentName: "Gauge",
-    navigationGroup: "Dashboard",
     description: "Dashboard progress gauge with half and full variants, optional summary copy, and footer metrics.",
     settingsType: "gauge",
     sourceFiles: ["components/Gauge/Gauge.tsx", "components/Gauge/Gauge.module.css"],
@@ -104,7 +97,6 @@ export const dashboardCatalog = [
     slug: "speedometer",
     title: "Speedometer",
     componentName: "Speedometer",
-    navigationGroup: "Dashboard",
     description: "Speedometer gauge with needle for performance and utilisation readouts.",
     settingsType: "speedometer",
     sourceFiles: ["components/Speedometer/Speedometer.tsx", "components/Speedometer/Speedometer.module.css"],
@@ -113,7 +105,6 @@ export const dashboardCatalog = [
     slug: "metric-tile",
     title: "Metric Tile",
     componentName: "MetricTile",
-    navigationGroup: "Dashboard",
     description: "Metric tile combining label, value, and optional sparkline preview.",
     settingsType: "metric-tile",
     sourceFiles: [
@@ -126,7 +117,6 @@ export const dashboardCatalog = [
     slug: "pipeline-overview",
     title: "Pipeline Overview",
     componentName: "PipelineOverview",
-    navigationGroup: "Dashboard",
     description: "Sales pipeline funnel card with stage legend, total value, and period selector.",
     settingsType: "pipeline-overview",
     sourceFiles: [
@@ -138,7 +128,6 @@ export const dashboardCatalog = [
     slug: "deals-over-time",
     title: "Deals Over Time",
     componentName: "DealsOverTime",
-    navigationGroup: "Dashboard",
     description: "Line chart dashboard widget for tracking deal volume over time with period selector and tooltip.",
     settingsType: "deals-over-time",
     sourceFiles: [
@@ -150,7 +139,6 @@ export const dashboardCatalog = [
     slug: "upcoming-tasks",
     title: "Upcoming Tasks",
     componentName: "UpcomingTasks",
-    navigationGroup: "Dashboard",
     description: "Task list dashboard widget with checkbox rows, due times, and footer link.",
     settingsType: "upcoming-tasks",
     sourceFiles: [
@@ -162,7 +150,6 @@ export const dashboardCatalog = [
     slug: "recent-activity",
     title: "Recent Activity",
     componentName: "RecentActivity",
-    navigationGroup: "Dashboard",
     description: "Activity feed dashboard widget with icon rows, timestamps, and footer link.",
     settingsType: "recent-activity",
     sourceFiles: [
@@ -174,7 +161,6 @@ export const dashboardCatalog = [
     slug: "top-performing-users",
     title: "Top Performing People",
     componentName: "TopPerformingUsers",
-    navigationGroup: "Dashboard",
     description: "Ranked people performance dashboard widget with avatars, gradient bars, and values.",
     settingsType: "top-performing-users",
     sourceFiles: [
@@ -186,7 +172,6 @@ export const dashboardCatalog = [
     slug: "user-profile",
     title: "User Profile",
     componentName: "UserProfileWidget",
-    navigationGroup: "Dashboard",
     description:
       "Signed-in user profile chip with optional photo, name, role, and chevron menu driven by a JSON menu config.",
     settingsType: "user-profile",
@@ -202,7 +187,6 @@ export const dashboardCatalog = [
     slug: "profile-photo-upload",
     title: "Profile Photo Upload",
     componentName: "ImageCropUploadWidget",
-    navigationGroup: "Dashboard",
     description:
       "Profile photo upload widget with circular crop mask, drag positioning, zoom controls, and canvas export before upload.",
     settingsType: "profile-photo-upload",
@@ -217,7 +201,6 @@ export const dashboardCatalog = [
     slug: "status-indicator",
     title: "Status Indicator",
     componentName: "StatusIndicator",
-    navigationGroup: "Dashboard",
     description: "Status indicator dot with label for health and state readouts.",
     settingsType: "status-indicator",
     sourceFiles: [
@@ -229,7 +212,6 @@ export const dashboardCatalog = [
     slug: "trend-badge",
     title: "Trend Badge",
     componentName: "TrendBadge",
-    navigationGroup: "Dashboard",
     description: "Compact trend badge for delta and direction beside metrics.",
     settingsType: "trend-badge",
     sourceFiles: ["components/TrendBadge/TrendBadge.tsx", "components/TrendBadge/TrendBadge.module.css"],

@@ -181,6 +181,26 @@ html[data-shell-theme="light"] .settingsSidebar {
   line-height: 1.35;
 }
 
+.settingsActionButton {
+  min-height: 36px;
+  padding: 0 12px;
+  border: 1px solid var(--opus-border);
+  border-radius: var(--opus-input-radius);
+  background: color-mix(in srgb, var(--opus-panel) 88%, transparent);
+  color: var(--opus-text);
+  font: inherit;
+  font-size: 0.76rem;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.settingsActionButton:hover,
+.settingsActionButton:focus-visible {
+  border-color: color-mix(in srgb, var(--opus-accent) 55%, var(--opus-border));
+  background: color-mix(in srgb, var(--opus-accent) 12%, var(--opus-panel));
+  outline: none;
+}
+
 .sidebar {
   display: flex;
   flex-direction: column;
@@ -432,7 +452,13 @@ html[data-shell-theme="light"] .shell .content {
 
 .navHeadingLinkActive {
   border-color: color-mix(in srgb, var(--opus-accent) 45%, transparent);
-  background: var(--opus-accent-soft);
+  background:
+    linear-gradient(90deg, color-mix(in srgb, var(--opus-accent) 20%, transparent), transparent 92%),
+    var(--opus-accent-soft);
+  box-shadow:
+    inset 3px 0 0 var(--opus-accent),
+    0 10px 24px color-mix(in srgb, var(--opus-accent) 12%, transparent);
+  color: var(--opus-accent);
 }
 
 .navGroupChevronButton {
@@ -455,6 +481,16 @@ html[data-shell-theme="light"] .shell .content {
 .navGroupChevronButton:hover {
   border-color: var(--opus-border);
   background: color-mix(in srgb, var(--opus-accent-soft) 50%, transparent);
+}
+
+.navGroupChevronButton:disabled {
+  cursor: default;
+  opacity: 0.54;
+}
+
+.navGroupChevronButton:disabled:hover {
+  border-color: transparent;
+  background: transparent;
 }
 
 .navGroupChevron,
@@ -545,7 +581,11 @@ html[data-shell-theme="light"] .shell .content {
 
 .navSubsectionHeadingLinkActive {
   border-color: color-mix(in srgb, var(--opus-accent) 45%, transparent);
-  background: var(--opus-accent-soft);
+  background:
+    linear-gradient(90deg, color-mix(in srgb, var(--opus-accent) 18%, transparent), transparent 92%),
+    var(--opus-accent-soft);
+  box-shadow: inset 3px 0 0 var(--opus-accent);
+  color: var(--opus-accent);
 }
 
 .navSubsectionChevronButton {
@@ -568,6 +608,16 @@ html[data-shell-theme="light"] .shell .content {
 .navSubsectionChevronButton:hover {
   border-color: var(--opus-border);
   background: color-mix(in srgb, var(--opus-accent-soft) 50%, transparent);
+}
+
+.navSubsectionChevronButton:disabled {
+  cursor: default;
+  opacity: 0.54;
+}
+
+.navSubsectionChevronButton:disabled:hover {
+  border-color: transparent;
+  background: transparent;
 }
 
 .navSubsectionButton {
@@ -654,6 +704,9 @@ html[data-shell-theme="light"] .shell .content {
   display: inline-flex;
   align-items: center;
   gap: 8px;
+  width: 100%;
+  min-width: 0;
+  box-sizing: border-box;
   padding: 8px 10px;
   border: 1px solid transparent;
   border-radius: var(--opus-input-radius);
@@ -681,8 +734,14 @@ html[data-shell-theme="light"] .shell .content {
 
 .navLinkActive {
   border-color: color-mix(in srgb, var(--opus-accent) 45%, transparent);
-  background: var(--opus-accent-soft);
+  background:
+    linear-gradient(90deg, color-mix(in srgb, var(--opus-accent) 18%, transparent), transparent 92%),
+    var(--opus-accent-soft);
+  box-shadow:
+    inset 3px 0 0 var(--opus-accent),
+    0 10px 24px color-mix(in srgb, var(--opus-accent) 10%, transparent);
   color: var(--opus-accent);
+  font-weight: 700;
 }
 
 .navLinkLabel {
@@ -691,6 +750,7 @@ html[data-shell-theme="light"] .shell .content {
   display: inline-flex;
   align-items: baseline;
   gap: 2px;
+  white-space: nowrap;
 }
 
 .navLinkNewMark {

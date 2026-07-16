@@ -1,6 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useId, useRef, useState, type CSSProperties, type ReactNode } from "react";
+import { ResizeHandle } from "../ResizeHandle";
 import styles from "./Splitter.module.css";
 
 export type SplitterOrientation = "horizontal" | "vertical";
@@ -76,6 +77,7 @@ export function Splitter({
     orientation === "horizontal"
       ? { width: `calc(${100 - size}% - 4px)` }
       : { height: `calc(${100 - size}% - 4px)` };
+  const handleOrientation = orientation === "horizontal" ? "vertical" : "horizontal";
 
   return (
     <div
@@ -92,13 +94,12 @@ export function Splitter({
       <div className={styles.pane} style={firstStyle}>
         {children[0]}
       </div>
-      <button
+      <ResizeHandle
         aria-label="Resize panes"
-        aria-orientation={orientation}
         aria-valuemax={100 - minSize}
         aria-valuemin={minSize}
         aria-valuenow={Math.round(size)}
-        className={styles.handle}
+        orientation={handleOrientation}
         onKeyDown={(event) => {
           const step = event.shiftKey ? 10 : 2;
           if (orientation === "horizontal") {
@@ -127,8 +128,6 @@ export function Splitter({
           document.body.style.cursor = orientation === "horizontal" ? "col-resize" : "row-resize";
           document.body.style.userSelect = "none";
         }}
-        role="separator"
-        type="button"
       />
       <div className={styles.pane} style={secondStyle}>
         {children[1]}

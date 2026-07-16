@@ -1,6 +1,7 @@
 "use client";
 
 import * as React from "react";
+import * as THREE from "three";
 import { useCallback, useEffect, useId, useMemo, useRef, useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { AccentColorPicker, createAccentStyle } from "opus-react";
@@ -25,6 +26,8 @@ export function createPlaygroundScope() {
     useEffect,
     useRef,
     useId,
+    THREE,
+    three: THREE,
     Chart,
     AccentColorPicker,
     createAccentStyle,

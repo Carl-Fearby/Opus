@@ -19,7 +19,8 @@
       }
     ],
     "paths": {
-      "@/*": ["./*"]
+      "@/*": ["./*"],
+      "opus-react": ["./packages/opus-react/src/index.ts"]
     }
   },
   "include": [

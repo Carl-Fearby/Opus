@@ -1,14 +1,14 @@
 "use client";
 
 import dynamic from "next/dynamic";
-import { useCallback, useRef } from "react";
+import { useCallback, useEffect, useRef } from "react";
 import { OpusThemeProvider } from "@/components/OpusThemeProvider";
 import {
   CompositionPartsList,
   CompositionUsageList,
 } from "@/components/control-detail/ControlDetail/CompositionPartsList";
 import { useComponentsTheme } from "@/components/development/ComponentsThemeProvider";
-import { getCompositionParents } from "@/lib/controls/compositionGraph";
+import { getCompositionParentsForControl } from "@/lib/controls/compositionGraph";
 import { controlHasSettingsPanel } from "@/lib/controls/controlSettingsPanel";
 import { getControl } from "@/lib/controls/registry";
 import {
@@ -40,7 +40,9 @@ export function ComponentsSettingsSidebar() {
   const dragRef = useRef<{ startWidth: number; startX: number } | null>(null);
   const widthRef = useRef(settingsWidth);
 
-  widthRef.current = settingsWidth;
+  useEffect(() => {
+    widthRef.current = settingsWidth;
+  }, [settingsWidth]);
 
   const finishResize = useCallback(() => {
     dragRef.current = null;
@@ -105,7 +107,7 @@ export function ComponentsSettingsSidebar() {
   }
 
   const control = getControl(activeSlug);
-  const compositionParents = getCompositionParents(activeSlug).map((entry) => entry.slug);
+  const compositionParents = control ? getCompositionParentsForControl(control) : [];
   const hasCompositionLinks = Boolean(control?.compositionParts?.length || compositionParents.length);
 
   return (
@@ -137,10 +139,10 @@ export function ComponentsSettingsSidebar() {
             {hasCompositionLinks ? (
               <div className={styles.settingsCompositionLinks}>
                 {control?.compositionParts?.length ? (
-                  <CompositionPartsList parts={control.compositionParts} />
+                  <CompositionPartsList control={control} parts={control.compositionParts} />
                 ) : null}
                 {compositionParents.length ? (
-                  <CompositionUsageList parents={compositionParents} />
+                  <CompositionUsageList controls={compositionParents} parents={compositionParents.map((entry) => entry.slug)} />
                 ) : null}
               </div>
             ) : null}

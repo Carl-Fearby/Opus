@@ -1,9 +1,11 @@
 import type { NotesActivityItem } from "@/components/NotesActivity";
+import { defaultUserProfilePhotoSrc } from "./userProfileDemoData";
 
 export const demoNotesActivity: NotesActivityItem[] = [
   {
     id: "note-1",
     author: "Carl Fearby",
+    avatarSrc: defaultUserProfilePhotoSrc,
     body: "Spoke with Sarah about the new pricing structure. She requested a custom solution for 50+ users.",
     dateGroup: "Today",
     kind: "note",
@@ -42,5 +44,59 @@ export const demoNotesActivity: NotesActivityItem[] = [
     status: "muted",
     tags: [{ label: "Email", tone: "blue" }],
     time: "14:20",
+  },
+  {
+    id: "note-5",
+    author: "Noah Patel",
+    body: "Added procurement contact and confirmed legal review starts tomorrow.",
+    dateGroup: "Yesterday",
+    kind: "note",
+    tags: [
+      { label: "Legal", tone: "cyan" },
+      { label: "Procurement", tone: "pink" },
+    ],
+    time: "11:05",
+  },
+  {
+    id: "note-6",
+    author: "Sophia Carter",
+    body: "Customer opened the renewal pack and viewed pricing twice.",
+    dateGroup: "Monday",
+    kind: "activity",
+    status: "success",
+    tags: [{ label: "Renewal", tone: "teal" }],
+    time: "15:48",
+  },
+  {
+    id: "note-7",
+    author: "James Smith",
+    body: "Requested implementation call with security and platform leads.",
+    dateGroup: "Monday",
+    kind: "activity",
+    status: "default",
+    tags: [{ label: "Implementation", tone: "yellow" }],
+    time: "13:24",
+  },
+  {
+    id: "note-8",
+    author: "Mia Thompson",
+    body: "Shared a draft migration plan and highlighted two integration risks.",
+    dateGroup: "Last week",
+    kind: "note",
+    tags: [
+      { label: "Migration", tone: "slate" },
+      { label: "Risk", tone: "red" },
+    ],
+    time: "17:12",
+  },
+  {
+    id: "note-9",
+    author: "Ethan Brooks",
+    body: "Demo replay sent to the buying committee with next-step checklist.",
+    dateGroup: "Last week",
+    kind: "activity",
+    status: "muted",
+    tags: [{ label: "Demo", tone: "slate" }],
+    time: "10:36",
   },
 ];

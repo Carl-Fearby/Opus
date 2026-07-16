@@ -7,14 +7,16 @@
   --tile-highlight: color-mix(in srgb, var(--tile-accent) 42%, transparent);
   --tile-sheen: color-mix(in srgb, var(--tile-fill) 88%, #ffffff 6%);
   --tile-depth: color-mix(in srgb, var(--tile-fill) 82%, #000 18%);
+  --stat-tile-height: 6.75rem;
   display: flex;
   align-items: flex-start;
   justify-content: space-between;
-  gap: 12px;
+  gap: 10px;
   width: min(100%, 12.75rem);
+  height: var(--stat-tile-height);
   max-width: 12.75rem;
   min-width: 0;
-  padding: 16px 14px;
+  padding: 12px;
   border: 1px solid color-mix(in srgb, var(--tile-accent) 22%, transparent);
   border-radius: 14px;
   background:
@@ -91,14 +93,14 @@
   display: flex;
   flex: 1 1 auto;
   flex-direction: column;
-  gap: 10px;
+  gap: 6px;
   min-width: 0;
 }
 
 .label {
   margin: 0;
   color: var(--tile-muted);
-  font-size: 0.92rem;
+  font-size: 0.82rem;
   font-weight: 600;
   line-height: 1.2;
 }
@@ -106,7 +108,7 @@
 .value {
   margin: 0;
   color: var(--tile-label);
-  font-size: 1.6rem;
+  font-size: 1.38rem;
   font-weight: 700;
   letter-spacing: -0.03em;
   line-height: 1;
@@ -115,7 +117,7 @@
 .meta {
   display: flex;
   flex-direction: column;
-  gap: 4px;
+  gap: 3px;
 }
 
 .trend {
@@ -123,7 +125,7 @@
   align-items: center;
   gap: 4px;
   width: fit-content;
-  font-size: 0.86rem;
+  font-size: 0.78rem;
   font-weight: 700;
   line-height: 1;
 }
@@ -139,7 +141,7 @@
 .comparison {
   margin: 0;
   color: var(--tile-muted);
-  font-size: 0.78rem;
+  font-size: 0.7rem;
   font-weight: 500;
   line-height: 1.2;
 }
@@ -148,9 +150,9 @@
   display: inline-grid;
   flex: 0 0 auto;
   place-items: center;
-  width: 52px;
-  height: 52px;
-  font-size: 2.2rem;
+  width: 44px;
+  height: 44px;
+  font-size: 1.9rem;
   line-height: 1;
   filter:
     drop-shadow(0 0 7px color-mix(in srgb, var(--tile-glow) 80%, transparent))

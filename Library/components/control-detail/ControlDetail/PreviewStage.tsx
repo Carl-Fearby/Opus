@@ -5,9 +5,16 @@ import { PreviewThemeBoundary } from "./PreviewThemeBoundary";
 import styles from "./ControlDetail.module.css";
 
 type PreviewStageProps = {
+  borderless?: boolean;
   children: ReactNode;
 };
 
-export function PreviewStage({ children }: PreviewStageProps) {
-  return <PreviewThemeBoundary className={styles.previewStage}>{children}</PreviewThemeBoundary>;
+export function PreviewStage({ borderless = false, children }: PreviewStageProps) {
+  return (
+    <PreviewThemeBoundary
+      className={[styles.previewStage, borderless ? styles.previewStageBorderless : undefined].filter(Boolean).join(" ")}
+    >
+      {children}
+    </PreviewThemeBoundary>
+  );
 }

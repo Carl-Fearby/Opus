@@ -2,16 +2,28 @@
 
 import {
   createContext,
+  useCallback,
   useContext,
+  useEffect,
+  useMemo,
+  useRef,
   useState,
+  type MouseEvent,
   type ReactNode,
 } from "react";
 import type { SidebarSide, SurfaceDensity } from "@/components/fields/types";
+import { Tooltip } from "../Tooltip";
 import styles from "./Sidebar.module.css";
 
 type SidebarContextValue = {
+  activeItem?: string;
   collapsed: boolean;
   density: SurfaceDensity;
+  getGroupOpenState?: (groupId: string, fallback: boolean) => boolean;
+  onCollapsedGroupSelect?: (groupId: string) => void;
+  onSelect?: (item: SidebarMenuLinkItem) => void;
+  setActiveItem?: (itemId: string) => void;
+  setGroupOpenState?: (groupId: string, open: boolean) => void;
 };
 
 const SidebarContext = createContext<SidebarContextValue>({
@@ -19,34 +31,294 @@ const SidebarContext = createContext<SidebarContextValue>({
   density: "comfortable",
 });
 
+export type SidebarMenuLinkItem = {
+  href?: string;
+  icon?: ReactNode | string;
+  id: string;
+  label: ReactNode;
+  onSelect?: (item: SidebarMenuLinkItem) => void;
+  type?: "item";
+};
+
+export type SidebarMenuGroupItem = {
+  children: SidebarMenuItem[];
+  defaultOpen?: boolean;
+  icon?: ReactNode | string;
+  id: string;
+  label: string;
+  type: "group";
+};
+
+export type SidebarMenuItem = SidebarMenuGroupItem | SidebarMenuLinkItem;
+
 type SidebarProps = {
-  children: ReactNode;
+  activeItem?: string;
+  children?: ReactNode;
   collapsed?: boolean;
+  defaultActiveItem?: string;
   density?: SurfaceDensity;
   footer?: ReactNode;
   header?: ReactNode;
+  menu?: SidebarMenuItem[];
+  navLabel?: string;
+  onCollapsedGroupSelect?: (groupId: string) => void;
+  onSelect?: (item: SidebarMenuLinkItem) => void;
+  persistState?: boolean;
+  renderIcon?: (icon: string) => ReactNode;
   side?: SidebarSide;
+  storageKey?: string;
 };
 
+type SidebarPersistedState = {
+  activeItem?: string;
+  groups?: Record<string, boolean>;
+};
+
+const SIDEBAR_STORAGE_PREFIX = "opus-sidebar-state";
+
+function SidebarOverflowLabel({ label }: { label: string }) {
+  const labelRef = useRef<HTMLSpanElement>(null);
+  const [overflowing, setOverflowing] = useState(false);
+
+  useEffect(() => {
+    const element = labelRef.current;
+    if (!element) {
+      return;
+    }
+
+    const updateOverflow = () => {
+      setOverflowing(element.scrollWidth > element.clientWidth + 1);
+    };
+    const frame = window.requestAnimationFrame(updateOverflow);
+    const observer = new ResizeObserver(updateOverflow);
+    observer.observe(element);
+
+    return () => {
+      window.cancelAnimationFrame(frame);
+      observer.disconnect();
+    };
+  }, [label]);
+
+  return (
+    <Tooltip className={styles.overflowTooltip} content={label} disabled={!overflowing} placement="right">
+      <span ref={labelRef} className={styles.overflowLabel}>{label}</span>
+    </Tooltip>
+  );
+}
+
+function hashString(value: string) {
+  let hash = 5381;
+
+  for (let index = 0; index < value.length; index += 1) {
+    hash = (hash * 33) ^ value.charCodeAt(index);
+  }
+
+  return (hash >>> 0).toString(36);
+}
+
+function serialiseSidebarMenu(menu?: SidebarMenuItem[]) {
+  if (!menu) {
+    return "children";
+  }
+
+  const serialiseItems = (items: SidebarMenuItem[]): unknown[] =>
+    items.map((item) => {
+      if (item.type === "group") {
+        return {
+          children: serialiseItems(item.children),
+          defaultOpen: item.defaultOpen ?? true,
+          icon: typeof item.icon === "string" ? item.icon : "",
+          id: item.id,
+          label: item.label,
+          type: item.type,
+        };
+      }
+
+      return {
+        href: item.href ?? "",
+        icon: typeof item.icon === "string" ? item.icon : "",
+        id: item.id,
+        label: typeof item.label === "string" ? item.label : item.id,
+        type: "item",
+      };
+    });
+
+  return JSON.stringify(serialiseItems(menu));
+}
+
+function readSidebarState(storageKey: string): SidebarPersistedState {
+  if (typeof window === "undefined") {
+    return {};
+  }
+
+  try {
+    const stored = window.localStorage.getItem(storageKey);
+
+    return stored ? (JSON.parse(stored) as SidebarPersistedState) : {};
+  } catch {
+    return {};
+  }
+}
+
+function writeSidebarState(storageKey: string, state: SidebarPersistedState) {
+  if (typeof window === "undefined") {
+    return;
+  }
+
+  try {
+    window.localStorage.setItem(storageKey, JSON.stringify(state));
+  } catch {
+    // Persistence should never break navigation.
+  }
+}
+
 export function Sidebar({
+  activeItem,
   children,
   collapsed = false,
+  defaultActiveItem,
   density = "comfortable",
   footer,
   header,
+  menu,
+  navLabel = "Sidebar navigation",
+  onCollapsedGroupSelect,
+  onSelect,
+  persistState = false,
+  renderIcon,
   side = "left",
+  storageKey,
 }: SidebarProps) {
+  const resolvedStorageKey = useMemo(
+    () =>
+      `${SIDEBAR_STORAGE_PREFIX}:${storageKey ?? hashString(`${navLabel}:${serialiseSidebarMenu(menu)}`)}`,
+    [menu, navLabel, storageKey],
+  );
+  const [persistedState, setPersistedState] = useState<SidebarPersistedState>({});
+  const [motionReady, setMotionReady] = useState(!persistState);
+  const [internalActiveItem, setInternalActiveItem] = useState(defaultActiveItem);
+  const effectiveActiveItem = activeItem ?? (persistState ? persistedState.activeItem ?? internalActiveItem : internalActiveItem);
+
+  useEffect(() => {
+    if (!persistState) {
+      const readyTimeout = window.setTimeout(() => setMotionReady(true), 0);
+      return () => window.clearTimeout(readyTimeout);
+    }
+
+    let firstFrame: number | null = null;
+    let secondFrame: number | null = null;
+    let settleTimeout: number | null = null;
+    const timeout = window.setTimeout(() => {
+      setPersistedState(readSidebarState(resolvedStorageKey));
+      firstFrame = window.requestAnimationFrame(() => {
+        secondFrame = window.requestAnimationFrame(() => {
+          settleTimeout = window.setTimeout(() => setMotionReady(true), 100);
+        });
+      });
+    }, 0);
+
+    return () => {
+      window.clearTimeout(timeout);
+      if (firstFrame !== null) {
+        window.cancelAnimationFrame(firstFrame);
+      }
+      if (secondFrame !== null) {
+        window.cancelAnimationFrame(secondFrame);
+      }
+      if (settleTimeout !== null) {
+        window.clearTimeout(settleTimeout);
+      }
+    };
+  }, [persistState, resolvedStorageKey]);
+
+  const updatePersistedState = useCallback(
+    (next: (current: SidebarPersistedState) => SidebarPersistedState) => {
+      if (!persistState) {
+        return;
+      }
+
+      setPersistedState((current) => {
+        const updated = next(current);
+        writeSidebarState(resolvedStorageKey, updated);
+
+        return updated;
+      });
+    },
+    [persistState, resolvedStorageKey],
+  );
+
+  const setSidebarActiveItem = useCallback(
+    (itemId: string) => {
+      if (persistState) {
+        updatePersistedState((current) => ({
+          ...current,
+          activeItem: itemId,
+        }));
+      }
+
+      if (activeItem === undefined) {
+        setInternalActiveItem(itemId);
+      }
+    },
+    [activeItem, persistState, updatePersistedState],
+  );
+
+  const getGroupOpenState = useCallback(
+    (groupId: string, fallback: boolean) => persistedState.groups?.[groupId] ?? fallback,
+    [persistedState.groups],
+  );
+
+  const setGroupOpenState = useCallback(
+    (groupId: string, open: boolean) => {
+      updatePersistedState((current) => ({
+        ...current,
+        groups: {
+          ...current.groups,
+          [groupId]: open,
+        },
+      }));
+    },
+    [updatePersistedState],
+  );
+
   return (
-    <SidebarContext.Provider value={{ collapsed, density }}>
+    <SidebarContext.Provider
+      value={{
+        activeItem: effectiveActiveItem,
+        collapsed,
+        density,
+        getGroupOpenState: persistState ? getGroupOpenState : undefined,
+        onCollapsedGroupSelect,
+        onSelect,
+        setActiveItem: setSidebarActiveItem,
+        setGroupOpenState: persistState ? setGroupOpenState : undefined,
+      }}
+    >
       <aside
         aria-label="Sidebar"
         className={styles.sidebar}
         data-collapsed={collapsed ? "true" : "false"}
         data-density={density}
+        data-motion-ready={motionReady ? "true" : "false"}
         data-side={side}
       >
         {header ? <div className={styles.header}>{header}</div> : null}
-        <div className={styles.body}>{children}</div>
+        <div className={styles.body}>
+          {menu ? (
+            <SidebarNav aria-label={navLabel}>
+              {menu.map((item) =>
+                renderSidebarMenuItem({
+                  depth: 0,
+                  effectiveActiveItem,
+                  item,
+                  renderIcon,
+                }),
+              )}
+            </SidebarNav>
+          ) : (
+            children
+          )}
+        </div>
         {footer ? <div className={styles.footer}>{footer}</div> : null}
       </aside>
     </SidebarContext.Provider>
@@ -86,37 +358,150 @@ type SidebarLinkProps = {
   active?: boolean;
   children: ReactNode;
   href?: string;
-  onClick?: () => void;
+  icon?: ReactNode;
+  itemId?: string;
+  onClick?: (event: MouseEvent<HTMLAnchorElement | HTMLButtonElement>) => void;
+  onSelect?: (item: SidebarMenuLinkItem) => void;
 };
 
-export function SidebarLink({ active = false, children, href, onClick }: SidebarLinkProps) {
-  const { collapsed } = useContext(SidebarContext);
-  const className = [styles.link, active ? styles.linkActive : ""].filter(Boolean).join(" ");
+export function SidebarLink({
+  active,
+  children,
+  href,
+  icon,
+  itemId,
+  onClick,
+  onSelect,
+}: SidebarLinkProps) {
+  const {
+    activeItem,
+    collapsed,
+    onSelect: onSidebarSelect,
+    setActiveItem,
+  } = useContext(SidebarContext);
+  const isActive = active ?? (itemId ? activeItem === itemId : false);
+  const className = [styles.link, isActive ? styles.linkActive : ""].filter(Boolean).join(" ");
   const label = typeof children === "string" ? children : null;
+  const handleClick = (event: MouseEvent<HTMLAnchorElement | HTMLButtonElement>) => {
+    const item = itemId
+      ? {
+          href,
+          id: itemId,
+          label: children,
+        }
+      : null;
+
+    if (item) {
+      setActiveItem?.(item.id);
+      onSidebarSelect?.(item);
+      onSelect?.(item);
+    }
+
+    onClick?.(event);
+  };
   const content = (
     <>
-      {collapsed && label ? <span aria-hidden="true">{label.charAt(0)}</span> : null}
-      <span className={collapsed ? styles.visuallyHidden : undefined}>{children}</span>
+      {icon ? <span className={styles.icon}>{icon}</span> : null}
+      {!icon && collapsed && label ? <span aria-hidden="true" className={styles.icon}>{label.charAt(0)}</span> : null}
+      {collapsed ? (
+        <span className={styles.visuallyHidden}>{children}</span>
+      ) : label ? (
+        <SidebarOverflowLabel label={label} />
+      ) : (
+        <span className={styles.linkLabel}>{children}</span>
+      )}
     </>
   );
 
-  if (href) {
-    return (
-      <a aria-current={active ? "page" : undefined} className={className} href={href}>
+  const control = href ? (
+      <a aria-current={isActive ? "page" : undefined} className={className} href={href} onClick={handleClick}>
         {content}
       </a>
-    );
-  }
-
-  return (
+    ) : (
     <button
-      aria-current={active ? "page" : undefined}
+      aria-current={isActive ? "page" : undefined}
       className={className}
-      onClick={onClick}
+      onClick={handleClick}
       type="button"
     >
       {content}
     </button>
+  );
+
+  if (collapsed && label) {
+    return (
+      <Tooltip className={styles.collapsedTooltip} content={label} placement="right">
+        {control}
+      </Tooltip>
+    );
+  }
+
+  return control;
+}
+
+function renderSidebarMenuIcon(icon: SidebarMenuItem["icon"], renderIcon?: (icon: string) => ReactNode) {
+  if (!icon) {
+    return null;
+  }
+
+  if (typeof icon === "string") {
+    return renderIcon?.(icon) ?? null;
+  }
+
+  return icon;
+}
+
+function renderSidebarMenuItem({
+  depth,
+  effectiveActiveItem,
+  item,
+  renderIcon,
+}: {
+  depth: number;
+  effectiveActiveItem?: string;
+  item: SidebarMenuItem;
+  renderIcon?: (icon: string) => ReactNode;
+}) {
+  if (item.type === "group") {
+    return (
+      <SidebarGroup
+        defaultOpen={item.defaultOpen}
+        depth={depth}
+        icon={renderSidebarMenuIcon(item.icon, renderIcon)}
+        id={item.id}
+        key={item.id}
+        label={item.label}
+      >
+        {item.children.map((child) =>
+          renderSidebarMenuItem({
+            depth: depth + 1,
+            effectiveActiveItem,
+            item: child,
+            renderIcon,
+          }),
+        )}
+      </SidebarGroup>
+    );
+  }
+
+  const handleClick = (event: MouseEvent<HTMLAnchorElement | HTMLButtonElement>) => {
+    if (!item.href) {
+      event.preventDefault();
+    }
+  };
+
+  return (
+    <SidebarLink
+      itemId={item.id}
+      active={effectiveActiveItem ? effectiveActiveItem === item.id : undefined}
+      href={item.href}
+      icon={renderSidebarMenuIcon(item.icon, renderIcon)}
+      key={item.id}
+      onClick={handleClick}
+      onSelect={item.onSelect}
+    >
+      {item.label}
+    </SidebarLink>
   );
 }
 
@@ -137,35 +522,81 @@ function createGroupListId(label: string, id?: string) {
 type SidebarGroupProps = {
   children: ReactNode;
   defaultOpen?: boolean;
+  depth?: number;
+  icon?: ReactNode;
   id?: string;
   label: string;
 };
 
-export function SidebarGroup({ children, defaultOpen = true, id, label }: SidebarGroupProps) {
-  const { collapsed } = useContext(SidebarContext);
+export function SidebarGroup({ children, defaultOpen = true, depth = 0, icon, id, label }: SidebarGroupProps) {
+  const { collapsed, getGroupOpenState, onCollapsedGroupSelect, setGroupOpenState } = useContext(SidebarContext);
   const listId = createGroupListId(label, id);
-  const [open, setOpen] = useState(defaultOpen);
+  const [open, setOpen] = useState(() => getGroupOpenState?.(listId, defaultOpen) ?? defaultOpen);
+  const [collapsedOpen, setCollapsedOpen] = useState(false);
+
+  useEffect(() => {
+    const timeout = window.setTimeout(() => {
+      setOpen(getGroupOpenState?.(listId, defaultOpen) ?? defaultOpen);
+    }, 0);
+
+    return () => window.clearTimeout(timeout);
+  }, [defaultOpen, getGroupOpenState, listId]);
+
+  const toggleOpen = () => {
+    const next = !open;
+
+    setOpen(next);
+    setGroupOpenState?.(listId, next);
+  };
 
   if (collapsed) {
+    if (depth > 0) {
+      return (
+        <div className={styles.collapsedGroupWrap}>
+          <Tooltip className={styles.collapsedTooltip} content={label} placement="right">
+            <button
+              aria-expanded={collapsedOpen}
+              aria-label={`${collapsedOpen ? "Close" : "Open"} ${label}`}
+              className={styles.collapsedGroup}
+              onClick={() => {
+                setCollapsedOpen((current) => !current);
+                onCollapsedGroupSelect?.(listId);
+              }}
+              type="button"
+            >
+              <span aria-hidden="true" className={styles.icon}>
+                {icon ?? label.charAt(0)}
+              </span>
+              <span
+                aria-hidden="true"
+                className={collapsedOpen ? styles.collapsedGroupChevronOpen : styles.collapsedGroupChevron}
+              />
+            </button>
+          </Tooltip>
+          {collapsedOpen ? <div className={styles.collapsedSubmenu}>{children}</div> : null}
+        </div>
+      );
+    }
+
     return (
-      <div aria-label={label} className={styles.group} role="group">
+      <div aria-label={label} className={styles.group} data-depth={depth} role="group">
         {children}
       </div>
     );
   }
 
   return (
-    <div aria-label={label} className={styles.group} role="group">
+    <div aria-label={label} className={styles.group} data-depth={depth} role="group">
       <div className={styles.groupHeader}>
-        <span className={styles.groupLabel}>{label}</span>
         <button
           aria-controls={listId}
           aria-expanded={open}
-          aria-label={`${open ? "Collapse" : "Expand"} ${label}`}
-          className={styles.groupToggle}
-          onClick={() => setOpen((current) => !current)}
+          className={styles.groupLabel}
+          onClick={toggleOpen}
           type="button"
         >
+          {icon ? <span className={styles.icon}>{icon}</span> : null}
+          <SidebarOverflowLabel label={label} />
           <span aria-hidden="true" className={open ? styles.groupChevronOpen : styles.groupChevron} />
         </button>
       </div>

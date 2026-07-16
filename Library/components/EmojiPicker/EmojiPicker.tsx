@@ -268,6 +268,7 @@ export function EmojiPicker({
     <div
       aria-label="Emoji picker"
       className={styles.panel}
+      data-opus-emoji-picker="true"
       data-placement={placement}
       data-portaled="true"
       data-theme={theme}
@@ -340,6 +341,7 @@ export function EmojiPicker({
   return (
     <div
       className={[styles.root, className].filter(Boolean).join(" ")}
+      data-opus-emoji-picker="true"
       data-placement={placement}
       ref={rootRef}
     >

@@ -4,6 +4,7 @@
   display: grid;
   grid-auto-flow: column;
   grid-auto-columns: var(--tile-size);
+  align-items: start;
   justify-content: start;
   gap: 12px;
   width: 100%;
@@ -26,8 +27,7 @@
 
 .row[data-layout="fill"] .tile {
   width: 100%;
-  height: auto;
-  aspect-ratio: 1 / 1;
+  height: var(--tile-size);
 }
 
 @media (max-width: 900px) {

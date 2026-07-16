@@ -3,6 +3,12 @@
 import { useLayoutEffect, useRef, useState, type ChangeEvent } from "react";
 import { CatalogIcon } from "@/components/CatalogIcon";
 import { EmojiPicker } from "@/components/EmojiPicker";
+import {
+  DEFAULT_NOTE_TAG_OPTIONS,
+  NoteTagList,
+  NoteTagPicker,
+  type NoteTagOption,
+} from "@/components/NoteTag";
 import styles from "./NoteComposer.module.css";
 
 export type NoteComposerProps = {
@@ -13,12 +19,16 @@ export type NoteComposerProps = {
   onChange?: (value: string) => void;
   onEmojiSelect?: (emoji: string) => void;
   onMentionClick?: () => void;
-  onSave?: (value: string) => void;
+  onSave?: (value: string, tags: NoteTagOption[]) => void;
+  onTagsChange?: (tags: NoteTagOption[]) => void;
   placeholder?: string;
   saveButtonLabel?: string;
   showAttach?: boolean;
   showEmoji?: boolean;
   showMention?: boolean;
+  showTags?: boolean;
+  selectedTags?: NoteTagOption[];
+  tagOptions?: NoteTagOption[];
   value?: string;
 };
 
@@ -31,18 +41,24 @@ export function NoteComposer({
   onEmojiSelect,
   onMentionClick,
   onSave,
+  onTagsChange,
   placeholder = "Add a note...",
   saveButtonLabel = "Save Note",
   showAttach = true,
   showEmoji = true,
   showMention = true,
+  showTags = false,
+  selectedTags,
+  tagOptions = DEFAULT_NOTE_TAG_OPTIONS,
   value,
 }: NoteComposerProps) {
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const selectionRef = useRef({ end: 0, start: 0 });
   const pendingCaretRef = useRef<number | null>(null);
   const [internalValue, setInternalValue] = useState(defaultValue);
+  const [internalTags, setInternalTags] = useState<NoteTagOption[]>([]);
   const currentValue = value ?? internalValue;
+  const currentTags = selectedTags ?? internalTags;
 
   const setValue = (nextValue: string) => {
     if (value === undefined) {
@@ -50,6 +66,19 @@ export function NoteComposer({
     }
 
     onChange?.(nextValue);
+  };
+
+  const setTags = (nextTags: NoteTagOption[]) => {
+    if (selectedTags === undefined) {
+      setInternalTags(nextTags);
+    }
+
+    onTagsChange?.(nextTags);
+  };
+
+  const removeTag = (tag: NoteTagOption) => {
+    const tagKey = tag.id ?? tag.label;
+    setTags(currentTags.filter((currentTag) => (currentTag.id ?? currentTag.label) !== tagKey));
   };
 
   const syncSelection = () => {
@@ -78,10 +107,14 @@ export function NoteComposer({
       return;
     }
 
-    onSave?.(trimmed);
+    onSave?.(trimmed, currentTags);
 
     if (value === undefined) {
       setInternalValue("");
+    }
+
+    if (selectedTags === undefined) {
+      setInternalTags([]);
     }
   };
 
@@ -126,6 +159,14 @@ export function NoteComposer({
         placeholder={placeholder}
         value={currentValue}
       />
+      {showTags && currentTags.length ? (
+        <NoteTagList
+          className={styles.selectedTags}
+          onRemove={removeTag}
+          size="sm"
+          tags={currentTags}
+        />
+      ) : null}
       <div className={styles.footer}>
         <div className={styles.tools}>
           {showAttach ? (
@@ -167,6 +208,17 @@ export function NoteComposer({
               }
               onSelect={handleEmojiSelect}
             />
+          ) : null}
+          {showTags ? (
+            <NoteTagPicker
+              buttonClassName={styles.toolButton}
+              label="Add tags"
+              onChange={setTags}
+              options={tagOptions}
+              selectedTags={currentTags}
+            >
+              <CatalogIcon iconName="tag" />
+            </NoteTagPicker>
           ) : null}
         </div>
         <button

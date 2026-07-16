@@ -36,7 +36,11 @@
 
 .footer {
   padding-top: 10px;
-  border-top: 1px solid color-mix(in srgb, var(--dashboard-section-text) 10%, transparent);
+  border-top: 1px solid color-mix(
+    in srgb,
+    var(--dashboard-section-text, var(--opus-text)) 10%,
+    transparent
+  );
 }
 
 .footerAction {

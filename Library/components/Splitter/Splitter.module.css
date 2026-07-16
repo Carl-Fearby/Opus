@@ -39,41 +39,6 @@
   padding: 12px;
 }
 
-.handle {
-  flex: 0 0 8px;
-  padding: 0;
-  border: 0;
-  background: color-mix(in srgb, var(--opus-muted) 16%, transparent);
-  cursor: col-resize;
-  position: relative;
-}
-
-.root[data-orientation="vertical"] .handle {
-  cursor: row-resize;
-}
-
-.handle::after {
-  content: "";
-  position: absolute;
-  inset: 20% 2px;
-  border-radius: 999px;
-  background: color-mix(in srgb, var(--opus-muted) 55%, transparent);
-}
-
-.root[data-orientation="vertical"] .handle::after {
-  inset: 2px 20%;
-}
-
-.handle:hover,
-.handle:focus-visible {
-  background: color-mix(in srgb, var(--opus-accent) 22%, transparent);
-}
-
-.handle:focus-visible {
-  outline: none;
-  box-shadow: 0 0 0 3px color-mix(in srgb, var(--opus-accent) 24%, transparent);
-}
-
 .srOnly {
   position: absolute;
   width: 1px;

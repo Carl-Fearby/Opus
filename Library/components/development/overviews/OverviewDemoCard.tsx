@@ -16,19 +16,14 @@ import styles from "./overview.module.css";
 
 type OverviewDemoCardProps = {
   children?: ReactNode;
-  previewCategory?: "labs";
   slug: ControlSlug;
   title?: string;
 };
 
-export function OverviewDemoCard({ children, previewCategory, slug, title }: OverviewDemoCardProps) {
+export function OverviewDemoCard({ children, slug, title }: OverviewDemoCardProps) {
   const control = getControl(slug);
   const [settings, setSettings] = useState<ControlSettings>(() => {
-    const defaults = getDefaultSettings(slug);
-    if (previewCategory === "labs" && slug === "user-profile") {
-      return { ...defaults, wrapInContainer: true };
-    }
-    return defaults;
+    return getDefaultSettings(slug);
   });
 
   if (!control) {
@@ -41,8 +36,8 @@ export function OverviewDemoCard({ children, previewCategory, slug, title }: Ove
         <span className="opus-panel-title">{title ?? control.title}</span>
         <div className={previewStyles.previewToolbar}>
           <PreviewThemeControls id={`preview-theme-toggle-${slug}`} />
-          <OpenInPlaygroundLink category={previewCategory} settings={settings} slug={slug} />
-          <Link className={styles.moreLink} href={componentPath(slug, { category: previewCategory })}>
+          <OpenInPlaygroundLink category={control.category} settings={settings} slug={slug} />
+          <Link className={styles.moreLink} href={componentPath(slug)}>
             More
           </Link>
         </div>
@@ -51,7 +46,7 @@ export function OverviewDemoCard({ children, previewCategory, slug, title }: Ove
         <PreviewStage>
           {children ?? (
             <ControlPreview
-              category={previewCategory}
+              category={control.category}
               slug={slug}
               settings={settings}
               onSettingsChange={setSettings}

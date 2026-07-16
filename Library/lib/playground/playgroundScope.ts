@@ -1,14 +1,12 @@
 "use client";
 
 import * as React from "react";
+import * as THREE from "three";
 import { useCallback, useEffect, useId, useMemo, useRef, useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { AccentColorPicker, createAccentStyle } from "opus-react";
-import { Chart } from "opus-react";
 import { ErrorPage } from "@/components/documentation/ErrorPage";
 import { ForbiddenPage, ForbiddenPageContent } from "@/components/documentation/ForbiddenPage";
 import { NotFoundPage, NotFoundPageContent } from "@/components/documentation/NotFoundPage";
-import { IconPicker } from "opus-react";
 import * as Fields from "opus-react";
 import { demoNotesActivity } from "@/lib/controls/notesActivityDemoData";
 import { demoRecentActivity } from "@/lib/controls/recentActivityDemoData";
@@ -25,10 +23,8 @@ export function createPlaygroundScope() {
     useEffect,
     useRef,
     useId,
-    Chart,
-    AccentColorPicker,
-    createAccentStyle,
-    IconPicker,
+    THREE,
+    three: THREE,
     ErrorPage,
     ForbiddenPage,
     ForbiddenPageContent,

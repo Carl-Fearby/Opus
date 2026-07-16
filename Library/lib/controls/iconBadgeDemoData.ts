@@ -51,23 +51,18 @@ function formatBadgeProps(
 }
 
 export function formatIconBadgeToolbarUsage(size: string, tone: string): string {
-  const badges = iconBadgeToolbarDemoItems.map((item) => formatBadgeProps(item, size, tone, "reportAction")).join("\n");
-  const themeBadge = formatBadgeProps(iconBadgeToolbarThemeItem, size, tone, "reportAction");
+  const badges = iconBadgeToolbarDemoItems.map((item) => formatBadgeProps(item, size, tone, "console.log")).join("\n");
+  const themeBadge = formatBadgeProps(iconBadgeToolbarThemeItem, size, tone, "console.log");
 
-  return `(
-  <>
-    <div
-      style={{
-        display: "inline-flex",
-        flexWrap: "wrap",
-        alignItems: "center",
-        gap: 6,
-      }}
-    >
+  return `<div
+  style={{
+    display: "inline-flex",
+    flexWrap: "wrap",
+    alignItems: "center",
+    gap: 6,
+  }}
+>
 ${badges}
 ${themeBadge}
-    </div>
-    <p>{lastAction}</p>
-  </>
-)`;
+</div>`;
 }

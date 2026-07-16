@@ -11,8 +11,16 @@ function stripModulePreamble(code: string) {
     .trim();
 }
 
+function normalisePlaygroundStyleTags(code: string) {
+  return code
+    .replace(/<style\s+jsx\s+global(\s*>)/g, "<style$1")
+    .replace(/<style\s+global\s+jsx(\s*>)/g, "<style$1")
+    .replace(/<style\s+jsx(\s*>)/g, "<style$1")
+    .replace(/<style\s+jsx=\{true\}(\s*>)/g, "<style$1");
+}
+
 export function compilePlaygroundCode(code: string): ComponentType {
-  const cleaned = stripModulePreamble(code);
+  const cleaned = normalisePlaygroundStyleTags(stripModulePreamble(code));
 
   if (!cleaned) {
     throw new Error("Add component code to preview it here.");

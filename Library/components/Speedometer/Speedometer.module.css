@@ -3,9 +3,10 @@
   width: 260px;
   min-width: 260px;
   max-width: 260px;
-  height: auto;
+  height: 154px;
   flex-shrink: 0;
   aspect-ratio: 220 / 130;
+  margin-inline: auto;
   overflow: hidden;
 }
 

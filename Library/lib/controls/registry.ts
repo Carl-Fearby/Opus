@@ -11,6 +11,7 @@ import { tilesCatalog } from "./tilesCatalog";
 
 export const componentCategories: { id: ComponentCategory; label: string }[] = [
   { id: "content", label: "Content" },
+  { id: "dashboard", label: "Dashboard" },
   { id: "forms", label: "Forms" },
   { id: "graphs", label: "Graphs" },
   { id: "labs", label: "Labs" },
@@ -21,12 +22,72 @@ export const componentCategories: { id: ComponentCategory; label: string }[] = [
 export const categoryDescriptions: Record<ComponentCategory, string> = {
   content:
     "Expandable sections, grouped accordions, alerts, navigation menus, empty states, sidebars, and show more / show less controls.",
+  dashboard: "Dashboard widgets, metric cards, progress components, profile panels, and data-rich summary blocks.",
   forms: "Inputs, selectors, toggles, buttons, and every field pattern used across Opus forms.",
   graphs: "Charts and visualisations for comparing, trending, segmenting, and exploring metric data.",
   labs: "Experimental compositions that combine multiple library components into ready-made patterns.",
   overlays: "Tooltips, command palettes, modals, drawers, and toast notifications for contextual help and feedback.",
   system: "Application shells, setup boilerplates, and route-level pages such as error and access-denied states.",
 };
+
+const compositionPartsBySlug: Partial<Record<ControlSlug, ControlSlug[]>> = {
+  "403-page": ["button"],
+  "404-page": ["button"],
+  "accordion-group": ["accordion"],
+  "app-setup": ["theme-provider", "portal-host", "drawer", "button"],
+  "avatar-group": ["avatar"],
+  calendar: ["modal", "button", "date-picker", "select", "text-input"],
+  carousel: ["image-thumbnail", "lightbox"],
+  "command-palette": ["portal", "search-input", "empty-state"],
+  "content-timeline": ["avatar"],
+  "context-menu": ["dropdown-menu"],
+  "copy-button": ["button"],
+  "deals-over-time": ["line-chart"],
+  dialog: ["button", "portal"],
+  drawer: ["button", "portal"],
+  "dropdown-menu": ["button"],
+  "emoji-picker": ["popover", "search-input", "button"],
+  "gauge": ["progress-ring", "trend-badge"],
+  "image-crop-upload": ["file-upload", "range-slider", "button"],
+  "image-gallery": ["image-thumbnail", "lightbox"],
+  "image-thumbnail": ["lightbox"],
+  "kpi-card": ["trend-badge"],
+  lightbox: ["portal"],
+  "metric-tile": ["sparkline"],
+  modal: ["button", "portal"],
+  "model-gallery": ["model-thumbnail", "model-lightbox", "model-viewer"],
+  "model-lightbox": ["portal", "model-viewer"],
+  "model-thumbnail": ["model-viewer", "model-lightbox"],
+  "note-composer": ["textarea", "button", "emoji-picker"],
+  "pipeline-overview": ["funnel-chart"],
+  popover: ["button"],
+  "profile-photo-upload": ["image-crop-upload"],
+  "range-slider": ["tooltip"],
+  "rich-text-field": ["tooltip"],
+  "stat-card": ["trend-badge"],
+  "stat-tiles": ["stat-tile"],
+  "tabs": ["button"],
+  "theme-switcher": ["theme-toggle"],
+  splitter: ["resize-handle"],
+  "three-pane-layout": ["sidebar", "panel", "resize-handle"],
+  tiles: ["tile"],
+  "toast": ["alert"],
+  "top-navigation": ["dropdown-menu", "mega-menu"],
+  "top-performing-users": ["avatar", "progress-bar"],
+  "upcoming-tasks": ["checkbox"],
+  "user-profile": ["avatar", "dropdown-menu", "modal", "image-crop-upload"],
+};
+
+function withCompositionParts(control: ControlDefinition): ControlDefinition {
+  const compositionParts = control.compositionParts ?? compositionPartsBySlug[control.slug];
+
+  return compositionParts?.length
+    ? {
+        ...control,
+        compositionParts: [...compositionParts],
+      }
+    : control;
+}
 
 const graphControls: ControlDefinition[] = chartCatalog.map((entry) => ({
   slug: entry.slug,
@@ -107,10 +168,9 @@ const systemControls: ControlDefinition[] = systemCatalog.map((entry) => ({
 const dashboardControls: ControlDefinition[] = dashboardCatalog.map((entry) => ({
   slug: entry.slug,
   title: entry.title,
-  category: "content",
+  category: "dashboard",
   componentName: entry.componentName,
   description: entry.description,
-  navigationGroup: entry.navigationGroup,
   sourceFiles: entry.sourceFiles,
   usesFieldShell: false,
 }));
@@ -179,6 +239,18 @@ const formsControls: Record<(typeof formsControlOrder)[number], ControlDefinitio
     sourceFiles: [
       "components/fields/ChipInputField/ChipInputField.tsx",
       "components/fields/ChipInputField/ChipInputField.module.css",
+    ],
+    usesFieldShell: true,
+  },
+  "choice-chips": {
+    slug: "choice-chips",
+    title: "Choice chips",
+    category: "forms",
+    componentName: "ChoiceChips",
+    description: "Selectable chip group for compact single or multiple choice decisions.",
+    sourceFiles: [
+      "components/fields/ChoiceChipsField/ChoiceChipsField.tsx",
+      "components/fields/ChoiceChipsField/ChoiceChipsField.module.css",
     ],
     usesFieldShell: true,
   },
@@ -509,7 +581,7 @@ const formsControls: Record<(typeof formsControlOrder)[number], ControlDefinitio
   },
 };
 
-export const controls: ControlDefinition[] = [
+const rawControls: ControlDefinition[] = [
   ...formsControlOrder.map((slug) => formsControls[slug]),
   ...graphControls,
   {
@@ -1155,7 +1227,7 @@ export const controls: ControlDefinition[] = [
     title: "Sidebar",
     category: "content",
     componentName: "Sidebar",
-    description: "Persistent navigation rail with optional header, grouped links, and layout shell.",
+    description: "Icon-led side navigation surface with optional header, grouped links, and no container chrome.",
     navigationGroup: "Navigation",
     sourceFiles: ["components/Sidebar/Sidebar.tsx", "components/Sidebar/Sidebar.module.css"],
     usesFieldShell: false,
@@ -1181,6 +1253,8 @@ export const controls: ControlDefinition[] = [
     usesFieldShell: false,
   },
 ];
+
+export const controls: ControlDefinition[] = rawControls.map(withCompositionParts);
 
 const controlMap = new Map<ControlSlug, ControlDefinition>();
 for (const control of controls) {

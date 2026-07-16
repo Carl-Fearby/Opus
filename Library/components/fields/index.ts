@@ -10,6 +10,8 @@ export type {
   ChartVariant,
   ChipInputPreset,
   ChipInputVariant,
+  ChoiceChipsSelectionMode,
+  ChoiceChipsVariant,
   ChoiceControlSize,
   ChoiceOption,
   ChoiceShape, ContentTimelineStatus, DescriptionListLayout, DialogActionSet, DividerOrientation, DividerTone, DrawerSide, DropdownMenuPlacement, EmptyStateIcon, FieldMode, GalleryImage, ImageThumbnailSize, InputControlSize, LabelPosition, ModalSize, ModelAsset, ModelThumbnailSize, PopoverPlacement, SidebarSide, SkeletonAnimation, SkeletonVariant, StatisticTrend, SurfaceDensity, SurfaceTone, TableDensity, TabsOrientation, TabsVariant, Theme, ToastHorizontalPosition, ToastVerticalPosition, ToastViewportPosition } from "./types";
@@ -27,6 +29,7 @@ export type { ImageCropUploadFieldProps, ImageCropUploadResult } from "./ImageCr
 export { NumberField } from "./NumberField";
 export { Radio, RadioGroup } from "./RadioGroup";
 export { ChipInputField, ChipInput } from "./ChipInputField";
+export { ChoiceChips, ChoiceChipsField } from "./ChoiceChipsField";
 export { RangeField } from "./RangeField";
 export { SelectField } from "./SelectField";
 export { SwitchField } from "./SwitchField";
@@ -146,10 +149,14 @@ export { Grid } from "../Grid";
 export type { GridProps } from "../Grid";
 export { Splitter } from "../Splitter";
 export type { SplitterOrientation, SplitterProps } from "../Splitter";
+export { ResizeHandle } from "../ResizeHandle";
+export type { ResizeHandleBackground, ResizeHandleHeight, ResizeHandleOrientation, ResizeHandleProps } from "../ResizeHandle";
 export { ResizablePanel } from "../ResizablePanel";
 export type { ResizablePanelProps } from "../ResizablePanel";
 export { DockLayout } from "../DockLayout";
 export type { DockLayoutProps } from "../DockLayout";
+export { ThreePaneLayout } from "../ThreePaneLayout";
+export type { ThreePaneLayoutProps, ThreePaneLayoutSize } from "../ThreePaneLayout";
 export { ScrollArea } from "../ScrollArea";
 export type { ScrollAreaProps } from "../ScrollArea";
 export { AspectRatio } from "../AspectRatio";
@@ -196,8 +203,10 @@ export { RecentActivity } from "../RecentActivity";
 export type { RecentActivityItem, RecentActivityProps } from "../RecentActivity";
 export { NoteComposer } from "../NoteComposer";
 export type { NoteComposerProps } from "../NoteComposer";
+export { DEFAULT_NOTE_TAG_OPTIONS, NoteTag, NoteTagList, NoteTagPicker } from "../NoteTag";
+export type { NoteTagOption, NoteTagTone } from "../NoteTag";
 export { NotesActivity } from "../NotesActivity";
-export type { NotesActivityItem, NotesActivityProps } from "../NotesActivity";
+export type { NotesActivityItem, NotesActivityProps, NotesActivityTag, NotesActivityTagTone } from "../NotesActivity";
 export { TopPerformingUsers } from "../TopPerformingUsers";
 export type { TopPerformingUserItem, TopPerformingUsersProps } from "../TopPerformingUsers";
 export { UserProfileWidget } from "../UserProfileWidget";
@@ -267,6 +276,7 @@ export {
   SidebarLink,
   SidebarNav,
 } from "../Sidebar";
+export type { SidebarMenuGroupItem, SidebarMenuItem, SidebarMenuLinkItem } from "../Sidebar";
 export {
   defaultTopNavigationBarMenus,
   defaultTopNavigationMenus,

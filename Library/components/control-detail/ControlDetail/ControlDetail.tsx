@@ -9,6 +9,7 @@ import { componentRawPath } from "@/lib/controls/routes";
 import { storePlaygroundSeed } from "@/lib/playground/playgroundNavigation";
 import type { ControlDefinition, ControlSettings } from "@/lib/controls/types";
 import { ControlDetailPanel } from "./ControlDetailPanel";
+import { CompositionPartsList } from "./CompositionPartsList";
 import { OpenInPlaygroundLink } from "./OpenInPlaygroundLink";
 import { PreviewLoading } from "./PreviewLoading";
 import { PreviewStage } from "./PreviewStage";
@@ -64,9 +65,13 @@ export function ControlDetail({ control, defaultSettings, documentation }: Contr
 
   return (
     <div className={styles.page}>
-      <ControlDetailPanel actions={panelActions} title="Preview">
+      <ControlDetailPanel
+        actions={panelActions}
+        className={control.slug === "lab-test-layout" ? styles.testLayoutPreviewPanel : undefined}
+        title="Preview"
+      >
         <div className={styles.previewBody}>
-          <PreviewStage>
+          <PreviewStage borderless={control.slug === "lab-test-layout"}>
             <ControlPreview
               category={control.category}
               slug={control.slug}
@@ -78,6 +83,8 @@ export function ControlDetail({ control, defaultSettings, documentation }: Contr
       </ControlDetailPanel>
 
       {documentation ? <ComponentDocumentation content={documentation} /> : null}
+
+      {control.compositionParts?.length ? <CompositionPartsList control={control} parts={control.compositionParts} /> : null}
 
       <UsageCodeViewer category={control.category} settings={settings} slug={control.slug} />
     </div>

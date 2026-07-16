@@ -10,6 +10,7 @@ type SwitchFieldProps = {
   help?: string;
   id: string;
   label: string;
+  labelVisuallyHidden?: boolean;
   labelPosition?: LabelPosition;
   mode?: FieldMode;
   size?: InputControlSize;
@@ -22,6 +23,7 @@ export function SwitchField({
   help,
   id,
   label,
+  labelVisuallyHidden,
   labelPosition = "left",
   mode = "flagged",
   size = "md",
@@ -40,6 +42,7 @@ export function SwitchField({
       label={label}
       labelPosition={labelPosition}
       labelTag="label"
+      labelVisuallyHidden={labelVisuallyHidden}
       mode={mode}
     >
       <div className={`${styles.toggle} ${inputControlSizeClassName[size]}`}>

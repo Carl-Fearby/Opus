@@ -4,27 +4,33 @@ import Link from "next/link";
 import { useSetComponentsPageHeader } from "@/components/development/ComponentsThemeProvider";
 import { getCategoryIcon, getComponentIcon, getNavigationGroupIcon } from "@/lib/controls/componentIcons";
 import { categoryDescriptions, componentCategories, getControlSectionsByCategory, getControlsByCategory } from "@/lib/controls/registry";
-import { categoryPath, componentPath } from "@/lib/controls/routes";
+import { categoryPath, componentPath, COMPONENTS_BASE_PATH } from "@/lib/controls/routes";
 import { ComponentIcon } from "@/components/development/ComponentIcon";
 import styles from "./overview.module.css";
 
 export function ComponentsHubOverview() {
   useSetComponentsPageHeader(
     "Overview",
-    "Browse components by category in the sidebar. Expand grouped sections under Content, or search the menu to jump straight to any component.",
+    "Browse components by category in the sidebar. Expand grouped sections or search the menu to jump straight to any component.",
   );
 
   return (
     <div className={styles.hubPage}>
       <section className={styles.hubIntro} aria-label="How to browse">
         <p>
-          Use the sidebar to explore <strong>Content</strong>, <strong>Forms</strong>,{" "}
-          <strong>Graphs</strong>, <strong>Labs</strong>, <strong>System</strong>, and{" "}
-          <strong>Overlays</strong>. Under Content, open groups such as Accordion, Data, Images, and
-          Navigation. Labs holds combined compositions built from multiple components. System holds
-          route-level pages such as 404 and 403. The search field above the menu lists matching
-          components in a flat list without the tree.
+          Use the sidebar to explore <strong>Content</strong>, <strong>Dashboard</strong>,{" "}
+          <strong>Forms</strong>, <strong>Graphs</strong>, <strong>Labs</strong>,{" "}
+          <strong>System</strong>, and <strong>Overlays</strong>. Dashboard now has its own
+          section for metric cards, widgets, and summary panels. Labs holds combined compositions
+          built from multiple components. System holds route-level pages such as 404 and 403. The
+          search field above the menu filters the tree while keeping each match inside its parent
+          section.
         </p>
+        <div className={styles.hubIntroActions}>
+          <Link className={styles.hubIntroLink} href={`${COMPONENTS_BASE_PATH}/relationships`}>
+            View component relationship tree
+          </Link>
+        </div>
       </section>
 
       {componentCategories.map((category) => {

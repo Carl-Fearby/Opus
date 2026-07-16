@@ -1,31 +1,45 @@
-export const EMOJI_RECENT_STORAGE_KEY = "opus-emoji-recent";
-export const EMOJI_FREQUENT_STORAGE_KEY = "opus-emoji-frequency";
+export const EMOJI_RECENT_STORAGE_KEY = "opus-emoji-recent-v2";
+export const EMOJI_RECENT_LEGACY_KEYS = ["opus-emoji-recent", "opus-emoji-frequency"] as const;
 export const EMOJI_RECENT_MAX = 24;
 
-type StoredFrequentEmoji = {
-  count: number;
-  emoji: string;
-  lastUsed: number;
-};
+function normaliseRecentEmojis(emojis: readonly string[]): string[] {
+  const seen = new Set<string>();
+  const next: string[] = [];
 
-function isStoredFrequentEmoji(entry: unknown): entry is StoredFrequentEmoji {
-  return (
-    typeof entry === "object" &&
-    entry !== null &&
-    typeof (entry as StoredFrequentEmoji).emoji === "string" &&
-    typeof (entry as StoredFrequentEmoji).count === "number" &&
-    typeof (entry as StoredFrequentEmoji).lastUsed === "number"
-  );
+  for (const emoji of emojis) {
+    const trimmed = emoji.trim();
+    if (!trimmed || seen.has(trimmed)) {
+      continue;
+    }
+
+    seen.add(trimmed);
+    next.push(trimmed);
+
+    if (next.length >= EMOJI_RECENT_MAX) {
+      break;
+    }
+  }
+
+  return next;
 }
 
-function sortFrequentEmojis(entries: StoredFrequentEmoji[]) {
-  return entries
-    .filter((entry) => entry.emoji.trim().length > 0 && entry.count > 0)
-    .sort((a, b) => b.count - a.count || b.lastUsed - a.lastUsed)
-    .slice(0, EMOJI_RECENT_MAX);
+function clearLegacyEmojiHistory() {
+  if (typeof window === "undefined") {
+    return;
+  }
+
+  for (const key of EMOJI_RECENT_LEGACY_KEYS) {
+    window.localStorage.removeItem(key);
+  }
 }
 
-function readLegacyRecentEmojis(): string[] {
+function readStoredRecentEmojis(): string[] {
+  if (typeof window === "undefined") {
+    return [];
+  }
+
+  clearLegacyEmojiHistory();
+
   try {
     const raw = window.localStorage.getItem(EMOJI_RECENT_STORAGE_KEY);
     if (!raw) {
@@ -34,52 +48,31 @@ function readLegacyRecentEmojis(): string[] {
 
     const parsed: unknown = JSON.parse(raw);
     if (!Array.isArray(parsed)) {
+      window.localStorage.removeItem(EMOJI_RECENT_STORAGE_KEY);
       return [];
     }
 
-    return parsed.filter((entry): entry is string => typeof entry === "string" && entry.length > 0);
+    return normaliseRecentEmojis(
+      parsed.filter((entry): entry is string => typeof entry === "string" && entry.length > 0),
+    );
   } catch {
-    return [];
-  }
-}
-
-function readFrequentEmojiEntries(): StoredFrequentEmoji[] {
-  if (typeof window === "undefined") {
-    return [];
-  }
-
-  try {
-    const raw = window.localStorage.getItem(EMOJI_FREQUENT_STORAGE_KEY);
-    if (raw) {
-      const parsed: unknown = JSON.parse(raw);
-      if (Array.isArray(parsed)) {
-        return sortFrequentEmojis(parsed.filter(isStoredFrequentEmoji));
-      }
-    }
-
-    const now = Date.now();
-    const migrated = readLegacyRecentEmojis().map((emoji, index) => ({
-      count: 1,
-      emoji,
-      lastUsed: now - index,
-    }));
-
-    if (migrated.length) {
-      window.localStorage.setItem(EMOJI_FREQUENT_STORAGE_KEY, JSON.stringify(sortFrequentEmojis(migrated)));
-    }
-
-    return sortFrequentEmojis(migrated);
-  } catch {
+    window.localStorage.removeItem(EMOJI_RECENT_STORAGE_KEY);
     return [];
   }
 }
 
 export function readRecentEmojis(): string[] {
+  return readStoredRecentEmojis();
+}
+
+export function clearRecentEmojis(): string[] {
   if (typeof window === "undefined") {
     return [];
   }
 
-  return readFrequentEmojiEntries().map((entry) => entry.emoji);
+  clearLegacyEmojiHistory();
+  window.localStorage.removeItem(EMOJI_RECENT_STORAGE_KEY);
+  return [];
 }
 
 export function addRecentEmoji(emoji: string): string[] {
@@ -88,18 +81,8 @@ export function addRecentEmoji(emoji: string): string[] {
     return readRecentEmojis();
   }
 
-  const now = Date.now();
-  const existing = readFrequentEmojiEntries();
-  const current = existing.find((entry) => entry.emoji === trimmed);
-  const next = sortFrequentEmojis([
-    {
-      count: (current?.count ?? 0) + 1,
-      emoji: trimmed,
-      lastUsed: now,
-    },
-    ...existing.filter((entry) => entry.emoji !== trimmed),
-  ]);
-
-  window.localStorage.setItem(EMOJI_FREQUENT_STORAGE_KEY, JSON.stringify(next));
-  return next.map((entry) => entry.emoji);
+  const next = normaliseRecentEmojis([trimmed, ...readStoredRecentEmojis()]);
+  window.localStorage.setItem(EMOJI_RECENT_STORAGE_KEY, JSON.stringify(next));
+  clearLegacyEmojiHistory();
+  return next;
 }

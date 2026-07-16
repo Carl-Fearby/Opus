@@ -2,6 +2,8 @@
 
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { CatalogIcon } from "opus-react";
+import { ContentTimeline } from "@/components/ContentTimeline";
+import { NotesActivity } from "@/components/NotesActivity";
 import {
   Button,
   Card,
@@ -9,6 +11,7 @@ import {
   Chart,
   CheckboxField,
   ChipInput,
+  ChoiceChips,
   ColorField,
   CommandPalette,
   ContextMenuProvider,
@@ -69,8 +72,10 @@ import {
   Columns,
   Grid,
   Splitter,
+  ResizeHandle,
   ResizablePanel,
   DockLayout,
+  ThreePaneLayout,
   ScrollArea,
   AspectRatio,
   Container,
@@ -97,7 +102,6 @@ import {
   KanbanBoard,
   Calendar,
   ResourcePlanner,
-  ContentTimeline,
   TreeView,
   MasonryGrid,
   JsonViewer,
@@ -126,11 +130,7 @@ import {
   AccordionGroup,
   ShowMore,
   Sidebar,
-  SidebarGroup,
   SidebarHeader,
-  SidebarLayout,
-  SidebarLink,
-  SidebarNav,
   Table,
   Tabs,
   Gauge,
@@ -140,7 +140,6 @@ import {
   DealsOverTime,
   PipelineOverview,
   RecentActivity,
-  NotesActivity,
   TopPerformingUsers,
   UpcomingTasks,
   UserProfileWidget,
@@ -216,7 +215,7 @@ import {
 import { demoRecentActivity } from "@/lib/controls/recentActivityDemoData";
 import { demoNotesActivity } from "@/lib/controls/notesActivityDemoData";
 import { demoTopPerformingUsers } from "@/lib/controls/topPerformingUsersDemoData";
-import { parseUserProfileMenuItems } from "@/lib/controls/userProfileDemoData";
+import { defaultUserProfilePhotoSrc, parseUserProfileMenuItems } from "@/lib/controls/userProfileDemoData";
 import { demoUpcomingTasks } from "@/lib/controls/upcomingTasksDemoData";
 import {
   iconBadgeToolbarDemoItems,
@@ -233,7 +232,14 @@ import {
 } from "@/lib/controls/dashboardWidgetData";
 import { topNavigationDemoMenus } from "@/lib/controls/topNavigationDemo";
 import type { TopNavigationSelectItem } from "opus-react";
-import type { ComponentCategory, ControlSettings, ControlSettingsBySlug, ControlSlug, ValueFieldSettings } from "@/lib/controls/types";
+import type {
+  BaseFieldSettings,
+  ComponentCategory,
+  ControlSettings,
+  ControlSettingsBySlug,
+  ControlSlug,
+  ValueFieldSettings,
+} from "@/lib/controls/types";
 import {
   getSectionDemoSlots,
   getSectionLayoutConfigFromSettings,
@@ -351,6 +357,22 @@ function parseChipValues(value: string[] | string) {
     .filter(Boolean);
 }
 
+function parseChoiceChipOptions(options: string) {
+  return options
+    .split(",")
+    .map((option) => option.trim())
+    .filter(Boolean)
+    .map((option) => {
+      const [label, rawValue] = option.split(":").map((part) => part.trim());
+      const value = rawValue || label.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
+
+      return {
+        label,
+        value,
+      };
+    });
+}
+
 const dropdownMenuItemsBase: DropdownMenuItemData[] = [
   { icon: "✎", id: "rename", label: "Rename", shortcut: "R" },
   { checked: true, icon: "✓", id: "pin", label: "Pinned" },
@@ -459,7 +481,7 @@ type ControlPreviewProps = {
   onSettingsChange: (next: ControlSettings) => void;
 };
 
-function fieldProps(settings: ControlSettingsBySlug[Exclude<ControlSlug, "button" | "submit-button" | "reset-button" | "theme-toggle" | "accent-color-picker" | "icon-picker" | "tooltip" | "dialog" | "drawer" | "dropdown-menu" | "context-menu" | "command-palette" | "modal" | "popover" | "alert" | "toast" | "tabs" | "card" | "stat-card" | "gauge" | "panel" | "section" | "table" | "data-grid" | "skeleton" | "bar-chart-vertical" | "bar-chart-horizontal" | "grouped-bar-chart" | "stacked-bar-chart" | "stacked-bar-chart-100" | "line-chart" | "multi-line-chart" | "area-chart" | "stacked-area-chart" | "spline-chart" | "pie-chart" | "donut-chart" | "scatter-plot" | "bubble-chart" | "radar-chart" | "polar-area-chart" | "funnel-chart" | "pyramid-chart" | "carousel" | "lightbox" | "image-thumbnail" | "image-gallery" | "model-viewer" | "model-lightbox" | "model-thumbnail" | "model-gallery" | "accordion" | "accordion-group" | "show-more" | "empty-state" | "badge" | "avatar" | "avatar-group" | "list" | "description-list" | "divider" | "content-timeline" | "tree-view" | "masonry-grid" | "property-grid" | "json-viewer" | "statistic" | "icon" | "spinner" | "portal" | "portal-host" | "visually-hidden" | "focus-trap" | "keyboard-shortcut" | "hotkey-manager" | "copy-button" | "clipboard" | "theme-provider" | "theme-switcher" | "resize-observer" | "intersection-observer" | "sidebar" | "mega-menu" | "top-navigation">]) {
+function fieldProps(settings: BaseFieldSettings) {
   return {
     error: settings.errorEnabled ? settings.error : undefined,
     help: settings.helpEnabled ? settings.help : undefined,
@@ -537,6 +559,411 @@ function StatTilePreview({ settings }: { settings: ControlSettingsBySlug["stat-t
   );
 }
 
+function ResizeHandlePreviewDemo({ settings }: { settings: ControlSettingsBySlug["resize-handle"] }) {
+  const isHorizontal = settings.orientation === "horizontal";
+  const minSize = isHorizontal ? 64 : 120;
+  const maxSize = isHorizontal ? 180 : 420;
+  const [paneSize, setPaneSize] = useState(isHorizontal ? 96 : 220);
+  const clampSize = useCallback(
+    (size: number) => Math.min(Math.max(size, minSize), maxSize),
+    [maxSize, minSize],
+  );
+  const resizeBy = useCallback(
+    (delta: number) => setPaneSize((current) => clampSize(current + delta)),
+    [clampSize],
+  );
+
+  const startResize = useCallback(
+    (event: React.PointerEvent<HTMLButtonElement>) => {
+      event.preventDefault();
+      const startPosition = isHorizontal ? event.clientY : event.clientX;
+      const startSize = paneSize;
+
+      const handlePointerMove = (moveEvent: PointerEvent) => {
+        const position = isHorizontal ? moveEvent.clientY : moveEvent.clientX;
+        setPaneSize(clampSize(startSize + position - startPosition));
+      };
+
+      const stopResize = () => {
+        window.removeEventListener("pointermove", handlePointerMove);
+        window.removeEventListener("pointerup", stopResize);
+      };
+
+      window.addEventListener("pointermove", handlePointerMove);
+      window.addEventListener("pointerup", stopResize, { once: true });
+    },
+    [clampSize, isHorizontal, paneSize],
+  );
+
+  const handleKeyDown = useCallback(
+    (event: React.KeyboardEvent<HTMLButtonElement>) => {
+      const decreaseKey = isHorizontal ? "ArrowUp" : "ArrowLeft";
+      const increaseKey = isHorizontal ? "ArrowDown" : "ArrowRight";
+
+      if (event.key === decreaseKey) {
+        event.preventDefault();
+        resizeBy(-16);
+      }
+
+      if (event.key === increaseKey) {
+        event.preventDefault();
+        resizeBy(16);
+      }
+    },
+    [isHorizontal, resizeBy],
+  );
+
+  return (
+    <div
+      style={{
+        display: "grid",
+        gridTemplateColumns: isHorizontal ? "1fr" : `${paneSize}px 8px minmax(0, 1fr)`,
+        gridTemplateRows: isHorizontal ? `${paneSize}px 8px minmax(0, 1fr)` : undefined,
+        height: isHorizontal ? 320 : 220,
+        minHeight: isHorizontal ? undefined : 220,
+        width: "100%",
+      }}
+    >
+      <aside style={{ padding: 16 }}>Pane A</aside>
+      <ResizeHandle
+        aria-label="Resize Pane A"
+        aria-valuemax={maxSize}
+        aria-valuemin={minSize}
+        aria-valuenow={paneSize}
+        background={settings.background}
+        height={settings.height}
+        orientation={settings.orientation}
+        onKeyDown={handleKeyDown}
+        onPointerDown={startResize}
+      />
+      <main style={{ padding: 16 }}>Pane B</main>
+    </div>
+  );
+}
+
+function SidebarPreviewDemo({
+  category,
+  onSettingsChange,
+  settings,
+}: {
+  category?: ComponentCategory;
+  settings: ControlSettingsBySlug["sidebar"];
+  onSettingsChange: (next: ControlSettings) => void;
+}) {
+  const menu = [
+    {
+      icon: "grid-2",
+      id: "overview",
+      label: "Overview",
+    },
+    {
+      children: [
+        {
+          icon: "cube",
+          id: "library",
+          label: "Components",
+        },
+        {
+          icon: "copy",
+          id: "templates",
+          label: "Templates",
+        },
+        {
+          icon: "swatchbook",
+          id: "tokens",
+          label: "Tokens",
+        },
+      ],
+      defaultOpen: settings.groupOpen,
+      icon: "layer-group",
+      id: "library-group",
+      label: "Library",
+      type: "group" as const,
+    },
+    {
+      icon: "gear",
+      id: "settings",
+      label: "Settings",
+    },
+  ];
+  const activeMenuItem = menu
+    .flatMap((item) => (item.type === "group" ? item.children : [item]))
+    .find((item) => item.id === settings.activeItem);
+  const [lastResult, setLastResult] = useState<string | null>(null);
+  const statusText = lastResult ?? `Selected: ${activeMenuItem?.label ?? settings.activeItem}`;
+  const sidebar = (
+    <Sidebar
+      activeItem={settings.activeItem}
+      collapsed={settings.collapsed}
+      density={settings.density}
+      footer={settings.showFooter ? settings.footerText : undefined}
+      header={settings.showHeader ? <SidebarHeader title={settings.headerTitle} /> : undefined}
+      menu={menu}
+      onSelect={(item) => {
+        setLastResult(`Menu callback: ${item.label}`);
+        onSettingsChange({
+          ...settings,
+          activeItem: item.id as typeof settings.activeItem,
+        } as ControlSettings);
+      }}
+      persistState={settings.persistState}
+      renderIcon={(iconName) => <CatalogIcon iconName={iconName} />}
+      side={settings.side}
+      storageKey="opus-sidebar-preview"
+    />
+  );
+  const wrapped = settings.wrapInContainer ?? category === "labs";
+
+  if (wrapped) {
+    return (
+      <div className={styles.sidebarCallbackPreview} data-fit-content="true">
+        <DashboardContentContainer data-component="sidebar" height={settings.height ?? "auto"} width="widget">
+          {sidebar}
+        </DashboardContentContainer>
+        <span className={styles.dialogResult}>{statusText}</span>
+      </div>
+    );
+  }
+
+  return (
+    <div className={styles.sidebarCallbackPreview} data-fit-content="true">
+      {sidebar}
+      <span className={styles.dialogResult}>{statusText}</span>
+    </div>
+  );
+}
+
+function TestLayoutPreview({
+  settings,
+  showDebug = false,
+}: {
+  settings: ControlSettingsBySlug["lab-test-layout"];
+  showDebug?: boolean;
+}) {
+  const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
+  const [rightCollapsed, setRightCollapsed] = useState(false);
+  const [rightTab, setRightTab] = useState<"activity" | "notes">("notes");
+  const [workspaceLabel, setWorkspaceLabel] = useState("CRM");
+  const [lastAction, setLastAction] = useState("Waiting for action");
+  const reportAction = (label: string) => setLastAction(`Last action: ${label}`);
+  const menu = [
+    { icon: "table-columns", id: "dashboard", label: "Dashboard" },
+    {
+      children: [
+        {
+          children: [
+            { icon: "address-book", id: "all-contacts", label: "All Contacts" },
+            { icon: "rectangle-list", id: "contact-lists", label: "Contact Lists" },
+          ],
+          defaultOpen: true,
+          icon: "users",
+          id: "contacts",
+          label: "Contacts",
+          type: "group" as const,
+        },
+        {
+          children: [
+            { icon: "building", id: "all-companies", label: "All Companies" },
+            { icon: "layer-group", id: "company-segments", label: "Company Segments" },
+          ],
+          defaultOpen: false,
+          icon: "building",
+          id: "companies",
+          label: "Companies",
+          type: "group" as const,
+        },
+        { icon: "dollar-sign", id: "deals", label: "Deals" },
+        { icon: "list-check", id: "tasks", label: "Tasks" },
+        { icon: "note-sticky", id: "notes", label: "Notes" },
+        { icon: "calendar", id: "calendar", label: "Calendar" },
+      ],
+      defaultOpen: true,
+      id: "crm",
+      label: "CRM",
+      type: "group" as const,
+    },
+    {
+      children: [
+        { icon: "chart-column", id: "reports", label: "Reports" },
+        { icon: "table-columns", id: "dashboards", label: "Dashboards" },
+        { icon: "chart-line", id: "charts", label: "Charts" },
+      ],
+      defaultOpen: true,
+      id: "analytics",
+      label: "Analytics",
+      type: "group" as const,
+    },
+    {
+      children: [
+        { icon: "users", id: "users", label: "Users" },
+        { icon: "gear", id: "settings", label: "Settings" },
+        { icon: "sliders", id: "custom-fields", label: "Custom Fields" },
+        { icon: "puzzle-piece", id: "integrations", label: "Integrations" },
+      ],
+      defaultOpen: true,
+      id: "settings-group",
+      label: "Settings",
+      type: "group" as const,
+    },
+  ];
+
+  const left = settings.showLeft ? (
+    <DashboardContentContainer
+      data-component="sidebar"
+      height="full"
+      width="full"
+    >
+      <div className={styles.testLayoutSidebarShell}>
+        <Sidebar
+          collapsed={sidebarCollapsed}
+          defaultActiveItem="dashboard"
+          density="compact"
+          footer={
+            <button
+              aria-label={sidebarCollapsed ? "Expand sidebar" : "Collapse sidebar"}
+              className={[styles.testLayoutCollapseButton, styles.testLayoutSidebarCollapse].join(" ")}
+              data-collapsed={sidebarCollapsed ? "true" : "false"}
+              onClick={() => {
+                setSidebarCollapsed(!sidebarCollapsed);
+                reportAction(sidebarCollapsed ? "Expanded sidebar" : "Collapsed sidebar");
+              }}
+              title={sidebarCollapsed ? "Expand sidebar" : "Collapse sidebar"}
+              type="button"
+            >
+              <CatalogIcon iconName={sidebarCollapsed ? "indent" : "outdent"} />
+              {sidebarCollapsed ? null : <span>Collapse</span>}
+            </button>
+          }
+          menu={menu}
+          onCollapsedGroupSelect={(groupId) => {
+            reportAction(`Toggled ${groupId} submenu`);
+          }}
+          onSelect={(item) => {
+            setWorkspaceLabel(String(item.label));
+            reportAction(`Selected ${item.label}`);
+          }}
+          persistState={settings.persist}
+          renderIcon={(iconName) => <CatalogIcon iconName={iconName} />}
+          storageKey="opus-lab-test-layout-menu"
+        />
+      </div>
+    </DashboardContentContainer>
+  ) : undefined;
+  const right = settings.showRight ? (
+    <DashboardContentContainer
+      data-component="notes-activity"
+      height="full"
+      width="full"
+    >
+      <div className={styles.testLayoutRightShell}>
+        {rightCollapsed ? (
+          <div aria-label="Notes and activity shortcuts" className={styles.testLayoutRightRail} role="navigation">
+            {([
+              { icon: "note-sticky", label: "Notes", tab: "notes" },
+              { icon: "clock-rotate-left", label: "Activity", tab: "activity" },
+            ] as const).map((item) => (
+              <Tooltip content={item.label} key={item.tab} placement="left">
+                <button
+                  aria-label={`Open ${item.label}`}
+                  className={styles.testLayoutRightRailButton}
+                  onClick={() => {
+                    setRightTab(item.tab);
+                    setRightCollapsed(false);
+                    reportAction(`Opened ${item.label}`);
+                  }}
+                  type="button"
+                >
+                  <CatalogIcon iconName={item.icon} />
+                </button>
+              </Tooltip>
+            ))}
+          </div>
+        ) : (
+          <NotesActivity
+            activeTab={rightTab}
+            activityFooterLabel="View all activities"
+            composerPlaceholder="Add a note..."
+            density="compact"
+            items={demoNotesActivity}
+            notesFooterLabel="View all notes"
+            onActivityFooterClick={() => reportAction("View all activities")}
+            onItemClick={(item) => reportAction(`Selected activity by ${item.author}`)}
+            onNoteSave={(note) => reportAction(`Saved note: ${note}`)}
+            onNotesFooterClick={() => reportAction("View all notes")}
+            onTabChange={(tab) => {
+              setRightTab(tab);
+              reportAction(`Opened ${tab}`);
+            }}
+            saveButtonLabel="Save"
+          />
+        )}
+        <div className={styles.testLayoutRightFooter} data-collapsed={rightCollapsed ? "true" : "false"}>
+          <button
+            aria-label={rightCollapsed ? "Expand notes and activity" : "Collapse notes and activity"}
+            className={[styles.testLayoutCollapseButton, styles.testLayoutRightCollapse].join(" ")}
+            data-collapsed={rightCollapsed ? "true" : "false"}
+            onClick={() => {
+              setRightCollapsed(!rightCollapsed);
+              reportAction(rightCollapsed ? "Expanded notes and activity" : "Collapsed notes and activity");
+            }}
+            title={rightCollapsed ? "Expand notes and activity" : "Collapse notes and activity"}
+            type="button"
+          >
+            <CatalogIcon iconName={rightCollapsed ? "outdent" : "indent"} />
+            {rightCollapsed ? null : <span>Collapse</span>}
+          </button>
+        </div>
+      </div>
+    </DashboardContentContainer>
+  ) : undefined;
+
+  return (
+    <div
+      data-full-bleed="true"
+      style={{
+        display: "grid",
+        gridTemplateRows: "minmax(0, 1fr) auto",
+        height: settings.height === "full" ? "100%" : "auto",
+        minHeight: settings.height === "full" ? 0 : 620,
+        width: "100%",
+      }}
+    >
+      <ThreePaneLayout
+        defaultLeftWidth={settings.defaultLeftWidth}
+        defaultRightWidth={settings.defaultRightWidth}
+        handleBackground={settings.handleBackground}
+        handleBorderRadius={settings.handleBorderRadius ?? 12}
+        handleHeight={settings.handleHeight}
+        handleMarginBlock={settings.handleMarginBlock ?? 12}
+        left={left}
+        leftCollapsed={sidebarCollapsed}
+        maxLeftWidth={settings.maxLeftWidth}
+        maxRightWidth={settings.maxRightWidth}
+        minLeftWidth={settings.minLeftWidth === 180 ? 120 : settings.minLeftWidth}
+        minRightWidth={Math.max(settings.minRightWidth, 220)}
+        onLeftCollapsedChange={setSidebarCollapsed}
+        onRightCollapsedChange={setRightCollapsed}
+        persist={settings.persist}
+        right={right}
+        rightCollapsed={rightCollapsed}
+        storageKey="opus-lab-test-layout-panes"
+        style={{ height: settings.height === "full" ? "100%" : undefined }}
+      >
+        <section style={{ padding: 28 }}>
+          <p style={{ margin: "0 0 8px", color: "var(--opus-accent)", fontWeight: 700 }}>{workspaceLabel} workspace</p>
+          <h2 style={{ margin: "0 0 12px" }}>Demo content</h2>
+          <p style={{ maxWidth: 560, margin: 0, color: "var(--opus-muted)", lineHeight: 1.7 }}>
+            This centre pane stays fluid while the navigation and Notes &amp; Activity panes can be resized independently.
+          </p>
+        </section>
+      </ThreePaneLayout>
+      {showDebug ? (
+        <span className={[styles.dialogResult, styles.testLayoutDebugLine].join(" ")}>{lastAction}</span>
+      ) : null}
+    </div>
+  );
+}
+
 function IconBadgePreview({ settings }: { settings: ControlSettingsBySlug["icon-badge"] }) {
   const [lastAction, setLastAction] = useState("Waiting for action");
   const reportAction = (label: string) => setLastAction(`Last action: ${label}`);
@@ -600,13 +1027,15 @@ function NoteComposerPreview({ settings }: { settings: ControlSettingsBySlug["no
         showAttach={settings.showAttach}
         showEmoji={settings.showEmoji}
         showMention={settings.showMention}
+        showTags
         value={note}
         onAttachClick={() => setLastAction("Attachment")}
         onChange={setNote}
         onEmojiSelect={(emoji) => setLastAction(`Emoji: ${emoji}`)}
         onMentionClick={() => setLastAction("Mention")}
-        onSave={(value) => {
-          setLastAction(`Saved note: ${value}`);
+        onSave={(value, tags) => {
+          const tagText = tags.length ? ` [${tags.map((tag) => tag.label).join(", ")}]` : "";
+          setLastAction(`Saved note: ${value}${tagText}`);
           setNote("");
         }}
       />
@@ -636,7 +1065,7 @@ function UserProfileWidgetPreview({
   reportAction,
   settings,
 }: {
-  category: ComponentCategory;
+  category?: ComponentCategory;
   onSettingsChange: (settings: ControlSettings) => void;
   reportAction: (label: string) => void;
   settings: ControlSettingsBySlug["user-profile"];
@@ -720,6 +1149,7 @@ function UpcomingTasksDashboardPreview({
           containerDataComponent="upcoming-tasks"
           containerWidth={settings.width ?? "widget"}
           layout={settings.previewLayout}
+          unwrapped={!(settings.wrapInContainer ?? true)}
           renderItem={() => (
             <UpcomingTasks
               checkboxSize={settings.checkboxSize ?? "md"}
@@ -1478,11 +1908,6 @@ function DataGridPreview({ settings: s }: { settings: ControlSettingsBySlug["dat
   const [pageCount, setPageCount] = useState(1);
   const [loadingMore, setLoadingMore] = useState(false);
 
-  useEffect(() => {
-    setPageCount(1);
-    setLoadingMore(false);
-  }, [s.infiniteScroll, s.layout]);
-
   const gridDefaults = {
     filterable: s.filterable,
     resizable: s.resizable,
@@ -1612,9 +2037,6 @@ function FilterBuilderPreview() {
 
 function QueryBuilderPreview({ combinator }: { combinator: "and" | "or" }) {
   const [group, setGroup] = useState(() => ({ ...demoQueryGroup, combinator }));
-  useEffect(() => {
-    setGroup((current) => ({ ...current, combinator }));
-  }, [combinator]);
   return <QueryBuilder fields={demoInspectorFields} group={group} onChange={setGroup} />;
 }
 
@@ -1655,9 +2077,6 @@ function PermissionsMatrixPreview() {
 
 function DualListBuilderPreview({ selectedCount }: { selectedCount: number }) {
   const [selectedIds, setSelectedIds] = useState(() => demoDualListSelected.slice(0, selectedCount));
-  useEffect(() => {
-    setSelectedIds(demoDualListSelected.slice(0, Math.max(selectedCount, 0)));
-  }, [selectedCount]);
   return <DualListBuilder available={demoDualListItems} onChange={setSelectedIds} selectedIds={selectedIds} />;
 }
 
@@ -2041,6 +2460,27 @@ export function ControlPreview({ category, slug, settings, onSettingsChange }: C
         />
       );
     }
+    case "choice-chips": {
+      const s = settings as ControlSettingsBySlug["choice-chips"];
+
+      return (
+        <ChoiceChips
+          {...fieldProps(s)}
+          disabled={s.disabled}
+          id="preview-choice-chips"
+          options={parseChoiceChipOptions(s.options)}
+          selectionMode={s.selectionMode}
+          value={s.value}
+          variant={s.variant}
+          onChange={(value) =>
+            onSettingsChange({
+              ...s,
+              value: Array.isArray(value) ? value : [value],
+            } as ControlSettings)
+          }
+        />
+      );
+    }
     case "checkbox": {
       const s = settings as ControlSettingsBySlug["checkbox"];
       return (
@@ -2337,6 +2777,7 @@ export function ControlPreview({ category, slug, settings, onSettingsChange }: C
         <DashboardPreviewGrid
           containerWidth={s.width ?? "widget"}
           layout={s.previewLayout}
+          unwrapped={!(s.wrapInContainer ?? true)}
           renderItem={() => (
             <StatCard
               change={s.showChange ? s.change : undefined}
@@ -2356,6 +2797,7 @@ export function ControlPreview({ category, slug, settings, onSettingsChange }: C
         <DashboardPreviewGrid
           containerWidth={s.width ?? "widget"}
           layout={s.previewLayout}
+          unwrapped={!(s.wrapInContainer ?? true)}
           renderItem={() => (
             <Sparkline
               height={48}
@@ -2374,6 +2816,7 @@ export function ControlPreview({ category, slug, settings, onSettingsChange }: C
         <DashboardPreviewGrid
           containerWidth={s.width ?? "widget"}
           layout={s.previewLayout}
+          unwrapped={!(s.wrapInContainer ?? true)}
           renderItem={() => <ProgressRing label={s.label} max={s.max} value={s.value} />}
         />
       );
@@ -2384,6 +2827,7 @@ export function ControlPreview({ category, slug, settings, onSettingsChange }: C
         <DashboardPreviewGrid
           containerWidth={s.width ?? "widget"}
           layout={s.previewLayout}
+          unwrapped={!(s.wrapInContainer ?? true)}
           renderItem={() => <ProgressBar label={s.label} max={s.max} value={s.value} />}
         />
       );
@@ -2412,6 +2856,7 @@ export function ControlPreview({ category, slug, settings, onSettingsChange }: C
         <DashboardPreviewGrid
           containerWidth={s.width ?? "widget"}
           layout={s.previewLayout}
+          unwrapped={!(s.wrapInContainer ?? true)}
           renderItem={() => <Gauge {...sharedGaugeProps} title={s.title} variant={s.variant} />}
         />
       );
@@ -2422,6 +2867,7 @@ export function ControlPreview({ category, slug, settings, onSettingsChange }: C
         <DashboardPreviewGrid
           containerWidth={s.width ?? "widget"}
           layout={s.previewLayout}
+          unwrapped={!(s.wrapInContainer ?? true)}
           renderItem={() => <Speedometer label={s.label} max={s.max} value={s.value} />}
         />
       );
@@ -2432,6 +2878,7 @@ export function ControlPreview({ category, slug, settings, onSettingsChange }: C
         <DashboardPreviewGrid
           containerWidth={s.width ?? "widget"}
           layout={s.previewLayout}
+          unwrapped={!(s.wrapInContainer ?? true)}
           renderItem={() => (
             <MetricTile
               icon={<CatalogIcon iconName={s.icon} />}
@@ -2451,7 +2898,7 @@ export function ControlPreview({ category, slug, settings, onSettingsChange }: C
           layout={s.previewLayout}
           unwrapped
           renderItem={() => (
-            <DashboardContentContainer title={s.title} width={s.width ?? "widget"}>
+            <DashboardContentContainer height={s.height ?? "auto"} title={s.title} width={s.width ?? "widget"}>
               <StatusIndicator label="Systems healthy" status="success" />
             </DashboardContentContainer>
           )}
@@ -2482,6 +2929,7 @@ export function ControlPreview({ category, slug, settings, onSettingsChange }: C
           containerTitle={s.title}
           containerWidth={s.width ?? "widget"}
           layout={s.previewLayout}
+          unwrapped={!(s.wrapInContainer ?? true)}
           renderItem={() => (
             <PipelineOverview
               onPeriodChange={(period) => onSettingsChange({ ...s, period } as ControlSettings)}
@@ -2503,6 +2951,7 @@ export function ControlPreview({ category, slug, settings, onSettingsChange }: C
           containerDataComponent="deals-over-time"
           containerWidth={s.width ?? "widget"}
           layout={s.previewLayout}
+          unwrapped={!(s.wrapInContainer ?? true)}
           renderItem={() => (
             <DealsOverTime
               data={data}
@@ -2527,27 +2976,50 @@ export function ControlPreview({ category, slug, settings, onSettingsChange }: C
     case "app-setup": {
       return <AppSetupGuide />;
     }
-    case "dashboard-list-columns": {
+    case "lab-dashboard-list-columns": {
       const s = settings as ControlSettingsBySlug["dashboard-list-columns"];
       return <DashboardListColumnsDashboardPreview settings={s} />;
     }
-    case "notes-activity": {
+    case "lab-notes-activity": {
       const s = settings as ControlSettingsBySlug["notes-activity"];
       return (
         <DashboardActionPreview>
           {(reportAction) => (
             <DashboardPreviewGrid
               containerDataComponent="notes-activity"
+              containerHeight={s.height ?? "auto"}
               containerWidth={s.width ?? "widget"}
               layout={s.previewLayout}
+              unwrapped={!(s.wrapInContainer ?? true)}
               renderItem={() => (
                 <NotesActivity
+                  addNoteButtonLabel={s.addNoteButtonLabel ?? "Add note"}
+                  addNoteModalDescription={
+                    s.addNoteModalDescription ?? "Capture supporting detail, attach files, or mention teammates."
+                  }
+                  addNoteModalTitle={s.addNoteModalTitle ?? "Add a note"}
+                  activityFooterLabel={s.activityFooterLabel}
                   composerPlaceholder={s.composerPlaceholder}
-                  footerLabel={s.footerLabel}
+                  density={s.density}
                   items={demoNotesActivity}
-                  onFooterClick={() => reportAction(s.footerLabel)}
-                  onItemClick={(item) => reportAction(item.body)}
-                  onNoteSave={(note) => reportAction(`Saved note: ${note}`)}
+                  noteAuthorAvatarSrc={defaultUserProfilePhotoSrc}
+                  noteAuthorName="Carl Fearby"
+                  notesFooterLabel={s.notesFooterLabel}
+                  onActivityFooterClick={() => reportAction(s.activityFooterLabel)}
+                  onItemClick={(item) => reportAction(`Reply: ${item.author}`)}
+                  onNoteAttachClick={() => reportAction("Attach file")}
+                  onNoteEmojiSelect={(emoji) => reportAction(`Emoji: ${emoji}`)}
+                  onNoteMentionClick={() => reportAction("Mention teammate")}
+                  onNotesFooterClick={() => reportAction(s.notesFooterLabel)}
+                  onNoteSave={(note, parentNote, tags) => {
+                    const tagText = tags?.length ? ` [${tags.map((tag) => tag.label).join(", ")}]` : "";
+                    reportAction(
+                      parentNote
+                        ? `Saved note on ${parentNote.author}: ${note}${tagText}`
+                        : `Saved note: ${note}${tagText}`,
+                    );
+                  }}
+                  onOpenTask={(item) => reportAction(`OpenTask: ${item.author}`)}
                   onTabChange={(tab) => reportAction(`Tab: ${tab}`)}
                   saveButtonLabel={s.saveButtonLabel}
                 />
@@ -2557,7 +3029,12 @@ export function ControlPreview({ category, slug, settings, onSettingsChange }: C
         </DashboardActionPreview>
       );
     }
-    case "user-profile": {
+    case "lab-test-layout": {
+      const s = settings as ControlSettingsBySlug["lab-test-layout"];
+      return <TestLayoutPreview key={s.layoutResetKey ?? 0} settings={s} showDebug={category === "labs"} />;
+    }
+    case "user-profile":
+    case "lab-user-profile": {
       const s = settings as ControlSettingsBySlug["user-profile"];
       return (
         <DashboardActionPreview>
@@ -2600,7 +3077,13 @@ export function ControlPreview({ category, slug, settings, onSettingsChange }: C
             );
 
             return (
-              <DashboardPreviewGrid layout={s.previewLayout} unwrapped renderItem={() => widget} />
+              <DashboardPreviewGrid
+                containerDataComponent="profile-photo-upload"
+                containerWidth={s.width ?? "widget"}
+                layout={s.previewLayout}
+                unwrapped={!(s.wrapInContainer ?? true)}
+                renderItem={() => widget}
+              />
             );
           }}
         </DashboardActionPreview>
@@ -2619,6 +3102,7 @@ export function ControlPreview({ category, slug, settings, onSettingsChange }: C
               containerDataComponent="recent-activity"
               containerWidth={s.width ?? "widget"}
               layout={s.previewLayout}
+              unwrapped={!(s.wrapInContainer ?? true)}
               renderItem={() => (
                 <RecentActivity
                   footerLabel={s.footerLabel}
@@ -2642,6 +3126,7 @@ export function ControlPreview({ category, slug, settings, onSettingsChange }: C
               containerDataComponent="top-performing-users"
               containerWidth={s.width ?? "widget"}
               layout={s.previewLayout}
+              unwrapped={!(s.wrapInContainer ?? true)}
               renderItem={() => (
                 <TopPerformingUsers
                   footerLabel={s.footerLabel}
@@ -2662,6 +3147,7 @@ export function ControlPreview({ category, slug, settings, onSettingsChange }: C
         <DashboardPreviewGrid
           containerWidth={s.width ?? "widget"}
           layout={s.previewLayout}
+          unwrapped={!(s.wrapInContainer ?? true)}
           renderItem={() => <StatusIndicator label={s.label} status={s.status} />}
         />
       );
@@ -2672,6 +3158,7 @@ export function ControlPreview({ category, slug, settings, onSettingsChange }: C
         <DashboardPreviewGrid
           containerWidth={s.width ?? "widget"}
           layout={s.previewLayout}
+          unwrapped={!(s.wrapInContainer ?? true)}
           renderItem={() => <TrendBadge direction={s.direction} value={s.value} />}
         />
       );
@@ -2768,7 +3255,7 @@ export function ControlPreview({ category, slug, settings, onSettingsChange }: C
     }
     case "data-grid": {
       const s = settings as ControlSettingsBySlug["data-grid"];
-      return <DataGridPreview settings={s} />;
+      return <DataGridPreview key={`${s.infiniteScroll}-${s.layout}`} settings={s} />;
     }
     case "skeleton": {
       const s = settings as ControlSettingsBySlug["skeleton"];
@@ -3084,6 +3571,10 @@ export function ControlPreview({ category, slug, settings, onSettingsChange }: C
         </Splitter>
       );
     }
+    case "resize-handle": {
+      const s = settings as ControlSettingsBySlug["resize-handle"];
+      return <ResizeHandlePreviewDemo settings={s} />;
+    }
     case "resizable-panel": {
       const s = settings as ControlSettingsBySlug["resizable-panel"];
       return (
@@ -3103,6 +3594,33 @@ export function ControlPreview({ category, slug, settings, onSettingsChange }: C
         >
           Centre workspace
         </DockLayout>
+      );
+    }
+    case "three-pane-layout": {
+      const s = settings as ControlSettingsBySlug["three-pane-layout"];
+      return (
+        <ThreePaneLayout
+          defaultLeftWidth={s.defaultLeftWidth}
+          defaultRightWidth={s.defaultRightWidth}
+          handleBackground={s.handleBackground}
+          handleBorderRadius={s.handleBorderRadius ?? 0}
+          handleHeight={s.handleHeight}
+          handleMarginBlock={s.handleMarginBlock ?? 0}
+          left={s.showLeft ? <div style={{ display: "grid", gap: 8 }}>Navigation<br />Projects<br />Reports</div> : undefined}
+          maxLeftWidth={s.maxLeftWidth}
+          maxRightWidth={s.maxRightWidth}
+          minLeftWidth={s.minLeftWidth}
+          minRightWidth={s.minRightWidth}
+          persist={s.persist}
+          right={s.showRight ? <div style={{ display: "grid", gap: 8 }}>Inspector<br />Status<br />Activity</div> : undefined}
+          storageKey="opus-demo-three-pane-layout"
+          style={{ height: s.height === "full" ? "100%" : undefined }}
+        >
+          <div style={{ display: "grid", gap: 10 }}>
+            <strong>Workspace</strong>
+            <span>Main content stays fluid while the left and right bars resize.</span>
+          </div>
+        </ThreePaneLayout>
       );
     }
     case "scroll-area": {
@@ -3268,7 +3786,7 @@ export function ControlPreview({ category, slug, settings, onSettingsChange }: C
     }
     case "query-builder": {
       const s = settings as ControlSettingsBySlug["query-builder"];
-      return <QueryBuilderPreview combinator={s.combinator} />;
+      return <QueryBuilderPreview combinator={s.combinator} key={s.combinator} />;
     }
     case "rule-builder": {
       const s = settings as ControlSettingsBySlug["rule-builder"];
@@ -3279,7 +3797,7 @@ export function ControlPreview({ category, slug, settings, onSettingsChange }: C
     }
     case "dual-list-builder": {
       const s = settings as ControlSettingsBySlug["dual-list-builder"];
-      return <DualListBuilderPreview selectedCount={s.selectedCount} />;
+      return <DualListBuilderPreview key={s.selectedCount} selectedCount={s.selectedCount} />;
     }
     case "scheduler": {
       const s = settings as ControlSettingsBySlug["scheduler"];
@@ -3535,34 +4053,10 @@ export function ControlPreview({ category, slug, settings, onSettingsChange }: C
       );
     }
 
-    case "sidebar": {
+    case "sidebar":
+    case "lab-sidebar": {
       const s = settings as ControlSettingsBySlug["sidebar"];
-
-      return (
-        <SidebarLayout
-          collapsed={s.collapsed}
-          main="Main content area"
-          side={s.side}
-        >
-          <Sidebar
-            collapsed={s.collapsed}
-            density={s.density}
-            footer={s.showFooter ? s.footerText : undefined}
-            header={s.showHeader ? <SidebarHeader title={s.headerTitle} /> : undefined}
-            side={s.side}
-          >
-            <SidebarNav aria-label="Primary">
-              <SidebarLink active={s.activeItem === "overview"}>Overview</SidebarLink>
-              <SidebarGroup defaultOpen={s.groupOpen} label="Library">
-                <SidebarLink active={s.activeItem === "library"}>Components</SidebarLink>
-                <SidebarLink>Templates</SidebarLink>
-                <SidebarLink>Tokens</SidebarLink>
-              </SidebarGroup>
-              <SidebarLink active={s.activeItem === "settings"}>Settings</SidebarLink>
-            </SidebarNav>
-          </Sidebar>
-        </SidebarLayout>
-      );
+      return <SidebarPreviewDemo category={category} onSettingsChange={onSettingsChange} settings={s} />;
     }
     case "mega-menu": {
       const s = settings as ControlSettingsBySlug["mega-menu"];

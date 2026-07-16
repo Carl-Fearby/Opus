@@ -40,7 +40,7 @@ function nodeRadius(depth: number, labeled: boolean) {
 }
 
 function scaleToPlot(
-  nodes: Array<Omit<NetworkLayoutNode, "groupIndex" | "showRing" | "showLabel"> & { group?: string }>,
+  nodes: Array<Omit<NetworkLayoutNode, "groupIndex" | "radius" | "showRing" | "showLabel"> & { group?: string }>,
   width: number,
   height: number,
   pad: number,

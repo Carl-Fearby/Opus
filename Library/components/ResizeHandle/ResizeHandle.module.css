@@ -1,0 +1,102 @@
+.handle {
+  position: relative;
+  z-index: 1;
+  flex: 0 0 8px;
+  padding: 0;
+  border: 0;
+  background: color-mix(in srgb, var(--opus-border) 62%, transparent);
+  touch-action: none;
+}
+
+.handle[data-orientation="vertical"] {
+  width: 8px;
+  min-width: 8px;
+  cursor: col-resize;
+}
+
+.handle[data-orientation="horizontal"] {
+  height: 8px;
+  min-height: 8px;
+  cursor: row-resize;
+}
+
+.handle[data-background="none"] {
+  background: transparent;
+}
+
+.handle[data-background="accent"] {
+  background: color-mix(in srgb, var(--opus-accent) 14%, transparent);
+}
+
+.handle[data-background="contrast"] {
+  background: color-mix(in srgb, var(--opus-text) 12%, transparent);
+}
+
+.handle:hover,
+.handle:focus-visible {
+  background: color-mix(in srgb, var(--opus-border) 72%, transparent);
+}
+
+.handle[data-background="none"]:hover,
+.handle[data-background="none"]:focus-visible {
+  background: transparent;
+}
+
+.handle::after {
+  content: "";
+  position: absolute;
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--opus-muted) 45%, transparent);
+  transition:
+    background 160ms ease,
+    inset 160ms ease;
+}
+
+.handle[data-orientation="vertical"]::after {
+  inset: 26% 3px;
+}
+
+.handle[data-orientation="horizontal"]::after {
+  inset: 3px 26%;
+}
+
+.handle[data-orientation="vertical"][data-height="short"]::after {
+  inset: 38% 3px;
+}
+
+.handle[data-orientation="vertical"][data-height="tall"]::after {
+  inset: 14% 3px;
+}
+
+.handle[data-orientation="vertical"][data-height="full"]::after {
+  inset: 5% 3px;
+}
+
+.handle[data-orientation="horizontal"][data-height="short"]::after {
+  inset: 3px 38%;
+}
+
+.handle[data-orientation="horizontal"][data-height="tall"]::after {
+  inset: 3px 14%;
+}
+
+.handle[data-orientation="horizontal"][data-height="full"]::after {
+  inset: 3px 5%;
+}
+
+.handle[data-orientation="vertical"]:hover::after,
+.handle[data-orientation="vertical"]:focus-visible::after {
+  inset: 12% 2px;
+  background: color-mix(in srgb, var(--opus-accent) 68%, transparent);
+}
+
+.handle[data-orientation="horizontal"]:hover::after,
+.handle[data-orientation="horizontal"]:focus-visible::after {
+  inset: 2px 12%;
+  background: color-mix(in srgb, var(--opus-accent) 68%, transparent);
+}
+
+.handle:focus-visible {
+  outline: none;
+  box-shadow: inset 0 0 0 2px color-mix(in srgb, var(--opus-accent) 45%, transparent);
+}

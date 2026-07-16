@@ -9,6 +9,7 @@ import {
   CascaderField,
   CheckboxField,
   ChipInput,
+  ChoiceChips,
   ColorField,
   CountryPickerField,
   DateField,
@@ -120,6 +121,7 @@ export function FormsOverview() {
   const [fileName, setFileName] = useState("");
   const [accentColor, setAccentColor] = useState("#6D2BD9");
   const [chips, setChips] = useState(["Design", "React", "UI"]);
+  const [choiceChips, setChoiceChips] = useState(["design", "frontend"]);
   const [richText, setRichText] = useState("<p>Describe your project goals and timeline.</p>");
   const [filterValues, setFilterValues] = useState(["Open", "High"]);
   const [multiSelectValues, setMultiSelectValues] = useState(["Design", "Engineering"]);
@@ -419,6 +421,23 @@ export function FormsOverview() {
         onChange={setChips}
       />
     ),
+    "choice-chips": (
+      <ChoiceChips
+        id="overview-choice-chips"
+        label="Interests"
+        mode={shared.mode}
+        labelPosition={shared.labelPosition}
+        error={shared.errorText("Please pick at least one interest")}
+        options={[
+          { label: "Design", value: "design" },
+          { label: "Frontend", value: "frontend" },
+          { label: "Research", value: "research" },
+          { label: "Strategy", value: "strategy" },
+        ]}
+        value={choiceChips}
+        onChange={(next) => setChoiceChips(Array.isArray(next) ? next : [next])}
+      />
+    ),
     "filter-select": (
       <FilterSelectField
         id="overview-filter-select"
@@ -541,7 +560,7 @@ export function FormsOverview() {
         error={shared.errorText("Please select a department")}
         nodes={treeSelectDemoNodes}
         value={department}
-        onChange={setDepartment}
+        onChange={(value) => setDepartment(value ?? "")}
       />
     ),
     cascader: (

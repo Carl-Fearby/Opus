@@ -6,7 +6,8 @@
     "packages/*"
   ],
   "scripts": {
-    "dev": "next dev --turbo",
+    "dev": "next dev --webpack",
+    "dev:turbo": "next dev --turbo",
     "build": "next build",
     "build:lib": "npm run build -w opus-react",
     "start": "next start",

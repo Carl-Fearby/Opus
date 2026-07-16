@@ -38,8 +38,13 @@
   outline: none;
 }
 
+.selectedTags {
+  margin-top: -2px;
+}
+
 .footer {
   display: flex;
+  flex-wrap: wrap;
   align-items: center;
   justify-content: space-between;
   gap: 10px;
@@ -74,6 +79,8 @@
 }
 
 .saveButton {
+  flex: 0 0 auto;
+  margin-left: auto;
   min-height: 2rem;
   padding: 0 14px;
   border: 0;

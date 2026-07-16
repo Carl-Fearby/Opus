@@ -129,7 +129,6 @@ import {
   Sidebar,
   SidebarGroup,
   SidebarHeader,
-  SidebarLayout,
   SidebarLink,
   SidebarNav,
   Table,
@@ -3577,11 +3576,7 @@ export function ControlPreview({ category, slug, settings, onSettingsChange }: C
       const s = settings as ControlSettingsBySlug["sidebar"];
 
       return (
-        <SidebarLayout
-          collapsed={s.collapsed}
-          main="Main content area"
-          side={s.side}
-        >
+        <div data-fit-content="true">
           <Sidebar
             collapsed={s.collapsed}
             density={s.density}
@@ -3605,7 +3600,7 @@ export function ControlPreview({ category, slug, settings, onSettingsChange }: C
               </SidebarLink>
             </SidebarNav>
           </Sidebar>
-        </SidebarLayout>
+        </div>
       );
     }
     case "mega-menu": {

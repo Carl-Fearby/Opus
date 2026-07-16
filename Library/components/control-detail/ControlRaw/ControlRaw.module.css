@@ -84,6 +84,10 @@
   padding: var(--raw-stage-padding) 16px 32px;
 }
 
+.viewportStage:has(> .canvas[data-full="true"]) {
+  padding: 0;
+}
+
 .viewportFrame {
   position: relative;
   flex-shrink: 0;
@@ -114,10 +118,16 @@
   background: linear-gradient(180deg, #f9f8ff 0%, #e7ebff 100%);
 }
 
+.canvas[data-borderless="true"] {
+  box-shadow: none;
+}
+
 .canvas[data-full="true"] {
-  width: min(100%, 1600px);
-  height: calc(100dvh - var(--raw-toolbar-height) - (var(--raw-stage-padding) * 2));
+  width: 100%;
+  max-width: none;
+  height: calc(100dvh - var(--raw-toolbar-height));
   min-height: 320px;
+  border-radius: 0;
 }
 
 .canvas[data-fixed-width="true"] {

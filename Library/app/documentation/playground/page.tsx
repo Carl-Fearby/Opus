@@ -22,16 +22,13 @@ function PlaygroundPageContent() {
     }
 
     const params = new URLSearchParams({ slug: seed.slug });
-    if (seed.category) {
-      params.set("category", seed.category);
-    }
 
     router.replace(`${PLAYGROUND_BASE_PATH}?${params.toString()}`);
   }, [router, slug]);
 
   return (
     <CodePlayground
-      initialCategory={searchParams.get("category")}
+      initialCategory={null}
       initialSlug={searchParams.get("slug")}
     />
   );

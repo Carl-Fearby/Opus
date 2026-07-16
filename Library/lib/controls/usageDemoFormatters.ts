@@ -280,6 +280,32 @@ export function formatSegmentedControlOptionsForUsage(options: string) {
   return formatObjectLiteral(parsed.length ? parsed : ["Monthly", "Quarterly", "Yearly"]);
 }
 
+export function formatChoiceChipOptionsForUsage(options: string) {
+  const parsed = options
+    .split(",")
+    .map((option) => option.trim())
+    .filter(Boolean)
+    .map((option) => {
+      const [label, rawValue] = option.split(":").map((part) => part.trim());
+      const value = rawValue || label.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
+
+      return {
+        label,
+        value,
+      };
+    });
+
+  return formatObjectLiteral(
+    parsed.length
+      ? parsed
+      : [
+          { label: "Design", value: "design" },
+          { label: "Frontend", value: "frontend" },
+          { label: "Research", value: "research" },
+        ],
+  );
+}
+
 export function formatDockLayoutProps(settings: ControlSettingsBySlug["dock-layout"]) {
   const props = [
     settings.showTop ? 'top="Top dock"' : "",
@@ -289,4 +315,26 @@ export function formatDockLayoutProps(settings: ControlSettingsBySlug["dock-layo
   ].filter(Boolean);
 
   return props.join(" ");
+}
+
+export function formatThreePaneLayoutProps(settings: ControlSettingsBySlug["three-pane-layout"]) {
+  const props = [
+    'storageKey="workspace-layout"',
+    settings.persist ? "" : "persist={false}",
+    `defaultLeftWidth={${settings.defaultLeftWidth}}`,
+    `defaultRightWidth={${settings.defaultRightWidth}}`,
+    `handleBackground="${settings.handleBackground}"`,
+    `handleBorderRadius={${settings.handleBorderRadius ?? 0}}`,
+    `handleHeight="${settings.handleHeight}"`,
+    `handleMarginBlock={${settings.handleMarginBlock ?? 0}}`,
+    settings.height === "full" ? 'style={{ height: "100%" }}' : "",
+    `minLeftWidth={${settings.minLeftWidth}}`,
+    `maxLeftWidth={${settings.maxLeftWidth}}`,
+    `minRightWidth={${settings.minRightWidth}}`,
+    `maxRightWidth={${settings.maxRightWidth}}`,
+    settings.showLeft ? 'left={<nav>Navigation</nav>}' : "",
+    settings.showRight ? 'right={<aside>Inspector</aside>}' : "",
+  ].filter(Boolean);
+
+  return props.join("\n  ");
 }

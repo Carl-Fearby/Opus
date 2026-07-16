@@ -13,7 +13,7 @@ All components registered in `lib/controls/registry.ts`. Each has a detail page 
 | `empty-state` | `EmptyState` | Placeholder for empty lists or search results |
 | `panel` | `Panel` | Surface panel with optional heading |
 | `show-more` | `ShowMore` | Truncated text with expand/collapse |
-| `sidebar` | `Sidebar`, `SidebarLayout`, … | Application sidebar shell and nav links |
+| `sidebar` | `Sidebar`, `SidebarGroup`, `SidebarLink`, `SidebarNav` | Icon-led side navigation surface |
 | `skeleton` | `Skeleton` | Loading placeholder shapes |
 | `table` | `Table` | Semantic HTML table wrapper |
 | `tabs` | `Tabs` | Tabbed content panels |
@@ -26,7 +26,6 @@ import {
   Sidebar,
   SidebarGroup,
   SidebarHeader,
-  SidebarLayout,
   SidebarLink,
   SidebarNav,
 } from "@/components/fields";

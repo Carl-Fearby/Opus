@@ -18,5 +18,6 @@ export type EmojiCategory = {
   emojis: EmojiEntry[];
   iconName: string;
   id: Exclude<EmojiCategoryId, "recent">;
+  ids: readonly string[];
   label: string;
 };

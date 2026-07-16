@@ -1,9 +1,11 @@
 .row {
   --stat-tile-size: 12.75rem;
+  --stat-tile-height: 6.75rem;
   position: relative;
   display: grid;
   grid-auto-flow: column;
   grid-auto-columns: var(--stat-tile-size);
+  align-items: start;
   justify-content: start;
   gap: 12px;
   width: 100%;

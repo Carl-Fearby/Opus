@@ -26,25 +26,25 @@ export function AppSetupGuide() {
           items={[
             {
               term: "Styles",
-              description: "Import opus-react/styles.css and opus-react/index.css in the root layout.",
+              details: "Import opus-react/styles.css and opus-react/index.css in the root layout.",
             },
             {
               term: "Theme",
-              description:
+              details:
                 "Set data-theme on the html element and wrap the app in ThemeProvider so portalled overlays inherit tokens.",
             },
             {
               term: "Portal host",
-              description:
+              details:
                 "Optional PortalHost wrapper for a dedicated mount node. Overlays still portal to document.body when omitted.",
             },
             {
               term: "Portalled overlays",
-              description: portalledOverlays.join(", "),
+              details: portalledOverlays.join(", "),
             },
             {
               term: "Portalled floating UI",
-              description: portalledFloating.join(", "),
+              details: portalledFloating.join(", "),
             },
           ]}
         />

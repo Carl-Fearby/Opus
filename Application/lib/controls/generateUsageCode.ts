@@ -2997,30 +2997,27 @@ const value = ${formatJsonValueForUsage()};
         "Sidebar",
         "SidebarGroup",
         "SidebarHeader",
-        "SidebarLayout",
         "SidebarLink",
         "SidebarNav",
       ])}
 
-<SidebarLayout main="Main content area"${s.side !== "left" ? ` side=${quote(s.side)}` : ""}>
-${formatOpeningElement("Sidebar", sidebarProps, "  ")}
-    <SidebarNav aria-label="Primary">
-      <SidebarLink${s.activeItem === "overview" ? ' active' : ""} icon={<CatalogIcon iconName="grid-2" />}>
-        Overview
+${formatOpeningElement("Sidebar", sidebarProps)}
+  <SidebarNav aria-label="Primary">
+    <SidebarLink${s.activeItem === "overview" ? ' active' : ""} icon={<CatalogIcon iconName="grid-2" />}>
+      Overview
+    </SidebarLink>
+    <SidebarGroup icon={<CatalogIcon iconName="layer-group" />} label="Library"${s.groupOpen ? "" : " defaultOpen={false}"}>
+      <SidebarLink${s.activeItem === "library" ? ' active' : ""} icon={<CatalogIcon iconName="cube" />}>
+        Components
       </SidebarLink>
-      <SidebarGroup icon={<CatalogIcon iconName="layer-group" />} label="Library"${s.groupOpen ? "" : " defaultOpen={false}"}>
-        <SidebarLink${s.activeItem === "library" ? ' active' : ""} icon={<CatalogIcon iconName="cube" />}>
-          Components
-        </SidebarLink>
-        <SidebarLink icon={<CatalogIcon iconName="copy" />}>Templates</SidebarLink>
-        <SidebarLink icon={<CatalogIcon iconName="swatchbook" />}>Tokens</SidebarLink>
-      </SidebarGroup>
-      <SidebarLink${s.activeItem === "settings" ? ' active' : ""} icon={<CatalogIcon iconName="gear" />}>
-        Settings
-      </SidebarLink>
-    </SidebarNav>
-  </Sidebar>
-</SidebarLayout>`;
+      <SidebarLink icon={<CatalogIcon iconName="copy" />}>Templates</SidebarLink>
+      <SidebarLink icon={<CatalogIcon iconName="swatchbook" />}>Tokens</SidebarLink>
+    </SidebarGroup>
+    <SidebarLink${s.activeItem === "settings" ? ' active' : ""} icon={<CatalogIcon iconName="gear" />}>
+      Settings
+    </SidebarLink>
+  </SidebarNav>
+</Sidebar>`;
     }
     case "mega-menu": {
       const s = settings as ControlSettingsBySlug["mega-menu"];

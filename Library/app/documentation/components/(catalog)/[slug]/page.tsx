@@ -2,12 +2,11 @@ import { notFound } from "next/navigation";
 import { ControlDetail } from "@/components/control-detail/ControlDetail";
 import { getDefaultSettings } from "@/lib/controls/defaults";
 import { getAllSlugs, getControl } from "@/lib/controls/registry";
-import type { ComponentCategory, ControlSlug } from "@/lib/controls/types";
+import type { ControlSlug } from "@/lib/controls/types";
 import { getComponentDocumentation } from "@/lib/documentation/componentDocs";
 
 type ControlPageProps = {
   params: Promise<{ slug: string }>;
-  searchParams: Promise<{ category?: string }>;
 };
 
 export function generateStaticParams() {
@@ -28,20 +27,15 @@ export async function generateMetadata({ params }: ControlPageProps) {
   };
 }
 
-export default async function ControlPage({ params, searchParams }: ControlPageProps) {
+export default async function ControlPage({ params }: ControlPageProps) {
   const { slug } = await params;
-  const { category: categoryParam } = await searchParams;
-  const category = categoryParam as ComponentCategory | undefined;
-  const control = getControl(slug, category ? { category } : undefined) ?? getControl(slug);
+  const control = getControl(slug);
 
   if (!control) {
     notFound();
   }
 
-  const defaultSettings =
-    category === "labs" && slug === "user-profile"
-      ? { ...getDefaultSettings(slug as ControlSlug), wrapInContainer: true }
-      : getDefaultSettings(slug as ControlSlug);
+  const defaultSettings = getDefaultSettings(slug as ControlSlug);
 
   return (
     <ControlDetail

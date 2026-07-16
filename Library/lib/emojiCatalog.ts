@@ -15,7 +15,7 @@ export const RECENT_EMOJI_CATEGORY = {
 export function getRecentEmojiEntries(recentEmojis: readonly string[]): EmojiEntry[] {
   return recentEmojis.map((emoji) => ({
     emoji,
-    keywords: ["recent", "recently used"],
+    keywords: ["history", "recent", "recently used"],
   }));
 }
 

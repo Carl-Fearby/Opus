@@ -8,10 +8,14 @@ export type ChipInputVariant = "filled" | "outlined" | "soft" | "glass" | "gradi
 export type ChipInputPreset = "chip-input" | "tag-input" | "token-input";
 
 export type ChoiceOption = {
+  disabled?: boolean;
   error?: string;
   label: string;
   value: string;
 };
+
+export type ChoiceChipsSelectionMode = "multiple" | "single";
+export type ChoiceChipsVariant = "filled" | "outlined" | "soft" | "glass";
 
 export type GalleryImage = {
   alt: string;

@@ -56,6 +56,11 @@
   align-self: stretch;
 }
 
+.container[data-height="full"] {
+  height: 100%;
+  min-height: 22rem;
+}
+
 :global([data-preview-root][data-theme="light"]) .container,
 :global([data-theme="light"]) .container {
   --dashboard-section-bg: #f8fbff;

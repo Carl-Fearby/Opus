@@ -7,8 +7,10 @@ export type LayoutCatalogEntry = {
     | "columns"
     | "grid"
     | "splitter"
+    | "resize-handle"
     | "resizable-panel"
     | "dock-layout"
+    | "three-pane-layout"
     | "scroll-area"
     | "aspect-ratio"
     | "container"
@@ -51,6 +53,14 @@ export const layoutCatalog = [
     sourceFiles: ["components/Splitter/Splitter.tsx", "components/Splitter/Splitter.module.css"],
   },
   {
+    slug: "resize-handle",
+    title: "Resize Handle",
+    componentName: "ResizeHandle",
+    navigationGroup: "Layout",
+    description: "Shared keyboard-accessible separator handle used by resizable layouts.",
+    sourceFiles: ["components/ResizeHandle/ResizeHandle.tsx", "components/ResizeHandle/ResizeHandle.module.css"],
+  },
+  {
     slug: "resizable-panel",
     title: "Resizable Panel",
     componentName: "ResizablePanel",
@@ -68,6 +78,17 @@ export const layoutCatalog = [
     navigationGroup: "Layout",
     description: "IDE-style dock regions for top, left, center, right, and bottom panes.",
     sourceFiles: ["components/DockLayout/DockLayout.tsx", "components/DockLayout/DockLayout.module.css"],
+  },
+  {
+    slug: "three-pane-layout",
+    title: "Three Pane Layout",
+    componentName: "ThreePaneLayout",
+    navigationGroup: "Layout",
+    description: "Application shell with optional persisted, resizable left and right sidebars around a main content pane.",
+    sourceFiles: [
+      "components/ThreePaneLayout/ThreePaneLayout.tsx",
+      "components/ThreePaneLayout/ThreePaneLayout.module.css",
+    ],
   },
   {
     slug: "scroll-area",
