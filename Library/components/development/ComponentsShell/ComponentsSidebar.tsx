@@ -7,6 +7,7 @@ import { faMagnifyingGlass } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import type { IconDefinition } from "@fortawesome/fontawesome-svg-core";
 import { ComponentIcon } from "@/components/development/ComponentIcon";
+import { CustomScrollbar } from "@/components/CustomScrollbar";
 import { getCategoryIcon, getComponentIcon, getNavigationGroupIcon, getOverviewIcon } from "@/lib/controls/componentIcons";
 import type { ComponentCategory, ControlDefinition } from "@/lib/controls/types";
 import {
@@ -485,6 +486,7 @@ export function ComponentsSidebar() {
           />
         </label>
       </div>
+      <CustomScrollbar className={styles.navScroll} label="Components navigation" orientation="vertical">
       <nav className={styles.nav} aria-label="Components">
         {isSearching ? (
           <div className={styles.sidebarSearchResults} id="components-sidebar-search-results">
@@ -578,6 +580,7 @@ export function ComponentsSidebar() {
           </>
         )}
       </nav>
+      </CustomScrollbar>
     </aside>
   );
 }

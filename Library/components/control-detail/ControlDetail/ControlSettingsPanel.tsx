@@ -1,7 +1,16 @@
 "use client";
 
-import type { BaseFieldSettings, ControlSettings, ControlSettingsBySlug, ControlSlug } from "@/lib/controls/types";
-import { isCartesianChartSlug, isChartSlug, isMatrixChartSlug } from "@/lib/controls/chartCatalog";
+import type {
+  BaseFieldSettings,
+  ControlSettings,
+  ControlSettingsBySlug,
+  ControlSlug,
+} from "@/lib/controls/types";
+import {
+  isCartesianChartSlug,
+  isChartSlug,
+  isMatrixChartSlug,
+} from "@/lib/controls/chartCatalog";
 import { chartVerticalBar36MonthData } from "@/lib/controls/chartDemoData";
 import {
   gaugePaletteOptions,
@@ -70,7 +79,8 @@ const dialogActionCopy = {
   },
   "yes-no": {
     title: "Continue with this choice?",
-    description: "Choose yes to continue, or no to go back and review the details.",
+    description:
+      "Choose yes to continue, or no to go back and review the details.",
   },
   delete: {
     title: "Delete this item?",
@@ -102,7 +112,9 @@ function CommonFieldSettings({
       <SettingSelect
         label="Layout mode"
         value={settings.mode}
-        onChange={(mode) => onChange({ ...settings, mode: mode as typeof settings.mode })}
+        onChange={(mode) =>
+          onChange({ ...settings, mode: mode as typeof settings.mode })
+        }
         options={[
           { label: "Stacked", value: "stacked" },
           { label: "Flagged", value: "flagged" },
@@ -112,7 +124,10 @@ function CommonFieldSettings({
         label="Label position"
         value={settings.labelPosition}
         onChange={(labelPosition) =>
-          onChange({ ...settings, labelPosition: labelPosition as typeof settings.labelPosition })
+          onChange({
+            ...settings,
+            labelPosition: labelPosition as typeof settings.labelPosition,
+          })
         }
         options={[
           { label: "Left", value: "left" },
@@ -123,7 +138,9 @@ function CommonFieldSettings({
         <SettingSelect
           label="Density"
           value={settings.size ?? "md"}
-          onChange={(size) => onChange({ ...settings, size: size as typeof settings.size })}
+          onChange={(size) =>
+            onChange({ ...settings, size: size as typeof settings.size })
+          }
           options={[
             { label: "Compact", value: "sm" },
             { label: "Comfortable", value: "md" },
@@ -175,7 +192,9 @@ function CommonFieldSettings({
         <SettingInput
           label="Value"
           value={String(settings.value)}
-          onChange={(value) => onChange({ ...settings, value } as typeof settings)}
+          onChange={(value) =>
+            onChange({ ...settings, value } as typeof settings)
+          }
         />
       ) : null}
     </>
@@ -194,14 +213,18 @@ function HelpTextSettings<T extends { helpEnabled: boolean; help: string }>({
       <SettingToggle
         label="Show help text"
         checked={settings.helpEnabled}
-        onChange={(helpEnabled) => onChange({ ...settings, helpEnabled } as ControlSettings)}
+        onChange={(helpEnabled) =>
+          onChange({ ...settings, helpEnabled } as ControlSettings)
+        }
       />
       {settings.helpEnabled ? (
         <div className={shellStyles.settingsFullWidth}>
           <SettingTextarea
             label="Help text"
             value={settings.help}
-            onChange={(help) => onChange({ ...settings, help } as ControlSettings)}
+            onChange={(help) =>
+              onChange({ ...settings, help } as ControlSettings)
+            }
           />
         </div>
       ) : null}
@@ -209,14 +232,16 @@ function HelpTextSettings<T extends { helpEnabled: boolean; help: string }>({
   );
 }
 
-function DashboardWidgetWidthSetting<T extends { width?: "full" | "widget"; wrapInContainer?: boolean }>({
+function DashboardWidgetWidthSetting<
+  T extends { width?: "full" | "widget"; wrapInContainer?: boolean },
+>({
   settings,
   onChange,
 }: {
   settings: T;
   onChange: (next: ControlSettings) => void;
 }) {
-  return settings.wrapInContainer ?? true ? (
+  return (settings.wrapInContainer ?? true) ? (
     <DashboardWidthSetting
       value={settings.width ?? "widget"}
       onChange={(width) => onChange({ ...settings, width } as ControlSettings)}
@@ -224,7 +249,11 @@ function DashboardWidgetWidthSetting<T extends { width?: "full" | "widget"; wrap
   ) : null;
 }
 
-export function ControlSettingsPanel({ slug, settings, onChange }: ControlSettingsPanelProps) {
+export function ControlSettingsPanel({
+  slug,
+  settings,
+  onChange,
+}: ControlSettingsPanelProps) {
   if (isChartSlug(slug)) {
     const s = settings as ControlSettingsBySlug[typeof slug];
     const supportsAxes = isCartesianChartSlug(slug) || isMatrixChartSlug(slug);
@@ -235,7 +264,10 @@ export function ControlSettingsPanel({ slug, settings, onChange }: ControlSettin
           label="Palette"
           value={s.palette}
           onChange={(palette) =>
-            onChange({ ...s, palette: palette as typeof s.palette } as ControlSettings)
+            onChange({
+              ...s,
+              palette: palette as typeof s.palette,
+            } as ControlSettings)
           }
           options={[
             { label: "Opus", value: "opus" },
@@ -259,34 +291,47 @@ export function ControlSettingsPanel({ slug, settings, onChange }: ControlSettin
           <SettingToggle
             label="Axes"
             checked={s.showAxis}
-            onChange={(showAxis) => onChange({ ...s, showAxis } as ControlSettings)}
+            onChange={(showAxis) =>
+              onChange({ ...s, showAxis } as ControlSettings)
+            }
           />
         ) : null}
         <SettingToggle
           label="Grid"
           checked={s.showGrid}
-          onChange={(showGrid) => onChange({ ...s, showGrid } as ControlSettings)}
+          onChange={(showGrid) =>
+            onChange({ ...s, showGrid } as ControlSettings)
+          }
         />
         <SettingToggle
           label="Legend"
           checked={s.showLegend}
-          onChange={(showLegend) => onChange({ ...s, showLegend } as ControlSettings)}
+          onChange={(showLegend) =>
+            onChange({ ...s, showLegend } as ControlSettings)
+          }
         />
         <SettingToggle
           label="Values"
           checked={s.showValues}
-          onChange={(showValues) => onChange({ ...s, showValues } as ControlSettings)}
+          onChange={(showValues) =>
+            onChange({ ...s, showValues } as ControlSettings)
+          }
         />
         <SettingToggle
           label="Maximise width"
           checked={s.maximise}
-          onChange={(maximise) => onChange({ ...s, maximise } as ControlSettings)}
+          onChange={(maximise) =>
+            onChange({ ...s, maximise } as ControlSettings)
+          }
         />
         <SettingSelect
           label="Preview layout"
           value={s.previewLayout}
           onChange={(previewLayout) =>
-            onChange({ ...s, previewLayout: previewLayout as typeof s.previewLayout } as ControlSettings)
+            onChange({
+              ...s,
+              previewLayout: previewLayout as typeof s.previewLayout,
+            } as ControlSettings)
           }
           options={[
             { label: "1 full width", value: "single" },
@@ -306,14 +351,18 @@ export function ControlSettingsPanel({ slug, settings, onChange }: ControlSettin
               <SettingInput
                 label="X axis label"
                 value={s.xAxisLabel}
-                onChange={(xAxisLabel) => onChange({ ...s, xAxisLabel } as ControlSettings)}
+                onChange={(xAxisLabel) =>
+                  onChange({ ...s, xAxisLabel } as ControlSettings)
+                }
               />
             </div>
             <div className={shellStyles.settingsFullWidth}>
               <SettingInput
                 label="Y axis label"
                 value={s.yAxisLabel}
-                onChange={(yAxisLabel) => onChange({ ...s, yAxisLabel } as ControlSettings)}
+                onChange={(yAxisLabel) =>
+                  onChange({ ...s, yAxisLabel } as ControlSettings)
+                }
               />
             </div>
           </>
@@ -349,13 +398,17 @@ export function ControlSettingsPanel({ slug, settings, onChange }: ControlSettin
           <SettingToggle
             label="Show placeholder"
             checked={s.placeholderEnabled}
-            onChange={(placeholderEnabled) => onChange({ ...s, placeholderEnabled } as ControlSettings)}
+            onChange={(placeholderEnabled) =>
+              onChange({ ...s, placeholderEnabled } as ControlSettings)
+            }
           />
           {s.placeholderEnabled ? (
             <SettingInput
               label="Placeholder"
               value={s.placeholder}
-              onChange={(placeholder) => onChange({ ...s, placeholder } as ControlSettings)}
+              onChange={(placeholder) =>
+                onChange({ ...s, placeholder } as ControlSettings)
+              }
             />
           ) : null}
         </div>
@@ -393,16 +446,25 @@ export function ControlSettingsPanel({ slug, settings, onChange }: ControlSettin
             <>
               <SettingToggle
                 label="Show placeholder"
-                checked={(s as ControlSettingsBySlug["search-input"]).placeholderEnabled ?? false}
+                checked={
+                  (s as ControlSettingsBySlug["search-input"])
+                    .placeholderEnabled ?? false
+                }
                 onChange={(placeholderEnabled) =>
                   onChange({ ...s, placeholderEnabled } as ControlSettings)
                 }
               />
-              {(s as ControlSettingsBySlug["search-input"]).placeholderEnabled ? (
+              {(s as ControlSettingsBySlug["search-input"])
+                .placeholderEnabled ? (
                 <SettingInput
                   label="Placeholder"
-                  value={(s as ControlSettingsBySlug["search-input"]).placeholder ?? ""}
-                  onChange={(placeholder) => onChange({ ...s, placeholder } as ControlSettings)}
+                  value={
+                    (s as ControlSettingsBySlug["search-input"]).placeholder ??
+                    ""
+                  }
+                  onChange={(placeholder) =>
+                    onChange({ ...s, placeholder } as ControlSettings)
+                  }
                 />
               ) : null}
             </>
@@ -421,7 +483,9 @@ export function ControlSettingsPanel({ slug, settings, onChange }: ControlSettin
           <SettingToggle
             label="Character limit"
             checked={s.maxCharsEnabled}
-            onChange={(maxCharsEnabled) => onChange({ ...s, maxCharsEnabled } as ControlSettings)}
+            onChange={(maxCharsEnabled) =>
+              onChange({ ...s, maxCharsEnabled } as ControlSettings)
+            }
           />
           {s.maxCharsEnabled ? (
             <SettingInput
@@ -429,20 +493,27 @@ export function ControlSettingsPanel({ slug, settings, onChange }: ControlSettin
               type="number"
               value={String(s.maxChars)}
               onChange={(value) =>
-                onChange({ ...s, maxChars: Number(value) || 0 } as ControlSettings)
+                onChange({
+                  ...s,
+                  maxChars: Number(value) || 0,
+                } as ControlSettings)
               }
             />
           ) : null}
           <SettingToggle
             label="Show placeholder"
             checked={s.placeholderEnabled}
-            onChange={(placeholderEnabled) => onChange({ ...s, placeholderEnabled } as ControlSettings)}
+            onChange={(placeholderEnabled) =>
+              onChange({ ...s, placeholderEnabled } as ControlSettings)
+            }
           />
           {s.placeholderEnabled ? (
             <SettingInput
               label="Placeholder"
               value={s.placeholder}
-              onChange={(placeholder) => onChange({ ...s, placeholder } as ControlSettings)}
+              onChange={(placeholder) =>
+                onChange({ ...s, placeholder } as ControlSettings)
+              }
             />
           ) : null}
         </div>
@@ -456,30 +527,40 @@ export function ControlSettingsPanel({ slug, settings, onChange }: ControlSettin
             <SettingInput
               label="Placeholder"
               value={s.placeholder}
-              onChange={(placeholder) => onChange({ ...s, placeholder } as ControlSettings)}
+              onChange={(placeholder) =>
+                onChange({ ...s, placeholder } as ControlSettings)
+              }
             />
           </div>
           <div className={shellStyles.settingsFullWidth}>
             <SettingInput
               label="Save button label"
               value={s.saveButtonLabel}
-              onChange={(saveButtonLabel) => onChange({ ...s, saveButtonLabel } as ControlSettings)}
+              onChange={(saveButtonLabel) =>
+                onChange({ ...s, saveButtonLabel } as ControlSettings)
+              }
             />
           </div>
           <SettingToggle
             label="Show attach"
             checked={s.showAttach}
-            onChange={(showAttach) => onChange({ ...s, showAttach } as ControlSettings)}
+            onChange={(showAttach) =>
+              onChange({ ...s, showAttach } as ControlSettings)
+            }
           />
           <SettingToggle
             label="Show mention"
             checked={s.showMention}
-            onChange={(showMention) => onChange({ ...s, showMention } as ControlSettings)}
+            onChange={(showMention) =>
+              onChange({ ...s, showMention } as ControlSettings)
+            }
           />
           <SettingToggle
             label="Show emoji"
             checked={s.showEmoji}
-            onChange={(showEmoji) => onChange({ ...s, showEmoji } as ControlSettings)}
+            onChange={(showEmoji) =>
+              onChange({ ...s, showEmoji } as ControlSettings)
+            }
           />
           <div className={shellStyles.settingsFullWidth}>
             <SettingInput
@@ -505,19 +586,26 @@ export function ControlSettingsPanel({ slug, settings, onChange }: ControlSettin
             type="number"
             value={String(s.minHeight)}
             onChange={(value) =>
-              onChange({ ...s, minHeight: Number(value) || 160 } as ControlSettings)
+              onChange({
+                ...s,
+                minHeight: Number(value) || 160,
+              } as ControlSettings)
             }
           />
           <SettingToggle
             label="Show placeholder"
             checked={s.placeholderEnabled}
-            onChange={(placeholderEnabled) => onChange({ ...s, placeholderEnabled } as ControlSettings)}
+            onChange={(placeholderEnabled) =>
+              onChange({ ...s, placeholderEnabled } as ControlSettings)
+            }
           />
           {s.placeholderEnabled ? (
             <SettingInput
               label="Placeholder"
               value={s.placeholder}
-              onChange={(placeholder) => onChange({ ...s, placeholder } as ControlSettings)}
+              onChange={(placeholder) =>
+                onChange({ ...s, placeholder } as ControlSettings)
+              }
             />
           ) : null}
         </div>
@@ -549,7 +637,9 @@ export function ControlSettingsPanel({ slug, settings, onChange }: ControlSettin
             <SettingTextarea
               label="Options (comma-separated)"
               value={s.options}
-              onChange={(options) => onChange({ ...s, options } as ControlSettings)}
+              onChange={(options) =>
+                onChange({ ...s, options } as ControlSettings)
+              }
             />
           </div>
         </div>
@@ -568,7 +658,9 @@ export function ControlSettingsPanel({ slug, settings, onChange }: ControlSettin
             <SettingTextarea
               label="Available items (comma-separated)"
               value={s.available}
-              onChange={(available) => onChange({ ...s, available } as ControlSettings)}
+              onChange={(available) =>
+                onChange({ ...s, available } as ControlSettings)
+              }
             />
           </div>
         </div>
@@ -585,7 +677,9 @@ export function ControlSettingsPanel({ slug, settings, onChange }: ControlSettin
           <SettingToggle
             label="Show requirements"
             checked={s.showRequirements}
-            onChange={(showRequirements) => onChange({ ...s, showRequirements } as ControlSettings)}
+            onChange={(showRequirements) =>
+              onChange({ ...s, showRequirements } as ControlSettings)
+            }
           />
         </div>
       );
@@ -607,19 +701,25 @@ export function ControlSettingsPanel({ slug, settings, onChange }: ControlSettin
               { label: "Hearts", value: "hearts" },
               { label: "Numeric", value: "numeric" },
             ]}
-            onChange={(variant) => onChange({ ...s, variant } as ControlSettings)}
+            onChange={(variant) =>
+              onChange({ ...s, variant } as ControlSettings)
+            }
           />
           <SettingInput
             label="Maximum rating"
             type="number"
             value={String(s.max)}
-            onChange={(value) => onChange({ ...s, max: Number(value) || 5 } as ControlSettings)}
+            onChange={(value) =>
+              onChange({ ...s, max: Number(value) || 5 } as ControlSettings)
+            }
           />
           <SettingInput
             label="Value"
             type="number"
             value={String(s.value)}
-            onChange={(value) => onChange({ ...s, value: Number(value) || 0 } as ControlSettings)}
+            onChange={(value) =>
+              onChange({ ...s, value: Number(value) || 0 } as ControlSettings)
+            }
           />
         </div>
       );
@@ -636,7 +736,9 @@ export function ControlSettingsPanel({ slug, settings, onChange }: ControlSettin
             <SettingTextarea
               label="Options (comma-separated)"
               value={s.options}
-              onChange={(options) => onChange({ ...s, options } as ControlSettings)}
+              onChange={(options) =>
+                onChange({ ...s, options } as ControlSettings)
+              }
             />
           </div>
         </div>
@@ -656,7 +758,10 @@ export function ControlSettingsPanel({ slug, settings, onChange }: ControlSettin
             type="number"
             value={String(s.value[0])}
             onChange={(value) =>
-              onChange({ ...s, value: [Number(value) || s.min, s.value[1]] } as ControlSettings)
+              onChange({
+                ...s,
+                value: [Number(value) || s.min, s.value[1]],
+              } as ControlSettings)
             }
           />
           <SettingInput
@@ -664,26 +769,35 @@ export function ControlSettingsPanel({ slug, settings, onChange }: ControlSettin
             type="number"
             value={String(s.value[1])}
             onChange={(value) =>
-              onChange({ ...s, value: [s.value[0], Number(value) || s.max] } as ControlSettings)
+              onChange({
+                ...s,
+                value: [s.value[0], Number(value) || s.max],
+              } as ControlSettings)
             }
           />
           <SettingInput
             label="Range min"
             type="number"
             value={String(s.min)}
-            onChange={(value) => onChange({ ...s, min: Number(value) || 0 } as ControlSettings)}
+            onChange={(value) =>
+              onChange({ ...s, min: Number(value) || 0 } as ControlSettings)
+            }
           />
           <SettingInput
             label="Range max"
             type="number"
             value={String(s.max)}
-            onChange={(value) => onChange({ ...s, max: Number(value) || 100 } as ControlSettings)}
+            onChange={(value) =>
+              onChange({ ...s, max: Number(value) || 100 } as ControlSettings)
+            }
           />
           <SettingInput
             label="Step"
             type="number"
             value={String(s.step)}
-            onChange={(value) => onChange({ ...s, step: Number(value) || 1 } as ControlSettings)}
+            onChange={(value) =>
+              onChange({ ...s, step: Number(value) || 1 } as ControlSettings)
+            }
           />
         </div>
       );
@@ -706,7 +820,9 @@ export function ControlSettingsPanel({ slug, settings, onChange }: ControlSettin
               { label: "France", value: "FR" },
               { label: "Ireland", value: "IE" },
             ]}
-            onChange={(countryCode) => onChange({ ...s, countryCode } as ControlSettings)}
+            onChange={(countryCode) =>
+              onChange({ ...s, countryCode } as ControlSettings)
+            }
           />
         </div>
       );
@@ -735,19 +851,25 @@ export function ControlSettingsPanel({ slug, settings, onChange }: ControlSettin
           <SettingToggle
             label="Show placeholder"
             checked={s.placeholderEnabled}
-            onChange={(placeholderEnabled) => onChange({ ...s, placeholderEnabled } as ControlSettings)}
+            onChange={(placeholderEnabled) =>
+              onChange({ ...s, placeholderEnabled } as ControlSettings)
+            }
           />
           {s.placeholderEnabled ? (
             <SettingInput
               label="Placeholder"
               value={s.placeholder}
-              onChange={(placeholder) => onChange({ ...s, placeholder } as ControlSettings)}
+              onChange={(placeholder) =>
+                onChange({ ...s, placeholder } as ControlSettings)
+              }
             />
           ) : null}
           <SettingInput
             label="Search placeholder"
             value={s.searchPlaceholder}
-            onChange={(searchPlaceholder) => onChange({ ...s, searchPlaceholder } as ControlSettings)}
+            onChange={(searchPlaceholder) =>
+              onChange({ ...s, searchPlaceholder } as ControlSettings)
+            }
           />
         </div>
       );
@@ -805,7 +927,12 @@ export function ControlSettingsPanel({ slug, settings, onChange }: ControlSettin
           <SettingSelect
             label="Shape"
             value={s.shape}
-            onChange={(shape) => onChange({ ...s, shape: shape as typeof s.shape } as ControlSettings)}
+            onChange={(shape) =>
+              onChange({
+                ...s,
+                shape: shape as typeof s.shape,
+              } as ControlSettings)
+            }
             options={[
               { label: "Round", value: "round" },
               { label: "Square", value: "square" },
@@ -814,7 +941,9 @@ export function ControlSettingsPanel({ slug, settings, onChange }: ControlSettin
           <SettingToggle
             label="Show global error"
             checked={s.errorEnabled}
-            onChange={(errorEnabled) => onChange({ ...s, errorEnabled } as ControlSettings)}
+            onChange={(errorEnabled) =>
+              onChange({ ...s, errorEnabled } as ControlSettings)
+            }
           />
           <SettingToggle
             label="Show option errors"
@@ -834,7 +963,9 @@ export function ControlSettingsPanel({ slug, settings, onChange }: ControlSettin
             <SettingInput
               label="Option error text"
               value={s.optionError}
-              onChange={(optionError) => onChange({ ...s, optionError } as ControlSettings)}
+              onChange={(optionError) =>
+                onChange({ ...s, optionError } as ControlSettings)
+              }
             />
           ) : null}
         </div>
@@ -859,7 +990,8 @@ export function ControlSettingsPanel({ slug, settings, onChange }: ControlSettin
             label="Preset"
             value={s.preset}
             onChange={(preset) => {
-              const defaults = presetDefaults[preset as keyof typeof presetDefaults];
+              const defaults =
+                presetDefaults[preset as keyof typeof presetDefaults];
               onChange({
                 ...s,
                 preset: preset as typeof s.preset,
@@ -876,7 +1008,12 @@ export function ControlSettingsPanel({ slug, settings, onChange }: ControlSettin
           <SettingSelect
             label="Chip variant"
             value={s.variant}
-            onChange={(variant) => onChange({ ...s, variant: variant as typeof s.variant } as ControlSettings)}
+            onChange={(variant) =>
+              onChange({
+                ...s,
+                variant: variant as typeof s.variant,
+              } as ControlSettings)
+            }
             options={[
               { label: "Filled", value: "filled" },
               { label: "Outlined", value: "outlined" },
@@ -903,24 +1040,32 @@ export function ControlSettingsPanel({ slug, settings, onChange }: ControlSettin
           <SettingToggle
             label="Show placeholder"
             checked={s.placeholderEnabled}
-            onChange={(placeholderEnabled) => onChange({ ...s, placeholderEnabled } as ControlSettings)}
+            onChange={(placeholderEnabled) =>
+              onChange({ ...s, placeholderEnabled } as ControlSettings)
+            }
           />
           {s.placeholderEnabled ? (
             <SettingInput
               label="Placeholder"
               value={s.placeholder}
-              onChange={(placeholder) => onChange({ ...s, placeholder } as ControlSettings)}
+              onChange={(placeholder) =>
+                onChange({ ...s, placeholder } as ControlSettings)
+              }
             />
           ) : null}
           <SettingToggle
             label="Disabled"
             checked={s.disabled}
-            onChange={(disabled) => onChange({ ...s, disabled } as ControlSettings)}
+            onChange={(disabled) =>
+              onChange({ ...s, disabled } as ControlSettings)
+            }
           />
           <SettingToggle
             label="Read only"
             checked={s.readOnly}
-            onChange={(readOnly) => onChange({ ...s, readOnly } as ControlSettings)}
+            onChange={(readOnly) =>
+              onChange({ ...s, readOnly } as ControlSettings)
+            }
           />
         </div>
       );
@@ -939,7 +1084,10 @@ export function ControlSettingsPanel({ slug, settings, onChange }: ControlSettin
             label="Selection mode"
             value={s.selectionMode}
             onChange={(selectionMode) =>
-              onChange({ ...s, selectionMode: selectionMode as typeof s.selectionMode } as ControlSettings)
+              onChange({
+                ...s,
+                selectionMode: selectionMode as typeof s.selectionMode,
+              } as ControlSettings)
             }
             options={[
               { label: "Multiple", value: "multiple" },
@@ -949,7 +1097,12 @@ export function ControlSettingsPanel({ slug, settings, onChange }: ControlSettin
           <SettingSelect
             label="Variant"
             value={s.variant}
-            onChange={(variant) => onChange({ ...s, variant: variant as typeof s.variant } as ControlSettings)}
+            onChange={(variant) =>
+              onChange({
+                ...s,
+                variant: variant as typeof s.variant,
+              } as ControlSettings)
+            }
             options={[
               { label: "Filled", value: "filled" },
               { label: "Outlined", value: "outlined" },
@@ -961,7 +1114,9 @@ export function ControlSettingsPanel({ slug, settings, onChange }: ControlSettin
             <SettingTextarea
               label="Options (Label:value, comma separated)"
               value={s.options}
-              onChange={(options) => onChange({ ...s, options } as ControlSettings)}
+              onChange={(options) =>
+                onChange({ ...s, options } as ControlSettings)
+              }
             />
           </div>
           <div className={shellStyles.settingsFullWidth}>
@@ -982,7 +1137,9 @@ export function ControlSettingsPanel({ slug, settings, onChange }: ControlSettin
           <SettingToggle
             label="Disabled"
             checked={s.disabled}
-            onChange={(disabled) => onChange({ ...s, disabled } as ControlSettings)}
+            onChange={(disabled) =>
+              onChange({ ...s, disabled } as ControlSettings)
+            }
           />
         </div>
       );
@@ -999,12 +1156,19 @@ export function ControlSettingsPanel({ slug, settings, onChange }: ControlSettin
           <SettingToggle
             label="Checked"
             checked={s.checked}
-            onChange={(checked) => onChange({ ...s, checked } as ControlSettings)}
+            onChange={(checked) =>
+              onChange({ ...s, checked } as ControlSettings)
+            }
           />
           <SettingSelect
             label="Shape"
             value={s.shape}
-            onChange={(shape) => onChange({ ...s, shape: shape as typeof s.shape } as ControlSettings)}
+            onChange={(shape) =>
+              onChange({
+                ...s,
+                shape: shape as typeof s.shape,
+              } as ControlSettings)
+            }
             options={[
               { label: "Square", value: "square" },
               { label: "Round", value: "round" },
@@ -1025,7 +1189,9 @@ export function ControlSettingsPanel({ slug, settings, onChange }: ControlSettin
           <SettingToggle
             label="Checked"
             checked={s.checked}
-            onChange={(checked) => onChange({ ...s, checked } as ControlSettings)}
+            onChange={(checked) =>
+              onChange({ ...s, checked } as ControlSettings)
+            }
           />
         </div>
       );
@@ -1044,28 +1210,36 @@ export function ControlSettingsPanel({ slug, settings, onChange }: ControlSettin
             numberStep={s.step}
             type="number"
             value={String(s.value)}
-            onChange={(value) => onChange({ ...s, value: Number(value) || 0 } as ControlSettings)}
+            onChange={(value) =>
+              onChange({ ...s, value: Number(value) || 0 } as ControlSettings)
+            }
           />
           <SettingInput
             label="Step"
             numberStep={0.001}
             type="number"
             value={String(s.step)}
-            onChange={(step) => onChange({ ...s, step: Number(step) || 1 } as ControlSettings)}
+            onChange={(step) =>
+              onChange({ ...s, step: Number(step) || 1 } as ControlSettings)
+            }
           />
           <SettingInput
             label="Min"
             numberStep={s.step}
             type="number"
             value={String(s.min)}
-            onChange={(min) => onChange({ ...s, min: Number(min) || 0 } as ControlSettings)}
+            onChange={(min) =>
+              onChange({ ...s, min: Number(min) || 0 } as ControlSettings)
+            }
           />
           <SettingInput
             label="Max"
             numberStep={s.step}
             type="number"
             value={String(s.max)}
-            onChange={(max) => onChange({ ...s, max: Number(max) || 0 } as ControlSettings)}
+            onChange={(max) =>
+              onChange({ ...s, max: Number(max) || 0 } as ControlSettings)
+            }
           />
         </div>
       );
@@ -1084,28 +1258,36 @@ export function ControlSettingsPanel({ slug, settings, onChange }: ControlSettin
             numberStep={s.step}
             type="number"
             value={String(s.value)}
-            onChange={(value) => onChange({ ...s, value: Number(value) || 0 } as ControlSettings)}
+            onChange={(value) =>
+              onChange({ ...s, value: Number(value) || 0 } as ControlSettings)
+            }
           />
           <SettingInput
             label="Step"
             numberStep={0.001}
             type="number"
             value={String(s.step)}
-            onChange={(step) => onChange({ ...s, step: Number(step) || 1 } as ControlSettings)}
+            onChange={(step) =>
+              onChange({ ...s, step: Number(step) || 1 } as ControlSettings)
+            }
           />
           <SettingInput
             label="Min"
             numberStep={s.step}
             type="number"
             value={String(s.min)}
-            onChange={(min) => onChange({ ...s, min: Number(min) || 0 } as ControlSettings)}
+            onChange={(min) =>
+              onChange({ ...s, min: Number(min) || 0 } as ControlSettings)
+            }
           />
           <SettingInput
             label="Max"
             numberStep={s.step}
             type="number"
             value={String(s.max)}
-            onChange={(max) => onChange({ ...s, max: Number(max) || 0 } as ControlSettings)}
+            onChange={(max) =>
+              onChange({ ...s, max: Number(max) || 0 } as ControlSettings)
+            }
           />
         </div>
       );
@@ -1122,7 +1304,9 @@ export function ControlSettingsPanel({ slug, settings, onChange }: ControlSettin
           <SettingInput
             label="File name display"
             value={s.fileName}
-            onChange={(fileName) => onChange({ ...s, fileName } as ControlSettings)}
+            onChange={(fileName) =>
+              onChange({ ...s, fileName } as ControlSettings)
+            }
             placeholder="Leave empty for placeholder state"
           />
         </div>
@@ -1132,51 +1316,87 @@ export function ControlSettingsPanel({ slug, settings, onChange }: ControlSettin
       const s = settings as ControlSettingsBySlug["image-crop-upload"];
       return (
         <div className={shellStyles.settingsGrid}>
-          <CommonFieldSettings settings={s} onChange={(next) => onChange({ ...s, ...next })} />
+          <CommonFieldSettings
+            settings={s}
+            onChange={(next) => onChange({ ...s, ...next })}
+          />
           <SettingInput
             label="Upload label"
             value={s.uploadLabel}
-            onChange={(uploadLabel) => onChange({ ...s, uploadLabel } as ControlSettings)}
+            onChange={(uploadLabel) =>
+              onChange({ ...s, uploadLabel } as ControlSettings)
+            }
           />
           <SettingInput
             label="Crop button label"
             value={s.cropButtonLabel}
-            onChange={(cropButtonLabel) => onChange({ ...s, cropButtonLabel } as ControlSettings)}
+            onChange={(cropButtonLabel) =>
+              onChange({ ...s, cropButtonLabel } as ControlSettings)
+            }
           />
           <SettingInput
             label="Change button label"
             value={s.changeButtonLabel}
-            onChange={(changeButtonLabel) => onChange({ ...s, changeButtonLabel } as ControlSettings)}
+            onChange={(changeButtonLabel) =>
+              onChange({ ...s, changeButtonLabel } as ControlSettings)
+            }
           />
           <SettingInput
             label="Zoom label"
             value={s.zoomLabel}
-            onChange={(zoomLabel) => onChange({ ...s, zoomLabel } as ControlSettings)}
+            onChange={(zoomLabel) =>
+              onChange({ ...s, zoomLabel } as ControlSettings)
+            }
           />
           <SettingInput
             label="Viewport size (px)"
             value={String(s.viewportSize)}
-            onChange={(viewportSize) => onChange({ ...s, viewportSize: Number(viewportSize) || 240 } as ControlSettings)}
+            onChange={(viewportSize) =>
+              onChange({
+                ...s,
+                viewportSize: Number(viewportSize) || 240,
+              } as ControlSettings)
+            }
           />
           <SettingInput
             label="Output size (px)"
             value={String(s.outputSize)}
-            onChange={(outputSize) => onChange({ ...s, outputSize: Number(outputSize) || 256 } as ControlSettings)}
+            onChange={(outputSize) =>
+              onChange({
+                ...s,
+                outputSize: Number(outputSize) || 256,
+              } as ControlSettings)
+            }
           />
           <SettingInput
             label="Min zoom"
             value={String(s.minZoom)}
-            onChange={(minZoom) => onChange({ ...s, minZoom: Number(minZoom) || 1 } as ControlSettings)}
+            onChange={(minZoom) =>
+              onChange({
+                ...s,
+                minZoom: Number(minZoom) || 1,
+              } as ControlSettings)
+            }
           />
           <SettingInput
             label="Max zoom"
             value={String(s.maxZoom)}
-            onChange={(maxZoom) => onChange({ ...s, maxZoom: Number(maxZoom) || 3 } as ControlSettings)}
+            onChange={(maxZoom) =>
+              onChange({
+                ...s,
+                maxZoom: Number(maxZoom) || 3,
+              } as ControlSettings)
+            }
           />
           <SettingInput
             label="Zoom step"
             value={String(s.zoomStep)}
-            onChange={(zoomStep) => onChange({ ...s, zoomStep: Number(zoomStep) || 0.05 } as ControlSettings)}
+            onChange={(zoomStep) =>
+              onChange({
+                ...s,
+                zoomStep: Number(zoomStep) || 0.05,
+              } as ControlSettings)
+            }
           />
         </div>
       );
@@ -1212,7 +1432,9 @@ export function ControlSettingsPanel({ slug, settings, onChange }: ControlSettin
           <SettingSelect
             label="Density"
             value={s.size ?? "md"}
-            onChange={(size) => onChange({ ...s, size: size as typeof s.size } as ControlSettings)}
+            onChange={(size) =>
+              onChange({ ...s, size: size as typeof s.size } as ControlSettings)
+            }
             options={[
               { label: "Compact", value: "sm" },
               { label: "Comfortable", value: "md" },
@@ -1223,7 +1445,10 @@ export function ControlSettingsPanel({ slug, settings, onChange }: ControlSettin
             label="Variant"
             value={s.variant}
             onChange={(variant) =>
-              onChange({ ...s, variant: variant as typeof s.variant } as ControlSettings)
+              onChange({
+                ...s,
+                variant: variant as typeof s.variant,
+              } as ControlSettings)
             }
             options={buttonVariants.map((variant) => ({
               label: variant[0].toUpperCase() + variant.slice(1),
@@ -1238,7 +1463,9 @@ export function ControlSettingsPanel({ slug, settings, onChange }: ControlSettin
           <SettingToggle
             label="Disabled"
             checked={s.disabled}
-            onChange={(disabled) => onChange({ ...s, disabled } as ControlSettings)}
+            onChange={(disabled) =>
+              onChange({ ...s, disabled } as ControlSettings)
+            }
           />
         </div>
       );
@@ -1250,7 +1477,9 @@ export function ControlSettingsPanel({ slug, settings, onChange }: ControlSettin
           <SettingSelect
             label="Layout mode"
             value={s.mode}
-            onChange={(mode) => onChange({ ...s, mode: mode as typeof s.mode } as ControlSettings)}
+            onChange={(mode) =>
+              onChange({ ...s, mode: mode as typeof s.mode } as ControlSettings)
+            }
             options={[
               { label: "Stacked", value: "stacked" },
               { label: "Flagged", value: "flagged" },
@@ -1260,7 +1489,10 @@ export function ControlSettingsPanel({ slug, settings, onChange }: ControlSettin
             label="Label position"
             value={s.labelPosition}
             onChange={(labelPosition) =>
-              onChange({ ...s, labelPosition: labelPosition as typeof s.labelPosition } as ControlSettings)
+              onChange({
+                ...s,
+                labelPosition: labelPosition as typeof s.labelPosition,
+              } as ControlSettings)
             }
             options={[
               { label: "Left", value: "left" },
@@ -1276,7 +1508,12 @@ export function ControlSettingsPanel({ slug, settings, onChange }: ControlSettin
           <SettingSelect
             label="Value"
             value={s.value}
-            onChange={(value) => onChange({ ...s, value: value as typeof s.value } as ControlSettings)}
+            onChange={(value) =>
+              onChange({
+                ...s,
+                value: value as typeof s.value,
+              } as ControlSettings)
+            }
             options={[
               { label: "Dark", value: "dark" },
               { label: "Light", value: "light" },
@@ -1292,7 +1529,9 @@ export function ControlSettingsPanel({ slug, settings, onChange }: ControlSettin
           <SettingSelect
             label="Layout mode"
             value={s.mode}
-            onChange={(mode) => onChange({ ...s, mode: mode as typeof s.mode } as ControlSettings)}
+            onChange={(mode) =>
+              onChange({ ...s, mode: mode as typeof s.mode } as ControlSettings)
+            }
             options={[
               { label: "Stacked", value: "stacked" },
               { label: "Flagged", value: "flagged" },
@@ -1302,7 +1541,10 @@ export function ControlSettingsPanel({ slug, settings, onChange }: ControlSettin
             label="Label position"
             value={s.labelPosition}
             onChange={(labelPosition) =>
-              onChange({ ...s, labelPosition: labelPosition as typeof s.labelPosition } as ControlSettings)
+              onChange({
+                ...s,
+                labelPosition: labelPosition as typeof s.labelPosition,
+              } as ControlSettings)
             }
             options={[
               { label: "Left", value: "left" },
@@ -1338,7 +1580,9 @@ export function ControlSettingsPanel({ slug, settings, onChange }: ControlSettin
           <SettingSelect
             label="Layout mode"
             value={s.mode}
-            onChange={(mode) => onChange({ ...s, mode: mode as typeof s.mode } as ControlSettings)}
+            onChange={(mode) =>
+              onChange({ ...s, mode: mode as typeof s.mode } as ControlSettings)
+            }
             options={[
               { label: "Stacked", value: "stacked" },
               { label: "Flagged", value: "flagged" },
@@ -1348,7 +1592,10 @@ export function ControlSettingsPanel({ slug, settings, onChange }: ControlSettin
             label="Label position"
             value={s.labelPosition}
             onChange={(labelPosition) =>
-              onChange({ ...s, labelPosition: labelPosition as typeof s.labelPosition } as ControlSettings)
+              onChange({
+                ...s,
+                labelPosition: labelPosition as typeof s.labelPosition,
+              } as ControlSettings)
             }
             options={[
               { label: "Left", value: "left" },
@@ -1403,7 +1650,10 @@ export function ControlSettingsPanel({ slug, settings, onChange }: ControlSettin
             label="Placement"
             value={s.placement}
             onChange={(placement) =>
-              onChange({ ...s, placement: placement as typeof s.placement } as ControlSettings)
+              onChange({
+                ...s,
+                placement: placement as typeof s.placement,
+              } as ControlSettings)
             }
             options={[
               { label: "Top", value: "top" },
@@ -1423,7 +1673,9 @@ export function ControlSettingsPanel({ slug, settings, onChange }: ControlSettin
             <SettingInput
               label="Last selected"
               value={s.lastSelected}
-              onChange={(lastSelected) => onChange({ ...s, lastSelected } as ControlSettings)}
+              onChange={(lastSelected) =>
+                onChange({ ...s, lastSelected } as ControlSettings)
+              }
             />
           </div>
         </div>
@@ -1436,13 +1688,17 @@ export function ControlSettingsPanel({ slug, settings, onChange }: ControlSettin
           <SettingInput
             label="Demo label"
             value={s.demoLabel}
-            onChange={(demoLabel) => onChange({ ...s, demoLabel } as ControlSettings)}
+            onChange={(demoLabel) =>
+              onChange({ ...s, demoLabel } as ControlSettings)
+            }
           />
           <div className={shellStyles.settingsFullWidth}>
             <SettingTextarea
               label="Tooltip content"
               value={s.content}
-              onChange={(content) => onChange({ ...s, content } as ControlSettings)}
+              onChange={(content) =>
+                onChange({ ...s, content } as ControlSettings)
+              }
             />
           </div>
         </div>
@@ -1495,7 +1751,10 @@ export function ControlSettingsPanel({ slug, settings, onChange }: ControlSettin
             label="Status"
             value={s.status}
             onChange={(status) =>
-              onChange({ ...s, status: status as typeof s.status } as ControlSettings)
+              onChange({
+                ...s,
+                status: status as typeof s.status,
+              } as ControlSettings)
             }
             options={[
               { label: "Error", value: "error" },
@@ -1515,7 +1774,9 @@ export function ControlSettingsPanel({ slug, settings, onChange }: ControlSettin
             <SettingTextarea
               label="Description"
               value={s.description}
-              onChange={(description) => onChange({ ...s, description } as ControlSettings)}
+              onChange={(description) =>
+                onChange({ ...s, description } as ControlSettings)
+              }
             />
           </div>
         </div>
@@ -1547,18 +1808,25 @@ export function ControlSettingsPanel({ slug, settings, onChange }: ControlSettin
           <SettingToggle
             label="Close button"
             checked={s.closeButton}
-            onChange={(closeButton) => onChange({ ...s, closeButton } as ControlSettings)}
+            onChange={(closeButton) =>
+              onChange({ ...s, closeButton } as ControlSettings)
+            }
           />
           <SettingToggle
             label="Footer actions"
             checked={s.footerActions}
-            onChange={(footerActions) => onChange({ ...s, footerActions } as ControlSettings)}
+            onChange={(footerActions) =>
+              onChange({ ...s, footerActions } as ControlSettings)
+            }
           />
           <SettingSelect
             label="Content type"
             value={s.contentType}
             onChange={(contentType) =>
-              onChange({ ...s, contentType: contentType as typeof s.contentType } as ControlSettings)
+              onChange({
+                ...s,
+                contentType: contentType as typeof s.contentType,
+              } as ControlSettings)
             }
             options={[
               { label: "HTML content", value: "html" },
@@ -1589,7 +1857,9 @@ export function ControlSettingsPanel({ slug, settings, onChange }: ControlSettin
             <SettingTextarea
               label="Description"
               value={s.description}
-              onChange={(description) => onChange({ ...s, description } as ControlSettings)}
+              onChange={(description) =>
+                onChange({ ...s, description } as ControlSettings)
+              }
             />
           </div>
           {s.contentType === "html" ? (
@@ -1597,7 +1867,9 @@ export function ControlSettingsPanel({ slug, settings, onChange }: ControlSettin
               <SettingTextarea
                 label="Content"
                 value={s.content}
-                onChange={(content) => onChange({ ...s, content } as ControlSettings)}
+                onChange={(content) =>
+                  onChange({ ...s, content } as ControlSettings)
+                }
               />
             </div>
           ) : null}
@@ -1637,17 +1909,22 @@ export function ControlSettingsPanel({ slug, settings, onChange }: ControlSettin
           <SettingToggle
             label="Show icons"
             checked={s.showIcons}
-            onChange={(showIcons) => onChange({ ...s, showIcons } as ControlSettings)}
+            onChange={(showIcons) =>
+              onChange({ ...s, showIcons } as ControlSettings)
+            }
           />
           <div className={shellStyles.settingsFullWidth}>
             <p className={shellStyles.settingsHint}>
-              The icon column appears only when at least one item includes an icon or checked state.
+              The icon column appears only when at least one item includes an
+              icon or checked state.
             </p>
           </div>
           <SettingToggle
             label="Disabled item"
             checked={s.showDisabled}
-            onChange={(showDisabled) => onChange({ ...s, showDisabled } as ControlSettings)}
+            onChange={(showDisabled) =>
+              onChange({ ...s, showDisabled } as ControlSettings)
+            }
           />
           <SettingToggle
             label="Destructive item"
@@ -1660,7 +1937,10 @@ export function ControlSettingsPanel({ slug, settings, onChange }: ControlSettin
             label="Placement"
             value={s.placement}
             onChange={(placement) =>
-              onChange({ ...s, placement: placement as typeof s.placement } as ControlSettings)
+              onChange({
+                ...s,
+                placement: placement as typeof s.placement,
+              } as ControlSettings)
             }
             options={[
               { label: "Bottom start", value: "bottom-start" },
@@ -1679,7 +1959,9 @@ export function ControlSettingsPanel({ slug, settings, onChange }: ControlSettin
           <SettingInput
             label="Target label"
             value={s.targetLabel}
-            onChange={(targetLabel: string) => onChange({ ...s, targetLabel } as ControlSettings)}
+            onChange={(targetLabel: string) =>
+              onChange({ ...s, targetLabel } as ControlSettings)
+            }
           />
           <SettingToggle
             label="Menu open"
@@ -1710,17 +1992,22 @@ export function ControlSettingsPanel({ slug, settings, onChange }: ControlSettin
           <SettingToggle
             label="Show icons"
             checked={s.showIcons}
-            onChange={(showIcons) => onChange({ ...s, showIcons } as ControlSettings)}
+            onChange={(showIcons) =>
+              onChange({ ...s, showIcons } as ControlSettings)
+            }
           />
           <div className={shellStyles.settingsFullWidth}>
             <p className={shellStyles.settingsHint}>
-              The icon column appears only when at least one item includes an icon or checked state.
+              The icon column appears only when at least one item includes an
+              icon or checked state.
             </p>
           </div>
           <SettingToggle
             label="Disabled item"
             checked={s.showDisabled}
-            onChange={(showDisabled) => onChange({ ...s, showDisabled } as ControlSettings)}
+            onChange={(showDisabled) =>
+              onChange({ ...s, showDisabled } as ControlSettings)
+            }
           />
           <SettingToggle
             label="Destructive item"
@@ -1758,12 +2045,16 @@ export function ControlSettingsPanel({ slug, settings, onChange }: ControlSettin
           <SettingToggle
             label="Close on select"
             checked={s.closeOnSelect}
-            onChange={(closeOnSelect) => onChange({ ...s, closeOnSelect } as ControlSettings)}
+            onChange={(closeOnSelect) =>
+              onChange({ ...s, closeOnSelect } as ControlSettings)
+            }
           />
           <SettingToggle
             label="Show shortcuts"
             checked={s.showShortcuts}
-            onChange={(showShortcuts) => onChange({ ...s, showShortcuts } as ControlSettings)}
+            onChange={(showShortcuts) =>
+              onChange({ ...s, showShortcuts } as ControlSettings)
+            }
           />
           <SettingToggle
             label="Show descriptions"
@@ -1775,7 +2066,9 @@ export function ControlSettingsPanel({ slug, settings, onChange }: ControlSettin
           <SettingToggle
             label="Show groups"
             checked={s.showGroups}
-            onChange={(showGroups) => onChange({ ...s, showGroups } as ControlSettings)}
+            onChange={(showGroups) =>
+              onChange({ ...s, showGroups } as ControlSettings)
+            }
           />
           <SettingToggle
             label="Preview empty results"
@@ -1788,14 +2081,18 @@ export function ControlSettingsPanel({ slug, settings, onChange }: ControlSettin
             <SettingInput
               label="Placeholder"
               value={s.placeholder}
-              onChange={(placeholder) => onChange({ ...s, placeholder } as ControlSettings)}
+              onChange={(placeholder) =>
+                onChange({ ...s, placeholder } as ControlSettings)
+              }
             />
           </div>
           <div className={shellStyles.settingsFullWidth}>
             <SettingInput
               label="Empty message"
               value={s.emptyMessage}
-              onChange={(emptyMessage) => onChange({ ...s, emptyMessage } as ControlSettings)}
+              onChange={(emptyMessage) =>
+                onChange({ ...s, emptyMessage } as ControlSettings)
+              }
             />
           </div>
         </div>
@@ -1827,18 +2124,25 @@ export function ControlSettingsPanel({ slug, settings, onChange }: ControlSettin
           <SettingToggle
             label="Close button"
             checked={s.closeButton}
-            onChange={(closeButton) => onChange({ ...s, closeButton } as ControlSettings)}
+            onChange={(closeButton) =>
+              onChange({ ...s, closeButton } as ControlSettings)
+            }
           />
           <SettingToggle
             label="Footer actions"
             checked={s.footerActions}
-            onChange={(footerActions) => onChange({ ...s, footerActions } as ControlSettings)}
+            onChange={(footerActions) =>
+              onChange({ ...s, footerActions } as ControlSettings)
+            }
           />
           <SettingSelect
             label="Content type"
             value={s.contentType}
             onChange={(contentType) =>
-              onChange({ ...s, contentType: contentType as typeof s.contentType } as ControlSettings)
+              onChange({
+                ...s,
+                contentType: contentType as typeof s.contentType,
+              } as ControlSettings)
             }
             options={[
               { label: "HTML content", value: "html" },
@@ -1869,7 +2173,9 @@ export function ControlSettingsPanel({ slug, settings, onChange }: ControlSettin
             <SettingTextarea
               label="Description"
               value={s.description}
-              onChange={(description) => onChange({ ...s, description } as ControlSettings)}
+              onChange={(description) =>
+                onChange({ ...s, description } as ControlSettings)
+              }
             />
           </div>
           {s.contentType === "html" ? (
@@ -1877,7 +2183,9 @@ export function ControlSettingsPanel({ slug, settings, onChange }: ControlSettin
               <SettingTextarea
                 label="Content"
                 value={s.content}
-                onChange={(content) => onChange({ ...s, content } as ControlSettings)}
+                onChange={(content) =>
+                  onChange({ ...s, content } as ControlSettings)
+                }
               />
             </div>
           ) : null}
@@ -1910,13 +2218,18 @@ export function ControlSettingsPanel({ slug, settings, onChange }: ControlSettin
           <SettingToggle
             label="Show arrow"
             checked={s.showArrow}
-            onChange={(showArrow) => onChange({ ...s, showArrow } as ControlSettings)}
+            onChange={(showArrow) =>
+              onChange({ ...s, showArrow } as ControlSettings)
+            }
           />
           <SettingSelect
             label="Content type"
             value={s.contentType}
             onChange={(contentType) =>
-              onChange({ ...s, contentType: contentType as typeof s.contentType } as ControlSettings)
+              onChange({
+                ...s,
+                contentType: contentType as typeof s.contentType,
+              } as ControlSettings)
             }
             options={[
               { label: "HTML content", value: "html" },
@@ -1927,7 +2240,10 @@ export function ControlSettingsPanel({ slug, settings, onChange }: ControlSettin
             label="Placement"
             value={s.placement}
             onChange={(placement) =>
-              onChange({ ...s, placement: placement as typeof s.placement } as ControlSettings)
+              onChange({
+                ...s,
+                placement: placement as typeof s.placement,
+              } as ControlSettings)
             }
             options={[
               { label: "Top", value: "top" },
@@ -1948,7 +2264,9 @@ export function ControlSettingsPanel({ slug, settings, onChange }: ControlSettin
               <SettingTextarea
                 label="Content"
                 value={s.content}
-                onChange={(content) => onChange({ ...s, content } as ControlSettings)}
+                onChange={(content) =>
+                  onChange({ ...s, content } as ControlSettings)
+                }
               />
             </div>
           ) : null}
@@ -1962,13 +2280,18 @@ export function ControlSettingsPanel({ slug, settings, onChange }: ControlSettin
           <SettingToggle
             label="Show alert"
             checked={s.visible}
-            onChange={(visible) => onChange({ ...s, visible } as ControlSettings)}
+            onChange={(visible) =>
+              onChange({ ...s, visible } as ControlSettings)
+            }
           />
           <SettingSelect
             label="Status"
             value={s.status}
             onChange={(status) =>
-              onChange({ ...s, status: status as typeof s.status } as ControlSettings)
+              onChange({
+                ...s,
+                status: status as typeof s.status,
+              } as ControlSettings)
             }
             options={[
               { label: "Error", value: "error" },
@@ -1980,12 +2303,16 @@ export function ControlSettingsPanel({ slug, settings, onChange }: ControlSettin
           <SettingToggle
             label="Dismissible"
             checked={s.dismissible}
-            onChange={(dismissible) => onChange({ ...s, dismissible } as ControlSettings)}
+            onChange={(dismissible) =>
+              onChange({ ...s, dismissible } as ControlSettings)
+            }
           />
           <SettingToggle
             label="Flagged icon"
             checked={s.iconFlagged}
-            onChange={(iconFlagged) => onChange({ ...s, iconFlagged } as ControlSettings)}
+            onChange={(iconFlagged) =>
+              onChange({ ...s, iconFlagged } as ControlSettings)
+            }
           />
           <div className={shellStyles.settingsFullWidth}>
             <SettingInput
@@ -1998,7 +2325,9 @@ export function ControlSettingsPanel({ slug, settings, onChange }: ControlSettin
             <SettingTextarea
               label="Description"
               value={s.description}
-              onChange={(description) => onChange({ ...s, description } as ControlSettings)}
+              onChange={(description) =>
+                onChange({ ...s, description } as ControlSettings)
+              }
             />
           </div>
         </div>
@@ -2012,7 +2341,10 @@ export function ControlSettingsPanel({ slug, settings, onChange }: ControlSettin
             label="Vertical position"
             value={s.positionVertical}
             onChange={(positionVertical) =>
-              onChange({ ...s, positionVertical: positionVertical as typeof s.positionVertical } as ControlSettings)
+              onChange({
+                ...s,
+                positionVertical: positionVertical as typeof s.positionVertical,
+              } as ControlSettings)
             }
             options={[
               { label: "Top", value: "top" },
@@ -2025,7 +2357,8 @@ export function ControlSettingsPanel({ slug, settings, onChange }: ControlSettin
             onChange={(positionHorizontal) =>
               onChange({
                 ...s,
-                positionHorizontal: positionHorizontal as typeof s.positionHorizontal,
+                positionHorizontal:
+                  positionHorizontal as typeof s.positionHorizontal,
               } as ControlSettings)
             }
             options={[
@@ -2037,7 +2370,10 @@ export function ControlSettingsPanel({ slug, settings, onChange }: ControlSettin
             label="Status"
             value={s.status}
             onChange={(status) =>
-              onChange({ ...s, status: status as typeof s.status } as ControlSettings)
+              onChange({
+                ...s,
+                status: status as typeof s.status,
+              } as ControlSettings)
             }
             options={[
               { label: "Error", value: "error" },
@@ -2049,7 +2385,9 @@ export function ControlSettingsPanel({ slug, settings, onChange }: ControlSettin
           <SettingToggle
             label="Dismissible"
             checked={s.dismissible}
-            onChange={(dismissible) => onChange({ ...s, dismissible } as ControlSettings)}
+            onChange={(dismissible) =>
+              onChange({ ...s, dismissible } as ControlSettings)
+            }
           />
           <SettingToggle
             label="Auto dismiss (3s)"
@@ -2077,7 +2415,9 @@ export function ControlSettingsPanel({ slug, settings, onChange }: ControlSettin
               <SettingTextarea
                 label="Description"
                 value={s.description}
-                onChange={(description) => onChange({ ...s, description } as ControlSettings)}
+                onChange={(description) =>
+                  onChange({ ...s, description } as ControlSettings)
+                }
               />
             </div>
           ) : null}
@@ -2091,7 +2431,9 @@ export function ControlSettingsPanel({ slug, settings, onChange }: ControlSettin
           <SettingSelect
             label="Tone"
             value={s.tone}
-            onChange={(tone) => onChange({ ...s, tone: tone as typeof s.tone } as ControlSettings)}
+            onChange={(tone) =>
+              onChange({ ...s, tone: tone as typeof s.tone } as ControlSettings)
+            }
             options={[
               { label: "Default", value: "default" },
               { label: "Accent", value: "accent" },
@@ -2105,7 +2447,10 @@ export function ControlSettingsPanel({ slug, settings, onChange }: ControlSettin
             label="Density"
             value={s.density}
             onChange={(density) =>
-              onChange({ ...s, density: density as typeof s.density } as ControlSettings)
+              onChange({
+                ...s,
+                density: density as typeof s.density,
+              } as ControlSettings)
             }
             options={[
               { label: "Comfortable", value: "comfortable" },
@@ -2120,12 +2465,16 @@ export function ControlSettingsPanel({ slug, settings, onChange }: ControlSettin
           <SettingToggle
             label="Footer actions"
             checked={s.footerActions}
-            onChange={(footerActions) => onChange({ ...s, footerActions } as ControlSettings)}
+            onChange={(footerActions) =>
+              onChange({ ...s, footerActions } as ControlSettings)
+            }
           />
           <SettingInput
             label="Eyebrow"
             value={s.eyebrow}
-            onChange={(eyebrow) => onChange({ ...s, eyebrow } as ControlSettings)}
+            onChange={(eyebrow) =>
+              onChange({ ...s, eyebrow } as ControlSettings)
+            }
           />
           <div className={shellStyles.settingsFullWidth}>
             <SettingInput
@@ -2138,7 +2487,9 @@ export function ControlSettingsPanel({ slug, settings, onChange }: ControlSettin
             <SettingTextarea
               label="Content"
               value={s.content}
-              onChange={(content) => onChange({ ...s, content } as ControlSettings)}
+              onChange={(content) =>
+                onChange({ ...s, content } as ControlSettings)
+              }
             />
           </div>
         </div>
@@ -2151,12 +2502,16 @@ export function ControlSettingsPanel({ slug, settings, onChange }: ControlSettin
         <div className={shellStyles.settingsGrid}>
           <DashboardPreviewLayoutSetting
             value={s.previewLayout}
-            onChange={(previewLayout) => onChange({ ...s, previewLayout } as ControlSettings)}
+            onChange={(previewLayout) =>
+              onChange({ ...s, previewLayout } as ControlSettings)
+            }
           />
           <SettingToggle
             label="Inside widget container"
             checked={s.wrapInContainer ?? true}
-            onChange={(wrapInContainer) => onChange({ ...s, wrapInContainer } as ControlSettings)}
+            onChange={(wrapInContainer) =>
+              onChange({ ...s, wrapInContainer } as ControlSettings)
+            }
           />
           <DashboardWidgetWidthSetting settings={s} onChange={onChange} />
           <div className={shellStyles.settingsFullWidth}>
@@ -2173,7 +2528,10 @@ export function ControlSettingsPanel({ slug, settings, onChange }: ControlSettin
             label="Density"
             value={s.density}
             onChange={(density) =>
-              onChange({ ...s, density: density as typeof s.density } as ControlSettings)
+              onChange({
+                ...s,
+                density: density as typeof s.density,
+              } as ControlSettings)
             }
             options={[
               { label: "Comfortable", value: "comfortable" },
@@ -2183,14 +2541,19 @@ export function ControlSettingsPanel({ slug, settings, onChange }: ControlSettin
           <SettingToggle
             label="Trend badge"
             checked={s.showChange}
-            onChange={(showChange) => onChange({ ...s, showChange } as ControlSettings)}
+            onChange={(showChange) =>
+              onChange({ ...s, showChange } as ControlSettings)
+            }
           />
           {s.showChange ? (
             <SettingSelect
               label="Trend"
               value={s.trend}
               onChange={(trend) =>
-                onChange({ ...s, trend: trend as typeof s.trend } as ControlSettings)
+                onChange({
+                  ...s,
+                  trend: trend as typeof s.trend,
+                } as ControlSettings)
               }
               options={[
                 { label: "Up", value: "up" },
@@ -2217,33 +2580,41 @@ export function ControlSettingsPanel({ slug, settings, onChange }: ControlSettin
               <SettingInput
                 label="Change"
                 value={s.change}
-                onChange={(change) => onChange({ ...s, change } as ControlSettings)}
+                onChange={(change) =>
+                  onChange({ ...s, change } as ControlSettings)
+                }
               />
             </div>
           ) : null}
         </div>
       );
     }
-    case "gauge":
-    {
+    case "gauge": {
       const s = settings as ControlSettingsBySlug["gauge"];
       return (
         <div className={shellStyles.settingsGrid}>
           <DashboardPreviewLayoutSetting
             value={s.previewLayout}
-            onChange={(previewLayout) => onChange({ ...s, previewLayout } as ControlSettings)}
+            onChange={(previewLayout) =>
+              onChange({ ...s, previewLayout } as ControlSettings)
+            }
           />
           <SettingToggle
             label="Inside widget container"
             checked={s.wrapInContainer ?? true}
-            onChange={(wrapInContainer) => onChange({ ...s, wrapInContainer } as ControlSettings)}
+            onChange={(wrapInContainer) =>
+              onChange({ ...s, wrapInContainer } as ControlSettings)
+            }
           />
           <DashboardWidgetWidthSetting settings={s} onChange={onChange} />
           <SettingSelect
             label="Variant"
             value={s.variant}
             onChange={(variant) =>
-              onChange({ ...s, variant: variant as typeof s.variant } as ControlSettings)
+              onChange({
+                ...s,
+                variant: variant as typeof s.variant,
+              } as ControlSettings)
             }
             options={[
               { label: "Half", value: "half" },
@@ -2254,7 +2625,10 @@ export function ControlSettingsPanel({ slug, settings, onChange }: ControlSettin
             label="Density"
             value={s.density}
             onChange={(density) =>
-              onChange({ ...s, density: density as typeof s.density } as ControlSettings)
+              onChange({
+                ...s,
+                density: density as typeof s.density,
+              } as ControlSettings)
             }
             options={[
               { label: "Comfortable", value: "comfortable" },
@@ -2265,10 +2639,16 @@ export function ControlSettingsPanel({ slug, settings, onChange }: ControlSettin
             label="Palette"
             value={s.palette}
             onChange={(palette) =>
-              onChange({ ...s, palette: palette as typeof s.palette } as ControlSettings)
+              onChange({
+                ...s,
+                palette: palette as typeof s.palette,
+              } as ControlSettings)
             }
             options={gaugePaletteOptions.map((palette) => ({
-              label: palette === "opus" ? "Opus" : palette.charAt(0).toUpperCase() + palette.slice(1),
+              label:
+                palette === "opus"
+                  ? "Opus"
+                  : palette.charAt(0).toUpperCase() + palette.slice(1),
               value: palette,
             }))}
           />
@@ -2276,7 +2656,10 @@ export function ControlSettingsPanel({ slug, settings, onChange }: ControlSettin
             label="Track colour"
             value={s.trackTone}
             onChange={(trackTone) =>
-              onChange({ ...s, trackTone: trackTone as typeof s.trackTone } as ControlSettings)
+              onChange({
+                ...s,
+                trackTone: trackTone as typeof s.trackTone,
+              } as ControlSettings)
             }
             options={gaugeTrackToneOptions.map((trackTone) => ({
               label:
@@ -2290,7 +2673,10 @@ export function ControlSettingsPanel({ slug, settings, onChange }: ControlSettin
             label="Range colour"
             value={s.valueTone}
             onChange={(valueTone) =>
-              onChange({ ...s, valueTone: valueTone as typeof s.valueTone } as ControlSettings)
+              onChange({
+                ...s,
+                valueTone: valueTone as typeof s.valueTone,
+              } as ControlSettings)
             }
             options={gaugeValueToneOptions.map((valueTone) => ({
               label:
@@ -2322,7 +2708,10 @@ export function ControlSettingsPanel({ slug, settings, onChange }: ControlSettin
             label="Change trend"
             value={s.changeTrend}
             onChange={(changeTrend) =>
-              onChange({ ...s, changeTrend: changeTrend as typeof s.changeTrend } as ControlSettings)
+              onChange({
+                ...s,
+                changeTrend: changeTrend as typeof s.changeTrend,
+              } as ControlSettings)
             }
             options={[
               { label: "Up", value: "up" },
@@ -2340,21 +2729,27 @@ export function ControlSettingsPanel({ slug, settings, onChange }: ControlSettin
             <SettingInput
               label="Subtitle"
               value={s.subtitle}
-              onChange={(subtitle) => onChange({ ...s, subtitle } as ControlSettings)}
+              onChange={(subtitle) =>
+                onChange({ ...s, subtitle } as ControlSettings)
+              }
             />
           </div>
           <div className={shellStyles.settingsFullWidth}>
             <SettingInput
               label="Change"
               value={s.change}
-              onChange={(change) => onChange({ ...s, change } as ControlSettings)}
+              onChange={(change) =>
+                onChange({ ...s, change } as ControlSettings)
+              }
             />
           </div>
           <div className={shellStyles.settingsFullWidth}>
             <SettingTextarea
               label="Summary"
               value={s.summary}
-              onChange={(summary) => onChange({ ...s, summary } as ControlSettings)}
+              onChange={(summary) =>
+                onChange({ ...s, summary } as ControlSettings)
+              }
             />
           </div>
         </div>
@@ -2366,18 +2761,27 @@ export function ControlSettingsPanel({ slug, settings, onChange }: ControlSettin
         <div className={shellStyles.settingsGrid}>
           <DashboardPreviewLayoutSetting
             value={s.previewLayout}
-            onChange={(previewLayout) => onChange({ ...s, previewLayout } as ControlSettings)}
+            onChange={(previewLayout) =>
+              onChange({ ...s, previewLayout } as ControlSettings)
+            }
           />
           <SettingToggle
             label="Inside widget container"
             checked={s.wrapInContainer ?? true}
-            onChange={(wrapInContainer) => onChange({ ...s, wrapInContainer } as ControlSettings)}
+            onChange={(wrapInContainer) =>
+              onChange({ ...s, wrapInContainer } as ControlSettings)
+            }
           />
           <DashboardWidgetWidthSetting settings={s} onChange={onChange} />
           <SettingSelect
             label="Palette"
             value={s.palette}
-            onChange={(palette) => onChange({ ...s, palette: palette as typeof s.palette } as ControlSettings)}
+            onChange={(palette) =>
+              onChange({
+                ...s,
+                palette: palette as typeof s.palette,
+              } as ControlSettings)
+            }
             options={[
               { label: "Opus", value: "opus" },
               { label: "Cool", value: "cool" },
@@ -2386,7 +2790,11 @@ export function ControlSettingsPanel({ slug, settings, onChange }: ControlSettin
             ]}
           />
           <div className={shellStyles.settingsFullWidth}>
-            <SettingInput label="Label" value={s.label} onChange={(label) => onChange({ ...s, label } as ControlSettings)} />
+            <SettingInput
+              label="Label"
+              value={s.label}
+              onChange={(label) => onChange({ ...s, label } as ControlSettings)}
+            />
           </div>
         </div>
       );
@@ -2399,28 +2807,40 @@ export function ControlSettingsPanel({ slug, settings, onChange }: ControlSettin
         <div className={shellStyles.settingsGrid}>
           <DashboardPreviewLayoutSetting
             value={s.previewLayout}
-            onChange={(previewLayout) => onChange({ ...s, previewLayout } as ControlSettings)}
+            onChange={(previewLayout) =>
+              onChange({ ...s, previewLayout } as ControlSettings)
+            }
           />
           <SettingToggle
             label="Inside widget container"
             checked={s.wrapInContainer ?? true}
-            onChange={(wrapInContainer) => onChange({ ...s, wrapInContainer } as ControlSettings)}
+            onChange={(wrapInContainer) =>
+              onChange({ ...s, wrapInContainer } as ControlSettings)
+            }
           />
           <DashboardWidgetWidthSetting settings={s} onChange={onChange} />
           <SettingInput
             label="Value"
             type="number"
             value={String(s.value)}
-            onChange={(value) => onChange({ ...s, value: Number(value) || 0 } as ControlSettings)}
+            onChange={(value) =>
+              onChange({ ...s, value: Number(value) || 0 } as ControlSettings)
+            }
           />
           <SettingInput
             label="Max"
             type="number"
             value={String(s.max)}
-            onChange={(max) => onChange({ ...s, max: Number(max) || 100 } as ControlSettings)}
+            onChange={(max) =>
+              onChange({ ...s, max: Number(max) || 100 } as ControlSettings)
+            }
           />
           <div className={shellStyles.settingsFullWidth}>
-            <SettingInput label="Label" value={s.label} onChange={(label) => onChange({ ...s, label } as ControlSettings)} />
+            <SettingInput
+              label="Label"
+              value={s.label}
+              onChange={(label) => onChange({ ...s, label } as ControlSettings)}
+            />
           </div>
         </div>
       );
@@ -2431,12 +2851,16 @@ export function ControlSettingsPanel({ slug, settings, onChange }: ControlSettin
         <div className={shellStyles.settingsGrid}>
           <DashboardPreviewLayoutSetting
             value={s.previewLayout}
-            onChange={(previewLayout) => onChange({ ...s, previewLayout } as ControlSettings)}
+            onChange={(previewLayout) =>
+              onChange({ ...s, previewLayout } as ControlSettings)
+            }
           />
           <SettingToggle
             label="Inside widget container"
             checked={s.wrapInContainer ?? true}
-            onChange={(wrapInContainer) => onChange({ ...s, wrapInContainer } as ControlSettings)}
+            onChange={(wrapInContainer) =>
+              onChange({ ...s, wrapInContainer } as ControlSettings)
+            }
           />
           <DashboardWidgetWidthSetting settings={s} onChange={onChange} />
           <div className={shellStyles.settingsFullWidth}>
@@ -2452,24 +2876,37 @@ export function ControlSettingsPanel({ slug, settings, onChange }: ControlSettin
           <SettingToggle
             label="Sparkline"
             checked={s.showSparkline}
-            onChange={(showSparkline) => onChange({ ...s, showSparkline } as ControlSettings)}
+            onChange={(showSparkline) =>
+              onChange({ ...s, showSparkline } as ControlSettings)
+            }
           />
           <div className={shellStyles.settingsFullWidth}>
-            <SettingInput label="Label" value={s.label} onChange={(label) => onChange({ ...s, label } as ControlSettings)} />
+            <SettingInput
+              label="Label"
+              value={s.label}
+              onChange={(label) => onChange({ ...s, label } as ControlSettings)}
+            />
           </div>
           <div className={shellStyles.settingsFullWidth}>
-            <SettingInput label="Value" value={s.value} onChange={(value) => onChange({ ...s, value } as ControlSettings)} />
+            <SettingInput
+              label="Value"
+              value={s.value}
+              onChange={(value) => onChange({ ...s, value } as ControlSettings)}
+            />
           </div>
         </div>
       );
     }
     case "dashboard-content-container": {
-      const s = settings as ControlSettingsBySlug["dashboard-content-container"];
+      const s =
+        settings as ControlSettingsBySlug["dashboard-content-container"];
       return (
         <div className={shellStyles.settingsGrid}>
           <DashboardPreviewLayoutSetting
             value={s.previewLayout}
-            onChange={(previewLayout) => onChange({ ...s, previewLayout } as ControlSettings)}
+            onChange={(previewLayout) =>
+              onChange({ ...s, previewLayout } as ControlSettings)
+            }
           />
           <DashboardWidthSetting
             value={s.width ?? "widget"}
@@ -2479,8 +2916,40 @@ export function ControlSettingsPanel({ slug, settings, onChange }: ControlSettin
             value={s.height ?? "auto"}
             onChange={(height) => onChange({ ...s, height } as ControlSettings)}
           />
+          <SettingToggle
+            label="Padding top"
+            checked={s.paddingTop ?? true}
+            onChange={(paddingTop) =>
+              onChange({ ...s, paddingTop } as ControlSettings)
+            }
+          />
+          <SettingToggle
+            label="Padding bottom"
+            checked={s.paddingBottom ?? true}
+            onChange={(paddingBottom) =>
+              onChange({ ...s, paddingBottom } as ControlSettings)
+            }
+          />
+          <SettingToggle
+            label="Padding left"
+            checked={s.paddingLeft ?? true}
+            onChange={(paddingLeft) =>
+              onChange({ ...s, paddingLeft } as ControlSettings)
+            }
+          />
+          <SettingToggle
+            label="Padding right"
+            checked={s.paddingRight ?? true}
+            onChange={(paddingRight) =>
+              onChange({ ...s, paddingRight } as ControlSettings)
+            }
+          />
           <div className={shellStyles.settingsFullWidth}>
-            <SettingInput label="Title" value={s.title} onChange={(title) => onChange({ ...s, title } as ControlSettings)} />
+            <SettingInput
+              label="Title"
+              value={s.title}
+              onChange={(title) => onChange({ ...s, title } as ControlSettings)}
+            />
           </div>
         </div>
       );
@@ -2492,35 +2961,49 @@ export function ControlSettingsPanel({ slug, settings, onChange }: ControlSettin
         <div className={shellStyles.settingsGrid}>
           <DashboardPreviewLayoutSetting
             value={s.previewLayout}
-            onChange={(previewLayout) => onChange({ ...s, previewLayout } as ControlSettings)}
+            onChange={(previewLayout) =>
+              onChange({ ...s, previewLayout } as ControlSettings)
+            }
           />
           <SettingToggle
             label="Inside widget container"
             checked={s.wrapInContainer ?? true}
-            onChange={(wrapInContainer) => onChange({ ...s, wrapInContainer } as ControlSettings)}
+            onChange={(wrapInContainer) =>
+              onChange({ ...s, wrapInContainer } as ControlSettings)
+            }
           />
           <DashboardWidgetWidthSetting settings={s} onChange={onChange} />
           <div className={shellStyles.settingsFullWidth}>
-            <SettingInput label="Title" value={s.title} onChange={(title) => onChange({ ...s, title } as ControlSettings)} />
+            <SettingInput
+              label="Title"
+              value={s.title}
+              onChange={(title) => onChange({ ...s, title } as ControlSettings)}
+            />
           </div>
           <div className={shellStyles.settingsFullWidth}>
             <SettingInput
               label="Total label"
               value={s.totalLabel}
-              onChange={(totalLabel) => onChange({ ...s, totalLabel } as ControlSettings)}
+              onChange={(totalLabel) =>
+                onChange({ ...s, totalLabel } as ControlSettings)
+              }
             />
           </div>
           <div className={shellStyles.settingsFullWidth}>
             <SettingInput
               label="Total value"
               value={s.totalValue}
-              onChange={(totalValue) => onChange({ ...s, totalValue } as ControlSettings)}
+              onChange={(totalValue) =>
+                onChange({ ...s, totalValue } as ControlSettings)
+              }
             />
           </div>
           <SettingSelect
             label="Funnel stages"
             value={String(stageCount)}
-            onChange={(stageCountValue) => onChange({ ...s, stageCount: stageCountValue } as ControlSettings)}
+            onChange={(stageCountValue) =>
+              onChange({ ...s, stageCount: stageCountValue } as ControlSettings)
+            }
             options={pipelineStageCountOptions}
           />
           {pipelineStageValueFields.slice(0, stageCount).map((field) => (
@@ -2528,7 +3011,12 @@ export function ControlSettingsPanel({ slug, settings, onChange }: ControlSettin
               key={field.valueKey}
               label={field.label}
               value={s[field.valueKey]}
-              onChange={(nextValue) => onChange({ ...s, [field.valueKey]: nextValue } as ControlSettings)}
+              onChange={(nextValue) =>
+                onChange({
+                  ...s,
+                  [field.valueKey]: nextValue,
+                } as ControlSettings)
+              }
               options={pipelineValueOptions}
             />
           ))}
@@ -2552,12 +3040,16 @@ export function ControlSettingsPanel({ slug, settings, onChange }: ControlSettin
         <div className={shellStyles.settingsGrid}>
           <DashboardPreviewLayoutSetting
             value={s.previewLayout}
-            onChange={(previewLayout) => onChange({ ...s, previewLayout } as ControlSettings)}
+            onChange={(previewLayout) =>
+              onChange({ ...s, previewLayout } as ControlSettings)
+            }
           />
           <SettingToggle
             label="Inside widget container"
             checked={s.wrapInContainer ?? true}
-            onChange={(wrapInContainer) => onChange({ ...s, wrapInContainer } as ControlSettings)}
+            onChange={(wrapInContainer) =>
+              onChange({ ...s, wrapInContainer } as ControlSettings)
+            }
           />
           <DashboardWidgetWidthSetting settings={s} onChange={onChange} />
           <SettingSelect
@@ -2574,24 +3066,34 @@ export function ControlSettingsPanel({ slug, settings, onChange }: ControlSettin
           <SettingSelect
             label="Palette"
             value={s.palette ?? "purple"}
-            onChange={(palette) => onChange({ ...s, palette } as ControlSettings)}
+            onChange={(palette) =>
+              onChange({ ...s, palette } as ControlSettings)
+            }
             options={[
               { label: "Purple", value: "purple" },
               { label: "Blue", value: "blue" },
             ]}
           />
           <div className={shellStyles.settingsFullWidth}>
-            <SettingInput label="Title" value={s.title} onChange={(title) => onChange({ ...s, title } as ControlSettings)} />
+            <SettingInput
+              label="Title"
+              value={s.title}
+              onChange={(title) => onChange({ ...s, title } as ControlSettings)}
+            />
           </div>
           <SettingInput
             label="Y-axis max"
             value={s.maxValue}
-            onChange={(maxValue) => onChange({ ...s, maxValue } as ControlSettings)}
+            onChange={(maxValue) =>
+              onChange({ ...s, maxValue } as ControlSettings)
+            }
           />
           <SettingInput
             label="Value label"
             value={s.valueLabel}
-            onChange={(valueLabel) => onChange({ ...s, valueLabel } as ControlSettings)}
+            onChange={(valueLabel) =>
+              onChange({ ...s, valueLabel } as ControlSettings)
+            }
           />
         </div>
       );
@@ -2602,7 +3104,9 @@ export function ControlSettingsPanel({ slug, settings, onChange }: ControlSettin
         <div className={shellStyles.settingsGrid}>
           <DashboardPreviewLayoutSetting
             value={s.previewLayout}
-            onChange={(previewLayout) => onChange({ ...s, previewLayout } as ControlSettings)}
+            onChange={(previewLayout) =>
+              onChange({ ...s, previewLayout } as ControlSettings)
+            }
           />
           <DashboardWidthSetting
             value={s.width ?? "full"}
@@ -2611,7 +3115,12 @@ export function ControlSettingsPanel({ slug, settings, onChange }: ControlSettin
           <SettingSelect
             label="Layout"
             value={s.layout}
-            onChange={(layout) => onChange({ ...s, layout: layout as typeof s.layout } as ControlSettings)}
+            onChange={(layout) =>
+              onChange({
+                ...s,
+                layout: layout as typeof s.layout,
+              } as ControlSettings)
+            }
             options={[
               { label: "Side by side", value: "row" },
               { label: "Stacked", value: "stacked" },
@@ -2621,7 +3130,10 @@ export function ControlSettingsPanel({ slug, settings, onChange }: ControlSettin
             label="Checkbox size"
             value={s.checkboxSize ?? "md"}
             onChange={(checkboxSize) =>
-              onChange({ ...s, checkboxSize: checkboxSize as typeof s.checkboxSize } as ControlSettings)
+              onChange({
+                ...s,
+                checkboxSize: checkboxSize as typeof s.checkboxSize,
+              } as ControlSettings)
             }
             options={[
               { label: "Small", value: "sm" },
@@ -2633,7 +3145,9 @@ export function ControlSettingsPanel({ slug, settings, onChange }: ControlSettin
             <SettingInput
               label="Upcoming tasks title"
               value={s.upcomingTasksTitle}
-              onChange={(upcomingTasksTitle) => onChange({ ...s, upcomingTasksTitle } as ControlSettings)}
+              onChange={(upcomingTasksTitle) =>
+                onChange({ ...s, upcomingTasksTitle } as ControlSettings)
+              }
             />
           </div>
           <div className={shellStyles.settingsFullWidth}>
@@ -2649,7 +3163,9 @@ export function ControlSettingsPanel({ slug, settings, onChange }: ControlSettin
             <SettingInput
               label="Recent activity title"
               value={s.recentActivityTitle}
-              onChange={(recentActivityTitle) => onChange({ ...s, recentActivityTitle } as ControlSettings)}
+              onChange={(recentActivityTitle) =>
+                onChange({ ...s, recentActivityTitle } as ControlSettings)
+              }
             />
           </div>
           <div className={shellStyles.settingsFullWidth}>
@@ -2665,7 +3181,9 @@ export function ControlSettingsPanel({ slug, settings, onChange }: ControlSettin
             <SettingInput
               label="Top people title"
               value={s.topPerformingUsersTitle}
-              onChange={(topPerformingUsersTitle) => onChange({ ...s, topPerformingUsersTitle } as ControlSettings)}
+              onChange={(topPerformingUsersTitle) =>
+                onChange({ ...s, topPerformingUsersTitle } as ControlSettings)
+              }
             />
           </div>
           <div className={shellStyles.settingsFullWidth}>
@@ -2673,7 +3191,10 @@ export function ControlSettingsPanel({ slug, settings, onChange }: ControlSettin
               label="Top people footer"
               value={s.topPerformingUsersFooterLabel}
               onChange={(topPerformingUsersFooterLabel) =>
-                onChange({ ...s, topPerformingUsersFooterLabel } as ControlSettings)
+                onChange({
+                  ...s,
+                  topPerformingUsersFooterLabel,
+                } as ControlSettings)
               }
             />
           </div>
@@ -2686,12 +3207,16 @@ export function ControlSettingsPanel({ slug, settings, onChange }: ControlSettin
         <div className={shellStyles.settingsGrid}>
           <DashboardPreviewLayoutSetting
             value={s.previewLayout}
-            onChange={(previewLayout) => onChange({ ...s, previewLayout } as ControlSettings)}
+            onChange={(previewLayout) =>
+              onChange({ ...s, previewLayout } as ControlSettings)
+            }
           />
           <SettingToggle
             label="Inside widget container"
             checked={s.wrapInContainer ?? true}
-            onChange={(wrapInContainer) => onChange({ ...s, wrapInContainer } as ControlSettings)}
+            onChange={(wrapInContainer) =>
+              onChange({ ...s, wrapInContainer } as ControlSettings)
+            }
           />
           <DashboardWidgetWidthSetting settings={s} onChange={onChange} />
           <DashboardHeightSetting
@@ -2702,7 +3227,10 @@ export function ControlSettingsPanel({ slug, settings, onChange }: ControlSettin
             label="Density"
             value={s.density}
             onChange={(density) =>
-              onChange({ ...s, density: density as typeof s.density } as ControlSettings)
+              onChange({
+                ...s,
+                density: density as typeof s.density,
+              } as ControlSettings)
             }
             options={[
               { label: "Comfortable", value: "comfortable" },
@@ -2713,49 +3241,66 @@ export function ControlSettingsPanel({ slug, settings, onChange }: ControlSettin
             <SettingInput
               label="Add note button"
               value={s.addNoteButtonLabel ?? "Add note"}
-              onChange={(addNoteButtonLabel) => onChange({ ...s, addNoteButtonLabel } as ControlSettings)}
+              onChange={(addNoteButtonLabel) =>
+                onChange({ ...s, addNoteButtonLabel } as ControlSettings)
+              }
             />
           </div>
           <div className={shellStyles.settingsFullWidth}>
             <SettingInput
               label="Modal title"
               value={s.addNoteModalTitle ?? "Add a note"}
-              onChange={(addNoteModalTitle) => onChange({ ...s, addNoteModalTitle } as ControlSettings)}
+              onChange={(addNoteModalTitle) =>
+                onChange({ ...s, addNoteModalTitle } as ControlSettings)
+              }
             />
           </div>
           <div className={shellStyles.settingsFullWidth}>
             <SettingTextarea
               label="Modal description"
-              value={s.addNoteModalDescription ?? "Capture supporting detail, attach files, or mention teammates."}
-              onChange={(addNoteModalDescription) => onChange({ ...s, addNoteModalDescription } as ControlSettings)}
+              value={
+                s.addNoteModalDescription ??
+                "Capture supporting detail, attach files, or mention teammates."
+              }
+              onChange={(addNoteModalDescription) =>
+                onChange({ ...s, addNoteModalDescription } as ControlSettings)
+              }
             />
           </div>
           <div className={shellStyles.settingsFullWidth}>
             <SettingInput
               label="Composer placeholder"
               value={s.composerPlaceholder}
-              onChange={(composerPlaceholder) => onChange({ ...s, composerPlaceholder } as ControlSettings)}
+              onChange={(composerPlaceholder) =>
+                onChange({ ...s, composerPlaceholder } as ControlSettings)
+              }
             />
           </div>
           <div className={shellStyles.settingsFullWidth}>
             <SettingInput
               label="Save button label"
               value={s.saveButtonLabel}
-              onChange={(saveButtonLabel) => onChange({ ...s, saveButtonLabel } as ControlSettings)}
+              onChange={(saveButtonLabel) =>
+                onChange({ ...s, saveButtonLabel } as ControlSettings)
+              }
             />
           </div>
           <div className={shellStyles.settingsFullWidth}>
             <SettingInput
               label="Notes footer label"
               value={s.notesFooterLabel}
-              onChange={(notesFooterLabel) => onChange({ ...s, notesFooterLabel } as ControlSettings)}
+              onChange={(notesFooterLabel) =>
+                onChange({ ...s, notesFooterLabel } as ControlSettings)
+              }
             />
           </div>
           <div className={shellStyles.settingsFullWidth}>
             <SettingInput
               label="Activity footer label"
               value={s.activityFooterLabel}
-              onChange={(activityFooterLabel) => onChange({ ...s, activityFooterLabel } as ControlSettings)}
+              onChange={(activityFooterLabel) =>
+                onChange({ ...s, activityFooterLabel } as ControlSettings)
+              }
             />
           </div>
         </div>
@@ -2768,24 +3313,41 @@ export function ControlSettingsPanel({ slug, settings, onChange }: ControlSettin
         <div className={shellStyles.settingsGrid}>
           <DashboardPreviewLayoutSetting
             value={s.previewLayout}
-            onChange={(previewLayout) => onChange({ ...s, previewLayout } as ControlSettings)}
+            onChange={(previewLayout) =>
+              onChange({ ...s, previewLayout } as ControlSettings)
+            }
           />
           <SettingToggle
             label="Inside widget container"
             checked={s.wrapInContainer ?? true}
-            onChange={(wrapInContainer) => onChange({ ...s, wrapInContainer } as ControlSettings)}
+            onChange={(wrapInContainer) =>
+              onChange({ ...s, wrapInContainer } as ControlSettings)
+            }
           />
           <DashboardWidgetWidthSetting settings={s} onChange={onChange} />
           <div className={shellStyles.settingsFullWidth}>
-            <SettingInput label="Name" value={s.name} onChange={(name) => onChange({ ...s, name } as ControlSettings)} />
+            <SettingInput
+              label="Name"
+              value={s.name}
+              onChange={(name) => onChange({ ...s, name } as ControlSettings)}
+            />
           </div>
           <div className={shellStyles.settingsFullWidth}>
-            <SettingInput label="Role" value={s.role} onChange={(role) => onChange({ ...s, role } as ControlSettings)} />
+            <SettingInput
+              label="Role"
+              value={s.role}
+              onChange={(role) => onChange({ ...s, role } as ControlSettings)}
+            />
           </div>
           <SettingSelect
             label="Avatar size"
             value={s.avatarSize}
-            onChange={(avatarSize) => onChange({ ...s, avatarSize: avatarSize as typeof s.avatarSize } as ControlSettings)}
+            onChange={(avatarSize) =>
+              onChange({
+                ...s,
+                avatarSize: avatarSize as typeof s.avatarSize,
+              } as ControlSettings)
+            }
             options={[
               { label: "Small", value: "sm" },
               { label: "Medium", value: "md" },
@@ -2796,7 +3358,9 @@ export function ControlSettingsPanel({ slug, settings, onChange }: ControlSettin
           <SettingToggle
             label="Show photo"
             checked={s.srcEnabled}
-            onChange={(srcEnabled) => onChange({ ...s, srcEnabled } as ControlSettings)}
+            onChange={(srcEnabled) =>
+              onChange({ ...s, srcEnabled } as ControlSettings)
+            }
           />
           {s.srcEnabled ? (
             <div className={shellStyles.settingsFullWidth}>
@@ -2810,7 +3374,9 @@ export function ControlSettingsPanel({ slug, settings, onChange }: ControlSettin
           <SettingToggle
             label="Enable photo upload"
             checked={s.photoUploadEnabled}
-            onChange={(photoUploadEnabled) => onChange({ ...s, photoUploadEnabled } as ControlSettings)}
+            onChange={(photoUploadEnabled) =>
+              onChange({ ...s, photoUploadEnabled } as ControlSettings)
+            }
           />
           {s.photoUploadEnabled ? (
             <>
@@ -2825,38 +3391,55 @@ export function ControlSettingsPanel({ slug, settings, onChange }: ControlSettin
                 <SettingInput
                   label="Photo upload title"
                   value={s.photoUploadTitle}
-                  onChange={(photoUploadTitle) => onChange({ ...s, photoUploadTitle } as ControlSettings)}
+                  onChange={(photoUploadTitle) =>
+                    onChange({ ...s, photoUploadTitle } as ControlSettings)
+                  }
                 />
               </div>
               <div className={shellStyles.settingsFullWidth}>
                 <SettingInput
                   label="Photo upload description"
                   value={s.photoUploadDescription}
-                  onChange={(photoUploadDescription) => onChange({ ...s, photoUploadDescription } as ControlSettings)}
+                  onChange={(photoUploadDescription) =>
+                    onChange({
+                      ...s,
+                      photoUploadDescription,
+                    } as ControlSettings)
+                  }
                 />
               </div>
               <SettingInput
                 label="Photo upload label"
                 value={s.photoUploadLabel}
-                onChange={(photoUploadLabel) => onChange({ ...s, photoUploadLabel } as ControlSettings)}
+                onChange={(photoUploadLabel) =>
+                  onChange({ ...s, photoUploadLabel } as ControlSettings)
+                }
               />
               <SettingInput
                 label="Upload label"
                 value={s.photoUploadUploadLabel}
-                onChange={(photoUploadUploadLabel) => onChange({ ...s, photoUploadUploadLabel } as ControlSettings)}
+                onChange={(photoUploadUploadLabel) =>
+                  onChange({ ...s, photoUploadUploadLabel } as ControlSettings)
+                }
               />
               <SettingInput
                 label="Crop button label"
                 value={s.photoUploadCropButtonLabel}
                 onChange={(photoUploadCropButtonLabel) =>
-                  onChange({ ...s, photoUploadCropButtonLabel } as ControlSettings)
+                  onChange({
+                    ...s,
+                    photoUploadCropButtonLabel,
+                  } as ControlSettings)
                 }
               />
               <SettingInput
                 label="Change button label"
                 value={s.photoUploadChangeButtonLabel}
                 onChange={(photoUploadChangeButtonLabel) =>
-                  onChange({ ...s, photoUploadChangeButtonLabel } as ControlSettings)
+                  onChange({
+                    ...s,
+                    photoUploadChangeButtonLabel,
+                  } as ControlSettings)
                 }
               />
             </>
@@ -2865,7 +3448,9 @@ export function ControlSettingsPanel({ slug, settings, onChange }: ControlSettin
             <SettingTextarea
               label="Menu items (JSON)"
               value={s.menuItemsJson}
-              onChange={(menuItemsJson) => onChange({ ...s, menuItemsJson } as ControlSettings)}
+              onChange={(menuItemsJson) =>
+                onChange({ ...s, menuItemsJson } as ControlSettings)
+              }
             />
           </div>
         </div>
@@ -2877,64 +3462,109 @@ export function ControlSettingsPanel({ slug, settings, onChange }: ControlSettin
         <div className={shellStyles.settingsGrid}>
           <DashboardPreviewLayoutSetting
             value={s.previewLayout}
-            onChange={(previewLayout) => onChange({ ...s, previewLayout } as ControlSettings)}
+            onChange={(previewLayout) =>
+              onChange({ ...s, previewLayout } as ControlSettings)
+            }
           />
           <SettingToggle
             label="Inside widget container"
             checked={s.wrapInContainer ?? true}
-            onChange={(wrapInContainer) => onChange({ ...s, wrapInContainer } as ControlSettings)}
+            onChange={(wrapInContainer) =>
+              onChange({ ...s, wrapInContainer } as ControlSettings)
+            }
           />
           <DashboardWidgetWidthSetting settings={s} onChange={onChange} />
           <div className={shellStyles.settingsFullWidth}>
-            <SettingInput label="Title" value={s.title} onChange={(title) => onChange({ ...s, title } as ControlSettings)} />
+            <SettingInput
+              label="Title"
+              value={s.title}
+              onChange={(title) => onChange({ ...s, title } as ControlSettings)}
+            />
           </div>
           <div className={shellStyles.settingsFullWidth}>
-            <SettingInput label="Field label" value={s.label} onChange={(label) => onChange({ ...s, label } as ControlSettings)} />
+            <SettingInput
+              label="Field label"
+              value={s.label}
+              onChange={(label) => onChange({ ...s, label } as ControlSettings)}
+            />
           </div>
           <SettingInput
             label="Upload label"
             value={s.uploadLabel}
-            onChange={(uploadLabel) => onChange({ ...s, uploadLabel } as ControlSettings)}
+            onChange={(uploadLabel) =>
+              onChange({ ...s, uploadLabel } as ControlSettings)
+            }
           />
           <SettingInput
             label="Crop button label"
             value={s.cropButtonLabel}
-            onChange={(cropButtonLabel) => onChange({ ...s, cropButtonLabel } as ControlSettings)}
+            onChange={(cropButtonLabel) =>
+              onChange({ ...s, cropButtonLabel } as ControlSettings)
+            }
           />
           <SettingInput
             label="Change button label"
             value={s.changeButtonLabel}
-            onChange={(changeButtonLabel) => onChange({ ...s, changeButtonLabel } as ControlSettings)}
+            onChange={(changeButtonLabel) =>
+              onChange({ ...s, changeButtonLabel } as ControlSettings)
+            }
           />
           <SettingInput
             label="Zoom label"
             value={s.zoomLabel}
-            onChange={(zoomLabel) => onChange({ ...s, zoomLabel } as ControlSettings)}
+            onChange={(zoomLabel) =>
+              onChange({ ...s, zoomLabel } as ControlSettings)
+            }
           />
           <SettingInput
             label="Viewport size (px)"
             value={String(s.viewportSize)}
-            onChange={(viewportSize) => onChange({ ...s, viewportSize: Number(viewportSize) || 240 } as ControlSettings)}
+            onChange={(viewportSize) =>
+              onChange({
+                ...s,
+                viewportSize: Number(viewportSize) || 240,
+              } as ControlSettings)
+            }
           />
           <SettingInput
             label="Output size (px)"
             value={String(s.outputSize)}
-            onChange={(outputSize) => onChange({ ...s, outputSize: Number(outputSize) || 256 } as ControlSettings)}
+            onChange={(outputSize) =>
+              onChange({
+                ...s,
+                outputSize: Number(outputSize) || 256,
+              } as ControlSettings)
+            }
           />
           <SettingInput
             label="Min zoom"
             value={String(s.minZoom)}
-            onChange={(minZoom) => onChange({ ...s, minZoom: Number(minZoom) || 1 } as ControlSettings)}
+            onChange={(minZoom) =>
+              onChange({
+                ...s,
+                minZoom: Number(minZoom) || 1,
+              } as ControlSettings)
+            }
           />
           <SettingInput
             label="Max zoom"
             value={String(s.maxZoom)}
-            onChange={(maxZoom) => onChange({ ...s, maxZoom: Number(maxZoom) || 3 } as ControlSettings)}
+            onChange={(maxZoom) =>
+              onChange({
+                ...s,
+                maxZoom: Number(maxZoom) || 3,
+              } as ControlSettings)
+            }
           />
           <SettingInput
             label="Zoom step"
             value={String(s.zoomStep)}
-            onChange={(zoomStep) => onChange({ ...s, zoomStep: Number(zoomStep) || 0.05 } as ControlSettings)}
+            onChange={(zoomStep) =>
+              onChange({
+                ...s,
+                zoomStep: Number(zoomStep) || 0.05,
+              } as ControlSettings)
+            }
           />
         </div>
       );
@@ -2945,19 +3575,26 @@ export function ControlSettingsPanel({ slug, settings, onChange }: ControlSettin
         <div className={shellStyles.settingsGrid}>
           <DashboardPreviewLayoutSetting
             value={s.previewLayout}
-            onChange={(previewLayout) => onChange({ ...s, previewLayout } as ControlSettings)}
+            onChange={(previewLayout) =>
+              onChange({ ...s, previewLayout } as ControlSettings)
+            }
           />
           <SettingToggle
             label="Inside widget container"
             checked={s.wrapInContainer ?? true}
-            onChange={(wrapInContainer) => onChange({ ...s, wrapInContainer } as ControlSettings)}
+            onChange={(wrapInContainer) =>
+              onChange({ ...s, wrapInContainer } as ControlSettings)
+            }
           />
           <DashboardWidgetWidthSetting settings={s} onChange={onChange} />
           <SettingSelect
             label="Checkbox size"
             value={s.checkboxSize ?? "md"}
             onChange={(checkboxSize) =>
-              onChange({ ...s, checkboxSize: checkboxSize as typeof s.checkboxSize } as ControlSettings)
+              onChange({
+                ...s,
+                checkboxSize: checkboxSize as typeof s.checkboxSize,
+              } as ControlSettings)
             }
             options={[
               { label: "Small", value: "sm" },
@@ -2966,13 +3603,19 @@ export function ControlSettingsPanel({ slug, settings, onChange }: ControlSettin
             ]}
           />
           <div className={shellStyles.settingsFullWidth}>
-            <SettingInput label="Title" value={s.title} onChange={(title) => onChange({ ...s, title } as ControlSettings)} />
+            <SettingInput
+              label="Title"
+              value={s.title}
+              onChange={(title) => onChange({ ...s, title } as ControlSettings)}
+            />
           </div>
           <div className={shellStyles.settingsFullWidth}>
             <SettingInput
               label="Footer link"
               value={s.footerLabel}
-              onChange={(footerLabel) => onChange({ ...s, footerLabel } as ControlSettings)}
+              onChange={(footerLabel) =>
+                onChange({ ...s, footerLabel } as ControlSettings)
+              }
             />
           </div>
         </div>
@@ -2985,22 +3628,32 @@ export function ControlSettingsPanel({ slug, settings, onChange }: ControlSettin
         <div className={shellStyles.settingsGrid}>
           <DashboardPreviewLayoutSetting
             value={s.previewLayout}
-            onChange={(previewLayout) => onChange({ ...s, previewLayout } as ControlSettings)}
+            onChange={(previewLayout) =>
+              onChange({ ...s, previewLayout } as ControlSettings)
+            }
           />
           <SettingToggle
             label="Inside widget container"
             checked={s.wrapInContainer ?? true}
-            onChange={(wrapInContainer) => onChange({ ...s, wrapInContainer } as ControlSettings)}
+            onChange={(wrapInContainer) =>
+              onChange({ ...s, wrapInContainer } as ControlSettings)
+            }
           />
           <DashboardWidgetWidthSetting settings={s} onChange={onChange} />
           <div className={shellStyles.settingsFullWidth}>
-            <SettingInput label="Title" value={s.title} onChange={(title) => onChange({ ...s, title } as ControlSettings)} />
+            <SettingInput
+              label="Title"
+              value={s.title}
+              onChange={(title) => onChange({ ...s, title } as ControlSettings)}
+            />
           </div>
           <div className={shellStyles.settingsFullWidth}>
             <SettingInput
               label="Footer link"
               value={s.footerLabel}
-              onChange={(footerLabel) => onChange({ ...s, footerLabel } as ControlSettings)}
+              onChange={(footerLabel) =>
+                onChange({ ...s, footerLabel } as ControlSettings)
+              }
             />
           </div>
         </div>
@@ -3012,18 +3665,27 @@ export function ControlSettingsPanel({ slug, settings, onChange }: ControlSettin
         <div className={shellStyles.settingsGrid}>
           <DashboardPreviewLayoutSetting
             value={s.previewLayout}
-            onChange={(previewLayout) => onChange({ ...s, previewLayout } as ControlSettings)}
+            onChange={(previewLayout) =>
+              onChange({ ...s, previewLayout } as ControlSettings)
+            }
           />
           <SettingToggle
             label="Inside widget container"
             checked={s.wrapInContainer ?? true}
-            onChange={(wrapInContainer) => onChange({ ...s, wrapInContainer } as ControlSettings)}
+            onChange={(wrapInContainer) =>
+              onChange({ ...s, wrapInContainer } as ControlSettings)
+            }
           />
           <DashboardWidgetWidthSetting settings={s} onChange={onChange} />
           <SettingSelect
             label="Status"
             value={s.status}
-            onChange={(status) => onChange({ ...s, status: status as typeof s.status } as ControlSettings)}
+            onChange={(status) =>
+              onChange({
+                ...s,
+                status: status as typeof s.status,
+              } as ControlSettings)
+            }
             options={[
               { label: "Success", value: "success" },
               { label: "Warning", value: "warning" },
@@ -3032,7 +3694,11 @@ export function ControlSettingsPanel({ slug, settings, onChange }: ControlSettin
             ]}
           />
           <div className={shellStyles.settingsFullWidth}>
-            <SettingInput label="Label" value={s.label} onChange={(label) => onChange({ ...s, label } as ControlSettings)} />
+            <SettingInput
+              label="Label"
+              value={s.label}
+              onChange={(label) => onChange({ ...s, label } as ControlSettings)}
+            />
           </div>
         </div>
       );
@@ -3043,25 +3709,38 @@ export function ControlSettingsPanel({ slug, settings, onChange }: ControlSettin
         <div className={shellStyles.settingsGrid}>
           <DashboardPreviewLayoutSetting
             value={s.previewLayout}
-            onChange={(previewLayout) => onChange({ ...s, previewLayout } as ControlSettings)}
+            onChange={(previewLayout) =>
+              onChange({ ...s, previewLayout } as ControlSettings)
+            }
           />
           <SettingToggle
             label="Inside widget container"
             checked={s.wrapInContainer ?? true}
-            onChange={(wrapInContainer) => onChange({ ...s, wrapInContainer } as ControlSettings)}
+            onChange={(wrapInContainer) =>
+              onChange({ ...s, wrapInContainer } as ControlSettings)
+            }
           />
           <DashboardWidgetWidthSetting settings={s} onChange={onChange} />
           <SettingSelect
             label="Direction"
             value={s.direction}
-            onChange={(direction) => onChange({ ...s, direction: direction as typeof s.direction } as ControlSettings)}
+            onChange={(direction) =>
+              onChange({
+                ...s,
+                direction: direction as typeof s.direction,
+              } as ControlSettings)
+            }
             options={[
               { label: "Up", value: "up" },
               { label: "Down", value: "down" },
             ]}
           />
           <div className={shellStyles.settingsFullWidth}>
-            <SettingInput label="Value" value={s.value} onChange={(value) => onChange({ ...s, value } as ControlSettings)} />
+            <SettingInput
+              label="Value"
+              value={s.value}
+              onChange={(value) => onChange({ ...s, value } as ControlSettings)}
+            />
           </div>
         </div>
       );
@@ -3073,7 +3752,9 @@ export function ControlSettingsPanel({ slug, settings, onChange }: ControlSettin
           <SettingSelect
             label="Tone"
             value={s.tone}
-            onChange={(tone) => onChange({ ...s, tone: tone as typeof s.tone } as ControlSettings)}
+            onChange={(tone) =>
+              onChange({ ...s, tone: tone as typeof s.tone } as ControlSettings)
+            }
             options={[
               { label: "Default", value: "default" },
               { label: "Accent", value: "accent" },
@@ -3087,7 +3768,10 @@ export function ControlSettingsPanel({ slug, settings, onChange }: ControlSettin
             label="Density"
             value={s.density}
             onChange={(density) =>
-              onChange({ ...s, density: density as typeof s.density } as ControlSettings)
+              onChange({
+                ...s,
+                density: density as typeof s.density,
+              } as ControlSettings)
             }
             options={[
               { label: "Comfortable", value: "comfortable" },
@@ -3097,12 +3781,16 @@ export function ControlSettingsPanel({ slug, settings, onChange }: ControlSettin
           <SettingToggle
             label="Divided"
             checked={s.divided}
-            onChange={(divided) => onChange({ ...s, divided } as ControlSettings)}
+            onChange={(divided) =>
+              onChange({ ...s, divided } as ControlSettings)
+            }
           />
           <SettingToggle
             label="Border"
             checked={s.bordered}
-            onChange={(bordered) => onChange({ ...s, bordered } as ControlSettings)}
+            onChange={(bordered) =>
+              onChange({ ...s, bordered } as ControlSettings)
+            }
           />
           <div className={shellStyles.settingsFullWidth}>
             <SettingInput
@@ -3115,21 +3803,27 @@ export function ControlSettingsPanel({ slug, settings, onChange }: ControlSettin
             <SettingTextarea
               label="Description"
               value={s.description}
-              onChange={(description) => onChange({ ...s, description } as ControlSettings)}
+              onChange={(description) =>
+                onChange({ ...s, description } as ControlSettings)
+              }
             />
           </div>
           <div className={shellStyles.settingsFullWidth}>
             <SettingTextarea
               label="Content"
               value={s.content}
-              onChange={(content) => onChange({ ...s, content } as ControlSettings)}
+              onChange={(content) =>
+                onChange({ ...s, content } as ControlSettings)
+              }
             />
           </div>
           <div className={shellStyles.settingsFullWidth}>
             <SettingTextarea
               label="Footer"
               value={s.footer}
-              onChange={(footer) => onChange({ ...s, footer } as ControlSettings)}
+              onChange={(footer) =>
+                onChange({ ...s, footer } as ControlSettings)
+              }
             />
           </div>
         </div>
@@ -3143,7 +3837,12 @@ export function ControlSettingsPanel({ slug, settings, onChange }: ControlSettin
           <SettingSelect
             label="Sidebar"
             value={s.sidebar}
-            onChange={(sidebar) => onChange({ ...s, sidebar: sidebar as typeof s.sidebar } as ControlSettings)}
+            onChange={(sidebar) =>
+              onChange({
+                ...s,
+                sidebar: sidebar as typeof s.sidebar,
+              } as ControlSettings)
+            }
             options={[
               { label: "None", value: "none" },
               { label: "Left", value: "left" },
@@ -3154,7 +3853,10 @@ export function ControlSettingsPanel({ slug, settings, onChange }: ControlSettin
             label="Columns"
             value={String(s.columns)}
             onChange={(columns) =>
-              onChange({ ...s, columns: Number(columns) as typeof s.columns } as ControlSettings)
+              onChange({
+                ...s,
+                columns: Number(columns) as typeof s.columns,
+              } as ControlSettings)
             }
             options={[
               { label: "1", value: "1" },
@@ -3167,7 +3869,9 @@ export function ControlSettingsPanel({ slug, settings, onChange }: ControlSettin
           <SettingSelect
             label="Gap"
             value={s.gap}
-            onChange={(gap) => onChange({ ...s, gap: gap as typeof s.gap } as ControlSettings)}
+            onChange={(gap) =>
+              onChange({ ...s, gap: gap as typeof s.gap } as ControlSettings)
+            }
             options={[
               { label: "Small", value: "sm" },
               { label: "Medium", value: "md" },
@@ -3178,7 +3882,10 @@ export function ControlSettingsPanel({ slug, settings, onChange }: ControlSettin
             label="Stack below"
             value={s.stackBelow}
             onChange={(stackBelow) =>
-              onChange({ ...s, stackBelow: stackBelow as typeof s.stackBelow } as ControlSettings)
+              onChange({
+                ...s,
+                stackBelow: stackBelow as typeof s.stackBelow,
+              } as ControlSettings)
             }
             options={[
               { label: "Mobile", value: "mobile" },
@@ -3190,7 +3897,10 @@ export function ControlSettingsPanel({ slug, settings, onChange }: ControlSettin
             label="Sidebar ratio"
             value={s.sidebarRatio}
             onChange={(sidebarRatio) =>
-              onChange({ ...s, sidebarRatio: sidebarRatio as typeof s.sidebarRatio } as ControlSettings)
+              onChange({
+                ...s,
+                sidebarRatio: sidebarRatio as typeof s.sidebarRatio,
+              } as ControlSettings)
             }
             options={[
               { label: "1:2", value: "1:2" },
@@ -3209,56 +3919,72 @@ export function ControlSettingsPanel({ slug, settings, onChange }: ControlSettin
             <SettingTextarea
               label="Description"
               value={s.description}
-              onChange={(description) => onChange({ ...s, description } as ControlSettings)}
+              onChange={(description) =>
+                onChange({ ...s, description } as ControlSettings)
+              }
             />
           </div>
           <div className={shellStyles.settingsFullWidth}>
             <SettingInput
               label="Sidebar title"
               value={s.sidebarTitle}
-              onChange={(sidebarTitle) => onChange({ ...s, sidebarTitle } as ControlSettings)}
+              onChange={(sidebarTitle) =>
+                onChange({ ...s, sidebarTitle } as ControlSettings)
+              }
             />
           </div>
           <div className={shellStyles.settingsFullWidth}>
             <SettingTextarea
               label="Sidebar content"
               value={s.sidebarContent}
-              onChange={(sidebarContent) => onChange({ ...s, sidebarContent } as ControlSettings)}
+              onChange={(sidebarContent) =>
+                onChange({ ...s, sidebarContent } as ControlSettings)
+              }
             />
           </div>
           <div className={shellStyles.settingsFullWidth}>
             <SettingInput
               label="Column 1 title"
               value={s.columnOneTitle}
-              onChange={(columnOneTitle) => onChange({ ...s, columnOneTitle } as ControlSettings)}
+              onChange={(columnOneTitle) =>
+                onChange({ ...s, columnOneTitle } as ControlSettings)
+              }
             />
           </div>
           <div className={shellStyles.settingsFullWidth}>
             <SettingTextarea
               label="Column 1 content"
               value={s.columnOneContent}
-              onChange={(columnOneContent) => onChange({ ...s, columnOneContent } as ControlSettings)}
+              onChange={(columnOneContent) =>
+                onChange({ ...s, columnOneContent } as ControlSettings)
+              }
             />
           </div>
           <div className={shellStyles.settingsFullWidth}>
             <SettingInput
               label="Column 2 title"
               value={s.columnTwoTitle}
-              onChange={(columnTwoTitle) => onChange({ ...s, columnTwoTitle } as ControlSettings)}
+              onChange={(columnTwoTitle) =>
+                onChange({ ...s, columnTwoTitle } as ControlSettings)
+              }
             />
           </div>
           <div className={shellStyles.settingsFullWidth}>
             <SettingTextarea
               label="Column 2 content"
               value={s.columnTwoContent}
-              onChange={(columnTwoContent) => onChange({ ...s, columnTwoContent } as ControlSettings)}
+              onChange={(columnTwoContent) =>
+                onChange({ ...s, columnTwoContent } as ControlSettings)
+              }
             />
           </div>
           <div className={shellStyles.settingsFullWidth}>
             <SettingInput
               label="Column 3 title"
               value={s.columnThreeTitle}
-              onChange={(columnThreeTitle) => onChange({ ...s, columnThreeTitle } as ControlSettings)}
+              onChange={(columnThreeTitle) =>
+                onChange({ ...s, columnThreeTitle } as ControlSettings)
+              }
             />
           </div>
           <div className={shellStyles.settingsFullWidth}>
@@ -3274,7 +4000,9 @@ export function ControlSettingsPanel({ slug, settings, onChange }: ControlSettin
             <SettingInput
               label="Column 4 title"
               value={s.columnFourTitle}
-              onChange={(columnFourTitle) => onChange({ ...s, columnFourTitle } as ControlSettings)}
+              onChange={(columnFourTitle) =>
+                onChange({ ...s, columnFourTitle } as ControlSettings)
+              }
             />
           </div>
           <div className={shellStyles.settingsFullWidth}>
@@ -3290,7 +4018,9 @@ export function ControlSettingsPanel({ slug, settings, onChange }: ControlSettin
             <SettingInput
               label="Column 5 title"
               value={s.columnFiveTitle}
-              onChange={(columnFiveTitle) => onChange({ ...s, columnFiveTitle } as ControlSettings)}
+              onChange={(columnFiveTitle) =>
+                onChange({ ...s, columnFiveTitle } as ControlSettings)
+              }
             />
           </div>
           <div className={shellStyles.settingsFullWidth}>
@@ -3313,7 +4043,10 @@ export function ControlSettingsPanel({ slug, settings, onChange }: ControlSettin
             label="Density"
             value={s.density}
             onChange={(density) =>
-              onChange({ ...s, density: density as typeof s.density } as ControlSettings)
+              onChange({
+                ...s,
+                density: density as typeof s.density,
+              } as ControlSettings)
             }
             options={[
               { label: "Comfortable", value: "comfortable" },
@@ -3323,33 +4056,45 @@ export function ControlSettingsPanel({ slug, settings, onChange }: ControlSettin
           <SettingToggle
             label="Show caption"
             checked={s.showCaption}
-            onChange={(showCaption) => onChange({ ...s, showCaption } as ControlSettings)}
+            onChange={(showCaption) =>
+              onChange({ ...s, showCaption } as ControlSettings)
+            }
           />
           <SettingToggle
             label="Striped rows"
             checked={s.striped}
-            onChange={(striped) => onChange({ ...s, striped } as ControlSettings)}
+            onChange={(striped) =>
+              onChange({ ...s, striped } as ControlSettings)
+            }
           />
           <SettingToggle
             label="Cell borders"
             checked={s.bordered}
-            onChange={(bordered) => onChange({ ...s, bordered } as ControlSettings)}
+            onChange={(bordered) =>
+              onChange({ ...s, bordered } as ControlSettings)
+            }
           />
           <SettingToggle
             label="Empty state"
             checked={s.showEmpty}
-            onChange={(showEmpty) => onChange({ ...s, showEmpty } as ControlSettings)}
+            onChange={(showEmpty) =>
+              onChange({ ...s, showEmpty } as ControlSettings)
+            }
           />
           <SettingToggle
             label="Numeric alignment"
             checked={s.numericColumn}
-            onChange={(numericColumn) => onChange({ ...s, numericColumn } as ControlSettings)}
+            onChange={(numericColumn) =>
+              onChange({ ...s, numericColumn } as ControlSettings)
+            }
           />
           <div className={shellStyles.settingsFullWidth}>
             <SettingInput
               label="Caption"
               value={s.caption}
-              onChange={(caption) => onChange({ ...s, caption } as ControlSettings)}
+              onChange={(caption) =>
+                onChange({ ...s, caption } as ControlSettings)
+              }
             />
           </div>
         </div>
@@ -3386,26 +4131,35 @@ export function ControlSettingsPanel({ slug, settings, onChange }: ControlSettin
             <SettingToggle
               label="Master detail"
               checked={s.masterDetail}
-              onChange={(masterDetail) => onChange({ ...s, masterDetail } as ControlSettings)}
+              onChange={(masterDetail) =>
+                onChange({ ...s, masterDetail } as ControlSettings)
+              }
             />
           ) : null}
           <SettingToggle
             label="Virtualized"
             checked={s.virtualized}
-            onChange={(virtualized) => onChange({ ...s, virtualized } as ControlSettings)}
+            onChange={(virtualized) =>
+              onChange({ ...s, virtualized } as ControlSettings)
+            }
           />
           {!treeLayout && !pivotLayout ? (
             <SettingToggle
               label="Infinite scroll"
               checked={s.infiniteScroll}
-              onChange={(infiniteScroll) => onChange({ ...s, infiniteScroll } as ControlSettings)}
+              onChange={(infiniteScroll) =>
+                onChange({ ...s, infiniteScroll } as ControlSettings)
+              }
             />
           ) : null}
           <SettingSelect
             label="Density"
             value={s.density}
             onChange={(density) =>
-              onChange({ ...s, density: density as typeof s.density } as ControlSettings)
+              onChange({
+                ...s,
+                density: density as typeof s.density,
+              } as ControlSettings)
             }
             options={[
               { label: "Comfortable", value: "comfortable" },
@@ -3415,7 +4169,9 @@ export function ControlSettingsPanel({ slug, settings, onChange }: ControlSettin
           <SettingToggle
             label="Fixed top header"
             checked={s.stickyHeader}
-            onChange={(stickyHeader) => onChange({ ...s, stickyHeader } as ControlSettings)}
+            onChange={(stickyHeader) =>
+              onChange({ ...s, stickyHeader } as ControlSettings)
+            }
           />
           <SettingToggle
             label="Fixed left header"
@@ -3427,17 +4183,23 @@ export function ControlSettingsPanel({ slug, settings, onChange }: ControlSettin
           <SettingToggle
             label="Sort by heading"
             checked={s.sortable}
-            onChange={(sortable) => onChange({ ...s, sortable } as ControlSettings)}
+            onChange={(sortable) =>
+              onChange({ ...s, sortable } as ControlSettings)
+            }
           />
           <SettingToggle
             label="Filter by heading"
             checked={s.filterable}
-            onChange={(filterable) => onChange({ ...s, filterable } as ControlSettings)}
+            onChange={(filterable) =>
+              onChange({ ...s, filterable } as ControlSettings)
+            }
           />
           <SettingToggle
             label="Drag by heading"
             checked={s.resizable}
-            onChange={(resizable) => onChange({ ...s, resizable } as ControlSettings)}
+            onChange={(resizable) =>
+              onChange({ ...s, resizable } as ControlSettings)
+            }
           />
           <SettingToggle
             label="Team column drag"
@@ -3463,23 +4225,31 @@ export function ControlSettingsPanel({ slug, settings, onChange }: ControlSettin
           <SettingToggle
             label="Striped rows"
             checked={s.striped}
-            onChange={(striped) => onChange({ ...s, striped } as ControlSettings)}
+            onChange={(striped) =>
+              onChange({ ...s, striped } as ControlSettings)
+            }
           />
           <SettingToggle
             label="Cell borders"
             checked={s.bordered}
-            onChange={(bordered) => onChange({ ...s, bordered } as ControlSettings)}
+            onChange={(bordered) =>
+              onChange({ ...s, bordered } as ControlSettings)
+            }
           />
           <SettingToggle
             label="Numeric alignment"
             checked={s.numericColumns}
-            onChange={(numericColumns) => onChange({ ...s, numericColumns } as ControlSettings)}
+            onChange={(numericColumns) =>
+              onChange({ ...s, numericColumns } as ControlSettings)
+            }
           />
           <div className={shellStyles.settingsFullWidth}>
             <SettingInput
               label="Caption"
               value={s.caption}
-              onChange={(caption) => onChange({ ...s, caption } as ControlSettings)}
+              onChange={(caption) =>
+                onChange({ ...s, caption } as ControlSettings)
+              }
             />
           </div>
         </div>
@@ -3493,7 +4263,10 @@ export function ControlSettingsPanel({ slug, settings, onChange }: ControlSettin
             label="Variant"
             value={s.variant}
             onChange={(variant) =>
-              onChange({ ...s, variant: variant as typeof s.variant } as ControlSettings)
+              onChange({
+                ...s,
+                variant: variant as typeof s.variant,
+              } as ControlSettings)
             }
             options={[
               { label: "Text", value: "text" },
@@ -3506,7 +4279,10 @@ export function ControlSettingsPanel({ slug, settings, onChange }: ControlSettin
             label="Animation"
             value={s.animation}
             onChange={(animation) =>
-              onChange({ ...s, animation: animation as typeof s.animation } as ControlSettings)
+              onChange({
+                ...s,
+                animation: animation as typeof s.animation,
+              } as ControlSettings)
             }
             options={[
               { label: "Shimmer", value: "shimmer" },
@@ -3539,7 +4315,8 @@ export function ControlSettingsPanel({ slug, settings, onChange }: ControlSettin
             onChange={(initialIndex) =>
               onChange({
                 ...s,
-                initialIndex: Math.min(Math.max(Number(initialIndex) || 1, 1), 4) - 1,
+                initialIndex:
+                  Math.min(Math.max(Number(initialIndex) || 1, 1), 4) - 1,
               } as ControlSettings)
             }
           />
@@ -3551,12 +4328,16 @@ export function ControlSettingsPanel({ slug, settings, onChange }: ControlSettin
           <SettingToggle
             label="Captions"
             checked={s.showCaptions}
-            onChange={(showCaptions) => onChange({ ...s, showCaptions } as ControlSettings)}
+            onChange={(showCaptions) =>
+              onChange({ ...s, showCaptions } as ControlSettings)
+            }
           />
           <SettingToggle
             label="Pips"
             checked={s.showPips}
-            onChange={(showPips) => onChange({ ...s, showPips } as ControlSettings)}
+            onChange={(showPips) =>
+              onChange({ ...s, showPips } as ControlSettings)
+            }
           />
         </div>
       );
@@ -3568,7 +4349,9 @@ export function ControlSettingsPanel({ slug, settings, onChange }: ControlSettin
           <SettingToggle
             label="Captions"
             checked={s.showCaptions}
-            onChange={(showCaptions) => onChange({ ...s, showCaptions } as ControlSettings)}
+            onChange={(showCaptions) =>
+              onChange({ ...s, showCaptions } as ControlSettings)
+            }
           />
           <SettingToggle
             label="Backdrop dismiss"
@@ -3606,7 +4389,9 @@ export function ControlSettingsPanel({ slug, settings, onChange }: ControlSettin
           <SettingToggle
             label="Caption"
             checked={s.showCaption}
-            onChange={(showCaption) => onChange({ ...s, showCaption } as ControlSettings)}
+            onChange={(showCaption) =>
+              onChange({ ...s, showCaption } as ControlSettings)
+            }
           />
           <SettingToggle
             label="Open in lightbox"
@@ -3626,7 +4411,10 @@ export function ControlSettingsPanel({ slug, settings, onChange }: ControlSettin
             label="Columns"
             value={String(s.columns)}
             onChange={(columns) =>
-              onChange({ ...s, columns: Number(columns) as typeof s.columns } as ControlSettings)
+              onChange({
+                ...s,
+                columns: Number(columns) as typeof s.columns,
+              } as ControlSettings)
             }
             options={[
               { label: "2", value: "2" },
@@ -3652,7 +4440,9 @@ export function ControlSettingsPanel({ slug, settings, onChange }: ControlSettin
           <SettingToggle
             label="Captions"
             checked={s.showCaptions}
-            onChange={(showCaptions) => onChange({ ...s, showCaptions } as ControlSettings)}
+            onChange={(showCaptions) =>
+              onChange({ ...s, showCaptions } as ControlSettings)
+            }
           />
         </div>
       );
@@ -3664,17 +4454,23 @@ export function ControlSettingsPanel({ slug, settings, onChange }: ControlSettin
           <SettingToggle
             label="Auto rotate"
             checked={s.autoRotate}
-            onChange={(autoRotate) => onChange({ ...s, autoRotate } as ControlSettings)}
+            onChange={(autoRotate) =>
+              onChange({ ...s, autoRotate } as ControlSettings)
+            }
           />
           <SettingToggle
             label="Camera controls"
             checked={s.cameraControls}
-            onChange={(cameraControls) => onChange({ ...s, cameraControls } as ControlSettings)}
+            onChange={(cameraControls) =>
+              onChange({ ...s, cameraControls } as ControlSettings)
+            }
           />
           <SettingToggle
             label="Caption"
             checked={s.showCaption}
-            onChange={(showCaption) => onChange({ ...s, showCaption } as ControlSettings)}
+            onChange={(showCaption) =>
+              onChange({ ...s, showCaption } as ControlSettings)
+            }
           />
         </div>
       );
@@ -3686,7 +4482,9 @@ export function ControlSettingsPanel({ slug, settings, onChange }: ControlSettin
           <SettingToggle
             label="Caption"
             checked={s.showCaption}
-            onChange={(showCaption) => onChange({ ...s, showCaption } as ControlSettings)}
+            onChange={(showCaption) =>
+              onChange({ ...s, showCaption } as ControlSettings)
+            }
           />
           <SettingToggle
             label="Backdrop dismiss"
@@ -3706,7 +4504,9 @@ export function ControlSettingsPanel({ slug, settings, onChange }: ControlSettin
             <SettingInput
               label="Trigger label"
               value={s.triggerLabel}
-              onChange={(triggerLabel) => onChange({ ...s, triggerLabel } as ControlSettings)}
+              onChange={(triggerLabel) =>
+                onChange({ ...s, triggerLabel } as ControlSettings)
+              }
             />
           </div>
         </div>
@@ -3731,7 +4531,9 @@ export function ControlSettingsPanel({ slug, settings, onChange }: ControlSettin
           <SettingToggle
             label="Caption"
             checked={s.showCaption}
-            onChange={(showCaption) => onChange({ ...s, showCaption } as ControlSettings)}
+            onChange={(showCaption) =>
+              onChange({ ...s, showCaption } as ControlSettings)
+            }
           />
           <SettingToggle
             label="Open in lightbox"
@@ -3751,7 +4553,10 @@ export function ControlSettingsPanel({ slug, settings, onChange }: ControlSettin
             label="Columns"
             value={String(s.columns)}
             onChange={(columns) =>
-              onChange({ ...s, columns: Number(columns) as typeof s.columns } as ControlSettings)
+              onChange({
+                ...s,
+                columns: Number(columns) as typeof s.columns,
+              } as ControlSettings)
             }
             options={[
               { label: "2", value: "2" },
@@ -3777,7 +4582,9 @@ export function ControlSettingsPanel({ slug, settings, onChange }: ControlSettin
           <SettingToggle
             label="Captions"
             checked={s.showCaptions}
-            onChange={(showCaptions) => onChange({ ...s, showCaptions } as ControlSettings)}
+            onChange={(showCaptions) =>
+              onChange({ ...s, showCaptions } as ControlSettings)
+            }
           />
         </div>
       );
@@ -3789,7 +4596,9 @@ export function ControlSettingsPanel({ slug, settings, onChange }: ControlSettin
           <SettingSelect
             label="Active tab"
             value={s.activeValue}
-            onChange={(activeValue) => onChange({ ...s, activeValue } as ControlSettings)}
+            onChange={(activeValue) =>
+              onChange({ ...s, activeValue } as ControlSettings)
+            }
             options={[
               { label: "Overview", value: "overview" },
               { label: "Insights", value: "insights" },
@@ -3801,7 +4610,10 @@ export function ControlSettingsPanel({ slug, settings, onChange }: ControlSettin
             label="Orientation"
             value={s.orientation}
             onChange={(orientation) =>
-              onChange({ ...s, orientation: orientation as typeof s.orientation } as ControlSettings)
+              onChange({
+                ...s,
+                orientation: orientation as typeof s.orientation,
+              } as ControlSettings)
             }
             options={[
               { label: "Horizontal", value: "horizontal" },
@@ -3812,7 +4624,10 @@ export function ControlSettingsPanel({ slug, settings, onChange }: ControlSettin
             label="Variant"
             value={s.variant}
             onChange={(variant) =>
-              onChange({ ...s, variant: variant as typeof s.variant } as ControlSettings)
+              onChange({
+                ...s,
+                variant: variant as typeof s.variant,
+              } as ControlSettings)
             }
             options={[
               { label: "Line", value: "line" },
@@ -3830,7 +4645,10 @@ export function ControlSettingsPanel({ slug, settings, onChange }: ControlSettin
             onChange={(disabledSecond) => {
               onChange({
                 ...s,
-                activeValue: disabledSecond && s.activeValue === "insights" ? "overview" : s.activeValue,
+                activeValue:
+                  disabledSecond && s.activeValue === "insights"
+                    ? "overview"
+                    : s.activeValue,
                 disabledSecond,
               } as ControlSettings);
             }}
@@ -3845,12 +4663,16 @@ export function ControlSettingsPanel({ slug, settings, onChange }: ControlSettin
           <SettingToggle
             label="Open by default"
             checked={s.defaultOpen}
-            onChange={(defaultOpen) => onChange({ ...s, defaultOpen } as ControlSettings)}
+            onChange={(defaultOpen) =>
+              onChange({ ...s, defaultOpen } as ControlSettings)
+            }
           />
           <SettingToggle
             label="Disabled"
             checked={s.disabled}
-            onChange={(disabled) => onChange({ ...s, disabled } as ControlSettings)}
+            onChange={(disabled) =>
+              onChange({ ...s, disabled } as ControlSettings)
+            }
           />
           <div className={shellStyles.settingsFullWidth}>
             <SettingInput
@@ -3863,7 +4685,9 @@ export function ControlSettingsPanel({ slug, settings, onChange }: ControlSettin
             <SettingTextarea
               label="Content"
               value={s.content}
-              onChange={(content) => onChange({ ...s, content } as ControlSettings)}
+              onChange={(content) =>
+                onChange({ ...s, content } as ControlSettings)
+              }
             />
           </div>
         </div>
@@ -3876,7 +4700,9 @@ export function ControlSettingsPanel({ slug, settings, onChange }: ControlSettin
           <SettingSelect
             label="Expand mode"
             value={s.type}
-            onChange={(type) => onChange({ ...s, type: type as typeof s.type } as ControlSettings)}
+            onChange={(type) =>
+              onChange({ ...s, type: type as typeof s.type } as ControlSettings)
+            }
             options={[
               { label: "Single", value: "single" },
               { label: "Multiple", value: "multiple" },
@@ -3885,7 +4711,9 @@ export function ControlSettingsPanel({ slug, settings, onChange }: ControlSettin
           <SettingToggle
             label="Collapsible"
             checked={s.collapsible}
-            onChange={(collapsible) => onChange({ ...s, collapsible } as ControlSettings)}
+            onChange={(collapsible) =>
+              onChange({ ...s, collapsible } as ControlSettings)
+            }
           />
           <SettingToggle
             label="Open first item"
@@ -3898,35 +4726,45 @@ export function ControlSettingsPanel({ slug, settings, onChange }: ControlSettin
             <SettingInput
               label="Item 1 title"
               value={s.itemOneTitle}
-              onChange={(itemOneTitle) => onChange({ ...s, itemOneTitle } as ControlSettings)}
+              onChange={(itemOneTitle) =>
+                onChange({ ...s, itemOneTitle } as ControlSettings)
+              }
             />
           </div>
           <div className={shellStyles.settingsFullWidth}>
             <SettingTextarea
               label="Item 1 content"
               value={s.itemOneContent}
-              onChange={(itemOneContent) => onChange({ ...s, itemOneContent } as ControlSettings)}
+              onChange={(itemOneContent) =>
+                onChange({ ...s, itemOneContent } as ControlSettings)
+              }
             />
           </div>
           <div className={shellStyles.settingsFullWidth}>
             <SettingInput
               label="Item 2 title"
               value={s.itemTwoTitle}
-              onChange={(itemTwoTitle) => onChange({ ...s, itemTwoTitle } as ControlSettings)}
+              onChange={(itemTwoTitle) =>
+                onChange({ ...s, itemTwoTitle } as ControlSettings)
+              }
             />
           </div>
           <div className={shellStyles.settingsFullWidth}>
             <SettingTextarea
               label="Item 2 content"
               value={s.itemTwoContent}
-              onChange={(itemTwoContent) => onChange({ ...s, itemTwoContent } as ControlSettings)}
+              onChange={(itemTwoContent) =>
+                onChange({ ...s, itemTwoContent } as ControlSettings)
+              }
             />
           </div>
           <div className={shellStyles.settingsFullWidth}>
             <SettingInput
               label="Item 3 title"
               value={s.itemThreeTitle}
-              onChange={(itemThreeTitle) => onChange({ ...s, itemThreeTitle } as ControlSettings)}
+              onChange={(itemThreeTitle) =>
+                onChange({ ...s, itemThreeTitle } as ControlSettings)
+              }
             />
           </div>
           <div className={shellStyles.settingsFullWidth}>
@@ -3948,31 +4786,42 @@ export function ControlSettingsPanel({ slug, settings, onChange }: ControlSettin
           <SettingToggle
             label="Expanded by default"
             checked={s.defaultExpanded}
-            onChange={(defaultExpanded) => onChange({ ...s, defaultExpanded } as ControlSettings)}
+            onChange={(defaultExpanded) =>
+              onChange({ ...s, defaultExpanded } as ControlSettings)
+            }
           />
           <SettingInput
             label="Max lines"
             type="number"
             value={String(s.maxLines)}
             onChange={(value) =>
-              onChange({ ...s, maxLines: Math.max(1, Number(value) || 1) } as ControlSettings)
+              onChange({
+                ...s,
+                maxLines: Math.max(1, Number(value) || 1),
+              } as ControlSettings)
             }
           />
           <SettingInput
             label="Show more label"
             value={s.showMoreLabel}
-            onChange={(showMoreLabel) => onChange({ ...s, showMoreLabel } as ControlSettings)}
+            onChange={(showMoreLabel) =>
+              onChange({ ...s, showMoreLabel } as ControlSettings)
+            }
           />
           <SettingInput
             label="Show less label"
             value={s.showLessLabel}
-            onChange={(showLessLabel) => onChange({ ...s, showLessLabel } as ControlSettings)}
+            onChange={(showLessLabel) =>
+              onChange({ ...s, showLessLabel } as ControlSettings)
+            }
           />
           <div className={shellStyles.settingsFullWidth}>
             <SettingTextarea
               label="Content"
               value={s.content}
-              onChange={(content) => onChange({ ...s, content } as ControlSettings)}
+              onChange={(content) =>
+                onChange({ ...s, content } as ControlSettings)
+              }
             />
           </div>
         </div>
@@ -3986,7 +4835,10 @@ export function ControlSettingsPanel({ slug, settings, onChange }: ControlSettin
             label="Density"
             value={s.density}
             onChange={(density) =>
-              onChange({ ...s, density: density as typeof s.density } as ControlSettings)
+              onChange({
+                ...s,
+                density: density as typeof s.density,
+              } as ControlSettings)
             }
             options={[
               { label: "Comfortable", value: "comfortable" },
@@ -3996,7 +4848,9 @@ export function ControlSettingsPanel({ slug, settings, onChange }: ControlSettin
           <SettingToggle
             label="Show icon"
             checked={s.showIcon}
-            onChange={(showIcon) => onChange({ ...s, showIcon } as ControlSettings)}
+            onChange={(showIcon) =>
+              onChange({ ...s, showIcon } as ControlSettings)
+            }
           />
           {s.showIcon ? (
             <div className={shellStyles.settingsFullWidth}>
@@ -4013,12 +4867,16 @@ export function ControlSettingsPanel({ slug, settings, onChange }: ControlSettin
           <SettingToggle
             label="Primary action"
             checked={s.primaryAction}
-            onChange={(primaryAction) => onChange({ ...s, primaryAction } as ControlSettings)}
+            onChange={(primaryAction) =>
+              onChange({ ...s, primaryAction } as ControlSettings)
+            }
           />
           <SettingToggle
             label="Secondary action"
             checked={s.secondaryAction}
-            onChange={(secondaryAction) => onChange({ ...s, secondaryAction } as ControlSettings)}
+            onChange={(secondaryAction) =>
+              onChange({ ...s, secondaryAction } as ControlSettings)
+            }
           />
           <div className={shellStyles.settingsFullWidth}>
             <SettingInput
@@ -4031,7 +4889,9 @@ export function ControlSettingsPanel({ slug, settings, onChange }: ControlSettin
             <SettingTextarea
               label="Description"
               value={s.description}
-              onChange={(description) => onChange({ ...s, description } as ControlSettings)}
+              onChange={(description) =>
+                onChange({ ...s, description } as ControlSettings)
+              }
             />
           </div>
           {s.primaryAction ? (
@@ -4067,7 +4927,9 @@ export function ControlSettingsPanel({ slug, settings, onChange }: ControlSettin
           <SettingSelect
             label="Tone"
             value={s.tone}
-            onChange={(tone) => onChange({ ...s, tone: tone as typeof s.tone } as ControlSettings)}
+            onChange={(tone) =>
+              onChange({ ...s, tone: tone as typeof s.tone } as ControlSettings)
+            }
             options={[
               { label: "Neutral", value: "neutral" },
               { label: "Accent", value: "accent" },
@@ -4081,7 +4943,10 @@ export function ControlSettingsPanel({ slug, settings, onChange }: ControlSettin
             label="Variant"
             value={s.variant}
             onChange={(variant) =>
-              onChange({ ...s, variant: variant as typeof s.variant } as ControlSettings)
+              onChange({
+                ...s,
+                variant: variant as typeof s.variant,
+              } as ControlSettings)
             }
             options={[
               { label: "Soft", value: "soft" },
@@ -4092,7 +4957,9 @@ export function ControlSettingsPanel({ slug, settings, onChange }: ControlSettin
           <SettingSelect
             label="Size"
             value={s.size}
-            onChange={(size) => onChange({ ...s, size: size as typeof s.size } as ControlSettings)}
+            onChange={(size) =>
+              onChange({ ...s, size: size as typeof s.size } as ControlSettings)
+            }
             options={[
               { label: "Small", value: "sm" },
               { label: "Medium", value: "md" },
@@ -4118,7 +4985,9 @@ export function ControlSettingsPanel({ slug, settings, onChange }: ControlSettin
           <SettingSelect
             label="Size"
             value={s.size}
-            onChange={(size) => onChange({ ...s, size: size as typeof s.size } as ControlSettings)}
+            onChange={(size) =>
+              onChange({ ...s, size: size as typeof s.size } as ControlSettings)
+            }
             options={[
               { label: "Small", value: "sm" },
               { label: "Medium", value: "md" },
@@ -4129,7 +4998,12 @@ export function ControlSettingsPanel({ slug, settings, onChange }: ControlSettin
           <SettingSelect
             label="Shape"
             value={s.shape}
-            onChange={(shape) => onChange({ ...s, shape: shape as typeof s.shape } as ControlSettings)}
+            onChange={(shape) =>
+              onChange({
+                ...s,
+                shape: shape as typeof s.shape,
+              } as ControlSettings)
+            }
             options={[
               { label: "Circle", value: "circle" },
               { label: "Rounded", value: "rounded" },
@@ -4138,7 +5012,9 @@ export function ControlSettingsPanel({ slug, settings, onChange }: ControlSettin
           <SettingToggle
             label="Use image URL"
             checked={s.srcEnabled}
-            onChange={(srcEnabled) => onChange({ ...s, srcEnabled } as ControlSettings)}
+            onChange={(srcEnabled) =>
+              onChange({ ...s, srcEnabled } as ControlSettings)
+            }
           />
           {s.srcEnabled ? (
             <div className={shellStyles.settingsFullWidth}>
@@ -4159,7 +5035,9 @@ export function ControlSettingsPanel({ slug, settings, onChange }: ControlSettin
           <SettingSelect
             label="Size"
             value={s.size}
-            onChange={(size) => onChange({ ...s, size: size as typeof s.size } as ControlSettings)}
+            onChange={(size) =>
+              onChange({ ...s, size: size as typeof s.size } as ControlSettings)
+            }
             options={[
               { label: "Small", value: "sm" },
               { label: "Medium", value: "md" },
@@ -4189,7 +5067,10 @@ export function ControlSettingsPanel({ slug, settings, onChange }: ControlSettin
             label="Density"
             value={s.density}
             onChange={(density) =>
-              onChange({ ...s, density: density as typeof s.density } as ControlSettings)
+              onChange({
+                ...s,
+                density: density as typeof s.density,
+              } as ControlSettings)
             }
             options={[
               { label: "Comfortable", value: "comfortable" },
@@ -4199,12 +5080,16 @@ export function ControlSettingsPanel({ slug, settings, onChange }: ControlSettin
           <SettingToggle
             label="Ordered"
             checked={s.ordered}
-            onChange={(ordered) => onChange({ ...s, ordered } as ControlSettings)}
+            onChange={(ordered) =>
+              onChange({ ...s, ordered } as ControlSettings)
+            }
           />
           <SettingToggle
             label="Show icons"
             checked={s.showIcons}
-            onChange={(showIcons) => onChange({ ...s, showIcons } as ControlSettings)}
+            onChange={(showIcons) =>
+              onChange({ ...s, showIcons } as ControlSettings)
+            }
           />
         </div>
       );
@@ -4217,7 +5102,10 @@ export function ControlSettingsPanel({ slug, settings, onChange }: ControlSettin
             label="Layout"
             value={s.layout}
             onChange={(layout) =>
-              onChange({ ...s, layout: layout as typeof s.layout } as ControlSettings)
+              onChange({
+                ...s,
+                layout: layout as typeof s.layout,
+              } as ControlSettings)
             }
             options={[
               { label: "Stacked", value: "stacked" },
@@ -4235,7 +5123,10 @@ export function ControlSettingsPanel({ slug, settings, onChange }: ControlSettin
             label="Orientation"
             value={s.orientation}
             onChange={(orientation) =>
-              onChange({ ...s, orientation: orientation as typeof s.orientation } as ControlSettings)
+              onChange({
+                ...s,
+                orientation: orientation as typeof s.orientation,
+              } as ControlSettings)
             }
             options={[
               { label: "Horizontal", value: "horizontal" },
@@ -4245,7 +5136,9 @@ export function ControlSettingsPanel({ slug, settings, onChange }: ControlSettin
           <SettingSelect
             label="Tone"
             value={s.tone}
-            onChange={(tone) => onChange({ ...s, tone: tone as typeof s.tone } as ControlSettings)}
+            onChange={(tone) =>
+              onChange({ ...s, tone: tone as typeof s.tone } as ControlSettings)
+            }
             options={[
               { label: "Default", value: "default" },
               { label: "Muted", value: "muted" },
@@ -4255,7 +5148,9 @@ export function ControlSettingsPanel({ slug, settings, onChange }: ControlSettin
           <SettingToggle
             label="Show label"
             checked={s.labelEnabled}
-            onChange={(labelEnabled) => onChange({ ...s, labelEnabled } as ControlSettings)}
+            onChange={(labelEnabled) =>
+              onChange({ ...s, labelEnabled } as ControlSettings)
+            }
           />
           {s.labelEnabled && s.orientation === "horizontal" ? (
             <SettingInput
@@ -4292,17 +5187,23 @@ export function ControlSettingsPanel({ slug, settings, onChange }: ControlSettin
           <SettingToggle
             label="Tags"
             checked={s.includeTags ?? true}
-            onChange={(includeTags) => onChange({ ...s, includeTags } as ControlSettings)}
+            onChange={(includeTags) =>
+              onChange({ ...s, includeTags } as ControlSettings)
+            }
           />
           <SettingToggle
             label="Group labels"
             checked={s.includeGroups ?? false}
-            onChange={(includeGroups) => onChange({ ...s, includeGroups } as ControlSettings)}
+            onChange={(includeGroups) =>
+              onChange({ ...s, includeGroups } as ControlSettings)
+            }
           />
           <SettingToggle
             label="Status accents"
             checked={s.includeStatus}
-            onChange={(includeStatus) => onChange({ ...s, includeStatus } as ControlSettings)}
+            onChange={(includeStatus) =>
+              onChange({ ...s, includeStatus } as ControlSettings)
+            }
           />
         </div>
       );
@@ -4314,7 +5215,9 @@ export function ControlSettingsPanel({ slug, settings, onChange }: ControlSettin
           <SettingToggle
             label="Expand root nodes"
             checked={s.expandRoots}
-            onChange={(expandRoots) => onChange({ ...s, expandRoots } as ControlSettings)}
+            onChange={(expandRoots) =>
+              onChange({ ...s, expandRoots } as ControlSettings)
+            }
           />
         </div>
       );
@@ -4355,12 +5258,16 @@ export function ControlSettingsPanel({ slug, settings, onChange }: ControlSettin
           <SettingToggle
             label="Border"
             checked={s.bordered}
-            onChange={(bordered) => onChange({ ...s, bordered } as ControlSettings)}
+            onChange={(bordered) =>
+              onChange({ ...s, bordered } as ControlSettings)
+            }
           />
           <SettingToggle
             label="Copyable rows"
             checked={s.copyable}
-            onChange={(copyable) => onChange({ ...s, copyable } as ControlSettings)}
+            onChange={(copyable) =>
+              onChange({ ...s, copyable } as ControlSettings)
+            }
           />
         </div>
       );
@@ -4376,14 +5283,19 @@ export function ControlSettingsPanel({ slug, settings, onChange }: ControlSettin
               { label: "Column", value: "column" },
               { label: "Row", value: "row" },
             ]}
-            onChange={(direction) => onChange({ ...s, direction } as ControlSettings)}
+            onChange={(direction) =>
+              onChange({ ...s, direction } as ControlSettings)
+            }
           />
           <SettingInput
             label="Gap"
             type="number"
             value={String(s.gap)}
             onChange={(gap) =>
-              onChange({ ...s, gap: Math.min(Math.max(Number(gap) || 0, 0), 48) } as ControlSettings)
+              onChange({
+                ...s,
+                gap: Math.min(Math.max(Number(gap) || 0, 0), 48),
+              } as ControlSettings)
             }
           />
           <SettingToggle
@@ -4405,7 +5317,9 @@ export function ControlSettingsPanel({ slug, settings, onChange }: ControlSettin
               { label: "Row", value: "row" },
               { label: "Column", value: "column" },
             ]}
-            onChange={(direction) => onChange({ ...s, direction } as ControlSettings)}
+            onChange={(direction) =>
+              onChange({ ...s, direction } as ControlSettings)
+            }
           />
           <SettingInput
             label="Columns"
@@ -4423,7 +5337,10 @@ export function ControlSettingsPanel({ slug, settings, onChange }: ControlSettin
             type="number"
             value={String(s.gap)}
             onChange={(gap) =>
-              onChange({ ...s, gap: Math.min(Math.max(Number(gap) || 0, 0), 48) } as ControlSettings)
+              onChange({
+                ...s,
+                gap: Math.min(Math.max(Number(gap) || 0, 0), 48),
+              } as ControlSettings)
             }
           />
         </div>
@@ -4449,7 +5366,10 @@ export function ControlSettingsPanel({ slug, settings, onChange }: ControlSettin
             type="number"
             value={String(s.gap)}
             onChange={(gap) =>
-              onChange({ ...s, gap: Math.min(Math.max(Number(gap) || 0, 0), 48) } as ControlSettings)
+              onChange({
+                ...s,
+                gap: Math.min(Math.max(Number(gap) || 0, 0), 48),
+              } as ControlSettings)
             }
           />
         </div>
@@ -4466,7 +5386,9 @@ export function ControlSettingsPanel({ slug, settings, onChange }: ControlSettin
               { label: "Horizontal", value: "horizontal" },
               { label: "Vertical", value: "vertical" },
             ]}
-            onChange={(orientation) => onChange({ ...s, orientation } as ControlSettings)}
+            onChange={(orientation) =>
+              onChange({ ...s, orientation } as ControlSettings)
+            }
           />
           <SettingInput
             label="Default size %"
@@ -4475,7 +5397,10 @@ export function ControlSettingsPanel({ slug, settings, onChange }: ControlSettin
             onChange={(defaultSize) =>
               onChange({
                 ...s,
-                defaultSize: Math.min(Math.max(Number(defaultSize) || 20, 15), 85),
+                defaultSize: Math.min(
+                  Math.max(Number(defaultSize) || 20, 15),
+                  85,
+                ),
               } as ControlSettings)
             }
           />
@@ -4493,7 +5418,9 @@ export function ControlSettingsPanel({ slug, settings, onChange }: ControlSettin
               { label: "Vertical", value: "vertical" },
               { label: "Horizontal", value: "horizontal" },
             ]}
-            onChange={(orientation) => onChange({ ...s, orientation } as ControlSettings)}
+            onChange={(orientation) =>
+              onChange({ ...s, orientation } as ControlSettings)
+            }
           />
           <SettingSelect
             label="Background"
@@ -4504,7 +5431,9 @@ export function ControlSettingsPanel({ slug, settings, onChange }: ControlSettin
               { label: "Contrast", value: "contrast" },
               { label: "None", value: "none" },
             ]}
-            onChange={(background) => onChange({ ...s, background } as ControlSettings)}
+            onChange={(background) =>
+              onChange({ ...s, background } as ControlSettings)
+            }
           />
           <SettingSelect
             label="Grip height"
@@ -4531,7 +5460,10 @@ export function ControlSettingsPanel({ slug, settings, onChange }: ControlSettin
             onChange={(defaultWidth) =>
               onChange({
                 ...s,
-                defaultWidth: Math.min(Math.max(Number(defaultWidth) || 180, 180), 640),
+                defaultWidth: Math.min(
+                  Math.max(Number(defaultWidth) || 180, 180),
+                  640,
+                ),
               } as ControlSettings)
             }
           />
@@ -4542,7 +5474,10 @@ export function ControlSettingsPanel({ slug, settings, onChange }: ControlSettin
             onChange={(defaultHeight) =>
               onChange({
                 ...s,
-                defaultHeight: Math.min(Math.max(Number(defaultHeight) || 120, 120), 480),
+                defaultHeight: Math.min(
+                  Math.max(Number(defaultHeight) || 120, 120),
+                  480,
+                ),
               } as ControlSettings)
             }
           />
@@ -4553,10 +5488,34 @@ export function ControlSettingsPanel({ slug, settings, onChange }: ControlSettin
       const s = settings as ControlSettingsBySlug["dock-layout"];
       return (
         <div className={shellStyles.settingsGrid}>
-          <SettingToggle label="Top" checked={s.showTop} onChange={(showTop) => onChange({ ...s, showTop } as ControlSettings)} />
-          <SettingToggle label="Left" checked={s.showLeft} onChange={(showLeft) => onChange({ ...s, showLeft } as ControlSettings)} />
-          <SettingToggle label="Right" checked={s.showRight} onChange={(showRight) => onChange({ ...s, showRight } as ControlSettings)} />
-          <SettingToggle label="Bottom" checked={s.showBottom} onChange={(showBottom) => onChange({ ...s, showBottom } as ControlSettings)} />
+          <SettingToggle
+            label="Top"
+            checked={s.showTop}
+            onChange={(showTop) =>
+              onChange({ ...s, showTop } as ControlSettings)
+            }
+          />
+          <SettingToggle
+            label="Left"
+            checked={s.showLeft}
+            onChange={(showLeft) =>
+              onChange({ ...s, showLeft } as ControlSettings)
+            }
+          />
+          <SettingToggle
+            label="Right"
+            checked={s.showRight}
+            onChange={(showRight) =>
+              onChange({ ...s, showRight } as ControlSettings)
+            }
+          />
+          <SettingToggle
+            label="Bottom"
+            checked={s.showBottom}
+            onChange={(showBottom) =>
+              onChange({ ...s, showBottom } as ControlSettings)
+            }
+          />
         </div>
       );
     }
@@ -4565,9 +5524,27 @@ export function ControlSettingsPanel({ slug, settings, onChange }: ControlSettin
       const s = settings as ControlSettingsBySlug["three-pane-layout"];
       return (
         <div className={shellStyles.settingsGrid}>
-          <SettingToggle label="Left bar" checked={s.showLeft} onChange={(showLeft) => onChange({ ...s, showLeft } as ControlSettings)} />
-          <SettingToggle label="Right bar" checked={s.showRight} onChange={(showRight) => onChange({ ...s, showRight } as ControlSettings)} />
-          <SettingToggle label="Persist layout" checked={s.persist} onChange={(persist) => onChange({ ...s, persist } as ControlSettings)} />
+          <SettingToggle
+            label="Left bar"
+            checked={s.showLeft}
+            onChange={(showLeft) =>
+              onChange({ ...s, showLeft } as ControlSettings)
+            }
+          />
+          <SettingToggle
+            label="Right bar"
+            checked={s.showRight}
+            onChange={(showRight) =>
+              onChange({ ...s, showRight } as ControlSettings)
+            }
+          />
+          <SettingToggle
+            label="Persist layout"
+            checked={s.persist}
+            onChange={(persist) =>
+              onChange({ ...s, persist } as ControlSettings)
+            }
+          />
           {slug === "lab-test-layout" ? (
             <button
               className={shellStyles.settingsActionButton}
@@ -4583,7 +5560,11 @@ export function ControlSettingsPanel({ slug, settings, onChange }: ControlSettin
                   "crm-test-layout-v3",
                   "crm-test-layout-v4",
                 ].forEach((key) => window.localStorage.removeItem(key));
-                onChange({ ...s, layoutResetKey: (s.layoutResetKey ?? 0) + 1, persist: true } as ControlSettings);
+                onChange({
+                  ...s,
+                  layoutResetKey: (s.layoutResetKey ?? 0) + 1,
+                  persist: true,
+                } as ControlSettings);
               }}
               type="button"
             >
@@ -4608,7 +5589,9 @@ export function ControlSettingsPanel({ slug, settings, onChange }: ControlSettin
               { label: "Contrast", value: "contrast" },
               { label: "None", value: "none" },
             ]}
-            onChange={(handleBackground) => onChange({ ...s, handleBackground } as ControlSettings)}
+            onChange={(handleBackground) =>
+              onChange({ ...s, handleBackground } as ControlSettings)
+            }
           />
           <SettingSelect
             label="Handle height"
@@ -4619,27 +5602,39 @@ export function ControlSettingsPanel({ slug, settings, onChange }: ControlSettin
               { label: "Tall", value: "tall" },
               { label: "Full", value: "full" },
             ]}
-            onChange={(handleHeight) => onChange({ ...s, handleHeight } as ControlSettings)}
+            onChange={(handleHeight) =>
+              onChange({ ...s, handleHeight } as ControlSettings)
+            }
           />
           <SettingInput
             label="Handle margin top/bottom"
             type="number"
-            value={String(s.handleMarginBlock ?? (slug === "lab-test-layout" ? 12 : 0))}
+            value={String(
+              s.handleMarginBlock ?? (slug === "lab-test-layout" ? 12 : 0),
+            )}
             onChange={(handleMarginBlock) =>
               onChange({
                 ...s,
-                handleMarginBlock: Math.min(Math.max(Number(handleMarginBlock) || 0, 0), 120),
+                handleMarginBlock: Math.min(
+                  Math.max(Number(handleMarginBlock) || 0, 0),
+                  120,
+                ),
               } as ControlSettings)
             }
           />
           <SettingInput
             label="Handle corner radius"
             type="number"
-            value={String(s.handleBorderRadius ?? (slug === "lab-test-layout" ? 12 : 0))}
+            value={String(
+              s.handleBorderRadius ?? (slug === "lab-test-layout" ? 12 : 0),
+            )}
             onChange={(handleBorderRadius) =>
               onChange({
                 ...s,
-                handleBorderRadius: Math.min(Math.max(Number(handleBorderRadius) || 0, 0), 999),
+                handleBorderRadius: Math.min(
+                  Math.max(Number(handleBorderRadius) || 0, 0),
+                  999,
+                ),
               } as ControlSettings)
             }
           />
@@ -4650,7 +5645,10 @@ export function ControlSettingsPanel({ slug, settings, onChange }: ControlSettin
             onChange={(defaultLeftWidth) =>
               onChange({
                 ...s,
-                defaultLeftWidth: Math.min(Math.max(Number(defaultLeftWidth) || 220, s.minLeftWidth), s.maxLeftWidth),
+                defaultLeftWidth: Math.min(
+                  Math.max(Number(defaultLeftWidth) || 220, s.minLeftWidth),
+                  s.maxLeftWidth,
+                ),
               } as ControlSettings)
             }
           />
@@ -4661,14 +5659,21 @@ export function ControlSettingsPanel({ slug, settings, onChange }: ControlSettin
             onChange={(defaultRightWidth) =>
               onChange({
                 ...s,
-                defaultRightWidth: Math.min(Math.max(Number(defaultRightWidth) || 260, s.minRightWidth), s.maxRightWidth),
+                defaultRightWidth: Math.min(
+                  Math.max(Number(defaultRightWidth) || 260, s.minRightWidth),
+                  s.maxRightWidth,
+                ),
               } as ControlSettings)
             }
           />
           <SettingInput
             label="Min left"
             type="number"
-            value={String(slug === "lab-test-layout" && s.minLeftWidth === 180 ? 120 : s.minLeftWidth)}
+            value={String(
+              slug === "lab-test-layout" && s.minLeftWidth === 180
+                ? 120
+                : s.minLeftWidth,
+            )}
             onChange={(minLeftWidth) =>
               onChange({
                 ...s,
@@ -4686,19 +5691,29 @@ export function ControlSettingsPanel({ slug, settings, onChange }: ControlSettin
             onChange={(maxLeftWidth) =>
               onChange({
                 ...s,
-                maxLeftWidth: Math.max(Number(maxLeftWidth) || 420, s.minLeftWidth + 20),
+                maxLeftWidth: Math.max(
+                  Number(maxLeftWidth) || 420,
+                  s.minLeftWidth + 20,
+                ),
               } as ControlSettings)
             }
           />
           <SettingInput
             label="Min right"
             type="number"
-            value={String(slug === "lab-test-layout" ? Math.max(s.minRightWidth, 220) : s.minRightWidth)}
+            value={String(
+              slug === "lab-test-layout"
+                ? Math.max(s.minRightWidth, 220)
+                : s.minRightWidth,
+            )}
             onChange={(minRightWidth) =>
               onChange({
                 ...s,
                 minRightWidth: Math.min(
-                  Math.max(Number(minRightWidth) || 140, slug === "lab-test-layout" ? 220 : 80),
+                  Math.max(
+                    Number(minRightWidth) || 140,
+                    slug === "lab-test-layout" ? 220 : 80,
+                  ),
                   s.maxRightWidth - 20,
                 ),
               } as ControlSettings)
@@ -4711,17 +5726,30 @@ export function ControlSettingsPanel({ slug, settings, onChange }: ControlSettin
             onChange={(maxRightWidth) =>
               onChange({
                 ...s,
-                maxRightWidth: Math.max(Number(maxRightWidth) || 460, s.minRightWidth + 20),
+                maxRightWidth: Math.max(
+                  Number(maxRightWidth) || 460,
+                  s.minRightWidth + 20,
+                ),
               } as ControlSettings)
             }
           />
         </div>
       );
     }
+    case "custom-scrollbar":
     case "scroll-area": {
-      const s = settings as ControlSettingsBySlug["scroll-area"];
+      const s = settings as
+        | ControlSettingsBySlug["custom-scrollbar"]
+        | ControlSettingsBySlug["scroll-area"];
       return (
         <div className={shellStyles.settingsGrid}>
+          <SettingToggle
+            label="Auto hide"
+            checked={s.autoHide}
+            onChange={(autoHide) =>
+              onChange({ ...s, autoHide } as ControlSettings)
+            }
+          />
           <SettingInput
             label="Max height"
             type="number"
@@ -4733,16 +5761,107 @@ export function ControlSettingsPanel({ slug, settings, onChange }: ControlSettin
               } as ControlSettings)
             }
           />
-          <SettingSelect
-            label="Orientation"
-            value={s.orientation}
-            options={[
-              { label: "Vertical", value: "vertical" },
-              { label: "Horizontal", value: "horizontal" },
-              { label: "Both", value: "both" },
-            ]}
-            onChange={(orientation) => onChange({ ...s, orientation } as ControlSettings)}
+          {slug === "scroll-area" ? (
+            <SettingSelect
+              label="Orientation"
+              value={s.orientation}
+              options={[
+                { label: "Vertical", value: "vertical" },
+                { label: "Horizontal", value: "horizontal" },
+                { label: "Both", value: "both" },
+              ]}
+              onChange={(orientation) =>
+                onChange({ ...s, orientation } as ControlSettings)
+              }
+            />
+          ) : null}
+          <SettingInput
+            label="Thickness"
+            type="number"
+            value={String(s.thickness)}
+            onChange={(thickness) =>
+              onChange({
+                ...s,
+                thickness: Math.min(Math.max(Number(thickness) || 6, 6), 24),
+              } as ControlSettings)
+            }
           />
+          {slug === "custom-scrollbar" ? (
+            <>
+              <SettingInput
+                label="Min thumb"
+                type="number"
+                value={String(
+                  (s as ControlSettingsBySlug["custom-scrollbar"]).minThumbSize,
+                )}
+                onChange={(minThumbSize) =>
+                  onChange({
+                    ...s,
+                    minThumbSize: Math.min(
+                      Math.max(Number(minThumbSize) || 20, 20),
+                      80,
+                    ),
+                  } as ControlSettings)
+                }
+              />
+              <SettingSelect
+                label="Vertical track"
+                value={
+                  (s as ControlSettingsBySlug["custom-scrollbar"])
+                    .verticalTrackShape
+                }
+                options={[
+                  { label: "Round", value: "round" },
+                  { label: "Square", value: "square" },
+                ]}
+                onChange={(verticalTrackShape) =>
+                  onChange({ ...s, verticalTrackShape } as ControlSettings)
+                }
+              />
+              <SettingSelect
+                label="Vertical thumb"
+                value={
+                  (s as ControlSettingsBySlug["custom-scrollbar"])
+                    .verticalThumbShape
+                }
+                options={[
+                  { label: "Round", value: "round" },
+                  { label: "Square", value: "square" },
+                ]}
+                onChange={(verticalThumbShape) =>
+                  onChange({ ...s, verticalThumbShape } as ControlSettings)
+                }
+              />
+              <SettingSelect
+                label="Horizontal track"
+                value={
+                  (s as ControlSettingsBySlug["custom-scrollbar"])
+                    .horizontalTrackShape
+                }
+                options={[
+                  { label: "Round", value: "round" },
+                  { label: "Square", value: "square" },
+                ]}
+                onChange={(horizontalTrackShape) =>
+                  onChange({ ...s, horizontalTrackShape } as ControlSettings)
+                }
+              />
+              <SettingSelect
+                label="Horizontal thumb"
+                value={
+                  (s as ControlSettingsBySlug["custom-scrollbar"])
+                    .horizontalThumbShape
+                }
+                options={[
+                  { label: "Round", value: "round" },
+                  { label: "Square", value: "square" },
+                ]}
+                onChange={(horizontalThumbShape) =>
+                  onChange({ ...s, horizontalThumbShape } as ControlSettings)
+                }
+              />
+            </>
+          ) : null}
         </div>
       );
     }
@@ -4807,7 +5926,10 @@ export function ControlSettingsPanel({ slug, settings, onChange }: ControlSettin
             type="number"
             value={String(s.size)}
             onChange={(size) =>
-              onChange({ ...s, size: Math.min(Math.max(Number(size) || 0, 0), 96) } as ControlSettings)
+              onChange({
+                ...s,
+                size: Math.min(Math.max(Number(size) || 0, 0), 96),
+              } as ControlSettings)
             }
           />
           <SettingToggle
@@ -4825,7 +5947,9 @@ export function ControlSettingsPanel({ slug, settings, onChange }: ControlSettin
           <SettingInput
             label="Separator"
             value={s.separator}
-            onChange={(separator) => onChange({ ...s, separator } as ControlSettings)}
+            onChange={(separator) =>
+              onChange({ ...s, separator } as ControlSettings)
+            }
           />
         </div>
       );
@@ -4866,12 +5990,16 @@ export function ControlSettingsPanel({ slug, settings, onChange }: ControlSettin
           <SettingToggle
             label="Breadcrumbs"
             checked={s.showBreadcrumbs}
-            onChange={(showBreadcrumbs) => onChange({ ...s, showBreadcrumbs } as ControlSettings)}
+            onChange={(showBreadcrumbs) =>
+              onChange({ ...s, showBreadcrumbs } as ControlSettings)
+            }
           />
           <SettingToggle
             label="Actions"
             checked={s.showActions}
-            onChange={(showActions) => onChange({ ...s, showActions } as ControlSettings)}
+            onChange={(showActions) =>
+              onChange({ ...s, showActions } as ControlSettings)
+            }
           />
         </div>
       );
@@ -4913,7 +6041,9 @@ export function ControlSettingsPanel({ slug, settings, onChange }: ControlSettin
           <SettingToggle
             label="Collapsed"
             checked={s.collapsed}
-            onChange={(collapsed) => onChange({ ...s, collapsed } as ControlSettings)}
+            onChange={(collapsed) =>
+              onChange({ ...s, collapsed } as ControlSettings)
+            }
           />
           <SettingSelect
             label="Active"
@@ -4942,7 +6072,9 @@ export function ControlSettingsPanel({ slug, settings, onChange }: ControlSettin
               { label: "Success", value: "success" },
               { label: "Danger", value: "danger" },
             ]}
-            onChange={(variant) => onChange({ ...s, variant } as ControlSettings)}
+            onChange={(variant) =>
+              onChange({ ...s, variant } as ControlSettings)
+            }
           />
         </div>
       );
@@ -4954,7 +6086,9 @@ export function ControlSettingsPanel({ slug, settings, onChange }: ControlSettin
           <SettingToggle
             label="Extended"
             checked={s.extended}
-            onChange={(extended) => onChange({ ...s, extended } as ControlSettings)}
+            onChange={(extended) =>
+              onChange({ ...s, extended } as ControlSettings)
+            }
           />
           <SettingSelect
             label="Size"
@@ -5007,15 +6141,21 @@ export function ControlSettingsPanel({ slug, settings, onChange }: ControlSettin
           <SettingSelect
             label="Layout"
             value={s.layout}
-            onChange={(layout) => onChange({ ...s, layout: layout as typeof s.layout } as ControlSettings)}
+            onChange={(layout) =>
+              onChange({
+                ...s,
+                layout: layout as typeof s.layout,
+              } as ControlSettings)
+            }
             options={[
               { label: "Fill", value: "fill" },
               { label: "Fixed", value: "fixed" },
             ]}
           />
           <p className={shellStyles.settingsHint}>
-            Fill expands tiles to use the full row width when they fit, and scrolls when they overflow. Fixed keeps each
-            tile at its default size and scrolls when needed.
+            Fill expands tiles to use the full row width when they fit, and
+            scrolls when they overflow. Fixed keeps each tile at its default
+            size and scrolls when needed.
           </p>
         </div>
       );
@@ -5027,15 +6167,21 @@ export function ControlSettingsPanel({ slug, settings, onChange }: ControlSettin
           <SettingSelect
             label="Layout"
             value={s.layout}
-            onChange={(layout) => onChange({ ...s, layout: layout as typeof s.layout } as ControlSettings)}
+            onChange={(layout) =>
+              onChange({
+                ...s,
+                layout: layout as typeof s.layout,
+              } as ControlSettings)
+            }
             options={[
               { label: "Fill", value: "fill" },
               { label: "Fixed", value: "fixed" },
             ]}
           />
           <p className={shellStyles.settingsHint}>
-            Fill expands stat tiles to use the full row width when they fit, and scrolls when they overflow. Fixed keeps
-            each tile at its default size and scrolls when needed.
+            Fill expands stat tiles to use the full row width when they fit, and
+            scrolls when they overflow. Fixed keeps each tile at its default
+            size and scrolls when needed.
           </p>
         </div>
       );
@@ -5076,7 +6222,9 @@ export function ControlSettingsPanel({ slug, settings, onChange }: ControlSettin
           <SettingInput
             label="Trend value"
             value={s.trendValue}
-            onChange={(trendValue) => onChange({ ...s, trendValue } as ControlSettings)}
+            onChange={(trendValue) =>
+              onChange({ ...s, trendValue } as ControlSettings)
+            }
           />
           <SettingSelect
             label="Trend"
@@ -5090,7 +6238,9 @@ export function ControlSettingsPanel({ slug, settings, onChange }: ControlSettin
           <SettingInput
             label="Comparison"
             value={s.comparison}
-            onChange={(comparison) => onChange({ ...s, comparison } as ControlSettings)}
+            onChange={(comparison) =>
+              onChange({ ...s, comparison } as ControlSettings)
+            }
           />
         </div>
       );
@@ -5102,7 +6252,9 @@ export function ControlSettingsPanel({ slug, settings, onChange }: ControlSettin
           <SettingToggle
             label="Searchable"
             checked={s.searchable}
-            onChange={(searchable) => onChange({ ...s, searchable } as ControlSettings)}
+            onChange={(searchable) =>
+              onChange({ ...s, searchable } as ControlSettings)
+            }
           />
         </div>
       );
@@ -5136,7 +6288,9 @@ export function ControlSettingsPanel({ slug, settings, onChange }: ControlSettin
               { label: "AND", value: "and" },
               { label: "OR", value: "or" },
             ]}
-            onChange={(combinator) => onChange({ ...s, combinator } as ControlSettings)}
+            onChange={(combinator) =>
+              onChange({ ...s, combinator } as ControlSettings)
+            }
           />
         </div>
       );
@@ -5148,7 +6302,9 @@ export function ControlSettingsPanel({ slug, settings, onChange }: ControlSettin
           <SettingToggle
             label="Show disabled rules"
             checked={s.showDisabled}
-            onChange={(showDisabled) => onChange({ ...s, showDisabled } as ControlSettings)}
+            onChange={(showDisabled) =>
+              onChange({ ...s, showDisabled } as ControlSettings)
+            }
           />
         </div>
       );
@@ -5160,7 +6316,9 @@ export function ControlSettingsPanel({ slug, settings, onChange }: ControlSettin
           <SettingToggle
             label="Compact hint"
             checked={s.compact}
-            onChange={(compact) => onChange({ ...s, compact } as ControlSettings)}
+            onChange={(compact) =>
+              onChange({ ...s, compact } as ControlSettings)
+            }
           />
         </div>
       );
@@ -5176,7 +6334,10 @@ export function ControlSettingsPanel({ slug, settings, onChange }: ControlSettin
             onChange={(selectedCount) =>
               onChange({
                 ...s,
-                selectedCount: Math.min(Math.max(Number(selectedCount) || 0, 0), 6),
+                selectedCount: Math.min(
+                  Math.max(Number(selectedCount) || 0, 0),
+                  6,
+                ),
               } as ControlSettings)
             }
           />
@@ -5219,7 +6380,9 @@ export function ControlSettingsPanel({ slug, settings, onChange }: ControlSettin
           <SettingToggle
             label="Interactive drag"
             checked={s.interactive}
-            onChange={(interactive) => onChange({ ...s, interactive } as ControlSettings)}
+            onChange={(interactive) =>
+              onChange({ ...s, interactive } as ControlSettings)
+            }
           />
         </div>
       );
@@ -5231,17 +6394,23 @@ export function ControlSettingsPanel({ slug, settings, onChange }: ControlSettin
           <SettingToggle
             label="Open day modal"
             checked={s.openDayOnSelect}
-            onChange={(openDayOnSelect) => onChange({ ...s, openDayOnSelect } as ControlSettings)}
+            onChange={(openDayOnSelect) =>
+              onChange({ ...s, openDayOnSelect } as ControlSettings)
+            }
           />
           <SettingToggle
             label="Show events"
             checked={s.showEvents}
-            onChange={(showEvents) => onChange({ ...s, showEvents } as ControlSettings)}
+            onChange={(showEvents) =>
+              onChange({ ...s, showEvents } as ControlSettings)
+            }
           />
           <SettingToggle
             label="Month/year picker"
             checked={s.showMonthYearPicker}
-            onChange={(showMonthYearPicker) => onChange({ ...s, showMonthYearPicker } as ControlSettings)}
+            onChange={(showMonthYearPicker) =>
+              onChange({ ...s, showMonthYearPicker } as ControlSettings)
+            }
           />
         </div>
       );
@@ -5286,7 +6455,10 @@ export function ControlSettingsPanel({ slug, settings, onChange }: ControlSettin
             onChange={(collapsedDepth) =>
               onChange({
                 ...s,
-                collapsedDepth: Math.min(Math.max(Number(collapsedDepth) || 0, 0), 4),
+                collapsedDepth: Math.min(
+                  Math.max(Number(collapsedDepth) || 0, 0),
+                  4,
+                ),
               } as ControlSettings)
             }
           />
@@ -5320,7 +6492,9 @@ export function ControlSettingsPanel({ slug, settings, onChange }: ControlSettin
           <SettingToggle
             label="Show trend"
             checked={s.trendEnabled}
-            onChange={(trendEnabled) => onChange({ ...s, trendEnabled } as ControlSettings)}
+            onChange={(trendEnabled) =>
+              onChange({ ...s, trendEnabled } as ControlSettings)
+            }
           />
           {s.trendEnabled ? (
             <>
@@ -5328,7 +6502,10 @@ export function ControlSettingsPanel({ slug, settings, onChange }: ControlSettin
                 label="Trend"
                 value={s.trend}
                 onChange={(trend) =>
-                  onChange({ ...s, trend: trend as typeof s.trend } as ControlSettings)
+                  onChange({
+                    ...s,
+                    trend: trend as typeof s.trend,
+                  } as ControlSettings)
                 }
                 options={[
                   { label: "Up", value: "up" },
@@ -5340,7 +6517,9 @@ export function ControlSettingsPanel({ slug, settings, onChange }: ControlSettin
                 <SettingInput
                   label="Trend label"
                   value={s.trendLabel}
-                  onChange={(trendLabel) => onChange({ ...s, trendLabel } as ControlSettings)}
+                  onChange={(trendLabel) =>
+                    onChange({ ...s, trendLabel } as ControlSettings)
+                  }
                 />
               </div>
             </>
@@ -5353,11 +6532,17 @@ export function ControlSettingsPanel({ slug, settings, onChange }: ControlSettin
       const s = settings as ControlSettingsBySlug["icon"];
       return (
         <div className={shellStyles.settingsGrid}>
-          <SettingInput label="Name" value={s.name} onChange={(name) => onChange({ ...s, name } as ControlSettings)} />
+          <SettingInput
+            label="Name"
+            value={s.name}
+            onChange={(name) => onChange({ ...s, name } as ControlSettings)}
+          />
           <SettingSelect
             label="Size"
             value={s.size}
-            onChange={(size) => onChange({ ...s, size: size as typeof s.size } as ControlSettings)}
+            onChange={(size) =>
+              onChange({ ...s, size: size as typeof s.size } as ControlSettings)
+            }
             options={[
               { label: "Small", value: "sm" },
               { label: "Medium", value: "md" },
@@ -5367,7 +6552,9 @@ export function ControlSettingsPanel({ slug, settings, onChange }: ControlSettin
           <SettingSelect
             label="Tone"
             value={s.tone}
-            onChange={(tone) => onChange({ ...s, tone: tone as typeof s.tone } as ControlSettings)}
+            onChange={(tone) =>
+              onChange({ ...s, tone: tone as typeof s.tone } as ControlSettings)
+            }
             options={[
               { label: "Default", value: "default" },
               { label: "Muted", value: "muted" },
@@ -5380,10 +6567,16 @@ export function ControlSettingsPanel({ slug, settings, onChange }: ControlSettin
           <SettingToggle
             label="Accessible label"
             checked={s.labelEnabled}
-            onChange={(labelEnabled) => onChange({ ...s, labelEnabled } as ControlSettings)}
+            onChange={(labelEnabled) =>
+              onChange({ ...s, labelEnabled } as ControlSettings)
+            }
           />
           {s.labelEnabled ? (
-            <SettingInput label="Label" value={s.label} onChange={(label) => onChange({ ...s, label } as ControlSettings)} />
+            <SettingInput
+              label="Label"
+              value={s.label}
+              onChange={(label) => onChange({ ...s, label } as ControlSettings)}
+            />
           ) : null}
         </div>
       );
@@ -5395,12 +6588,16 @@ export function ControlSettingsPanel({ slug, settings, onChange }: ControlSettin
           <SettingToggle
             label="Toolbar demo"
             checked={s.showToolbarDemo}
-            onChange={(showToolbarDemo) => onChange({ ...s, showToolbarDemo } as ControlSettings)}
+            onChange={(showToolbarDemo) =>
+              onChange({ ...s, showToolbarDemo } as ControlSettings)
+            }
           />
           <SettingSelect
             label="Size"
             value={s.size}
-            onChange={(size) => onChange({ ...s, size: size as typeof s.size } as ControlSettings)}
+            onChange={(size) =>
+              onChange({ ...s, size: size as typeof s.size } as ControlSettings)
+            }
             options={[
               { label: "Small", value: "sm" },
               { label: "Medium", value: "md" },
@@ -5410,7 +6607,9 @@ export function ControlSettingsPanel({ slug, settings, onChange }: ControlSettin
           <SettingSelect
             label="Tone"
             value={s.tone}
-            onChange={(tone) => onChange({ ...s, tone: tone as typeof s.tone } as ControlSettings)}
+            onChange={(tone) =>
+              onChange({ ...s, tone: tone as typeof s.tone } as ControlSettings)
+            }
             options={[
               { label: "Default", value: "default" },
               { label: "Muted", value: "muted" },
@@ -5423,7 +6622,12 @@ export function ControlSettingsPanel({ slug, settings, onChange }: ControlSettin
           <SettingSelect
             label="Badge urgency"
             value={s.urgency}
-            onChange={(urgency) => onChange({ ...s, urgency: urgency as typeof s.urgency } as ControlSettings)}
+            onChange={(urgency) =>
+              onChange({
+                ...s,
+                urgency: urgency as typeof s.urgency,
+              } as ControlSettings)
+            }
             options={[
               { label: "Standard", value: "standard" },
               { label: "Danger", value: "danger" },
@@ -5437,25 +6641,37 @@ export function ControlSettingsPanel({ slug, settings, onChange }: ControlSettin
             type="number"
             value={String(s.count)}
             onChange={(count) =>
-              onChange({ ...s, count: Math.max(0, Number(count) || 0) } as ControlSettings)
+              onChange({
+                ...s,
+                count: Math.max(0, Number(count) || 0),
+              } as ControlSettings)
             }
           />
           <SettingInput
             label="Max count"
             type="number"
             value={String(s.max)}
-            onChange={(max) => onChange({ ...s, max: Math.max(1, Number(max) || 99) } as ControlSettings)}
+            onChange={(max) =>
+              onChange({
+                ...s,
+                max: Math.max(1, Number(max) || 99),
+              } as ControlSettings)
+            }
           />
           <SettingToggle
             label="Show zero badge"
             checked={s.showZero}
-            onChange={(showZero) => onChange({ ...s, showZero } as ControlSettings)}
+            onChange={(showZero) =>
+              onChange({ ...s, showZero } as ControlSettings)
+            }
           />
           <div className={shellStyles.settingsFullWidth}>
             <SettingInput
               label="Icon name"
               value={s.iconName}
-              onChange={(iconName) => onChange({ ...s, iconName } as ControlSettings)}
+              onChange={(iconName) =>
+                onChange({ ...s, iconName } as ControlSettings)
+              }
             />
           </div>
           <div className={shellStyles.settingsFullWidth}>
@@ -5475,7 +6691,9 @@ export function ControlSettingsPanel({ slug, settings, onChange }: ControlSettin
           <SettingSelect
             label="Size"
             value={s.size}
-            onChange={(size) => onChange({ ...s, size: size as typeof s.size } as ControlSettings)}
+            onChange={(size) =>
+              onChange({ ...s, size: size as typeof s.size } as ControlSettings)
+            }
             options={[
               { label: "Small", value: "sm" },
               { label: "Medium", value: "md" },
@@ -5485,14 +6703,20 @@ export function ControlSettingsPanel({ slug, settings, onChange }: ControlSettin
           <SettingSelect
             label="Tone"
             value={s.tone}
-            onChange={(tone) => onChange({ ...s, tone: tone as typeof s.tone } as ControlSettings)}
+            onChange={(tone) =>
+              onChange({ ...s, tone: tone as typeof s.tone } as ControlSettings)
+            }
             options={[
               { label: "Accent", value: "accent" },
               { label: "Muted", value: "muted" },
               { label: "Inverse", value: "inverse" },
             ]}
           />
-          <SettingInput label="Label" value={s.label} onChange={(label) => onChange({ ...s, label } as ControlSettings)} />
+          <SettingInput
+            label="Label"
+            value={s.label}
+            onChange={(label) => onChange({ ...s, label } as ControlSettings)}
+          />
         </div>
       );
     }
@@ -5503,7 +6727,9 @@ export function ControlSettingsPanel({ slug, settings, onChange }: ControlSettin
           <SettingSelect
             label="Size"
             value={s.size}
-            onChange={(size) => onChange({ ...s, size: size as typeof s.size } as ControlSettings)}
+            onChange={(size) =>
+              onChange({ ...s, size: size as typeof s.size } as ControlSettings)
+            }
             options={[
               { label: "Small", value: "sm" },
               { label: "Medium", value: "md" },
@@ -5513,17 +6739,23 @@ export function ControlSettingsPanel({ slug, settings, onChange }: ControlSettin
           <SettingToggle
             label="Show analog"
             checked={s.showAnalog}
-            onChange={(showAnalog) => onChange({ ...s, showAnalog } as ControlSettings)}
+            onChange={(showAnalog) =>
+              onChange({ ...s, showAnalog } as ControlSettings)
+            }
           />
           <SettingToggle
             label="Show digital"
             checked={s.showDigital}
-            onChange={(showDigital) => onChange({ ...s, showDigital } as ControlSettings)}
+            onChange={(showDigital) =>
+              onChange({ ...s, showDigital } as ControlSettings)
+            }
           />
           <SettingToggle
             label="Show date"
             checked={s.showDate}
-            onChange={(showDate) => onChange({ ...s, showDate } as ControlSettings)}
+            onChange={(showDate) =>
+              onChange({ ...s, showDate } as ControlSettings)
+            }
           />
         </div>
       );
@@ -5532,9 +6764,21 @@ export function ControlSettingsPanel({ slug, settings, onChange }: ControlSettin
       const s = settings as ControlSettingsBySlug["portal"];
       return (
         <div className={shellStyles.settingsGrid}>
-          <SettingToggle label="Disabled" checked={s.disabled} onChange={(disabled) => onChange({ ...s, disabled } as ControlSettings)} />
+          <SettingToggle
+            label="Disabled"
+            checked={s.disabled}
+            onChange={(disabled) =>
+              onChange({ ...s, disabled } as ControlSettings)
+            }
+          />
           <div className={shellStyles.settingsFullWidth}>
-            <SettingInput label="Message" value={s.message} onChange={(message) => onChange({ ...s, message } as ControlSettings)} />
+            <SettingInput
+              label="Message"
+              value={s.message}
+              onChange={(message) =>
+                onChange({ ...s, message } as ControlSettings)
+              }
+            />
           </div>
         </div>
       );
@@ -5543,8 +6787,18 @@ export function ControlSettingsPanel({ slug, settings, onChange }: ControlSettin
       const s = settings as ControlSettingsBySlug["portal-host"];
       return (
         <div className={shellStyles.settingsGrid}>
-          <SettingInput label="Host id" value={s.hostId} onChange={(hostId) => onChange({ ...s, hostId } as ControlSettings)} />
-          <SettingInput label="Message" value={s.message} onChange={(message) => onChange({ ...s, message } as ControlSettings)} />
+          <SettingInput
+            label="Host id"
+            value={s.hostId}
+            onChange={(hostId) => onChange({ ...s, hostId } as ControlSettings)}
+          />
+          <SettingInput
+            label="Message"
+            value={s.message}
+            onChange={(message) =>
+              onChange({ ...s, message } as ControlSettings)
+            }
+          />
         </div>
       );
     }
@@ -5552,9 +6806,19 @@ export function ControlSettingsPanel({ slug, settings, onChange }: ControlSettin
       const s = settings as ControlSettingsBySlug["visually-hidden"];
       return (
         <div className={shellStyles.settingsGrid}>
-          <SettingToggle label="Show hint" checked={s.showHint} onChange={(showHint) => onChange({ ...s, showHint } as ControlSettings)} />
+          <SettingToggle
+            label="Show hint"
+            checked={s.showHint}
+            onChange={(showHint) =>
+              onChange({ ...s, showHint } as ControlSettings)
+            }
+          />
           <div className={shellStyles.settingsFullWidth}>
-            <SettingInput label="Hidden text" value={s.text} onChange={(text) => onChange({ ...s, text } as ControlSettings)} />
+            <SettingInput
+              label="Hidden text"
+              value={s.text}
+              onChange={(text) => onChange({ ...s, text } as ControlSettings)}
+            />
           </div>
         </div>
       );
@@ -5563,7 +6827,11 @@ export function ControlSettingsPanel({ slug, settings, onChange }: ControlSettin
       const s = settings as ControlSettingsBySlug["focus-trap"];
       return (
         <div className={shellStyles.settingsGrid}>
-          <SettingToggle label="Active" checked={s.active} onChange={(active) => onChange({ ...s, active } as ControlSettings)} />
+          <SettingToggle
+            label="Active"
+            checked={s.active}
+            onChange={(active) => onChange({ ...s, active } as ControlSettings)}
+          />
         </div>
       );
     }
@@ -5571,11 +6839,17 @@ export function ControlSettingsPanel({ slug, settings, onChange }: ControlSettin
       const s = settings as ControlSettingsBySlug["keyboard-shortcut"];
       return (
         <div className={shellStyles.settingsGrid}>
-          <SettingInput label="Keys" value={s.keys} onChange={(keys) => onChange({ ...s, keys } as ControlSettings)} />
+          <SettingInput
+            label="Keys"
+            value={s.keys}
+            onChange={(keys) => onChange({ ...s, keys } as ControlSettings)}
+          />
           <SettingSelect
             label="Size"
             value={s.size}
-            onChange={(size) => onChange({ ...s, size: size as typeof s.size } as ControlSettings)}
+            onChange={(size) =>
+              onChange({ ...s, size: size as typeof s.size } as ControlSettings)
+            }
             options={[
               { label: "Small", value: "sm" },
               { label: "Medium", value: "md" },
@@ -5588,8 +6862,18 @@ export function ControlSettingsPanel({ slug, settings, onChange }: ControlSettin
       const s = settings as ControlSettingsBySlug["hotkey-manager"];
       return (
         <div className={shellStyles.settingsGrid}>
-          <SettingToggle label="Enabled" checked={s.enabled} onChange={(enabled) => onChange({ ...s, enabled } as ControlSettings)} />
-          <SettingInput label="Key" value={s.key} onChange={(key) => onChange({ ...s, key } as ControlSettings)} />
+          <SettingToggle
+            label="Enabled"
+            checked={s.enabled}
+            onChange={(enabled) =>
+              onChange({ ...s, enabled } as ControlSettings)
+            }
+          />
+          <SettingInput
+            label="Key"
+            value={s.key}
+            onChange={(key) => onChange({ ...s, key } as ControlSettings)}
+          />
         </div>
       );
     }
@@ -5597,9 +6881,23 @@ export function ControlSettingsPanel({ slug, settings, onChange }: ControlSettin
       const s = settings as ControlSettingsBySlug["copy-button"];
       return (
         <div className={shellStyles.settingsGrid}>
-          <SettingInput label="Value" value={s.value} onChange={(value) => onChange({ ...s, value } as ControlSettings)} />
-          <SettingInput label="Label" value={s.label} onChange={(label) => onChange({ ...s, label } as ControlSettings)} />
-          <SettingInput label="Copied label" value={s.copiedLabel} onChange={(copiedLabel) => onChange({ ...s, copiedLabel } as ControlSettings)} />
+          <SettingInput
+            label="Value"
+            value={s.value}
+            onChange={(value) => onChange({ ...s, value } as ControlSettings)}
+          />
+          <SettingInput
+            label="Label"
+            value={s.label}
+            onChange={(label) => onChange({ ...s, label } as ControlSettings)}
+          />
+          <SettingInput
+            label="Copied label"
+            value={s.copiedLabel}
+            onChange={(copiedLabel) =>
+              onChange({ ...s, copiedLabel } as ControlSettings)
+            }
+          />
         </div>
       );
     }
@@ -5608,7 +6906,11 @@ export function ControlSettingsPanel({ slug, settings, onChange }: ControlSettin
       return (
         <div className={shellStyles.settingsGrid}>
           <div className={shellStyles.settingsFullWidth}>
-            <SettingInput label="Value" value={s.value} onChange={(value) => onChange({ ...s, value } as ControlSettings)} />
+            <SettingInput
+              label="Value"
+              value={s.value}
+              onChange={(value) => onChange({ ...s, value } as ControlSettings)}
+            />
           </div>
         </div>
       );
@@ -5620,7 +6922,12 @@ export function ControlSettingsPanel({ slug, settings, onChange }: ControlSettin
           <SettingSelect
             label="Theme"
             value={s.theme}
-            onChange={(theme) => onChange({ ...s, theme: theme as typeof s.theme } as ControlSettings)}
+            onChange={(theme) =>
+              onChange({
+                ...s,
+                theme: theme as typeof s.theme,
+              } as ControlSettings)
+            }
             options={[
               { label: "Dark", value: "dark" },
               { label: "Light", value: "light" },
@@ -5633,11 +6940,20 @@ export function ControlSettingsPanel({ slug, settings, onChange }: ControlSettin
       const s = settings as ControlSettingsBySlug["theme-switcher"];
       return (
         <div className={shellStyles.settingsGrid}>
-          <SettingInput label="Label" value={s.label} onChange={(label) => onChange({ ...s, label } as ControlSettings)} />
+          <SettingInput
+            label="Label"
+            value={s.label}
+            onChange={(label) => onChange({ ...s, label } as ControlSettings)}
+          />
           <SettingSelect
             label="Theme"
             value={s.theme}
-            onChange={(theme) => onChange({ ...s, theme: theme as typeof s.theme } as ControlSettings)}
+            onChange={(theme) =>
+              onChange({
+                ...s,
+                theme: theme as typeof s.theme,
+              } as ControlSettings)
+            }
             options={[
               { label: "Dark", value: "dark" },
               { label: "Light", value: "light" },
@@ -5650,7 +6966,11 @@ export function ControlSettingsPanel({ slug, settings, onChange }: ControlSettin
       const s = settings as ControlSettingsBySlug["resize-observer"];
       return (
         <div className={shellStyles.settingsGrid}>
-          <SettingInput label="Hint" value={s.hint} onChange={(hint) => onChange({ ...s, hint } as ControlSettings)} />
+          <SettingInput
+            label="Hint"
+            value={s.hint}
+            onChange={(hint) => onChange({ ...s, hint } as ControlSettings)}
+          />
         </div>
       );
     }
@@ -5680,7 +7000,9 @@ export function ControlSettingsPanel({ slug, settings, onChange }: ControlSettin
           <SettingSelect
             label="Side"
             value={s.side}
-            onChange={(side) => onChange({ ...s, side: side as typeof s.side } as ControlSettings)}
+            onChange={(side) =>
+              onChange({ ...s, side: side as typeof s.side } as ControlSettings)
+            }
             options={[
               { label: "Left", value: "left" },
               { label: "Right", value: "right" },
@@ -5690,7 +7012,10 @@ export function ControlSettingsPanel({ slug, settings, onChange }: ControlSettin
             label="Density"
             value={s.density}
             onChange={(density) =>
-              onChange({ ...s, density: density as typeof s.density } as ControlSettings)
+              onChange({
+                ...s,
+                density: density as typeof s.density,
+              } as ControlSettings)
             }
             options={[
               { label: "Comfortable", value: "comfortable" },
@@ -5700,19 +7025,26 @@ export function ControlSettingsPanel({ slug, settings, onChange }: ControlSettin
           <SettingToggle
             label="Inside widget container"
             checked={s.wrapInContainer ?? false}
-            onChange={(wrapInContainer) => onChange({ ...s, wrapInContainer } as ControlSettings)}
+            onChange={(wrapInContainer) =>
+              onChange({ ...s, wrapInContainer } as ControlSettings)
+            }
           />
           {s.wrapInContainer ? (
             <DashboardHeightSetting
               value={s.height ?? "auto"}
-              onChange={(height) => onChange({ ...s, height } as ControlSettings)}
+              onChange={(height) =>
+                onChange({ ...s, height } as ControlSettings)
+              }
             />
           ) : null}
           <SettingSelect
             label="Active item"
             value={s.activeItem}
             onChange={(activeItem) =>
-              onChange({ ...s, activeItem: activeItem as typeof s.activeItem } as ControlSettings)
+              onChange({
+                ...s,
+                activeItem: activeItem as typeof s.activeItem,
+              } as ControlSettings)
             }
             options={[
               { label: "Overview", value: "overview" },
@@ -5723,36 +7055,76 @@ export function ControlSettingsPanel({ slug, settings, onChange }: ControlSettin
             ]}
           />
           <SettingToggle
+            label="Padding top"
+            checked={s.paddingTop ?? false}
+            onChange={(paddingTop) =>
+              onChange({ ...s, paddingTop } as ControlSettings)
+            }
+          />
+          <SettingToggle
+            label="Padding bottom"
+            checked={s.paddingBottom ?? false}
+            onChange={(paddingBottom) =>
+              onChange({ ...s, paddingBottom } as ControlSettings)
+            }
+          />
+          <SettingToggle
+            label="Padding left"
+            checked={s.paddingLeft ?? false}
+            onChange={(paddingLeft) =>
+              onChange({ ...s, paddingLeft } as ControlSettings)
+            }
+          />
+          <SettingToggle
+            label="Padding right"
+            checked={s.paddingRight ?? false}
+            onChange={(paddingRight) =>
+              onChange({ ...s, paddingRight } as ControlSettings)
+            }
+          />
+          <SettingToggle
             label="Collapsed"
             checked={s.collapsed}
-            onChange={(collapsed) => onChange({ ...s, collapsed } as ControlSettings)}
+            onChange={(collapsed) =>
+              onChange({ ...s, collapsed } as ControlSettings)
+            }
           />
           <SettingToggle
             label="Show header"
             checked={s.showHeader}
-            onChange={(showHeader) => onChange({ ...s, showHeader } as ControlSettings)}
+            onChange={(showHeader) =>
+              onChange({ ...s, showHeader } as ControlSettings)
+            }
           />
           <SettingToggle
             label="Show footer"
             checked={s.showFooter}
-            onChange={(showFooter) => onChange({ ...s, showFooter } as ControlSettings)}
+            onChange={(showFooter) =>
+              onChange({ ...s, showFooter } as ControlSettings)
+            }
           />
           <SettingToggle
             label="Group expanded"
             checked={s.groupOpen}
-            onChange={(groupOpen) => onChange({ ...s, groupOpen } as ControlSettings)}
+            onChange={(groupOpen) =>
+              onChange({ ...s, groupOpen } as ControlSettings)
+            }
           />
           <SettingToggle
             label="Persist state"
             checked={s.persistState}
-            onChange={(persistState) => onChange({ ...s, persistState } as ControlSettings)}
+            onChange={(persistState) =>
+              onChange({ ...s, persistState } as ControlSettings)
+            }
           />
           {s.showHeader ? (
             <div className={shellStyles.settingsFullWidth}>
               <SettingInput
                 label="Header title"
                 value={s.headerTitle}
-                onChange={(headerTitle) => onChange({ ...s, headerTitle } as ControlSettings)}
+                onChange={(headerTitle) =>
+                  onChange({ ...s, headerTitle } as ControlSettings)
+                }
               />
             </div>
           ) : null}
@@ -5761,7 +7133,9 @@ export function ControlSettingsPanel({ slug, settings, onChange }: ControlSettin
               <SettingInput
                 label="Footer text"
                 value={s.footerText}
-                onChange={(footerText) => onChange({ ...s, footerText } as ControlSettings)}
+                onChange={(footerText) =>
+                  onChange({ ...s, footerText } as ControlSettings)
+                }
               />
             </div>
           ) : null}
@@ -5794,7 +7168,9 @@ export function ControlSettingsPanel({ slug, settings, onChange }: ControlSettin
             onChange={(itemsPerColumn) =>
               onChange({
                 ...s,
-                itemsPerColumn: Number(itemsPerColumn) as typeof s.itemsPerColumn,
+                itemsPerColumn: Number(
+                  itemsPerColumn,
+                ) as typeof s.itemsPerColumn,
               } as ControlSettings)
             }
             options={[
@@ -5809,7 +7185,10 @@ export function ControlSettingsPanel({ slug, settings, onChange }: ControlSettin
             label="Density"
             value={s.density}
             onChange={(density) =>
-              onChange({ ...s, density: density as typeof s.density } as ControlSettings)
+              onChange({
+                ...s,
+                density: density as typeof s.density,
+              } as ControlSettings)
             }
             options={[
               { label: "Comfortable", value: "comfortable" },
@@ -5819,7 +7198,9 @@ export function ControlSettingsPanel({ slug, settings, onChange }: ControlSettin
           <SettingToggle
             label="Featured panel"
             checked={s.featured}
-            onChange={(featured) => onChange({ ...s, featured } as ControlSettings)}
+            onChange={(featured) =>
+              onChange({ ...s, featured } as ControlSettings)
+            }
           />
           {s.featured ? (
             <>
@@ -5871,7 +7252,9 @@ export function ControlSettingsPanel({ slug, settings, onChange }: ControlSettin
           <SettingToggle
             label="Escape dismiss"
             checked={s.closeOnEscape}
-            onChange={(closeOnEscape) => onChange({ ...s, closeOnEscape } as ControlSettings)}
+            onChange={(closeOnEscape) =>
+              onChange({ ...s, closeOnEscape } as ControlSettings)
+            }
           />
         </div>
       );
@@ -5884,7 +7267,10 @@ export function ControlSettingsPanel({ slug, settings, onChange }: ControlSettin
             label="Open menu"
             value={s.activeMenu}
             onChange={(activeMenu) =>
-              onChange({ ...s, activeMenu: activeMenu as typeof s.activeMenu } as ControlSettings)
+              onChange({
+                ...s,
+                activeMenu: activeMenu as typeof s.activeMenu,
+              } as ControlSettings)
             }
             options={[
               { label: "None", value: "none" },
@@ -5900,7 +7286,10 @@ export function ControlSettingsPanel({ slug, settings, onChange }: ControlSettin
             label="Density"
             value={s.density}
             onChange={(density) =>
-              onChange({ ...s, density: density as typeof s.density } as ControlSettings)
+              onChange({
+                ...s,
+                density: density as typeof s.density,
+              } as ControlSettings)
             }
             options={[
               { label: "Comfortable", value: "comfortable" },
@@ -5924,12 +7313,16 @@ export function ControlSettingsPanel({ slug, settings, onChange }: ControlSettin
           <SettingToggle
             label="Close on select"
             checked={s.closeOnSelect}
-            onChange={(closeOnSelect) => onChange({ ...s, closeOnSelect } as ControlSettings)}
+            onChange={(closeOnSelect) =>
+              onChange({ ...s, closeOnSelect } as ControlSettings)
+            }
           />
           <SettingToggle
             label="Show shortcuts"
             checked={s.showShortcuts}
-            onChange={(showShortcuts) => onChange({ ...s, showShortcuts } as ControlSettings)}
+            onChange={(showShortcuts) =>
+              onChange({ ...s, showShortcuts } as ControlSettings)
+            }
           />
         </div>
       );

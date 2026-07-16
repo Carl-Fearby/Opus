@@ -512,7 +512,7 @@ export function CodePlayground({ initialCategory = null, initialSlug = null }: C
                   setPreviewMenuOpen(false);
                 }}
               >
-                <PreviewMenuLabel iconName="up-right-from-square" label="Show External" />
+                <PreviewMenuLabel iconName="up-right-from-square" label="Open External" />
               </button>
               {isFullWidth ? (
                 <button

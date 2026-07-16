@@ -76,6 +76,7 @@ import {
   ResizablePanel,
   DockLayout,
   ThreePaneLayout,
+  CustomScrollbar,
   ScrollArea,
   AspectRatio,
   Container,
@@ -192,7 +193,10 @@ import {
   demoRules,
   demoSchedulerEvents,
 } from "@/lib/controls/buildersDemoData";
-import { layoutDemoTiles, layoutScrollLines } from "@/lib/controls/layoutDemoData";
+import {
+  layoutDemoTiles,
+  layoutScrollLines,
+} from "@/lib/controls/layoutDemoData";
 import {
   demoBottomNavItems,
   demoBreadcrumbItems,
@@ -215,7 +219,10 @@ import {
 import { demoRecentActivity } from "@/lib/controls/recentActivityDemoData";
 import { demoNotesActivity } from "@/lib/controls/notesActivityDemoData";
 import { demoTopPerformingUsers } from "@/lib/controls/topPerformingUsersDemoData";
-import { defaultUserProfilePhotoSrc, parseUserProfileMenuItems } from "@/lib/controls/userProfileDemoData";
+import {
+  defaultUserProfilePhotoSrc,
+  parseUserProfileMenuItems,
+} from "@/lib/controls/userProfileDemoData";
 import { demoUpcomingTasks } from "@/lib/controls/upcomingTasksDemoData";
 import {
   iconBadgeToolbarDemoItems,
@@ -253,7 +260,10 @@ import {
   dataGridTreeRows,
   getDetailContentForDemo,
 } from "@/lib/controls/dataGridDemoData";
-import { chartDemoSeries, getChartPreviewData } from "@/lib/controls/chartDemoData";
+import {
+  chartDemoSeries,
+  getChartPreviewData,
+} from "@/lib/controls/chartDemoData";
 import {
   cascaderDemoOptions,
   filterSelectDemoGroups,
@@ -323,20 +333,41 @@ const randomToastSamples: Record<
   { description: string; title: string }[]
 > = {
   error: [
-    { title: "Upload failed", description: "The file could not be saved. Try again." },
-    { title: "Payment declined", description: "Check your card details and retry." },
+    {
+      title: "Upload failed",
+      description: "The file could not be saved. Try again.",
+    },
+    {
+      title: "Payment declined",
+      description: "Check your card details and retry.",
+    },
   ],
   success: [
     { title: "Changes saved", description: "Your updates are live." },
-    { title: "Invite sent", description: "They will receive an email shortly." },
+    {
+      title: "Invite sent",
+      description: "They will receive an email shortly.",
+    },
   ],
   warning: [
-    { title: "Session expiring", description: "You will be signed out in 2 minutes." },
-    { title: "Storage almost full", description: "Free up space to keep syncing." },
+    {
+      title: "Session expiring",
+      description: "You will be signed out in 2 minutes.",
+    },
+    {
+      title: "Storage almost full",
+      description: "Free up space to keep syncing.",
+    },
   ],
   info: [
-    { title: "Maintenance tonight", description: "Expect brief downtime after 11pm." },
-    { title: "New version available", description: "Refresh to get the latest fixes." },
+    {
+      title: "Maintenance tonight",
+      description: "Expect brief downtime after 11pm.",
+    },
+    {
+      title: "New version available",
+      description: "Refresh to get the latest fixes.",
+    },
   ],
 };
 
@@ -364,7 +395,12 @@ function parseChoiceChipOptions(options: string) {
     .filter(Boolean)
     .map((option) => {
       const [label, rawValue] = option.split(":").map((part) => part.trim());
-      const value = rawValue || label.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
+      const value =
+        rawValue ||
+        label
+          .toLowerCase()
+          .replace(/[^a-z0-9]+/g, "-")
+          .replace(/^-|-$/g, "");
 
       return {
         label,
@@ -435,9 +471,18 @@ const tableColumns = [
 ];
 
 const tableRows = [
-  { id: "design", values: { team: "Design Systems", status: "Healthy", components: 42 } },
-  { id: "web", values: { team: "Web Platform", status: "Adopting", components: 28 } },
-  { id: "mobile", values: { team: "Mobile", status: "Reviewing", components: 16 } },
+  {
+    id: "design",
+    values: { team: "Design Systems", status: "Healthy", components: 42 },
+  },
+  {
+    id: "web",
+    values: { team: "Web Platform", status: "Adopting", components: 28 },
+  },
+  {
+    id: "mobile",
+    values: { team: "Mobile", status: "Reviewing", components: 16 },
+  },
 ];
 
 const galleryImages = [
@@ -493,10 +538,17 @@ function fieldProps(settings: BaseFieldSettings) {
   };
 }
 
-function TilesPreview({ settings }: { settings: ControlSettingsBySlug["tiles"] }) {
+function TilesPreview({
+  settings,
+}: {
+  settings: ControlSettingsBySlug["tiles"];
+}) {
   const [lastResult, setLastResult] = useState("Waiting for action");
   const items = useMemo(
-    () => withDemoTileHandlers((item) => setLastResult(`Last action: ${item.label}`)),
+    () =>
+      withDemoTileHandlers((item) =>
+        setLastResult(`Last action: ${item.label}`),
+      ),
     [],
   );
 
@@ -508,10 +560,17 @@ function TilesPreview({ settings }: { settings: ControlSettingsBySlug["tiles"] }
   );
 }
 
-function StatTilesPreview({ settings }: { settings: ControlSettingsBySlug["stat-tiles"] }) {
+function StatTilesPreview({
+  settings,
+}: {
+  settings: ControlSettingsBySlug["stat-tiles"];
+}) {
   const [lastResult, setLastResult] = useState("Waiting for action");
   const items = useMemo(
-    () => withDemoStatTileHandlers((item) => setLastResult(`Last action: ${item.label}`)),
+    () =>
+      withDemoStatTileHandlers((item) =>
+        setLastResult(`Last action: ${item.label}`),
+      ),
     [],
   );
 
@@ -523,7 +582,11 @@ function StatTilesPreview({ settings }: { settings: ControlSettingsBySlug["stat-
   );
 }
 
-function TilePreview({ settings }: { settings: ControlSettingsBySlug["tile"] }) {
+function TilePreview({
+  settings,
+}: {
+  settings: ControlSettingsBySlug["tile"];
+}) {
   const [lastResult, setLastResult] = useState("Waiting for action");
 
   return (
@@ -539,7 +602,11 @@ function TilePreview({ settings }: { settings: ControlSettingsBySlug["tile"] }) 
   );
 }
 
-function StatTilePreview({ settings }: { settings: ControlSettingsBySlug["stat-tile"] }) {
+function StatTilePreview({
+  settings,
+}: {
+  settings: ControlSettingsBySlug["stat-tile"];
+}) {
   const [lastResult, setLastResult] = useState("Waiting for action");
 
   return (
@@ -559,7 +626,11 @@ function StatTilePreview({ settings }: { settings: ControlSettingsBySlug["stat-t
   );
 }
 
-function ResizeHandlePreviewDemo({ settings }: { settings: ControlSettingsBySlug["resize-handle"] }) {
+function ResizeHandlePreviewDemo({
+  settings,
+}: {
+  settings: ControlSettingsBySlug["resize-handle"];
+}) {
   const isHorizontal = settings.orientation === "horizontal";
   const minSize = isHorizontal ? 64 : 120;
   const maxSize = isHorizontal ? 180 : 420;
@@ -617,8 +688,12 @@ function ResizeHandlePreviewDemo({ settings }: { settings: ControlSettingsBySlug
     <div
       style={{
         display: "grid",
-        gridTemplateColumns: isHorizontal ? "1fr" : `${paneSize}px 8px minmax(0, 1fr)`,
-        gridTemplateRows: isHorizontal ? `${paneSize}px 8px minmax(0, 1fr)` : undefined,
+        gridTemplateColumns: isHorizontal
+          ? "1fr"
+          : `${paneSize}px 8px minmax(0, 1fr)`,
+        gridTemplateRows: isHorizontal
+          ? `${paneSize}px 8px minmax(0, 1fr)`
+          : undefined,
         height: isHorizontal ? 320 : 220,
         minHeight: isHorizontal ? undefined : 220,
         width: "100%",
@@ -636,7 +711,7 @@ function ResizeHandlePreviewDemo({ settings }: { settings: ControlSettingsBySlug
         onKeyDown={handleKeyDown}
         onPointerDown={startResize}
       />
-      <main style={{ padding: 16 }}>Pane B</main>
+      <div style={{ padding: 16 }}>Pane B</div>
     </div>
   );
 }
@@ -690,14 +765,19 @@ function SidebarPreviewDemo({
     .flatMap((item) => (item.type === "group" ? item.children : [item]))
     .find((item) => item.id === settings.activeItem);
   const [lastResult, setLastResult] = useState<string | null>(null);
-  const statusText = lastResult ?? `Selected: ${activeMenuItem?.label ?? settings.activeItem}`;
+  const statusText =
+    lastResult ?? `Selected: ${activeMenuItem?.label ?? settings.activeItem}`;
   const sidebar = (
     <Sidebar
       activeItem={settings.activeItem}
       collapsed={settings.collapsed}
       density={settings.density}
       footer={settings.showFooter ? settings.footerText : undefined}
-      header={settings.showHeader ? <SidebarHeader title={settings.headerTitle} /> : undefined}
+      header={
+        settings.showHeader ? (
+          <SidebarHeader title={settings.headerTitle} />
+        ) : undefined
+      }
       menu={menu}
       onSelect={(item) => {
         setLastResult(`Menu callback: ${item.label}`);
@@ -706,6 +786,10 @@ function SidebarPreviewDemo({
           activeItem: item.id as typeof settings.activeItem,
         } as ControlSettings);
       }}
+      paddingBottom={settings.paddingBottom ?? false}
+      paddingLeft={settings.paddingLeft ?? false}
+      paddingRight={settings.paddingRight ?? false}
+      paddingTop={settings.paddingTop ?? false}
       persistState={settings.persistState}
       renderIcon={(iconName) => <CatalogIcon iconName={iconName} />}
       side={settings.side}
@@ -717,7 +801,11 @@ function SidebarPreviewDemo({
   if (wrapped) {
     return (
       <div className={styles.sidebarCallbackPreview} data-fit-content="true">
-        <DashboardContentContainer data-component="sidebar" height={settings.height ?? "auto"} width="widget">
+        <DashboardContentContainer
+          data-component="sidebar"
+          height={settings.height ?? "auto"}
+          width="widget"
+        >
           {sidebar}
         </DashboardContentContainer>
         <span className={styles.dialogResult}>{statusText}</span>
@@ -745,7 +833,8 @@ function TestLayoutPreview({
   const [rightTab, setRightTab] = useState<"activity" | "notes">("notes");
   const [workspaceLabel, setWorkspaceLabel] = useState("CRM");
   const [lastAction, setLastAction] = useState("Waiting for action");
-  const reportAction = (label: string) => setLastAction(`Last action: ${label}`);
+  const reportAction = (label: string) =>
+    setLastAction(`Last action: ${label}`);
   const menu = [
     { icon: "table-columns", id: "dashboard", label: "Dashboard" },
     {
@@ -753,7 +842,11 @@ function TestLayoutPreview({
         {
           children: [
             { icon: "address-book", id: "all-contacts", label: "All Contacts" },
-            { icon: "rectangle-list", id: "contact-lists", label: "Contact Lists" },
+            {
+              icon: "rectangle-list",
+              id: "contact-lists",
+              label: "Contact Lists",
+            },
           ],
           defaultOpen: true,
           icon: "users",
@@ -764,7 +857,11 @@ function TestLayoutPreview({
         {
           children: [
             { icon: "building", id: "all-companies", label: "All Companies" },
-            { icon: "layer-group", id: "company-segments", label: "Company Segments" },
+            {
+              icon: "layer-group",
+              id: "company-segments",
+              label: "Company Segments",
+            },
           ],
           defaultOpen: false,
           icon: "building",
@@ -811,6 +908,8 @@ function TestLayoutPreview({
     <DashboardContentContainer
       data-component="sidebar"
       height="full"
+      paddingLeft={false}
+      paddingRight={false}
       width="full"
     >
       <div className={styles.testLayoutSidebarShell}>
@@ -820,12 +919,19 @@ function TestLayoutPreview({
           density="compact"
           footer={
             <button
-              aria-label={sidebarCollapsed ? "Expand sidebar" : "Collapse sidebar"}
-              className={[styles.testLayoutCollapseButton, styles.testLayoutSidebarCollapse].join(" ")}
+              aria-label={
+                sidebarCollapsed ? "Expand sidebar" : "Collapse sidebar"
+              }
+              className={[
+                styles.testLayoutCollapseButton,
+                styles.testLayoutSidebarCollapse,
+              ].join(" ")}
               data-collapsed={sidebarCollapsed ? "true" : "false"}
               onClick={() => {
                 setSidebarCollapsed(!sidebarCollapsed);
-                reportAction(sidebarCollapsed ? "Expanded sidebar" : "Collapsed sidebar");
+                reportAction(
+                  sidebarCollapsed ? "Expanded sidebar" : "Collapsed sidebar",
+                );
               }}
               title={sidebarCollapsed ? "Expand sidebar" : "Collapse sidebar"}
               type="button"
@@ -842,6 +948,8 @@ function TestLayoutPreview({
             setWorkspaceLabel(String(item.label));
             reportAction(`Selected ${item.label}`);
           }}
+          paddingLeft
+          paddingRight
           persistState={settings.persist}
           renderIcon={(iconName) => <CatalogIcon iconName={iconName} />}
           storageKey="opus-lab-test-layout-menu"
@@ -857,11 +965,21 @@ function TestLayoutPreview({
     >
       <div className={styles.testLayoutRightShell}>
         {rightCollapsed ? (
-          <div aria-label="Notes and activity shortcuts" className={styles.testLayoutRightRail} role="navigation">
-            {([
-              { icon: "note-sticky", label: "Notes", tab: "notes" },
-              { icon: "clock-rotate-left", label: "Activity", tab: "activity" },
-            ] as const).map((item) => (
+          <div
+            aria-label="Notes and activity shortcuts"
+            className={styles.testLayoutRightRail}
+            role="navigation"
+          >
+            {(
+              [
+                { icon: "note-sticky", label: "Notes", tab: "notes" },
+                {
+                  icon: "clock-rotate-left",
+                  label: "Activity",
+                  tab: "activity",
+                },
+              ] as const
+            ).map((item) => (
               <Tooltip content={item.label} key={item.tab} placement="left">
                 <button
                   aria-label={`Open ${item.label}`}
@@ -887,7 +1005,9 @@ function TestLayoutPreview({
             items={demoNotesActivity}
             notesFooterLabel="View all notes"
             onActivityFooterClick={() => reportAction("View all activities")}
-            onItemClick={(item) => reportAction(`Selected activity by ${item.author}`)}
+            onItemClick={(item) =>
+              reportAction(`Selected activity by ${item.author}`)
+            }
             onNoteSave={(note) => reportAction(`Saved note: ${note}`)}
             onNotesFooterClick={() => reportAction("View all notes")}
             onTabChange={(tab) => {
@@ -897,16 +1017,34 @@ function TestLayoutPreview({
             saveButtonLabel="Save"
           />
         )}
-        <div className={styles.testLayoutRightFooter} data-collapsed={rightCollapsed ? "true" : "false"}>
+        <div
+          className={styles.testLayoutRightFooter}
+          data-collapsed={rightCollapsed ? "true" : "false"}
+        >
           <button
-            aria-label={rightCollapsed ? "Expand notes and activity" : "Collapse notes and activity"}
-            className={[styles.testLayoutCollapseButton, styles.testLayoutRightCollapse].join(" ")}
+            aria-label={
+              rightCollapsed
+                ? "Expand notes and activity"
+                : "Collapse notes and activity"
+            }
+            className={[
+              styles.testLayoutCollapseButton,
+              styles.testLayoutRightCollapse,
+            ].join(" ")}
             data-collapsed={rightCollapsed ? "true" : "false"}
             onClick={() => {
               setRightCollapsed(!rightCollapsed);
-              reportAction(rightCollapsed ? "Expanded notes and activity" : "Collapsed notes and activity");
+              reportAction(
+                rightCollapsed
+                  ? "Expanded notes and activity"
+                  : "Collapsed notes and activity",
+              );
             }}
-            title={rightCollapsed ? "Expand notes and activity" : "Collapse notes and activity"}
+            title={
+              rightCollapsed
+                ? "Expand notes and activity"
+                : "Collapse notes and activity"
+            }
             type="button"
           >
             <CatalogIcon iconName={rightCollapsed ? "outdent" : "indent"} />
@@ -939,7 +1077,9 @@ function TestLayoutPreview({
         leftCollapsed={sidebarCollapsed}
         maxLeftWidth={settings.maxLeftWidth}
         maxRightWidth={settings.maxRightWidth}
-        minLeftWidth={settings.minLeftWidth === 180 ? 120 : settings.minLeftWidth}
+        minLeftWidth={
+          settings.minLeftWidth === 180 ? 120 : settings.minLeftWidth
+        }
         minRightWidth={Math.max(settings.minRightWidth, 220)}
         onLeftCollapsedChange={setSidebarCollapsed}
         onRightCollapsedChange={setRightCollapsed}
@@ -947,26 +1087,53 @@ function TestLayoutPreview({
         right={right}
         rightCollapsed={rightCollapsed}
         storageKey="opus-lab-test-layout-panes"
-        style={{ height: settings.height === "full" ? "100%" : undefined }}
+        style={{ height: "auto" }}
       >
         <section style={{ padding: 28 }}>
-          <p style={{ margin: "0 0 8px", color: "var(--opus-accent)", fontWeight: 700 }}>{workspaceLabel} workspace</p>
+          <p
+            style={{
+              margin: "0 0 8px",
+              color: "var(--opus-accent)",
+              fontWeight: 700,
+            }}
+          >
+            {workspaceLabel} workspace
+          </p>
           <h2 style={{ margin: "0 0 12px" }}>Demo content</h2>
-          <p style={{ maxWidth: 560, margin: 0, color: "var(--opus-muted)", lineHeight: 1.7 }}>
-            This centre pane stays fluid while the navigation and Notes &amp; Activity panes can be resized independently.
+          <p
+            style={{
+              maxWidth: 560,
+              margin: 0,
+              color: "var(--opus-muted)",
+              lineHeight: 1.7,
+            }}
+          >
+            This centre pane stays fluid while the navigation and Notes &amp;
+            Activity panes can be resized independently.
           </p>
         </section>
       </ThreePaneLayout>
       {showDebug ? (
-        <span className={[styles.dialogResult, styles.testLayoutDebugLine].join(" ")}>{lastAction}</span>
+        <span
+          className={[styles.dialogResult, styles.testLayoutDebugLine].join(
+            " ",
+          )}
+        >
+          {lastAction}
+        </span>
       ) : null}
     </div>
   );
 }
 
-function IconBadgePreview({ settings }: { settings: ControlSettingsBySlug["icon-badge"] }) {
+function IconBadgePreview({
+  settings,
+}: {
+  settings: ControlSettingsBySlug["icon-badge"];
+}) {
   const [lastAction, setLastAction] = useState("Waiting for action");
-  const reportAction = (label: string) => setLastAction(`Last action: ${label}`);
+  const reportAction = (label: string) =>
+    setLastAction(`Last action: ${label}`);
 
   if (settings.showToolbarDemo) {
     return (
@@ -1015,7 +1182,11 @@ function IconBadgePreview({ settings }: { settings: ControlSettingsBySlug["icon-
   );
 }
 
-function NoteComposerPreview({ settings }: { settings: ControlSettingsBySlug["note-composer"] }) {
+function NoteComposerPreview({
+  settings,
+}: {
+  settings: ControlSettingsBySlug["note-composer"];
+}) {
   const [note, setNote] = useState("");
   const [lastAction, setLastAction] = useState("Waiting for action");
 
@@ -1034,7 +1205,9 @@ function NoteComposerPreview({ settings }: { settings: ControlSettingsBySlug["no
         onEmojiSelect={(emoji) => setLastAction(`Emoji: ${emoji}`)}
         onMentionClick={() => setLastAction("Mention")}
         onSave={(value, tags) => {
-          const tagText = tags.length ? ` [${tags.map((tag) => tag.label).join(", ")}]` : "";
+          const tagText = tags.length
+            ? ` [${tags.map((tag) => tag.label).join(", ")}]`
+            : "";
           setLastAction(`Saved note: ${value}${tagText}`);
           setNote("");
         }}
@@ -1072,16 +1245,21 @@ function UserProfileWidgetPreview({
 }) {
   const [photoUploadOpen, setPhotoUploadOpen] = useState(false);
   const openPhotoUpload = () => setPhotoUploadOpen(true);
-  const menuItems = parseUserProfileMenuItems(settings.menuItemsJson).map((item) => ({
-    ...item,
-    onSelect: () => {
-      if (settings.photoUploadEnabled && item.id === settings.photoUploadMenuItemId) {
-        openPhotoUpload();
-      }
+  const menuItems = parseUserProfileMenuItems(settings.menuItemsJson).map(
+    (item) => ({
+      ...item,
+      onSelect: () => {
+        if (
+          settings.photoUploadEnabled &&
+          item.id === settings.photoUploadMenuItemId
+        ) {
+          openPhotoUpload();
+        }
 
-      reportAction(item.label);
-    },
-  }));
+        reportAction(item.label);
+      },
+    }),
+  );
 
   const content = (
     <>
@@ -1091,7 +1269,9 @@ function UserProfileWidgetPreview({
         name={settings.name}
         role={settings.role}
         src={settings.srcEnabled ? settings.src : undefined}
-        onAvatarClick={settings.photoUploadEnabled ? openPhotoUpload : undefined}
+        onAvatarClick={
+          settings.photoUploadEnabled ? openPhotoUpload : undefined
+        }
       />
       {settings.photoUploadEnabled ? (
         <ProfilePhotoUploadModal
@@ -1114,7 +1294,11 @@ function UserProfileWidgetPreview({
           value={settings.srcEnabled ? settings.src : undefined}
           onClose={() => setPhotoUploadOpen(false)}
           onPhotoChange={(previewUrl) => {
-            onSettingsChange({ ...settings, src: previewUrl, srcEnabled: true } as ControlSettings);
+            onSettingsChange({
+              ...settings,
+              src: previewUrl,
+              srcEnabled: true,
+            } as ControlSettings);
             reportAction("Photo updated");
           }}
         />
@@ -1126,13 +1310,22 @@ function UserProfileWidgetPreview({
 
   if (wrapped) {
     return (
-      <DashboardContentContainer data-component="user-profile" width={settings.width ?? "widget"}>
+      <DashboardContentContainer
+        data-component="user-profile"
+        width={settings.width ?? "widget"}
+      >
         {content}
       </DashboardContentContainer>
     );
   }
 
-  return <DashboardPreviewGrid layout={settings.previewLayout} unwrapped renderItem={() => content} />;
+  return (
+    <DashboardPreviewGrid
+      layout={settings.previewLayout}
+      unwrapped
+      renderItem={() => content}
+    />
+  );
 }
 
 function UpcomingTasksDashboardPreview({
@@ -1140,7 +1333,9 @@ function UpcomingTasksDashboardPreview({
 }: {
   settings: ControlSettingsBySlug["upcoming-tasks"];
 }) {
-  const [tasks, setTasks] = useState(() => demoUpcomingTasks.map((task) => ({ ...task })));
+  const [tasks, setTasks] = useState(() =>
+    demoUpcomingTasks.map((task) => ({ ...task })),
+  );
 
   return (
     <DashboardActionPreview>
@@ -1158,9 +1353,15 @@ function UpcomingTasksDashboardPreview({
               onTaskClick={(task) => reportAction(task.title)}
               onTaskCompleteChange={(task, completed) => {
                 setTasks((current) =>
-                  current.map((entry) => (entry.id === task.id ? { ...entry, completed } : entry)),
+                  current.map((entry) =>
+                    entry.id === task.id ? { ...entry, completed } : entry,
+                  ),
                 );
-                reportAction(completed ? `Completed: ${task.title}` : `Reopened: ${task.title}`);
+                reportAction(
+                  completed
+                    ? `Completed: ${task.title}`
+                    : `Reopened: ${task.title}`,
+                );
               }}
               tasks={tasks}
               title={settings.title}
@@ -1177,7 +1378,9 @@ function DashboardListColumnsDashboardPreview({
 }: {
   settings: ControlSettingsBySlug["dashboard-list-columns"];
 }) {
-  const [tasks, setTasks] = useState(() => demoUpcomingTasks.map((task) => ({ ...task })));
+  const [tasks, setTasks] = useState(() =>
+    demoUpcomingTasks.map((task) => ({ ...task })),
+  );
   const containerWidth = settings.width === "widget" ? "widget" : "full";
 
   return (
@@ -1194,35 +1397,56 @@ function DashboardListColumnsDashboardPreview({
               direction={settings.layout === "stacked" ? "column" : "row"}
               gap={16}
             >
-              <DashboardContentContainer data-component="upcoming-tasks" width={containerWidth}>
+              <DashboardContentContainer
+                data-component="upcoming-tasks"
+                width={containerWidth}
+              >
                 <UpcomingTasks
                   checkboxSize={settings.checkboxSize ?? "md"}
                   footerLabel={settings.upcomingTasksFooterLabel}
-                  onFooterClick={() => reportAction(settings.upcomingTasksFooterLabel)}
+                  onFooterClick={() =>
+                    reportAction(settings.upcomingTasksFooterLabel)
+                  }
                   onTaskClick={(task) => reportAction(task.title)}
                   onTaskCompleteChange={(task, completed) => {
                     setTasks((current) =>
-                      current.map((entry) => (entry.id === task.id ? { ...entry, completed } : entry)),
+                      current.map((entry) =>
+                        entry.id === task.id ? { ...entry, completed } : entry,
+                      ),
                     );
-                    reportAction(completed ? `Completed: ${task.title}` : `Reopened: ${task.title}`);
+                    reportAction(
+                      completed
+                        ? `Completed: ${task.title}`
+                        : `Reopened: ${task.title}`,
+                    );
                   }}
                   tasks={tasks}
                   title={settings.upcomingTasksTitle}
                 />
               </DashboardContentContainer>
-              <DashboardContentContainer data-component="recent-activity" width={containerWidth}>
+              <DashboardContentContainer
+                data-component="recent-activity"
+                width={containerWidth}
+              >
                 <RecentActivity
                   footerLabel={settings.recentActivityFooterLabel}
                   items={demoRecentActivity}
-                  onFooterClick={() => reportAction(settings.recentActivityFooterLabel)}
+                  onFooterClick={() =>
+                    reportAction(settings.recentActivityFooterLabel)
+                  }
                   onItemClick={(item) => reportAction(item.title)}
                   title={settings.recentActivityTitle}
                 />
               </DashboardContentContainer>
-              <DashboardContentContainer data-component="top-performing-users" width={containerWidth}>
+              <DashboardContentContainer
+                data-component="top-performing-users"
+                width={containerWidth}
+              >
                 <TopPerformingUsers
                   footerLabel={settings.topPerformingUsersFooterLabel}
-                  onFooterClick={() => reportAction(settings.topPerformingUsersFooterLabel)}
+                  onFooterClick={() =>
+                    reportAction(settings.topPerformingUsersFooterLabel)
+                  }
                   onPersonClick={(person) => reportAction(person.name)}
                   title={settings.topPerformingUsersTitle}
                   users={demoTopPerformingUsers}
@@ -1250,18 +1474,33 @@ function DropdownMenuPreviewDemo({
       icon: settings.showIcons ? item.icon : undefined,
     })),
     ...(settings.showDisabled
-      ? [{ disabled: true, icon: settings.showIcons ? "⌁" : undefined, id: "archive", label: "Archive" }]
+      ? [
+          {
+            disabled: true,
+            icon: settings.showIcons ? "⌁" : undefined,
+            id: "archive",
+            label: "Archive",
+          },
+        ]
       : []),
     ...(settings.showDestructive
-      ? [{ destructive: true, icon: settings.showIcons ? "!" : undefined, id: "delete", label: "Delete" }]
+      ? [
+          {
+            destructive: true,
+            icon: settings.showIcons ? "!" : undefined,
+            id: "delete",
+            label: "Delete",
+          },
+        ]
       : []),
   ];
 
   return (
     <div className={styles.dialogPreview}>
       <p className={styles.toastHint}>
-        Dropdown menus are for contextual actions. They are separate from form selects and support
-        disabled, checked, shortcut, and destructive item states.
+        Dropdown menus are for contextual actions. They are separate from form
+        selects and support disabled, checked, shortcut, and destructive item
+        states.
       </p>
       <DropdownMenu
         closeOnEscape={settings.closeOnEscape}
@@ -1272,7 +1511,9 @@ function DropdownMenuPreviewDemo({
         open={settings.open}
         placement={settings.placement}
         trigger={<Button variant="primary">Actions</Button>}
-        onOpenChange={(open) => onSettingsChange({ ...settings, open } as ControlSettings)}
+        onOpenChange={(open) =>
+          onSettingsChange({ ...settings, open } as ControlSettings)
+        }
         onSelect={(item) => setLastResult(`Last action: ${item.label}`)}
       />
       <span className={styles.dialogResult}>{lastResult}</span>
@@ -1294,25 +1535,42 @@ function ContextMenuPreviewDemo({
       icon: settings.showIcons ? item.icon : undefined,
     })),
     ...(settings.showDisabled
-      ? [{ disabled: true, icon: settings.showIcons ? "⌁" : undefined, id: "archive", label: "Archive" }]
+      ? [
+          {
+            disabled: true,
+            icon: settings.showIcons ? "⌁" : undefined,
+            id: "archive",
+            label: "Archive",
+          },
+        ]
       : []),
     ...(settings.showDestructive
-      ? [{ destructive: true, icon: settings.showIcons ? "!" : undefined, id: "delete", label: "Delete" }]
+      ? [
+          {
+            destructive: true,
+            icon: settings.showIcons ? "!" : undefined,
+            id: "delete",
+            label: "Delete",
+          },
+        ]
       : []),
   ];
 
   return (
     <div className={styles.dialogPreview}>
       <p className={styles.toastHint}>
-        Context menus open on right-click and appear at the pointer. They reuse dropdown menu item
-        states for actions, shortcuts, checks, and destructive entries.
+        Context menus open on right-click and appear at the pointer. They reuse
+        dropdown menu item states for actions, shortcuts, checks, and
+        destructive entries.
       </p>
       <ContextMenuProvider
         closeOnEscape={settings.closeOnEscape}
         closeOnOutside={settings.closeOnOutside}
         closeOnSelect={settings.closeOnSelect}
         open={settings.open}
-        onOpenChange={(open) => onSettingsChange({ ...settings, open } as ControlSettings)}
+        onOpenChange={(open) =>
+          onSettingsChange({ ...settings, open } as ControlSettings)
+        }
       >
         <ContextMenuTarget
           className={styles.contextMenuTarget}
@@ -1321,8 +1579,12 @@ function ContextMenuPreviewDemo({
           onSelect={(item) => setLastResult(`Last action: ${item.label}`)}
         >
           <div className={styles.contextMenuDemo}>
-            <p className={styles.contextMenuDemoTitle}>{settings.targetLabel}</p>
-            <p className={styles.contextMenuDemoHint}>Right-click anywhere in this area for actions.</p>
+            <p className={styles.contextMenuDemoTitle}>
+              {settings.targetLabel}
+            </p>
+            <p className={styles.contextMenuDemoHint}>
+              Right-click anywhere in this area for actions.
+            </p>
           </div>
         </ContextMenuTarget>
       </ContextMenuProvider>
@@ -1344,13 +1606,16 @@ function CommandPalettePreviewDemo({
   return (
     <div className={styles.dialogPreview}>
       <p className={styles.toastHint}>
-        Command palettes are keyboard-first launchers for navigation, actions, and search. Use
-        arrow keys to move, Enter to select, and Escape to close.
+        Command palettes are keyboard-first launchers for navigation, actions,
+        and search. Use arrow keys to move, Enter to select, and Escape to
+        close.
       </p>
       <div className={styles.toastActions}>
         <Button
           variant="primary"
-          onClick={() => onSettingsChange({ ...settings, open: true } as ControlSettings)}
+          onClick={() =>
+            onSettingsChange({ ...settings, open: true } as ControlSettings)
+          }
         >
           Open command palette
         </Button>
@@ -1367,7 +1632,9 @@ function CommandPalettePreviewDemo({
         showDescriptions={settings.showDescriptions}
         showGroups={settings.showGroups}
         showShortcuts={settings.showShortcuts}
-        onClose={() => onSettingsChange({ ...settings, open: false } as ControlSettings)}
+        onClose={() =>
+          onSettingsChange({ ...settings, open: false } as ControlSettings)
+        }
         onSelect={(item) => setLastResult(`Last command: ${item.label}`)}
       />
     </div>
@@ -1382,11 +1649,15 @@ function TopNavigationPreviewDemo({
   onSettingsChange: (next: ControlSettings) => void;
 }) {
   const [lastResult, setLastResult] = useState<string>("Waiting for action");
-  const activeMenu = settings.activeMenu === "none" ? null : settings.activeMenu;
+  const activeMenu =
+    settings.activeMenu === "none" ? null : settings.activeMenu;
 
-  const handleSelect = useCallback((menuId: string, item: TopNavigationSelectItem) => {
-    setLastResult(`${menuId}: ${item.label}`);
-  }, []);
+  const handleSelect = useCallback(
+    (menuId: string, item: TopNavigationSelectItem) => {
+      setLastResult(`${menuId}: ${item.label}`);
+    },
+    [],
+  );
 
   const menus = useMemo(
     () =>
@@ -1396,7 +1667,8 @@ function TopNavigationPreviewDemo({
             ...menu,
             items: menu.items.map((item) => ({
               ...item,
-              onSelect: () => handleSelect(menu.id, { id: item.id, label: item.label }),
+              onSelect: () =>
+                handleSelect(menu.id, { id: item.id, label: item.label }),
             })),
           };
         }
@@ -1423,8 +1695,9 @@ function TopNavigationPreviewDemo({
   return (
     <div className={styles.dialogPreview}>
       <p className={styles.toastHint}>
-        Select any item from App, File, Edit, View, Window, or Help. Dropdown and mega menu links
-        call back through item onSelect handlers and update the result below.
+        Select any item from App, File, Edit, View, Window, or Help. Dropdown
+        and mega menu links call back through item onSelect handlers and update
+        the result below.
       </p>
       <TopNavigation
         activeMenu={activeMenu}
@@ -1435,7 +1708,10 @@ function TopNavigationPreviewDemo({
         menus={menus}
         showShortcuts={settings.showShortcuts}
         onActiveMenuChange={(menuId) =>
-          onSettingsChange({ ...settings, activeMenu: menuId ?? "none" } as ControlSettings)
+          onSettingsChange({
+            ...settings,
+            activeMenu: menuId ?? "none",
+          } as ControlSettings)
         }
       />
       <span className={styles.dialogResult}>{lastResult}</span>
@@ -1456,8 +1732,8 @@ function PopoverPreviewDemo({
   return (
     <div className={styles.dialogPreview}>
       <p className={styles.toastHint}>
-        Popovers are anchored to a trigger and accept JSX children for compact content, actions, or
-        small forms.
+        Popovers are anchored to a trigger and accept JSX children for compact
+        content, actions, or small forms.
       </p>
       <Popover
         closeOnEscape={settings.closeOnEscape}
@@ -1468,7 +1744,9 @@ function PopoverPreviewDemo({
         showArrow={settings.showArrow}
         title={settings.title}
         trigger={<Button variant="primary">Open popover</Button>}
-        onOpenChange={(open) => onSettingsChange({ ...settings, open } as ControlSettings)}
+        onOpenChange={(open) =>
+          onSettingsChange({ ...settings, open } as ControlSettings)
+        }
       >
         {settings.contentType === "form" ? (
           <div className={styles.modalFormDemo}>
@@ -1527,13 +1805,15 @@ function DrawerPreviewDemo({
   return (
     <div className={styles.dialogPreview}>
       <p className={styles.toastHint}>
-        Drawers accept JSX children for navigation, filters, inspectors, and compact workflows
-        that slide in from any screen edge.
+        Drawers accept JSX children for navigation, filters, inspectors, and
+        compact workflows that slide in from any screen edge.
       </p>
       <div className={styles.toastActions}>
         <Button
           variant="primary"
-          onClick={() => onSettingsChange({ ...settings, open: true } as ControlSettings)}
+          onClick={() =>
+            onSettingsChange({ ...settings, open: true } as ControlSettings)
+          }
         >
           Open drawer
         </Button>
@@ -1544,8 +1824,16 @@ function DrawerPreviewDemo({
         description={settings.description}
         dismissOnBackdrop={settings.dismissOnBackdrop}
         dismissOnEscape={settings.dismissOnEscape}
-        footer={settings.footerActions ? "Drawer changes are applied to the current page." : undefined}
-        actions={settings.footerActions ? <DrawerDefaultActions onClose={() => closeDrawer("applied")} /> : undefined}
+        footer={
+          settings.footerActions
+            ? "Drawer changes are applied to the current page."
+            : undefined
+        }
+        actions={
+          settings.footerActions ? (
+            <DrawerDefaultActions onClose={() => closeDrawer("applied")} />
+          ) : undefined
+        }
         open={settings.open}
         side={settings.side}
         title={settings.title}
@@ -1599,8 +1887,13 @@ function DrawerPreviewDemo({
                 <p key={paragraph}>{paragraph}</p>
               ))}
             <ul>
-              <li>Use left/right drawers for navigation, filters, and inspectors.</li>
-              <li>Use top/bottom drawers for transient panels and compact workflows.</li>
+              <li>
+                Use left/right drawers for navigation, filters, and inspectors.
+              </li>
+              <li>
+                Use top/bottom drawers for transient panels and compact
+                workflows.
+              </li>
               <li>Supports blocking or dismissible overlay behavior.</li>
             </ul>
           </div>
@@ -1630,13 +1923,15 @@ function ModalPreviewDemo({
   return (
     <div className={styles.dialogPreview}>
       <p className={styles.toastHint}>
-        Modals accept JSX children, so they can render plain HTML, custom content, or fully
-        functional Opus form components inside the overlay.
+        Modals accept JSX children, so they can render plain HTML, custom
+        content, or fully functional Opus form components inside the overlay.
       </p>
       <div className={styles.toastActions}>
         <Button
           variant="primary"
-          onClick={() => onSettingsChange({ ...settings, open: true } as ControlSettings)}
+          onClick={() =>
+            onSettingsChange({ ...settings, open: true } as ControlSettings)
+          }
         >
           Open modal
         </Button>
@@ -1647,8 +1942,16 @@ function ModalPreviewDemo({
         description={settings.description}
         dismissOnBackdrop={settings.dismissOnBackdrop}
         dismissOnEscape={settings.dismissOnEscape}
-        footer={settings.footerActions ? "Changes are only saved when you confirm." : undefined}
-        actions={settings.footerActions ? <ModalDefaultActions onClose={() => closeModal("saved")} /> : undefined}
+        footer={
+          settings.footerActions
+            ? "Changes are only saved when you confirm."
+            : undefined
+        }
+        actions={
+          settings.footerActions ? (
+            <ModalDefaultActions onClose={() => closeModal("saved")} />
+          ) : undefined
+        }
         open={settings.open}
         size={settings.size}
         title={settings.title}
@@ -1702,7 +2005,9 @@ function ModalPreviewDemo({
                 <p key={paragraph}>{paragraph}</p>
               ))}
             <ul>
-              <li>Supports headings, paragraphs, lists, media, and custom layouts.</li>
+              <li>
+                Supports headings, paragraphs, lists, media, and custom layouts.
+              </li>
               <li>Keeps the user in context without navigating away.</li>
               <li>Uses the same backdrop and animation language as dialogs.</li>
             </ul>
@@ -1725,13 +2030,15 @@ function DialogPreviewDemo({
   return (
     <div className={styles.dialogPreview}>
       <p className={styles.toastHint}>
-        Dialogs support standard confirmation phases and can either dismiss from the backdrop or
-        block backdrop clicks for higher-risk actions.
+        Dialogs support standard confirmation phases and can either dismiss from
+        the backdrop or block backdrop clicks for higher-risk actions.
       </p>
       <div className={styles.toastActions}>
         <Button
           variant="primary"
-          onClick={() => onSettingsChange({ ...settings, open: true } as ControlSettings)}
+          onClick={() =>
+            onSettingsChange({ ...settings, open: true } as ControlSettings)
+          }
         >
           Open dialog
         </Button>
@@ -1754,9 +2061,15 @@ function DialogPreviewDemo({
   );
 }
 
-function ToastPreviewDemo({ settings }: { settings: ControlSettingsBySlug["toast"] }) {
+function ToastPreviewDemo({
+  settings,
+}: {
+  settings: ControlSettingsBySlug["toast"];
+}) {
   const { setViewport, show } = useToast();
-  const duration = settings.autoDismissEnabled ? DEFAULT_TOAST_DURATION_MS : undefined;
+  const duration = settings.autoDismissEnabled
+    ? DEFAULT_TOAST_DURATION_MS
+    : undefined;
 
   useEffect(() => {
     setViewport({
@@ -1766,11 +2079,14 @@ function ToastPreviewDemo({ settings }: { settings: ControlSettingsBySlug["toast
   }, [settings.positionHorizontal, settings.positionVertical, setViewport]);
 
   const showRandomToast = () => {
-    const status = toastStatuses[Math.floor(Math.random() * toastStatuses.length)];
+    const status =
+      toastStatuses[Math.floor(Math.random() * toastStatuses.length)];
     const samples = randomToastSamples[status];
     const sample = samples[Math.floor(Math.random() * samples.length)];
     const randomDuration =
-      Math.random() < 0.35 ? undefined : 3000 + Math.round(Math.random() * 2000);
+      Math.random() < 0.35
+        ? undefined
+        : 3000 + Math.round(Math.random() * 2000);
 
     show({
       description: sample.description,
@@ -1784,16 +2100,19 @@ function ToastPreviewDemo({ settings }: { settings: ControlSettingsBySlug["toast
   return (
     <div className={styles.toastPreview}>
       <p className={styles.toastHint}>
-        Toasts animate in through <code>ToastProvider</code> and stack at the configured viewport
-        corner. Hover a toast to pause its auto-dismiss timer. Random toasts mix 3–5s timers
-        with some that stay until dismissed.
+        Toasts animate in through <code>ToastProvider</code> and stack at the
+        configured viewport corner. Hover a toast to pause its auto-dismiss
+        timer. Random toasts mix 3–5s timers with some that stay until
+        dismissed.
       </p>
       <div className={styles.toastActions}>
         <Button
           variant="primary"
           onClick={() =>
             show({
-              description: settings.descriptionEnabled ? settings.description : undefined,
+              description: settings.descriptionEnabled
+                ? settings.description
+                : undefined,
               dismissible: settings.dismissible,
               duration,
               status: settings.status,
@@ -1827,18 +2146,33 @@ function TabsPreview({
       fitted={settings.fitted}
       items={[
         {
-          content: <p>Review the main project status, recent activity, and current design-system health.</p>,
+          content: (
+            <p>
+              Review the main project status, recent activity, and current
+              design-system health.
+            </p>
+          ),
           label: "Overview",
           value: "overview",
         },
         {
-          content: <p>Track component usage, accessibility checks, and adoption across product surfaces.</p>,
+          content: (
+            <p>
+              Track component usage, accessibility checks, and adoption across
+              product surfaces.
+            </p>
+          ),
           disabled: settings.disabledSecond,
           label: "Insights",
           value: "insights",
         },
         {
-          content: <p>Configure release notes, component ownership, and library publishing preferences.</p>,
+          content: (
+            <p>
+              Configure release notes, component ownership, and library
+              publishing preferences.
+            </p>
+          ),
           label: "Settings",
           value: "settings",
         },
@@ -1904,7 +2238,11 @@ const dateFieldTypes = {
 
 const DATA_GRID_PAGE_SIZE = 40;
 
-function DataGridPreview({ settings: s }: { settings: ControlSettingsBySlug["data-grid"] }) {
+function DataGridPreview({
+  settings: s,
+}: {
+  settings: ControlSettingsBySlug["data-grid"];
+}) {
   const [pageCount, setPageCount] = useState(1);
   const [loadingMore, setLoadingMore] = useState(false);
 
@@ -1928,7 +2266,11 @@ function DataGridPreview({ settings: s }: { settings: ControlSettingsBySlug["dat
         ? createDataGridRows(pageCount * DATA_GRID_PAGE_SIZE)
         : dataGridRows;
 
-  const hasMore = s.infiniteScroll && s.layout !== "tree" && s.layout !== "pivot" && pageCount < 8;
+  const hasMore =
+    s.infiniteScroll &&
+    s.layout !== "tree" &&
+    s.layout !== "pivot" &&
+    pageCount < 8;
 
   const handleLoadMore = useCallback(() => {
     if (!hasMore || loadingMore) {
@@ -1948,13 +2290,19 @@ function DataGridPreview({ settings: s }: { settings: ControlSettingsBySlug["dat
       columns={columns}
       density={s.density}
       getDetailContent={
-        s.masterDetail && s.layout !== "pivot" ? getDetailContentForDemo : undefined
+        s.masterDetail && s.layout !== "pivot"
+          ? getDetailContentForDemo
+          : undefined
       }
       groupBy={s.layout === "grouped" ? "group" : undefined}
       hasMore={hasMore}
       layout={s.layout}
       loadingMore={loadingMore}
-      onLoadMore={s.infiniteScroll && s.layout !== "tree" && s.layout !== "pivot" ? handleLoadMore : undefined}
+      onLoadMore={
+        s.infiniteScroll && s.layout !== "tree" && s.layout !== "pivot"
+          ? handleLoadMore
+          : undefined
+      }
       pivot={s.layout === "pivot" ? dataGridPivotConfig : undefined}
       rows={baseRows}
       stickyFirstColumn={s.stickyFirstColumn}
@@ -1966,8 +2314,13 @@ function DataGridPreview({ settings: s }: { settings: ControlSettingsBySlug["dat
   );
 }
 
-
-function HotkeyManagerPreview({ enabled, hotkey }: { enabled: boolean; hotkey: string }) {
+function HotkeyManagerPreview({
+  enabled,
+  hotkey,
+}: {
+  enabled: boolean;
+  hotkey: string;
+}) {
   const [count, setCount] = useState(0);
   const onFire = useCallback(() => {
     setCount((n) => n + 1);
@@ -1978,15 +2331,24 @@ function HotkeyManagerPreview({ enabled, hotkey }: { enabled: boolean; hotkey: s
       <HotkeyListener hotkey={hotkey} onFire={onFire} />
       <div style={{ display: "grid", gap: 8 }}>
         <p style={{ margin: 0 }}>
-          Press <KeyboardShortcut keys={["Meta", hotkey.toUpperCase()]} /> (or Ctrl+{hotkey.toUpperCase()} via settings key) — fired {count} times.
+          Press <KeyboardShortcut keys={["Meta", hotkey.toUpperCase()]} /> (or
+          Ctrl+{hotkey.toUpperCase()} via settings key) — fired {count} times.
         </p>
-        <p style={{ margin: 0, color: "var(--opus-muted)" }}>Demo listens for key &quot;{hotkey}&quot; with Meta.</p>
+        <p style={{ margin: 0, color: "var(--opus-muted)" }}>
+          Demo listens for key &quot;{hotkey}&quot; with Meta.
+        </p>
       </div>
     </HotkeyManager>
   );
 }
 
-function HotkeyListener({ hotkey, onFire }: { hotkey: string; onFire: () => void }) {
+function HotkeyListener({
+  hotkey,
+  onFire,
+}: {
+  hotkey: string;
+  onFire: () => void;
+}) {
   const combo = useMemo(
     () => ({ id: "demo-hotkey", key: hotkey, meta: true, description: "Demo" }),
     [hotkey],
@@ -2007,7 +2369,11 @@ function ClipboardPreviewInner({ value }: { value: string }) {
   const { lastCopied, writeText } = useClipboard();
   return (
     <div style={{ display: "grid", gap: 10 }}>
-      <Button type="button" variant="primary" onClick={() => void writeText(value)}>
+      <Button
+        type="button"
+        variant="primary"
+        onClick={() => void writeText(value)}
+      >
         Write to clipboard
       </Button>
       <p style={{ margin: 0, color: "var(--opus-muted)" }}>
@@ -2024,7 +2390,9 @@ function PropertyInspectorPreview({ searchable }: { searchable: boolean }) {
       items={items}
       searchable={searchable}
       onChange={(id, value) =>
-        setItems((current) => current.map((item) => (item.id === id ? { ...item, value } : item)))
+        setItems((current) =>
+          current.map((item) => (item.id === id ? { ...item, value } : item)),
+        )
       }
     />
   );
@@ -2032,12 +2400,24 @@ function PropertyInspectorPreview({ searchable }: { searchable: boolean }) {
 
 function FilterBuilderPreview() {
   const [conditions, setConditions] = useState(demoFilterConditions);
-  return <FilterBuilder conditions={conditions} fields={demoInspectorFields} onChange={setConditions} />;
+  return (
+    <FilterBuilder
+      conditions={conditions}
+      fields={demoInspectorFields}
+      onChange={setConditions}
+    />
+  );
 }
 
 function QueryBuilderPreview({ combinator }: { combinator: "and" | "or" }) {
   const [group, setGroup] = useState(() => ({ ...demoQueryGroup, combinator }));
-  return <QueryBuilder fields={demoInspectorFields} group={group} onChange={setGroup} />;
+  return (
+    <QueryBuilder
+      fields={demoInspectorFields}
+      group={group}
+      onChange={setGroup}
+    />
+  );
 }
 
 function RuleBuilderPreview({ showDisabled }: { showDisabled: boolean }) {
@@ -2052,7 +2432,12 @@ function RuleBuilderPreview({ showDisabled }: { showDisabled: boolean }) {
           return;
         }
         const disabled = rules.filter((rule) => !rule.enabled);
-        setRules([...next, ...disabled].map((rule, index) => ({ ...rule, priority: index + 1 })));
+        setRules(
+          [...next, ...disabled].map((rule, index) => ({
+            ...rule,
+            priority: index + 1,
+          })),
+        );
       }}
     />
   );
@@ -2076,8 +2461,16 @@ function PermissionsMatrixPreview() {
 }
 
 function DualListBuilderPreview({ selectedCount }: { selectedCount: number }) {
-  const [selectedIds, setSelectedIds] = useState(() => demoDualListSelected.slice(0, selectedCount));
-  return <DualListBuilder available={demoDualListItems} onChange={setSelectedIds} selectedIds={selectedIds} />;
+  const [selectedIds, setSelectedIds] = useState(() =>
+    demoDualListSelected.slice(0, selectedCount),
+  );
+  return (
+    <DualListBuilder
+      available={demoDualListItems}
+      onChange={setSelectedIds}
+      selectedIds={selectedIds}
+    />
+  );
 }
 
 function KanbanBoardPreview({ interactive }: { interactive: boolean }) {
@@ -2101,13 +2494,17 @@ function CalendarPreview({
   openDayOnSelect: boolean;
 }) {
   const [selectedDate, setSelectedDate] = useState<string | undefined>();
-  const [lastAction, setLastAction] = useState("Click a day to open its schedule.");
+  const [lastAction, setLastAction] = useState(
+    "Click a day to open its schedule.",
+  );
 
   return (
     <div className={styles.dialogPreview}>
       <Calendar
         events={showEvents ? demoCalendarEvents() : []}
-        onBookEvent={(event) => setLastAction(`Booked "${event.title}" on ${event.date}`)}
+        onBookEvent={(event) =>
+          setLastAction(`Booked "${event.title}" on ${event.date}`)
+        }
         onSelectDate={(date) => {
           setSelectedDate(date);
           if (openDayOnSelect) {
@@ -2125,7 +2522,12 @@ function CalendarPreview({
   );
 }
 
-export function ControlPreview({ category, slug, settings, onSettingsChange }: ControlPreviewProps) {
+export function ControlPreview({
+  category,
+  slug,
+  settings,
+  onSettingsChange,
+}: ControlPreviewProps) {
   if (isChartSlug(slug)) {
     const s = settings as ControlSettingsBySlug[typeof slug];
     const canMaximise = maximisableChartVariants.includes(
@@ -2162,7 +2564,10 @@ export function ControlPreview({ category, slug, settings, onSettingsChange }: C
     }
 
     return (
-      <div className={styles.chartPreviewSingle} data-maximise={s.maximise && canMaximise}>
+      <div
+        className={styles.chartPreviewSingle}
+        data-maximise={s.maximise && canMaximise}
+      >
         <Chart {...chartProps} />
       </div>
     );
@@ -2178,7 +2583,12 @@ export function ControlPreview({ category, slug, settings, onSettingsChange }: C
           placeholder={s.placeholderEnabled ? s.placeholder : undefined}
           type="text"
           value={s.value}
-          onChange={(event) => onSettingsChange({ ...s, value: event.target.value } as ControlSettings)}
+          onChange={(event) =>
+            onSettingsChange({
+              ...s,
+              value: event.target.value,
+            } as ControlSettings)
+          }
         />
       );
     }
@@ -2198,7 +2608,12 @@ export function ControlPreview({ category, slug, settings, onSettingsChange }: C
           }
           type={textFieldTypes[slug]}
           value={s.value}
-          onChange={(event) => onSettingsChange({ ...s, value: event.target.value } as ControlSettings)}
+          onChange={(event) =>
+            onSettingsChange({
+              ...s,
+              value: event.target.value,
+            } as ControlSettings)
+          }
         />
       );
     }
@@ -2211,7 +2626,12 @@ export function ControlPreview({ category, slug, settings, onSettingsChange }: C
           maxChars={s.maxCharsEnabled ? s.maxChars : undefined}
           placeholder={s.placeholderEnabled ? s.placeholder : undefined}
           value={s.value}
-          onChange={(event) => onSettingsChange({ ...s, value: event.target.value } as ControlSettings)}
+          onChange={(event) =>
+            onSettingsChange({
+              ...s,
+              value: event.target.value,
+            } as ControlSettings)
+          }
         />
       );
     }
@@ -2228,7 +2648,9 @@ export function ControlPreview({ category, slug, settings, onSettingsChange }: C
           minHeight={s.minHeight}
           placeholder={s.placeholderEnabled ? s.placeholder : undefined}
           value={s.value}
-          onChange={(value) => onSettingsChange({ ...s, value } as ControlSettings)}
+          onChange={(value) =>
+            onSettingsChange({ ...s, value } as ControlSettings)
+          }
         />
       );
     }
@@ -2240,7 +2662,9 @@ export function ControlPreview({ category, slug, settings, onSettingsChange }: C
           groups={filterSelectDemoGroups}
           id="preview-filter-select"
           value={s.value}
-          onChange={(value) => onSettingsChange({ ...s, value } as ControlSettings)}
+          onChange={(value) =>
+            onSettingsChange({ ...s, value } as ControlSettings)
+          }
         />
       );
     }
@@ -2256,7 +2680,9 @@ export function ControlPreview({ category, slug, settings, onSettingsChange }: C
           id="preview-multi-select"
           options={options.length ? options : multiSelectDemoOptions}
           value={s.value}
-          onChange={(value) => onSettingsChange({ ...s, value } as ControlSettings)}
+          onChange={(value) =>
+            onSettingsChange({ ...s, value } as ControlSettings)
+          }
         />
       );
     }
@@ -2272,7 +2698,9 @@ export function ControlPreview({ category, slug, settings, onSettingsChange }: C
           available={available.length ? available : transferListDemoAvailable}
           id="preview-transfer-list"
           selected={s.selected}
-          onChange={(selected) => onSettingsChange({ ...s, selected } as ControlSettings)}
+          onChange={(selected) =>
+            onSettingsChange({ ...s, selected } as ControlSettings)
+          }
         />
       );
     }
@@ -2284,7 +2712,9 @@ export function ControlPreview({ category, slug, settings, onSettingsChange }: C
           id="preview-password-strength-field"
           showRequirements={s.showRequirements}
           value={s.value}
-          onChange={(value) => onSettingsChange({ ...s, value } as ControlSettings)}
+          onChange={(value) =>
+            onSettingsChange({ ...s, value } as ControlSettings)
+          }
         />
       );
     }
@@ -2297,7 +2727,9 @@ export function ControlPreview({ category, slug, settings, onSettingsChange }: C
           max={s.max}
           value={s.value}
           variant={s.variant}
-          onChange={(value) => onSettingsChange({ ...s, value } as ControlSettings)}
+          onChange={(value) =>
+            onSettingsChange({ ...s, value } as ControlSettings)
+          }
         />
       );
     }
@@ -2311,9 +2743,13 @@ export function ControlPreview({ category, slug, settings, onSettingsChange }: C
         <SegmentedControlField
           {...fieldProps(s)}
           id="preview-segmented-control"
-          options={options.length ? options : ["Monthly", "Quarterly", "Yearly"]}
+          options={
+            options.length ? options : ["Monthly", "Quarterly", "Yearly"]
+          }
           value={s.value}
-          onChange={(value) => onSettingsChange({ ...s, value } as ControlSettings)}
+          onChange={(value) =>
+            onSettingsChange({ ...s, value } as ControlSettings)
+          }
         />
       );
     }
@@ -2327,7 +2763,9 @@ export function ControlPreview({ category, slug, settings, onSettingsChange }: C
           min={s.min}
           step={s.step}
           value={s.value}
-          onChange={(value) => onSettingsChange({ ...s, value } as ControlSettings)}
+          onChange={(value) =>
+            onSettingsChange({ ...s, value } as ControlSettings)
+          }
         />
       );
     }
@@ -2339,7 +2777,9 @@ export function ControlPreview({ category, slug, settings, onSettingsChange }: C
           countryCode={s.countryCode}
           id="preview-phone-number-input"
           value={s.value}
-          onChange={(value) => onSettingsChange({ ...s, value } as ControlSettings)}
+          onChange={(value) =>
+            onSettingsChange({ ...s, value } as ControlSettings)
+          }
           onCountryCodeChange={(countryCode) =>
             onSettingsChange({ ...s, countryCode } as ControlSettings)
           }
@@ -2355,7 +2795,9 @@ export function ControlPreview({ category, slug, settings, onSettingsChange }: C
           placeholder={s.placeholderEnabled ? s.placeholder : undefined}
           searchPlaceholder={s.searchPlaceholder}
           value={s.value}
-          onChange={(value) => onSettingsChange({ ...s, value } as ControlSettings)}
+          onChange={(value) =>
+            onSettingsChange({ ...s, value } as ControlSettings)
+          }
         />
       );
     }
@@ -2367,7 +2809,9 @@ export function ControlPreview({ category, slug, settings, onSettingsChange }: C
           id="preview-tree-select"
           nodes={treeSelectDemoNodes}
           value={s.value}
-          onChange={(value) => onSettingsChange({ ...s, value } as ControlSettings)}
+          onChange={(value) =>
+            onSettingsChange({ ...s, value } as ControlSettings)
+          }
         />
       );
     }
@@ -2379,7 +2823,9 @@ export function ControlPreview({ category, slug, settings, onSettingsChange }: C
           id="preview-cascader"
           options={cascaderDemoOptions}
           value={s.value}
-          onChange={(value) => onSettingsChange({ ...s, value } as ControlSettings)}
+          onChange={(value) =>
+            onSettingsChange({ ...s, value } as ControlSettings)
+          }
         />
       );
     }
@@ -2395,7 +2841,12 @@ export function ControlPreview({ category, slug, settings, onSettingsChange }: C
           id="preview-select"
           options={options.length ? options : ["Option 1"]}
           value={s.value}
-          onChange={(event) => onSettingsChange({ ...s, value: event.target.value } as ControlSettings)}
+          onChange={(event) =>
+            onSettingsChange({
+              ...s,
+              value: event.target.value,
+            } as ControlSettings)
+          }
         />
       );
     }
@@ -2411,7 +2862,12 @@ export function ControlPreview({ category, slug, settings, onSettingsChange }: C
           id={`preview-${slug}`}
           type={dateFieldTypes[slug] as DateInputType}
           value={s.value}
-          onChange={(event) => onSettingsChange({ ...s, value: event.target.value } as ControlSettings)}
+          onChange={(event) =>
+            onSettingsChange({
+              ...s,
+              value: event.target.value,
+            } as ControlSettings)
+          }
         />
       );
     }
@@ -2425,7 +2881,9 @@ export function ControlPreview({ category, slug, settings, onSettingsChange }: C
           shape={s.shape}
           size={s.size ?? "md"}
           value={s.value}
-          onChange={(value) => onSettingsChange({ ...s, value } as ControlSettings)}
+          onChange={(value) =>
+            onSettingsChange({ ...s, value } as ControlSettings)
+          }
         >
           {radioOptions.map((option) => (
             <Radio
@@ -2491,7 +2949,10 @@ export function ControlPreview({ category, slug, settings, onSettingsChange }: C
           shape={s.shape}
           size={s.size ?? "md"}
           onChange={(event) =>
-            onSettingsChange({ ...s, checked: event.target.checked } as ControlSettings)
+            onSettingsChange({
+              ...s,
+              checked: event.target.checked,
+            } as ControlSettings)
           }
         />
       );
@@ -2504,7 +2965,10 @@ export function ControlPreview({ category, slug, settings, onSettingsChange }: C
           id="preview-switch"
           checked={s.checked}
           onChange={(event) =>
-            onSettingsChange({ ...s, checked: event.target.checked } as ControlSettings)
+            onSettingsChange({
+              ...s,
+              checked: event.target.checked,
+            } as ControlSettings)
           }
         />
       );
@@ -2520,7 +2984,10 @@ export function ControlPreview({ category, slug, settings, onSettingsChange }: C
           step={s.step}
           value={s.value}
           onChange={(event) =>
-            onSettingsChange({ ...s, value: Number(event.target.value) } as ControlSettings)
+            onSettingsChange({
+              ...s,
+              value: Number(event.target.value),
+            } as ControlSettings)
           }
         />
       );
@@ -2536,7 +3003,10 @@ export function ControlPreview({ category, slug, settings, onSettingsChange }: C
           step={s.step}
           value={s.value}
           onChange={(event) =>
-            onSettingsChange({ ...s, value: Number(event.target.value) || 0 } as ControlSettings)
+            onSettingsChange({
+              ...s,
+              value: Number(event.target.value) || 0,
+            } as ControlSettings)
           }
         />
       );
@@ -2573,8 +3043,12 @@ export function ControlPreview({ category, slug, settings, onSettingsChange }: C
           viewportSize={s.viewportSize}
           zoomLabel={s.zoomLabel}
           zoomStep={s.zoomStep}
-          onChange={(value) => onSettingsChange({ ...s, value } as ControlSettings)}
-          onCrop={({ previewUrl }) => onSettingsChange({ ...s, value: previewUrl } as ControlSettings)}
+          onChange={(value) =>
+            onSettingsChange({ ...s, value } as ControlSettings)
+          }
+          onCrop={({ previewUrl }) =>
+            onSettingsChange({ ...s, value: previewUrl } as ControlSettings)
+          }
         />
       );
     }
@@ -2585,7 +3059,12 @@ export function ControlPreview({ category, slug, settings, onSettingsChange }: C
           {...fieldProps(s)}
           id="preview-color-picker"
           value={s.value}
-          onChange={(event) => onSettingsChange({ ...s, value: event.target.value } as ControlSettings)}
+          onChange={(event) =>
+            onSettingsChange({
+              ...s,
+              value: event.target.value,
+            } as ControlSettings)
+          }
         />
       );
     }
@@ -2608,9 +3087,19 @@ export function ControlPreview({ category, slug, settings, onSettingsChange }: C
     case "submit-button":
     case "reset-button": {
       const s = settings as ControlSettingsBySlug["button"];
-      const buttonType = slug === "submit-button" ? "submit" : slug === "reset-button" ? "reset" : "button";
+      const buttonType =
+        slug === "submit-button"
+          ? "submit"
+          : slug === "reset-button"
+            ? "reset"
+            : "button";
       return (
-        <Button disabled={s.disabled} size={s.size ?? "md"} type={buttonType} variant={s.variant}>
+        <Button
+          disabled={s.disabled}
+          size={s.size ?? "md"}
+          type={buttonType}
+          variant={s.variant}
+        >
           {s.label}
         </Button>
       );
@@ -2625,7 +3114,9 @@ export function ControlPreview({ category, slug, settings, onSettingsChange }: C
           labelPosition={s.labelPosition}
           mode={s.mode}
           value={s.value}
-          onChange={(value) => onSettingsChange({ ...s, value } as ControlSettings)}
+          onChange={(value) =>
+            onSettingsChange({ ...s, value } as ControlSettings)
+          }
         />
       );
     }
@@ -2642,7 +3133,9 @@ export function ControlPreview({ category, slug, settings, onSettingsChange }: C
             labelPosition={s.labelPosition}
             mode={s.mode}
             value={s.value}
-            onChange={(value) => onSettingsChange({ ...s, value } as ControlSettings)}
+            onChange={(value) =>
+              onSettingsChange({ ...s, value } as ControlSettings)
+            }
           />
           <Button variant="primary">Preview accent</Button>
         </div>
@@ -2658,7 +3151,9 @@ export function ControlPreview({ category, slug, settings, onSettingsChange }: C
           labelPosition={s.labelPosition}
           mode={s.mode}
           value={s.value}
-          onChange={(value) => onSettingsChange({ ...s, value } as ControlSettings)}
+          onChange={(value) =>
+            onSettingsChange({ ...s, value } as ControlSettings)
+          }
         />
       );
     }
@@ -2677,9 +3172,15 @@ export function ControlPreview({ category, slug, settings, onSettingsChange }: C
                 <CatalogIcon iconName="face-smile" /> Add emoji
               </Button>
             }
-            onOpenChange={(open) => onSettingsChange({ ...s, open } as ControlSettings)}
+            onOpenChange={(open) =>
+              onSettingsChange({ ...s, open } as ControlSettings)
+            }
             onSelect={(emoji) =>
-              onSettingsChange({ ...s, lastSelected: emoji, open: false } as ControlSettings)
+              onSettingsChange({
+                ...s,
+                lastSelected: emoji,
+                open: false,
+              } as ControlSettings)
             }
           />
           <p className={styles.emojiPickerSelection}>
@@ -2699,36 +3200,64 @@ export function ControlPreview({ category, slug, settings, onSettingsChange }: C
     }
     case "dialog": {
       const s = settings as ControlSettingsBySlug["dialog"];
-      return <DialogPreviewDemo settings={s} onSettingsChange={onSettingsChange} />;
+      return (
+        <DialogPreviewDemo settings={s} onSettingsChange={onSettingsChange} />
+      );
     }
     case "drawer": {
       const s = settings as ControlSettingsBySlug["drawer"];
-      return <DrawerPreviewDemo settings={s} onSettingsChange={onSettingsChange} />;
+      return (
+        <DrawerPreviewDemo settings={s} onSettingsChange={onSettingsChange} />
+      );
     }
     case "dropdown-menu": {
       const s = settings as ControlSettingsBySlug["dropdown-menu"];
-      return <DropdownMenuPreviewDemo settings={s} onSettingsChange={onSettingsChange} />;
+      return (
+        <DropdownMenuPreviewDemo
+          settings={s}
+          onSettingsChange={onSettingsChange}
+        />
+      );
     }
     case "context-menu": {
       const s = settings as ControlSettingsBySlug["context-menu"];
-      return <ContextMenuPreviewDemo settings={s} onSettingsChange={onSettingsChange} />;
+      return (
+        <ContextMenuPreviewDemo
+          settings={s}
+          onSettingsChange={onSettingsChange}
+        />
+      );
     }
     case "command-palette": {
       const s = settings as ControlSettingsBySlug["command-palette"];
-      return <CommandPalettePreviewDemo settings={s} onSettingsChange={onSettingsChange} />;
+      return (
+        <CommandPalettePreviewDemo
+          settings={s}
+          onSettingsChange={onSettingsChange}
+        />
+      );
     }
     case "modal": {
       const s = settings as ControlSettingsBySlug["modal"];
-      return <ModalPreviewDemo settings={s} onSettingsChange={onSettingsChange} />;
+      return (
+        <ModalPreviewDemo settings={s} onSettingsChange={onSettingsChange} />
+      );
     }
     case "popover": {
       const s = settings as ControlSettingsBySlug["popover"];
-      return <PopoverPreviewDemo settings={s} onSettingsChange={onSettingsChange} />;
+      return (
+        <PopoverPreviewDemo settings={s} onSettingsChange={onSettingsChange} />
+      );
     }
     case "alert": {
       const s = settings as ControlSettingsBySlug["alert"];
       if (!s.visible) {
-        return <p className={styles.dismissedHint}>Alert dismissed. Turn on “Show alert” in settings to preview it again.</p>;
+        return (
+          <p className={styles.dismissedHint}>
+            Alert dismissed. Turn on “Show alert” in settings to preview it
+            again.
+          </p>
+        );
       }
       return (
         <Alert
@@ -2737,7 +3266,9 @@ export function ControlPreview({ category, slug, settings, onSettingsChange }: C
           iconFlagged={s.iconFlagged}
           status={s.status}
           title={s.title}
-          onDismiss={() => onSettingsChange({ ...s, visible: false } as ControlSettings)}
+          onDismiss={() =>
+            onSettingsChange({ ...s, visible: false } as ControlSettings)
+          }
         />
       );
     }
@@ -2817,7 +3348,9 @@ export function ControlPreview({ category, slug, settings, onSettingsChange }: C
           containerWidth={s.width ?? "widget"}
           layout={s.previewLayout}
           unwrapped={!(s.wrapInContainer ?? true)}
-          renderItem={() => <ProgressRing label={s.label} max={s.max} value={s.value} />}
+          renderItem={() => (
+            <ProgressRing label={s.label} max={s.max} value={s.value} />
+          )}
         />
       );
     }
@@ -2828,12 +3361,13 @@ export function ControlPreview({ category, slug, settings, onSettingsChange }: C
           containerWidth={s.width ?? "widget"}
           layout={s.previewLayout}
           unwrapped={!(s.wrapInContainer ?? true)}
-          renderItem={() => <ProgressBar label={s.label} max={s.max} value={s.value} />}
+          renderItem={() => (
+            <ProgressBar label={s.label} max={s.max} value={s.value} />
+          )}
         />
       );
     }
-    case "gauge":
-    {
+    case "gauge": {
       const s = settings as ControlSettingsBySlug["gauge"];
       const gaugeFooter = getGaugeFooter(s.palette);
       const footer =
@@ -2857,7 +3391,9 @@ export function ControlPreview({ category, slug, settings, onSettingsChange }: C
           containerWidth={s.width ?? "widget"}
           layout={s.previewLayout}
           unwrapped={!(s.wrapInContainer ?? true)}
-          renderItem={() => <Gauge {...sharedGaugeProps} title={s.title} variant={s.variant} />}
+          renderItem={() => (
+            <Gauge {...sharedGaugeProps} title={s.title} variant={s.variant} />
+          )}
         />
       );
     }
@@ -2868,7 +3404,9 @@ export function ControlPreview({ category, slug, settings, onSettingsChange }: C
           containerWidth={s.width ?? "widget"}
           layout={s.previewLayout}
           unwrapped={!(s.wrapInContainer ?? true)}
-          renderItem={() => <Speedometer label={s.label} max={s.max} value={s.value} />}
+          renderItem={() => (
+            <Speedometer label={s.label} max={s.max} value={s.value} />
+          )}
         />
       );
     }
@@ -2883,7 +3421,9 @@ export function ControlPreview({ category, slug, settings, onSettingsChange }: C
             <MetricTile
               icon={<CatalogIcon iconName={s.icon} />}
               label={s.label}
-              sparkline={s.showSparkline ? [12, 18, 16, 24, 22, 30, 28] : undefined}
+              sparkline={
+                s.showSparkline ? [12, 18, 16, 24, 22, 30, 28] : undefined
+              }
               value={s.value}
             />
           )}
@@ -2891,14 +3431,23 @@ export function ControlPreview({ category, slug, settings, onSettingsChange }: C
       );
     }
     case "dashboard-content-container": {
-      const s = settings as ControlSettingsBySlug["dashboard-content-container"];
+      const s =
+        settings as ControlSettingsBySlug["dashboard-content-container"];
       return (
         <DashboardPreviewGrid
           containerWidth={s.width ?? "widget"}
           layout={s.previewLayout}
           unwrapped
           renderItem={() => (
-            <DashboardContentContainer height={s.height ?? "auto"} title={s.title} width={s.width ?? "widget"}>
+            <DashboardContentContainer
+              height={s.height ?? "auto"}
+              paddingBottom={s.paddingBottom}
+              paddingLeft={s.paddingLeft}
+              paddingRight={s.paddingRight}
+              paddingTop={s.paddingTop}
+              title={s.title}
+              width={s.width ?? "widget"}
+            >
               <StatusIndicator label="Systems healthy" status="success" />
             </DashboardContentContainer>
           )}
@@ -2916,13 +3465,17 @@ export function ControlPreview({ category, slug, settings, onSettingsChange }: C
         parseCurrencySetting(s.wonValue),
       ].slice(0, stageCount);
       const percentages = normalizePercentages(stageValues);
-      const stages = demoPipelineStages.slice(0, stageCount).map((stage, index) => ({
-        ...stage,
-        displayValue: formatCurrencySetting(stageValues[index] ?? 0),
-        percentage: percentages[index] ?? 0,
-        value: stageValues[index] ?? 0,
-      }));
-      const computedTotalValue = formatCurrencySetting(stageValues.reduce((sum, value) => sum + value, 0));
+      const stages = demoPipelineStages
+        .slice(0, stageCount)
+        .map((stage, index) => ({
+          ...stage,
+          displayValue: formatCurrencySetting(stageValues[index] ?? 0),
+          percentage: percentages[index] ?? 0,
+          value: stageValues[index] ?? 0,
+        }));
+      const computedTotalValue = formatCurrencySetting(
+        stageValues.reduce((sum, value) => sum + value, 0),
+      );
       return (
         <DashboardPreviewGrid
           containerDataComponent="pipeline-overview"
@@ -2932,11 +3485,15 @@ export function ControlPreview({ category, slug, settings, onSettingsChange }: C
           unwrapped={!(s.wrapInContainer ?? true)}
           renderItem={() => (
             <PipelineOverview
-              onPeriodChange={(period) => onSettingsChange({ ...s, period } as ControlSettings)}
+              onPeriodChange={(period) =>
+                onSettingsChange({ ...s, period } as ControlSettings)
+              }
               period={s.period}
               stages={stages}
               totalLabel={s.totalLabel}
-              totalValue={s.totalValue || computedTotalValue || demoPipelineTotalValue}
+              totalValue={
+                s.totalValue || computedTotalValue || demoPipelineTotalValue
+              }
             />
           )}
         />
@@ -2956,7 +3513,9 @@ export function ControlPreview({ category, slug, settings, onSettingsChange }: C
             <DealsOverTime
               data={data}
               maxValue={maxValue}
-              onPeriodChange={(period) => onSettingsChange({ ...s, period } as ControlSettings)}
+              onPeriodChange={(period) =>
+                onSettingsChange({ ...s, period } as ControlSettings)
+              }
               palette={s.palette ?? "purple"}
               period={s.period}
               periodOptions={[...dealsOverTimePeriodOptions]}
@@ -2995,7 +3554,8 @@ export function ControlPreview({ category, slug, settings, onSettingsChange }: C
                 <NotesActivity
                   addNoteButtonLabel={s.addNoteButtonLabel ?? "Add note"}
                   addNoteModalDescription={
-                    s.addNoteModalDescription ?? "Capture supporting detail, attach files, or mention teammates."
+                    s.addNoteModalDescription ??
+                    "Capture supporting detail, attach files, or mention teammates."
                   }
                   addNoteModalTitle={s.addNoteModalTitle ?? "Add a note"}
                   activityFooterLabel={s.activityFooterLabel}
@@ -3005,21 +3565,27 @@ export function ControlPreview({ category, slug, settings, onSettingsChange }: C
                   noteAuthorAvatarSrc={defaultUserProfilePhotoSrc}
                   noteAuthorName="Carl Fearby"
                   notesFooterLabel={s.notesFooterLabel}
-                  onActivityFooterClick={() => reportAction(s.activityFooterLabel)}
+                  onActivityFooterClick={() =>
+                    reportAction(s.activityFooterLabel)
+                  }
                   onItemClick={(item) => reportAction(`Reply: ${item.author}`)}
                   onNoteAttachClick={() => reportAction("Attach file")}
                   onNoteEmojiSelect={(emoji) => reportAction(`Emoji: ${emoji}`)}
                   onNoteMentionClick={() => reportAction("Mention teammate")}
                   onNotesFooterClick={() => reportAction(s.notesFooterLabel)}
                   onNoteSave={(note, parentNote, tags) => {
-                    const tagText = tags?.length ? ` [${tags.map((tag) => tag.label).join(", ")}]` : "";
+                    const tagText = tags?.length
+                      ? ` [${tags.map((tag) => tag.label).join(", ")}]`
+                      : "";
                     reportAction(
                       parentNote
                         ? `Saved note on ${parentNote.author}: ${note}${tagText}`
                         : `Saved note: ${note}${tagText}`,
                     );
                   }}
-                  onOpenTask={(item) => reportAction(`OpenTask: ${item.author}`)}
+                  onOpenTask={(item) =>
+                    reportAction(`OpenTask: ${item.author}`)
+                  }
                   onTabChange={(tab) => reportAction(`Tab: ${tab}`)}
                   saveButtonLabel={s.saveButtonLabel}
                 />
@@ -3031,7 +3597,13 @@ export function ControlPreview({ category, slug, settings, onSettingsChange }: C
     }
     case "lab-test-layout": {
       const s = settings as ControlSettingsBySlug["lab-test-layout"];
-      return <TestLayoutPreview key={s.layoutResetKey ?? 0} settings={s} showDebug={category === "labs"} />;
+      return (
+        <TestLayoutPreview
+          key={s.layoutResetKey ?? 0}
+          settings={s}
+          showDebug={category === "labs"}
+        />
+      );
     }
     case "user-profile":
     case "lab-user-profile": {
@@ -3068,9 +3640,14 @@ export function ControlPreview({ category, slug, settings, onSettingsChange }: C
                 viewportSize={s.viewportSize}
                 zoomLabel={s.zoomLabel}
                 zoomStep={s.zoomStep}
-                onChange={(value) => onSettingsChange({ ...s, value } as ControlSettings)}
+                onChange={(value) =>
+                  onSettingsChange({ ...s, value } as ControlSettings)
+                }
                 onCrop={({ previewUrl }) => {
-                  onSettingsChange({ ...s, value: previewUrl } as ControlSettings);
+                  onSettingsChange({
+                    ...s,
+                    value: previewUrl,
+                  } as ControlSettings);
                   reportAction("Photo cropped");
                 }}
               />
@@ -3148,7 +3725,9 @@ export function ControlPreview({ category, slug, settings, onSettingsChange }: C
           containerWidth={s.width ?? "widget"}
           layout={s.previewLayout}
           unwrapped={!(s.wrapInContainer ?? true)}
-          renderItem={() => <StatusIndicator label={s.label} status={s.status} />}
+          renderItem={() => (
+            <StatusIndicator label={s.label} status={s.status} />
+          )}
         />
       );
     }
@@ -3159,7 +3738,9 @@ export function ControlPreview({ category, slug, settings, onSettingsChange }: C
           containerWidth={s.width ?? "widget"}
           layout={s.previewLayout}
           unwrapped={!(s.wrapInContainer ?? true)}
-          renderItem={() => <TrendBadge direction={s.direction} value={s.value} />}
+          renderItem={() => (
+            <TrendBadge direction={s.direction} value={s.value} />
+          )}
         />
       );
     }
@@ -3201,9 +3782,15 @@ export function ControlPreview({ category, slug, settings, onSettingsChange }: C
 
       if (usesNestedContentRow(config) && sidebarSlot) {
         const contentRow = (
-          <Section.Row columns={s.columns} gap={s.gap} stackBelow={s.stackBelow}>
+          <Section.Row
+            columns={s.columns}
+            gap={s.gap}
+            stackBelow={s.stackBelow}
+          >
             {contentSlots.map((slot) => (
-              <Section.Column key={slot.title}>{renderPanel(slot)}</Section.Column>
+              <Section.Column key={slot.title}>
+                {renderPanel(slot)}
+              </Section.Column>
             ))}
           </Section.Row>
         );
@@ -3231,7 +3818,9 @@ export function ControlPreview({ category, slug, settings, onSettingsChange }: C
         <Section description={s.description} gap={s.gap} title={s.title}>
           <Section.Row {...rowProps}>
             {slots.map((slot) => (
-              <Section.Column key={slot.title}>{renderPanel(slot)}</Section.Column>
+              <Section.Column key={slot.title}>
+                {renderPanel(slot)}
+              </Section.Column>
             ))}
           </Section.Row>
         </Section>
@@ -3239,7 +3828,9 @@ export function ControlPreview({ category, slug, settings, onSettingsChange }: C
     }
     case "table": {
       const s = settings as ControlSettingsBySlug["table"];
-      const columns = s.numericColumn ? tableColumns : tableColumns.map((column) => ({ ...column, align: "left" as const }));
+      const columns = s.numericColumn
+        ? tableColumns
+        : tableColumns.map((column) => ({ ...column, align: "left" as const }));
       return (
         <Table
           bordered={s.bordered}
@@ -3255,16 +3846,14 @@ export function ControlPreview({ category, slug, settings, onSettingsChange }: C
     }
     case "data-grid": {
       const s = settings as ControlSettingsBySlug["data-grid"];
-      return <DataGridPreview key={`${s.infiniteScroll}-${s.layout}`} settings={s} />;
+      return (
+        <DataGridPreview key={`${s.infiniteScroll}-${s.layout}`} settings={s} />
+      );
     }
     case "skeleton": {
       const s = settings as ControlSettingsBySlug["skeleton"];
       return (
-        <Skeleton
-          animation={s.animation}
-          lines={s.lines}
-          variant={s.variant}
-        />
+        <Skeleton animation={s.animation} lines={s.lines} variant={s.variant} />
       );
     }
     case "carousel": {
@@ -3360,14 +3949,16 @@ export function ControlPreview({ category, slug, settings, onSettingsChange }: C
     }
     case "tabs": {
       const s = settings as ControlSettingsBySlug["tabs"];
-      return (
-        <TabsPreview settings={s} onSettingsChange={onSettingsChange} />
-      );
+      return <TabsPreview settings={s} onSettingsChange={onSettingsChange} />;
     }
     case "accordion": {
       const s = settings as ControlSettingsBySlug["accordion"];
       return (
-        <Accordion defaultOpen={s.defaultOpen} disabled={s.disabled} title={s.title}>
+        <Accordion
+          defaultOpen={s.defaultOpen}
+          disabled={s.disabled}
+          title={s.title}
+        >
           {s.content}
         </Accordion>
       );
@@ -3378,7 +3969,11 @@ export function ControlPreview({ category, slug, settings, onSettingsChange }: C
         <AccordionGroup
           collapsible={s.collapsible}
           defaultValue={
-            s.defaultOpenFirst ? (s.type === "multiple" ? ["item-one"] : "item-one") : undefined
+            s.defaultOpenFirst
+              ? s.type === "multiple"
+                ? ["item-one"]
+                : "item-one"
+              : undefined
           }
           type={s.type}
         >
@@ -3413,8 +4008,12 @@ export function ControlPreview({ category, slug, settings, onSettingsChange }: C
       const actions =
         s.primaryAction || s.secondaryAction ? (
           <>
-            {s.secondaryAction ? <Button variant="secondary">{s.secondaryActionLabel}</Button> : null}
-            {s.primaryAction ? <Button variant="primary">{s.primaryActionLabel}</Button> : null}
+            {s.secondaryAction ? (
+              <Button variant="secondary">{s.secondaryActionLabel}</Button>
+            ) : null}
+            {s.primaryAction ? (
+              <Button variant="primary">{s.primaryActionLabel}</Button>
+            ) : null}
           </>
         ) : undefined;
 
@@ -3430,7 +4029,15 @@ export function ControlPreview({ category, slug, settings, onSettingsChange }: C
     }
     case "badge": {
       const s = settings as ControlSettingsBySlug["badge"];
-      return <Badge dot={s.dot} label={s.label} size={s.size} tone={s.tone} variant={s.variant} />;
+      return (
+        <Badge
+          dot={s.dot}
+          label={s.label}
+          size={s.size}
+          tone={s.tone}
+          variant={s.variant}
+        />
+      );
     }
     case "avatar": {
       const s = settings as ControlSettingsBySlug["avatar"];
@@ -3445,22 +4052,43 @@ export function ControlPreview({ category, slug, settings, onSettingsChange }: C
     }
     case "avatar-group": {
       const s = settings as ControlSettingsBySlug["avatar-group"];
-      return <AvatarGroup items={demoAvatarGroupItems} max={s.max} size={s.size} />;
+      return (
+        <AvatarGroup items={demoAvatarGroupItems} max={s.max} size={s.size} />
+      );
     }
     case "list": {
       const s = settings as ControlSettingsBySlug["list"];
-      return <List density={s.density} items={demoListItems(s.showIcons)} ordered={s.ordered} />;
+      return (
+        <List
+          density={s.density}
+          items={demoListItems(s.showIcons)}
+          ordered={s.ordered}
+        />
+      );
     }
     case "description-list": {
       const s = settings as ControlSettingsBySlug["description-list"];
-      return <DescriptionList items={demoDescriptionListItems} layout={s.layout} />;
+      return (
+        <DescriptionList items={demoDescriptionListItems} layout={s.layout} />
+      );
     }
     case "divider": {
       const s = settings as ControlSettingsBySlug["divider"];
       return (
-        <div style={{ width: "100%", minHeight: s.orientation === "vertical" ? 80 : undefined, display: "flex", alignItems: "center" }}>
+        <div
+          style={{
+            width: "100%",
+            minHeight: s.orientation === "vertical" ? 80 : undefined,
+            display: "flex",
+            alignItems: "center",
+          }}
+        >
           <Divider
-            label={s.labelEnabled && s.orientation === "horizontal" ? s.label : undefined}
+            label={
+              s.labelEnabled && s.orientation === "horizontal"
+                ? s.label
+                : undefined
+            }
             orientation={s.orientation}
             tone={s.tone}
           />
@@ -3473,14 +4101,22 @@ export function ControlPreview({ category, slug, settings, onSettingsChange }: C
       if (s.includeGroups) {
         return (
           <ContentTimeline
-            groups={demoContentTimelineGroups(s.includeStatus, s.rowStyles, s.includeTags)}
+            groups={demoContentTimelineGroups(
+              s.includeStatus,
+              s.rowStyles,
+              s.includeTags,
+            )}
           />
         );
       }
 
       return (
         <ContentTimeline
-          items={demoContentTimelineItems(s.includeStatus, s.rowStyles, s.includeTags)}
+          items={demoContentTimelineItems(
+            s.includeStatus,
+            s.rowStyles,
+            s.includeTags,
+          )}
         />
       );
     }
@@ -3495,11 +4131,18 @@ export function ControlPreview({ category, slug, settings, onSettingsChange }: C
     }
     case "masonry-grid": {
       const s = settings as ControlSettingsBySlug["masonry-grid"];
-      return <MasonryGrid columns={s.columns} gap={s.gap} items={demoMasonryItems} />;
+      return (
+        <MasonryGrid columns={s.columns} gap={s.gap} items={demoMasonryItems} />
+      );
     }
     case "property-grid": {
       const s = settings as ControlSettingsBySlug["property-grid"];
-      return <PropertyGrid bordered={s.bordered} items={demoPropertyItems(s.copyable)} />;
+      return (
+        <PropertyGrid
+          bordered={s.bordered}
+          items={demoPropertyItems(s.copyable)}
+        />
+      );
     }
     case "stack": {
       const s = settings as ControlSettingsBySlug["stack"];
@@ -3512,7 +4155,8 @@ export function ControlPreview({ category, slug, settings, onSettingsChange }: C
                 padding: "10px 12px",
                 border: "1px solid var(--opus-border)",
                 borderRadius: 8,
-                background: "color-mix(in srgb, var(--opus-muted) 8%, transparent)",
+                background:
+                  "color-mix(in srgb, var(--opus-muted) 8%, transparent)",
               }}
             >
               {tile}
@@ -3532,7 +4176,8 @@ export function ControlPreview({ category, slug, settings, onSettingsChange }: C
                 padding: "10px 12px",
                 border: "1px solid var(--opus-border)",
                 borderRadius: 8,
-                background: "color-mix(in srgb, var(--opus-muted) 8%, transparent)",
+                background:
+                  "color-mix(in srgb, var(--opus-muted) 8%, transparent)",
               }}
             >
               {tile}
@@ -3552,7 +4197,8 @@ export function ControlPreview({ category, slug, settings, onSettingsChange }: C
                 padding: "14px 12px",
                 border: "1px solid var(--opus-border)",
                 borderRadius: 8,
-                background: "color-mix(in srgb, var(--opus-muted) 8%, transparent)",
+                background:
+                  "color-mix(in srgb, var(--opus-muted) 8%, transparent)",
                 textAlign: "center",
               }}
             >
@@ -3578,7 +4224,10 @@ export function ControlPreview({ category, slug, settings, onSettingsChange }: C
     case "resizable-panel": {
       const s = settings as ControlSettingsBySlug["resizable-panel"];
       return (
-        <ResizablePanel defaultHeight={s.defaultHeight} defaultWidth={s.defaultWidth}>
+        <ResizablePanel
+          defaultHeight={s.defaultHeight}
+          defaultWidth={s.defaultWidth}
+        >
           Drag the corner handle to resize this panel.
         </ResizablePanel>
       );
@@ -3606,27 +4255,131 @@ export function ControlPreview({ category, slug, settings, onSettingsChange }: C
           handleBorderRadius={s.handleBorderRadius ?? 0}
           handleHeight={s.handleHeight}
           handleMarginBlock={s.handleMarginBlock ?? 0}
-          left={s.showLeft ? <div style={{ display: "grid", gap: 8 }}>Navigation<br />Projects<br />Reports</div> : undefined}
+          left={
+            s.showLeft ? (
+              <div style={{ display: "grid", gap: 8 }}>
+                Navigation
+                <br />
+                Projects
+                <br />
+                Reports
+              </div>
+            ) : undefined
+          }
           maxLeftWidth={s.maxLeftWidth}
           maxRightWidth={s.maxRightWidth}
           minLeftWidth={s.minLeftWidth}
           minRightWidth={s.minRightWidth}
           persist={s.persist}
-          right={s.showRight ? <div style={{ display: "grid", gap: 8 }}>Inspector<br />Status<br />Activity</div> : undefined}
+          right={
+            s.showRight ? (
+              <div style={{ display: "grid", gap: 8 }}>
+                Inspector
+                <br />
+                Status
+                <br />
+                Activity
+              </div>
+            ) : undefined
+          }
           storageKey="opus-demo-three-pane-layout"
           style={{ height: s.height === "full" ? "100%" : undefined }}
         >
           <div style={{ display: "grid", gap: 10 }}>
             <strong>Workspace</strong>
-            <span>Main content stays fluid while the left and right bars resize.</span>
+            <span>
+              Main content stays fluid while the left and right bars resize.
+            </span>
           </div>
         </ThreePaneLayout>
+      );
+    }
+    case "custom-scrollbar": {
+      const s = settings as ControlSettingsBySlug["custom-scrollbar"];
+      return (
+        <div className={styles.scrollbarPreviewGrid}>
+          <section className={styles.scrollbarPreviewExample}>
+            <strong>Horizontal only</strong>
+            <CustomScrollbar
+              autoHide={s.autoHide}
+              className={styles.scrollbarHorizontalDemo}
+              horizontalThumbShape={s.horizontalThumbShape}
+              horizontalTrackShape={s.horizontalTrackShape}
+              label="Horizontal scrollbar example"
+              minThumbSize={s.minThumbSize}
+              orientation="horizontal"
+              thickness={s.thickness}
+            >
+              <div className={styles.scrollbarCardRow}>
+                {Array.from({ length: 10 }, (_, index) => (
+                  <article className={styles.scrollbarDemoCard} key={index}>
+                    <span>Workspace {index + 1}</span>
+                    <small>Quarterly planning and delivery overview</small>
+                  </article>
+                ))}
+              </div>
+            </CustomScrollbar>
+          </section>
+
+          <section className={styles.scrollbarPreviewExample}>
+            <strong>Vertical only</strong>
+            <CustomScrollbar
+              autoHide={s.autoHide}
+              className={styles.scrollbarVerticalDemo}
+              label="Vertical scrollbar example"
+              maxHeight={s.maxHeight}
+              minThumbSize={s.minThumbSize}
+              orientation="vertical"
+              thickness={s.thickness}
+              verticalThumbShape={s.verticalThumbShape}
+              verticalTrackShape={s.verticalTrackShape}
+            >
+              <div className={styles.scrollbarVerticalContent}>
+                {layoutScrollLines.map((line) => (
+                  <div key={line}>{line}</div>
+                ))}
+              </div>
+            </CustomScrollbar>
+          </section>
+
+          <section className={styles.scrollbarPreviewExample}>
+            <strong>Horizontal and vertical</strong>
+            <CustomScrollbar
+              autoHide={s.autoHide}
+              className={styles.scrollbarBothDemo}
+              horizontalThumbShape={s.horizontalThumbShape}
+              horizontalTrackShape={s.horizontalTrackShape}
+              label="Two-axis scrollbar example"
+              minThumbSize={s.minThumbSize}
+              orientation="both"
+              thickness={s.thickness}
+              verticalThumbShape={s.verticalThumbShape}
+              verticalTrackShape={s.verticalTrackShape}
+            >
+              <div className={styles.scrollbarDataCanvas}>
+                {Array.from({ length: 12 }, (_, row) => (
+                  <div className={styles.scrollbarDataRow} key={row}>
+                    <strong>Record {String(row + 1).padStart(2, "0")}</strong>
+                    <span>Enterprise account</span>
+                    <span>Implementation in progress</span>
+                    <span>Updated today</span>
+                  </div>
+                ))}
+              </div>
+            </CustomScrollbar>
+          </section>
+        </div>
       );
     }
     case "scroll-area": {
       const s = settings as ControlSettingsBySlug["scroll-area"];
       return (
-        <ScrollArea maxHeight={s.maxHeight} orientation={s.orientation}>
+        <ScrollArea
+          autoHide={s.autoHide}
+          maxHeight={s.maxHeight}
+          orientation={s.orientation}
+          thickness={s.thickness}
+        >
           <div style={{ padding: 12, display: "grid", gap: 6 }}>
             {layoutScrollLines.map((line) => (
               <div key={line}>{line}</div>
@@ -3639,7 +4392,15 @@ export function ControlPreview({ category, slug, settings, onSettingsChange }: C
       const s = settings as ControlSettingsBySlug["aspect-ratio"];
       return (
         <AspectRatio ratio={s.ratio}>
-          <div style={{ color: "var(--opus-muted)", fontSize: "0.85rem", fontWeight: 650 }}>{s.ratio}</div>
+          <div
+            style={{
+              color: "var(--opus-muted)",
+              fontSize: "0.85rem",
+              fontWeight: 650,
+            }}
+          >
+            {s.ratio}
+          </div>
         </AspectRatio>
       );
     }
@@ -3663,16 +4424,44 @@ export function ControlPreview({ category, slug, settings, onSettingsChange }: C
     case "spacer": {
       const s = settings as ControlSettingsBySlug["spacer"];
       return (
-        <div style={{ display: "flex", flexDirection: s.axis === "x" ? "row" : "column", alignItems: "stretch" }}>
-          <div style={{ padding: 10, border: "1px solid var(--opus-border)", borderRadius: 8 }}>Above</div>
+        <div
+          style={{
+            display: "flex",
+            flexDirection: s.axis === "x" ? "row" : "column",
+            alignItems: "stretch",
+          }}
+        >
+          <div
+            style={{
+              padding: 10,
+              border: "1px solid var(--opus-border)",
+              borderRadius: 8,
+            }}
+          >
+            Above
+          </div>
           <Spacer axis={s.axis} flex={s.flex} size={s.size} />
-          <div style={{ padding: 10, border: "1px solid var(--opus-border)", borderRadius: 8 }}>Below</div>
+          <div
+            style={{
+              padding: 10,
+              border: "1px solid var(--opus-border)",
+              borderRadius: 8,
+            }}
+          >
+            Below
+          </div>
         </div>
       );
     }
     case "breadcrumb": {
       const s = settings as ControlSettingsBySlug["breadcrumb"];
-      return <Breadcrumb items={demoBreadcrumbItems} separator={s.separator} />;
+      return (
+        <Breadcrumb
+          ariaLabel="Preview breadcrumb"
+          items={demoBreadcrumbItems}
+          separator={s.separator}
+        />
+      );
     }
     case "pagination": {
       const s = settings as ControlSettingsBySlug["pagination"];
@@ -3680,7 +4469,9 @@ export function ControlPreview({ category, slug, settings, onSettingsChange }: C
         <Pagination
           page={s.page}
           pageCount={s.pageCount}
-          onPageChange={(page) => onSettingsChange({ ...s, page } as ControlSettings)}
+          onPageChange={(page) =>
+            onSettingsChange({ ...s, page } as ControlSettings)
+          }
         />
       );
     }
@@ -3700,7 +4491,14 @@ export function ControlPreview({ category, slug, settings, onSettingsChange }: C
               </>
             ) : undefined
           }
-          breadcrumbs={s.showBreadcrumbs ? <Breadcrumb items={demoBreadcrumbItems} /> : undefined}
+          breadcrumbs={
+            s.showBreadcrumbs ? (
+              <Breadcrumb
+                ariaLabel="Preview breadcrumb"
+                items={demoBreadcrumbItems}
+              />
+            ) : undefined
+          }
           description="Composable page chrome for documentation and application shells."
           eyebrow="Navigation"
           title="Page header"
@@ -3712,8 +4510,16 @@ export function ControlPreview({ category, slug, settings, onSettingsChange }: C
       return (
         <Toolbar
           dense={s.dense}
-          end={<Button type="button" variant="primary">Publish</Button>}
-          start={<Button type="button" variant="secondary">Filter</Button>}
+          end={
+            <Button type="button" variant="primary">
+              Publish
+            </Button>
+          }
+          start={
+            <Button type="button" variant="secondary">
+              Filter
+            </Button>
+          }
         >
           <Button type="button" variant="light">
             Undo
@@ -3730,7 +4536,9 @@ export function ControlPreview({ category, slug, settings, onSettingsChange }: C
         <BottomNavigation
           items={demoBottomNavItems}
           value={s.value}
-          onChange={(value) => onSettingsChange({ ...s, value } as ControlSettings)}
+          onChange={(value) =>
+            onSettingsChange({ ...s, value } as ControlSettings)
+          }
         />
       );
     }
@@ -3741,7 +4549,9 @@ export function ControlPreview({ category, slug, settings, onSettingsChange }: C
           collapsed={s.collapsed}
           items={demoRailItems}
           value={s.value}
-          onChange={(value) => onSettingsChange({ ...s, value } as ControlSettings)}
+          onChange={(value) =>
+            onSettingsChange({ ...s, value } as ControlSettings)
+          }
         />
       );
     }
@@ -3757,7 +4567,13 @@ export function ControlPreview({ category, slug, settings, onSettingsChange }: C
       const s = settings as ControlSettingsBySlug["fab"];
       return (
         <div style={{ position: "relative", minHeight: 120, width: "100%" }}>
-          <FloatingActionButton extended={s.extended} icon="+" label="Create" position="end" size={s.size} />
+          <FloatingActionButton
+            extended={s.extended}
+            icon="+"
+            label="Create"
+            position="end"
+            size={s.size}
+          />
         </div>
       );
     }
@@ -3786,7 +4602,9 @@ export function ControlPreview({ category, slug, settings, onSettingsChange }: C
     }
     case "query-builder": {
       const s = settings as ControlSettingsBySlug["query-builder"];
-      return <QueryBuilderPreview combinator={s.combinator} key={s.combinator} />;
+      return (
+        <QueryBuilderPreview combinator={s.combinator} key={s.combinator} />
+      );
     }
     case "rule-builder": {
       const s = settings as ControlSettingsBySlug["rule-builder"];
@@ -3797,11 +4615,22 @@ export function ControlPreview({ category, slug, settings, onSettingsChange }: C
     }
     case "dual-list-builder": {
       const s = settings as ControlSettingsBySlug["dual-list-builder"];
-      return <DualListBuilderPreview key={s.selectedCount} selectedCount={s.selectedCount} />;
+      return (
+        <DualListBuilderPreview
+          key={s.selectedCount}
+          selectedCount={s.selectedCount}
+        />
+      );
     }
     case "scheduler": {
       const s = settings as ControlSettingsBySlug["scheduler"];
-      return <Scheduler events={demoSchedulerEvents} endHour={s.endHour} startHour={s.startHour} />;
+      return (
+        <Scheduler
+          events={demoSchedulerEvents}
+          endHour={s.endHour}
+          startHour={s.startHour}
+        />
+      );
     }
     case "kanban-board": {
       const s = settings as ControlSettingsBySlug["kanban-board"];
@@ -3830,7 +4659,9 @@ export function ControlPreview({ category, slug, settings, onSettingsChange }: C
     }
     case "json-viewer": {
       const s = settings as ControlSettingsBySlug["json-viewer"];
-      return <JsonViewer collapsedDepth={s.collapsedDepth} value={demoJsonValue} />;
+      return (
+        <JsonViewer collapsedDepth={s.collapsedDepth} value={demoJsonValue} />
+      );
     }
     case "statistic": {
       const s = settings as ControlSettingsBySlug["statistic"];
@@ -3880,7 +4711,9 @@ export function ControlPreview({ category, slug, settings, onSettingsChange }: C
       const s = settings as ControlSettingsBySlug["portal"];
       return (
         <div style={{ display: "grid", gap: 12 }}>
-          <p style={{ margin: 0, color: "var(--opus-muted)" }}>Source tree stays here.</p>
+          <p style={{ margin: 0, color: "var(--opus-muted)" }}>
+            Source tree stays here.
+          </p>
           <Portal disabled={s.disabled}>
             <div
               style={{
@@ -3904,7 +4737,9 @@ export function ControlPreview({ category, slug, settings, onSettingsChange }: C
       const s = settings as ControlSettingsBySlug["portal-host"];
       return (
         <PortalHost id={s.hostId}>
-          <p style={{ margin: 0, color: "var(--opus-muted)" }}>Host id: {s.hostId}</p>
+          <p style={{ margin: 0, color: "var(--opus-muted)" }}>
+            Host id: {s.hostId}
+          </p>
           <Portal>
             <div
               style={{
@@ -3949,7 +4784,9 @@ export function ControlPreview({ category, slug, settings, onSettingsChange }: C
               maxWidth: 280,
             }}
           >
-            <p style={{ margin: 0 }}>Tab cycles inside this panel while active.</p>
+            <p style={{ margin: 0 }}>
+              Tab cycles inside this panel while active.
+            </p>
             <Button type="button" variant="secondary">
               First
             </Button>
@@ -3966,7 +4803,12 @@ export function ControlPreview({ category, slug, settings, onSettingsChange }: C
     case "keyboard-shortcut": {
       const s = settings as ControlSettingsBySlug["keyboard-shortcut"];
       const keys = s.keys.split(/\s*\+\s*|\s+/).filter(Boolean);
-      return <KeyboardShortcut keys={keys.length ? keys : ["⌘", "K"]} size={s.size} />;
+      return (
+        <KeyboardShortcut
+          keys={keys.length ? keys : ["⌘", "K"]}
+          size={s.size}
+        />
+      );
     }
     case "hotkey-manager": {
       const s = settings as ControlSettingsBySlug["hotkey-manager"];
@@ -3974,7 +4816,13 @@ export function ControlPreview({ category, slug, settings, onSettingsChange }: C
     }
     case "copy-button": {
       const s = settings as ControlSettingsBySlug["copy-button"];
-      return <CopyButton copiedLabel={s.copiedLabel} label={s.label} value={s.value} />;
+      return (
+        <CopyButton
+          copiedLabel={s.copiedLabel}
+          label={s.label}
+          value={s.value}
+        />
+      );
     }
     case "clipboard": {
       const s = settings as ControlSettingsBySlug["clipboard"];
@@ -3984,7 +4832,15 @@ export function ControlPreview({ category, slug, settings, onSettingsChange }: C
       const s = settings as ControlSettingsBySlug["theme-provider"];
       return (
         <ThemeProvider applyToDocument={false} theme={s.theme}>
-          <div data-theme={s.theme} style={{ padding: 16, borderRadius: 12, background: "var(--opus-panel)", color: "var(--opus-text)" }}>
+          <div
+            data-theme={s.theme}
+            style={{
+              padding: 16,
+              borderRadius: 12,
+              background: "var(--opus-panel)",
+              color: "var(--opus-text)",
+            }}
+          >
             Theme provider value: <strong>{s.theme}</strong>
           </div>
         </ThemeProvider>
@@ -3996,7 +4852,9 @@ export function ControlPreview({ category, slug, settings, onSettingsChange }: C
         <ThemeSwitcher
           label={s.label}
           value={s.theme}
-          onChange={(theme) => onSettingsChange({ ...s, theme } as ControlSettings)}
+          onChange={(theme) =>
+            onSettingsChange({ ...s, theme } as ControlSettings)
+          }
         />
       );
     }
@@ -4020,7 +4878,9 @@ export function ControlPreview({ category, slug, settings, onSettingsChange }: C
           >
             {(size) => (
               <>
-                <div style={{ color: "var(--opus-muted)", marginBottom: 8 }}>{s.hint}</div>
+                <div style={{ color: "var(--opus-muted)", marginBottom: 8 }}>
+                  {s.hint}
+                </div>
                 <strong>
                   {size.width} × {size.height}
                 </strong>
@@ -4033,15 +4893,28 @@ export function ControlPreview({ category, slug, settings, onSettingsChange }: C
     case "intersection-observer": {
       const s = settings as ControlSettingsBySlug["intersection-observer"];
       return (
-        <div style={{ maxHeight: 180, overflow: "auto", borderRadius: 12, padding: 12 }}>
-          <div style={{ height: 160, color: "var(--opus-muted)" }}>Scroll down…</div>
+        <div
+          aria-label="Intersection observer demo"
+          style={{
+            maxHeight: 180,
+            overflow: "auto",
+            borderRadius: 12,
+            padding: 12,
+          }}
+          tabIndex={0}
+        >
+          <div style={{ height: 160, color: "var(--opus-muted)" }}>
+            Scroll down…
+          </div>
           <IntersectionObserver threshold={s.threshold}>
             {(visible) => (
               <div
                 style={{
                   padding: 16,
                   borderRadius: 10,
-                  background: visible ? "color-mix(in srgb, var(--opus-accent) 18%, transparent)" : "var(--opus-panel)",
+                  background: visible
+                    ? "color-mix(in srgb, var(--opus-accent) 18%, transparent)"
+                    : "var(--opus-panel)",
                 }}
               >
                 Target is {visible ? "visible" : "hidden"}
@@ -4056,7 +4929,13 @@ export function ControlPreview({ category, slug, settings, onSettingsChange }: C
     case "sidebar":
     case "lab-sidebar": {
       const s = settings as ControlSettingsBySlug["sidebar"];
-      return <SidebarPreviewDemo category={category} onSettingsChange={onSettingsChange} settings={s} />;
+      return (
+        <SidebarPreviewDemo
+          category={category}
+          onSettingsChange={onSettingsChange}
+          settings={s}
+        />
+      );
     }
     case "mega-menu": {
       const s = settings as ControlSettingsBySlug["mega-menu"];
@@ -4076,7 +4955,12 @@ export function ControlPreview({ category, slug, settings, onSettingsChange }: C
     }
     case "top-navigation": {
       const s = settings as ControlSettingsBySlug["top-navigation"];
-      return <TopNavigationPreviewDemo settings={s} onSettingsChange={onSettingsChange} />;
+      return (
+        <TopNavigationPreviewDemo
+          settings={s}
+          onSettingsChange={onSettingsChange}
+        />
+      );
     }
     default:
       return null;

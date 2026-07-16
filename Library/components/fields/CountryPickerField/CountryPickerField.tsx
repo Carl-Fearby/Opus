@@ -160,6 +160,7 @@ export function CountryPickerField({
                     .filter(Boolean)
                     .join(" ")}
                   key={`${country.code}-${country.dialCode}`}
+                  role="option"
                   type="button"
                   onClick={() => {
                     onChange(country.code);

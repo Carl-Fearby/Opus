@@ -28,6 +28,22 @@
   min-width: 0;
 }
 
+.container[data-padding-top="false"] {
+  padding-top: 0;
+}
+
+.container[data-padding-right="false"] {
+  padding-right: 0;
+}
+
+.container[data-padding-bottom="false"] {
+  padding-bottom: 0;
+}
+
+.container[data-padding-left="false"] {
+  padding-left: 0;
+}
+
 .container[data-width="widget"] {
   width: 100%;
   max-width: 24.5rem;

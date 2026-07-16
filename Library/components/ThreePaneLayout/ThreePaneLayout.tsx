@@ -12,6 +12,7 @@ import {
   type ReactNode,
 } from "react";
 import { ResizeHandle, type ResizeHandleBackground, type ResizeHandleHeight } from "../ResizeHandle";
+import { CustomScrollbar } from "../CustomScrollbar";
 import styles from "./ThreePaneLayout.module.css";
 
 export type ThreePaneLayoutSize = {
@@ -385,7 +386,7 @@ export function ThreePaneLayout({
       {left ? (
         <>
           <aside aria-label={leftLabel} className={styles.sidebar} data-side="left" id={leftId}>
-            {left}
+            <CustomScrollbar label={leftLabel} orientation="vertical">{left}</CustomScrollbar>
           </aside>
           <ResizeHandle
             aria-controls={leftId}
@@ -413,7 +414,9 @@ export function ThreePaneLayout({
           />
         </>
       ) : null}
-      <main className={styles.content}>{children}</main>
+      <main className={styles.content}>
+        <CustomScrollbar label="Main content" orientation="both">{children}</CustomScrollbar>
+      </main>
       {right ? (
         <>
           <ResizeHandle
@@ -441,7 +444,7 @@ export function ThreePaneLayout({
             onPointerDown={(event) => startResize("right", event)}
           />
           <aside aria-label={rightLabel} className={styles.sidebar} data-side="right" id={rightId}>
-            {right}
+            <CustomScrollbar label={rightLabel} orientation="vertical">{right}</CustomScrollbar>
           </aside>
         </>
       ) : null}

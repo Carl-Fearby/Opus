@@ -37,7 +37,8 @@
   display: flex;
   width: 100%;
   gap: 0;
-  border-bottom: 1px solid color-mix(in srgb, var(--dashboard-section-text) 10%, transparent);
+  border-bottom: 1px solid
+    color-mix(in srgb, var(--dashboard-section-text) 10%, transparent);
 }
 
 .composer {
@@ -47,7 +48,11 @@
 .threadItems {
   --thread-child-avatar-size: var(--notes-activity-avatar-size);
   --thread-indent: 0.325rem;
-  --thread-line-color: color-mix(in srgb, var(--opus-accent) 50%, var(--opus-border));
+  --thread-line-color: color-mix(
+    in srgb,
+    var(--opus-accent) 50%,
+    var(--opus-border)
+  );
   --thread-marker-shift: -4px;
   --thread-nest-offset: calc(var(--thread-child-avatar-size) * -0.4);
 
@@ -61,7 +66,8 @@
   isolation: isolate;
 }
 
-.threadItems :global([data-content-timeline-item="true"][data-clickable="true"]) {
+.threadItems
+  :global([data-content-timeline-item="true"][data-clickable="true"]) {
   padding: 2px 8px 2px 14px;
 }
 
@@ -125,11 +131,23 @@
   z-index: 3;
 }
 
-.feed > :global([data-content-timeline-list="true"] > [data-content-timeline-item="true"] > [data-content-timeline-rail="true"] > [data-content-timeline-marker="true"]) {
+.feed
+  > :global(
+    [data-content-timeline-list="true"]
+      > [data-content-timeline-item="true"]
+      > [data-content-timeline-rail="true"]
+      > [data-content-timeline-marker="true"]
+  ) {
   transform: translateY(-11px);
 }
 
-.feed > :global([data-content-timeline-list="true"] > [data-content-timeline-item="true"] > [data-content-timeline-rail="true"] > [data-content-timeline-line="true"]) {
+.feed
+  > :global(
+    [data-content-timeline-list="true"]
+      > [data-content-timeline-item="true"]
+      > [data-content-timeline-rail="true"]
+      > [data-content-timeline-line="true"]
+  ) {
   margin-top: -13px;
 }
 
@@ -157,7 +175,11 @@
   padding-bottom: 4px;
 }
 
-.threadItems :global([data-content-timeline-item="true"]:last-child > [data-content-timeline-body="true"]) {
+.threadItems
+  :global(
+    [data-content-timeline-item="true"]:last-child
+      > [data-content-timeline-body="true"]
+  ) {
   padding-bottom: 0;
 }
 
@@ -199,7 +221,8 @@
   align-items: center;
   min-width: 0;
   min-height: 2.15rem;
-  border: 1px solid color-mix(in srgb, var(--opus-accent) 30%, var(--dashboard-section-border));
+  border: 1px solid
+    color-mix(in srgb, var(--opus-accent) 30%, var(--dashboard-section-border));
   border-radius: 12px;
   background: color-mix(in srgb, var(--opus-input-bg) 88%, transparent);
   box-sizing: border-box;
@@ -210,7 +233,11 @@
 }
 
 .replyInputShell:focus-within {
-  border-color: color-mix(in srgb, var(--opus-accent) 70%, var(--dashboard-section-border));
+  border-color: color-mix(
+    in srgb,
+    var(--opus-accent) 70%,
+    var(--dashboard-section-border)
+  );
   box-shadow: 0 0 0 2px color-mix(in srgb, var(--opus-accent) 20%, transparent);
 }
 
@@ -347,14 +374,8 @@
   gap: 0;
   min-width: 0;
   min-height: 0;
-  overflow-y: auto;
   overscroll-behavior: contain;
   padding-right: 4px;
-  scrollbar-width: none;
-}
-
-.feed::-webkit-scrollbar {
-  display: none;
 }
 
 .feed > :global([data-content-timeline-list="true"]) {
@@ -368,11 +389,23 @@
   opacity: 0;
 }
 
-.root :global([data-content-timeline-item="true"][data-clickable="true"]:has([data-content-timeline-item="true"][data-clickable="true"]:hover)) {
+.root
+  :global(
+    [data-content-timeline-item="true"][data-clickable="true"]:has(
+        [data-content-timeline-item="true"][data-clickable="true"]:hover
+      )
+  ) {
   background: transparent;
 }
 
-.root :global([data-content-timeline-item="true"][data-clickable="true"]:has([data-content-timeline-item="true"][data-clickable="true"]:hover) > [data-content-timeline-body="true"] > [data-content-timeline-content="true"]::before) {
+.root
+  :global(
+    [data-content-timeline-item="true"][data-clickable="true"]:has(
+        [data-content-timeline-item="true"][data-clickable="true"]:hover
+      )
+      > [data-content-timeline-body="true"]
+      > [data-content-timeline-content="true"]::before
+  ) {
   background: transparent;
 }
 
@@ -383,7 +416,8 @@
 .footer {
   grid-area: footer;
   padding: 10px 0 14px;
-  border-top: 1px solid color-mix(in srgb, var(--dashboard-section-text) 10%, transparent);
+  border-top: 1px solid
+    color-mix(in srgb, var(--dashboard-section-text) 10%, transparent);
 }
 
 .footerAction {

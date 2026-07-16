@@ -99,6 +99,96 @@
   max-width: 100%;
 }
 
+.scrollbarPreviewGrid {
+  display: grid;
+  gap: 18px;
+}
+
+.scrollbarPreviewExample {
+  display: grid;
+  gap: 8px;
+  min-width: 0;
+}
+
+.scrollbarPreviewExample > strong {
+  color: var(--opus-muted);
+  font-size: 0.78rem;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.scrollbarHorizontalDemo {
+  height: 128px;
+  border: 1px solid var(--opus-border);
+  border-radius: var(--opus-input-radius);
+}
+
+.scrollbarCardRow {
+  display: flex;
+  gap: 10px;
+  width: calc(100% + 720px);
+  min-width: max-content;
+  padding: 12px 18px 20px 12px;
+}
+
+.scrollbarDemoCard {
+  display: grid;
+  gap: 7px;
+  width: 160px;
+  padding: 14px;
+  border: 1px solid var(--opus-border);
+  border-radius: var(--opus-input-radius);
+  background: color-mix(in srgb, var(--opus-input-bg) 78%, transparent);
+}
+
+.scrollbarDemoCard small {
+  color: var(--opus-muted);
+  line-height: 1.35;
+}
+
+.scrollbarVerticalDemo {
+  height: 220px;
+  border: 1px solid var(--opus-border);
+  border-radius: var(--opus-input-radius);
+}
+
+.scrollbarVerticalContent {
+  display: grid;
+  gap: 8px;
+  padding: 14px 22px 14px 14px;
+}
+
+.scrollbarBothDemo {
+  height: 220px;
+  border: 1px solid var(--opus-border);
+  border-radius: var(--opus-input-radius);
+}
+
+.scrollbarDataCanvas {
+  display: grid;
+  gap: 8px;
+  width: calc(100% + 720px);
+  min-width: 920px;
+  padding: 12px 22px 22px 12px;
+}
+
+.scrollbarDataRow {
+  display: grid;
+  grid-template-columns: 120px 180px 260px 140px;
+  gap: 16px;
+  min-height: 42px;
+  align-items: center;
+  padding: 0 12px;
+  border: 1px solid var(--opus-border);
+  border-radius: var(--opus-input-radius);
+  background: color-mix(in srgb, var(--opus-input-bg) 72%, transparent);
+  white-space: nowrap;
+}
+
+.scrollbarDataRow span {
+  color: var(--opus-muted);
+}
+
 .previewStage:has(> [data-full-bleed="true"]) {
   height: 44rem;
   padding: 0;

@@ -41,19 +41,19 @@ export function StatTiles({ className, items, layout = "fill" }: StatTilesProps)
         const tone = item.tone ?? defaultToneForIndex(index);
 
         return (
-          <StatTile
-            className={styles.statTile}
-            comparison={item.comparison}
-            icon={item.icon}
-            key={item.id}
-            label={item.label}
-            onClick={item.onClick}
-            role="listitem"
-            tone={tone}
-            trend={item.trend}
-            trendValue={item.trendValue}
-            value={item.value}
-          />
+          <div className={styles.statTileItem} key={item.id} role="listitem">
+            <StatTile
+              className={styles.statTile}
+              comparison={item.comparison}
+              icon={item.icon}
+              label={item.label}
+              onClick={item.onClick}
+              tone={tone}
+              trend={item.trend}
+              trendValue={item.trendValue}
+              value={item.value}
+            />
+          </div>
         );
       })}
     </div>

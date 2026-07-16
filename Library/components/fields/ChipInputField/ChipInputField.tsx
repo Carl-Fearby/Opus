@@ -108,7 +108,6 @@ export function ChipInput({
     >
       <div
         aria-disabled={disabled ? "true" : undefined}
-        aria-invalid={error ? "true" : undefined}
         aria-label={`${label} values`}
         className={[
           styles.field,
@@ -122,7 +121,6 @@ export function ChipInput({
         data-chip-variant={variant}
         onClick={focusInput}
         role="group"
-        {...fieldInputAriaProps(shellAria, { invalid: Boolean(error) })}
       >
         {value.map((chip, index) => (
           <span key={`${chip}-${index}`} className={styles.chip}>
@@ -147,6 +145,7 @@ export function ChipInput({
           <input
             ref={inputRef}
             aria-label={value.length ? `Add another ${label.toLowerCase()}` : `Add ${label.toLowerCase()}`}
+            aria-invalid={error ? "true" : undefined}
             className={styles.input}
             disabled={disabled}
             id={fieldId}
@@ -156,6 +155,7 @@ export function ChipInput({
             onBlur={commitDraft}
             onChange={(event) => setDraft(event.target.value)}
             onKeyDown={handleKeyDown}
+            {...fieldInputAriaProps(shellAria, { invalid: Boolean(error) })}
           />
         ) : null}
       </div>

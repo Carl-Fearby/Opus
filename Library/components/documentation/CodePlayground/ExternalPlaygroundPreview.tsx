@@ -22,7 +22,7 @@ export function ExternalPlaygroundPreview() {
     return (
       <main className={styles.externalPreviewEmpty}>
         <h1>Preview unavailable</h1>
-        <p>Return to the playground and open Show External again.</p>
+        <p>Return to the playground and choose Open External again.</p>
       </main>
     );
   }

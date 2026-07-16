@@ -157,6 +157,7 @@ const componentIcons: Record<string, IconDefinition> = {
   "dock-layout": faTableColumns,
   "three-pane-layout": faTableColumns,
   "scroll-area": faMaximize,
+  "custom-scrollbar": faBars,
   "aspect-ratio": faExpandAlt,
   container: faObjectGroup,
   spacer: faMinus,

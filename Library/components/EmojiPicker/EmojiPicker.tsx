@@ -319,6 +319,7 @@ export function EmojiPicker({
           filteredEmojis.map((entry, index) => (
             <button
               aria-label={entry.keywords[0] ?? entry.emoji}
+              aria-selected="false"
               className={styles.emojiButton}
               key={`${entry.emoji}-${index}`}
               role="option"

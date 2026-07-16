@@ -27,7 +27,7 @@ export function DockLayout({
       {top ? <div className={styles.top}>{top}</div> : null}
       <div className={styles.middle}>
         {left ? <aside className={styles.left}>{left}</aside> : null}
-        <main className={styles.center}>{children}</main>
+        <div className={styles.center}>{children}</div>
         {right ? <aside className={styles.right}>{right}</aside> : null}
       </div>
       {bottom ? <div className={styles.bottom}>{bottom}</div> : null}

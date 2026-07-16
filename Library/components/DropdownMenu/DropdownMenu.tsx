@@ -120,7 +120,7 @@ export function DropdownMenuItem({
       data-has-icon-column={showIconColumn ? "true" : undefined}
       disabled={item.disabled}
       onClick={() => onSelect(item)}
-      role="menuitem"
+      role={item.checked === undefined ? "menuitem" : "menuitemcheckbox"}
       type="button"
     >
       {showIconColumn ? (

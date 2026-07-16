@@ -134,7 +134,7 @@ Both providers read theme from `OpusThemeProvider` via `useOpusTheme()`.
 - The source pane can be reduced to 15% of the Playground width.
 - Use `Cmd+A` on macOS or `Ctrl+A` elsewhere to select all source while the editor is focused.
 - **Reset preview** is a frame-level action in the Preview options menu. It clears saved preview-layout state and remounts the rendered example without adding controls to preview content.
-- **Show External** opens the same rendered preview in a dedicated browser view.
+- **Open External** opens the current Playground code in a dedicated browser window.
 
 ---
 

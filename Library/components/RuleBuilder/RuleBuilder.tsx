@@ -160,7 +160,7 @@ export function RuleBuilder({ onChange, rules }: RuleBuilderProps) {
       <div className={styles.output} aria-label="Rule output">
         <div className={styles.outputLabel}>Output</div>
         <p className={styles.expression}>{expression}</p>
-        <pre className={styles.payload}>{JSON.stringify(payload, null, 2)}</pre>
+        <pre className={styles.payload} tabIndex={0}>{JSON.stringify(payload, null, 2)}</pre>
       </div>
     </div>
   );

@@ -49,8 +49,8 @@ export function ColorField({
           .join(" ")}
       >
         <input
+          aria-label={label}
           aria-invalid={error ? "true" : undefined}
-          aria-valuetext={value.toUpperCase()}
           className={styles.nativeInput}
           id={id}
           onChange={onChange}

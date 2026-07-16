@@ -10,14 +10,15 @@ export type BreadcrumbItem = {
 };
 
 export type BreadcrumbProps = {
+  ariaLabel?: string;
   items: BreadcrumbItem[];
   onNavigate?: (id: string) => void;
   separator?: ReactNode;
 };
 
-export function Breadcrumb({ items, onNavigate, separator = "/" }: BreadcrumbProps) {
+export function Breadcrumb({ ariaLabel = "Breadcrumb", items, onNavigate, separator = "/" }: BreadcrumbProps) {
   return (
-    <nav aria-label="Breadcrumb" className={styles.root}>
+    <nav aria-label={ariaLabel} className={styles.root}>
       <ol className={styles.list}>
         {items.map((item, index) => {
           const isLast = index === items.length - 1;

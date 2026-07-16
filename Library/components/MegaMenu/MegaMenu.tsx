@@ -465,7 +465,8 @@ export function MegaMenu({
         data-portaled={isStaticPanel ? undefined : "true"}
         data-theme={isStaticPanel ? undefined : theme}
         id={menuId}
-        role="menu"
+        aria-label={`${activeConfig.label} navigation`}
+        role="region"
         style={portaledPanelStyle}
       >
         <div
@@ -481,7 +482,6 @@ export function MegaMenu({
                     <button
                       className={styles.item}
                       key={item.id}
-                      role="menuitem"
                       type="button"
                       onClick={() => handleSelect(item)}
                     >
@@ -524,7 +524,7 @@ export function MegaMenu({
       data-surface={inTopNavigation ? "navigation" : isStaticPanel ? "static" : "standalone"}
     >
       {isStaticPanel ? null : (
-        <div className={styles.menuBar} role="menubar">
+        <div className={styles.menuBar}>
           {resolvedMenus.map((menu) => {
             const isActive = activeConfig?.id === menu.id && Boolean(visible);
 
@@ -535,7 +535,6 @@ export function MegaMenu({
                 aria-haspopup="menu"
                 className={styles.trigger}
                 key={menu.id}
-                role="menuitem"
                 type="button"
                 onClick={() => {
                   if (inTopNavigation) {

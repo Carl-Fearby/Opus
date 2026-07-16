@@ -3,9 +3,11 @@
 import dynamic from "next/dynamic";
 import Link from "next/link";
 import { useEffect } from "react";
-import { useSetComponentsPageHeader } from "@/components/development/ComponentsThemeProvider";
+import { useComponentsTheme, useSetComponentsPageHeader } from "@/components/development/ComponentsThemeProvider";
 import { useComponentSettings } from "@/components/development/ComponentsShell/ComponentSettingsContext";
 import { componentRawPath } from "@/lib/controls/routes";
+import { generateUsageCode } from "@/lib/controls/generateUsageCode";
+import { createExternalPreviewPayload } from "@/lib/playground/externalPreviewStorage";
 import { storePlaygroundSeed } from "@/lib/playground/playgroundNavigation";
 import type { ControlDefinition, ControlSettings } from "@/lib/controls/types";
 import { ControlDetailPanel } from "./ControlDetailPanel";
@@ -42,6 +44,7 @@ type ControlDetailProps = {
 
 export function ControlDetail({ control, defaultSettings, documentation }: ControlDetailProps) {
   useSetComponentsPageHeader(control.title, control.description);
+  const { previewTheme } = useComponentsTheme();
   const { settings, setSettings } = useComponentSettings(control.slug, defaultSettings);
 
   useEffect(() => {
@@ -52,6 +55,24 @@ export function ControlDetail({ control, defaultSettings, documentation }: Contr
     <>
       <PreviewThemeControls id={`preview-theme-toggle-${control.slug}`} />
       <OpenInPlaygroundLink category={control.category} settings={settings} slug={control.slug} />
+      <button
+        className={styles.panelActionButton}
+        onClick={() => {
+          const previewId = createExternalPreviewPayload({
+            code: generateUsageCode(control.slug, settings, control.category).full,
+            padded: control.slug !== "lab-test-layout",
+            theme: previewTheme,
+          });
+          window.open(
+            `/documentation/playground/external?preview=${encodeURIComponent(previewId)}`,
+            "_blank",
+            "noopener,noreferrer",
+          );
+        }}
+        type="button"
+      >
+        Open External
+      </button>
       <Link
         className={styles.panelActionButton}
         href={componentRawPath(control.slug, settings)}

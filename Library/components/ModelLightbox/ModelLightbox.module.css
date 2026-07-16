@@ -10,7 +10,7 @@
   justify-content: center;
   border: 1px solid color-mix(in srgb, var(--opus-accent) 58%, transparent);
   border-radius: var(--opus-input-radius);
-  background: var(--opus-accent);
+  background: color-mix(in srgb, var(--opus-accent) 65%, #11132b);
   color: var(--opus-accent-contrast);
   cursor: pointer;
   font: inherit;

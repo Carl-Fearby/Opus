@@ -1,5 +1,5 @@
 import type { CSSProperties, ReactNode } from "react";
-import styles from "./ScrollArea.module.css";
+import { CustomScrollbar } from "@/components/CustomScrollbar";
 
 export type ScrollAreaProps = {
   children: ReactNode;
@@ -7,25 +7,29 @@ export type ScrollAreaProps = {
   maxHeight?: number | string;
   orientation?: "vertical" | "horizontal" | "both";
   style?: CSSProperties;
+  autoHide?: boolean;
+  thickness?: number;
 };
 
 export function ScrollArea({
+  autoHide = false,
   children,
   className,
   maxHeight = 240,
   orientation = "vertical",
   style,
+  thickness,
 }: ScrollAreaProps) {
   return (
-    <div
-      className={[styles.root, className].filter(Boolean).join(" ")}
-      data-orientation={orientation}
-      style={{
-        ...style,
-        maxHeight: typeof maxHeight === "number" ? `${maxHeight}px` : maxHeight,
-      }}
+    <CustomScrollbar
+      autoHide={autoHide}
+      className={className}
+      maxHeight={maxHeight}
+      orientation={orientation}
+      style={style}
+      thickness={thickness}
     >
-      <div className={styles.viewport}>{children}</div>
-    </div>
+      {children}
+    </CustomScrollbar>
   );
 }

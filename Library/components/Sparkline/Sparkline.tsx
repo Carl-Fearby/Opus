@@ -52,6 +52,7 @@ export function Sparkline({
 
   const chart = (
     <svg
+      aria-label={resolvedVariant === "labeled" && label ? label : undefined}
       aria-hidden={resolvedVariant === "labeled" && label ? undefined : true}
       className={styles.svg}
       height={height}

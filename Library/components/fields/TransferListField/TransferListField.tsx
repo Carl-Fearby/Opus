@@ -131,14 +131,15 @@ function ListColumn({
   return (
     <div className={styles.column}>
       <div className={styles.columnHeader}>{title}</div>
-      <ul className={styles.list} role="listbox">
+      <ul aria-label={title} aria-multiselectable="true" className={styles.list} role="listbox">
         {items.map((item) => (
-          <li key={item}>
+          <li key={item} role="presentation">
             <button
               aria-selected={active.includes(item)}
               className={[styles.item, active.includes(item) ? styles.itemActive : ""]
                 .filter(Boolean)
                 .join(" ")}
+              role="option"
               type="button"
               onClick={() => onToggle(item)}
             >

@@ -1,6 +1,10 @@
 import type { ControlSettingsBySlug, ControlSlug } from "./types";
 import { chartDefaults } from "./chartDefaults";
-import { defaultUserProfileMenuItemsJson, defaultUserProfilePhotoSrc, defaultUserProfilePhotoUploadMenuItemId } from "./userProfileDemoData";
+import {
+  defaultUserProfileMenuItemsJson,
+  defaultUserProfilePhotoSrc,
+  defaultUserProfilePhotoUploadMenuItemId,
+} from "./userProfileDemoData";
 
 const now = new Date();
 
@@ -25,11 +29,15 @@ function toMonthValue(date: Date) {
 }
 
 function toWeekValue(date: Date) {
-  const target = new Date(Date.UTC(date.getFullYear(), date.getMonth(), date.getDate()));
+  const target = new Date(
+    Date.UTC(date.getFullYear(), date.getMonth(), date.getDate()),
+  );
   const dayNumber = target.getUTCDay() || 7;
   target.setUTCDate(target.getUTCDate() + 4 - dayNumber);
   const yearStart = new Date(Date.UTC(target.getUTCFullYear(), 0, 1));
-  const week = Math.ceil(((target.getTime() - yearStart.getTime()) / 86400000 + 1) / 7);
+  const week = Math.ceil(
+    ((target.getTime() - yearStart.getTime()) / 86400000 + 1) / 7,
+  );
   return `${target.getUTCFullYear()}-W${pad(week)}`;
 }
 
@@ -108,7 +116,8 @@ export const defaultSettings: ControlSettingsBySlug = {
     ...baseFieldDefaults,
     label: "Interests",
     value: ["design", "frontend"],
-    options: "Design:design, Frontend:frontend, Research:research, Strategy:strategy",
+    options:
+      "Design:design, Frontend:frontend, Research:research, Strategy:strategy",
     selectionMode: "multiple",
     variant: "soft",
     disabled: false,
@@ -261,7 +270,8 @@ export const defaultSettings: ControlSettingsBySlug = {
   "transfer-list": {
     ...baseFieldDefaults,
     label: "Office locations",
-    available: "Amsterdam, Berlin, Copenhagen, Dublin, Helsinki, Lisbon, Madrid, Oslo, Prague, Stockholm",
+    available:
+      "Amsterdam, Berlin, Copenhagen, Dublin, Helsinki, Lisbon, Madrid, Oslo, Prague, Stockholm",
     selected: ["London", "Paris"],
   },
   "password-strength-field": {
@@ -429,7 +439,7 @@ export const defaultSettings: ControlSettingsBySlug = {
     showArrow: true,
     open: false,
   },
-  "alert": {
+  alert: {
     status: "error",
     title: "There was a problem with your submission.",
     description: "Please correct the errors below and try again.",
@@ -516,7 +526,8 @@ export const defaultSettings: ControlSettingsBySlug = {
     subtitle: "Supporting description for the gauge",
     change: "+10%",
     changeTrend: "up",
-    summary: "You earn $3287 today, its higher than last month. Keep up your good work!",
+    summary:
+      "You earn $3287 today, its higher than last month. Keep up your good work!",
     density: "comfortable",
     footerMetricCount: 3,
     palette: "opus",
@@ -652,7 +663,8 @@ export const defaultSettings: ControlSettingsBySlug = {
   },
   "notes-activity": {
     addNoteButtonLabel: "Add note",
-    addNoteModalDescription: "Capture supporting detail, attach files, or mention teammates.",
+    addNoteModalDescription:
+      "Capture supporting detail, attach files, or mention teammates.",
     addNoteModalTitle: "Add a note",
     activityFooterLabel: "View all activities",
     composerPlaceholder: "Add a note...",
@@ -678,7 +690,8 @@ export const defaultSettings: ControlSettingsBySlug = {
   },
   "lab-notes-activity": {
     addNoteButtonLabel: "Add note",
-    addNoteModalDescription: "Capture supporting detail, attach files, or mention teammates.",
+    addNoteModalDescription:
+      "Capture supporting detail, attach files, or mention teammates.",
     addNoteModalTitle: "Add a note",
     activityFooterLabel: "View all activities",
     composerPlaceholder: "Add a note...",
@@ -700,6 +713,10 @@ export const defaultSettings: ControlSettingsBySlug = {
     footerText: "Signed in as Alex Morgan",
     activeItem: "library",
     groupOpen: true,
+    paddingBottom: false,
+    paddingLeft: false,
+    paddingRight: false,
+    paddingTop: false,
     persistState: true,
     height: "auto",
     wrapInContainer: true,
@@ -747,6 +764,10 @@ export const defaultSettings: ControlSettingsBySlug = {
   },
   "dashboard-content-container": {
     height: "auto",
+    paddingBottom: true,
+    paddingLeft: true,
+    paddingRight: true,
+    paddingTop: true,
     previewLayout: "single",
     title: "Dashboard section",
     width: "widget",
@@ -767,7 +788,8 @@ export const defaultSettings: ControlSettingsBySlug = {
   },
   panel: {
     title: "Release readiness",
-    description: "A structural panel for settings, grouped content, and page sections.",
+    description:
+      "A structural panel for settings, grouped content, and page sections.",
     content:
       "Panels are broader layout primitives than cards. Use them for page sections, settings groups, and structured content blocks.",
     tone: "default",
@@ -778,16 +800,19 @@ export const defaultSettings: ControlSettingsBySlug = {
   },
   section: {
     title: "Page layout",
-    description: "Responsive rows and columns that stack on mobile and expand on larger screens.",
+    description:
+      "Responsive rows and columns that stack on mobile and expand on larger screens.",
     sidebar: "none",
     columns: 3,
     gap: "md",
     stackBelow: "mobile",
     sidebarRatio: "1:2",
     sidebarTitle: "Sidebar",
-    sidebarContent: "Navigation, filters, or supporting controls beside the main content area.",
+    sidebarContent:
+      "Navigation, filters, or supporting controls beside the main content area.",
     columnOneTitle: "Primary column",
-    columnOneContent: "Main content area. On mobile this stacks above the secondary column.",
+    columnOneContent:
+      "Main content area. On mobile this stacks above the secondary column.",
     columnTwoTitle: "Secondary column",
     columnTwoContent: "Supporting content beside the primary column.",
     columnThreeTitle: "Third column",
@@ -905,7 +930,8 @@ export const defaultSettings: ControlSettingsBySlug = {
   },
   "empty-state": {
     title: "No components yet",
-    description: "Create your first component to start building your library and sharing patterns across teams.",
+    description:
+      "Create your first component to start building your library and sharing patterns across teams.",
     density: "comfortable",
     showIcon: true,
     icon: "inbox",
@@ -1013,8 +1039,21 @@ export const defaultSettings: ControlSettingsBySlug = {
     showRight: true,
   },
   "scroll-area": {
+    autoHide: true,
     maxHeight: 180,
     orientation: "vertical",
+    thickness: 12,
+  },
+  "custom-scrollbar": {
+    autoHide: true,
+    horizontalThumbShape: "round",
+    horizontalTrackShape: "round",
+    maxHeight: 220,
+    minThumbSize: 32,
+    orientation: "vertical",
+    thickness: 12,
+    verticalThumbShape: "round",
+    verticalTrackShape: "round",
   },
   "aspect-ratio": {
     ratio: "16 / 9",
@@ -1205,6 +1244,10 @@ export const defaultSettings: ControlSettingsBySlug = {
     footerText: "Signed in as Alex Morgan",
     activeItem: "library",
     groupOpen: true,
+    paddingBottom: false,
+    paddingLeft: false,
+    paddingRight: false,
+    paddingTop: false,
     persistState: true,
     height: "auto",
     wrapInContainer: false,
@@ -1232,6 +1275,8 @@ export const defaultSettings: ControlSettingsBySlug = {
   },
 };
 
-export function getDefaultSettings<S extends ControlSlug>(slug: S): ControlSettingsBySlug[S] {
+export function getDefaultSettings<S extends ControlSlug>(
+  slug: S,
+): ControlSettingsBySlug[S] {
   return structuredClone(defaultSettings[slug]);
 }

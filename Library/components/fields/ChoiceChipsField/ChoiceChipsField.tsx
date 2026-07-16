@@ -83,7 +83,6 @@ export function ChoiceChips({
     >
       <div
         aria-disabled={disabled ? "true" : undefined}
-        aria-multiselectable={isSingle ? undefined : "true"}
         className={[styles.root, inputControlSizeClassName[size], disabled ? styles.disabled : ""]
           .filter(Boolean)
           .join(" ")}

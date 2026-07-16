@@ -25,7 +25,7 @@
 }
 
 .segmentActive {
-  background: var(--opus-accent);
+  background: color-mix(in srgb, var(--opus-accent) 65%, #11132b);
   color: #fff;
   box-shadow: 0 8px 18px color-mix(in srgb, var(--opus-accent) 28%, transparent);
 }

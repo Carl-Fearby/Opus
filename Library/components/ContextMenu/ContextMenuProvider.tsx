@@ -406,13 +406,11 @@ export function ContextMenuTarget({
   return (
     <div
       ref={targetRef}
-      aria-controls={targetOpen ? menuId : undefined}
-      aria-expanded={targetOpen}
-      aria-haspopup="menu"
       aria-label={label}
       className={className ? `${styles.target} ${className}` : styles.target}
       onContextMenu={handleContextMenu}
       onKeyDown={handleKeyDown}
+      role="group"
       tabIndex={0}
     >
       {children}

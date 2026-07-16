@@ -25,6 +25,10 @@
   height: var(--tile-size);
 }
 
+.tileItem {
+  min-width: 0;
+}
+
 .row[data-layout="fill"] .tile {
   width: 100%;
   height: var(--tile-size);

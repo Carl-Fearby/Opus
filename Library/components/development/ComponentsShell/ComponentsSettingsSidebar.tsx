@@ -3,6 +3,7 @@
 import dynamic from "next/dynamic";
 import { useCallback, useEffect, useRef } from "react";
 import { OpusThemeProvider } from "@/components/OpusThemeProvider";
+import { CustomScrollbar } from "@/components/CustomScrollbar";
 import {
   CompositionPartsList,
   CompositionUsageList,
@@ -133,7 +134,8 @@ export function ComponentsSettingsSidebar() {
         <div className={styles.settingsSidebarHeader}>
           <h2 className={styles.settingsSidebarTitle}>Settings</h2>
         </div>
-        <div className={styles.settingsSidebarBody}>
+        <CustomScrollbar className={styles.settingsSidebarBody} label="Component settings" orientation="vertical">
+          <div className={styles.settingsSidebarBodyInner}>
           <OpusThemeProvider theme={theme}>
             <ControlSettingsPanel slug={activeSlug} settings={settings} onChange={setSettings} />
             {hasCompositionLinks ? (
@@ -147,7 +149,8 @@ export function ComponentsSettingsSidebar() {
               </div>
             ) : null}
           </OpusThemeProvider>
-        </div>
+          </div>
+        </CustomScrollbar>
       </aside>
     </div>
   );

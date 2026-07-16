@@ -92,6 +92,8 @@ function renderTimelineItem({
       data-marker={showAvatar ? "avatar" : "dot"}
       data-status={item.status ?? "default"}
       key={itemKey}
+      aria-label={isInteractive ? `${item.title}. Press Enter to activate.` : undefined}
+      aria-roledescription={isInteractive ? "interactive timeline item" : undefined}
       onClick={
         onItemClick
           ? (event) => {
@@ -110,7 +112,7 @@ function renderTimelineItem({
           : undefined
       }
       onKeyDown={handleKeyDown}
-      role={isInteractive ? "button" : undefined}
+      role={isInteractive ? "listitem" : undefined}
       tabIndex={isInteractive ? 0 : undefined}
     >
       <div aria-hidden="true" className={styles.rail} data-content-timeline-rail="true">

@@ -93,7 +93,7 @@ export function TreeView({ defaultExpandedIds, nodes }: TreeViewProps) {
   }
 
   return (
-    <ul aria-label="Tree" className={styles.tree} role="tree">
+    <ul aria-label="Tree" className={styles.tree}>
       {nodes.map((node) => (
         <TreeNode
           depth={0}

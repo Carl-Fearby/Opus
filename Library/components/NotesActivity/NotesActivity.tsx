@@ -11,9 +11,13 @@ import {
   type ReactNode,
 } from "react";
 import { CatalogIcon } from "@/components/CatalogIcon";
-import { ContentTimeline, type ContentTimelineItem } from "@/components/ContentTimeline";
+import {
+  ContentTimeline,
+  type ContentTimelineItem,
+} from "@/components/ContentTimeline";
 import { EmojiPicker } from "@/components/EmojiPicker";
 import { NoteComposer } from "@/components/NoteComposer";
+import { CustomScrollbar } from "@/components/CustomScrollbar";
 import {
   DEFAULT_NOTE_TAG_OPTIONS,
   NoteTagList,
@@ -21,7 +25,10 @@ import {
   type NoteTagOption,
   type NoteTagTone,
 } from "@/components/NoteTag";
-import type { ContentTimelineStatus, SurfaceDensity } from "@/components/fields/types";
+import type {
+  ContentTimelineStatus,
+  SurfaceDensity,
+} from "@/components/fields/types";
 import styles from "./NotesActivity.module.css";
 
 export type NotesActivityTagTone = NoteTagTone;
@@ -75,7 +82,11 @@ export type NotesActivityProps = {
   onNoteEmojiSelect?: (emoji: string) => void;
   onNoteMentionClick?: () => void;
   onNotesFooterClick?: () => void;
-  onNoteSave?: (note: string, parentNote?: NotesActivityItem, tags?: NotesActivityTag[]) => void;
+  onNoteSave?: (
+    note: string,
+    parentNote?: NotesActivityItem,
+    tags?: NotesActivityTag[],
+  ) => void;
   onOpenTask?: (item: NotesActivityItem) => void;
   onTabChange?: (tab: NotesActivityTab) => void;
   saveButtonLabel?: string;
@@ -129,7 +140,11 @@ type ThreadedTimelineProps = {
   onItemDoubleClick?: (item: ContentTimelineItem, index: number) => void;
 };
 
-function ThreadedTimeline({ items, onItemClick, onItemDoubleClick }: ThreadedTimelineProps) {
+function ThreadedTimeline({
+  items,
+  onItemClick,
+  onItemDoubleClick,
+}: ThreadedTimelineProps) {
   const rootRef = useRef<HTMLDivElement>(null);
   const [connectorPaths, setConnectorPaths] = useState<string[]>([]);
 
@@ -143,12 +158,16 @@ function ThreadedTimeline({ items, onItemClick, onItemDoubleClick }: ThreadedTim
     const parentMarker = parentItem?.querySelector<HTMLElement>(
       ':scope > [data-content-timeline-rail="true"] > [data-content-timeline-marker="true"]',
     );
-    const list = Array.from(root.children).find((child): child is HTMLElement =>
-      child instanceof HTMLElement && child.matches('[data-content-timeline-list="true"]'),
+    const list = Array.from(root.children).find(
+      (child): child is HTMLElement =>
+        child instanceof HTMLElement &&
+        child.matches('[data-content-timeline-list="true"]'),
     );
 
     if (!parentMarker || !list) {
-      setConnectorPaths((currentPaths) => (currentPaths.length > 0 ? [] : currentPaths));
+      setConnectorPaths((currentPaths) =>
+        currentPaths.length > 0 ? [] : currentPaths,
+      );
       return;
     }
 
@@ -156,8 +175,10 @@ function ThreadedTimeline({ items, onItemClick, onItemDoubleClick }: ThreadedTim
     const parentRect = parentMarker.getBoundingClientRect();
     const parentX = parentRect.left + parentRect.width / 2 - rootRect.left;
     const parentY = parentRect.top + parentRect.height / 2 - rootRect.top;
-    const childItems = Array.from(list.children).filter((child): child is HTMLElement =>
-      child instanceof HTMLElement && child.matches('[data-content-timeline-item="true"]'),
+    const childItems = Array.from(list.children).filter(
+      (child): child is HTMLElement =>
+        child instanceof HTMLElement &&
+        child.matches('[data-content-timeline-item="true"]'),
     );
 
     const nextPaths = childItems
@@ -182,7 +203,10 @@ function ThreadedTimeline({ items, onItemClick, onItemDoubleClick }: ThreadedTim
       .filter(Boolean) as string[];
 
     setConnectorPaths((currentPaths) => {
-      if (currentPaths.length === nextPaths.length && currentPaths.every((path, index) => path === nextPaths[index])) {
+      if (
+        currentPaths.length === nextPaths.length &&
+        currentPaths.every((path, index) => path === nextPaths[index])
+      ) {
         return currentPaths;
       }
 
@@ -208,9 +232,11 @@ function ThreadedTimeline({ items, onItemClick, onItemDoubleClick }: ThreadedTim
       resizeObserver.observe(parentItem);
     }
 
-    root.querySelectorAll<HTMLElement>('[data-content-timeline-marker="true"]').forEach((marker) => {
-      resizeObserver.observe(marker);
-    });
+    root
+      .querySelectorAll<HTMLElement>('[data-content-timeline-marker="true"]')
+      .forEach((marker) => {
+        resizeObserver.observe(marker);
+      });
     window.addEventListener("resize", measureConnectors);
 
     return () => {
@@ -222,12 +248,20 @@ function ThreadedTimeline({ items, onItemClick, onItemDoubleClick }: ThreadedTim
 
   return (
     <div className={styles.threadItems} ref={rootRef}>
-      <svg aria-hidden="true" className={styles.threadConnectors} focusable="false">
+      <svg
+        aria-hidden="true"
+        className={styles.threadConnectors}
+        focusable="false"
+      >
         {connectorPaths.map((path, index) => (
           <path d={path} key={`${path}-${index}`} />
         ))}
       </svg>
-      <ContentTimeline items={items} onItemClick={onItemClick} onItemDoubleClick={onItemDoubleClick} />
+      <ContentTimeline
+        items={items}
+        onItemClick={onItemClick}
+        onItemDoubleClick={onItemDoubleClick}
+      />
     </div>
   );
 }
@@ -288,21 +322,38 @@ function InlineReplyComposer({
 
   const removeTag = (tag: NoteTagOption) => {
     const tagKey = tag.id ?? tag.label;
-    onTagsChange(selectedTags.filter((selectedTag) => (selectedTag.id ?? selectedTag.label) !== tagKey));
+    onTagsChange(
+      selectedTags.filter(
+        (selectedTag) => (selectedTag.id ?? selectedTag.label) !== tagKey,
+      ),
+    );
   };
 
   return (
     <form className={styles.replyComposer} onSubmit={onSubmit}>
-      <div className={styles.replyInputShell} data-has-tools={hasTools ? "true" : undefined}>
+      <div
+        className={styles.replyInputShell}
+        data-has-tools={hasTools ? "true" : undefined}
+      >
         {hasTools ? (
           <div className={styles.replyTools} aria-label="Reply tools">
             {showAttach ? (
-              <button aria-label="Attach file" className={styles.replyToolButton} onClick={onAttachClick} type="button">
+              <button
+                aria-label="Attach file"
+                className={styles.replyToolButton}
+                onClick={onAttachClick}
+                type="button"
+              >
                 <CatalogIcon iconName="paperclip" />
               </button>
             ) : null}
             {showMention ? (
-              <button aria-label="Mention someone" className={styles.replyToolButton} onClick={onMentionClick} type="button">
+              <button
+                aria-label="Mention someone"
+                className={styles.replyToolButton}
+                onClick={onMentionClick}
+                type="button"
+              >
                 <CatalogIcon iconName="at" />
               </button>
             ) : null}
@@ -311,7 +362,11 @@ function InlineReplyComposer({
                 label="Add emoji"
                 placement="top"
                 trigger={
-                  <button aria-label="Add emoji" className={styles.replyToolButton} type="button">
+                  <button
+                    aria-label="Add emoji"
+                    className={styles.replyToolButton}
+                    type="button"
+                  >
                     <CatalogIcon iconName="face-smile" />
                   </button>
                 }
@@ -365,7 +420,10 @@ function InlineReplyComposer({
   );
 }
 
-function commentToItem(parent: NotesActivityItem, comment: NotesActivityComment): NotesActivityItem {
+function commentToItem(
+  parent: NotesActivityItem,
+  comment: NotesActivityComment,
+): NotesActivityItem {
   return {
     author: comment.author,
     avatarSrc: comment.avatarSrc,
@@ -397,7 +455,10 @@ function toTimelineItems(
   },
 ): ContentTimelineItem[] {
   return items.map((item) => {
-    const comments = [...(commentsByNoteId[item.id] ?? []), ...(item.comments ?? [])];
+    const comments = [
+      ...(commentsByNoteId[item.id] ?? []),
+      ...(item.comments ?? []),
+    ];
     const showReply = enableReply && activeReplyNoteId === item.id;
 
     return {
@@ -422,12 +483,16 @@ function toTimelineItems(
       ) : undefined,
       description: item.body,
       footer: showReply ? (
-        <div className={styles.replyBlock} data-notes-reply="true" onClick={(event) => event.stopPropagation()}>
+        <div
+          className={styles.replyBlock}
+          data-notes-reply="true"
+          onClick={(event) => event.stopPropagation()}
+        >
           {renderReplyComposer(item)}
         </div>
       ) : undefined,
       id: item.id,
-      status: item.kind === "activity" ? item.status ?? "default" : undefined,
+      status: item.kind === "activity" ? (item.status ?? "default") : undefined,
       tags: item.tags,
       time: item.time,
       title: item.author,
@@ -465,22 +530,40 @@ export function NotesActivity({
   showTags = true,
 }: NotesActivityProps) {
   const singleClickTimerRef = useRef<number | null>(null);
-  const [internalActiveTab, setInternalActiveTab] = useState<NotesActivityTab>(defaultTab);
+  const [internalActiveTab, setInternalActiveTab] =
+    useState<NotesActivityTab>(defaultTab);
   const activeTab = controlledActiveTab ?? internalActiveTab;
-  const [activeReplyNoteId, setActiveReplyNoteId] = useState<string | null>(null);
-  const [commentsByNoteId, setCommentsByNoteId] = useState<CommentsByNoteId>({});
+  const [activeReplyNoteId, setActiveReplyNoteId] = useState<string | null>(
+    null,
+  );
+  const [commentsByNoteId, setCommentsByNoteId] = useState<CommentsByNoteId>(
+    {},
+  );
   const [createdNotes, setCreatedNotes] = useState<NotesActivityItem[]>([]);
-  const [draftsByNoteId, setDraftsByNoteId] = useState<Record<string, string>>({});
-  const [draftTagsByNoteId, setDraftTagsByNoteId] = useState<Record<string, NotesActivityTag[]>>({});
+  const [draftsByNoteId, setDraftsByNoteId] = useState<Record<string, string>>(
+    {},
+  );
+  const [draftTagsByNoteId, setDraftTagsByNoteId] = useState<
+    Record<string, NotesActivityTag[]>
+  >({});
   const [topDraft, setTopDraft] = useState("");
   const [topTags, setTopTags] = useState<NotesActivityTag[]>([]);
-  const allItems = useMemo(() => [...createdNotes, ...items], [createdNotes, items]);
+  const allItems = useMemo(
+    () => [...createdNotes, ...items],
+    [createdNotes, items],
+  );
 
   const visibleItems = useMemo(
-    () => (activeTab === "activity" ? allItems.filter((item) => item.kind === "activity") : allItems),
+    () =>
+      activeTab === "activity"
+        ? allItems.filter((item) => item.kind === "activity")
+        : allItems,
     [activeTab, allItems],
   );
-  const groupedItems = useMemo(() => groupItemsByDate(visibleItems), [visibleItems]);
+  const groupedItems = useMemo(
+    () => groupItemsByDate(visibleItems),
+    [visibleItems],
+  );
   const replyTargetsById = useMemo(() => {
     const map = new Map<string, NotesActivityItem>();
 
@@ -527,7 +610,10 @@ export function NotesActivity({
     onTabChange?.(tab);
   };
 
-  const handleTopLevelSave = (note: string, tags: NotesActivityTag[] = topTags) => {
+  const handleTopLevelSave = (
+    note: string,
+    tags: NotesActivityTag[] = topTags,
+  ) => {
     const createdAt = new Date();
     const createdNote: NotesActivityItem = {
       author: noteAuthorName,
@@ -587,9 +673,16 @@ export function NotesActivity({
     setActiveReplyNoteId(null);
   };
 
-  const handleThreadSubmit = (targetId: string, event: FormEvent<HTMLFormElement>) => {
+  const handleThreadSubmit = (
+    targetId: string,
+    event: FormEvent<HTMLFormElement>,
+  ) => {
     event.preventDefault();
-    handleThreadSave(targetId, draftsByNoteId[targetId] ?? "", draftTagsByNoteId[targetId] ?? []);
+    handleThreadSave(
+      targetId,
+      draftsByNoteId[targetId] ?? "",
+      draftTagsByNoteId[targetId] ?? [],
+    );
   };
 
   const resolveTimelineSource = (timelineItem: ContentTimelineItem) => {
@@ -674,9 +767,12 @@ export function NotesActivity({
     };
   }, [activeReplyNoteId]);
 
-  const activeFooterLabel = activeTab === "notes" ? notesFooterLabel : activityFooterLabel;
-  const activeFooterHref = activeTab === "notes" ? notesFooterHref : activityFooterHref;
-  const activeFooterClick = activeTab === "notes" ? onNotesFooterClick : onActivityFooterClick;
+  const activeFooterLabel =
+    activeTab === "notes" ? notesFooterLabel : activityFooterLabel;
+  const activeFooterHref =
+    activeTab === "notes" ? notesFooterHref : activityFooterHref;
+  const activeFooterClick =
+    activeTab === "notes" ? onNotesFooterClick : onActivityFooterClick;
 
   const footerContent = (
     <>
@@ -689,7 +785,11 @@ export function NotesActivity({
 
   return (
     <div className={[styles.root, className].filter(Boolean).join(" ")} data-density={density}>
-      <div aria-label="Notes and activity" className={styles.tabs} role="tablist">
+      <div
+        aria-label="Notes and activity"
+        className={styles.tabs}
+        role="tablist"
+      >
         {(["notes", "activity"] as const).map((tab) => (
           <button
             aria-selected={activeTab === tab}
@@ -701,7 +801,9 @@ export function NotesActivity({
             type="button"
           >
             <span aria-hidden="true" className={styles.tabIcon}>
-              <CatalogIcon iconName={tab === "notes" ? "note-sticky" : "clock-rotate-left"} />
+              <CatalogIcon
+                iconName={tab === "notes" ? "note-sticky" : "clock-rotate-left"}
+              />
             </span>
             {tab === "notes" ? "Notes" : "Activity"}
           </button>
@@ -729,49 +831,64 @@ export function NotesActivity({
         />
       ) : null}
 
-      <div aria-label="Notes and activity feed" className={styles.feed} tabIndex={0}>
+      <CustomScrollbar
+        label="Notes and activity feed"
+        className={styles.feed}
+        orientation="vertical"
+      >
         <ContentTimeline
-          groups={groupedItems.map((group) => ({
-            items: toTimelineItems(group.items, {
-              activeReplyNoteId,
-              commentsByNoteId,
-              enableReply: activeTab === "notes",
-              onItemClick: activeTab === "notes" || onItemClick ? handleTimelineClick : undefined,
-              onItemDoubleClick: onOpenTask ? handleTimelineDoubleClick : undefined,
-              renderReplyComposer: (item) => (
-                <InlineReplyComposer
-                  onAttachClick={onNoteAttachClick}
-                  onChange={(value) => {
-                    setDraftsByNoteId((current) => ({
-                      ...current,
-                      [item.id]: value,
-                    }));
-                  }}
-                  onEmojiSelect={onNoteEmojiSelect}
-                  onMentionClick={onNoteMentionClick}
-                  onSubmit={(event) => handleThreadSubmit(item.id, event)}
-                  onTagsChange={(tags) => {
-                    setDraftTagsByNoteId((current) => ({
-                      ...current,
-                      [item.id]: tags,
-                    }));
-                  }}
-                  selectedTags={draftTagsByNoteId[item.id] ?? []}
-                  showAttach={showAttach}
-                  showEmoji={showEmoji}
-                  showMention={showMention}
-                  showTags={showTags}
-                  tagOptions={noteTagOptions}
-                  value={draftsByNoteId[item.id] ?? ""}
-                />
-              ),
-            }),
-            label: group.dateGroup,
-          }))}
-          onItemClick={activeTab === "notes" || onItemClick ? handleTimelineClick : undefined}
-          onItemDoubleClick={onOpenTask ? handleTimelineDoubleClick : undefined}
+            groups={groupedItems.map((group) => ({
+              items: toTimelineItems(group.items, {
+                activeReplyNoteId,
+                commentsByNoteId,
+                enableReply: activeTab === "notes",
+                onItemClick:
+                  activeTab === "notes" || onItemClick
+                    ? handleTimelineClick
+                    : undefined,
+                onItemDoubleClick: onOpenTask
+                  ? handleTimelineDoubleClick
+                  : undefined,
+                renderReplyComposer: (item) => (
+                  <InlineReplyComposer
+                    onAttachClick={onNoteAttachClick}
+                    onChange={(value) => {
+                      setDraftsByNoteId((current) => ({
+                        ...current,
+                        [item.id]: value,
+                      }));
+                    }}
+                    onEmojiSelect={onNoteEmojiSelect}
+                    onMentionClick={onNoteMentionClick}
+                    onSubmit={(event) => handleThreadSubmit(item.id, event)}
+                    onTagsChange={(tags) => {
+                      setDraftTagsByNoteId((current) => ({
+                        ...current,
+                        [item.id]: tags,
+                      }));
+                    }}
+                    selectedTags={draftTagsByNoteId[item.id] ?? []}
+                    showAttach={showAttach}
+                    showEmoji={showEmoji}
+                    showMention={showMention}
+                    showTags={showTags}
+                    tagOptions={noteTagOptions}
+                    value={draftsByNoteId[item.id] ?? ""}
+                  />
+                ),
+              }),
+              label: group.dateGroup,
+            }))}
+            onItemClick={
+              activeTab === "notes" || onItemClick
+                ? handleTimelineClick
+                : undefined
+            }
+            onItemDoubleClick={
+              onOpenTask ? handleTimelineDoubleClick : undefined
+            }
         />
-      </div>
+      </CustomScrollbar>
 
       <footer className={styles.footer}>
         {activeFooterHref ? (
@@ -779,7 +896,11 @@ export function NotesActivity({
             {footerContent}
           </a>
         ) : (
-          <button className={styles.footerAction} onClick={activeFooterClick} type="button">
+          <button
+            className={styles.footerAction}
+            onClick={activeFooterClick}
+            type="button"
+          >
             {footerContent}
           </button>
         )}

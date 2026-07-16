@@ -2,6 +2,7 @@
 
 import { createContext, useCallback, useContext, useEffect, useMemo, useState, type CSSProperties, type ReactNode } from "react";
 import { useAccentPreference } from "@/components/AccentColorPicker";
+import { useFontPreference, type GoogleFontFamily } from "@/components/FontPicker";
 import type { Theme } from "@/components/fields";
 import { OpusThemeProvider } from "@/components/OpusThemeProvider";
 import { ToastProvider } from "@/components/ToastProvider";
@@ -15,9 +16,11 @@ type ComponentsThemeContextValue = {
   };
   accent: string;
   accentStyle: CSSProperties;
+  fontFamily: GoogleFontFamily;
   previewTheme: Theme;
   setPageHeader: (header: { description?: string; title: string }) => void;
   setAccent: (accent: string) => void;
+  setFontFamily: (fontFamily: string) => void;
   setPreviewTheme: (theme: Theme) => void;
   setTheme: (theme: Theme) => void;
   theme: Theme;
@@ -52,6 +55,7 @@ export function ComponentsThemeProvider({ children }: { children: ReactNode }) {
   const [previewTheme, setPreviewTheme] = useStoredPreviewTheme();
   const [pageHeader, setPageHeaderState] = useState(defaultPageHeader);
   const { accent, accentStyle, setAccent } = useAccentPreference();
+  const { fontFamily, setFontFamily } = useFontPreference();
 
   const setPageHeader = useCallback((header: { description?: string; title: string }) => {
     const nextDescription = header.description ?? "";
@@ -72,15 +76,17 @@ export function ComponentsThemeProvider({ children }: { children: ReactNode }) {
     () => ({
       accent,
       accentStyle,
+      fontFamily,
       pageHeader,
       previewTheme,
       setAccent,
+      setFontFamily,
       setPageHeader,
       setPreviewTheme,
       setTheme,
       theme,
     }),
-    [accent, accentStyle, pageHeader, previewTheme, setAccent, setPageHeader, setPreviewTheme, setTheme, theme],
+    [accent, accentStyle, fontFamily, pageHeader, previewTheme, setAccent, setFontFamily, setPageHeader, setPreviewTheme, setTheme, theme],
   );
 
   return (

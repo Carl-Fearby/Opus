@@ -68,7 +68,7 @@
 }
 
 .selected {
-  --choice-chip-bg: var(--opus-accent);
+  --choice-chip-bg: color-mix(in srgb, var(--opus-accent) 65%, #11132b);
   --choice-chip-border: color-mix(in srgb, var(--opus-accent) 82%, white);
   --choice-chip-color: var(--opus-accent-contrast);
   box-shadow: 0 14px 30px color-mix(in srgb, var(--opus-accent) 28%, transparent);

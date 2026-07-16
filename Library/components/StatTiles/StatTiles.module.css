@@ -25,6 +25,10 @@
   width: var(--stat-tile-size);
 }
 
+.statTileItem {
+  min-width: 0;
+}
+
 .row[data-layout="fill"] .statTile {
   width: 100%;
   max-width: none;

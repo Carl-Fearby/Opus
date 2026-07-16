@@ -562,6 +562,7 @@ export function RichTextField({
             />
           </div>
           <div
+            aria-label={label}
             aria-multiline="true"
             aria-readonly={readOnly || undefined}
             className={[styles.editor, readOnly ? styles.readOnly : ""].filter(Boolean).join(" ")}

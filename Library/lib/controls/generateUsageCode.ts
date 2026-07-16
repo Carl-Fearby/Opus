@@ -1,4 +1,9 @@
-import type { ComponentCategory, ControlSettings, ControlSettingsBySlug, ControlSlug } from "./types";
+import type {
+  ComponentCategory,
+  ControlSettings,
+  ControlSettingsBySlug,
+  ControlSlug,
+} from "./types";
 import {
   getSectionDemoSlots,
   getSectionLayoutConfigFromSettings,
@@ -22,7 +27,10 @@ import {
 } from "./chartDemoData";
 import { worldMapRegionIds } from "opus-react";
 import { isChartSlug } from "./chartCatalog";
-import { formatPipelineStagesForUsage, formatPipelineTotalValue } from "./pipelineDemoData";
+import {
+  formatPipelineStagesForUsage,
+  formatPipelineTotalValue,
+} from "./pipelineDemoData";
 import { getDealsOverTimeDemoData } from "./dealsOverTimeDemoData";
 import { demoRecentActivity } from "./recentActivityDemoData";
 import { demoNotesActivity } from "./notesActivityDemoData";
@@ -97,7 +105,10 @@ import {
 } from "./topNavigationDemo";
 import { formatFullUsageComponent, splitUsageCode } from "./usageCode";
 import { generateAppSetupPlaygroundCode } from "./appSetupBoilerplate";
-import { generate403PlaygroundCode, generate404PlaygroundCode } from "./errorPageBoilerplate";
+import {
+  generate403PlaygroundCode,
+  generate404PlaygroundCode,
+} from "./errorPageBoilerplate";
 
 const radioOptions = [
   { label: "Personal", value: "personal" },
@@ -171,7 +182,11 @@ function formatSelfClosing(props: string[]): string {
   return `\n  ${props.join("\n  ")}\n/>`;
 }
 
-function formatSelfClosingElement(tagName: string, props: string[], indent = ""): string {
+function formatSelfClosingElement(
+  tagName: string,
+  props: string[],
+  indent = "",
+): string {
   if (!props.length) {
     return `${indent}<${tagName} />`;
   }
@@ -224,7 +239,9 @@ function formatJsxParagraphContent(content: string, indent = "  "): string {
       const body = lines
         .map((line, index) => {
           const lineText = escapeJsxText(line);
-          return index === 0 ? lineText : `\n${indent}  <br />\n${indent}  ${lineText}`;
+          return index === 0
+            ? lineText
+            : `\n${indent}  <br />\n${indent}  ${lineText}`;
         })
         .join("");
 
@@ -254,7 +271,9 @@ function formatJsxRichContent(content: string, indent = "  "): string {
       const body = lines
         .map((line, index) => {
           const lineNode = `{${quote(line)}}`;
-          return index === 0 ? lineNode : `\n${indent}  <br />\n${indent}  ${lineNode}`;
+          return index === 0
+            ? lineNode
+            : `\n${indent}  <br />\n${indent}  ${lineNode}`;
         })
         .join("");
 
@@ -296,7 +315,13 @@ function importLine(components: string[]): string {
 function wrapDashboardWidget(
   content: string,
   components: string[],
-  options?: { dataComponent?: string; height?: string; title?: string; width?: string; wrap?: boolean },
+  options?: {
+    dataComponent?: string;
+    height?: string;
+    title?: string;
+    width?: string;
+    wrap?: boolean;
+  },
 ) {
   if (options?.wrap === false) {
     return `${importLine(components)}
@@ -306,8 +331,12 @@ ${content}`;
 
   const containerProps = [
     options?.title ? ` title=${quote(options.title)}` : "",
-    options?.dataComponent ? ` data-component=${quote(options.dataComponent)}` : "",
-    options?.height && options.height !== "auto" ? ` height=${quote(options.height)}` : "",
+    options?.dataComponent
+      ? ` data-component=${quote(options.dataComponent)}`
+      : "",
+    options?.height && options.height !== "auto"
+      ? ` height=${quote(options.height)}`
+      : "",
     options?.width ? ` width=${quote(options.width)}` : "",
   ].join("");
 
@@ -320,13 +349,21 @@ ${content}
 
 function maybeWrapDashboardContent(
   content: string,
-  options: { dataComponent: string; height?: string; width: string; wrap: boolean },
+  options: {
+    dataComponent: string;
+    height?: string;
+    width: string;
+    wrap: boolean;
+  },
 ) {
   if (!options.wrap) {
     return content;
   }
 
-  const heightProp = options.height && options.height !== "auto" ? ` height=${quote(options.height)}` : "";
+  const heightProp =
+    options.height && options.height !== "auto"
+      ? ` height=${quote(options.height)}`
+      : "";
 
   return `<DashboardContentContainer data-component=${quote(options.dataComponent)}${heightProp} width=${quote(options.width)}>
 ${content
@@ -337,7 +374,9 @@ ${content
 }
 
 function usageClientPrefix(includeUseState = true): string {
-  return includeUseState ? `"use client";\n\nimport { useState } from "react";` : `"use client";`;
+  return includeUseState
+    ? `"use client";\n\nimport { useState } from "react";`
+    : `"use client";`;
 }
 
 function controlledFieldUsage(
@@ -372,8 +411,17 @@ function interactiveUsage({
   state: string[];
   jsx: string;
 }): string {
-  const includeUseState = [...state, ...afterState].some((line) => line.includes("useState"));
-  const importsBlock = [usageClientPrefix(includeUseState), ...extraImports, importLine(components), ...preamble, ...state, ...afterState]
+  const includeUseState = [...state, ...afterState].some((line) =>
+    line.includes("useState"),
+  );
+  const importsBlock = [
+    usageClientPrefix(includeUseState),
+    ...extraImports,
+    importLine(components),
+    ...preamble,
+    ...state,
+    ...afterState,
+  ]
     .filter(Boolean)
     .join("\n");
   const trimmedJsx = jsx.trim();
@@ -416,7 +464,9 @@ function generateUsageCodeContent(
       ...(s.showValues ? [formatBoolProp("showValues", true)] : []),
       ...(s.xAxisLabel ? [formatStringProp("xAxisLabel", s.xAxisLabel)] : []),
       ...(s.yAxisLabel ? [formatStringProp("yAxisLabel", s.yAxisLabel)] : []),
-      ...(s.highlightLabel ? [formatStringProp("highlightLabel", s.highlightLabel)] : []),
+      ...(s.highlightLabel
+        ? [formatStringProp("highlightLabel", s.highlightLabel)]
+        : []),
     ];
     const dataMode = getChartUsageDataMode(s.variant);
     const mapUsageNote =
@@ -429,9 +479,13 @@ function generateUsageCodeContent(
 
 ${mapUsageNote}const data = ${formatChartDataForUsage(previewData, dataMode)};
 
-${includeSeries ? `const series = ${formatChartSeriesForUsage(chartDemoSeries)};
+${
+  includeSeries
+    ? `const series = ${formatChartSeriesForUsage(chartDemoSeries)};
 
-` : ""}return <Chart${formatSelfClosing(props)};`;
+`
+    : ""
+}return <Chart${formatSelfClosing(props)};`;
   }
 
   switch (slug) {
@@ -442,9 +496,14 @@ ${includeSeries ? `const series = ${formatChartSeriesForUsage(chartDemoSeries)};
         formatStringProp("id", id),
         ...fieldProps(s),
         formatStringProp("type", "text"),
-        ...(s.placeholderEnabled ? [formatStringProp("placeholder", s.placeholder)] : []),
+        ...(s.placeholderEnabled
+          ? [formatStringProp("placeholder", s.placeholder)]
+          : []),
         formatExpressionProp("value", state),
-        formatExpressionProp("onChange", `(event) => ${toSetter(state)}(event.target.value)`),
+        formatExpressionProp(
+          "onChange",
+          `(event) => ${toSetter(state)}(event.target.value)`,
+        ),
       ];
       return controlledFieldUsage(["TextField"], "TextField", state, props);
     }
@@ -470,7 +529,10 @@ ${includeSeries ? `const series = ${formatChartSeriesForUsage(chartDemoSeries)};
           ? [formatStringProp("placeholder", s.placeholder ?? "")]
           : []),
         formatExpressionProp("value", state),
-        formatExpressionProp("onChange", `(event) => ${toSetter(state)}(event.target.value)`),
+        formatExpressionProp(
+          "onChange",
+          `(event) => ${toSetter(state)}(event.target.value)`,
+        ),
       ];
       return controlledFieldUsage(["TextField"], "TextField", state, props);
     }
@@ -480,20 +542,30 @@ ${includeSeries ? `const series = ${formatChartSeriesForUsage(chartDemoSeries)};
       const props = [
         formatStringProp("id", id),
         ...fieldProps(s),
-        ...(s.placeholderEnabled ? [formatStringProp("placeholder", s.placeholder)] : []),
-        ...(s.maxCharsEnabled ? [formatNumberProp("maxChars", s.maxChars)] : []),
+        ...(s.placeholderEnabled
+          ? [formatStringProp("placeholder", s.placeholder)]
+          : []),
+        ...(s.maxCharsEnabled
+          ? [formatNumberProp("maxChars", s.maxChars)]
+          : []),
         formatExpressionProp("value", state),
-        formatExpressionProp("onChange", `(event) => ${toSetter(state)}(event.target.value)`),
+        formatExpressionProp(
+          "onChange",
+          `(event) => ${toSetter(state)}(event.target.value)`,
+        ),
       ];
-      return controlledFieldUsage(["TextAreaField"], "TextAreaField", state, props);
+      return controlledFieldUsage(
+        ["TextAreaField"],
+        "TextAreaField",
+        state,
+        props,
+      );
     }
     case "note-composer": {
       const s = settings as ControlSettingsBySlug["note-composer"];
       return interactiveUsage({
         components: ["NoteComposer"],
-        state: [
-          'const [note, setNote] = useState("");',
-        ],
+        state: ['const [note, setNote] = useState("");'],
         jsx: `<NoteComposer
   placeholder=${quote(s.placeholder)}
   saveButtonLabel=${quote(s.saveButtonLabel)}
@@ -519,13 +591,21 @@ ${includeSeries ? `const series = ${formatChartSeriesForUsage(chartDemoSeries)};
         formatStringProp("id", id),
         ...fieldProps(s),
         formatNumberProp("minHeight", s.minHeight),
-        ...(s.placeholderEnabled ? [formatStringProp("placeholder", s.placeholder)] : []),
+        ...(s.placeholderEnabled
+          ? [formatStringProp("placeholder", s.placeholder)]
+          : []),
         formatExpressionProp("value", state),
         formatExpressionProp("onChange", `(html) => ${toSetter(state)}(html)`),
       ];
-      return controlledFieldUsage(["RichTextField"], "RichTextField", state, props, {
-        initial: quote(s.value),
-      });
+      return controlledFieldUsage(
+        ["RichTextField"],
+        "RichTextField",
+        state,
+        props,
+        {
+          initial: quote(s.value),
+        },
+      );
     }
     case "select": {
       const s = settings as ControlSettingsBySlug["select"];
@@ -539,11 +619,20 @@ ${includeSeries ? `const series = ${formatChartSeriesForUsage(chartDemoSeries)};
         ...fieldProps(s),
         `options={[${options.map((option) => quote(option)).join(", ")}]}`,
         formatExpressionProp("value", state),
-        formatExpressionProp("onChange", `(event) => ${toSetter(state)}(event.target.value)`),
+        formatExpressionProp(
+          "onChange",
+          `(event) => ${toSetter(state)}(event.target.value)`,
+        ),
       ];
-      return controlledFieldUsage(["SelectField"], "SelectField", state, props, {
-        initial: options[0] ? quote(options[0]) : '""',
-      });
+      return controlledFieldUsage(
+        ["SelectField"],
+        "SelectField",
+        state,
+        props,
+        {
+          initial: options[0] ? quote(options[0]) : '""',
+        },
+      );
     }
     case "country-picker": {
       const s = settings as ControlSettingsBySlug["country-picker"];
@@ -551,14 +640,22 @@ ${includeSeries ? `const series = ${formatChartSeriesForUsage(chartDemoSeries)};
       const props = [
         formatStringProp("id", id),
         ...fieldProps(s),
-        ...(s.placeholderEnabled ? [formatStringProp("placeholder", s.placeholder)] : []),
+        ...(s.placeholderEnabled
+          ? [formatStringProp("placeholder", s.placeholder)]
+          : []),
         formatStringProp("searchPlaceholder", s.searchPlaceholder),
         formatExpressionProp("value", state),
         formatExpressionProp("onChange", `(code) => ${toSetter(state)}(code)`),
       ];
-      return controlledFieldUsage(["CountryPickerField"], "CountryPickerField", state, props, {
-        initial: quote(s.value),
-      });
+      return controlledFieldUsage(
+        ["CountryPickerField"],
+        "CountryPickerField",
+        state,
+        props,
+        {
+          initial: quote(s.value),
+        },
+      );
     }
     case "date-picker":
     case "datetime-picker":
@@ -582,7 +679,10 @@ ${includeSeries ? `const series = ${formatChartSeriesForUsage(chartDemoSeries)};
         ...fieldProps(s),
         ...(inputType !== "date" ? [formatStringProp("type", inputType)] : []),
         formatExpressionProp("value", state),
-        formatExpressionProp("onChange", `(event) => ${toSetter(state)}(event.target.value)`),
+        formatExpressionProp(
+          "onChange",
+          `(event) => ${toSetter(state)}(event.target.value)`,
+        ),
       ];
       return controlledFieldUsage(["DateField"], "DateField", state, props);
     }
@@ -594,7 +694,9 @@ ${includeSeries ? `const series = ${formatChartSeriesForUsage(chartDemoSeries)};
         ...fieldProps(s),
         formatStringProp("name", `${id}-group`),
         formatStringProp("shape", s.shape),
-        ...(s.size && s.size !== "md" ? [formatStringProp("size", s.size)] : []),
+        ...(s.size && s.size !== "md"
+          ? [formatStringProp("size", s.size)]
+          : []),
         formatExpressionProp("value", state),
         formatExpressionProp("onChange", toSetter(state)),
       ];
@@ -602,15 +704,23 @@ ${includeSeries ? `const series = ${formatChartSeriesForUsage(chartDemoSeries)};
         .map((option) => {
           const radioProps = [
             formatStringProp("value", option.value),
-            ...(s.optionErrorsEnabled ? [formatStringProp("error", s.optionError)] : []),
+            ...(s.optionErrorsEnabled
+              ? [formatStringProp("error", s.optionError)]
+              : []),
           ];
           return `  <Radio${formatOpeningProps(radioProps)}>\n    ${option.label}\n  </Radio>`;
         })
         .join("\n");
-      return controlledFieldUsage(["Radio", "RadioGroup"], "RadioGroup", state, groupProps, {
-        children,
-        initial: quote(radioOptions[0]?.value ?? ""),
-      });
+      return controlledFieldUsage(
+        ["Radio", "RadioGroup"],
+        "RadioGroup",
+        state,
+        groupProps,
+        {
+          children,
+          initial: quote(radioOptions[0]?.value ?? ""),
+        },
+      );
     }
     case "chip-input": {
       const s = settings as ControlSettingsBySlug["chip-input"];
@@ -625,7 +735,9 @@ ${includeSeries ? `const series = ${formatChartSeriesForUsage(chartDemoSeries)};
         formatStringProp("id", id),
         ...fieldProps(s),
         formatStringProp("variant", s.variant),
-        ...(s.placeholderEnabled ? [formatStringProp("placeholder", s.placeholder)] : []),
+        ...(s.placeholderEnabled
+          ? [formatStringProp("placeholder", s.placeholder)]
+          : []),
         ...(s.disabled ? [formatBoolProp("disabled", true)] : []),
         ...(s.readOnly ? [formatBoolProp("readOnly", true)] : []),
         formatExpressionProp("value", state),
@@ -643,11 +755,18 @@ ${includeSeries ? `const series = ${formatChartSeriesForUsage(chartDemoSeries)};
         formatStringProp("id", id),
         ...fieldProps(s),
         formatExpressionProp("options", "options"),
-        ...(s.selectionMode !== "multiple" ? [formatStringProp("selectionMode", s.selectionMode)] : []),
-        ...(s.variant !== "soft" ? [formatStringProp("variant", s.variant)] : []),
+        ...(s.selectionMode !== "multiple"
+          ? [formatStringProp("selectionMode", s.selectionMode)]
+          : []),
+        ...(s.variant !== "soft"
+          ? [formatStringProp("variant", s.variant)]
+          : []),
         ...(s.disabled ? [formatBoolProp("disabled", true)] : []),
         formatExpressionProp("value", state),
-        formatExpressionProp("onChange", `(next) => ${toSetter(state)}(Array.isArray(next) ? next : [next])`),
+        formatExpressionProp(
+          "onChange",
+          `(next) => ${toSetter(state)}(Array.isArray(next) ? next : [next])`,
+        ),
       ];
 
       return `${usageClientPrefix()}
@@ -666,11 +785,22 @@ const [${state}, ${toSetter(state)}] = useState([${s.value.map((value) => quote(
         formatStringProp("id", id),
         ...fieldProps(s),
         formatStringProp("shape", s.shape),
-        ...(s.size && s.size !== "md" ? [formatStringProp("size", s.size)] : []),
+        ...(s.size && s.size !== "md"
+          ? [formatStringProp("size", s.size)]
+          : []),
         formatExpressionProp("checked", state),
-        formatExpressionProp("onChange", `(event) => ${toSetter(state)}(event.target.checked)`),
+        formatExpressionProp(
+          "onChange",
+          `(event) => ${toSetter(state)}(event.target.checked)`,
+        ),
       ];
-      return controlledFieldUsage(["CheckboxField"], "CheckboxField", state, props, { initial: "false" });
+      return controlledFieldUsage(
+        ["CheckboxField"],
+        "CheckboxField",
+        state,
+        props,
+        { initial: "false" },
+      );
     }
     case "switch": {
       const s = settings as ControlSettingsBySlug["switch"];
@@ -679,9 +809,18 @@ const [${state}, ${toSetter(state)}] = useState([${s.value.map((value) => quote(
         formatStringProp("id", id),
         ...fieldProps(s),
         formatExpressionProp("checked", state),
-        formatExpressionProp("onChange", `(event) => ${toSetter(state)}(event.target.checked)`),
+        formatExpressionProp(
+          "onChange",
+          `(event) => ${toSetter(state)}(event.target.checked)`,
+        ),
       ];
-      return controlledFieldUsage(["SwitchField"], "SwitchField", state, props, { initial: "false" });
+      return controlledFieldUsage(
+        ["SwitchField"],
+        "SwitchField",
+        state,
+        props,
+        { initial: "false" },
+      );
     }
     case "range-slider": {
       const s = settings as ControlSettingsBySlug["range-slider"];
@@ -693,9 +832,14 @@ const [${state}, ${toSetter(state)}] = useState([${s.value.map((value) => quote(
         formatNumberProp("max", s.max),
         formatNumberProp("step", s.step),
         formatExpressionProp("value", state),
-        formatExpressionProp("onChange", `(event) => ${toSetter(state)}(Number(event.target.value))`),
+        formatExpressionProp(
+          "onChange",
+          `(event) => ${toSetter(state)}(Number(event.target.value))`,
+        ),
       ];
-      return controlledFieldUsage(["RangeField"], "RangeField", state, props, { initial: String(s.min) });
+      return controlledFieldUsage(["RangeField"], "RangeField", state, props, {
+        initial: String(s.min),
+      });
     }
     case "number-input": {
       const s = settings as ControlSettingsBySlug["number-input"];
@@ -707,9 +851,18 @@ const [${state}, ${toSetter(state)}] = useState([${s.value.map((value) => quote(
         formatNumberProp("max", s.max),
         formatNumberProp("step", s.step),
         formatExpressionProp("value", state),
-        formatExpressionProp("onChange", `(event) => ${toSetter(state)}(Number(event.target.value) || 0)`),
+        formatExpressionProp(
+          "onChange",
+          `(event) => ${toSetter(state)}(Number(event.target.value) || 0)`,
+        ),
       ];
-      return controlledFieldUsage(["NumberField"], "NumberField", state, props, { initial: "0" });
+      return controlledFieldUsage(
+        ["NumberField"],
+        "NumberField",
+        state,
+        props,
+        { initial: "0" },
+      );
     }
     case "file-upload": {
       const s = settings as ControlSettingsBySlug["file-upload"];
@@ -718,7 +871,10 @@ const [${state}, ${toSetter(state)}] = useState([${s.value.map((value) => quote(
         formatStringProp("id", id),
         ...fieldProps(s),
         ...(s.fileName ? [formatStringProp("fileName", s.fileName)] : []),
-        formatExpressionProp("onChange", `(event) => ${toSetter(state)}(event.target.files?.[0]?.name ?? "")`),
+        formatExpressionProp(
+          "onChange",
+          `(event) => ${toSetter(state)}(event.target.files?.[0]?.name ?? "")`,
+        ),
       ];
       return controlledFieldUsage(["FileField"], "FileField", state, props);
     }
@@ -739,9 +895,18 @@ const [${state}, ${toSetter(state)}] = useState([${s.value.map((value) => quote(
         formatNumberProp("zoomStep", s.zoomStep),
         formatExpressionProp("value", state),
         formatExpressionProp("onChange", toSetter(state)),
-        formatExpressionProp("onCrop", `({ previewUrl }) => ${toSetter(state)}(previewUrl)`),
+        formatExpressionProp(
+          "onCrop",
+          `({ previewUrl }) => ${toSetter(state)}(previewUrl)`,
+        ),
       ];
-      return controlledFieldUsage(["ImageCropUploadField"], "ImageCropUploadField", state, props, { initial: '""' });
+      return controlledFieldUsage(
+        ["ImageCropUploadField"],
+        "ImageCropUploadField",
+        state,
+        props,
+        { initial: '""' },
+      );
     }
     case "color-picker": {
       const s = settings as ControlSettingsBySlug["color-picker"];
@@ -750,9 +915,14 @@ const [${state}, ${toSetter(state)}] = useState([${s.value.map((value) => quote(
         formatStringProp("id", id),
         ...fieldProps(s),
         formatExpressionProp("value", state),
-        formatExpressionProp("onChange", `(event) => ${toSetter(state)}(event.target.value)`),
+        formatExpressionProp(
+          "onChange",
+          `(event) => ${toSetter(state)}(event.target.value)`,
+        ),
       ];
-      return controlledFieldUsage(["ColorField"], "ColorField", state, props, { initial: quote("#8f6cff") });
+      return controlledFieldUsage(["ColorField"], "ColorField", state, props, {
+        initial: quote("#8f6cff"),
+      });
     }
     case "hidden-input": {
       const s = settings as ControlSettingsBySlug["hidden-input"];
@@ -828,13 +998,24 @@ const [${state}, ${toSetter(state)}] = useState(${formatObjectLiteral(s.selected
       const props = [
         formatStringProp("id", id),
         ...fieldProps(s),
-        ...(s.showRequirements ? [formatBoolProp("showRequirements", true)] : []),
+        ...(s.showRequirements
+          ? [formatBoolProp("showRequirements", true)]
+          : []),
         formatExpressionProp("value", state),
-        formatExpressionProp("onChange", `(value) => ${toSetter(state)}(value)`),
+        formatExpressionProp(
+          "onChange",
+          `(value) => ${toSetter(state)}(value)`,
+        ),
       ];
-      return controlledFieldUsage(["PasswordStrengthField"], "PasswordStrengthField", state, props, {
-        initial: quote(s.value),
-      });
+      return controlledFieldUsage(
+        ["PasswordStrengthField"],
+        "PasswordStrengthField",
+        state,
+        props,
+        {
+          initial: quote(s.value),
+        },
+      );
     }
     case "rating-input": {
       const s = settings as ControlSettingsBySlug["rating-input"];
@@ -847,9 +1028,15 @@ const [${state}, ${toSetter(state)}] = useState(${formatObjectLiteral(s.selected
         formatExpressionProp("value", state),
         formatExpressionProp("onChange", toSetter(state)),
       ];
-      return controlledFieldUsage(["RatingField"], "RatingField", state, props, {
-        initial: String(s.value),
-      });
+      return controlledFieldUsage(
+        ["RatingField"],
+        "RatingField",
+        state,
+        props,
+        {
+          initial: String(s.value),
+        },
+      );
     }
     case "segmented-control": {
       const s = settings as ControlSettingsBySlug["segmented-control"];
@@ -881,9 +1068,15 @@ const [${state}, ${toSetter(state)}] = useState(${quote(s.value)});
         formatExpressionProp("value", state),
         formatExpressionProp("onChange", toSetter(state)),
       ];
-      return controlledFieldUsage(["SliderRangeField"], "SliderRangeField", state, props, {
-        initial: formatObjectLiteral(s.value),
-      });
+      return controlledFieldUsage(
+        ["SliderRangeField"],
+        "SliderRangeField",
+        state,
+        props,
+        {
+          initial: formatObjectLiteral(s.value),
+        },
+      );
     }
     case "phone-number-input": {
       const s = settings as ControlSettingsBySlug["phone-number-input"];
@@ -894,8 +1087,14 @@ const [${state}, ${toSetter(state)}] = useState(${quote(s.value)});
         ...fieldProps(s),
         formatExpressionProp("countryCode", countryState),
         formatExpressionProp("value", phoneState),
-        formatExpressionProp("onChange", `(value) => ${toSetter(phoneState)}(value)`),
-        formatExpressionProp("onCountryCodeChange", `(code) => ${toSetter(countryState)}(code)`),
+        formatExpressionProp(
+          "onChange",
+          `(value) => ${toSetter(phoneState)}(value)`,
+        ),
+        formatExpressionProp(
+          "onCountryCodeChange",
+          `(code) => ${toSetter(countryState)}(code)`,
+        ),
       ];
       return `${usageClientPrefix()}
 ${importLine(["PhoneNumberField"])}
@@ -945,11 +1144,20 @@ const [${state}, ${toSetter(state)}] = useState(${formatObjectLiteral(s.value)})
     case "submit-button":
     case "reset-button": {
       const s = settings as ControlSettingsBySlug["button"];
-      const buttonType = slug === "submit-button" ? "submit" : slug === "reset-button" ? "reset" : "button";
+      const buttonType =
+        slug === "submit-button"
+          ? "submit"
+          : slug === "reset-button"
+            ? "reset"
+            : "button";
       const props = [
         formatStringProp("variant", s.variant),
-        ...(buttonType !== "button" ? [formatStringProp("type", buttonType)] : []),
-        ...(s.size && s.size !== "md" ? [formatStringProp("size", s.size)] : []),
+        ...(buttonType !== "button"
+          ? [formatStringProp("type", buttonType)]
+          : []),
+        ...(s.size && s.size !== "md"
+          ? [formatStringProp("size", s.size)]
+          : []),
         ...(s.disabled ? [formatBoolProp("disabled", true)] : []),
       ];
       if (!props.length) {
@@ -1051,8 +1259,12 @@ return <IconPicker${formatSelfClosing(props)};`;
         formatStringProp("status", s.status),
         formatStringProp("title", s.title),
         formatStringProp("description", s.description),
-        ...(s.dismissOnBackdrop ? [] : [formatBoolProp("dismissOnBackdrop", false)]),
-        ...(s.dismissOnEscape ? [] : [formatBoolProp("dismissOnEscape", false)]),
+        ...(s.dismissOnBackdrop
+          ? []
+          : [formatBoolProp("dismissOnBackdrop", false)]),
+        ...(s.dismissOnEscape
+          ? []
+          : [formatBoolProp("dismissOnEscape", false)]),
       ];
       const dialogProps = props.map((prop) => `      ${prop}`).join("\n");
       return interactiveUsage({
@@ -1079,8 +1291,12 @@ ${dialogProps}
         formatStringProp("title", s.title),
         formatStringProp("description", s.description),
         formatStringProp("side", s.side),
-        ...(s.dismissOnBackdrop ? [] : [formatBoolProp("dismissOnBackdrop", false)]),
-        ...(s.dismissOnEscape ? [] : [formatBoolProp("dismissOnEscape", false)]),
+        ...(s.dismissOnBackdrop
+          ? []
+          : [formatBoolProp("dismissOnBackdrop", false)]),
+        ...(s.dismissOnEscape
+          ? []
+          : [formatBoolProp("dismissOnEscape", false)]),
         ...(s.closeButton ? [] : [formatBoolProp("closeButton", false)]),
       ];
       const drawerProps = props.map((prop) => `      ${prop}`).join("\n");
@@ -1107,7 +1323,13 @@ ${dialogProps}
           : formatJsxRichContent(s.content, "      ");
       const imports =
         s.contentType === "form"
-          ? ["Button", "Drawer", "DrawerDefaultActions", "SelectField", "TextField"]
+          ? [
+              "Button",
+              "Drawer",
+              "DrawerDefaultActions",
+              "SelectField",
+              "TextField",
+            ]
           : ["Button", "Drawer", "DrawerDefaultActions"];
       const state =
         s.contentType === "form"
@@ -1142,10 +1364,14 @@ ${children}
         `{ id: "pin", label: "Pinned", checked: true${s.showIcons ? ', icon: "✓"' : ""} }`,
         `{ id: "duplicate", label: "Duplicate"${s.showIcons ? ', icon: "⧉"' : ""}, shortcut: "⌘D" }`,
         ...(s.showDisabled
-          ? [`{ id: "archive", label: "Archive", disabled: true${s.showIcons ? ', icon: "⌁"' : ""} }`]
+          ? [
+              `{ id: "archive", label: "Archive", disabled: true${s.showIcons ? ', icon: "⌁"' : ""} }`,
+            ]
           : []),
         ...(s.showDestructive
-          ? [`{ id: "delete", label: "Delete", destructive: true${s.showIcons ? ', icon: "!"' : ""} }`]
+          ? [
+              `{ id: "delete", label: "Delete", destructive: true${s.showIcons ? ', icon: "!"' : ""} }`,
+            ]
           : []),
       ];
       const props = [
@@ -1155,19 +1381,17 @@ ${children}
         ...(s.closeOnEscape ? [] : [formatBoolProp("closeOnEscape", false)]),
         ...(s.closeOnSelect ? [] : [formatBoolProp("closeOnSelect", false)]),
         formatExpressionProp("items", "items"),
-        formatExpressionProp("trigger", '<Button variant="primary">Actions</Button>'),
+        formatExpressionProp(
+          "trigger",
+          '<Button variant="primary">Actions</Button>',
+        ),
         formatExpressionProp("onOpenChange", "setMenuOpen"),
         formatExpressionProp("onSelect", "(item) => console.log(item.label)"),
       ];
       const menuProps = props.map((prop) => `  ${prop}`).join("\n");
       return interactiveUsage({
         components: ["Button", "DropdownMenu"],
-        preamble: [
-          "",
-          "const items = [",
-          `  ${items.join(",\n  ")},`,
-          "];",
-        ],
+        preamble: ["", "const items = [", `  ${items.join(",\n  ")},`, "];"],
         state: [`const [menuOpen, setMenuOpen] = useState(${s.open});`],
         jsx: `<DropdownMenu
 ${menuProps}
@@ -1181,10 +1405,14 @@ ${menuProps}
         `{ id: "pin", label: "Pinned", checked: true${s.showIcons ? ', icon: "✓"' : ""} }`,
         `{ id: "duplicate", label: "Duplicate"${s.showIcons ? ', icon: "⧉"' : ""}, shortcut: "⌘D" }`,
         ...(s.showDisabled
-          ? [`{ id: "archive", label: "Archive", disabled: true${s.showIcons ? ', icon: "⌁"' : ""} }`]
+          ? [
+              `{ id: "archive", label: "Archive", disabled: true${s.showIcons ? ', icon: "⌁"' : ""} }`,
+            ]
           : []),
         ...(s.showDestructive
-          ? [`{ id: "delete", label: "Delete", destructive: true${s.showIcons ? ', icon: "!"' : ""} }`]
+          ? [
+              `{ id: "delete", label: "Delete", destructive: true${s.showIcons ? ', icon: "!"' : ""} }`,
+            ]
           : []),
       ];
       const props = [
@@ -1238,11 +1466,17 @@ ${providerProps}
         formatExpressionProp("open", "paletteOpen"),
         formatStringProp("placeholder", s.placeholder),
         formatStringProp("emptyMessage", s.emptyMessage),
-        ...(s.dismissOnBackdrop ? [] : [formatBoolProp("dismissOnBackdrop", false)]),
-        ...(s.dismissOnEscape ? [] : [formatBoolProp("dismissOnEscape", false)]),
+        ...(s.dismissOnBackdrop
+          ? []
+          : [formatBoolProp("dismissOnBackdrop", false)]),
+        ...(s.dismissOnEscape
+          ? []
+          : [formatBoolProp("dismissOnEscape", false)]),
         ...(s.closeOnSelect ? [] : [formatBoolProp("closeOnSelect", false)]),
         ...(s.showShortcuts ? [] : [formatBoolProp("showShortcuts", false)]),
-        ...(s.showDescriptions ? [] : [formatBoolProp("showDescriptions", false)]),
+        ...(s.showDescriptions
+          ? []
+          : [formatBoolProp("showDescriptions", false)]),
         ...(s.showGroups ? [] : [formatBoolProp("showGroups", false)]),
         formatExpressionProp("items", "items"),
       ];
@@ -1270,8 +1504,12 @@ ${paletteProps}
         formatStringProp("title", s.title),
         formatStringProp("description", s.description),
         formatStringProp("size", s.size),
-        ...(s.dismissOnBackdrop ? [] : [formatBoolProp("dismissOnBackdrop", false)]),
-        ...(s.dismissOnEscape ? [] : [formatBoolProp("dismissOnEscape", false)]),
+        ...(s.dismissOnBackdrop
+          ? []
+          : [formatBoolProp("dismissOnBackdrop", false)]),
+        ...(s.dismissOnEscape
+          ? []
+          : [formatBoolProp("dismissOnEscape", false)]),
         ...(s.closeButton ? [] : [formatBoolProp("closeButton", false)]),
       ];
       const modalProps = props.map((prop) => `      ${prop}`).join("\n");
@@ -1298,7 +1536,13 @@ ${paletteProps}
           : formatJsxRichContent(s.content, "      ");
       const imports =
         s.contentType === "form"
-          ? ["Button", "Modal", "ModalDefaultActions", "SelectField", "TextField"]
+          ? [
+              "Button",
+              "Modal",
+              "ModalDefaultActions",
+              "SelectField",
+              "TextField",
+            ]
           : ["Button", "Modal", "ModalDefaultActions"];
       const state =
         s.contentType === "form"
@@ -1336,7 +1580,10 @@ ${children}
         ...(s.closeOnEscape ? [] : [formatBoolProp("closeOnEscape", false)]),
         ...(s.showArrow ? [] : [formatBoolProp("showArrow", false)]),
         formatExpressionProp("onOpenChange", "setPopoverOpen"),
-        formatExpressionProp("trigger", '<Button variant="primary">Open popover</Button>'),
+        formatExpressionProp(
+          "trigger",
+          '<Button variant="primary">Open popover</Button>',
+        ),
       ];
       const popoverProps = props.map((prop) => `  ${prop}`).join("\n");
       const children =
@@ -1389,7 +1636,12 @@ ${children}
         formatStringProp("title", s.title),
         formatStringProp("description", s.description),
         ...(s.iconFlagged ? [] : [formatBoolProp("iconFlagged", false)]),
-        ...(s.dismissible ? [formatBoolProp("dismissible", true), formatExpressionProp("onDismiss", "() => setAlertVisible(false)")] : []),
+        ...(s.dismissible
+          ? [
+              formatBoolProp("dismissible", true),
+              formatExpressionProp("onDismiss", "() => setAlertVisible(false)"),
+            ]
+          : []),
       ];
       return `${importLine(["Alert"])}\n\n<Alert${formatSelfClosing(props)}`;
     }
@@ -1398,7 +1650,9 @@ ${children}
       const showProps = [
         formatStringProp("status", s.status),
         formatStringProp("title", s.title),
-        ...(s.descriptionEnabled ? [formatStringProp("description", s.description)] : []),
+        ...(s.descriptionEnabled
+          ? [formatStringProp("description", s.description)]
+          : []),
         ...(s.dismissible ? [] : [formatBoolProp("dismissible", false)]),
       ];
       return interactiveUsage({
@@ -1427,10 +1681,21 @@ ${children}
         formatStringProp("title", s.title),
         ...(s.eyebrow ? [formatStringProp("eyebrow", s.eyebrow)] : []),
         ...(s.tone !== "default" ? [formatStringProp("tone", s.tone)] : []),
-        ...(s.density !== "comfortable" ? [formatStringProp("density", s.density)] : []),
+        ...(s.density !== "comfortable"
+          ? [formatStringProp("density", s.density)]
+          : []),
         ...(s.media ? [formatExpressionProp("media", "<div />")] : []),
-        ...(s.footerActions ? [formatStringProp("footer", "Updated 2 minutes ago")] : []),
-        ...(s.footerActions ? [formatExpressionProp("actions", "<Button variant=\"primary\">Open</Button>")] : []),
+        ...(s.footerActions
+          ? [formatStringProp("footer", "Updated 2 minutes ago")]
+          : []),
+        ...(s.footerActions
+          ? [
+              formatExpressionProp(
+                "actions",
+                '<Button variant="primary">Open</Button>',
+              ),
+            ]
+          : []),
       ];
       return `${importLine(s.footerActions ? ["Button", "Card"] : ["Card"])}
 
@@ -1445,9 +1710,19 @@ ${formatJsxRichContent(s.content)}
       const props = [
         formatStringProp("label", s.label),
         formatStringProp("value", s.value),
-        formatExpressionProp("icon", `<FontAwesomeIcon icon={${iconOption.importName}} />`),
-        ...(s.showChange ? [formatStringProp("change", s.change), formatStringProp("trend", s.trend)] : []),
-        ...(s.density !== "comfortable" ? [formatStringProp("density", s.density)] : []),
+        formatExpressionProp(
+          "icon",
+          `<FontAwesomeIcon icon={${iconOption.importName}} />`,
+        ),
+        ...(s.showChange
+          ? [
+              formatStringProp("change", s.change),
+              formatStringProp("trend", s.trend),
+            ]
+          : []),
+        ...(s.density !== "comfortable"
+          ? [formatStringProp("density", s.density)]
+          : []),
       ];
 
       return `import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -1463,10 +1738,10 @@ ${wrapDashboardWidget(`<StatCard${formatSelfClosing(props)} />`, ["StatCard"], {
       return `const values = [18, 24, 21, 34, 29, 42, 38];
 
 ${wrapDashboardWidget(
-        `<Sparkline label=${quote(s.label)} palette=${quote(s.palette)} values={values} variant="labeled" />`,
-        ["Sparkline"],
-        { width: s.width ?? "widget", wrap: s.wrapInContainer ?? true },
-      )}`;
+  `<Sparkline label=${quote(s.label)} palette=${quote(s.palette)} values={values} variant="labeled" />`,
+  ["Sparkline"],
+  { width: s.width ?? "widget", wrap: s.wrapInContainer ?? true },
+)}`;
     }
     case "progress-ring": {
       const s = settings as ControlSettingsBySlug["progress-ring"];
@@ -1484,8 +1759,7 @@ ${wrapDashboardWidget(
         { width: s.width ?? "widget", wrap: s.wrapInContainer ?? true },
       );
     }
-    case "gauge":
-    {
+    case "gauge": {
       const s = settings as ControlSettingsBySlug["gauge"];
       const gaugeFooter = getGaugeFooter(s.palette);
       const footerItems = gaugeFooter.slice(0, s.footerMetricCount);
@@ -1497,12 +1771,18 @@ ${wrapDashboardWidget(
         formatExpressionProp("value", String(gaugePreviewValue)),
         formatStringProp("trackColor", trackColor),
         formatStringProp("valueColor", valueColor),
-        ...(s.variant !== "half" ? [formatStringProp("variant", s.variant)] : []),
+        ...(s.variant !== "half"
+          ? [formatStringProp("variant", s.variant)]
+          : []),
         formatStringProp("change", s.change),
         formatStringProp("changeTrend", s.changeTrend),
         formatStringProp("summary", s.summary),
-        ...(s.footerMetricCount > 0 ? [formatExpressionProp("footer", "footerMetrics")] : []),
-        ...(s.density !== "comfortable" ? [formatStringProp("density", s.density)] : []),
+        ...(s.footerMetricCount > 0
+          ? [formatExpressionProp("footer", "footerMetrics")]
+          : []),
+        ...(s.density !== "comfortable"
+          ? [formatStringProp("density", s.density)]
+          : []),
       ];
 
       if (s.footerMetricCount === 0) {
@@ -1513,10 +1793,14 @@ ${wrapDashboardWidget(
           )
           .join(",\n");
 
-        return `${wrapDashboardWidget(`<Gauge${formatSelfClosing(props)}`, ["Gauge"], {
-          width: s.width ?? "widget",
-          wrap: s.wrapInContainer ?? true,
-        })}
+        return `${wrapDashboardWidget(
+          `<Gauge${formatSelfClosing(props)}`,
+          ["Gauge"],
+          {
+            width: s.width ?? "widget",
+            wrap: s.wrapInContainer ?? true,
+          },
+        )}
 
 // Optional footer metrics — pass any number of items, or omit entirely:
 // footer={[
@@ -1555,16 +1839,17 @@ ${wrapDashboardWidget(`<Gauge${formatSelfClosing(props)}`, ["Gauge"], {
 import { ${iconOption.importName} } from "@fortawesome/free-solid-svg-icons";
 import "@/lib/fontawesome";
 ${wrapDashboardWidget(
-        `<MetricTile icon={<FontAwesomeIcon icon={${iconOption.importName}} />} label=${quote(s.label)} value=${quote(s.value)}${s.showSparkline ? " sparkline={[12, 18, 16, 24, 22, 30, 28]}" : ""} />`,
-        ["MetricTile"],
-        { width: s.width ?? "widget", wrap: s.wrapInContainer ?? true },
-      )}`;
+  `<MetricTile icon={<FontAwesomeIcon icon={${iconOption.importName}} />} label=${quote(s.label)} value=${quote(s.value)}${s.showSparkline ? " sparkline={[12, 18, 16, 24, 22, 30, 28]}" : ""} />`,
+  ["MetricTile"],
+  { width: s.width ?? "widget", wrap: s.wrapInContainer ?? true },
+)}`;
     }
     case "dashboard-content-container": {
-      const s = settings as ControlSettingsBySlug["dashboard-content-container"];
+      const s =
+        settings as ControlSettingsBySlug["dashboard-content-container"];
       return `${importLine(["DashboardContentContainer", "StatusIndicator"])}
 
-<DashboardContentContainer${(s.height ?? "auto") !== "auto" ? ` height=${quote(s.height)}` : ""} title=${quote(s.title)} width=${quote(s.width ?? "widget")}>
+<DashboardContentContainer${(s.height ?? "auto") !== "auto" ? ` height=${quote(s.height)}` : ""} paddingBottom={${s.paddingBottom ?? true}} paddingLeft={${s.paddingLeft ?? true}} paddingRight={${s.paddingRight ?? true}} paddingTop={${s.paddingTop ?? true}} title=${quote(s.title)} width=${quote(s.width ?? "widget")}>
   <StatusIndicator label="Systems healthy" status="success" />
 </DashboardContentContainer>`;
     }
@@ -1573,7 +1858,7 @@ ${wrapDashboardWidget(
       return `const stages = ${formatPipelineStagesForUsage(s)};
 
 ${wrapDashboardWidget(
-        `<PipelineOverview
+  `<PipelineOverview
   stages={stages}
   totalLabel=${quote(s.totalLabel)}
   totalValue=${quote(formatPipelineTotalValue(s))}
@@ -1582,14 +1867,14 @@ ${wrapDashboardWidget(
     console.log("Period changed:", nextPeriod);
   }}
 />`,
-        ["PipelineOverview"],
-        {
-          dataComponent: "pipeline-overview",
-          title: s.title,
-          width: s.width ?? "widget",
-          wrap: s.wrapInContainer ?? true,
-        },
-      )}`;
+  ["PipelineOverview"],
+  {
+    dataComponent: "pipeline-overview",
+    title: s.title,
+    width: s.width ?? "widget",
+    wrap: s.wrapInContainer ?? true,
+  },
+)}`;
     }
     case "deals-over-time": {
       const s = settings as ControlSettingsBySlug["deals-over-time"];
@@ -1598,7 +1883,7 @@ ${wrapDashboardWidget(
       return `const dealsData = ${JSON.stringify(data, null, 2)};
 
 ${wrapDashboardWidget(
-        `<DealsOverTime
+  `<DealsOverTime
   title=${quote(s.title)}
   data={dealsData}
   maxValue={${maxValue}}
@@ -1609,9 +1894,13 @@ ${wrapDashboardWidget(
     console.log("Period changed:", nextPeriod);
   }}
 />`,
-        ["DealsOverTime"],
-        { dataComponent: "deals-over-time", width: s.width ?? "widget", wrap: s.wrapInContainer ?? true },
-      )}`;
+  ["DealsOverTime"],
+  {
+    dataComponent: "deals-over-time",
+    width: s.width ?? "widget",
+    wrap: s.wrapInContainer ?? true,
+  },
+)}`;
     }
     case "404-page": {
       return generate404PlaygroundCode();
@@ -1639,9 +1928,7 @@ ${wrapDashboardWidget(
           'import { demoRecentActivity } from "./recentActivityDemoData";',
           'import { demoTopPerformingUsers } from "./topPerformingUsersDemoData";',
         ],
-        state: [
-          "const [tasks, setTasks] = useState(demoUpcomingTasks);",
-        ],
+        state: ["const [tasks, setTasks] = useState(demoUpcomingTasks);"],
         jsx: `<Columns direction=${quote(s.layout === "stacked" ? "column" : "row")} columns={3} gap={16}>
   <DashboardContentContainer data-component=${quote("upcoming-tasks")} width=${quote(containerWidth)}>
     <UpcomingTasks
@@ -1706,8 +1993,12 @@ ${wrapDashboardWidget(
   onTabChange={(tab) => console.log("Tab", tab)}
 />`;
       return interactiveUsage({
-        components: wrap ? ["DashboardContentContainer", "NoteComposer", "NotesActivity"] : ["NoteComposer", "NotesActivity"],
-        preamble: [`const activity = ${JSON.stringify(demoNotesActivity, null, 2)};`],
+        components: wrap
+          ? ["DashboardContentContainer", "NoteComposer", "NotesActivity"]
+          : ["NoteComposer", "NotesActivity"],
+        preamble: [
+          `const activity = ${JSON.stringify(demoNotesActivity, null, 2)};`,
+        ],
         state: [],
         jsx: maybeWrapDashboardContent(widget, {
           dataComponent: "notes-activity",
@@ -1720,7 +2011,15 @@ ${wrapDashboardWidget(
     case "lab-test-layout": {
       const s = settings as ControlSettingsBySlug["lab-test-layout"];
       return interactiveUsage({
-        components: ["CatalogIcon", "DashboardContentContainer", "Icon", "NotesActivity", "Sidebar", "ThreePaneLayout", "Tooltip"],
+        components: [
+          "CatalogIcon",
+          "DashboardContentContainer",
+          "Icon",
+          "NotesActivity",
+          "Sidebar",
+          "ThreePaneLayout",
+          "Tooltip",
+        ],
         preamble: [
           `const menu = [
   {
@@ -1779,7 +2078,7 @@ ${wrapDashboardWidget(
     rightCollapsed={rightCollapsed}
     style={{ height: "100%" }}
     left={
-      <DashboardContentContainer data-component="sidebar" height="full" width="full">
+      <DashboardContentContainer data-component="sidebar" height="full" paddingLeft={false} paddingRight={false} width="full">
         <Sidebar
           collapsed={sidebarCollapsed}
           defaultActiveItem="all-contacts"
@@ -1797,6 +2096,8 @@ ${wrapDashboardWidget(
           }
           menu={menu}
           onSelect={(item) => setWorkspaceLabel(String(item.label))}
+          paddingLeft
+          paddingRight
           persistState={${s.persist}}
           renderIcon={(name) => <CatalogIcon iconName={name} />}
           storageKey="crm-test-layout-menu"
@@ -1874,8 +2175,12 @@ ${wrapDashboardWidget(
   }}
 />`;
       return interactiveUsage({
-        components: wrap ? ["DashboardContentContainer", "UpcomingTasks"] : ["UpcomingTasks"],
-        preamble: [`const initialTasks = ${JSON.stringify(demoUpcomingTasks, null, 2)};`],
+        components: wrap
+          ? ["DashboardContentContainer", "UpcomingTasks"]
+          : ["UpcomingTasks"],
+        preamble: [
+          `const initialTasks = ${JSON.stringify(demoUpcomingTasks, null, 2)};`,
+        ],
         state: ["const [tasks, setTasks] = useState(initialTasks);"],
         jsx: maybeWrapDashboardContent(widget, {
           dataComponent: "upcoming-tasks",
@@ -1895,14 +2200,18 @@ ${wrapDashboardWidget(
   onItemClick={(item) => console.log(item.title)}
 />`;
       return interactiveUsage({
-        components: wrap ? ["DashboardContentContainer", "RecentActivity"] : ["RecentActivity"],
-        preamble: [`const activity = ${JSON.stringify(demoRecentActivity, null, 2)};`],
+        components: wrap
+          ? ["DashboardContentContainer", "RecentActivity"]
+          : ["RecentActivity"],
+        preamble: [
+          `const activity = ${JSON.stringify(demoRecentActivity, null, 2)};`,
+        ],
         state: [],
         jsx: maybeWrapDashboardContent(widget, {
-      dataComponent: "recent-activity",
-      width: s.width ?? "widget",
-      wrap,
-    }),
+          dataComponent: "recent-activity",
+          width: s.width ?? "widget",
+          wrap,
+        }),
       });
     }
     case "top-performing-users": {
@@ -1916,14 +2225,18 @@ ${wrapDashboardWidget(
   onPersonClick={(person) => console.log(person.name)}
 />`;
       return interactiveUsage({
-        components: wrap ? ["DashboardContentContainer", "TopPerformingUsers"] : ["TopPerformingUsers"],
-        preamble: [`const users = ${JSON.stringify(demoTopPerformingUsers, null, 2)};`],
+        components: wrap
+          ? ["DashboardContentContainer", "TopPerformingUsers"]
+          : ["TopPerformingUsers"],
+        preamble: [
+          `const users = ${JSON.stringify(demoTopPerformingUsers, null, 2)};`,
+        ],
         state: [],
         jsx: maybeWrapDashboardContent(widget, {
-      dataComponent: "top-performing-users",
-      width: s.width ?? "widget",
-      wrap,
-    }),
+          dataComponent: "top-performing-users",
+          width: s.width ?? "widget",
+          wrap,
+        }),
       });
     }
     case "user-profile":
@@ -1937,12 +2250,23 @@ ${wrapDashboardWidget(
         formatStringProp("avatarSize", s.avatarSize),
         formatExpressionProp("src", "photo"),
         formatExpressionProp("menuItems", "menuItems"),
-        ...(s.photoUploadEnabled ? [formatExpressionProp("onAvatarClick", "openPhotoUpload")] : []),
+        ...(s.photoUploadEnabled
+          ? [formatExpressionProp("onAvatarClick", "openPhotoUpload")]
+          : []),
       ];
-      const afterState = formatUserProfileUsageAfterState(menuItems, s.photoUploadEnabled, s.photoUploadMenuItemId);
+      const afterState = formatUserProfileUsageAfterState(
+        menuItems,
+        s.photoUploadEnabled,
+        s.photoUploadMenuItemId,
+      );
       const propsBlock = widgetProps.map((prop) => `  ${prop}`).join("\n");
-      const photoUploadState = s.photoUploadEnabled ? "const [photoUploadOpen, setPhotoUploadOpen] = useState(false);" : "";
-      const state = [`const [photo, setPhoto] = useState(${s.srcEnabled && s.src ? quote(s.src) : '""'});`, photoUploadState].filter(Boolean);
+      const photoUploadState = s.photoUploadEnabled
+        ? "const [photoUploadOpen, setPhotoUploadOpen] = useState(false);"
+        : "";
+      const state = [
+        `const [photo, setPhoto] = useState(${s.srcEnabled && s.src ? quote(s.src) : '""'});`,
+        photoUploadState,
+      ].filter(Boolean);
       const modalBlock = s.photoUploadEnabled
         ? formatUserProfilePhotoUploadModalUsage(fieldId, s.photoUploadTitle)
         : "";
@@ -1960,14 +2284,20 @@ ${propsBlock}
   ${modalBlock}
 </>`
         : widgetBlock;
-      const returnContent = s.photoUploadEnabled ? `(\n  ${fragmentContent}\n)` : widgetBlock;
+      const returnContent = s.photoUploadEnabled
+        ? `(\n  ${fragmentContent}\n)`
+        : widgetBlock;
       const wrapped = s.wrapInContainer ?? true;
       const containerContent = s.photoUploadEnabled
         ? `${indentContainerChild(widgetBlock)}\n${indentContainerChild(modalBlock)}`
         : indentContainerChild(widgetBlock);
       const components = s.photoUploadEnabled
         ? wrapped
-          ? ["DashboardContentContainer", "UserProfileWidget", "ProfilePhotoUploadModal"]
+          ? [
+              "DashboardContentContainer",
+              "UserProfileWidget",
+              "ProfilePhotoUploadModal",
+            ]
           : ["UserProfileWidget", "ProfilePhotoUploadModal"]
         : wrapped
           ? ["DashboardContentContainer", "UserProfileWidget"]
@@ -2015,13 +2345,15 @@ ${containerContent}
 />`;
 
       return interactiveUsage({
-        components: wrap ? ["DashboardContentContainer", "ImageCropUploadWidget"] : ["ImageCropUploadWidget"],
+        components: wrap
+          ? ["DashboardContentContainer", "ImageCropUploadWidget"]
+          : ["ImageCropUploadWidget"],
         state: ['const [photo, setPhoto] = useState("");'],
         jsx: maybeWrapDashboardContent(widget, {
-      dataComponent: "profile-photo-upload",
-      width: s.width ?? "widget",
-      wrap,
-    }),
+          dataComponent: "profile-photo-upload",
+          width: s.width ?? "widget",
+          wrap,
+        }),
       });
     }
     case "status-indicator": {
@@ -2046,7 +2378,9 @@ ${containerContent}
         formatStringProp("title", s.title),
         formatStringProp("description", s.description),
         ...(s.tone !== "default" ? [formatStringProp("tone", s.tone)] : []),
-        ...(s.density !== "comfortable" ? [formatStringProp("density", s.density)] : []),
+        ...(s.density !== "comfortable"
+          ? [formatStringProp("density", s.density)]
+          : []),
         ...(s.divided ? [] : [formatBoolProp("divided", false)]),
         ...(s.bordered ? [] : [formatBoolProp("bordered", false)]),
         formatStringProp("footer", s.footer),
@@ -2069,10 +2403,14 @@ ${formatJsxRichContent(s.content)}
         ...(s.gap !== "md" ? [formatStringProp("gap", s.gap)] : []),
       ];
       const rowProps = [
-        ...(s.sidebar !== "none" ? [formatStringProp("sidebar", s.sidebar)] : []),
+        ...(s.sidebar !== "none"
+          ? [formatStringProp("sidebar", s.sidebar)]
+          : []),
         ...(s.columns !== 1 ? [formatNumberProp("columns", s.columns)] : []),
         ...(s.gap !== "md" ? [formatStringProp("gap", s.gap)] : []),
-        ...(s.stackBelow !== "mobile" ? [formatStringProp("stackBelow", s.stackBelow)] : []),
+        ...(s.stackBelow !== "mobile"
+          ? [formatStringProp("stackBelow", s.stackBelow)]
+          : []),
         ...(s.sidebar !== "none" && s.sidebarRatio !== "1:2"
           ? [formatStringProp("sidebarRatio", s.sidebarRatio)]
           : []),
@@ -2092,7 +2430,9 @@ ${formatPanel(column.title, column.content, "          ")}
         const nestedRowProps = [
           `columns={${s.columns}}`,
           ...(s.gap !== "md" ? [`gap="${s.gap}"`] : []),
-          ...(s.stackBelow !== "mobile" ? [`stackBelow="${s.stackBelow}"`] : []),
+          ...(s.stackBelow !== "mobile"
+            ? [`stackBelow="${s.stackBelow}"`]
+            : []),
         ];
         const nestedRow = `      <Section.Row ${nestedRowProps.join(" ")}>
 ${contentMarkup}
@@ -2162,11 +2502,20 @@ ${columnMarkup}
         formatExpressionProp("columns", "columns"),
         formatExpressionProp("rows", "rows"),
         formatStringProp("caption", s.caption),
-        ...(s.density !== "comfortable" ? [formatStringProp("density", s.density)] : []),
+        ...(s.density !== "comfortable"
+          ? [formatStringProp("density", s.density)]
+          : []),
         ...(s.striped ? [formatBoolProp("striped", true)] : []),
         ...(s.bordered ? [formatBoolProp("bordered", true)] : []),
         ...(s.showCaption ? [] : [formatBoolProp("showCaption", false)]),
-        ...(s.showEmpty ? [formatStringProp("emptyMessage", "No component adoption data available.")] : []),
+        ...(s.showEmpty
+          ? [
+              formatStringProp(
+                "emptyMessage",
+                "No component adoption data available.",
+              ),
+            ]
+          : []),
       ];
       return `${importLine(["Table"])}
 
@@ -2195,14 +2544,23 @@ const rows = ${rows};
         formatExpressionProp("columns", "columns"),
         formatExpressionProp("rows", "rows"),
         formatStringProp("caption", s.caption),
-        ...(s.density !== "compact" ? [formatStringProp("density", s.density)] : []),
+        ...(s.density !== "compact"
+          ? [formatStringProp("density", s.density)]
+          : []),
         ...(s.layout !== "flat" ? [formatStringProp("layout", s.layout)] : []),
-        ...(s.layout === "grouped" ? [formatStringProp("groupBy", "group")] : []),
+        ...(s.layout === "grouped"
+          ? [formatStringProp("groupBy", "group")]
+          : []),
         ...(s.layout === "pivot"
           ? [formatExpressionProp("pivot", JSON.stringify(dataGridPivotConfig))]
           : []),
         ...(s.masterDetail && s.layout !== "pivot"
-          ? [formatExpressionProp("getDetailContent", "(row) => `Detail for ${row.values.team}`")]
+          ? [
+              formatExpressionProp(
+                "getDetailContent",
+                "(row) => `Detail for ${row.values.team}`",
+              ),
+            ]
           : []),
         ...(s.virtualized ? [formatBoolProp("virtualized", true)] : []),
         ...(s.infiniteScroll && s.layout !== "tree" && s.layout !== "pivot"
@@ -2214,7 +2572,9 @@ const rows = ${rows};
         ...(s.striped ? [] : [formatBoolProp("striped", false)]),
         ...(s.bordered ? [] : [formatBoolProp("bordered", false)]),
         ...(s.stickyHeader ? [] : [formatBoolProp("stickyHeader", false)]),
-        ...(s.stickyFirstColumn ? [] : [formatBoolProp("stickyFirstColumn", false)]),
+        ...(s.stickyFirstColumn
+          ? []
+          : [formatBoolProp("stickyFirstColumn", false)]),
       ];
       return `${importLine(["DataGrid"])}
 
@@ -2227,8 +2587,12 @@ const rows = ${formatDataGridRowsForUsage(demoRows)};
     case "skeleton": {
       const s = settings as ControlSettingsBySlug["skeleton"];
       const props = [
-        ...(s.variant !== "text" ? [formatStringProp("variant", s.variant)] : []),
-        ...(s.animation !== "shimmer" ? [formatStringProp("animation", s.animation)] : []),
+        ...(s.variant !== "text"
+          ? [formatStringProp("variant", s.variant)]
+          : []),
+        ...(s.animation !== "shimmer"
+          ? [formatStringProp("animation", s.animation)]
+          : []),
         ...(s.lines !== 3 ? [formatNumberProp("lines", s.lines)] : []),
       ];
       return `${importLine(["Skeleton"])}
@@ -2239,7 +2603,9 @@ const rows = ${formatDataGridRowsForUsage(demoRows)};
       const s = settings as ControlSettingsBySlug["carousel"];
       const props = [
         formatExpressionProp("images", "images"),
-        ...(s.initialIndex !== 0 ? [formatNumberProp("initialIndex", s.initialIndex)] : []),
+        ...(s.initialIndex !== 0
+          ? [formatNumberProp("initialIndex", s.initialIndex)]
+          : []),
         ...(s.loop ? [] : [formatBoolProp("loop", false)]),
         ...(s.showCaptions ? [] : [formatBoolProp("showCaptions", false)]),
         ...(s.showPips ? [] : [formatBoolProp("showPips", false)]),
@@ -2261,8 +2627,12 @@ const images = [
         formatExpressionProp("image", "image"),
         formatStringProp("triggerLabel", s.triggerLabel),
         ...(s.showCaptions ? [] : [formatBoolProp("showCaption", false)]),
-        ...(s.dismissOnBackdrop ? [] : [formatBoolProp("dismissOnBackdrop", false)]),
-        ...(s.dismissOnEscape ? [] : [formatBoolProp("dismissOnEscape", false)]),
+        ...(s.dismissOnBackdrop
+          ? []
+          : [formatBoolProp("dismissOnBackdrop", false)]),
+        ...(s.dismissOnEscape
+          ? []
+          : [formatBoolProp("dismissOnEscape", false)]),
       ];
       return `${importLine(["Lightbox"])}
 
@@ -2299,7 +2669,9 @@ const image = {
       const props = [
         formatExpressionProp("images", "images"),
         ...(s.columns !== 4 ? [formatNumberProp("columns", s.columns)] : []),
-        ...(s.thumbnailSize !== "small" ? [formatStringProp("thumbnailSize", s.thumbnailSize)] : []),
+        ...(s.thumbnailSize !== "small"
+          ? [formatStringProp("thumbnailSize", s.thumbnailSize)]
+          : []),
         ...(s.showCaptions ? [] : [formatBoolProp("showCaptions", false)]),
       ];
       return `${importLine(["ImageGallery"])}
@@ -2339,8 +2711,12 @@ const asset = {
         formatExpressionProp("asset", "asset"),
         formatStringProp("triggerLabel", s.triggerLabel),
         ...(s.showCaption ? [] : [formatBoolProp("showCaption", false)]),
-        ...(s.dismissOnBackdrop ? [] : [formatBoolProp("dismissOnBackdrop", false)]),
-        ...(s.dismissOnEscape ? [] : [formatBoolProp("dismissOnEscape", false)]),
+        ...(s.dismissOnBackdrop
+          ? []
+          : [formatBoolProp("dismissOnBackdrop", false)]),
+        ...(s.dismissOnEscape
+          ? []
+          : [formatBoolProp("dismissOnEscape", false)]),
       ];
       return `${importLine(["ModelLightbox"])}
 
@@ -2379,7 +2755,9 @@ const asset = {
       const props = [
         formatExpressionProp("assets", "assets"),
         ...(s.columns !== 4 ? [formatNumberProp("columns", s.columns)] : []),
-        ...(s.thumbnailSize !== "small" ? [formatStringProp("thumbnailSize", s.thumbnailSize)] : []),
+        ...(s.thumbnailSize !== "small"
+          ? [formatStringProp("thumbnailSize", s.thumbnailSize)]
+          : []),
         ...(s.showCaptions ? [] : [formatBoolProp("showCaptions", false)]),
       ];
       return `${importLine(["ModelGallery"])}
@@ -2393,8 +2771,12 @@ const assets = ${formatModelAssetsForUsage()};
       const props = [
         formatExpressionProp("items", "items"),
         formatExpressionProp("value", "activeTab"),
-        ...(s.orientation !== "horizontal" ? [formatStringProp("orientation", s.orientation)] : []),
-        ...(s.variant !== "line" ? [formatStringProp("variant", s.variant)] : []),
+        ...(s.orientation !== "horizontal"
+          ? [formatStringProp("orientation", s.orientation)]
+          : []),
+        ...(s.variant !== "line"
+          ? [formatStringProp("variant", s.variant)]
+          : []),
         ...(s.fitted ? [formatBoolProp("fitted", true)] : []),
         formatExpressionProp("onValueChange", "setActiveTab"),
       ];
@@ -2482,7 +2864,9 @@ ${formatJsxRichContent(s.content)}
       const groupProps = [
         ...(s.type !== "single" ? [formatStringProp("type", s.type)] : []),
         ...(s.collapsible ? [] : [formatBoolProp("collapsible", false)]),
-        ...(s.defaultOpenFirst ? [formatStringProp("defaultValue", "getting-started")] : []),
+        ...(s.defaultOpenFirst
+          ? [formatStringProp("defaultValue", "getting-started")]
+          : []),
       ];
       return `${importLine(["Accordion", "AccordionGroup"])}
 
@@ -2502,8 +2886,12 @@ ${formatJsxRichContent(s.itemThreeContent, "    ")}
       const s = settings as ControlSettingsBySlug["show-more"];
       const props = [
         ...(s.maxLines !== 3 ? [formatNumberProp("maxLines", s.maxLines)] : []),
-        ...(s.showMoreLabel !== "Show more" ? [formatStringProp("showMoreLabel", s.showMoreLabel)] : []),
-        ...(s.showLessLabel !== "Show less" ? [formatStringProp("showLessLabel", s.showLessLabel)] : []),
+        ...(s.showMoreLabel !== "Show more"
+          ? [formatStringProp("showMoreLabel", s.showMoreLabel)]
+          : []),
+        ...(s.showLessLabel !== "Show less"
+          ? [formatStringProp("showLessLabel", s.showLessLabel)]
+          : []),
         ...(s.defaultExpanded ? [formatBoolProp("defaultExpanded", true)] : []),
       ];
       return `${importLine(["ShowMore"])}
@@ -2516,20 +2904,35 @@ ${formatJsxParagraphContent(s.content)}
       const s = settings as ControlSettingsBySlug["empty-state"];
       const actionParts: string[] = [];
       if (s.secondaryAction) {
-        actionParts.push(`<Button variant="secondary">${s.secondaryActionLabel}</Button>`);
+        actionParts.push(
+          `<Button variant="secondary">${s.secondaryActionLabel}</Button>`,
+        );
       }
       if (s.primaryAction) {
-        actionParts.push(`<Button variant="primary">${s.primaryActionLabel}</Button>`);
+        actionParts.push(
+          `<Button variant="primary">${s.primaryActionLabel}</Button>`,
+        );
       }
       const props = [
         formatStringProp("title", s.title),
         formatStringProp("description", s.description),
-        ...(s.density !== "comfortable" ? [formatStringProp("density", s.density)] : []),
+        ...(s.density !== "comfortable"
+          ? [formatStringProp("density", s.density)]
+          : []),
         ...(s.showIcon ? [] : [formatExpressionProp("icon", "false")]),
         ...(s.showIcon ? [formatStringProp("icon", s.icon)] : []),
-        ...(actionParts.length ? [formatExpressionProp("actions", `<>\n    ${actionParts.join("\n    ")}\n  </>`)] : []),
+        ...(actionParts.length
+          ? [
+              formatExpressionProp(
+                "actions",
+                `<>\n    ${actionParts.join("\n    ")}\n  </>`,
+              ),
+            ]
+          : []),
       ];
-      const imports = actionParts.length ? ["Button", "EmptyState"] : ["EmptyState"];
+      const imports = actionParts.length
+        ? ["Button", "EmptyState"]
+        : ["EmptyState"];
       return `${importLine(imports)}
 
 <EmptyState${formatSelfClosing(props)}`;
@@ -2539,7 +2942,9 @@ ${formatJsxParagraphContent(s.content)}
       const props = [
         formatStringProp("label", s.label),
         ...(s.tone !== "neutral" ? [formatStringProp("tone", s.tone)] : []),
-        ...(s.variant !== "soft" ? [formatStringProp("variant", s.variant)] : []),
+        ...(s.variant !== "soft"
+          ? [formatStringProp("variant", s.variant)]
+          : []),
         ...(s.size !== "md" ? [formatStringProp("size", s.size)] : []),
         ...(s.dot ? [formatBoolProp("dot", true)] : []),
       ];
@@ -2572,7 +2977,9 @@ const items = ${formatAvatarGroupItemsForUsage()};
       const s = settings as ControlSettingsBySlug["list"];
       const props = [
         formatExpressionProp("items", "items"),
-        ...(s.density !== "comfortable" ? [formatStringProp("density", s.density)] : []),
+        ...(s.density !== "comfortable"
+          ? [formatStringProp("density", s.density)]
+          : []),
         ...(s.ordered ? [formatBoolProp("ordered", true)] : []),
       ];
       return `${importLine(["List"])}
@@ -2585,7 +2992,9 @@ const items = ${formatListItemsForUsage(s.showIcons)};
       const s = settings as ControlSettingsBySlug["description-list"];
       const props = [
         formatExpressionProp("items", "items"),
-        ...(s.layout !== "stacked" ? [formatStringProp("layout", s.layout)] : []),
+        ...(s.layout !== "stacked"
+          ? [formatStringProp("layout", s.layout)]
+          : []),
       ];
       return `${importLine(["DescriptionList"])}
 
@@ -2596,9 +3005,13 @@ const items = ${formatDescriptionListItemsForUsage()};
     case "divider": {
       const s = settings as ControlSettingsBySlug["divider"];
       const props = [
-        ...(s.orientation !== "horizontal" ? [formatStringProp("orientation", s.orientation)] : []),
+        ...(s.orientation !== "horizontal"
+          ? [formatStringProp("orientation", s.orientation)]
+          : []),
         ...(s.tone !== "default" ? [formatStringProp("tone", s.tone)] : []),
-        ...(s.labelEnabled && s.orientation === "horizontal" ? [formatStringProp("label", s.label)] : []),
+        ...(s.labelEnabled && s.orientation === "horizontal"
+          ? [formatStringProp("label", s.label)]
+          : []),
       ];
       return `${importLine(["Divider"])}\n\n<Divider${formatSelfClosing(props)}`;
     }
@@ -2658,7 +3071,8 @@ ${formatLayoutTileChildren(4)}
     }
     case "columns": {
       const s = settings as ControlSettingsBySlug["columns"];
-      const directionProp = s.direction !== "row" ? ` direction="${s.direction}"` : "";
+      const directionProp =
+        s.direction !== "row" ? ` direction="${s.direction}"` : "";
       const columnsProp = s.columns !== 3 ? ` columns={${s.columns}}` : "";
       const gapProp = s.gap !== 16 ? ` gap={${s.gap}}` : "";
       return `${importLine(["Columns"])}
@@ -2804,11 +3218,31 @@ export default function ResizeHandleExample() {
   </section>
 </ThreePaneLayout>`;
     }
+    case "custom-scrollbar": {
+      const s = settings as ControlSettingsBySlug["custom-scrollbar"];
+      return `${importLine(["CustomScrollbar"])}
+
+<CustomScrollbar
+  autoHide={${s.autoHide}}
+  horizontalThumbShape="${s.horizontalThumbShape}"
+  horizontalTrackShape="${s.horizontalTrackShape}"
+  maxHeight={${s.maxHeight}}
+  minThumbSize={${s.minThumbSize}}
+  orientation="${s.orientation}"
+  thickness={${s.thickness}}
+  verticalThumbShape="${s.verticalThumbShape}"
+  verticalTrackShape="${s.verticalTrackShape}"
+>
+  <div style={{ padding: 12, display: "grid", gap: 6 }}>
+${formatScrollAreaContent()}
+  </div>
+</CustomScrollbar>`;
+    }
     case "scroll-area": {
       const s = settings as ControlSettingsBySlug["scroll-area"];
       return `${importLine(["ScrollArea"])}
 
-<ScrollArea maxHeight={${s.maxHeight}} orientation="${s.orientation}">
+<ScrollArea autoHide={${s.autoHide}} maxHeight={${s.maxHeight}} orientation="${s.orientation}" thickness={${s.thickness}}>
   <div style={{ padding: 12, display: "grid", gap: 6 }}>
 ${formatScrollAreaContent()}
   </div>
@@ -3073,7 +3507,9 @@ function CalendarExample() {
       const s = settings as ControlSettingsBySlug["json-viewer"];
       const props = [
         formatExpressionProp("value", "value"),
-        ...(s.collapsedDepth !== 1 ? [formatNumberProp("collapsedDepth", s.collapsedDepth)] : []),
+        ...(s.collapsedDepth !== 1
+          ? [formatNumberProp("collapsedDepth", s.collapsedDepth)]
+          : []),
       ];
       return `${importLine(["JsonViewer"])}
 
@@ -3088,7 +3524,12 @@ const value = ${formatJsonValueForUsage()};
         formatStringProp("value", s.value),
         ...(s.prefix ? [formatStringProp("prefix", s.prefix)] : []),
         ...(s.suffix ? [formatStringProp("suffix", s.suffix)] : []),
-        ...(s.trendEnabled ? [formatStringProp("trend", s.trend), formatStringProp("trendLabel", s.trendLabel)] : []),
+        ...(s.trendEnabled
+          ? [
+              formatStringProp("trend", s.trend),
+              formatStringProp("trendLabel", s.trendLabel),
+            ]
+          : []),
       ];
       return `${importLine(["Statistic"])}\n\n<Statistic${formatSelfClosing(props)}`;
     }
@@ -3121,7 +3562,9 @@ const value = ${formatJsonValueForUsage()};
         ...(s.max !== 99 ? [formatExpressionProp("max", String(s.max))] : []),
         ...(s.size !== "md" ? [formatStringProp("size", s.size)] : []),
         ...(s.tone !== "muted" ? [formatStringProp("tone", s.tone)] : []),
-        ...(s.urgency !== "standard" ? [formatStringProp("urgency", s.urgency)] : []),
+        ...(s.urgency !== "standard"
+          ? [formatStringProp("urgency", s.urgency)]
+          : []),
         ...(s.showZero ? [formatBoolProp("showZero", true)] : []),
         formatExpressionProp("onClick", `() => console.log(${quote(s.label)})`),
       ];
@@ -3166,7 +3609,10 @@ const value = ${formatJsonValueForUsage()};
       const s = settings as ControlSettingsBySlug["keyboard-shortcut"];
       const keys = s.keys.split(/\\s*\\+\\s*|\\s+/).filter(Boolean);
       const props = [
-        formatExpressionProp("keys", JSON.stringify(keys.length ? keys : ["⌘", "K"])),
+        formatExpressionProp(
+          "keys",
+          JSON.stringify(keys.length ? keys : ["⌘", "K"]),
+        ),
         ...(s.size !== "md" ? [formatStringProp("size", s.size)] : []),
       ];
       return `${importLine(["KeyboardShortcut"])}\n\n<KeyboardShortcut${formatSelfClosing(props)}`;
@@ -3180,7 +3626,9 @@ const value = ${formatJsonValueForUsage()};
       const props = [
         formatStringProp("value", s.value),
         ...(s.label !== "Copy" ? [formatStringProp("label", s.label)] : []),
-        ...(s.copiedLabel !== "Copied" ? [formatStringProp("copiedLabel", s.copiedLabel)] : []),
+        ...(s.copiedLabel !== "Copied"
+          ? [formatStringProp("copiedLabel", s.copiedLabel)]
+          : []),
       ];
       return `${importLine(["CopyButton"])}\n\n<CopyButton${formatSelfClosing(props)}`;
     }
@@ -3241,37 +3689,54 @@ const value = ${formatJsonValueForUsage()};
       const sidebarProps = [
         ...(s.side !== "left" ? [formatStringProp("side", s.side)] : []),
         ...(s.collapsed ? [formatBoolProp("collapsed", true)] : []),
-        ...(s.density !== "comfortable" ? [formatStringProp("density", s.density)] : []),
+        ...(s.density !== "comfortable"
+          ? [formatStringProp("density", s.density)]
+          : []),
         formatStringProp("defaultActiveItem", s.activeItem),
-        ...(s.showHeader ? [formatExpressionProp("header", `<SidebarHeader title=${quote(s.headerTitle)} />`)] : []),
+        ...(s.showHeader
+          ? [
+              formatExpressionProp(
+                "header",
+                `<SidebarHeader title=${quote(s.headerTitle)} />`,
+              ),
+            ]
+          : []),
         ...(s.showFooter ? [formatStringProp("footer", s.footerText)] : []),
         ...(s.persistState ? [formatBoolProp("persistState", true)] : []),
+        ...(s.paddingBottom ? [formatBoolProp("paddingBottom", true)] : []),
+        ...(s.paddingLeft ? [formatBoolProp("paddingLeft", true)] : []),
+        ...(s.paddingRight ? [formatBoolProp("paddingRight", true)] : []),
+        ...(s.paddingTop ? [formatBoolProp("paddingTop", true)] : []),
       ];
       const sidebarMarkup = `<Sidebar${formatSelfClosing([
         ...sidebarProps,
         formatExpressionProp("menu", "menu"),
-        formatExpressionProp("renderIcon", `(iconName) => <CatalogIcon iconName={iconName} />`),
+        formatExpressionProp(
+          "renderIcon",
+          `(iconName) => <CatalogIcon iconName={iconName} />`,
+        ),
         formatExpressionProp("onSelect", "handleMenuSelect"),
       ])}`;
-      const sidebarContainerHeight = (s.height ?? "auto") !== "auto" ? ` height=${quote(s.height)}` : "";
+      const sidebarContainerHeight =
+        (s.height ?? "auto") !== "auto" ? ` height=${quote(s.height)}` : "";
       const returnMarkup = wrapped
         ? `<DashboardContentContainer data-component="sidebar"${sidebarContainerHeight} width="widget">
     ${sidebarMarkup
-        .split("\n")
-        .map((line) => (line ? `  ${line}` : line))
-        .join("\n")}
-  </DashboardContentContainer>`
-        : sidebarMarkup
       .split("\n")
       .map((line) => (line ? `  ${line}` : line))
-      .join("\n");
+      .join("\n")}
+  </DashboardContentContainer>`
+        : sidebarMarkup
+            .split("\n")
+            .map((line) => (line ? `  ${line}` : line))
+            .join("\n");
       return `${usageClientPrefix(false)}
 ${importLine([
-        "CatalogIcon",
-        ...(wrapped ? ["DashboardContentContainer"] : []),
-        "Sidebar",
-        "SidebarHeader",
-      ])}
+  "CatalogIcon",
+  ...(wrapped ? ["DashboardContentContainer"] : []),
+  "Sidebar",
+  "SidebarHeader",
+])}
 
 const handleMenuSelect = (item) => {
   console.log("Menu callback", item.label);
@@ -3333,7 +3798,9 @@ return (
       const props = [
         formatExpressionProp("menus", "menus"),
         formatBoolProp("staticPanel", true),
-        ...(s.density !== "comfortable" ? [formatStringProp("density", s.density)] : []),
+        ...(s.density !== "comfortable"
+          ? [formatStringProp("density", s.density)]
+          : []),
         ...(s.closeOnOutside ? [] : [formatBoolProp("closeOnOutside", false)]),
         ...(s.closeOnEscape ? [] : [formatBoolProp("closeOnEscape", false)]),
       ];
@@ -3351,7 +3818,9 @@ ${formatMegaMenuMenusForUsage([previewMenu], { includeFeatured: s.featured })},
       const props = [
         formatExpressionProp("menus", "menus"),
         formatExpressionProp("activeMenu", "activeMenu"),
-        ...(s.density !== "comfortable" ? [formatStringProp("density", s.density)] : []),
+        ...(s.density !== "comfortable"
+          ? [formatStringProp("density", s.density)]
+          : []),
         ...(s.closeOnOutside ? [] : [formatBoolProp("closeOnOutside", false)]),
         ...(s.closeOnEscape ? [] : [formatBoolProp("closeOnEscape", false)]),
         ...(s.closeOnSelect ? [] : [formatBoolProp("closeOnSelect", false)]),
@@ -3360,18 +3829,16 @@ ${formatMegaMenuMenusForUsage([previewMenu], { includeFeatured: s.featured })},
         formatExpressionProp("onSelect", "handleSelect"),
       ];
       const navProps = props.map((prop) => `      ${prop}`).join("\n");
-      const menusBlock = formatTopNavigationMenusForUsage(topNavigationDemoMenus, {
-        showShortcuts: s.showShortcuts,
-      });
+      const menusBlock = formatTopNavigationMenusForUsage(
+        topNavigationDemoMenus,
+        {
+          showShortcuts: s.showShortcuts,
+        },
+      );
 
       return interactiveUsage({
         components: ["TopNavigation"],
-        preamble: [
-          "",
-          "const menus = [",
-          `${menusBlock},`,
-          "];",
-        ],
+        preamble: ["", "const menus = [", `${menusBlock},`, "];"],
         state: [
           `const [activeMenu, setActiveMenu] = useState<string | null>(${s.activeMenu === "none" ? "null" : quote(s.activeMenu)});`,
           "",
@@ -3410,7 +3877,11 @@ export function generatePlaygroundSeedCode(
   return generateFullUsageCode(slug, settings, category);
 }
 
-export function generateUsageCode(slug: ControlSlug, settings: ControlSettings, category?: ComponentCategory) {
+export function generateUsageCode(
+  slug: ControlSlug,
+  settings: ControlSettings,
+  category?: ComponentCategory,
+) {
   const full = generateFullUsageCode(slug, settings, category);
   return {
     ...splitUsageCode(full),

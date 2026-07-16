@@ -41,17 +41,17 @@ export function Tiles({ className, items, layout = "fill" }: TilesProps) {
         const tone = item.tone ?? defaultToneForIndex(index);
 
         return (
-          <Tile
-            className={styles.tile}
-            href={item.href}
-            icon={item.icon}
-            key={item.id}
-            label={item.label}
-            onClick={item.onClick}
-            role="listitem"
-            tone={tone}
-            withGradients={false}
-          />
+          <div className={styles.tileItem} key={item.id} role="listitem">
+            <Tile
+              className={styles.tile}
+              href={item.href}
+              icon={item.icon}
+              label={item.label}
+              onClick={item.onClick}
+              tone={tone}
+              withGradients={false}
+            />
+          </div>
         );
       })}
     </div>

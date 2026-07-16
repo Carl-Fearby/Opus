@@ -89,7 +89,7 @@ export function JsonViewer({ collapsedDepth = 1, value }: JsonViewerProps) {
   const parsed = useMemo(() => value, [value]);
 
   return (
-    <div className={styles.root} role="tree">
+    <div className={styles.root}>
       <JsonNode collapsedDepth={Math.max(0, collapsedDepth)} depth={0} value={parsed} />
     </div>
   );

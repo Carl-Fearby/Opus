@@ -7,6 +7,7 @@ import { selectAll } from "@codemirror/commands";
 import { EditorSelection } from "@codemirror/state";
 import { EditorView, keymap } from "@codemirror/view";
 import { vscodeDark } from "@uiw/codemirror-theme-vscode";
+import { CustomScrollbar } from "../../CustomScrollbar";
 import styles from "./UsageCodeEditor.module.css";
 
 type UsageCodeEditorProps = {
@@ -82,7 +83,7 @@ export function UsageCodeEditor({
     return base;
   }, [fillHeight]);
 
-  return (
+  const editor = (
     <div
       aria-label={editable ? "Editable code editor" : "Generated usage code"}
       className={styles.codeEditor}
@@ -126,7 +127,7 @@ export function UsageCodeEditor({
         editable={editable}
         extensions={extensions}
         height={fillHeight ? undefined : "auto"}
-        maxHeight={fillHeight ? undefined : maxHeight}
+        maxHeight={undefined}
         minHeight={fillHeight ? undefined : minHeight}
         theme={vscodeDark}
         value={code}
@@ -136,5 +137,17 @@ export function UsageCodeEditor({
         onChange={editable ? onChange : undefined}
       />
     </div>
+  );
+
+  if (fillHeight) return editor;
+
+  return (
+    <CustomScrollbar
+      className={styles.codeEditorScroll}
+      label={editable ? "Editable code" : "Generated usage code"}
+      maxHeight={maxHeight}
+    >
+      {editor}
+    </CustomScrollbar>
   );
 }

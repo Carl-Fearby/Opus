@@ -9,6 +9,10 @@ export type DashboardContentContainerProps = {
   className?: string;
   "data-component"?: string;
   height?: DashboardContentContainerHeight;
+  paddingBottom?: boolean;
+  paddingLeft?: boolean;
+  paddingRight?: boolean;
+  paddingTop?: boolean;
   title?: string;
   width?: DashboardContentContainerWidth;
 };
@@ -18,6 +22,10 @@ export function DashboardContentContainer({
   className,
   "data-component": dataComponent = "dashboard-content-container",
   height = "auto",
+  paddingBottom = true,
+  paddingLeft = true,
+  paddingRight = true,
+  paddingTop = true,
   title,
   width = "widget",
 }: DashboardContentContainerProps) {
@@ -26,6 +34,10 @@ export function DashboardContentContainer({
       className={[styles.container, className].filter(Boolean).join(" ")}
       data-component={dataComponent}
       data-height={height}
+      data-padding-bottom={paddingBottom ? "true" : "false"}
+      data-padding-left={paddingLeft ? "true" : "false"}
+      data-padding-right={paddingRight ? "true" : "false"}
+      data-padding-top={paddingTop ? "true" : "false"}
       data-width={width}
     >
       {title ? <h3 className={styles.title}>{title}</h3> : null}

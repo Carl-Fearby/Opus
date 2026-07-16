@@ -153,6 +153,7 @@ export function PhoneNumberField({
                       .filter(Boolean)
                       .join(" ")}
                     key={`${country.code}-${country.dialCode}`}
+                    role="option"
                     type="button"
                     onClick={() => {
                       onCountryCodeChange(country.code);

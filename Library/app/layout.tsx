@@ -80,6 +80,25 @@ const performanceMeasureGuardScript = `
 })();
 `;
 
+const fontBootstrapScript = `
+(() => {
+  try {
+    const family = window.localStorage.getItem("opus-components-font");
+    if (!family) return;
+    const safeFamily = family.replace(/'/g, "\\\\'");
+    document.documentElement.style.setProperty(
+      "--opus-font-family",
+      "'" + safeFamily + "', ui-sans-serif, system-ui, sans-serif"
+    );
+    const link = document.createElement("link");
+    link.rel = "stylesheet";
+    link.href = "https://fonts.googleapis.com/css2?family=" +
+      encodeURIComponent(family).replace(/%20/g, "+") + "&display=swap";
+    document.head.appendChild(link);
+  } catch {}
+})();
+`;
+
 export default async function RootLayout({
   children,
 }: Readonly<{
@@ -98,6 +117,7 @@ export default async function RootLayout({
       suppressHydrationWarning
     >
       <body className={`${spaceGrotesk.variable} ${ibmPlexMono.variable}`}>
+        <script dangerouslySetInnerHTML={{ __html: fontBootstrapScript }} />
         <script dangerouslySetInnerHTML={{ __html: performanceMeasureGuardScript }} />
         <ThemeBootstrapScript />
         {children}

@@ -13,6 +13,7 @@ import {
 } from "react";
 import type { SidebarSide, SurfaceDensity } from "@/components/fields/types";
 import { Tooltip } from "../Tooltip";
+import { CustomScrollbar } from "../CustomScrollbar";
 import styles from "./Sidebar.module.css";
 
 type SidebarContextValue = {
@@ -51,7 +52,7 @@ export type SidebarMenuGroupItem = {
 
 export type SidebarMenuItem = SidebarMenuGroupItem | SidebarMenuLinkItem;
 
-type SidebarProps = {
+export type SidebarProps = {
   activeItem?: string;
   children?: ReactNode;
   collapsed?: boolean;
@@ -63,6 +64,10 @@ type SidebarProps = {
   navLabel?: string;
   onCollapsedGroupSelect?: (groupId: string) => void;
   onSelect?: (item: SidebarMenuLinkItem) => void;
+  paddingBottom?: boolean;
+  paddingLeft?: boolean;
+  paddingRight?: boolean;
+  paddingTop?: boolean;
   persistState?: boolean;
   renderIcon?: (icon: string) => ReactNode;
   side?: SidebarSide;
@@ -100,8 +105,15 @@ function SidebarOverflowLabel({ label }: { label: string }) {
   }, [label]);
 
   return (
-    <Tooltip className={styles.overflowTooltip} content={label} disabled={!overflowing} placement="right">
-      <span ref={labelRef} className={styles.overflowLabel}>{label}</span>
+    <Tooltip
+      className={styles.overflowTooltip}
+      content={label}
+      disabled={!overflowing}
+      placement="right"
+    >
+      <span ref={labelRef} className={styles.overflowLabel}>
+        {label}
+      </span>
     </Tooltip>
   );
 }
@@ -184,6 +196,10 @@ export function Sidebar({
   navLabel = "Sidebar navigation",
   onCollapsedGroupSelect,
   onSelect,
+  paddingBottom = false,
+  paddingLeft = false,
+  paddingRight = false,
+  paddingTop = false,
   persistState = false,
   renderIcon,
   side = "left",
@@ -194,10 +210,17 @@ export function Sidebar({
       `${SIDEBAR_STORAGE_PREFIX}:${storageKey ?? hashString(`${navLabel}:${serialiseSidebarMenu(menu)}`)}`,
     [menu, navLabel, storageKey],
   );
-  const [persistedState, setPersistedState] = useState<SidebarPersistedState>({});
+  const [persistedState, setPersistedState] = useState<SidebarPersistedState>(
+    {},
+  );
   const [motionReady, setMotionReady] = useState(!persistState);
-  const [internalActiveItem, setInternalActiveItem] = useState(defaultActiveItem);
-  const effectiveActiveItem = activeItem ?? (persistState ? persistedState.activeItem ?? internalActiveItem : internalActiveItem);
+  const [internalActiveItem, setInternalActiveItem] =
+    useState(defaultActiveItem);
+  const effectiveActiveItem =
+    activeItem ??
+    (persistState
+      ? (persistedState.activeItem ?? internalActiveItem)
+      : internalActiveItem);
 
   useEffect(() => {
     if (!persistState) {
@@ -264,7 +287,8 @@ export function Sidebar({
   );
 
   const getGroupOpenState = useCallback(
-    (groupId: string, fallback: boolean) => persistedState.groups?.[groupId] ?? fallback,
+    (groupId: string, fallback: boolean) =>
+      persistedState.groups?.[groupId] ?? fallback,
     [persistedState.groups],
   );
 
@@ -300,25 +324,35 @@ export function Sidebar({
         data-collapsed={collapsed ? "true" : "false"}
         data-density={density}
         data-motion-ready={motionReady ? "true" : "false"}
+        data-padding-bottom={paddingBottom ? "true" : "false"}
+        data-padding-left={paddingLeft ? "true" : "false"}
+        data-padding-right={paddingRight ? "true" : "false"}
+        data-padding-top={paddingTop ? "true" : "false"}
         data-side={side}
       >
         {header ? <div className={styles.header}>{header}</div> : null}
-        <div className={styles.body}>
-          {menu ? (
-            <SidebarNav aria-label={navLabel}>
-              {menu.map((item) =>
-                renderSidebarMenuItem({
-                  depth: 0,
-                  effectiveActiveItem,
-                  item,
-                  renderIcon,
-                }),
-              )}
-            </SidebarNav>
-          ) : (
-            children
-          )}
-        </div>
+        <CustomScrollbar
+          className={styles.body}
+          label={navLabel}
+          orientation="vertical"
+        >
+          <div className={styles.bodyContent}>
+            {menu ? (
+              <SidebarNav aria-label={navLabel}>
+                {menu.map((item) =>
+                  renderSidebarMenuItem({
+                    depth: 0,
+                    effectiveActiveItem,
+                    item,
+                    renderIcon,
+                  }),
+                )}
+              </SidebarNav>
+            ) : (
+              children
+            )}
+          </div>
+        </CustomScrollbar>
         {footer ? <div className={styles.footer}>{footer}</div> : null}
       </aside>
     </SidebarContext.Provider>
@@ -335,7 +369,9 @@ export function SidebarHeader({ children, title }: SidebarHeaderProps) {
 
   return (
     <div className={styles.headerInner}>
-      <h2 className={collapsed ? styles.visuallyHidden : styles.headerTitle}>{title}</h2>
+      <h2 className={collapsed ? styles.visuallyHidden : styles.headerTitle}>
+        {title}
+      </h2>
       {children}
     </div>
   );
@@ -346,7 +382,10 @@ type SidebarNavProps = {
   children: ReactNode;
 };
 
-export function SidebarNav({ "aria-label": ariaLabel, children }: SidebarNavProps) {
+export function SidebarNav({
+  "aria-label": ariaLabel,
+  children,
+}: SidebarNavProps) {
   return (
     <nav aria-label={ariaLabel} className={styles.nav}>
       {children}
@@ -380,9 +419,13 @@ export function SidebarLink({
     setActiveItem,
   } = useContext(SidebarContext);
   const isActive = active ?? (itemId ? activeItem === itemId : false);
-  const className = [styles.link, isActive ? styles.linkActive : ""].filter(Boolean).join(" ");
+  const className = [styles.link, isActive ? styles.linkActive : ""]
+    .filter(Boolean)
+    .join(" ");
   const label = typeof children === "string" ? children : null;
-  const handleClick = (event: MouseEvent<HTMLAnchorElement | HTMLButtonElement>) => {
+  const handleClick = (
+    event: MouseEvent<HTMLAnchorElement | HTMLButtonElement>,
+  ) => {
     const item = itemId
       ? {
           href,
@@ -402,7 +445,11 @@ export function SidebarLink({
   const content = (
     <>
       {icon ? <span className={styles.icon}>{icon}</span> : null}
-      {!icon && collapsed && label ? <span aria-hidden="true" className={styles.icon}>{label.charAt(0)}</span> : null}
+      {!icon && collapsed && label ? (
+        <span aria-hidden="true" className={styles.icon}>
+          {label.charAt(0)}
+        </span>
+      ) : null}
       {collapsed ? (
         <span className={styles.visuallyHidden}>{children}</span>
       ) : label ? (
@@ -414,10 +461,15 @@ export function SidebarLink({
   );
 
   const control = href ? (
-      <a aria-current={isActive ? "page" : undefined} className={className} href={href} onClick={handleClick}>
-        {content}
-      </a>
-    ) : (
+    <a
+      aria-current={isActive ? "page" : undefined}
+      className={className}
+      href={href}
+      onClick={handleClick}
+    >
+      {content}
+    </a>
+  ) : (
     <button
       aria-current={isActive ? "page" : undefined}
       className={className}
@@ -430,7 +482,11 @@ export function SidebarLink({
 
   if (collapsed && label) {
     return (
-      <Tooltip className={styles.collapsedTooltip} content={label} placement="right">
+      <Tooltip
+        className={styles.collapsedTooltip}
+        content={label}
+        placement="right"
+      >
         {control}
       </Tooltip>
     );
@@ -439,7 +495,10 @@ export function SidebarLink({
   return control;
 }
 
-function renderSidebarMenuIcon(icon: SidebarMenuItem["icon"], renderIcon?: (icon: string) => ReactNode) {
+function renderSidebarMenuIcon(
+  icon: SidebarMenuItem["icon"],
+  renderIcon?: (icon: string) => ReactNode,
+) {
   if (!icon) {
     return null;
   }
@@ -484,7 +543,9 @@ function renderSidebarMenuItem({
     );
   }
 
-  const handleClick = (event: MouseEvent<HTMLAnchorElement | HTMLButtonElement>) => {
+  const handleClick = (
+    event: MouseEvent<HTMLAnchorElement | HTMLButtonElement>,
+  ) => {
     if (!item.href) {
       event.preventDefault();
     }
@@ -528,10 +589,24 @@ type SidebarGroupProps = {
   label: string;
 };
 
-export function SidebarGroup({ children, defaultOpen = true, depth = 0, icon, id, label }: SidebarGroupProps) {
-  const { collapsed, getGroupOpenState, onCollapsedGroupSelect, setGroupOpenState } = useContext(SidebarContext);
+export function SidebarGroup({
+  children,
+  defaultOpen = true,
+  depth = 0,
+  icon,
+  id,
+  label,
+}: SidebarGroupProps) {
+  const {
+    collapsed,
+    getGroupOpenState,
+    onCollapsedGroupSelect,
+    setGroupOpenState,
+  } = useContext(SidebarContext);
   const listId = createGroupListId(label, id);
-  const [open, setOpen] = useState(() => getGroupOpenState?.(listId, defaultOpen) ?? defaultOpen);
+  const [open, setOpen] = useState(
+    () => getGroupOpenState?.(listId, defaultOpen) ?? defaultOpen,
+  );
   const [collapsedOpen, setCollapsedOpen] = useState(false);
 
   useEffect(() => {
@@ -553,7 +628,11 @@ export function SidebarGroup({ children, defaultOpen = true, depth = 0, icon, id
     if (depth > 0) {
       return (
         <div className={styles.collapsedGroupWrap}>
-          <Tooltip className={styles.collapsedTooltip} content={label} placement="right">
+          <Tooltip
+            className={styles.collapsedTooltip}
+            content={label}
+            placement="right"
+          >
             <button
               aria-expanded={collapsedOpen}
               aria-label={`${collapsedOpen ? "Close" : "Open"} ${label}`}
@@ -569,24 +648,40 @@ export function SidebarGroup({ children, defaultOpen = true, depth = 0, icon, id
               </span>
               <span
                 aria-hidden="true"
-                className={collapsedOpen ? styles.collapsedGroupChevronOpen : styles.collapsedGroupChevron}
+                className={
+                  collapsedOpen
+                    ? styles.collapsedGroupChevronOpen
+                    : styles.collapsedGroupChevron
+                }
               />
             </button>
           </Tooltip>
-          {collapsedOpen ? <div className={styles.collapsedSubmenu}>{children}</div> : null}
+          {collapsedOpen ? (
+            <div className={styles.collapsedSubmenu}>{children}</div>
+          ) : null}
         </div>
       );
     }
 
     return (
-      <div aria-label={label} className={styles.group} data-depth={depth} role="group">
+      <div
+        aria-label={label}
+        className={styles.group}
+        data-depth={depth}
+        role="group"
+      >
         {children}
       </div>
     );
   }
 
   return (
-    <div aria-label={label} className={styles.group} data-depth={depth} role="group">
+    <div
+      aria-label={label}
+      className={styles.group}
+      data-depth={depth}
+      role="group"
+    >
       <div className={styles.groupHeader}>
         <button
           aria-controls={listId}
@@ -597,11 +692,21 @@ export function SidebarGroup({ children, defaultOpen = true, depth = 0, icon, id
         >
           {icon ? <span className={styles.icon}>{icon}</span> : null}
           <SidebarOverflowLabel label={label} />
-          <span aria-hidden="true" className={open ? styles.groupChevronOpen : styles.groupChevron} />
+          <span
+            aria-hidden="true"
+            className={open ? styles.groupChevronOpen : styles.groupChevron}
+          />
         </button>
       </div>
-      <div className={styles.groupItemsWrap} data-open={open ? "true" : "false"}>
-        <div className={styles.groupItems} id={listId} inert={!open || undefined}>
+      <div
+        className={styles.groupItemsWrap}
+        data-open={open ? "true" : "false"}
+      >
+        <div
+          className={styles.groupItems}
+          id={listId}
+          inert={!open || undefined}
+        >
           {children}
         </div>
       </div>
@@ -616,9 +721,18 @@ type SidebarLayoutProps = {
   side?: SidebarSide;
 };
 
-export function SidebarLayout({ children, collapsed = false, main, side = "left" }: SidebarLayoutProps) {
+export function SidebarLayout({
+  children,
+  collapsed = false,
+  main,
+  side = "left",
+}: SidebarLayoutProps) {
   return (
-    <div className={styles.layout} data-collapsed={collapsed ? "true" : "false"} data-side={side}>
+    <div
+      className={styles.layout}
+      data-collapsed={collapsed ? "true" : "false"}
+      data-side={side}
+    >
       {side === "left" ? children : null}
       <div className={styles.main}>{main}</div>
       {side === "right" ? children : null}
