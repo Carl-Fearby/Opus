@@ -93,6 +93,11 @@ for (const file of [
 
 syncDirectory(join(libraryDir, "lib", "ui"), join(appDir, "lib", "ui"), { rewire: true });
 syncTextFile(
+  join(libraryDir, "lib", "playground", "externalPreviewStorage.ts"),
+  join(appDir, "lib", "playground", "externalPreviewStorage.ts"),
+  { rewire: true },
+);
+syncTextFile(
   join(libraryDir, "lib", "theme", "opusThemeTokens.ts"),
   join(appDir, "lib", "theme", "opusThemeTokens.ts"),
   { rewire: true },

@@ -88,6 +88,7 @@ stage_application_sync_files() {
   local paths=(
     "Application/lib/controls"
     "Application/lib/ui"
+    "Application/lib/playground/externalPreviewStorage.ts"
     "Application/lib/emojiCatalog.generated.ts"
     "Application/lib/emojiCatalog.ts"
     "Application/lib/emojiCatalog.types.ts"
