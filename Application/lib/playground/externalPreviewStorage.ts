@@ -1,4 +1,4 @@
-import type { Theme } from "@/components/fields/types";
+import type { Theme } from "opus-react";
 
 export const PLAYGROUND_EXTERNAL_PREVIEW_KEY_PREFIX = "opus-playground-external-preview:";
 

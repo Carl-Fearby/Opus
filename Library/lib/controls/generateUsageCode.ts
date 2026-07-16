@@ -34,6 +34,7 @@ import {
 import { getDealsOverTimeDemoData } from "./dealsOverTimeDemoData";
 import { demoRecentActivity } from "./recentActivityDemoData";
 import { demoNotesActivity } from "./notesActivityDemoData";
+import { testLayoutMenu } from "./testLayoutDemoData";
 import { demoTopPerformingUsers } from "./topPerformingUsersDemoData";
 import {
   formatUserProfilePhotoUploadModalUsage,
@@ -2021,37 +2022,7 @@ ${wrapDashboardWidget(
           "Tooltip",
         ],
         preamble: [
-          `const menu = [
-  {
-    id: "crm", label: "CRM", type: "group", defaultOpen: true,
-    children: [
-      {
-        id: "contacts", label: "Contacts", icon: "users", type: "group", defaultOpen: true,
-        children: [
-          { id: "all-contacts", label: "All Contacts", icon: "address-book" },
-          { id: "contact-lists", label: "Contact Lists", icon: "rectangle-list" },
-        ],
-      },
-      {
-        id: "companies", label: "Companies", icon: "building", type: "group",
-        children: [
-          { id: "all-companies", label: "All Companies", icon: "building" },
-          { id: "company-segments", label: "Company Segments", icon: "layer-group" },
-        ],
-      },
-      { id: "deals", label: "Deals", icon: "dollar-sign" },
-      { id: "tasks", label: "Tasks", icon: "list-check" },
-    ],
-  },
-  {
-    id: "analytics", label: "Analytics", type: "group", defaultOpen: true,
-    children: [{ id: "reports", label: "Reports", icon: "chart-column" }, { id: "charts", label: "Charts", icon: "chart-line" }],
-  },
-  {
-    id: "settings", label: "Settings", type: "group", defaultOpen: true,
-    children: [{ id: "users", label: "Users", icon: "users" }, { id: "integrations", label: "Integrations", icon: "puzzle-piece" }],
-  },
-];`,
+          `const menu = ${JSON.stringify(testLayoutMenu, null, 2)};`,
           `const activity = ${JSON.stringify(demoNotesActivity, null, 2)};`,
         ],
         state: [
@@ -2081,7 +2052,7 @@ ${wrapDashboardWidget(
       <DashboardContentContainer data-component="sidebar" height="full" paddingLeft={false} paddingRight={false} width="full">
         <Sidebar
           collapsed={sidebarCollapsed}
-          defaultActiveItem="all-contacts"
+          defaultActiveItem="dashboard"
           footer={
             <button
               aria-label={sidebarCollapsed ? "Expand sidebar" : "Collapse sidebar"}
