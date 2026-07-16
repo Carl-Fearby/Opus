@@ -128,6 +128,16 @@ Both providers read theme from `OpusThemeProvider` via `useOpusTheme()`.
 
 ---
 
+## Playground controls
+
+- The source/preview split width persists between sessions and is restored before the split view becomes visible, avoiding a load-time width jump.
+- The source pane can be reduced to 15% of the Playground width.
+- Use `Cmd+A` on macOS or `Ctrl+A` elsewhere to select all source while the editor is focused.
+- **Reset preview** is a frame-level action in the Preview options menu. It clears saved preview-layout state and remounts the rendered example without adding controls to preview content.
+- **Show External** opens the same rendered preview in a dedicated browser view.
+
+---
+
 ## Source files
 
 Each registry entry lists its `sourceFiles` — the React component and CSS module that implement it. Open the detail page for a component to see the live preview and generated usage code.

@@ -72,13 +72,22 @@ function useSplitterOrientation(): SplitterOrientation {
 function usePlaygroundPanelSize(orientation: SplitterOrientation) {
   const fallback = orientation === "horizontal" ? 50 : 42;
   const [size, setSize] = useState(fallback);
+  const [ready, setReady] = useState(false);
 
   useEffect(() => {
+    let readyFrame: number | null = null;
     const timeout = window.setTimeout(() => {
+      setReady(false);
       setSize(readPlaygroundPanelSize(orientation, fallback));
+      readyFrame = window.requestAnimationFrame(() => setReady(true));
     }, 0);
 
-    return () => window.clearTimeout(timeout);
+    return () => {
+      window.clearTimeout(timeout);
+      if (readyFrame !== null) {
+        window.cancelAnimationFrame(readyFrame);
+      }
+    };
   }, [fallback, orientation]);
 
   const onSizeChange = useCallback(
@@ -89,7 +98,7 @@ function usePlaygroundPanelSize(orientation: SplitterOrientation) {
     [orientation],
   );
 
-  return { onSizeChange, size };
+  return { onSizeChange, ready, size };
 }
 
 function resolveInitialCode(
@@ -119,12 +128,13 @@ function resolveInitialCode(
 
 export function CodePlayground({ initialCategory = null, initialSlug = null }: CodePlaygroundProps) {
   const orientation = useSplitterOrientation();
-  const { onSizeChange, size } = usePlaygroundPanelSize(orientation);
+  const { onSizeChange, ready: panelSizeReady, size } = usePlaygroundPanelSize(orientation);
   const selectSourceCodeRef = useRef<() => void>(() => undefined);
   const [playgroundTheme, setPlaygroundTheme] = usePlaygroundTheme();
   const [layout, setLayout] = useState<PlaygroundLayout>("split");
   const [isFullWidth, setIsFullWidth] = useState(false);
   const [previewPadding, setPreviewPadding] = useState(true);
+  const [previewResetKey, setPreviewResetKey] = useState(0);
   const [previewMenuOpen, setPreviewMenuOpen] = useState(false);
   const previewMenuRef = useRef<HTMLDivElement | null>(null);
   const layoutBeforeFullWidthRef = useRef<PlaygroundLayout>("split");
@@ -238,6 +248,17 @@ export function CodePlayground({ initialCategory = null, initialSlug = null }: C
     onSizeChange(orientation === "horizontal" ? 50 : 42);
   }, [onSizeChange, orientation]);
 
+  const resetPreviewLayout = useCallback(() => {
+    [
+      "crm-test-layout",
+      "crm-test-layout-v2",
+      "crm-test-layout-v3",
+      "crm-test-layout-v4",
+      "opus-sidebar-state:crm-test-layout-menu",
+    ].forEach((key) => window.localStorage.removeItem(key));
+    setPreviewResetKey((current) => current + 1);
+  }, []);
+
   const enterFullWidth = useCallback(() => {
     layoutBeforeFullWidthRef.current = layout;
     setIsFullWidth(true);
@@ -331,14 +352,6 @@ export function CodePlayground({ initialCategory = null, initialSlug = null }: C
         <div>
           <h1 className={styles.paneTitle}>Source</h1>
           <p className={styles.paneHint}>Edit the component, then preview updates on the right.</p>
-        </div>
-        <div className={styles.paneActions}>
-          <button className={styles.resetButton} type="button" onClick={selectSourceCode}>
-            Select all
-          </button>
-          <button className={styles.resetButton} type="button" onClick={() => updateCode(seedCode)}>
-            Reset
-          </button>
         </div>
       </div>
       <div className={`${styles.paneBody} ${styles.sourcePaneBody}`}>
@@ -484,6 +497,17 @@ export function CodePlayground({ initialCategory = null, initialSlug = null }: C
                 role="menuitem"
                 type="button"
                 onClick={() => {
+                  resetPreviewLayout();
+                  setPreviewMenuOpen(false);
+                }}
+              >
+                <PreviewMenuLabel iconName="rotate-left" label="Reset preview" />
+              </button>
+              <button
+                className={styles.previewMenuItem}
+                role="menuitem"
+                type="button"
+                onClick={() => {
                   openExternalPreview();
                   setPreviewMenuOpen(false);
                 }}
@@ -521,6 +545,7 @@ export function CodePlayground({ initialCategory = null, initialSlug = null }: C
       </div>
       <div className={styles.paneBody}>
         <PlaygroundPreview
+          key={previewResetKey}
           code={code}
           padded={previewPadding}
           theme={playgroundTheme}
@@ -572,10 +597,11 @@ export function CodePlayground({ initialCategory = null, initialSlug = null }: C
           <Splitter
             className={styles.splitter}
             flush
-            minSize={25}
+            minSize={15}
             onSizeChange={onSizeChange}
             orientation={orientation}
             size={size}
+            style={{ visibility: panelSizeReady ? "visible" : "hidden" }}
           >
             {sourcePane}
             {previewPane}

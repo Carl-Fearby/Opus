@@ -68,13 +68,6 @@
   font-size: 0.74rem;
 }
 
-.paneActions {
-  display: inline-flex;
-  align-items: center;
-  gap: 10px;
-  flex-shrink: 0;
-}
-
 .paneBody {
   display: flex;
   flex: 1 1 auto;
@@ -186,21 +179,6 @@
 
 .externalPreviewEmpty p {
   color: var(--opus-muted, rgba(223, 226, 255, 0.72));
-}
-
-.resetButton {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  min-height: 30px;
-  padding: 0 12px;
-  border: 1px solid color-mix(in srgb, var(--opus-border, rgba(255, 255, 255, 0.12)) 80%, transparent);
-  border-radius: var(--opus-input-radius, 4px);
-  background: transparent;
-  color: var(--opus-text, #f5f7ff);
-  font-size: 0.76rem;
-  font-weight: 600;
-  cursor: pointer;
 }
 
 .externalPreviewButton {
@@ -368,10 +346,6 @@
   border-color: color-mix(in srgb, var(--opus-accent, #6d2bd9) 58%, var(--opus-border, rgba(255, 255, 255, 0.12)));
   background: color-mix(in srgb, var(--opus-accent, #6d2bd9) 18%, transparent);
   outline: none;
-}
-
-.resetButton:hover {
-  background: color-mix(in srgb, var(--opus-accent-soft, rgba(124, 58, 237, 0.12)) 55%, transparent);
 }
 
 .layoutControls {
