@@ -15,6 +15,8 @@ export type { IconBadgeProps, IconBadgeUrgency } from "../../../components/IconB
 export { EmojiPicker } from "../../../components/EmojiPicker";
 export type { EmojiPickerPlacement, EmojiPickerProps } from "../../../components/EmojiPicker";
 
+export * from "../../../components/FontPicker";
+
 export { CustomScrollbar } from "../../../components/CustomScrollbar";
 export type { CustomScrollbarOrientation, CustomScrollbarProps, CustomScrollbarShape } from "../../../components/CustomScrollbar";
 export { ScrollArea } from "../../../components/ScrollArea";
