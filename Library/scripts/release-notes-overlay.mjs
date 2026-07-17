@@ -306,4 +306,28 @@ export const releaseNotesOverlay = [
       "Publish the corrected ResizeHandle styling and update Application to opus-react 0.2.44.",
     ],
   },
+  {
+    version: "0.2.45",
+    releasedAt: "2026-07-17",
+    commit: "507a167121c19fab865a2ec96c795877a2cfc2fc",
+    summary: "Correct raw-preview orientation, labelling, and height containment.",
+    changes: [
+      "Make portrait previews consistently taller than wide and landscape previews consistently wider than tall.",
+      "Remove the redundant edge-to-edge status label from full-width previews while retaining fixed-size dimensions and fit percentages.",
+      "Size full-width preview canvases from their actual flex container so component bottom edges and borders remain visible.",
+      "Synchronise the preview corrections into Application and publish opus-react 0.2.45.",
+    ],
+  },
+  {
+    version: "0.3.0",
+    releasedAt: "2026-07-17",
+    commit: "651f9652a5772bc00b61dadd814ed6bbbf570669",
+    summary: "Application-consumed component platform milestone.",
+    changes: [
+      "Promote the tested Opus component system to the 0.3 release line now that Application consumes the published package directly.",
+      "Ship the three-pane workspace, persistent resizable sidebars, custom scrolling, Sidebar footer insets, compact raw-preview routing, and refined resize handles as one supported baseline.",
+      "Align Component Lab, Playground, external previews, and Application around the same package and preview behaviour.",
+      "Update Application to opus-react 0.3.0 and publish the matching npm release and Git tag.",
+    ],
+  },
 ];
