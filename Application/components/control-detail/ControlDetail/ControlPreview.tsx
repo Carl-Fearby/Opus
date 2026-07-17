@@ -4,8 +4,8 @@ import { useCallback, useEffect, useMemo, useState } from "react";
 import { CatalogIcon } from "opus-react";
 import { ContentTimeline } from "opus-react";
 import { NotesActivity } from "opus-react";
-import { ApplicationHeader } from "@/components/ApplicationHeader";
-import { ApplicationFooter } from "@/components/ApplicationFooter";
+import { ApplicationHeader } from "opus-react";
+import { ApplicationFooter } from "opus-react";
 import {
   Button,
   Card,
