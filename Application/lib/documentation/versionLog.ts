@@ -248,8 +248,8 @@ export const versionLog: VersionEntry[] = [
   {
     version: "0.2.39",
     releasedAt: "2026-07-17",
-    commit: "d430b69734a2ad7ead9f67a394c10b111f50c93b",
-    commitShort: "d430b69",
+    commit: "75d0327f0a87878fc43076410eb050e6c896e56c",
+    commitShort: "75d0327",
     summary: "Font preference API export fix.",
     changes: ["Export FontPicker and useFontPreference from the public opus-react package surface.","Republish package declarations and runtime exports for Application consumers."],
   },
