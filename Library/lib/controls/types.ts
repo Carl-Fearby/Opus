@@ -1116,6 +1116,12 @@ export type ToolbarSettings = {
   dense: boolean;
 };
 
+export type ApplicationHeaderSettings = {
+  showProfile: boolean;
+  showSearch: boolean;
+};
+export type ApplicationFooterSettings = { showActions: boolean; showBrand: boolean; showVersion: boolean };
+
 export type BottomNavigationSettings = {
   value: string;
 };
@@ -1458,6 +1464,8 @@ export type ControlSettingsBySlug = {
   pagination: PaginationSettings;
   "page-header": PageHeaderSettings;
   toolbar: ToolbarSettings;
+  "application-header": ApplicationHeaderSettings;
+  "application-footer": ApplicationFooterSettings;
   "bottom-navigation": BottomNavigationSettings;
   "navigation-rail": NavigationRailSettings;
   "split-button": SplitButtonSettings;

@@ -31,6 +31,7 @@ export const categoryDescriptions: Record<ComponentCategory, string> = {
 };
 
 const compositionPartsBySlug: Partial<Record<ControlSlug, ControlSlug[]>> = {
+  "application-header": ["search-input", "keyboard-shortcut", "icon-badge", "divider", "theme-switcher", "user-profile", "tooltip"],
   "403-page": ["button"],
   "404-page": ["button"],
   "accordion-group": ["accordion"],

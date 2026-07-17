@@ -17,7 +17,7 @@
 
 .searchWrap {
   display: grid;
-  grid-template-columns: auto minmax(0, 1fr);
+  grid-template-columns: auto minmax(0, 1fr) auto;
   align-items: center;
   gap: var(--opus-control-prefix-gap, 8px);
   width: 100%;
@@ -46,6 +46,15 @@
 
 .searchWrapError {
   border-color: color-mix(in srgb, var(--opus-error) 75%, transparent);
+}
+
+.endAdornment {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 0;
+  color: var(--opus-muted);
+  line-height: 1;
 }
 
 .prefixIcon {

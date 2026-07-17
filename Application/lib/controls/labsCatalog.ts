@@ -2,13 +2,36 @@ export type LabsCatalogEntry = {
   componentName: string;
   compositionParts: readonly string[];
   description: string;
-  settingsType: "dashboard-list-columns" | "notes-activity" | "sidebar" | "three-pane-layout" | "user-profile";
+  settingsType: "application-footer" | "application-header" | "dashboard-list-columns" | "notes-activity" | "sidebar" | "three-pane-layout" | "user-profile";
   slug: string;
   sourceFiles: string[];
   title: string;
 };
 
 export const labsCatalog = [
+  { slug: "application-footer", title: "Application Footer", componentName: "ApplicationFooter", description: "Composed application footer with product identity, version, copyright, and utility actions.", settingsType: "application-footer", compositionParts: ["divider", "tooltip", "icon"], sourceFiles: ["components/ApplicationFooter/ApplicationFooter.tsx", "components/ApplicationFooter/ApplicationFooter.module.css"] },
+  {
+    slug: "application-header",
+    title: "Application Header",
+    componentName: "ApplicationHeader",
+    description:
+      "Composed product header combining brand, search, shortcut guidance, create menu, application actions, theme control, and user profile.",
+    settingsType: "application-header",
+    compositionParts: [
+      "search-input",
+      "keyboard-shortcut",
+      "dropdown-menu",
+      "icon-badge",
+      "divider",
+      "theme-switcher",
+      "user-profile",
+      "tooltip",
+    ],
+    sourceFiles: [
+      "components/ApplicationHeader/ApplicationHeader.tsx",
+      "components/ApplicationHeader/ApplicationHeader.module.css",
+    ],
+  },
   {
     slug: "lab-dashboard-list-columns",
     title: "Dashboard List Columns",

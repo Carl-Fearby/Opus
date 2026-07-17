@@ -6016,6 +6016,27 @@ export function ControlSettingsPanel({
         </div>
       );
     }
+    case "application-footer": {
+      const s = settings as ControlSettingsBySlug["application-footer"];
+      return <div className={shellStyles.settingsGrid}><SettingToggle label="Brand" checked={s.showBrand} onChange={(showBrand) => onChange({ ...s, showBrand } as ControlSettings)} /><SettingToggle label="Version" checked={s.showVersion} onChange={(showVersion) => onChange({ ...s, showVersion } as ControlSettings)} /><SettingToggle label="Actions" checked={s.showActions} onChange={(showActions) => onChange({ ...s, showActions } as ControlSettings)} /></div>;
+    }
+    case "application-header": {
+      const s = settings as ControlSettingsBySlug["application-header"];
+      return (
+        <div className={shellStyles.settingsGrid}>
+          <SettingToggle
+            label="Search"
+            checked={s.showSearch}
+            onChange={(showSearch) => onChange({ ...s, showSearch } as ControlSettings)}
+          />
+          <SettingToggle
+            label="User profile"
+            checked={s.showProfile}
+            onChange={(showProfile) => onChange({ ...s, showProfile } as ControlSettings)}
+          />
+        </div>
+      );
+    }
     case "bottom-navigation": {
       const s = settings as ControlSettingsBySlug["bottom-navigation"];
       return (

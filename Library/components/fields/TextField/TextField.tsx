@@ -1,5 +1,5 @@
 import { useState } from "react";
-import type { ChangeEventHandler } from "react";
+import type { ChangeEventHandler, ReactNode, Ref } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faMagnifyingGlass } from "@fortawesome/free-solid-svg-icons";
 import shared from "../shared/fieldControl.module.css";
@@ -12,7 +12,9 @@ type TextFieldProps = {
   error?: string;
   help?: string;
   id: string;
+  inputRef?: Ref<HTMLInputElement>;
   label: string;
+  labelVisuallyHidden?: boolean;
   labelPosition?: LabelPosition;
   mode?: FieldMode;
   placeholder?: string;
@@ -20,6 +22,7 @@ type TextFieldProps = {
   size?: InputControlSize;
   type: "email" | "password" | "search" | "tel" | "text" | "url";
   value: string;
+  endAdornment?: ReactNode;
   onChange: ChangeEventHandler<HTMLInputElement>;
 };
 
@@ -27,7 +30,9 @@ export function TextField({
   error,
   help,
   id,
+  inputRef,
   label,
+  labelVisuallyHidden,
   labelPosition = "left",
   mode = "stacked",
   placeholder,
@@ -35,6 +40,7 @@ export function TextField({
   size = "md",
   type,
   value,
+  endAdornment,
   onChange,
 }: TextFieldProps) {
   const shellAria = useFieldShellAria();
@@ -55,6 +61,7 @@ export function TextField({
         .filter(Boolean)
         .join(" ")}
       id={id}
+      ref={inputRef}
       placeholder={placeholder}
       onChange={onChange}
       type={inputType}
@@ -69,6 +76,7 @@ export function TextField({
       help={help}
       id={id}
       label={label}
+      labelVisuallyHidden={labelVisuallyHidden}
       labelPosition={labelPosition}
       mode={mode}
       required={required}
@@ -87,6 +95,7 @@ export function TextField({
             <FontAwesomeIcon className={shared.prefixIconSvg} icon={faMagnifyingGlass} />
           </span>
           {inputEl}
+          {endAdornment ? <span className={shared.endAdornment}>{endAdornment}</span> : null}
         </div>
       ) : isPassword ? (
         <div className={`${shared.passwordWrap} ${sizeClass}`}>

@@ -15,6 +15,15 @@ export type { IconBadgeProps, IconBadgeUrgency } from "../../../components/IconB
 export { EmojiPicker } from "../../../components/EmojiPicker";
 export type { EmojiPickerPlacement, EmojiPickerProps } from "../../../components/EmojiPicker";
 
+export { ApplicationHeader } from "../../../components/ApplicationHeader";
+export { ApplicationFooter } from "../../../components/ApplicationFooter";
+export type { ApplicationFooterAction, ApplicationFooterProps } from "../../../components/ApplicationFooter";
+export type {
+  ApplicationHeaderAction,
+  ApplicationHeaderProfile,
+  ApplicationHeaderProps,
+} from "../../../components/ApplicationHeader";
+
 export * from "../../../components/FontPicker";
 
 export { CustomScrollbar } from "../../../components/CustomScrollbar";

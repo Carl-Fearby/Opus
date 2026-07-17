@@ -4,6 +4,8 @@ import { useCallback, useEffect, useMemo, useState } from "react";
 import { CatalogIcon } from "opus-react";
 import { ContentTimeline } from "@/components/ContentTimeline";
 import { NotesActivity } from "@/components/NotesActivity";
+import { ApplicationHeader } from "@/components/ApplicationHeader";
+import { ApplicationFooter } from "@/components/ApplicationFooter";
 import {
   Button,
   Card,
@@ -832,6 +834,7 @@ function TestLayoutPreview({
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
   const [rightCollapsed, setRightCollapsed] = useState(false);
   const [rightTab, setRightTab] = useState<"activity" | "notes">("notes");
+  const [headerSearch, setHeaderSearch] = useState("");
   const [workspaceLabel, setWorkspaceLabel] = useState("CRM");
   const [lastAction, setLastAction] = useState("Waiting for action");
   const reportAction = (label: string) =>
@@ -994,16 +997,41 @@ function TestLayoutPreview({
       data-full-bleed="true"
       style={{
         display: "grid",
-        gridTemplateRows: "minmax(0, 1fr) auto",
+        gridTemplateRows: "auto minmax(0, 1fr) auto",
         height: settings.height === "full" ? "100%" : "auto",
         minHeight: settings.height === "full" ? 0 : 620,
         width: "100%",
       }}
     >
+      <ApplicationHeader
+        actions={[
+          { id: "notifications", iconName: "bell", label: "Notifications", count: 8, onClick: () => reportAction("Notifications") },
+          { id: "messages", iconName: "envelope", label: "Messages", count: 3, onClick: () => reportAction("Messages") },
+          { id: "calendar", iconName: "calendar", label: "Calendar", group: "utility", onClick: () => reportAction("Calendar") },
+        ]}
+        createItems={[
+          { id: "company", label: "Add Company", iconName: "building", onSelect: () => reportAction("Add Company") },
+          { id: "contact", label: "Add Contact", iconName: "user-plus", onSelect: () => reportAction("Add Contact") },
+          { id: "task", label: "Add Task", iconName: "list-check", onSelect: () => reportAction("Add Task") },
+        ]}
+        connected
+        onSearchChange={setHeaderSearch}
+        profile={{
+          name: "Carl Fearby",
+          role: "Administrator",
+          src: "/user-profile-carl.png",
+          menuItems: [
+            { id: "profile", label: "Profile", onSelect: () => reportAction("Profile") },
+            { id: "settings", label: "Settings", onSelect: () => reportAction("Settings") },
+            { id: "sign-out", label: "Sign out", destructive: true, onSelect: () => reportAction("Sign out") },
+          ],
+        }}
+        searchValue={headerSearch}
+      />
       <ThreePaneLayout
         defaultLeftWidth={settings.defaultLeftWidth}
         defaultRightWidth={settings.defaultRightWidth}
-        handleBackground={settings.handleBackground}
+        handleBackground="none"
         handleBorderRadius={settings.handleBorderRadius ?? 12}
         handleHeight={settings.handleHeight}
         handleMarginBlock={settings.handleMarginBlock ?? 12}
@@ -1021,32 +1049,49 @@ function TestLayoutPreview({
         right={right}
         rightCollapsed={rightCollapsed}
         storageKey="opus-lab-test-layout-panes"
-        style={{ height: "auto" }}
+        style={{ height: "auto", marginTop: 8 }}
       >
-        <section style={{ padding: 28 }}>
-          <p
-            style={{
-              margin: "0 0 8px",
-              color: "var(--opus-accent)",
-              fontWeight: 700,
-            }}
-          >
-            {workspaceLabel} workspace
-          </p>
-          <h2 style={{ margin: "0 0 12px" }}>Demo content</h2>
-          <p
-            style={{
-              maxWidth: 560,
-              margin: 0,
-              color: "var(--opus-muted)",
-              lineHeight: 1.7,
-            }}
-          >
-            This centre pane stays fluid while the navigation and Notes &amp;
-            Activity panes can be resized independently.
-          </p>
-        </section>
+        <DashboardContentContainer
+          data-component="crm-workspace"
+          height="full"
+          width="full"
+        >
+          <section>
+            <p
+              style={{
+                margin: "0 0 8px",
+                color: "var(--opus-accent)",
+                fontWeight: 700,
+              }}
+            >
+              {workspaceLabel} workspace
+            </p>
+            <h2 style={{ margin: "0 0 12px" }}>Demo content</h2>
+            <p
+              style={{
+                maxWidth: 560,
+                margin: 0,
+                color: "var(--dashboard-section-muted)",
+                lineHeight: 1.7,
+              }}
+            >
+              This centre pane stays fluid while the navigation and Notes &amp;
+              Activity panes can be resized independently.
+            </p>
+          </section>
+        </DashboardContentContainer>
       </ThreePaneLayout>
+      <div style={{ marginTop: 8 }}>
+        <ApplicationFooter
+          actions={[
+            { id: "help", iconName: "circle-question", label: "Help", onSelect: () => reportAction("Help") },
+            { id: "guide", iconName: "book-open", label: "User guide", onSelect: () => reportAction("User guide") },
+            { id: "settings", iconName: "gear", label: "Settings", onSelect: () => reportAction("Settings") },
+          ]}
+          productName="CRM"
+          version="v1.0.0"
+        />
+      </div>
       {showDebug ? (
         <span
           className={[styles.dialogResult, styles.testLayoutDebugLine].join(
@@ -4480,6 +4525,39 @@ export function ControlPreview({
             Redo
           </Button>
         </Toolbar>
+      );
+    }
+    case "application-footer": {
+      const s = settings as ControlSettingsBySlug["application-footer"];
+      return <ApplicationFooter actions={s.showActions ? [{ id: "help", iconName: "circle-question", label: "Help" }, { id: "guide", iconName: "book-open", label: "User guide" }, { id: "settings", iconName: "gear", label: "Settings" }] : []} productName={s.showBrand ? "CRM" : ""} version={s.showVersion ? "v1.0.0" : ""} onActionSelect={() => undefined} />;
+    }
+    case "application-header": {
+      const s = settings as ControlSettingsBySlug["application-header"];
+      return (
+        <ApplicationHeader
+          actions={[
+            { id: "notifications", iconName: "bell", label: "Notifications", count: 8 },
+            { id: "messages", iconName: "envelope", label: "Messages", count: 3 },
+            { id: "calendar", iconName: "calendar", label: "Calendar" },
+          ]}
+          createItems={[
+            { id: "company", label: "Add Company", iconName: "building", onSelect: () => undefined },
+            { id: "contact", label: "Add Contact", iconName: "user-plus", onSelect: () => undefined },
+            { id: "task", label: "Add Task", iconName: "list-check", onSelect: () => undefined },
+          ]}
+          onCreateSelect={() => undefined}
+          profile={s.showProfile ? {
+            name: "Carl Fearby",
+            role: "Administrator",
+            src: "/user-profile-carl.png",
+            menuItems: [
+              { id: "profile", label: "Profile" },
+              { id: "settings", label: "Settings" },
+              { id: "sign-out", label: "Sign out", destructive: true },
+            ],
+          } : undefined}
+          showSearch={s.showSearch}
+        />
       );
     }
     case "bottom-navigation": {

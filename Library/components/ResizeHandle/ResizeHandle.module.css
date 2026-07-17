@@ -126,14 +126,14 @@
 
 .handle[data-orientation="vertical"] .grip {
   flex-direction: column;
-  width: 12px;
-  height: 30px;
+  width: 10px;
+  height: 26px;
 }
 
 .handle[data-orientation="horizontal"] .grip {
   flex-direction: row;
-  width: 30px;
-  height: 12px;
+  width: 26px;
+  height: 10px;
 }
 
 .dot {

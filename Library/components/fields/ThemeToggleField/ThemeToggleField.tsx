@@ -28,6 +28,8 @@ export function ThemeToggleField({
   value,
   onChange,
 }: ThemeToggleFieldProps) {
+  const nextTheme: Theme = value === "light" ? "dark" : "light";
+
   return (
     <FieldShell
       className={className}
@@ -41,31 +43,31 @@ export function ThemeToggleField({
       labelVisuallyHidden={labelVisuallyHidden}
       mode={mode}
     >
-      <div className={styles.toggle} role="group" aria-label={label}>
+      <button
+        aria-label={`Switch to ${nextTheme} theme`}
+        aria-pressed={value === "dark"}
+        className={styles.toggle}
+        onClick={() => onChange(nextTheme)}
+        type="button"
+      >
         <span
           aria-hidden="true"
           className={styles.indicator}
           data-active={value}
         />
-        <button
-          aria-label="Light theme"
-          aria-pressed={value === "light"}
+        <span
+          aria-hidden="true"
           className={`${styles.option} ${value === "light" ? styles.active : ""}`}
-          onClick={() => onChange("light")}
-          type="button"
         >
           <FontAwesomeIcon aria-hidden="true" icon={faSun} />
-        </button>
-        <button
-          aria-label="Dark theme"
-          aria-pressed={value === "dark"}
+        </span>
+        <span
+          aria-hidden="true"
           className={`${styles.option} ${value === "dark" ? styles.active : ""}`}
-          onClick={() => onChange("dark")}
-          type="button"
         >
           <FontAwesomeIcon aria-hidden="true" icon={faMoon} />
-        </button>
-      </div>
+        </span>
+      </button>
     </FieldShell>
   );
 }

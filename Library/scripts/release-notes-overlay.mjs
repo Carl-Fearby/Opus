@@ -330,4 +330,16 @@ export const releaseNotesOverlay = [
       "Update Application to opus-react 0.3.0 and publish the matching npm release and Git tag.",
     ],
   },
+  {
+    version: "0.3.1",
+    releasedAt: "2026-07-18",
+    summary: "Application chrome, composed workspace shell, and interaction polish.",
+    changes: [
+      "Add the composed ApplicationHeader Lab with Opus branding, global search shortcut, JSON-driven create actions, notification badges, and profile controls.",
+      "Add the standalone ApplicationFooter Lab with matching application-surface styling, product identity, version information, copyright, and utility actions.",
+      "Integrate the header and footer around Test Layout so Component Lab and generated Playground source share the complete CRM workspace shell.",
+      "Adopt the transparent Opus brand asset and refine responsive header surfaces, connected pane spacing, resize grips, and light-theme presentation.",
+      "Make ThemeSwitcher a single accessible light-dark toggle and remove theme selection from ApplicationHeader so it can move into dedicated settings.",
+    ],
+  },
 ];

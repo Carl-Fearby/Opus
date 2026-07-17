@@ -2013,6 +2013,8 @@ ${wrapDashboardWidget(
       const s = settings as ControlSettingsBySlug["lab-test-layout"];
       return interactiveUsage({
         components: [
+          "ApplicationFooter",
+          "ApplicationHeader",
           "CatalogIcon",
           "DashboardContentContainer",
           "Icon",
@@ -2029,13 +2031,30 @@ ${wrapDashboardWidget(
           "const [sidebarCollapsed, setSidebarCollapsed] = useState(false);",
           "const [rightCollapsed, setRightCollapsed] = useState(false);",
           'const [rightTab, setRightTab] = useState("notes");',
+          'const [headerSearch, setHeaderSearch] = useState("");',
           'const [workspaceLabel, setWorkspaceLabel] = useState("CRM");',
         ],
-        jsx: `<div style={{ height: "100%" }}>
+        jsx: `<div style={{ display: "grid", gridTemplateRows: "auto minmax(0, 1fr) auto", height: "100%" }}>
+  <ApplicationHeader
+    actions={[
+      { id: "notifications", iconName: "bell", label: "Notifications", count: 8 },
+      { id: "messages", iconName: "envelope", label: "Messages", count: 3 },
+      { id: "calendar", iconName: "calendar", label: "Calendar", group: "utility" },
+    ]}
+    createItems={[
+      { id: "company", label: "Add Company", iconName: "building", onSelect: () => console.log("Add Company") },
+      { id: "contact", label: "Add Contact", iconName: "user-plus", onSelect: () => console.log("Add Contact") },
+      { id: "task", label: "Add Task", iconName: "list-check", onSelect: () => console.log("Add Task") },
+    ]}
+    connected
+    onSearchChange={setHeaderSearch}
+    profile={{ name: "Carl Fearby", role: "Administrator", src: "/user-profile-carl.png" }}
+    searchValue={headerSearch}
+  />
   <ThreePaneLayout
     defaultLeftWidth={${s.defaultLeftWidth}}
     defaultRightWidth={${s.defaultRightWidth}}
-    handleBackground=${quote(s.handleBackground)}
+    handleBackground="none"
     handleBorderRadius={${s.handleBorderRadius ?? 12}}
     handleHeight=${quote(s.handleHeight)}
     handleMarginBlock={${s.handleMarginBlock ?? 12}}
@@ -2047,7 +2066,7 @@ ${wrapDashboardWidget(
     persist={${s.persist}}
     storageKey="crm-test-layout"
     rightCollapsed={rightCollapsed}
-    style={{ height: "100%" }}
+    style={{ height: "auto", marginTop: 8 }}
     left={
       <DashboardContentContainer data-component="sidebar" height="full" paddingLeft={false} paddingRight={false} width="full">
         <Sidebar
@@ -2121,12 +2140,25 @@ ${wrapDashboardWidget(
       </DashboardContentContainer>
     }
   >
-    <main style={{ padding: 28 }}>
-      <p style={{ color: "var(--opus-accent)", fontWeight: 700 }}>{workspaceLabel} workspace</p>
-      <h2>Demo content</h2>
-      <p>The centre workspace remains fluid between both resizable panes.</p>
-    </main>
+    <DashboardContentContainer data-component="crm-workspace" height="full" width="full">
+      <main>
+        <p style={{ color: "var(--opus-accent)", fontWeight: 700 }}>{workspaceLabel} workspace</p>
+        <h2>Demo content</h2>
+        <p>The centre workspace remains fluid between both resizable panes.</p>
+      </main>
+    </DashboardContentContainer>
   </ThreePaneLayout>
+  <div style={{ marginTop: 8 }}>
+    <ApplicationFooter
+      actions={[
+        { id: "help", iconName: "circle-question", label: "Help", onSelect: () => console.log("Help") },
+        { id: "guide", iconName: "book-open", label: "User guide", onSelect: () => console.log("User guide") },
+        { id: "settings", iconName: "gear", label: "Settings", onSelect: () => console.log("Settings") },
+      ]}
+      productName="CRM"
+      version="v1.0.0"
+    />
+  </div>
 </div>`,
       });
     }
@@ -3285,6 +3317,27 @@ ${formatScrollAreaContent()}
 <Toolbar${s.dense ? " dense" : ""} start={<Button variant="secondary">Filter</Button>} end={<Button>Publish</Button>}>
   <Button variant="light">Undo</Button>
 </Toolbar>`;
+    }
+    case "application-footer": {
+      return `${importLine(["ApplicationFooter"])}\n\n<ApplicationFooter actions={[{ id: "help", iconName: "circle-question", label: "Help", onSelect: () => console.log("Help") }, { id: "guide", iconName: "book-open", label: "User guide" }, { id: "settings", iconName: "gear", label: "Settings" }]} productName="CRM" version="v1.0.0" />`;
+    }
+    case "application-header": {
+      const s = settings as ControlSettingsBySlug["application-header"];
+      return `${importLine(["ApplicationHeader"])}
+
+<ApplicationHeader
+  actions={[
+    { id: "notifications", iconName: "bell", label: "Notifications", count: 8 },
+    { id: "messages", iconName: "envelope", label: "Messages", count: 3 },
+    { id: "calendar", iconName: "calendar", label: "Calendar" },
+  ]}
+  createItems={[
+    { id: "company", label: "Add Company", iconName: "building", onSelect: () => console.log("add company") },
+    { id: "contact", label: "Add Contact", iconName: "user-plus", onSelect: () => console.log("add contact") },
+    { id: "task", label: "Add Task", iconName: "list-check", onSelect: () => console.log("add task") },
+  ]}
+  onCreateSelect={(item) => console.log("selected", item.id)}${s.showSearch ? "" : "\n  showSearch={false}"}${s.showProfile ? '\n  profile={{ name: "Carl Fearby", role: "Administrator", src: "/user-profile-carl.png" }}' : ""}
+/>`;
     }
     case "bottom-navigation": {
       const s = settings as ControlSettingsBySlug["bottom-navigation"];

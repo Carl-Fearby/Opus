@@ -165,6 +165,8 @@ const componentIcons: Record<string, IconDefinition> = {
   pagination: faPager,
   "page-header": faHeading,
   toolbar: faWrench,
+  "application-header": faWindowMaximize,
+  "application-footer": faWindowMaximize,
   "bottom-navigation": faMobileScreen,
   "navigation-rail": faBars,
   "split-button": faCaretDown,

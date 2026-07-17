@@ -728,7 +728,7 @@ export const defaultSettings: ControlSettingsBySlug = {
   "lab-test-layout": {
     defaultLeftWidth: 260,
     defaultRightWidth: 260,
-    handleBackground: "subtle",
+    handleBackground: "none",
     handleBorderRadius: 12,
     handleHeight: "medium",
     handleMarginBlock: 12,
@@ -1085,6 +1085,11 @@ export const defaultSettings: ControlSettingsBySlug = {
   toolbar: {
     dense: false,
   },
+  "application-header": {
+    showProfile: true,
+    showSearch: true,
+  },
+  "application-footer": { showActions: true, showBrand: true, showVersion: true },
   "bottom-navigation": {
     value: "home",
   },
