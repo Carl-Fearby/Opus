@@ -134,10 +134,10 @@
 
 .handle[data-orientation="vertical"] .grip::after {
   background-image:
-    radial-gradient(circle, var(--opus-panel) 2.1px, transparent 2.35px),
-    radial-gradient(circle, var(--opus-panel) 2.1px, transparent 2.35px),
-    radial-gradient(circle, var(--opus-panel) 2.1px, transparent 2.35px),
-    radial-gradient(circle, var(--opus-panel) 2.1px, transparent 2.35px);
+    radial-gradient(circle, var(--opus-accent-contrast) 2.1px, transparent 2.35px),
+    radial-gradient(circle, var(--opus-accent-contrast) 2.1px, transparent 2.35px),
+    radial-gradient(circle, var(--opus-accent-contrast) 2.1px, transparent 2.35px),
+    radial-gradient(circle, var(--opus-accent-contrast) 2.1px, transparent 2.35px);
   background-position: center 18%, center 39%, center 61%, center 82%;
   background-repeat: no-repeat;
   background-size: 5px 5px;
@@ -150,10 +150,10 @@
 
 .handle[data-orientation="horizontal"] .grip::after {
   background-image:
-    radial-gradient(circle, var(--opus-panel) 2.1px, transparent 2.35px),
-    radial-gradient(circle, var(--opus-panel) 2.1px, transparent 2.35px),
-    radial-gradient(circle, var(--opus-panel) 2.1px, transparent 2.35px),
-    radial-gradient(circle, var(--opus-panel) 2.1px, transparent 2.35px);
+    radial-gradient(circle, var(--opus-accent-contrast) 2.1px, transparent 2.35px),
+    radial-gradient(circle, var(--opus-accent-contrast) 2.1px, transparent 2.35px),
+    radial-gradient(circle, var(--opus-accent-contrast) 2.1px, transparent 2.35px),
+    radial-gradient(circle, var(--opus-accent-contrast) 2.1px, transparent 2.35px);
   background-position: 18% center, 39% center, 61% center, 82% center;
   background-repeat: no-repeat;
   background-size: 5px 5px;

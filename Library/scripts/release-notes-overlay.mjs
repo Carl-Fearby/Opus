@@ -243,6 +243,7 @@ export const releaseNotesOverlay = [
   {
     version: "0.2.39",
     releasedAt: "2026-07-17",
+    commit: "1243baf87f74e9e9bd1e8c5be7d4c03843c8be42",
     summary: "Font preference API export fix.",
     changes: [
       "Export FontPicker and useFontPreference from the public opus-react package surface.",
@@ -268,6 +269,18 @@ export const releaseNotesOverlay = [
       "Make Sidebar footer dividers inherit the same horizontal insets as their footer content.",
       "Align Test Layout component and Playground menu content through shared demo data.",
       "Backfill curated release narratives from opus-react 0.2.26 through 0.2.40.",
+    ],
+  },
+  {
+    version: "0.2.42",
+    releasedAt: "2026-07-17",
+    commit: "97f87b8999ca11d030474f34aafe6f9d85c84472",
+    summary: "Resize-handle grip affordance and dual-orientation preview.",
+    changes: [
+      "Add a centred four-dot grip to vertical and horizontal ResizeHandle tracks.",
+      "Use a dark muted resting grip that follows the track accent on hover and keyboard focus.",
+      "Add interactive vertical and horizontal examples together on the Resize Handle component page.",
+      "Publish the updated ResizeHandle styling and Application preview as opus-react 0.2.42.",
     ],
   },
 ];
