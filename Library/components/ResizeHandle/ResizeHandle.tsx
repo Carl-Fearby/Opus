@@ -30,6 +30,8 @@ export function ResizeHandle({
       data-orientation={orientation}
       role="separator"
       type="button"
-    />
+    >
+      <span aria-hidden="true" className={styles.grip} />
+    </button>
   );
 }

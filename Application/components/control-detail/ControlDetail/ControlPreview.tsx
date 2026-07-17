@@ -4153,7 +4153,25 @@ export function ControlPreview({
     }
     case "resize-handle": {
       const s = settings as ControlSettingsBySlug["resize-handle"];
-      return <ResizeHandlePreviewDemo settings={s} />;
+      return (
+        <div
+          style={{
+            display: "grid",
+            gap: 20,
+            gridTemplateColumns: "repeat(auto-fit, minmax(min(100%, 320px), 1fr))",
+            width: "100%",
+          }}
+        >
+          <section style={{ display: "grid", gap: 8, minWidth: 0 }}>
+            <strong>Vertical</strong>
+            <ResizeHandlePreviewDemo settings={{ ...s, orientation: "vertical" }} />
+          </section>
+          <section style={{ display: "grid", gap: 8, minWidth: 0 }}>
+            <strong>Horizontal</strong>
+            <ResizeHandlePreviewDemo settings={{ ...s, orientation: "horizontal" }} />
+          </section>
+        </div>
+      );
     }
     case "resizable-panel": {
       const s = settings as ControlSettingsBySlug["resizable-panel"];
