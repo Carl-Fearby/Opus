@@ -1,12 +1,12 @@
 "use client";
 
 import dynamic from "next/dynamic";
-import Link from "next/link";
 import { useEffect } from "react";
 import { useComponentsTheme, useSetComponentsPageHeader } from "@/components/development/ComponentsThemeProvider";
 import { useComponentSettings } from "@/components/development/ComponentsShell/ComponentSettingsContext";
 import { componentRawPath } from "@/lib/controls/routes";
 import { generateUsageCode } from "@/lib/controls/generateUsageCode";
+import { storeRawPreviewSettings } from "@/lib/controls/rawSettings";
 import { createExternalPreviewPayload } from "@/lib/playground/externalPreviewStorage";
 import { storePlaygroundSeed } from "@/lib/playground/playgroundNavigation";
 import type { ControlDefinition, ControlSettings } from "@/lib/controls/types";
@@ -73,14 +73,16 @@ export function ControlDetail({ control, defaultSettings, documentation }: Contr
       >
         Open External
       </button>
-      <Link
+      <button
         className={styles.panelActionButton}
-        href={componentRawPath(control.slug, settings)}
-        rel="noopener noreferrer"
-        target="_blank"
+        onClick={() => {
+          const previewId = storeRawPreviewSettings(settings);
+          window.open(componentRawPath(control.slug, previewId), "_blank", "noopener,noreferrer");
+        }}
+        type="button"
       >
         Open Preview
-      </Link>
+      </button>
     </>
   );
 

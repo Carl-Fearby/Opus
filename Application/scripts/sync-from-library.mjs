@@ -115,6 +115,11 @@ syncTextFile(
 cpSync(join(libraryDir, "app", "preview-theme.css"), join(appDir, "app", "preview-theme.css"), {
   force: true,
 });
+syncTextFile(
+  join(libraryDir, "app", "documentation", "components", "raw", "[slug]", "page.tsx"),
+  join(appDir, "app", "documentation", "components", "raw", "[slug]", "page.tsx"),
+  { rewire: true },
+);
 
 syncDirectory(join(libraryDir, "components", "control-detail"), join(appDir, "components", "control-detail"), {
   rewire: true,

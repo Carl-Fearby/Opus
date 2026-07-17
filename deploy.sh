@@ -98,6 +98,7 @@ stage_application_sync_files() {
     "Application/lib/documentation/breadcrumbs.ts"
     "Application/lib/documentation/versionLog.ts"
     "Application/app/preview-theme.css"
+    "Application/app/documentation/components/raw/[slug]/page.tsx"
     "Application/components/control-detail"
     "Application/components/development"
     "Application/scripts/sync-from-library.mjs"

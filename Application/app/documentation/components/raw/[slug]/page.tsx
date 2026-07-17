@@ -6,7 +6,7 @@ import type { ControlSlug } from "@/lib/controls/types";
 
 type ControlRawPageProps = {
   params: Promise<{ slug: string }>;
-  searchParams: Promise<{ config?: string | string[] }>;
+  searchParams: Promise<{ config?: string | string[]; preview?: string | string[] }>;
 };
 
 export function generateStaticParams() {
@@ -29,7 +29,7 @@ export async function generateMetadata({ params }: ControlRawPageProps) {
 
 export default async function ControlRawPage({ params, searchParams }: ControlRawPageProps) {
   const { slug } = await params;
-  const { config } = await searchParams;
+  const { config, preview } = await searchParams;
   const control = getControl(slug);
 
   if (!control) {
@@ -37,11 +37,13 @@ export default async function ControlRawPage({ params, searchParams }: ControlRa
   }
 
   const encodedSettings = Array.isArray(config) ? config[0] : config;
+  const previewId = Array.isArray(preview) ? preview[0] : preview;
 
   return (
     <ControlRaw
       defaultSettings={getDefaultSettings(slug as ControlSlug)}
       encodedSettings={encodedSettings}
+      previewId={previewId}
       slug={slug as ControlSlug}
     />
   );

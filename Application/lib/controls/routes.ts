@@ -1,6 +1,4 @@
 import type { ComponentCategory } from "./types";
-import type { ControlSettings } from "./types";
-import { encodeRawSettingsParam } from "./rawSettings";
 import { getControl } from "./registry";
 import { COMPONENTS_BASE_PATH } from "@/lib/documentation/routes";
 
@@ -20,13 +18,9 @@ export function componentPath(slug?: string) {
   return slug ? `${COMPONENTS_BASE_PATH}/${slug}` : COMPONENTS_BASE_PATH;
 }
 
-export function componentRawPath(slug: string, settings?: ControlSettings) {
+export function componentRawPath(slug: string, previewId?: string) {
   const path = `${COMPONENTS_BASE_PATH}/raw/${slug}`;
-  if (!settings) {
-    return path;
-  }
-
-  return `${path}?config=${encodeRawSettingsParam(settings)}`;
+  return previewId ? `${path}?preview=${encodeURIComponent(previewId)}` : path;
 }
 
 export function categoryPath(category: ComponentCategory) {

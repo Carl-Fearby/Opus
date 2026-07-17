@@ -31,7 +31,12 @@ export function ResizeHandle({
       role="separator"
       type="button"
     >
-      <span aria-hidden="true" className={styles.grip} />
+      <span aria-hidden="true" className={styles.grip}>
+        <span className={styles.dot} />
+        <span className={styles.dot} />
+        <span className={styles.dot} />
+        <span className={styles.dot} />
+      </span>
     </button>
   );
 }

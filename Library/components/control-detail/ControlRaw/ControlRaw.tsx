@@ -4,7 +4,7 @@ import { useState } from "react";
 import { ControlPreview } from "@/components/control-detail/ControlDetail/ControlPreview";
 import { PreviewThemeBoundary } from "@/components/control-detail/ControlDetail/PreviewThemeBoundary";
 import { PreviewThemeControls } from "@/components/control-detail/ControlDetail/PreviewThemeControls";
-import { decodeRawSettingsParam } from "@/lib/controls/rawSettings";
+import { decodeRawSettingsParam, readRawPreviewSettings } from "@/lib/controls/rawSettings";
 import {
   formatRawPreviewCanvasLabel,
   getRawPreviewWidthOption,
@@ -21,12 +21,15 @@ import type { ControlSettings, ControlSlug } from "@/lib/controls/types";
 type ControlRawProps = {
   defaultSettings: ControlSettings;
   encodedSettings?: string;
+  previewId?: string;
   slug: ControlSlug;
 };
 
-export function ControlRaw({ defaultSettings, encodedSettings, slug }: ControlRawProps) {
+export function ControlRaw({ defaultSettings, encodedSettings, previewId, slug }: ControlRawProps) {
   const [settings, setSettings] = useState<ControlSettings>(() =>
-    decodeRawSettingsParam(encodedSettings, defaultSettings),
+    previewId
+      ? readRawPreviewSettings(previewId, defaultSettings)
+      : decodeRawSettingsParam(encodedSettings, defaultSettings),
   );
   const [previewWidth, setPreviewWidth] = useState<RawPreviewWidthId>("full");
   const [orientation, setOrientation] = useState<RawPreviewOrientation>("portrait");
