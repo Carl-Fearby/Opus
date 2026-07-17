@@ -141,7 +141,7 @@
   width: 4px;
   height: 4px;
   border-radius: 50%;
-  background: #070912;
+  background: light-dark(#ffffff, #070912);
 }
 
 .handle:hover .grip,

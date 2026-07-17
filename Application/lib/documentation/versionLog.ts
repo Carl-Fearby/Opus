@@ -276,6 +276,14 @@ export const versionLog: VersionEntry[] = [
     commitShort: "97f87b8",
     summary: "Resize-handle grip affordance and dual-orientation preview.",
     changes: ["Add a centred four-dot grip to vertical and horizontal ResizeHandle tracks.","Use a dark muted resting grip that follows the track accent on hover and keyboard focus.","Add interactive vertical and horizontal examples together on the Resize Handle component page.","Publish the updated ResizeHandle styling and Application preview as opus-react 0.2.42."],
+  },
+  {
+    version: "0.2.43",
+    releasedAt: "2026-07-17",
+    commit: "2a25a225c42c55b64316b9f76874922e4a064e4c",
+    commitShort: "2a25a22",
+    summary: "Stable resize-grip spacing and compact raw-preview URLs.",
+    changes: ["Replace gradient-rendered grip dots with four fixed-size elements for identical spacing in embedded and external previews.","Replace serialized raw-preview configuration URLs with short same-origin preview IDs.","Retain backward compatibility with existing config query links.","Synchronise raw-preview routing into Application deployments."],
   }
 ].reverse();
 
