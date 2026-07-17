@@ -258,4 +258,16 @@ export const releaseNotesOverlay = [
       "Update Application package metadata and lockfile to consume opus-react 0.2.40.",
     ],
   },
+  {
+    version: "0.2.41",
+    releasedAt: "2026-07-17",
+    summary: "Custom source-editor scrolling and reusable Sidebar footer insets.",
+    changes: [
+      "Connect CustomScrollbar tracks to CodeMirror's native scroll viewport while preserving editing and virtualisation.",
+      "Add reusable top, right, bottom, and left footer padding controls to Sidebar.",
+      "Make Sidebar footer dividers inherit the same horizontal insets as their footer content.",
+      "Align Test Layout component and Playground menu content through shared demo data.",
+      "Backfill curated release narratives from opus-react 0.2.26 through 0.2.40.",
+    ],
+  },
 ];

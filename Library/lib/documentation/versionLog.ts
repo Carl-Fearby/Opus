@@ -248,8 +248,8 @@ export const versionLog: VersionEntry[] = [
   {
     version: "0.2.39",
     releasedAt: "2026-07-17",
-    commit: "720313038d1556224b738e828dd9503541a95552",
-    commitShort: "7203130",
+    commit: "d430b69734a2ad7ead9f67a394c10b111f50c93b",
+    commitShort: "d430b69",
     summary: "Font preference API export fix.",
     changes: ["Export FontPicker and useFontPreference from the public opus-react package surface.","Republish package declarations and runtime exports for Application consumers."],
   },
@@ -260,6 +260,14 @@ export const versionLog: VersionEntry[] = [
     commitShort: "e0447d0",
     summary: "Published font API and Application dependency alignment.",
     changes: ["Publish the corrected public font-preference API to npm.","Update Application package metadata and lockfile to consume opus-react 0.2.40."],
+  },
+  {
+    version: "0.2.41",
+    releasedAt: "2026-07-17",
+    commit: "d430b69734a2ad7ead9f67a394c10b111f50c93b",
+    commitShort: "d430b69",
+    summary: "Custom source-editor scrolling and reusable Sidebar footer insets.",
+    changes: ["Connect CustomScrollbar tracks to CodeMirror's native scroll viewport while preserving editing and virtualisation.","Add reusable top, right, bottom, and left footer padding controls to Sidebar.","Make Sidebar footer dividers inherit the same horizontal insets as their footer content.","Align Test Layout component and Playground menu content through shared demo data.","Backfill curated release narratives from opus-react 0.2.26 through 0.2.40."],
   }
 ].reverse();
 
