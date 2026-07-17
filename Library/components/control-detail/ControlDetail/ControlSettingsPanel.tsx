@@ -7103,6 +7103,38 @@ export function ControlSettingsPanel({
               onChange({ ...s, showFooter } as ControlSettings)
             }
           />
+          {s.showFooter ? (
+            <>
+              <SettingToggle
+                label="Footer padding top"
+                checked={s.footerPaddingTop ?? false}
+                onChange={(footerPaddingTop) =>
+                  onChange({ ...s, footerPaddingTop } as ControlSettings)
+                }
+              />
+              <SettingToggle
+                label="Footer padding bottom"
+                checked={s.footerPaddingBottom ?? false}
+                onChange={(footerPaddingBottom) =>
+                  onChange({ ...s, footerPaddingBottom } as ControlSettings)
+                }
+              />
+              <SettingToggle
+                label="Footer padding left"
+                checked={s.footerPaddingLeft ?? false}
+                onChange={(footerPaddingLeft) =>
+                  onChange({ ...s, footerPaddingLeft } as ControlSettings)
+                }
+              />
+              <SettingToggle
+                label="Footer padding right"
+                checked={s.footerPaddingRight ?? false}
+                onChange={(footerPaddingRight) =>
+                  onChange({ ...s, footerPaddingRight } as ControlSettings)
+                }
+              />
+            </>
+          ) : null}
           <SettingToggle
             label="Group expanded"
             checked={s.groupOpen}

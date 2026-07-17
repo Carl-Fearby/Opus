@@ -139,7 +139,19 @@ export function UsageCodeEditor({
     </div>
   );
 
-  if (fillHeight) return editor;
+  if (fillHeight) {
+    return (
+      <CustomScrollbar
+        autoHide={false}
+        className={styles.codeEditorFillScroll}
+        label={editable ? "Editable code" : "Generated usage code"}
+        orientation="both"
+        viewportSelector=".cm-scroller"
+      >
+        {editor}
+      </CustomScrollbar>
+    );
+  }
 
   return (
     <CustomScrollbar

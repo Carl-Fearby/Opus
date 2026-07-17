@@ -59,6 +59,10 @@ export type SidebarProps = {
   defaultActiveItem?: string;
   density?: SurfaceDensity;
   footer?: ReactNode;
+  footerPaddingBottom?: boolean;
+  footerPaddingLeft?: boolean;
+  footerPaddingRight?: boolean;
+  footerPaddingTop?: boolean;
   header?: ReactNode;
   menu?: SidebarMenuItem[];
   navLabel?: string;
@@ -191,6 +195,10 @@ export function Sidebar({
   defaultActiveItem,
   density = "comfortable",
   footer,
+  footerPaddingBottom = false,
+  footerPaddingLeft = false,
+  footerPaddingRight = false,
+  footerPaddingTop = false,
   header,
   menu,
   navLabel = "Sidebar navigation",
@@ -323,6 +331,10 @@ export function Sidebar({
         className={styles.sidebar}
         data-collapsed={collapsed ? "true" : "false"}
         data-density={density}
+        data-footer-padding-bottom={footerPaddingBottom ? "true" : "false"}
+        data-footer-padding-left={footerPaddingLeft ? "true" : "false"}
+        data-footer-padding-right={footerPaddingRight ? "true" : "false"}
+        data-footer-padding-top={footerPaddingTop ? "true" : "false"}
         data-motion-ready={motionReady ? "true" : "false"}
         data-padding-bottom={paddingBottom ? "true" : "false"}
         data-padding-left={paddingLeft ? "true" : "false"}

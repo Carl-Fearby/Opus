@@ -2065,6 +2065,8 @@ ${wrapDashboardWidget(
               {sidebarCollapsed ? null : <span>Collapse</span>}
             </button>
           }
+          footerPaddingLeft
+          footerPaddingRight
           menu={menu}
           onSelect={(item) => setWorkspaceLabel(String(item.label))}
           paddingLeft
@@ -3673,6 +3675,10 @@ const value = ${formatJsonValueForUsage()};
             ]
           : []),
         ...(s.showFooter ? [formatStringProp("footer", s.footerText)] : []),
+        ...(s.footerPaddingBottom ? [formatBoolProp("footerPaddingBottom", true)] : []),
+        ...(s.footerPaddingLeft ? [formatBoolProp("footerPaddingLeft", true)] : []),
+        ...(s.footerPaddingRight ? [formatBoolProp("footerPaddingRight", true)] : []),
+        ...(s.footerPaddingTop ? [formatBoolProp("footerPaddingTop", true)] : []),
         ...(s.persistState ? [formatBoolProp("persistState", true)] : []),
         ...(s.paddingBottom ? [formatBoolProp("paddingBottom", true)] : []),
         ...(s.paddingLeft ? [formatBoolProp("paddingLeft", true)] : []),

@@ -13,6 +13,7 @@ import {
   type KeyboardEvent,
   type PointerEvent,
   type ReactNode,
+  type RefObject,
 } from "react";
 import styles from "./CustomScrollbar.module.css";
 
@@ -33,6 +34,7 @@ export type CustomScrollbarProps = {
   thickness?: number;
   verticalThumbShape?: CustomScrollbarShape;
   verticalTrackShape?: CustomScrollbarShape;
+  viewportSelector?: string;
 };
 
 type Axis = "x" | "y";
@@ -88,11 +90,12 @@ export function CustomScrollbar({
   thickness = 10,
   verticalThumbShape = "round",
   verticalTrackShape = "round",
+  viewportSelector,
 }: CustomScrollbarProps) {
   const generatedId = useId();
   const viewportId = `custom-scrollbar-${generatedId.replaceAll(":", "")}`;
   const rootRef = useRef<HTMLDivElement>(null);
-  const viewportRef = useRef<HTMLDivElement>(null);
+  const viewportRef = useRef<HTMLElement>(null);
   const contentRef = useRef<HTMLDivElement>(null);
   const verticalTrackRef = useRef<HTMLDivElement>(null);
   const horizontalTrackRef = useRef<HTMLDivElement>(null);
@@ -136,6 +139,41 @@ export function CustomScrollbar({
     measure();
     showTemporarily();
   };
+
+  useLayoutEffect(() => {
+    if (!viewportSelector) return;
+    const root = rootRef.current;
+    if (!root) return;
+    let viewport: HTMLElement | null = null;
+    let frame: number | null = null;
+
+    const attach = () => {
+      const next = root.querySelector<HTMLElement>(viewportSelector);
+      if (!next || next === viewport) return;
+      viewport?.removeEventListener("scroll", handleScroll);
+      viewport = next;
+      viewportRef.current = next;
+      next.id ||= viewportId;
+      next.setAttribute("aria-label", label);
+      next.addEventListener("scroll", handleScroll, { passive: true });
+      if (frame !== null) window.cancelAnimationFrame(frame);
+      frame = window.requestAnimationFrame(measure);
+    };
+
+    attach();
+    const observer = new MutationObserver(() => {
+      attach();
+      measure();
+    });
+    observer.observe(root, { childList: true, subtree: true });
+
+    return () => {
+      observer.disconnect();
+      if (frame !== null) window.cancelAnimationFrame(frame);
+      viewport?.removeEventListener("scroll", handleScroll);
+      if (viewportRef.current === viewport) viewportRef.current = null;
+    };
+  }, [label, measure, viewportId, viewportSelector]);
 
   useLayoutEffect(() => () => {
     if (activityTimer.current !== null) window.clearTimeout(activityTimer.current);
@@ -306,16 +344,18 @@ export function CustomScrollbar({
       data-vertical-thumb-shape={verticalThumbShape}
       data-vertical-track-shape={verticalTrackShape}
     >
-      <div
-        aria-label={label}
-        className={styles.viewport}
-        id={viewportId}
-        ref={viewportRef}
-        tabIndex={0}
-        onScroll={handleScroll}
-      >
-        <div className={styles.content} ref={contentRef}>{children}</div>
-      </div>
+      {viewportSelector ? children : (
+        <div
+          aria-label={label}
+          className={styles.viewport}
+          id={viewportId}
+          ref={viewportRef as RefObject<HTMLDivElement | null>}
+          tabIndex={0}
+          onScroll={handleScroll}
+        >
+          <div className={styles.content} ref={contentRef}>{children}</div>
+        </div>
+      )}
       {orientation !== "horizontal" ? renderTrack("y") : null}
       {orientation !== "vertical" ? renderTrack("x") : null}
       {vertical.visible && horizontal.visible ? <span aria-hidden="true" className={styles.cornerDot} /> : null}

@@ -120,4 +120,142 @@ export const releaseNotesOverlay = [
       "Fix OpusThemeProvider document theme resolution and remove hardcoded app-shell dark theme.",
     ],
   },
+  {
+    version: "0.2.27",
+    releasedAt: "2026-07-09",
+    summary: "Application and package version alignment after the theme release.",
+    changes: [
+      "Align Application dependency and lockfiles with the latest published opus-react package.",
+      "Refresh package metadata for consistent Library and Application installs.",
+    ],
+  },
+  {
+    version: "0.2.28",
+    releasedAt: "2026-07-09",
+    summary: "Expanded component catalog and synchronised Application documentation.",
+    changes: [
+      "Expand builder, layout, navigation, tile, and dashboard component definitions.",
+      "Add richer preview settings and generated usage examples across the catalog.",
+      "Synchronise the growing Library catalog, emoji data, and documentation into Application.",
+    ],
+  },
+  {
+    version: "0.2.29",
+    releasedAt: "2026-07-09",
+    summary: "Dashboard widgets, navigation primitives, and interactive content refinements.",
+    changes: [
+      "Broaden layout and navigation primitives including ThreePaneLayout, Sidebar, tiles, rails, and pagination.",
+      "Refine PipelineOverview, DealsOverTime, NotesActivity, NoteComposer, and dashboard tile presentation.",
+      "Expand component exports, examples, settings, and package documentation.",
+    ],
+  },
+  {
+    version: "0.2.30",
+    releasedAt: "2026-07-10",
+    summary: "User Profile widget, editable Code Playground, and unified component detail pages.",
+    changes: [
+      "Add the UserProfileWidget and image-crop profile-photo workflow.",
+      "Add the Code Playground with live JSX compilation and component-seeded examples.",
+      "Unify preview, documentation, composition, settings, and usage-code panels on component pages.",
+    ],
+  },
+  {
+    version: "0.2.31",
+    releasedAt: "2026-07-10",
+    summary: "Usage-code editor and component documentation workflow improvements.",
+    changes: [
+      "Improve editable generated source, selection behaviour, and preview theme controls.",
+      "Refine component Markdown rendering and usage-code presentation.",
+      "Strengthen Library-to-Application source synchronisation for documentation tooling.",
+    ],
+  },
+  {
+    version: "0.2.32",
+    releasedAt: "2026-07-11",
+    summary: "Calendar improvements, documentation navigation, and preview parity auditing.",
+    changes: [
+      "Improve Calendar behaviour and a broad set of interactive component previews.",
+      "Restructure documentation routes and navigation for catalog groups and Playground.",
+      "Add preview-versus-usage auditing and improve the Application synchronisation workflow.",
+    ],
+  },
+  {
+    version: "0.2.33",
+    releasedAt: "2026-07-12",
+    summary: "Forms catalog and generated example coverage expansion.",
+    changes: [
+      "Expand forms overview content, defaults, icons, and component registration.",
+      "Add reusable usage-data formatters for richer generated examples.",
+      "Improve component previews and settings for newly documented form controls.",
+    ],
+  },
+  {
+    version: "0.2.34",
+    releasedAt: "2026-07-13",
+    summary: "Emoji persistence and source-editor refinements.",
+    changes: [
+      "Add recent-emoji persistence and shared emoji catalog utilities.",
+      "Improve generated source and CodeMirror editor behaviour.",
+      "Refresh preview and documentation registration for the updated controls.",
+    ],
+  },
+  {
+    version: "0.2.35",
+    releasedAt: "2026-07-16",
+    summary: "Three-pane CRM lab, composition relationships, and external previews.",
+    changes: [
+      "Add the resizable Test Layout CRM workspace with collapsible Sidebar and NotesActivity panes.",
+      "Add composition relationship views and expand dashboard documentation groups.",
+      "Add external Playground previews, NoteTag support, ResizeHandle controls, and richer NotesActivity interactions.",
+      "Improve resize persistence, panel sizing, collapse behaviour, and component settings.",
+    ],
+  },
+  {
+    version: "0.2.36",
+    releasedAt: "2026-07-16",
+    summary: "Playground workspace controls and component-library guidance.",
+    changes: [
+      "Refine Playground source, split, preview, reset, and full-width workspace controls.",
+      "Update component-library documentation for the expanded preview workflow.",
+    ],
+  },
+  {
+    version: "0.2.37",
+    releasedAt: "2026-07-17",
+    summary: "Accessibility pass, custom scrollbars, and global font preferences.",
+    changes: [
+      "Add CustomScrollbar and ScrollArea with styled tracks, thumbs, dual-axis corners, and auto-hide behaviour.",
+      "Apply accessibility improvements across navigation, overlays, builders, content, and dashboard components.",
+      "Add a global Google Font picker and persist the selected documentation font.",
+      "Integrate custom scrolling across the component library and Lab layouts.",
+    ],
+  },
+  {
+    version: "0.2.38",
+    releasedAt: "2026-07-17",
+    summary: "Test Layout polish and documentation composition refinements.",
+    changes: [
+      "Refine Test Layout pane sizing, scrolling, padding, collapse controls, and responsive behaviour.",
+      "Improve NotesActivity demos, relationship views, settings panels, and dashboard overviews.",
+      "Synchronise the latest Lab and component-detail experience into Application.",
+    ],
+  },
+  {
+    version: "0.2.39",
+    releasedAt: "2026-07-17",
+    summary: "Font preference API export fix.",
+    changes: [
+      "Export FontPicker and useFontPreference from the public opus-react package surface.",
+      "Republish package declarations and runtime exports for Application consumers.",
+    ],
+  },
+  {
+    version: "0.2.40",
+    releasedAt: "2026-07-17",
+    summary: "Published font API and Application dependency alignment.",
+    changes: [
+      "Publish the corrected public font-preference API to npm.",
+      "Update Application package metadata and lockfile to consume opus-react 0.2.40.",
+    ],
+  },
 ];

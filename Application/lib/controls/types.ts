@@ -1315,6 +1315,10 @@ export type SidebarSettings = {
   headerTitle: string;
   showFooter: boolean;
   footerText: string;
+  footerPaddingBottom: boolean;
+  footerPaddingLeft: boolean;
+  footerPaddingRight: boolean;
+  footerPaddingTop: boolean;
   activeItem: "overview" | "library" | "templates" | "tokens" | "settings";
   groupOpen: boolean;
   paddingBottom: boolean;

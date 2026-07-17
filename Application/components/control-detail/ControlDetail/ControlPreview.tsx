@@ -872,6 +872,8 @@ function TestLayoutPreview({
               {sidebarCollapsed ? null : <span>Collapse</span>}
             </button>
           }
+          footerPaddingLeft
+          footerPaddingRight
           menu={testLayoutMenu}
           onCollapsedGroupSelect={(groupId) => {
             reportAction(`Toggled ${groupId} submenu`);
