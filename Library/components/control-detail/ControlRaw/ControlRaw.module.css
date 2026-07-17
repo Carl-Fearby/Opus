@@ -1,5 +1,4 @@
 .frame {
-  --raw-toolbar-height: 57px;
   --raw-stage-padding: 24px;
   display: flex;
   flex-direction: column;
@@ -85,6 +84,8 @@
 }
 
 .viewportStage:has(> .canvas[data-full="true"]) {
+  height: 100%;
+  min-height: 0;
   padding: 0;
 }
 
@@ -125,8 +126,8 @@
 .canvas[data-full="true"] {
   width: 100%;
   max-width: none;
-  height: calc(100dvh - var(--raw-toolbar-height));
-  min-height: 320px;
+  height: 100%;
+  min-height: 0;
   border-radius: 0;
 }
 

@@ -82,10 +82,12 @@ export function ControlRaw({ defaultSettings, encodedSettings, previewId, slug }
           </select>
         </div>
 
-        <span className={styles.toolbarMeta}>
-          {formatRawPreviewCanvasLabel(canvasSize, orientation)}
-          {!canvasSize.full && scale < 1 ? ` · ${Math.round(scale * 100)}% fit` : null}
-        </span>
+        {!canvasSize.full ? (
+          <span className={styles.toolbarMeta}>
+            {formatRawPreviewCanvasLabel(canvasSize, orientation)}
+            {scale < 1 ? ` · ${Math.round(scale * 100)}% fit` : null}
+          </span>
+        ) : null}
 
         <PreviewThemeControls id={`preview-theme-toggle-${slug}-raw`} variant="toolbar" />
       </header>

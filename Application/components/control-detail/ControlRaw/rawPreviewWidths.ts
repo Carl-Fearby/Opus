@@ -74,20 +74,22 @@ export function resolveRawPreviewCanvasSize(
     return { full: true, width: null, height: null };
   }
 
-  const portraitHeight = portraitHeightForWidth(widthOption.px);
+  const pairedDimension = portraitHeightForWidth(widthOption.px);
+  const shortEdge = Math.min(widthOption.px, pairedDimension);
+  const longEdge = Math.max(widthOption.px, pairedDimension);
 
   if (orientation === "portrait") {
     return {
       full: false,
-      width: widthOption.px,
-      height: portraitHeight,
+      width: shortEdge,
+      height: longEdge,
     };
   }
 
   return {
     full: false,
-    width: portraitHeight,
-    height: widthOption.px,
+    width: longEdge,
+    height: shortEdge,
   };
 }
 
