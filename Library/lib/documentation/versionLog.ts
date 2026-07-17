@@ -284,6 +284,14 @@ export const versionLog: VersionEntry[] = [
     commitShort: "2a25a22",
     summary: "Stable resize-grip spacing and compact raw-preview URLs.",
     changes: ["Replace gradient-rendered grip dots with four fixed-size elements for identical spacing in embedded and external previews.","Replace serialized raw-preview configuration URLs with short same-origin preview IDs.","Retain backward compatibility with existing config query links.","Synchronise raw-preview routing into Application deployments."],
+  },
+  {
+    version: "0.2.44",
+    releasedAt: "2026-07-17",
+    commit: "9674bd73dd247b40061a31c6d8adcc5e8419f459",
+    commitShort: "9674bd7",
+    summary: "Theme-aware resize-grip dot contrast.",
+    changes: ["Render resize-handle grip dots in white for light themes and near-black for dark themes.","Use CSS light-dark colour selection so embedded, external, and component previews follow their own active theme.","Publish the corrected ResizeHandle styling and update Application to opus-react 0.2.44."],
   }
 ].reverse();
 
