@@ -2,13 +2,29 @@ export type LabsCatalogEntry = {
   componentName: string;
   compositionParts: readonly string[];
   description: string;
-  settingsType: "application-footer" | "application-header" | "dashboard-list-columns" | "notes-activity" | "sidebar" | "three-pane-layout" | "user-profile";
+  settingsType: "application-footer" | "application-header" | "dashboard-list-columns" | "dashboard-welcome" | "notes-activity" | "sidebar" | "three-pane-layout" | "user-profile";
   slug: string;
   sourceFiles: string[];
   title: string;
 };
 
 export const labsCatalog = [
+  {
+    slug: "lab-dashboard-welcome",
+    title: "Dashboard Welcome",
+    componentName: "WelcomeMessage",
+    description:
+      "Time-aware dashboard greeting composed with a live date card and JSON-driven quick-action tiles.",
+    settingsType: "dashboard-welcome",
+    compositionParts: ["dashboard-content-container", "tiles", "tile", "icon"],
+    sourceFiles: [
+      "components/WelcomeMessage/WelcomeMessage.tsx",
+      "components/WelcomeMessage/WelcomeMessage.module.css",
+      "components/Tiles/Tiles.tsx",
+      "components/Tile/Tile.tsx",
+      "components/DashboardContentContainer/DashboardContentContainer.tsx",
+    ],
+  },
   { slug: "application-footer", title: "Application Footer", componentName: "ApplicationFooter", description: "Composed application footer with product identity, version, copyright, and utility actions.", settingsType: "application-footer", compositionParts: ["divider", "tooltip", "icon"], sourceFiles: ["components/ApplicationFooter/ApplicationFooter.tsx", "components/ApplicationFooter/ApplicationFooter.module.css"] },
   {
     slug: "application-header",
@@ -88,10 +104,10 @@ export const labsCatalog = [
   },
   {
     slug: "lab-test-layout",
-    title: "Test Layout",
+    title: "Home Layout",
     componentName: "ThreePaneLayout",
     description:
-      "Three-pane CRM workspace with grouped side navigation, a fluid content canvas, and Notes & Activity.",
+      "Complete CRM home workspace with application chrome, dashboard welcome actions, grouped navigation, and Notes & Activity.",
     settingsType: "three-pane-layout",
     compositionParts: ["three-pane-layout", "resize-handle", "sidebar", "content-timeline", "note-composer"],
     sourceFiles: [

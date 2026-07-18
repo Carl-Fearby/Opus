@@ -120,6 +120,21 @@ syncTextFile(
   join(appDir, "app", "documentation", "components", "raw", "[slug]", "page.tsx"),
   { rewire: true },
 );
+syncTextFile(
+  join(libraryDir, "app", "api", "playground-preview", "route.ts"),
+  join(appDir, "app", "api", "playground-preview", "route.ts"),
+  { rewire: true },
+);
+syncTextFile(
+  join(libraryDir, "app", "documentation", "playground", "external", "page.tsx"),
+  join(appDir, "app", "documentation", "playground", "external", "page.tsx"),
+  { rewire: true },
+);
+syncTextFile(
+  join(libraryDir, "components", "documentation", "CodePlayground", "ExternalPlaygroundPreview.tsx"),
+  join(appDir, "components", "documentation", "CodePlayground", "ExternalPlaygroundPreview.tsx"),
+  { rewire: true },
+);
 
 syncDirectory(join(libraryDir, "components", "control-detail"), join(appDir, "components", "control-detail"), {
   rewire: true,

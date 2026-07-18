@@ -688,6 +688,15 @@ export const defaultSettings: ControlSettingsBySlug = {
     topPerformingUsersTitle: "Top Performing People",
     topPerformingUsersFooterLabel: "View full report",
   },
+  "lab-dashboard-welcome": {
+    greeting: "auto",
+    name: "Carl",
+    showDate: true,
+    showWave: true,
+    subtitle: "Here’s what’s happening with your CRM today.",
+    tileLayout: "fill",
+    wrapInContainer: false,
+  },
   "lab-notes-activity": {
     addNoteButtonLabel: "Add note",
     addNoteModalDescription:

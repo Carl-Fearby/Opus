@@ -1968,6 +1968,52 @@ ${wrapDashboardWidget(
 </Columns>`,
       });
     }
+    case "lab-dashboard-welcome": {
+      const s = settings as ControlSettingsBySlug["lab-dashboard-welcome"];
+      const greetingProp = s.greeting === "auto"
+        ? ""
+        : `\n      greeting=${quote(`Good ${s.greeting}`)}`;
+      const widget = `<section style={{ display: "grid", gap: 24, minWidth: 0 }}>
+  <div style={{ alignItems: "flex-start", display: "flex", gap: 24, justifyContent: "space-between" }}>
+    <WelcomeMessage
+      name=${quote(s.name)}${greetingProp}
+      showWave={${s.showWave}}
+      subtitle=${quote(s.subtitle)}
+    />
+    ${s.showDate ? `<time style={{ alignItems: "center", background: "color-mix(in srgb, var(--dashboard-section-panel, var(--opus-panel)) 88%, transparent)", border: "1px solid var(--dashboard-section-border, var(--opus-border))", borderRadius: 10, color: "var(--dashboard-section-muted, var(--opus-muted))", display: "inline-flex", fontSize: "0.84rem", fontWeight: 650, gap: 10, minHeight: 44, padding: "0 16px", whiteSpace: "nowrap" }}>
+      <span style={{ display: "inline-flex", flex: "0 0 16px", fontSize: 16, height: 16, width: 16 }}>
+        <CatalogIcon iconName="calendar" />
+      </span>
+      {new Intl.DateTimeFormat("en-GB", { day: "numeric", month: "long", weekday: "long", year: "numeric" }).format(new Date())}
+    </time>` : ""}
+  </div>
+  <Tiles items={quickActions} layout=${quote(s.tileLayout)} />
+</section>`;
+      return interactiveUsage({
+        components: s.wrapInContainer
+          ? ["CatalogIcon", "DashboardContentContainer", "Tiles", "WelcomeMessage"]
+          : ["CatalogIcon", "Tiles", "WelcomeMessage"],
+        preamble: [
+          `const quickActions = [
+  { id: "contacts", icon: "users", label: "Contact Manager", tone: "purple" },
+  { id: "product-catalogues", icon: "boxes-stacked", label: "Product Catalogues", tone: "blue" },
+  { id: "my-catalogue", icon: "book-open", label: "My Catalogue", tone: "purple" },
+  { id: "opportunities", icon: "chart-line", label: "Sales Opportunities", tone: "blue" },
+  { id: "communication", icon: "comments", label: "Communication", tone: "purple" },
+  { id: "quotations", icon: "file-lines", label: "Quotations", tone: "blue" },
+  { id: "sales-orders", icon: "cart-shopping", label: "Sales Orders", tone: "purple" },
+  { id: "sales-invoices", icon: "file-invoice-dollar", label: "Sales Invoices", tone: "blue" },
+  { id: "appointment-diary", icon: "calendar-days", label: "Appointment Diary", tone: "purple" },
+  { id: "system-config", icon: "gears", label: "System Config", tone: "blue" },
+  { id: "stock-control", icon: "warehouse", label: "Stock Control", tone: "purple" },
+].map((item) => ({ ...item, onClick: () => console.log(item.label) }));`,
+        ],
+        state: [],
+        jsx: s.wrapInContainer
+          ? `<DashboardContentContainer data-component="dashboard-welcome" width="full">\n  ${widget.replaceAll("\n", "\n  ")}\n</DashboardContentContainer>`
+          : widget,
+      });
+    }
     case "lab-notes-activity": {
       const s = settings as ControlSettingsBySlug["notes-activity"];
       const wrap = s.wrapInContainer ?? true;
@@ -2020,12 +2066,36 @@ ${wrapDashboardWidget(
           "Icon",
           "NotesActivity",
           "Sidebar",
+          "StatTiles",
           "ThreePaneLayout",
+          "Tiles",
           "Tooltip",
+          "WelcomeMessage",
         ],
         preamble: [
           `const menu = ${JSON.stringify(testLayoutMenu, null, 2)};`,
           `const activity = ${JSON.stringify(demoNotesActivity, null, 2)};`,
+          `const homeTiles = [
+  { id: "contacts", icon: "users", label: "Contact Manager", tone: "purple" },
+  { id: "product-catalogues", icon: "boxes-stacked", label: "Product Catalogues", tone: "blue" },
+  { id: "my-catalogue", icon: "book-open", label: "My Catalogue", tone: "purple" },
+  { id: "opportunities", icon: "chart-line", label: "Sales Opportunities", tone: "blue" },
+  { id: "communication", icon: "comments", label: "Communication", tone: "purple" },
+  { id: "quotations", icon: "file-lines", label: "Quotations", tone: "blue" },
+  { id: "sales-orders", icon: "cart-shopping", label: "Sales Orders", tone: "purple" },
+  { id: "sales-invoices", icon: "file-invoice-dollar", label: "Sales Invoices", tone: "blue" },
+  { id: "appointment-diary", icon: "calendar-days", label: "Appointment Diary", tone: "purple" },
+  { id: "system-config", icon: "gears", label: "System Config", tone: "blue" },
+  { id: "stock-control", icon: "warehouse", label: "Stock Control", tone: "purple" },
+];`,
+          `const homeStats = [
+  { id: "total-contacts", label: "Total Contacts", value: "2,543", icon: "user", tone: "blue", trend: "up", trendValue: "12.5%", comparison: "vs last 30 days" },
+  { id: "open-deals", label: "Open Deals", value: "127", icon: "sack-dollar", tone: "blue", trend: "up", trendValue: "8.2%", comparison: "vs last 30 days" },
+  { id: "pipeline-value", label: "Pipeline Value", value: "£2.48M", icon: "chart-line", tone: "blue", trend: "up", trendValue: "15.3%", comparison: "vs last 30 days" },
+  { id: "tasks-due", label: "Tasks Due Today", value: "18", icon: "list-check", tone: "blue", trend: "up", trendTone: "warning", trendValue: "3", comparison: "vs yesterday" },
+  { id: "won-deals", label: "Won Deals (30d)", value: "23", icon: "trophy", tone: "blue", trend: "up", trendValue: "27.8%", comparison: "vs last 30 days" },
+  { id: "conversion-rate", label: "Conversion Rate", value: "18.6%", icon: "chart-pie", tone: "blue", trend: "up", trendValue: "2.4%", comparison: "vs last 30 days" },
+];`,
         ],
         state: [
           "const [sidebarCollapsed, setSidebarCollapsed] = useState(false);",
@@ -2141,11 +2211,32 @@ ${wrapDashboardWidget(
     }
   >
     <DashboardContentContainer data-component="crm-workspace" height="full" width="full">
-      <main>
-        <p style={{ color: "var(--opus-accent)", fontWeight: 700 }}>{workspaceLabel} workspace</p>
-        <h2>Demo content</h2>
-        <p>The centre workspace remains fluid between both resizable panes.</p>
-      </main>
+      {workspaceLabel === "CRM" || workspaceLabel === "Dashboard" ? (
+        <main>
+          <div style={{ alignItems: "start", display: "flex", justifyContent: "space-between", marginBottom: 24 }}>
+            <WelcomeMessage name="Carl" subtitle="Here’s what’s happening with your CRM today." />
+            <time style={{ alignItems: "center", background: "color-mix(in srgb, var(--dashboard-section-panel, var(--opus-panel)) 88%, transparent)", border: "1px solid var(--dashboard-section-border, var(--opus-border))", borderRadius: 10, color: "var(--dashboard-section-muted, var(--opus-muted))", display: "inline-flex", fontSize: "0.84rem", fontWeight: 650, gap: 10, minHeight: 44, padding: "0 16px", whiteSpace: "nowrap" }}>
+              <span style={{ display: "inline-flex", flex: "0 0 16px", fontSize: 16, height: 16, width: 16 }}>
+                <CatalogIcon iconName="calendar" />
+              </span>
+              {new Intl.DateTimeFormat("en-GB", { day: "numeric", month: "long", weekday: "long", year: "numeric" }).format(new Date())}
+            </time>
+          </div>
+          <Tiles
+            items={homeTiles.map((item) => ({ ...item, onClick: () => console.log(item.label) }))}
+            layout="fill"
+          />
+          <div style={{ marginTop: 18, padding: 12, border: "1px solid var(--opus-border)", borderRadius: 14 }}>
+            <StatTiles items={homeStats} layout="fill" />
+          </div>
+        </main>
+      ) : (
+        <main>
+          <p style={{ color: "var(--opus-accent)", fontWeight: 700 }}>{workspaceLabel} workspace</p>
+          <h2>{workspaceLabel}</h2>
+          <p>The centre workspace remains fluid between both resizable panes.</p>
+        </main>
+      )}
     </DashboardContentContainer>
   </ThreePaneLayout>
   <div style={{ marginTop: 8 }}>

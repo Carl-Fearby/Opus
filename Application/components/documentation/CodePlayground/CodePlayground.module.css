@@ -377,3 +377,35 @@
   outline: 2px solid color-mix(in srgb, var(--opus-accent, #6d2bd9) 70%, transparent);
   outline-offset: 2px;
 }
+.externalPreview {
+  width: 100vw;
+  height: 100dvh;
+  min-height: 0;
+  overflow: hidden;
+  background: var(--opus-shell-bg, #0b1020);
+}
+
+.externalPreview :global([data-preview-root]) {
+  height: 100%;
+}
+
+.externalPreviewEmpty {
+  display: grid;
+  place-content: center;
+  gap: 8px;
+  width: 100vw;
+  height: 100dvh;
+  padding: 24px;
+  background: var(--opus-shell-bg, #0b1020);
+  color: var(--opus-text, #f5f7ff);
+  text-align: center;
+}
+
+.externalPreviewEmpty h1,
+.externalPreviewEmpty p {
+  margin: 0;
+}
+
+.externalPreviewEmpty p {
+  color: var(--opus-muted, rgba(223, 226, 255, 0.72));
+}

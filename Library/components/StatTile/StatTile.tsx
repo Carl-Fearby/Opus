@@ -5,6 +5,7 @@ import { TileGradientDefs } from "@/components/Tile/TileGradientDefs";
 import styles from "./StatTile.module.css";
 
 export type StatTileTrend = "up" | "down";
+export type StatTileTrendTone = "negative" | "positive" | "warning";
 export type StatTileTone = "purple" | "blue";
 
 export type StatTileProps = {
@@ -16,6 +17,7 @@ export type StatTileProps = {
   role?: string;
   tone?: StatTileTone;
   trend?: StatTileTrend;
+  trendTone?: StatTileTrendTone;
   trendValue?: string;
   value: string;
 };
@@ -29,6 +31,7 @@ export function StatTile({
   role,
   tone = "blue",
   trend,
+  trendTone,
   trendValue,
   value,
 }: StatTileProps) {
@@ -43,7 +46,7 @@ export function StatTile({
         {showTrend || comparison ? (
           <div className={styles.meta}>
             {showTrend ? (
-              <span className={styles.trend} data-trend={trend}>
+              <span className={styles.trend} data-trend={trend} data-trend-tone={trendTone}>
                 <span aria-hidden="true">{trend === "up" ? "↑" : "↓"}</span>
                 <span>{trendValue}</span>
               </span>

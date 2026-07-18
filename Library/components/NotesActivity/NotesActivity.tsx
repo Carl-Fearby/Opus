@@ -784,7 +784,11 @@ export function NotesActivity({
   );
 
   return (
-    <div className={[styles.root, className].filter(Boolean).join(" ")} data-density={density}>
+    <div
+      className={[styles.root, className].filter(Boolean).join(" ")}
+      data-active-tab={activeTab}
+      data-density={density}
+    >
       <div
         aria-label="Notes and activity"
         className={styles.tabs}

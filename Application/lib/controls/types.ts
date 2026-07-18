@@ -1122,6 +1122,16 @@ export type ApplicationHeaderSettings = {
 };
 export type ApplicationFooterSettings = { showActions: boolean; showBrand: boolean; showVersion: boolean };
 
+export type DashboardWelcomeSettings = {
+  greeting: "afternoon" | "auto" | "evening" | "morning";
+  name: string;
+  showDate: boolean;
+  showWave: boolean;
+  subtitle: string;
+  tileLayout: "fill" | "fixed";
+  wrapInContainer: boolean;
+};
+
 export type BottomNavigationSettings = {
   value: string;
 };
@@ -1525,6 +1535,7 @@ export type ControlSettingsBySlug = {
     "dashboard-list-columns": DashboardListColumnsSettings;
     "notes-activity": NotesActivitySettings;
     "lab-dashboard-list-columns": DashboardListColumnsSettings;
+    "lab-dashboard-welcome": DashboardWelcomeSettings;
     "lab-notes-activity": NotesActivitySettings;
     "lab-sidebar": SidebarSettings;
     "lab-test-layout": ThreePaneLayoutSettings;

@@ -45,6 +45,49 @@
   grid-area: composer;
 }
 
+.root[data-active-tab="notes"] .composer,
+.root[data-active-tab="notes"] .feed,
+.root[data-active-tab="notes"] .footer {
+  animation: notesActivityEnterFromLeft 180ms ease-out both;
+}
+
+.root[data-active-tab="activity"] .feed,
+.root[data-active-tab="activity"] .footer {
+  animation: notesActivityEnterFromRight 180ms ease-out both;
+}
+
+@keyframes notesActivityEnterFromLeft {
+  from {
+    opacity: 0;
+    transform: translateX(-6px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes notesActivityEnterFromRight {
+  from {
+    opacity: 0;
+    transform: translateX(6px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .root[data-active-tab] .composer,
+  .root[data-active-tab] .feed,
+  .root[data-active-tab] .footer {
+    animation: none;
+  }
+}
+
 .threadItems {
   --thread-child-avatar-size: var(--notes-activity-avatar-size);
   --thread-indent: 0.325rem;

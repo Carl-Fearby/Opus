@@ -4,7 +4,7 @@
   flex: 0 0 8px;
   padding: 0;
   border: 0;
-  background: color-mix(in srgb, var(--opus-border) 62%, transparent);
+  background: color-mix(in srgb, var(--opus-accent) 8%, transparent);
   touch-action: none;
 }
 
@@ -25,7 +25,7 @@
 }
 
 .handle[data-background="accent"] {
-  background: color-mix(in srgb, var(--opus-accent) 14%, transparent);
+  background: color-mix(in srgb, var(--opus-accent) 8%, transparent);
 }
 
 .handle[data-background="contrast"] {
@@ -34,7 +34,7 @@
 
 .handle:hover,
 .handle:focus-visible {
-  background: color-mix(in srgb, var(--opus-border) 72%, transparent);
+  background: color-mix(in srgb, var(--opus-accent) 22%, transparent);
 }
 
 .handle[data-background="none"]:hover,
@@ -46,7 +46,7 @@
   content: "";
   position: absolute;
   border-radius: 999px;
-  background: color-mix(in srgb, var(--opus-muted) 45%, transparent);
+  background: color-mix(in srgb, var(--opus-accent) 32%, transparent);
   transition:
     background 160ms ease,
     inset 160ms ease;
@@ -110,12 +110,12 @@
   align-items: center;
   justify-content: center;
   gap: 2px;
-  border: 1px solid color-mix(in srgb, var(--opus-muted) 52%, var(--opus-panel));
+  border: 1px solid color-mix(in srgb, var(--opus-accent) 52%, #070912);
   border-radius: 999px;
-  background-color: color-mix(in srgb, var(--opus-muted) 42%, var(--opus-panel));
+  background-color: color-mix(in srgb, var(--opus-accent) 52%, #070912);
   box-shadow:
     0 1px 3px color-mix(in srgb, #000 28%, transparent),
-    inset 0 1px 0 color-mix(in srgb, white 12%, transparent);
+    0 0 4px color-mix(in srgb, var(--opus-accent) 7%, transparent);
   transform: translate(-50%, -50%);
   pointer-events: none;
   transition:
@@ -141,13 +141,13 @@
   width: 4px;
   height: 4px;
   border-radius: 50%;
-  background: light-dark(#ffffff, #070912);
+  background: #070912;
 }
 
 .handle:hover .grip,
 .handle:focus-visible .grip {
-  border-color: color-mix(in srgb, var(--opus-accent) 68%, var(--opus-border));
-  background-color: color-mix(in srgb, var(--opus-accent) 68%, var(--opus-panel));
+  border-color: var(--opus-accent);
+  background-color: var(--opus-accent);
   box-shadow:
     0 1px 4px color-mix(in srgb, #000 32%, transparent),
     0 0 5px color-mix(in srgb, var(--opus-accent) 14%, transparent);

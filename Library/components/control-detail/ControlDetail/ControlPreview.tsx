@@ -6,6 +6,7 @@ import { ContentTimeline } from "@/components/ContentTimeline";
 import { NotesActivity } from "@/components/NotesActivity";
 import { ApplicationHeader } from "@/components/ApplicationHeader";
 import { ApplicationFooter } from "@/components/ApplicationFooter";
+import { WelcomeMessage } from "@/components/WelcomeMessage";
 import {
   Button,
   Card,
@@ -839,6 +840,14 @@ function TestLayoutPreview({
   const [lastAction, setLastAction] = useState("Waiting for action");
   const reportAction = (label: string) =>
     setLastAction(`Last action: ${label}`);
+  const isDashboardWorkspace = workspaceLabel === "CRM" || workspaceLabel === "Dashboard";
+  const dashboardDate = new Date();
+  const formattedDashboardDate = new Intl.DateTimeFormat("en-GB", {
+    day: "numeric",
+    month: "long",
+    weekday: "long",
+    year: "numeric",
+  }).format(dashboardDate);
   const left = settings.showLeft ? (
     <DashboardContentContainer
       data-component="sidebar"
@@ -1051,12 +1060,53 @@ function TestLayoutPreview({
         storageKey="opus-lab-test-layout-panes"
         style={{ height: "auto", marginTop: 8 }}
       >
-        <DashboardContentContainer
-          data-component="crm-workspace"
-          height="full"
-          width="full"
-        >
-          <section>
+        <DashboardContentContainer data-component="crm-workspace" height="full" width="full">
+          {isDashboardWorkspace ? (
+            <div className={styles.homeDashboardContent}>
+              <section className={styles.dashboardWelcome} data-component="dashboard-welcome">
+                <div className={styles.dashboardWelcomeHeader}>
+                <WelcomeMessage
+                  name="Carl"
+                  subtitle="Here’s what’s happening with your CRM today."
+                />
+                <time className={styles.dashboardWelcomeDate} dateTime={dashboardDate.toISOString()}>
+                  <CatalogIcon iconName="calendar" />
+                  <span>{formattedDashboardDate}</span>
+                </time>
+                </div>
+                <Tiles
+                items={[
+                  { id: "contacts", icon: "users", label: "Contact Manager", tone: "purple", onClick: () => reportAction("Contact Manager") },
+                  { id: "product-catalogues", icon: "boxes-stacked", label: "Product Catalogues", tone: "blue", onClick: () => reportAction("Product Catalogues") },
+                  { id: "my-catalogue", icon: "book-open", label: "My Catalogue", tone: "purple", onClick: () => reportAction("My Catalogue") },
+                  { id: "opportunities", icon: "chart-line", label: "Sales Opportunities", tone: "blue", onClick: () => reportAction("Sales Opportunities") },
+                  { id: "communication", icon: "comments", label: "Communication", tone: "purple", onClick: () => reportAction("Communication") },
+                  { id: "quotations", icon: "file-lines", label: "Quotations", tone: "blue", onClick: () => reportAction("Quotations") },
+                  { id: "sales-orders", icon: "cart-shopping", label: "Sales Orders", tone: "purple", onClick: () => reportAction("Sales Orders") },
+                  { id: "sales-invoices", icon: "file-invoice-dollar", label: "Sales Invoices", tone: "blue", onClick: () => reportAction("Sales Invoices") },
+                  { id: "appointment-diary", icon: "calendar-days", label: "Appointment Diary", tone: "purple", onClick: () => reportAction("Appointment Diary") },
+                  { id: "system-config", icon: "gears", label: "System Config", tone: "blue", onClick: () => reportAction("System Config") },
+                  { id: "stock-control", icon: "warehouse", label: "Stock Control", tone: "purple", onClick: () => reportAction("Stock Control") },
+                ]}
+                layout="fill"
+                />
+              </section>
+              <section className={styles.homeStatsPanel} aria-label="CRM performance summary">
+                <StatTiles
+                  items={[
+                    { id: "total-contacts", label: "Total Contacts", value: "2,543", icon: "user", tone: "blue", trend: "up", trendValue: "12.5%", comparison: "vs last 30 days" },
+                    { id: "open-deals", label: "Open Deals", value: "127", icon: "sack-dollar", tone: "blue", trend: "up", trendValue: "8.2%", comparison: "vs last 30 days" },
+                    { id: "pipeline-value", label: "Pipeline Value", value: "£2.48M", icon: "chart-line", tone: "blue", trend: "up", trendValue: "15.3%", comparison: "vs last 30 days" },
+                    { id: "tasks-due", label: "Tasks Due Today", value: "18", icon: "list-check", tone: "blue", trend: "up", trendTone: "warning", trendValue: "3", comparison: "vs yesterday" },
+                    { id: "won-deals", label: "Won Deals (30d)", value: "23", icon: "trophy", tone: "blue", trend: "up", trendValue: "27.8%", comparison: "vs last 30 days" },
+                    { id: "conversion-rate", label: "Conversion Rate", value: "18.6%", icon: "chart-pie", tone: "blue", trend: "up", trendValue: "2.4%", comparison: "vs last 30 days" },
+                  ]}
+                  layout="fill"
+                />
+              </section>
+            </div>
+          ) : (
+            <section>
             <p
               style={{
                 margin: "0 0 8px",
@@ -1078,7 +1128,8 @@ function TestLayoutPreview({
               This centre pane stays fluid while the navigation and Notes &amp;
               Activity panes can be resized independently.
             </p>
-          </section>
+            </section>
+          )}
         </DashboardContentContainer>
       </ThreePaneLayout>
       <div style={{ marginTop: 8 }}>
@@ -3517,6 +3568,64 @@ export function ControlPreview({
     case "lab-dashboard-list-columns": {
       const s = settings as ControlSettingsBySlug["dashboard-list-columns"];
       return <DashboardListColumnsDashboardPreview settings={s} />;
+    }
+    case "lab-dashboard-welcome": {
+      const s = settings as ControlSettingsBySlug["lab-dashboard-welcome"];
+      const date = new Date();
+      const formattedDate = new Intl.DateTimeFormat("en-GB", {
+        day: "numeric",
+        month: "long",
+        weekday: "long",
+        year: "numeric",
+      }).format(date);
+      const greeting = s.greeting === "auto" ? undefined : `Good ${s.greeting}`;
+
+      return (
+        <DashboardActionPreview>
+          {(reportAction) => {
+            const content = (
+              <section className={styles.dashboardWelcome} data-component="dashboard-welcome">
+                <div className={styles.dashboardWelcomeHeader}>
+                  <WelcomeMessage
+                    greeting={greeting}
+                    name={s.name}
+                    showWave={s.showWave}
+                    subtitle={s.subtitle}
+                  />
+                  {s.showDate ? (
+                    <time className={styles.dashboardWelcomeDate} dateTime={date.toISOString()}>
+                      <CatalogIcon iconName="calendar" />
+                      <span>{formattedDate}</span>
+                    </time>
+                  ) : null}
+                </div>
+                <Tiles
+                  items={[
+                    { id: "contacts", icon: "users", label: "Contact Manager", tone: "purple", onClick: () => reportAction("Contact Manager") },
+                    { id: "product-catalogues", icon: "boxes-stacked", label: "Product Catalogues", tone: "blue", onClick: () => reportAction("Product Catalogues") },
+                    { id: "my-catalogue", icon: "book-open", label: "My Catalogue", tone: "purple", onClick: () => reportAction("My Catalogue") },
+                    { id: "opportunities", icon: "chart-line", label: "Sales Opportunities", tone: "blue", onClick: () => reportAction("Sales Opportunities") },
+                    { id: "communication", icon: "comments", label: "Communication", tone: "purple", onClick: () => reportAction("Communication") },
+                    { id: "quotations", icon: "file-lines", label: "Quotations", tone: "blue", onClick: () => reportAction("Quotations") },
+                    { id: "sales-orders", icon: "cart-shopping", label: "Sales Orders", tone: "purple", onClick: () => reportAction("Sales Orders") },
+                    { id: "sales-invoices", icon: "file-invoice-dollar", label: "Sales Invoices", tone: "blue", onClick: () => reportAction("Sales Invoices") },
+                    { id: "appointment-diary", icon: "calendar-days", label: "Appointment Diary", tone: "purple", onClick: () => reportAction("Appointment Diary") },
+                    { id: "system-config", icon: "gears", label: "System Config", tone: "blue", onClick: () => reportAction("System Config") },
+                    { id: "stock-control", icon: "warehouse", label: "Stock Control", tone: "purple", onClick: () => reportAction("Stock Control") },
+                  ]}
+                  layout={s.tileLayout}
+                />
+              </section>
+            );
+
+            return s.wrapInContainer ? (
+              <DashboardContentContainer data-component="dashboard-welcome" width="full">
+                {content}
+              </DashboardContentContainer>
+            ) : content;
+          }}
+        </DashboardActionPreview>
+      );
     }
     case "lab-notes-activity": {
       const s = settings as ControlSettingsBySlug["notes-activity"];

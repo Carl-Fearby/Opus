@@ -258,7 +258,7 @@ export type { TileItem, TilesLayout, TilesProps } from "../Tiles";
 export { Tile } from "../Tile";
 export type { TileProps, TileTone } from "../Tile";
 export { StatTile } from "../StatTile";
-export type { StatTileProps, StatTileTrend, StatTileTone } from "../StatTile";
+export type { StatTileProps, StatTileTrend, StatTileTone, StatTileTrendTone } from "../StatTile";
 export { StatTiles } from "../StatTiles";
 export type { StatTileItem, StatTilesProps } from "../StatTiles";
 export { PipelineOverview } from "../PipelineOverview";

@@ -1,0 +1,38 @@
+.root {
+  min-width: 0;
+}
+
+.heading {
+  margin: 0;
+  color: var(--dashboard-section-text, var(--opus-text));
+  font-size: clamp(1.5rem, 2.4vw, 2rem);
+  font-weight: 650;
+  letter-spacing: -0.025em;
+  line-height: 1.15;
+}
+
+.wave {
+  display: inline-block;
+  margin-left: 0.45em;
+  font-size: 0.88em;
+  transform-origin: 70% 70%;
+}
+
+.subtitle {
+  margin: 8px 0 0;
+  color: var(--dashboard-section-muted, var(--opus-muted));
+  font-size: 0.95rem;
+  line-height: 1.5;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .root:hover .wave {
+    animation: welcome-wave 650ms ease-in-out;
+  }
+}
+
+@keyframes welcome-wave {
+  0%, 100% { transform: rotate(0deg); }
+  30% { transform: rotate(15deg); }
+  65% { transform: rotate(-8deg); }
+}

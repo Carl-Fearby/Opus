@@ -3201,6 +3201,58 @@ export function ControlSettingsPanel({
         </div>
       );
     }
+    case "lab-dashboard-welcome": {
+      const s = settings as ControlSettingsBySlug["lab-dashboard-welcome"];
+      return (
+        <div className={shellStyles.settingsGrid}>
+          <SettingInput
+            label="Name"
+            value={s.name}
+            onChange={(name) => onChange({ ...s, name } as ControlSettings)}
+          />
+          <SettingInput
+            label="Subtitle"
+            value={s.subtitle}
+            onChange={(subtitle) => onChange({ ...s, subtitle } as ControlSettings)}
+          />
+          <SettingSelect
+            label="Greeting"
+            value={s.greeting}
+            onChange={(greeting) => onChange({ ...s, greeting } as ControlSettings)}
+            options={[
+              { label: "Automatic", value: "auto" },
+              { label: "Morning", value: "morning" },
+              { label: "Afternoon", value: "afternoon" },
+              { label: "Evening", value: "evening" },
+            ]}
+          />
+          <SettingSelect
+            label="Tiles"
+            value={s.tileLayout}
+            onChange={(tileLayout) => onChange({ ...s, tileLayout } as ControlSettings)}
+            options={[
+              { label: "Stretch", value: "fill" },
+              { label: "Scroll", value: "fixed" },
+            ]}
+          />
+          <SettingToggle
+            label="Inside widget container"
+            checked={s.wrapInContainer}
+            onChange={(wrapInContainer) => onChange({ ...s, wrapInContainer } as ControlSettings)}
+          />
+          <SettingToggle
+            label="Wave"
+            checked={s.showWave}
+            onChange={(showWave) => onChange({ ...s, showWave } as ControlSettings)}
+          />
+          <SettingToggle
+            label="Date"
+            checked={s.showDate}
+            onChange={(showDate) => onChange({ ...s, showDate } as ControlSettings)}
+          />
+        </div>
+      );
+    }
     case "lab-notes-activity": {
       const s = settings as ControlSettingsBySlug["notes-activity"];
       return (
