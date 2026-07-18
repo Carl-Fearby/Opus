@@ -749,6 +749,7 @@ export const defaultSettings: ControlSettingsBySlug = {
     persist: true,
     showLeft: true,
     showRight: true,
+    workspaceScrollbarInset: -1,
   },
   "lab-user-profile": {
     name: "Carl Fearby",
@@ -1065,6 +1066,7 @@ export const defaultSettings: ControlSettingsBySlug = {
     minThumbSize: 32,
     orientation: "vertical",
     thickness: 12,
+    trackInset: 2,
     verticalThumbShape: "round",
     verticalTrackShape: "round",
   },

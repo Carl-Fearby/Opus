@@ -5632,6 +5632,22 @@ export function ControlSettingsPanel({
             ]}
             onChange={(height) => onChange({ ...s, height } as ControlSettings)}
           />
+          {slug === "lab-test-layout" ? (
+            <SettingInput
+              label="Centre scrollbar inset"
+              type="number"
+              value={String(s.workspaceScrollbarInset ?? -1)}
+              onChange={(workspaceScrollbarInset) =>
+                onChange({
+                  ...s,
+                  workspaceScrollbarInset: Math.min(
+                    Math.max(Number(workspaceScrollbarInset) || 0, -1),
+                    24,
+                  ),
+                } as ControlSettings)
+              }
+            />
+          ) : null}
           <SettingSelect
             label="Handle background"
             value={s.handleBackground}
@@ -5852,6 +5868,22 @@ export function ControlSettingsPanel({
                     minThumbSize: Math.min(
                       Math.max(Number(minThumbSize) || 20, 20),
                       80,
+                    ),
+                  } as ControlSettings)
+                }
+              />
+              <SettingInput
+                label="Track inset"
+                type="number"
+                value={String(
+                  (s as ControlSettingsBySlug["custom-scrollbar"]).trackInset,
+                )}
+                onChange={(trackInset) =>
+                  onChange({
+                    ...s,
+                    trackInset: Math.min(
+                      Math.max(Number(trackInset) || 0, -1),
+                      24,
                     ),
                   } as ControlSettings)
                 }

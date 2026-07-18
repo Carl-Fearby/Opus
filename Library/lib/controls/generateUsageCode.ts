@@ -28,6 +28,7 @@ import {
 import { worldMapRegionIds } from "opus-react";
 import { isChartSlug } from "./chartCatalog";
 import {
+  demoPipelineStages,
   formatPipelineStagesForUsage,
   formatPipelineTotalValue,
 } from "./pipelineDemoData";
@@ -1920,6 +1921,7 @@ ${wrapDashboardWidget(
         components: [
           "Columns",
           "DashboardContentContainer",
+          "DealsOverTime",
           "RecentActivity",
           "TopPerformingUsers",
           "UpcomingTasks",
@@ -2062,14 +2064,20 @@ ${wrapDashboardWidget(
           "ApplicationFooter",
           "ApplicationHeader",
           "CatalogIcon",
+          "CustomScrollbar",
           "DashboardContentContainer",
+          "DealsOverTime",
           "Icon",
           "NotesActivity",
+          "PipelineOverview",
+          "RecentActivity",
           "Sidebar",
           "StatTiles",
+          "TopPerformingUsers",
           "ThreePaneLayout",
           "Tiles",
           "Tooltip",
+          "UpcomingTasks",
           "WelcomeMessage",
         ],
         preamble: [
@@ -2088,6 +2096,11 @@ ${wrapDashboardWidget(
   { id: "system-config", icon: "gears", label: "System Config", tone: "blue" },
   { id: "stock-control", icon: "warehouse", label: "Stock Control", tone: "purple" },
 ];`,
+          `const pipelineStages = ${JSON.stringify(demoPipelineStages, null, 2)};`,
+          `const dealsData = ${JSON.stringify(getDealsOverTimeDemoData("This Year"), null, 2)};`,
+          `const upcomingTasks = ${JSON.stringify(demoUpcomingTasks, null, 2)};`,
+          `const recentActivity = ${JSON.stringify(demoRecentActivity, null, 2)};`,
+          `const topPerformers = ${JSON.stringify(demoTopPerformingUsers, null, 2)};`,
           `const homeStats = [
   { id: "total-contacts", label: "Total Contacts", value: "2,543", icon: "user", tone: "blue", trend: "up", trendValue: "12.5%", comparison: "vs last 30 days" },
   { id: "open-deals", label: "Open Deals", value: "127", icon: "sack-dollar", tone: "blue", trend: "up", trendValue: "8.2%", comparison: "vs last 30 days" },
@@ -2103,6 +2116,8 @@ ${wrapDashboardWidget(
           'const [rightTab, setRightTab] = useState("notes");',
           'const [headerSearch, setHeaderSearch] = useState("");',
           'const [workspaceLabel, setWorkspaceLabel] = useState("CRM");',
+          'const [dashboardPeriod, setDashboardPeriod] = useState("This Year");',
+          "const [dashboardTasks, setDashboardTasks] = useState(upcomingTasks);",
         ],
         jsx: `<div style={{ display: "grid", gridTemplateRows: "auto minmax(0, 1fr) auto", height: "100%" }}>
   <ApplicationHeader
@@ -2136,7 +2151,7 @@ ${wrapDashboardWidget(
     persist={${s.persist}}
     storageKey="crm-test-layout"
     rightCollapsed={rightCollapsed}
-    style={{ height: "auto", marginTop: 8 }}
+    style={{ height: "calc(100% - 8px)", minHeight: 0, marginTop: 8 }}
     left={
       <DashboardContentContainer data-component="sidebar" height="full" paddingLeft={false} paddingRight={false} width="full">
         <Sidebar
@@ -2210,7 +2225,9 @@ ${wrapDashboardWidget(
       </DashboardContentContainer>
     }
   >
-    <DashboardContentContainer data-component="crm-workspace" height="full" width="full">
+    <DashboardContentContainer data-component="crm-workspace" height="full" paddingBottom={false} paddingLeft={false} paddingRight={false} paddingTop={false} width="full">
+      <CustomScrollbar label="CRM workspace content" orientation="vertical" trackInset={${s.workspaceScrollbarInset ?? -1}}>
+      <div style={{ minHeight: "100%", padding: "14px 16px 12px" }}>
       {workspaceLabel === "CRM" || workspaceLabel === "Dashboard" ? (
         <main>
           <div style={{ alignItems: "start", display: "flex", justifyContent: "space-between", marginBottom: 24 }}>
@@ -2229,6 +2246,37 @@ ${wrapDashboardWidget(
           <div style={{ marginTop: 18, padding: 12, border: "1px solid var(--opus-border)", borderRadius: 14 }}>
             <StatTiles items={homeStats} layout="fill" />
           </div>
+          <section aria-label="CRM charts" style={{ display: "grid", gap: 12, gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))", marginTop: 18 }}>
+            <DashboardContentContainer data-component="pipeline-overview" title="Pipeline Overview" width="full">
+              <PipelineOverview
+                period="This Month"
+                stages={pipelineStages}
+                totalLabel="Total Pipeline Value"
+                totalValue="£2,480,000"
+              />
+            </DashboardContentContainer>
+            <DashboardContentContainer data-component="deals-over-time" width="full">
+              <DealsOverTime
+                data={dealsData}
+                onPeriodChange={setDashboardPeriod}
+                period={dashboardPeriod}
+              />
+            </DashboardContentContainer>
+          </section>
+          <section aria-label="CRM dashboard lists" style={{ display: "grid", gap: 12, gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))", marginTop: 18 }}>
+            <DashboardContentContainer data-component="upcoming-tasks" width="full">
+              <UpcomingTasks
+                onTaskCompleteChange={(task, completed) => setDashboardTasks((current) => current.map((entry) => entry.id === task.id ? { ...entry, completed } : entry))}
+                tasks={dashboardTasks}
+              />
+            </DashboardContentContainer>
+            <DashboardContentContainer data-component="recent-activity" width="full">
+              <RecentActivity items={recentActivity} />
+            </DashboardContentContainer>
+            <DashboardContentContainer data-component="top-performing-users" width="full">
+              <TopPerformingUsers title="Top Performing Users" users={topPerformers} />
+            </DashboardContentContainer>
+          </section>
         </main>
       ) : (
         <main>
@@ -2237,6 +2285,8 @@ ${wrapDashboardWidget(
           <p>The centre workspace remains fluid between both resizable panes.</p>
         </main>
       )}
+      </div>
+      </CustomScrollbar>
     </DashboardContentContainer>
   </ThreePaneLayout>
   <div style={{ marginTop: 8 }}>
@@ -3326,6 +3376,7 @@ export default function ResizeHandleExample() {
   minThumbSize={${s.minThumbSize}}
   orientation="${s.orientation}"
   thickness={${s.thickness}}
+  trackInset={${s.trackInset}}
   verticalThumbShape="${s.verticalThumbShape}"
   verticalTrackShape="${s.verticalTrackShape}"
 >

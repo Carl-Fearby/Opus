@@ -838,6 +838,10 @@ function TestLayoutPreview({
   const [headerSearch, setHeaderSearch] = useState("");
   const [workspaceLabel, setWorkspaceLabel] = useState("CRM");
   const [lastAction, setLastAction] = useState("Waiting for action");
+  const [dashboardPeriod, setDashboardPeriod] = useState("This Year");
+  const [dashboardTasks, setDashboardTasks] = useState(() =>
+    demoUpcomingTasks.map((task) => ({ ...task })),
+  );
   const reportAction = (label: string) =>
     setLastAction(`Last action: ${label}`);
   const isDashboardWorkspace = workspaceLabel === "CRM" || workspaceLabel === "Dashboard";
@@ -1058,9 +1062,25 @@ function TestLayoutPreview({
         right={right}
         rightCollapsed={rightCollapsed}
         storageKey="opus-lab-test-layout-panes"
-        style={{ height: "auto", marginTop: 8 }}
+        style={{ height: "calc(100% - 8px)", minHeight: 0, marginTop: 8 }}
       >
-        <DashboardContentContainer data-component="crm-workspace" height="full" width="full">
+        <DashboardContentContainer
+          className={styles.testLayoutWorkspace}
+          data-component="crm-workspace"
+          height="full"
+          paddingBottom={false}
+          paddingLeft={false}
+          paddingRight={false}
+          paddingTop={false}
+          width="full"
+        >
+          <CustomScrollbar
+            className={styles.testLayoutWorkspaceScroll}
+            label="CRM workspace content"
+            orientation="vertical"
+            trackInset={settings.workspaceScrollbarInset ?? -1}
+          >
+          <div className={styles.testLayoutWorkspaceContent}>
           {isDashboardWorkspace ? (
             <div className={styles.homeDashboardContent}>
               <section className={styles.dashboardWelcome} data-component="dashboard-welcome">
@@ -1104,6 +1124,91 @@ function TestLayoutPreview({
                   layout="fill"
                 />
               </section>
+              <section
+                aria-label="CRM charts"
+                className={styles.homeDashboardCharts}
+              >
+                <DashboardContentContainer
+                  data-component="pipeline-overview"
+                  title="Pipeline Overview"
+                  width="full"
+                >
+                  <PipelineOverview
+                    onPeriodChange={(period) => {
+                      reportAction(`Pipeline period: ${period}`);
+                    }}
+                    period="This Month"
+                    stages={demoPipelineStages}
+                    totalLabel="Total Pipeline Value"
+                    totalValue={demoPipelineTotalValue}
+                  />
+                </DashboardContentContainer>
+                <DashboardContentContainer
+                  data-component="deals-over-time"
+                  width="full"
+                >
+                  <DealsOverTime
+                    data={getDealsOverTimeDemoData(dashboardPeriod)}
+                    onPeriodChange={(period) => {
+                      setDashboardPeriod(period);
+                      reportAction(`Deals period: ${period}`);
+                    }}
+                    period={dashboardPeriod}
+                    periodOptions={[...dealsOverTimePeriodOptions]}
+                  />
+                </DashboardContentContainer>
+              </section>
+              <section
+                aria-label="CRM dashboard lists"
+                className={styles.homeDashboardLists}
+              >
+                <DashboardContentContainer
+                  data-component="upcoming-tasks"
+                  width="full"
+                >
+                  <UpcomingTasks
+                    onFooterClick={() => reportAction("View all tasks")}
+                    onTaskClick={(task) => reportAction(task.title)}
+                    onTaskCompleteChange={(task, completed) => {
+                      setDashboardTasks((current) =>
+                        current.map((entry) =>
+                          entry.id === task.id
+                            ? { ...entry, completed }
+                            : entry,
+                        ),
+                      );
+                      reportAction(
+                        completed
+                          ? `Completed: ${task.title}`
+                          : `Reopened: ${task.title}`,
+                      );
+                    }}
+                    tasks={dashboardTasks}
+                  />
+                </DashboardContentContainer>
+                <DashboardContentContainer
+                  data-component="recent-activity"
+                  width="full"
+                >
+                  <RecentActivity
+                    items={demoRecentActivity}
+                    onFooterClick={() => reportAction("View all activity")}
+                    onItemClick={(item) => reportAction(item.title)}
+                  />
+                </DashboardContentContainer>
+                <DashboardContentContainer
+                  data-component="top-performing-users"
+                  width="full"
+                >
+                  <TopPerformingUsers
+                    footerLabel="View full report"
+                    onFooterClick={() => reportAction("View full report")}
+                    onPersonClick={(person) => reportAction(person.name)}
+                    title="Top Performing Users"
+                    users={demoTopPerformingUsers}
+                  />
+                </DashboardContentContainer>
+              </section>
             </div>
           ) : (
             <section>
@@ -1130,6 +1235,8 @@ function TestLayoutPreview({
             </p>
             </section>
           )}
+          </div>
+          </CustomScrollbar>
         </DashboardContentContainer>
       </ThreePaneLayout>
       <div style={{ marginTop: 8 }}>
@@ -4415,6 +4522,7 @@ export function ControlPreview({
               minThumbSize={s.minThumbSize}
               orientation="horizontal"
               thickness={s.thickness}
+              trackInset={s.trackInset}
             >
               <div className={styles.scrollbarCardRow}>
                 {Array.from({ length: 10 }, (_, index) => (
@@ -4437,6 +4545,7 @@ export function ControlPreview({
               minThumbSize={s.minThumbSize}
               orientation="vertical"
               thickness={s.thickness}
+              trackInset={s.trackInset}
               verticalThumbShape={s.verticalThumbShape}
               verticalTrackShape={s.verticalTrackShape}
             >
@@ -4459,6 +4568,7 @@ export function ControlPreview({
               minThumbSize={s.minThumbSize}
               orientation="both"
               thickness={s.thickness}
+              trackInset={s.trackInset}
               verticalThumbShape={s.verticalThumbShape}
               verticalTrackShape={s.verticalTrackShape}
             >

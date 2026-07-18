@@ -32,6 +32,7 @@ export type CustomScrollbarProps = {
   orientation?: CustomScrollbarOrientation;
   style?: CSSProperties;
   thickness?: number;
+  trackInset?: number;
   verticalThumbShape?: CustomScrollbarShape;
   verticalTrackShape?: CustomScrollbarShape;
   viewportSelector?: string;
@@ -88,6 +89,7 @@ export function CustomScrollbar({
   orientation = "vertical",
   style,
   thickness = 10,
+  trackInset = 2,
   verticalThumbShape = "round",
   verticalTrackShape = "round",
   viewportSelector,
@@ -326,6 +328,7 @@ export function CustomScrollbar({
   const rootStyle = {
     ...style,
     "--custom-scrollbar-size": `${Math.max(6, thickness)}px`,
+    "--custom-scrollbar-track-inset": `${trackInset}px`,
     maxHeight: typeof maxHeight === "number" ? `${maxHeight}px` : maxHeight,
   } as CSSProperties;
 

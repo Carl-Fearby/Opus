@@ -1066,6 +1066,7 @@ export type ThreePaneLayoutSettings = {
   persist: boolean;
   showLeft: boolean;
   showRight: boolean;
+  workspaceScrollbarInset?: number;
 };
 
 export type ScrollAreaSettings = {
@@ -1079,6 +1080,7 @@ export type CustomScrollbarSettings = ScrollAreaSettings & {
   horizontalThumbShape: "round" | "square";
   horizontalTrackShape: "round" | "square";
   minThumbSize: number;
+  trackInset: number;
   verticalThumbShape: "round" | "square";
   verticalTrackShape: "round" | "square";
 };

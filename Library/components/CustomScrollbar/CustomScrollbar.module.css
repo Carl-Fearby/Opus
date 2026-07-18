@@ -56,16 +56,16 @@
 }
 
 .track[data-axis="y"] {
-  top: 2px;
-  right: 2px;
-  bottom: 2px;
+  top: var(--custom-scrollbar-track-inset, 2px);
+  right: var(--custom-scrollbar-track-inset, 2px);
+  bottom: var(--custom-scrollbar-track-inset, 2px);
   width: var(--custom-scrollbar-size, 10px);
 }
 
 .track[data-axis="x"] {
-  right: 2px;
-  bottom: 2px;
-  left: 2px;
+  right: var(--custom-scrollbar-track-inset, 2px);
+  bottom: var(--custom-scrollbar-track-inset, 2px);
+  left: var(--custom-scrollbar-track-inset, 2px);
   height: var(--custom-scrollbar-size, 10px);
 }
 
