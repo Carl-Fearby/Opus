@@ -64,7 +64,7 @@ export function ControlDetail({ control, defaultSettings, documentation }: Contr
             theme: previewTheme,
           });
           window.open(
-            `/documentation/playground/external?preview=${encodeURIComponent(previewId)}`,
+            `/documentation/playground/external?preview=${encodeURIComponent(previewId)}&theme=${previewTheme}`,
             "_blank",
             "noopener,noreferrer",
           );

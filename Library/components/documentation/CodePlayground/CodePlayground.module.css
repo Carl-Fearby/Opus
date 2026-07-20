@@ -135,6 +135,18 @@
   min-height: 0;
 }
 
+.previewCanvas[data-align="form"] {
+  display: grid;
+  align-items: safe center;
+  justify-items: center;
+  overflow: auto;
+  box-sizing: border-box;
+}
+
+.previewCanvas[data-align="form"] > * {
+  width: min(100%, 28rem);
+}
+
 .previewErrorEditor {
   display: flex;
   flex: 1 1 auto;

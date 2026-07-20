@@ -130,11 +130,18 @@ syncTextFile(
   join(appDir, "app", "documentation", "playground", "external", "page.tsx"),
   { rewire: true },
 );
-syncTextFile(
-  join(libraryDir, "components", "documentation", "CodePlayground", "ExternalPlaygroundPreview.tsx"),
-  join(appDir, "components", "documentation", "CodePlayground", "ExternalPlaygroundPreview.tsx"),
-  { rewire: true },
-);
+for (const file of [
+  "CodePlayground.module.css",
+  "CodePlayground.tsx",
+  "ExternalPlaygroundPreview.tsx",
+  "PlaygroundPreview.tsx",
+]) {
+  syncTextFile(
+    join(libraryDir, "components", "documentation", "CodePlayground", file),
+    join(appDir, "components", "documentation", "CodePlayground", file),
+    { rewire: true },
+  );
+}
 
 syncDirectory(join(libraryDir, "components", "control-detail"), join(appDir, "components", "control-detail"), {
   rewire: true,

@@ -7,6 +7,8 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { ErrorPage } from "@/components/documentation/ErrorPage";
 import { ForbiddenPage, ForbiddenPageContent } from "@/components/documentation/ForbiddenPage";
 import { NotFoundPage, NotFoundPageContent } from "@/components/documentation/NotFoundPage";
+import { Map } from "@/components/Map";
+import { ContactDetails, ContactNotesActivity } from "@/components/ContactDetails";
 import * as Fields from "opus-react";
 import { demoNotesActivity } from "@/lib/controls/notesActivityDemoData";
 import { demoRecentActivity } from "@/lib/controls/recentActivityDemoData";
@@ -37,6 +39,9 @@ export function createPlaygroundScope() {
     demoNotesActivity,
     topNavigationDemoMenus,
     ...Fields,
+    ContactDetails,
+    ContactNotesActivity,
+    Map,
   };
 }
 

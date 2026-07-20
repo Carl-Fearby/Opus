@@ -90,6 +90,10 @@ class PreviewErrorBoundary extends Component<PreviewErrorBoundaryProps, PreviewE
 
 export function PlaygroundPreview({ code, padded = true, theme, onErrorChange }: PlaygroundPreviewProps) {
   const preview = useMemo(() => computePreview(code), [code]);
+  const alignForm = useMemo(
+    () => /data-component=["'](?:login-form|register-form|otp-form|passkey-login-form|social-auth-form|social-register-form)["']/.test(code),
+    [code],
+  );
 
   useEffect(() => {
     if (preview.error) {
@@ -118,7 +122,7 @@ export function PlaygroundPreview({ code, padded = true, theme, onErrorChange }:
         resetKey={`${theme}:${code}`}
         onError={(error) => onErrorChange?.(error)}
       >
-        <div className={styles.previewCanvas}>
+        <div className={styles.previewCanvas} data-align={alignForm ? "form" : "default"}>
           <PreviewComponent />
         </div>
       </PreviewErrorBoundary>

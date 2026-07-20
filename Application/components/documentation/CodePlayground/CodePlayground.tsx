@@ -5,13 +5,15 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import { Splitter, type SplitterOrientation } from "opus-react";
 import type { Theme } from "opus-react";
 import { DocumentationTopBar } from "@/components/documentation/DocumentationTopBar";
-import { PreviewThemeControls } from "@/components/control-detail/ControlDetail/PreviewThemeControls";
+import { CatalogIcon } from "opus-react";
+import { SwitchField, ThemeToggleField } from "opus-react";
 import { patchAppSetupPlaygroundTheme } from "@/lib/controls/appSetupBoilerplate";
 import { getDefaultSettings } from "@/lib/controls/defaults";
 import { generateUsageCode } from "@/lib/controls/generateUsageCode";
 import { getControl } from "@/lib/controls/registry";
-import type { AppSetupSettings, ComponentCategory, ControlSettings, ControlSlug } from "@/lib/controls/types";
+import type { AppSetupSettings, ControlSettings, ControlSlug } from "@/lib/controls/types";
 import { DEFAULT_PLAYGROUND_CODE } from "@/lib/playground/defaultPlaygroundCode";
+import { createExternalPreviewPayload } from "@/lib/playground/externalPreviewStorage";
 import { readPlaygroundPanelSize, storePlaygroundPanelSize } from "@/lib/playground/playgroundPanelSize";
 import { readPlaygroundSeed } from "@/lib/playground/playgroundNavigation";
 import { usePlaygroundTheme } from "@/lib/playground/playgroundTheme";
@@ -41,6 +43,17 @@ type PlaygroundSourceContext = {
   slug: string | null;
 };
 
+function PreviewMenuLabel({ iconName, label }: { iconName: string; label: string }) {
+  return (
+    <span className={styles.previewMenuLabel}>
+      <span className={styles.previewMenuIcon}>
+        <CatalogIcon iconName={iconName} />
+      </span>
+      <span>{label}</span>
+    </span>
+  );
+}
+
 function useSplitterOrientation(): SplitterOrientation {
   const [orientation, setOrientation] = useState<SplitterOrientation>("horizontal");
 
@@ -59,9 +72,22 @@ function useSplitterOrientation(): SplitterOrientation {
 function usePlaygroundPanelSize(orientation: SplitterOrientation) {
   const fallback = orientation === "horizontal" ? 50 : 42;
   const [size, setSize] = useState(fallback);
+  const [ready, setReady] = useState(false);
 
   useEffect(() => {
-    setSize(readPlaygroundPanelSize(orientation, fallback));
+    let readyFrame: number | null = null;
+    const timeout = window.setTimeout(() => {
+      setReady(false);
+      setSize(readPlaygroundPanelSize(orientation, fallback));
+      readyFrame = window.requestAnimationFrame(() => setReady(true));
+    }, 0);
+
+    return () => {
+      window.clearTimeout(timeout);
+      if (readyFrame !== null) {
+        window.cancelAnimationFrame(readyFrame);
+      }
+    };
   }, [fallback, orientation]);
 
   const onSizeChange = useCallback(
@@ -72,7 +98,7 @@ function usePlaygroundPanelSize(orientation: SplitterOrientation) {
     [orientation],
   );
 
-  return { onSizeChange, size };
+  return { onSizeChange, ready, size };
 }
 
 function resolveInitialCode(
@@ -85,8 +111,7 @@ function resolveInitialCode(
     return DEFAULT_PLAYGROUND_CODE;
   }
 
-  const category = initialCategory ? (initialCategory as ComponentCategory) : undefined;
-  const control = getControl(initialSlug, category ? { category } : undefined) ?? getControl(initialSlug);
+  const control = getControl(initialSlug);
 
   if (!control) {
     return DEFAULT_PLAYGROUND_CODE;
@@ -103,11 +128,15 @@ function resolveInitialCode(
 
 export function CodePlayground({ initialCategory = null, initialSlug = null }: CodePlaygroundProps) {
   const orientation = useSplitterOrientation();
-  const { onSizeChange, size } = usePlaygroundPanelSize(orientation);
+  const { onSizeChange, ready: panelSizeReady, size } = usePlaygroundPanelSize(orientation);
   const selectSourceCodeRef = useRef<() => void>(() => undefined);
   const [playgroundTheme, setPlaygroundTheme] = usePlaygroundTheme();
   const [layout, setLayout] = useState<PlaygroundLayout>("split");
   const [isFullWidth, setIsFullWidth] = useState(false);
+  const [previewPadding, setPreviewPadding] = useState(true);
+  const [previewResetKey, setPreviewResetKey] = useState(0);
+  const [previewMenuOpen, setPreviewMenuOpen] = useState(false);
+  const previewMenuRef = useRef<HTMLDivElement | null>(null);
   const layoutBeforeFullWidthRef = useRef<PlaygroundLayout>("split");
   const [seedCode, setSeedCode] = useState(() =>
     resolveInitialCode(initialSlug, initialCategory, undefined, playgroundTheme),
@@ -130,25 +159,29 @@ export function CodePlayground({ initialCategory = null, initialSlug = null }: C
   ]);
 
   useEffect(() => {
-    const seed = readPlaygroundSeed();
-    const slug = initialSlug ?? seed?.slug ?? null;
-    const category = initialCategory ?? seed?.category ?? null;
-    const seedSettings =
-      seed && seed.slug === slug && (!category || seed.category === category) ? seed.settings : undefined;
-    const nextCode = resolveInitialCode(slug, category, seedSettings, playgroundTheme);
+    const timeout = window.setTimeout(() => {
+      const seed = readPlaygroundSeed();
+      const slug = initialSlug ?? seed?.slug ?? null;
+      const category = initialCategory ?? seed?.category ?? null;
+      const seedSettings =
+        seed && seed.slug === slug && (!category || seed.category === category) ? seed.settings : undefined;
+      const nextCode = resolveInitialCode(slug, category, seedSettings, playgroundTheme);
 
-    setPlaygroundContext({ category, slug });
-    setPreviewError(null);
-    setSeedCode(nextCode);
+      setPlaygroundContext({ category, slug });
+      setPreviewError(null);
+      setSeedCode(nextCode);
 
-    if (slug === "app-setup") {
-      setCode((current) =>
-        current.includes("OpusAppShell") ? patchAppSetupPlaygroundTheme(current, playgroundTheme) : nextCode,
-      );
-      return;
-    }
+      if (slug === "app-setup") {
+        setCode((current) =>
+          current.includes("OpusAppShell") ? patchAppSetupPlaygroundTheme(current, playgroundTheme) : nextCode,
+        );
+        return;
+      }
 
-    setCode(nextCode);
+      setCode(nextCode);
+    }, 0);
+
+    return () => window.clearTimeout(timeout);
   }, [initialCategory, initialSlug, playgroundTheme]);
 
   const updateCode = useCallback((nextCode: string) => {
@@ -215,6 +248,17 @@ export function CodePlayground({ initialCategory = null, initialSlug = null }: C
     onSizeChange(orientation === "horizontal" ? 50 : 42);
   }, [onSizeChange, orientation]);
 
+  const resetPreviewLayout = useCallback(() => {
+    [
+      "crm-test-layout",
+      "crm-test-layout-v2",
+      "crm-test-layout-v3",
+      "crm-test-layout-v4",
+      "opus-sidebar-state:crm-test-layout-menu",
+    ].forEach((key) => window.localStorage.removeItem(key));
+    setPreviewResetKey((current) => current + 1);
+  }, []);
+
   const enterFullWidth = useCallback(() => {
     layoutBeforeFullWidthRef.current = layout;
     setIsFullWidth(true);
@@ -224,6 +268,46 @@ export function CodePlayground({ initialCategory = null, initialSlug = null }: C
     setIsFullWidth(false);
     setLayout(layoutBeforeFullWidthRef.current);
   }, []);
+
+  const openExternalPreview = useCallback(() => {
+    const previewId = createExternalPreviewPayload({
+      code,
+      padded: previewPadding,
+      theme: playgroundTheme,
+    });
+    window.open(
+      `/documentation/playground/external?preview=${encodeURIComponent(previewId)}&theme=${playgroundTheme}`,
+      "_blank",
+      "noopener,noreferrer",
+    );
+  }, [code, playgroundTheme, previewPadding]);
+
+  useEffect(() => {
+    if (!previewMenuOpen) {
+      return;
+    }
+
+    const handlePointerDown = (event: PointerEvent) => {
+      if (previewMenuRef.current?.contains(event.target as Node)) {
+        return;
+      }
+
+      setPreviewMenuOpen(false);
+    };
+
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === "Escape") {
+        setPreviewMenuOpen(false);
+      }
+    };
+
+    window.addEventListener("pointerdown", handlePointerDown);
+    window.addEventListener("keydown", handleKeyDown);
+    return () => {
+      window.removeEventListener("pointerdown", handlePointerDown);
+      window.removeEventListener("keydown", handleKeyDown);
+    };
+  }, [previewMenuOpen]);
 
   useEffect(() => {
     if (!isFullWidth) {
@@ -272,14 +356,6 @@ export function CodePlayground({ initialCategory = null, initialSlug = null }: C
         <div>
           <h1 className={styles.paneTitle}>Source</h1>
           <p className={styles.paneHint}>Edit the component, then preview updates on the right.</p>
-        </div>
-        <div className={styles.paneActions}>
-          <button className={styles.resetButton} type="button" onClick={selectSourceCode}>
-            Select all
-          </button>
-          <button className={styles.resetButton} type="button" onClick={() => updateCode(seedCode)}>
-            Reset
-          </button>
         </div>
       </div>
       <div className={`${styles.paneBody} ${styles.sourcePaneBody}`}>
@@ -382,26 +458,103 @@ export function CodePlayground({ initialCategory = null, initialSlug = null }: C
           <h2 className={styles.paneTitle}>Preview</h2>
           <p className={styles.paneHint}>Live render of your edited component.</p>
         </div>
-        <div className={styles.paneActions}>
-          <PreviewThemeControls
-            id="playground-preview-theme-toggle"
-            theme={playgroundTheme}
-            variant="toolbar"
-            onThemeChange={setPlaygroundTheme}
-          />
-          {isFullWidth ? (
-            <button className={styles.exitFullWidthButton} type="button" onClick={exitFullWidth}>
-              Exit full width
-            </button>
-          ) : (
-            <button className={styles.fullWidthButton} type="button" onClick={enterFullWidth}>
-              Full width
-            </button>
-          )}
+        <div className={styles.previewMenuWrap} ref={previewMenuRef}>
+          <button
+            aria-expanded={previewMenuOpen}
+            aria-haspopup="menu"
+            aria-label="Preview options"
+            className={styles.previewMenuButton}
+            type="button"
+            onClick={() => setPreviewMenuOpen((open) => !open)}
+          >
+            <span />
+            <span />
+            <span />
+          </button>
+          {previewMenuOpen ? (
+            <div className={styles.previewMenu} role="menu">
+              <div className={styles.previewMenuRow}>
+                <PreviewMenuLabel iconName="border-all" label="Preview Padding" />
+                <SwitchField
+                  checked={previewPadding}
+                  id="playground-preview-padding-toggle"
+                  label="Preview Padding"
+                  labelVisuallyHidden
+                  mode="flagged"
+                  size="sm"
+                  onChange={(event) => setPreviewPadding(event.target.checked)}
+                />
+              </div>
+              <div className={styles.previewMenuTheme}>
+                <PreviewMenuLabel iconName="circle-half-stroke" label="Preview theme" />
+                <ThemeToggleField
+                  id="playground-preview-theme-toggle"
+                  label="Preview theme"
+                  labelVisuallyHidden
+                  value={playgroundTheme}
+                  onChange={setPlaygroundTheme}
+                />
+              </div>
+              <div className={styles.previewMenuDivider} />
+              <button
+                className={styles.previewMenuItem}
+                role="menuitem"
+                type="button"
+                onClick={() => {
+                  resetPreviewLayout();
+                  setPreviewMenuOpen(false);
+                }}
+              >
+                <PreviewMenuLabel iconName="rotate-left" label="Reset preview" />
+              </button>
+              <button
+                className={styles.previewMenuItem}
+                role="menuitem"
+                type="button"
+                onClick={() => {
+                  openExternalPreview();
+                  setPreviewMenuOpen(false);
+                }}
+              >
+                <PreviewMenuLabel iconName="up-right-from-square" label="Open External" />
+              </button>
+              {isFullWidth ? (
+                <button
+                  className={styles.previewMenuItem}
+                  role="menuitem"
+                  type="button"
+                  onClick={() => {
+                    exitFullWidth();
+                    setPreviewMenuOpen(false);
+                  }}
+                >
+                  <PreviewMenuLabel iconName="compress" label="Exit full width" />
+                </button>
+              ) : (
+                <button
+                  className={styles.previewMenuItem}
+                  role="menuitem"
+                  type="button"
+                  onClick={() => {
+                    enterFullWidth();
+                    setPreviewMenuOpen(false);
+                  }}
+                >
+                  <PreviewMenuLabel iconName="expand" label="Full width" />
+                </button>
+              )}
+            </div>
+          ) : null}
         </div>
       </div>
       <div className={styles.paneBody}>
-        <PlaygroundPreview code={code} theme={playgroundTheme} onErrorChange={setPreviewError} />
+        <PlaygroundPreview
+          key={previewResetKey}
+          code={code}
+          padded={previewPadding}
+          theme={playgroundTheme}
+          onErrorChange={setPreviewError}
+        />
       </div>
     </section>
   );
@@ -448,10 +601,11 @@ export function CodePlayground({ initialCategory = null, initialSlug = null }: C
           <Splitter
             className={styles.splitter}
             flush
-            minSize={25}
+            minSize={15}
             onSizeChange={onSizeChange}
             orientation={orientation}
             size={size}
+            style={{ visibility: panelSizeReady ? "visible" : "hidden" }}
           >
             {sourcePane}
             {previewPane}

@@ -275,7 +275,11 @@ export function CodePlayground({ initialCategory = null, initialSlug = null }: C
       padded: previewPadding,
       theme: playgroundTheme,
     });
-    window.open(`/documentation/playground/external?preview=${encodeURIComponent(previewId)}`, "_blank", "noopener,noreferrer");
+    window.open(
+      `/documentation/playground/external?preview=${encodeURIComponent(previewId)}&theme=${playgroundTheme}`,
+      "_blank",
+      "noopener,noreferrer",
+    );
   }, [code, playgroundTheme, previewPadding]);
 
   useEffect(() => {

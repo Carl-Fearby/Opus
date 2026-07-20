@@ -152,3 +152,59 @@
     0 1px 4px color-mix(in srgb, #000 32%, transparent),
     0 0 5px color-mix(in srgb, var(--opus-accent) 14%, transparent);
 }
+
+:global([data-theme="light"]) .handle {
+  background: color-mix(in srgb, var(--opus-accent) 6%, transparent);
+}
+
+:global([data-theme="light"]) .handle[data-background="none"] {
+  background: transparent;
+}
+
+:global([data-theme="light"]) .handle[data-background="accent"] {
+  background: color-mix(in srgb, var(--opus-accent) 8%, transparent);
+}
+
+:global([data-theme="light"]) .handle[data-background="contrast"] {
+  background: color-mix(in srgb, var(--opus-text) 7%, transparent);
+}
+
+:global([data-theme="light"]) .handle::after {
+  background: color-mix(in srgb, var(--opus-accent) 24%, transparent);
+}
+
+:global([data-theme="light"]) .grip {
+  border-color: color-mix(in srgb, var(--opus-accent) 74%, #fff);
+  background-color: color-mix(in srgb, var(--opus-accent) 82%, #fff);
+  box-shadow:
+    0 1px 3px color-mix(in srgb, var(--opus-muted) 20%, transparent),
+    0 0 5px color-mix(in srgb, var(--opus-accent) 18%, transparent);
+}
+
+:global([data-theme="light"]) .dot {
+  background: #fff;
+}
+
+:global([data-theme="light"]) .handle:hover,
+:global([data-theme="light"]) .handle:focus-visible {
+  background: color-mix(in srgb, var(--opus-accent) 14%, transparent);
+}
+
+:global([data-theme="light"]) .handle[data-background="none"]:hover,
+:global([data-theme="light"]) .handle[data-background="none"]:focus-visible {
+  background: transparent;
+}
+
+:global([data-theme="light"]) .handle:hover::after,
+:global([data-theme="light"]) .handle:focus-visible::after {
+  background: color-mix(in srgb, var(--opus-accent) 52%, transparent);
+}
+
+:global([data-theme="light"]) .handle:hover .grip,
+:global([data-theme="light"]) .handle:focus-visible .grip {
+  border-color: var(--opus-accent);
+  background-color: var(--opus-accent);
+  box-shadow:
+    0 1px 4px color-mix(in srgb, var(--opus-muted) 24%, transparent),
+    0 0 6px color-mix(in srgb, var(--opus-accent) 20%, transparent);
+}

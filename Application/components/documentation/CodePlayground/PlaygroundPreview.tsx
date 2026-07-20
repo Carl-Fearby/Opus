@@ -15,6 +15,7 @@ const UsageCodeEditor = dynamic(
 
 type PlaygroundPreviewProps = {
   code: string;
+  padded?: boolean;
   theme: Theme;
   onErrorChange?: (error: string | null) => void;
 };
@@ -87,8 +88,12 @@ class PreviewErrorBoundary extends Component<PreviewErrorBoundaryProps, PreviewE
   }
 }
 
-export function PlaygroundPreview({ code, theme, onErrorChange }: PlaygroundPreviewProps) {
+export function PlaygroundPreview({ code, padded = true, theme, onErrorChange }: PlaygroundPreviewProps) {
   const preview = useMemo(() => computePreview(code), [code]);
+  const alignForm = useMemo(
+    () => /data-component=["'](?:login-form|register-form|otp-form|passkey-login-form|social-auth-form|social-register-form)["']/.test(code),
+    [code],
+  );
 
   useEffect(() => {
     if (preview.error) {
@@ -107,12 +112,19 @@ export function PlaygroundPreview({ code, theme, onErrorChange }: PlaygroundPrev
   const PreviewComponent = preview.PreviewComponent!;
 
   return (
-    <PreviewThemeBoundary key={theme} theme={theme} className={styles.previewSurface}>
+    <PreviewThemeBoundary
+      key={theme}
+      theme={theme}
+      className={styles.previewSurface}
+      data-padded={padded ? "true" : "false"}
+    >
       <PreviewErrorBoundary
         resetKey={`${theme}:${code}`}
         onError={(error) => onErrorChange?.(error)}
       >
-        <PreviewComponent />
+        <div className={styles.previewCanvas} data-align={alignForm ? "form" : "default"}>
+          <PreviewComponent />
+        </div>
       </PreviewErrorBoundary>
     </PreviewThemeBoundary>
   );

@@ -18,6 +18,7 @@ export const demoNotesActivity: NotesActivityItem[] = [
   {
     id: "note-2",
     author: "Emma Davis",
+    avatarSrc: "/user-profile-emma.jpg",
     body: "Logged a call with James Smith. Discussed implementation timeline and requirements.",
     dateGroup: "Today",
     kind: "activity",

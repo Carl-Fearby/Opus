@@ -2,6 +2,7 @@
 
 import { useId, useState, type ReactNode, type KeyboardEvent } from "react";
 import type { TabsOrientation, TabsVariant } from "@/components/fields/types";
+import { TabActiveLine } from "@/components/TabActiveLine";
 import styles from "./Tabs.module.css";
 
 export type TabItem = {
@@ -18,6 +19,8 @@ type TabsProps = {
   items: TabItem[];
   onValueChange?: (value: string) => void;
   orientation?: TabsOrientation;
+  /** Content aligned to the end of the tab row (e.g. context actions). */
+  trailing?: ReactNode;
   value?: string;
   variant?: TabsVariant;
 };
@@ -29,6 +32,7 @@ export function Tabs({
   items,
   onValueChange,
   orientation = "horizontal",
+  trailing,
   value,
   variant = "line",
 }: TabsProps) {
@@ -91,35 +95,39 @@ export function Tabs({
       data-orientation={orientation}
       data-variant={variant}
     >
-      <div
-        aria-label={ariaLabel}
-        aria-orientation={orientation}
-        className={styles.list}
-        onKeyDown={handleKeyDown}
-        role="tablist"
-      >
-        {items.map((item) => {
-          const selected = item.value === activeValue;
-          const tabId = `${generatedId}-${item.value}-tab`;
-          const panelId = `${generatedId}-${item.value}-panel`;
+      <div className={styles.header}>
+        <div
+          aria-label={ariaLabel}
+          aria-orientation={orientation}
+          className={styles.list}
+          onKeyDown={handleKeyDown}
+          role="tablist"
+        >
+          {items.map((item) => {
+            const selected = item.value === activeValue;
+            const tabId = `${generatedId}-${item.value}-tab`;
+            const panelId = `${generatedId}-${item.value}-panel`;
 
-          return (
-            <button
-              aria-controls={panelId}
-              aria-selected={selected}
-              className={styles.tab}
-              disabled={item.disabled}
-              id={tabId}
-              key={item.value}
-              onClick={() => setValue(item.value)}
-              role="tab"
-              tabIndex={selected ? 0 : -1}
-              type="button"
-            >
-              {item.label}
-            </button>
-          );
-        })}
+            return (
+              <button
+                aria-controls={panelId}
+                aria-selected={selected}
+                className={styles.tab}
+                disabled={item.disabled}
+                id={tabId}
+                key={item.value}
+                onClick={() => setValue(item.value)}
+                role="tab"
+                tabIndex={selected ? 0 : -1}
+                type="button"
+              >
+                {item.label}
+                {selected && variant === "line" ? <TabActiveLine orientation={orientation} /> : null}
+              </button>
+            );
+          })}
+        </div>
+        {trailing ? <div className={styles.trailing}>{trailing}</div> : null}
       </div>
       {activeItem ? (
         <div

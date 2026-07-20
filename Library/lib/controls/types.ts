@@ -145,6 +145,7 @@ export type ControlSlug =
   | "tree-view"
   | "masonry-grid"
   | "property-grid"
+  | "map"
   | BuildersControlSlug
   | LayoutControlSlug
   | NavigationExtrasControlSlug
@@ -714,6 +715,24 @@ export type MetricTileSettings = {
   wrapInContainer?: boolean;
 };
 
+export type MapSettings = {
+  interactive: boolean;
+  latitude: number;
+  longitude: number;
+  markerCount: number;
+  previewLayout: DashboardPreviewLayout;
+  showAttribution: boolean;
+  showAddress: boolean;
+  showCoordinates: boolean;
+  showGeolocate: boolean;
+  showHotspots: boolean;
+  showNavigation: boolean;
+  showSearch: boolean;
+  width: DashboardSectionWidth;
+  wrapInContainer?: boolean;
+  zoom: number;
+};
+
 export type PipelineOverviewSettings = {
   closingValue: string;
   negotiationValue: string;
@@ -1085,6 +1104,18 @@ export type CustomScrollbarSettings = ScrollAreaSettings & {
   verticalTrackShape: "round" | "square";
 };
 
+export type AuthFormSettings = {
+  email: string;
+  name: string;
+  password: string;
+  confirmPassword: string;
+  remember: boolean;
+  submitLabel: string;
+  subtitle: string;
+  title: string;
+  verificationCode: string;
+};
+
 export type AspectRatioSettings = {
   ratio: "16 / 9" | "4 / 3" | "1 / 1" | "9 / 16";
 };
@@ -1132,6 +1163,13 @@ export type DashboardWelcomeSettings = {
   subtitle: string;
   tileLayout: "fill" | "fixed";
   wrapInContainer: boolean;
+};
+
+export type ContactDetailsSettings = {
+  isStaffRecord: boolean;
+  showActions: boolean;
+  showNotes: boolean;
+  showStatus: boolean;
 };
 
 export type BottomNavigationSettings = {
@@ -1526,6 +1564,7 @@ export type ControlSettingsBySlug = {
     "progress-bar": ProgressBarSettings;
     speedometer: SpeedometerSettings;
     "metric-tile": MetricTileSettings;
+    map: MapSettings;
     "dashboard-content-container": DashboardContentContainerSettings;
     "pipeline-overview": PipelineOverviewSettings;
     "deals-over-time": DealsOverTimeSettings;
@@ -1538,10 +1577,17 @@ export type ControlSettingsBySlug = {
     "notes-activity": NotesActivitySettings;
     "lab-dashboard-list-columns": DashboardListColumnsSettings;
     "lab-dashboard-welcome": DashboardWelcomeSettings;
+    "lab-contact-details": ContactDetailsSettings;
     "lab-notes-activity": NotesActivitySettings;
     "lab-sidebar": SidebarSettings;
     "lab-test-layout": ThreePaneLayoutSettings;
     "lab-user-profile": UserProfileWidgetSettings;
+    "lab-login-form": AuthFormSettings;
+    "lab-register-form": AuthFormSettings;
+    "lab-otp-form": AuthFormSettings;
+    "lab-passkey-login-form": AuthFormSettings;
+    "lab-social-auth-form": AuthFormSettings;
+    "lab-social-register-form": AuthFormSettings;
     "404-page": ErrorPageSettings;
     "403-page": ErrorPageSettings;
     "app-setup": AppSetupSettings;

@@ -1,0 +1,18 @@
+.trigger {
+  width: var(--opus-control-height);
+  min-width: var(--opus-control-height);
+  padding-inline: 0;
+  border-color: color-mix(in srgb, var(--opus-accent) 46%, var(--opus-border));
+  background: var(--opus-input-bg);
+  color: var(--opus-text);
+}
+
+.trigger:hover {
+  border-color: var(--opus-accent);
+  background: color-mix(in srgb, var(--opus-accent) 12%, var(--opus-input-bg));
+}
+
+.trigger svg {
+  width: 1rem;
+  height: 1rem;
+}

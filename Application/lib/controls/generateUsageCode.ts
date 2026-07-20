@@ -1846,6 +1846,35 @@ ${wrapDashboardWidget(
   { width: s.width ?? "widget", wrap: s.wrapInContainer ?? true },
 )}`;
     }
+    case "map": {
+      const s = settings as ControlSettingsBySlug["map"];
+      return `${usageClientPrefix()}
+${importLine((s.wrapInContainer ?? true) ? ["DashboardContentContainer", "Map"] : ["Map"])}
+
+const markers = [
+  { id: "birmingham", label: "Birmingham", description: "Central sales office", coordinates: [-1.8904, 52.4862], tone: "accent" },
+  { id: "london", label: "London", description: "Customer success hub", coordinates: [-0.1276, 51.5072], tone: "blue" },
+  { id: "manchester", label: "Manchester", description: "Northern operations", coordinates: [-2.2426, 53.4808], tone: "green" },
+  { id: "bristol", label: "Bristol", description: "South West support centre", coordinates: [-2.5879, 51.4545], tone: "blue" },
+  { id: "cardiff", label: "Cardiff", description: "Welsh regional office", coordinates: [-3.1791, 51.4816], tone: "warning" },
+  { id: "edinburgh", label: "Edinburgh", description: "Scottish operations hub", coordinates: [-3.1883, 55.9533], tone: "accent" },
+].slice(0, ${s.markerCount});
+
+${s.wrapInContainer ?? true ? `<DashboardContentContainer width=${quote(s.width ?? "full")}>\n` : ""}<Map
+  center={[${s.longitude}, ${s.latitude}]}
+  zoom={${s.zoom}}
+  markers={markers}
+  interactive={${s.interactive}}
+  showNavigation={${s.showNavigation}}
+  showGeolocate={${s.showGeolocate ?? true}}
+  showSearch={${s.showSearch ?? true}}
+  showAttribution={${s.showAttribution}}
+  showAddress={${s.showAddress ?? true}}
+  showCoordinates={${(s.wrapInContainer ?? true) && (s.showCoordinates ?? true)}}
+  showHotspots={${(s.wrapInContainer ?? true) && (s.showHotspots ?? true)}}
+  onMarkerClick={(marker) => console.log(marker)}
+/>${s.wrapInContainer ?? true ? "\n</DashboardContentContainer>" : ""}`;
+    }
     case "dashboard-content-container": {
       const s =
         settings as ControlSettingsBySlug["dashboard-content-container"];
@@ -1970,6 +1999,44 @@ ${wrapDashboardWidget(
 </Columns>`,
       });
     }
+    case "lab-contact-details": {
+      const s = settings as ControlSettingsBySlug["lab-contact-details"];
+      const recordLabel = s.isStaffRecord ? "User" : "Contact";
+      const collectionLabel = s.isStaffRecord ? "Users" : "Contacts";
+      const collectionId = s.isStaffRecord ? "users" : "contacts";
+      const notesBlock = s.showNotes
+        ? `
+  <ContactNotesActivity
+    onAction={(action) => console.log(action)}
+    onAddNote={(note) => console.log(note)}
+  />`
+        : "";
+      return interactiveUsage({
+        components: ["ContactDetails", "ContactNotesActivity", "PageHeader", "Breadcrumb"],
+        state: [],
+        jsx: `<div style={{ display: "grid", gap: 18, width: "100%" }}>
+  <PageHeader
+    title="${recordLabel} Details"
+    breadcrumbs={
+      <Breadcrumb
+        separator="›"
+        items={[
+          { id: "${collectionId}", href: "#${collectionId}", label: "${collectionLabel}" },
+          { id: "current", label: "Emma Davis" },
+        ]}
+      />
+    }
+  />
+  <ContactDetails
+    isStaffRecord={${s.isStaffRecord ?? false}}
+    showActions={${s.showActions}}
+    showStatus={${s.showStatus}}
+    onAction={(action) => console.log(action)}
+    onPasswordReset={() => console.log("reset-password")}
+  />${notesBlock}
+</div>`,
+      });
+    }
     case "lab-dashboard-welcome": {
       const s = settings as ControlSettingsBySlug["lab-dashboard-welcome"];
       const greetingProp = s.greeting === "auto"
@@ -2014,6 +2081,161 @@ ${wrapDashboardWidget(
         jsx: s.wrapInContainer
           ? `<DashboardContentContainer data-component="dashboard-welcome" width="full">\n  ${widget.replaceAll("\n", "\n  ")}\n</DashboardContentContainer>`
           : widget,
+      });
+    }
+    case "lab-login-form":
+    case "lab-register-form":
+    case "lab-otp-form":
+    case "lab-passkey-login-form":
+    case "lab-social-auth-form":
+    case "lab-social-register-form": {
+      const s = settings as ControlSettingsBySlug["lab-login-form"];
+      const isSocialRegister = slug === "lab-social-register-form";
+      const isRegister = slug === "lab-register-form" || isSocialRegister;
+      const isOtp = slug === "lab-otp-form";
+      const isPasskey = slug === "lab-passkey-login-form";
+      const isSocial = slug === "lab-social-auth-form" || isSocialRegister;
+      if (isOtp) {
+        return interactiveUsage({
+          components: ["Button", "DashboardContentContainer"],
+          state: [`const [code, setCode] = useState(${quote(s.verificationCode)});`],
+          jsx: `<DashboardContentContainer data-component="otp-form" width="widget">
+  <form onSubmit={(event) => { event.preventDefault(); console.log("Verify code", code); }} style={{ display: "grid", gap: 16 }}>
+    <img alt="Opus" src="/opus-logo.png" style={{ display: "block", height: "auto", margin: "0 auto", width: "12rem" }} />
+    <header style={{ display: "grid", gap: 6, textAlign: "center" }}>
+      <h2 style={{ margin: 0 }}>${s.title}</h2>
+      <p style={{ margin: 0, color: "var(--opus-muted)" }}>${s.subtitle}</p>
+    </header>
+    <fieldset style={{ border: 0, margin: 0, padding: 0 }}>
+      <legend style={{ marginBottom: 8, fontWeight: 650 }}>Six-digit verification code</legend>
+      <div style={{ display: "grid", gap: 8, gridTemplateColumns: "repeat(6, minmax(0, 1fr))" }}>
+        {Array.from({ length: 6 }, (_, index) => (
+          <input
+            aria-label={\`Digit \${index + 1} of 6\`}
+            autoComplete={index === 0 ? "one-time-code" : "off"}
+            inputMode="numeric"
+            key={index}
+            maxLength={1}
+            onChange={(event) => {
+              const rawDigits = event.target.value.replace(/\\D/g, "");
+              const inputs = Array.from(event.currentTarget.parentElement?.querySelectorAll("input") ?? []);
+              if (rawDigits.length > 1) {
+                const nextCode = rawDigits.slice(0, 6);
+                setCode(nextCode);
+                requestAnimationFrame(() => inputs[Math.min(nextCode.length, 5)]?.focus());
+                return;
+              }
+              const digits = code.padEnd(6, " ").split("");
+              digits[index] = rawDigits.slice(-1) || " ";
+              setCode(digits.join("").trimEnd());
+              if (rawDigits) requestAnimationFrame(() => inputs[index + 1]?.focus());
+            }}
+            onKeyDown={(event) => {
+              if (event.key !== "Backspace" || event.currentTarget.value) return;
+              const inputs = Array.from(event.currentTarget.parentElement?.querySelectorAll("input") ?? []);
+              inputs[index - 1]?.focus();
+            }}
+            onPaste={(event) => {
+              const nextCode = event.clipboardData.getData("text").replace(/\\D/g, "").slice(0, 6);
+              if (!nextCode) return;
+              event.preventDefault();
+              const inputs = Array.from(event.currentTarget.parentElement?.querySelectorAll("input") ?? []);
+              setCode(nextCode);
+              requestAnimationFrame(() => inputs[Math.min(nextCode.length, 5)]?.focus());
+            }}
+            pattern="[0-9]*"
+            value={code[index] ?? ""}
+          />
+        ))}
+      </div>
+    </fieldset>
+    <Button type="submit">${s.submitLabel}</Button>
+    <Button onClick={() => console.log("Resend code")} type="button" variant="link">Resend code</Button>
+  </form>
+</DashboardContentContainer>`,
+        });
+      }
+      if (isPasskey) {
+        return interactiveUsage({
+          components: ["Button", "CatalogIcon", "DashboardContentContainer"],
+          state: [],
+          jsx: `<DashboardContentContainer data-component="passkey-login-form" width="widget">
+  <form onSubmit={(event) => { event.preventDefault(); console.log("Start passkey sign-in"); }} style={{ display: "grid", gap: 16 }}>
+    <img alt="Opus" src="/opus-logo.png" style={{ display: "block", height: "auto", margin: "0 auto", width: "12rem" }} />
+    <header style={{ display: "grid", gap: 6, textAlign: "center" }}>
+      <h2 style={{ margin: 0 }}>${s.title}</h2>
+      <p style={{ margin: 0, color: "var(--opus-muted)" }}>${s.subtitle}</p>
+    </header>
+    <div aria-hidden="true" style={{ alignItems: "center", background: "color-mix(in srgb, var(--opus-accent) 12%, var(--opus-input-bg))", border: "1px solid color-mix(in srgb, var(--opus-accent) 40%, var(--opus-border))", borderRadius: "50%", color: "var(--opus-accent)", display: "flex", fontSize: 36, height: 80, justifyContent: "center", margin: "4px auto", width: 80 }}>
+      <CatalogIcon iconName="fingerprint" />
+    </div>
+    <Button type="submit">${s.submitLabel}</Button>
+    <Button onClick={() => console.log("Use password")} type="button" variant="link">Use password instead</Button>
+  </form>
+</DashboardContentContainer>`,
+        });
+      }
+      if (isSocial) {
+        return interactiveUsage({
+          components: ["Button", "CheckboxField", "DashboardContentContainer", "TextField"],
+          state: [
+            `const [email, setEmail] = useState(${quote(s.email)});`,
+            ...(isSocialRegister ? [`const [name, setName] = useState(${quote(s.name)});`] : []),
+            `const [password, setPassword] = useState(${quote(s.password)});`,
+            ...(isSocialRegister ? [`const [confirmPassword, setConfirmPassword] = useState(${quote(s.confirmPassword)});`] : []),
+            `const [remember, setRemember] = useState(${s.remember});`,
+          ],
+          jsx: `<DashboardContentContainer data-component="${isSocialRegister ? "social-register-form" : "social-auth-form"}" width="widget">
+  <form onSubmit={(event) => { event.preventDefault(); console.log("${isSocialRegister ? "Create account" : "Sign in"}", { email${isSocialRegister ? ", name" : ""} }); }} style={{ display: "grid", gap: 16 }}>
+    <img alt="Opus" src="/opus-logo.png" style={{ display: "block", height: "auto", margin: "0 auto", width: "12rem" }} />
+    <header style={{ display: "grid", gap: 6, textAlign: "center" }}>
+      <h2 style={{ margin: 0 }}>${s.title}</h2>
+      <p style={{ margin: 0, color: "var(--opus-muted)" }}>${s.subtitle}</p>
+    </header>
+    <button onClick={() => console.log("${isSocialRegister ? "Sign up with Google" : "Continue with Google"}")} style={{ alignItems: "center", background: "#fff", border: "1px solid #747775", borderRadius: 4, color: "#1f1f1f", cursor: "pointer", display: "flex", font: "500 14px Arial, sans-serif", gap: 12, justifyContent: "center", minHeight: 44, width: "100%" }} type="button">
+      <svg aria-hidden="true" height="18" viewBox="0 0 18 18" width="18"><path d="M17.64 9.205c0-.638-.057-1.252-.164-1.841H9v3.482h4.844c-.209 1.125-.843 2.078-1.797 2.716v2.258h2.909c1.702-1.567 2.684-3.874 2.684-6.615Z" fill="#4285F4"/><path d="M9 18c2.43 0 4.467-.806 5.956-2.18l-2.909-2.258c-.806.54-1.835.859-3.047.859-2.344 0-4.329-1.585-5.037-3.711H.956v2.333C2.437 15.983 5.482 18 9 18Z" fill="#34A853"/><path d="M3.963 10.71A5.423 5.423 0 0 1 3.68 9c0-.593.103-1.17.283-1.71V4.957H.956A9.002 9.002 0 0 0 0 9c0 1.451.347 2.827.956 4.043l3.007-2.333Z" fill="#FBBC05"/><path d="M9 3.579c1.321 0 2.508.454 3.44 1.346l2.582-2.581C13.464.892 11.426 0 9 0 5.482 0 2.437 2.017.956 4.957L3.963 7.29C4.67 5.164 6.656 3.579 9 3.579Z" fill="#EA4335"/></svg>
+      ${isSocialRegister ? "Sign up with Google" : "Continue with Google"}
+    </button>
+    <button onClick={() => console.log("${isSocialRegister ? "Sign up with Apple" : "Continue with Apple"}")} style={{ alignItems: "center", background: "#000", border: "1px solid #000", borderRadius: 4, color: "#fff", cursor: "pointer", display: "flex", font: "500 15px -apple-system, BlinkMacSystemFont, sans-serif", gap: 12, justifyContent: "center", minHeight: 44, width: "100%" }} type="button">
+      <svg aria-hidden="true" height="19" viewBox="0 0 384 512" width="15"><path d="M319.1 268.7c-.2-36.7 16.4-64.4 50-84.8-18.8-26.9-47.2-41.7-84.7-44.6-35.5-2.8-74.3 20.7-88.5 20.7-15 0-49.4-19.7-76.4-19.7-55.8.9-115.1 44.5-115.1 133.2 0 26.2 4.8 53.3 14.4 81.2 12.8 36.7 59 126.7 107.2 125.2 25.2-.6 43-17.9 75.8-17.9 31.8 0 48.3 17.9 76.4 17.9 48.6-.7 90.4-82.5 102.6-119.3-65.2-30.7-61.7-90-61.7-91.9zM262.5 104.5c27.3-32.4 24.8-61.9 24-72.5-24.1 1.4-52 16.4-67.9 34.9-17.5 19.8-27.8 44.3-25.6 71.9 26.1 2 49.9-11.4 69.5-34.3z" fill="currentColor"/></svg>
+      ${isSocialRegister ? "Sign up with Apple" : "Continue with Apple"}
+    </button>
+    <div role="separator" style={{ color: "var(--opus-muted)", textAlign: "center" }}>or continue with email</div>
+    ${isSocialRegister ? '<TextField id="social-name" label="Full name" required type="text" value={name} onChange={(event) => setName(event.target.value)} />' : ""}
+    <TextField id="social-email" label="Email address" required type="email" value={email} onChange={(event) => setEmail(event.target.value)} />
+    <TextField id="social-password" label="Password" required type="password" value={password} onChange={(event) => setPassword(event.target.value)} />
+    ${isSocialRegister ? '<TextField id="social-confirm-password" label="Confirm password" required type="password" value={confirmPassword} onChange={(event) => setConfirmPassword(event.target.value)} />' : ""}
+    <CheckboxField checked={remember} fitContent id="social-remember" label="${isSocialRegister ? "I agree to the terms" : "Remember me"}" labelPosition="right" onChange={(event) => setRemember(event.target.checked)} />
+    <Button type="submit">${s.submitLabel}</Button>
+    <Button onClick={() => console.log("${isSocialRegister ? "Sign in" : "Create account"}")} type="button" variant="link">${isSocialRegister ? "Sign in" : "Create an account"}</Button>
+  </form>
+</DashboardContentContainer>`,
+        });
+      }
+      return interactiveUsage({
+        components: ["Button", "CheckboxField", "DashboardContentContainer", "TextField"],
+        state: [
+          `const [email, setEmail] = useState(${quote(s.email)});`,
+          `const [name, setName] = useState(${quote(s.name)});`,
+          `const [password, setPassword] = useState(${quote(s.password)});`,
+          `const [confirmPassword, setConfirmPassword] = useState(${quote(s.confirmPassword)});`,
+          `const [remember, setRemember] = useState(${s.remember});`,
+        ],
+        jsx: `<DashboardContentContainer data-component="${isRegister ? "register-form" : "login-form"}" width="widget">
+  <form onSubmit={(event) => { event.preventDefault(); console.log(${isRegister ? '"Create account"' : '"Sign in"'}, { email${isRegister ? ", name" : ""} }); }} style={{ display: "grid", gap: 16 }}>
+    <img alt="Opus" src="/opus-logo.png" style={{ display: "block", height: "auto", margin: "0 auto", width: "12rem" }} />
+    <header style={{ display: "grid", gap: 6, textAlign: "center" }}>
+      <h2 style={{ margin: 0 }}>${s.title}</h2>
+      <p style={{ margin: 0, color: "var(--opus-muted)" }}>${s.subtitle}</p>
+    </header>
+    ${isRegister ? '<TextField id="register-name" label="Full name" required type="text" value={name} onChange={(event) => setName(event.target.value)} />' : ""}
+    <TextField id="auth-email" label="Email address" required type="email" value={email} onChange={(event) => setEmail(event.target.value)} />
+    <TextField id="auth-password" label="Password" required type="password" value={password} onChange={(event) => setPassword(event.target.value)} />
+    ${isRegister ? '<TextField id="register-confirm-password" label="Confirm password" required type="password" value={confirmPassword} onChange={(event) => setConfirmPassword(event.target.value)} />' : ""}
+    <CheckboxField checked={remember} fitContent id="auth-consent" label="${isRegister ? "I agree to the terms" : "Remember me"}" labelPosition="right" onChange={(event) => setRemember(event.target.checked)} />
+    <Button type="submit">${s.submitLabel}</Button>
+  </form>
+</DashboardContentContainer>`,
       });
     }
     case "lab-notes-activity": {

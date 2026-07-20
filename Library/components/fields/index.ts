@@ -137,6 +137,8 @@ export { ProgressRing } from "../ProgressRing";
 export { ProgressBar } from "../ProgressBar";
 export { Speedometer } from "../Speedometer";
 export { MetricTile } from "../MetricTile";
+export { Map } from "../Map";
+export type { MapCoordinate, MapMarker, MapProps } from "../Map";
 export { StatusIndicator } from "../StatusIndicator";
 export type { StatusIndicatorState } from "../StatusIndicator";
 export { TrendBadge } from "../TrendBadge";
@@ -356,6 +358,30 @@ export type {
   ResourcePlannerResource,
 } from "../ResourcePlanner";
 export { ContentTimeline } from "../ContentTimeline";
+export { ContactDetails } from "../ContactDetails";
+export type {
+  ContactCardProps,
+  ContactCompany,
+  ContactDetailsAction,
+  ContactDetailsContact,
+  ContactDetailsProps,
+  ContactIdentityCardProps,
+  ContactNotesActivityProps,
+  ContactSummaryCardProps,
+  ContactSummaryTab,
+} from "../ContactDetails";
+export {
+  ContactCard,
+  ContactIdentityCard,
+  ContactNotesActivity,
+  ContactSummaryCard,
+  defaultContact,
+  defaultContactNotes,
+  getPrimaryCompany,
+  resolveContactDetailsContact,
+} from "../ContactDetails";
+export { MoreActionsMenu } from "../MoreActionsMenu";
+export type { MoreActionsMenuItem, MoreActionsMenuProps } from "../MoreActionsMenu";
 export type {
   ContentTimelineGroup,
   ContentTimelineItem,

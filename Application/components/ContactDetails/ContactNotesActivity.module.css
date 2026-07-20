@@ -1,0 +1,51 @@
+.tabsCard {
+  overflow: hidden;
+  padding: 0 24px 18px;
+}
+
+.workspaceAction {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin: 0;
+  padding: 0 12px;
+  min-height: 2rem;
+  border: 1px solid color-mix(in srgb, var(--opus-accent) 42%, var(--dashboard-section-border, var(--opus-border)));
+  border-radius: 8px;
+  background: color-mix(in srgb, var(--opus-accent) 14%, transparent);
+  color: var(--dashboard-section-text, var(--opus-text));
+  font: inherit;
+  font-size: 0.74rem;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.workspaceAction:hover,
+.workspaceAction:focus-visible {
+  border-color: color-mix(in srgb, var(--opus-accent) 70%, var(--dashboard-section-border, var(--opus-border)));
+  background: color-mix(in srgb, var(--opus-accent) 22%, transparent);
+  outline: none;
+}
+
+.workspaceAction :global(svg) {
+  display: block;
+  width: 0.78rem;
+  height: 0.78rem;
+}
+
+.notesActivity {
+  --notes-activity-height: 31rem;
+}
+
+.emptyPanel {
+  box-sizing: border-box;
+  height: 31rem;
+  padding: 30px 4px;
+  color: var(--opus-muted);
+}
+
+@media (max-width: 760px) {
+  .tabsCard {
+    padding-inline: 14px;
+  }
+}

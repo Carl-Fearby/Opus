@@ -16,7 +16,6 @@ import {
   type ContentTimelineItem,
 } from "@/components/ContentTimeline";
 import { EmojiPicker } from "@/components/EmojiPicker";
-import { NoteComposer } from "@/components/NoteComposer";
 import { CustomScrollbar } from "@/components/CustomScrollbar";
 import {
   DEFAULT_NOTE_TAG_OPTIONS,
@@ -61,11 +60,14 @@ export type NotesActivityTab = "activity" | "notes";
 
 export type NotesActivityProps = {
   activeTab?: NotesActivityTab;
+  addActivityButtonLabel?: string;
   addNoteButtonLabel?: string;
   addNoteModalDescription?: string;
   addNoteModalTitle?: string;
   className?: string;
+  composerOpen?: boolean;
   composerPlaceholder?: string;
+  defaultComposerOpen?: boolean;
   defaultTab?: NotesActivityTab;
   density?: SurfaceDensity;
   activityFooterHref?: string;
@@ -77,6 +79,7 @@ export type NotesActivityProps = {
   noteAuthorName?: string;
   noteTagOptions?: NotesActivityTag[];
   onActivityFooterClick?: () => void;
+  onComposerOpenChange?: (open: boolean) => void;
   onItemClick?: (item: NotesActivityItem) => void;
   onNoteAttachClick?: () => void;
   onNoteEmojiSelect?: (emoji: string) => void;
@@ -91,8 +94,11 @@ export type NotesActivityProps = {
   onTabChange?: (tab: NotesActivityTab) => void;
   saveButtonLabel?: string;
   showAttach?: boolean;
+  /** When false, the built-in Add Note/Activity trigger is hidden (use an external control). */
+  showComposerTrigger?: boolean;
   showEmoji?: boolean;
   showMention?: boolean;
+  showTabs?: boolean;
   showTags?: boolean;
 };
 
@@ -121,10 +127,12 @@ type CommentsByNoteId = Record<string, NotesActivityComment[]>;
 type InlineReplyComposerProps = {
   onAttachClick?: () => void;
   onChange: (value: string) => void;
+  onDismiss?: () => void;
   onEmojiSelect?: (emoji: string) => void;
   onMentionClick?: () => void;
   onTagsChange: (tags: NoteTagOption[]) => void;
   onSubmit: (event: FormEvent<HTMLFormElement>) => void;
+  placeholder?: string;
   selectedTags: NoteTagOption[];
   showAttach: boolean;
   showEmoji: boolean;
@@ -269,10 +277,12 @@ function ThreadedTimeline({
 function InlineReplyComposer({
   onAttachClick,
   onChange,
+  onDismiss,
   onEmojiSelect,
   onMentionClick,
   onTagsChange,
   onSubmit,
+  placeholder = "Reply to thread...",
   selectedTags,
   showAttach,
   showEmoji,
@@ -335,8 +345,36 @@ function InlineReplyComposer({
         className={styles.replyInputShell}
         data-has-tools={hasTools ? "true" : undefined}
       >
+        <textarea
+          ref={textareaRef}
+          aria-label={placeholder}
+          className={styles.replyInput}
+          onChange={(event) => onChange(event.target.value)}
+          onKeyDown={(event) => {
+            if (event.key === "Escape") {
+              event.preventDefault();
+              event.stopPropagation();
+              onDismiss?.();
+              return;
+            }
+
+            if (event.key !== "Enter") {
+              return;
+            }
+
+            if (event.shiftKey) {
+              return;
+            }
+
+            event.preventDefault();
+            event.currentTarget.form?.requestSubmit();
+          }}
+          placeholder={placeholder}
+          rows={1}
+          value={value}
+        />
         {hasTools ? (
-          <div className={styles.replyTools} aria-label="Reply tools">
+          <div className={styles.replyTools} aria-label="Composer tools">
             {showAttach ? (
               <button
                 aria-label="Attach file"
@@ -386,27 +424,6 @@ function InlineReplyComposer({
             ) : null}
           </div>
         ) : null}
-        <textarea
-          ref={textareaRef}
-          aria-label="Reply to thread"
-          className={styles.replyInput}
-          onChange={(event) => onChange(event.target.value)}
-          onKeyDown={(event) => {
-            if (event.key !== "Enter") {
-              return;
-            }
-
-            if (event.shiftKey) {
-              return;
-            }
-
-            event.preventDefault();
-            event.currentTarget.form?.requestSubmit();
-          }}
-          placeholder="Reply to thread..."
-          rows={1}
-          value={value}
-        />
       </div>
       {showTags && selectedTags.length ? (
         <NoteTagList
@@ -502,8 +519,12 @@ function toTimelineItems(
 
 export function NotesActivity({
   activeTab: controlledActiveTab,
+  addActivityButtonLabel = "Add Activity",
+  addNoteButtonLabel = "Add Note",
   className,
-  composerPlaceholder = "Add a note...",
+  composerOpen: controlledComposerOpen,
+  composerPlaceholder,
+  defaultComposerOpen = false,
   defaultTab = "notes",
   density = "comfortable",
   activityFooterHref,
@@ -515,6 +536,7 @@ export function NotesActivity({
   noteAuthorName = "You",
   noteTagOptions = DEFAULT_NOTE_TAG_OPTIONS,
   onActivityFooterClick,
+  onComposerOpenChange,
   onItemClick,
   onNoteAttachClick,
   onNoteEmojiSelect,
@@ -523,10 +545,11 @@ export function NotesActivity({
   onNoteSave,
   onOpenTask,
   onTabChange,
-  saveButtonLabel = "Save Note",
   showAttach = true,
+  showComposerTrigger = true,
   showEmoji = true,
   showMention = true,
+  showTabs = true,
   showTags = true,
 }: NotesActivityProps) {
   const singleClickTimerRef = useRef<number | null>(null);
@@ -536,6 +559,9 @@ export function NotesActivity({
   const [activeReplyNoteId, setActiveReplyNoteId] = useState<string | null>(
     null,
   );
+  const [internalComposerOpen, setInternalComposerOpen] =
+    useState(defaultComposerOpen);
+  const composerOpen = controlledComposerOpen ?? internalComposerOpen;
   const [commentsByNoteId, setCommentsByNoteId] = useState<CommentsByNoteId>(
     {},
   );
@@ -552,6 +578,18 @@ export function NotesActivity({
     () => [...createdNotes, ...items],
     [createdNotes, items],
   );
+  const resolvedComposerPlaceholder =
+    composerPlaceholder ??
+    (activeTab === "activity" ? "Add an activity..." : "Add a note...");
+  const composerTriggerLabel =
+    activeTab === "activity" ? addActivityButtonLabel : addNoteButtonLabel;
+
+  const setComposerOpen = (open: boolean) => {
+    if (controlledComposerOpen === undefined) {
+      setInternalComposerOpen(open);
+    }
+    onComposerOpenChange?.(open);
+  };
 
   const visibleItems = useMemo(
     () =>
@@ -607,6 +645,7 @@ export function NotesActivity({
       setInternalActiveTab(tab);
     }
     setActiveReplyNoteId(null);
+    setComposerOpen(false);
     onTabChange?.(tab);
   };
 
@@ -615,13 +654,15 @@ export function NotesActivity({
     tags: NotesActivityTag[] = topTags,
   ) => {
     const createdAt = new Date();
+    const kind = activeTab === "activity" ? "activity" : "note";
     const createdNote: NotesActivityItem = {
       author: noteAuthorName,
       avatarSrc: noteAuthorAvatarSrc,
       body: note,
       dateGroup: "Today",
-      id: `note-${createdAt.getTime()}`,
-      kind: "note",
+      id: `${kind}-${createdAt.getTime()}`,
+      kind,
+      status: kind === "activity" ? "default" : undefined,
       tags: tags.length ? tags : undefined,
       time: formatNoteTime(createdAt),
     };
@@ -630,6 +671,23 @@ export function NotesActivity({
     onNoteSave?.(note, undefined, tags);
     setTopDraft("");
     setTopTags([]);
+    setComposerOpen(false);
+  };
+
+  const closeComposer = () => {
+    setComposerOpen(false);
+    setTopDraft("");
+    setTopTags([]);
+  };
+
+  const handleTopSubmit = (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    const trimmed = topDraft.trim();
+    if (!trimmed) {
+      return;
+    }
+
+    handleTopLevelSave(trimmed, topTags);
   };
 
   const handleThreadSave = (
@@ -712,6 +770,7 @@ export function NotesActivity({
     singleClickTimerRef.current = window.setTimeout(() => {
       singleClickTimerRef.current = null;
       if (activeTab === "notes") {
+        setComposerOpen(false);
         setActiveReplyNoteId(source.id);
       }
 
@@ -788,51 +847,100 @@ export function NotesActivity({
       className={[styles.root, className].filter(Boolean).join(" ")}
       data-active-tab={activeTab}
       data-density={density}
+      data-show-tabs={showTabs}
     >
-      <div
-        aria-label="Notes and activity"
-        className={styles.tabs}
-        role="tablist"
-      >
-        {(["notes", "activity"] as const).map((tab) => (
-          <button
-            aria-selected={activeTab === tab}
-            className={styles.tab}
-            data-active={activeTab === tab}
-            key={tab}
-            onClick={() => setTab(tab)}
-            role="tab"
-            type="button"
+      {showTabs ? (
+        <div className={styles.tabsRow}>
+          <div
+            aria-label="Notes and activity"
+            className={styles.tabs}
+            role="tablist"
           >
-            <span aria-hidden="true" className={styles.tabIcon}>
-              <CatalogIcon
-                iconName={tab === "notes" ? "note-sticky" : "clock-rotate-left"}
-              />
-            </span>
-            {tab === "notes" ? "Notes" : "Activity"}
-          </button>
-        ))}
-      </div>
+            {(["notes", "activity"] as const).map((tab) => (
+              <button
+                aria-selected={activeTab === tab}
+                className={styles.tab}
+                data-active={activeTab === tab}
+                key={tab}
+                onClick={() => setTab(tab)}
+                role="tab"
+                type="button"
+              >
+                <span aria-hidden="true" className={styles.tabIcon}>
+                  <CatalogIcon
+                    iconName={tab === "notes" ? "note-sticky" : "clock-rotate-left"}
+                  />
+                </span>
+                {tab === "notes" ? "Notes" : "Activity"}
+              </button>
+            ))}
+          </div>
+          {showComposerTrigger ? (
+            <button
+              className={styles.addNoteButton}
+              onClick={() => {
+                setActiveReplyNoteId(null);
+                setComposerOpen(true);
+              }}
+              type="button"
+            >
+              <CatalogIcon iconName="plus" />
+              {composerTriggerLabel}
+            </button>
+          ) : null}
+        </div>
+      ) : null}
 
-      {activeTab === "notes" ? (
-        <NoteComposer
-          className={styles.composer}
-          onAttachClick={onNoteAttachClick}
-          onChange={setTopDraft}
-          onEmojiSelect={onNoteEmojiSelect}
-          onMentionClick={onNoteMentionClick}
-          onSave={handleTopLevelSave}
-          onTagsChange={setTopTags}
-          placeholder={composerPlaceholder}
-          saveButtonLabel={saveButtonLabel}
-          selectedTags={topTags}
-          showAttach={showAttach}
-          showEmoji={showEmoji}
-          showMention={showMention}
-          showTags={showTags}
-          tagOptions={noteTagOptions}
-          value={topDraft}
-        />
+      {composerOpen || (showComposerTrigger && !showTabs) ? (
+        <div className={styles.composer}>
+          {composerOpen ? (
+            <div className={styles.composerPanel}>
+              <button
+                aria-label={
+                  activeTab === "activity"
+                    ? "Close activity composer"
+                    : "Close note composer"
+                }
+                className={styles.composerClose}
+                onClick={closeComposer}
+                type="button"
+              >
+                <CatalogIcon iconName="xmark" />
+              </button>
+              <InlineReplyComposer
+                onAttachClick={onNoteAttachClick}
+                onChange={setTopDraft}
+                onDismiss={closeComposer}
+                onEmojiSelect={onNoteEmojiSelect}
+                onMentionClick={onNoteMentionClick}
+                onSubmit={handleTopSubmit}
+                onTagsChange={setTopTags}
+                placeholder={resolvedComposerPlaceholder}
+                selectedTags={topTags}
+                showAttach={showAttach}
+                showEmoji={showEmoji}
+                showMention={showMention}
+                showTags={showTags}
+                tagOptions={noteTagOptions}
+                value={topDraft}
+              />
+            </div>
+          ) : showComposerTrigger && !showTabs ? (
+            <div className={styles.composerBar}>
+              <button
+                className={styles.addNoteButton}
+                onClick={() => {
+                  setActiveReplyNoteId(null);
+                  setComposerOpen(true);
+                }}
+                type="button"
+              >
+                <CatalogIcon iconName="plus" />
+                {composerTriggerLabel}
+              </button>
+            </div>
+          ) : null}
+        </div>
       ) : null}
 
       <CustomScrollbar
@@ -862,6 +970,7 @@ export function NotesActivity({
                         [item.id]: value,
                       }));
                     }}
+                    onDismiss={() => setActiveReplyNoteId(null)}
                     onEmojiSelect={onNoteEmojiSelect}
                     onMentionClick={onNoteMentionClick}
                     onSubmit={(event) => handleThreadSubmit(item.id, event)}

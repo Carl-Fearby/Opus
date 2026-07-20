@@ -769,6 +769,13 @@
   min-width: 0;
 }
 
+.contactDetailsPage {
+  display: grid;
+  gap: 18px;
+  width: 100%;
+  color: var(--opus-text);
+}
+
 .homeDashboardContent {
   display: grid;
   align-content: start;
@@ -788,6 +795,211 @@
 .testLayoutWorkspaceContent {
   min-height: 100%;
   padding: 14px 16px 12px;
+}
+
+.authFormStage {
+  display: grid;
+  min-height: 42rem;
+  padding: 24px;
+  place-items: center;
+}
+
+.authFormContainer {
+  width: min(100%, 28rem);
+}
+
+.authForm {
+  display: grid;
+  gap: 16px;
+}
+
+.authFormHeader {
+  display: grid;
+  gap: 6px;
+  margin-bottom: 4px;
+  text-align: center;
+}
+
+.authFormLogo {
+  display: block;
+  width: min(12rem, 58%);
+  height: auto;
+  margin: 0 auto 4px;
+}
+
+.otpFieldset {
+  min-width: 0;
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+
+.otpFieldset legend {
+  margin-bottom: 8px;
+  color: var(--opus-text);
+  font-weight: 650;
+}
+
+.otpInputs {
+  display: grid;
+  grid-template-columns: repeat(6, minmax(0, 1fr));
+  gap: 8px;
+}
+
+.otpInput {
+  width: 100%;
+  min-width: 0;
+  aspect-ratio: 1;
+  border: 1px solid var(--opus-border);
+  border-radius: 10px;
+  color: var(--opus-text);
+  background: var(--opus-input-bg);
+  box-sizing: border-box;
+  font: inherit;
+  font-size: 1.25rem;
+  font-weight: 700;
+  text-align: center;
+}
+
+.otpInput:focus-visible {
+  border-color: var(--opus-accent);
+  outline: 2px solid color-mix(in srgb, var(--opus-accent) 36%, transparent);
+  outline-offset: 1px;
+}
+
+.passkeyGraphic {
+  display: grid;
+  width: 5rem;
+  height: 5rem;
+  margin: 4px auto;
+  border: 1px solid color-mix(in srgb, var(--opus-accent) 40%, var(--opus-border));
+  border-radius: 50%;
+  color: var(--opus-accent);
+  background: color-mix(in srgb, var(--opus-accent) 12%, var(--opus-input-bg));
+  box-shadow: 0 0 24px color-mix(in srgb, var(--opus-accent) 20%, transparent);
+  font-size: 2.25rem;
+  place-items: center;
+}
+
+.passkeyGraphic svg {
+  width: 1em;
+  height: 1em;
+}
+
+.socialAuthOptions {
+  display: grid;
+  gap: 10px;
+}
+
+.providerButton {
+  display: flex;
+  width: 100%;
+  min-height: 44px;
+  border-radius: 4px;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  cursor: pointer;
+  font: 500 14px/20px Arial, sans-serif;
+  transition: box-shadow 120ms ease, filter 120ms ease;
+}
+
+.providerButton:focus-visible {
+  outline: 3px solid color-mix(in srgb, var(--opus-accent) 40%, transparent);
+  outline-offset: 2px;
+}
+
+.providerButton:hover {
+  filter: brightness(0.96);
+}
+
+.googleButton {
+  border: 1px solid #747775;
+  color: #1f1f1f;
+  background: #fff;
+  box-shadow: 0 1px 2px rgb(0 0 0 / 15%);
+}
+
+.appleButton {
+  border: 1px solid #000;
+  color: #fff;
+  background: #000;
+  font-family: -apple-system, BlinkMacSystemFont, "Helvetica Neue", Arial, sans-serif;
+  font-size: 15px;
+  font-weight: 500;
+}
+
+.googleLogo,
+.appleLogo {
+  width: 18px;
+  height: 18px;
+  flex: 0 0 18px;
+}
+
+.appleLogo {
+  font-size: 18px;
+}
+
+.authDivider {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  color: var(--opus-muted);
+  font-size: 0.8rem;
+  text-align: center;
+}
+
+.authDivider::before,
+.authDivider::after {
+  height: 1px;
+  background: var(--opus-border);
+  content: "";
+  flex: 1;
+}
+
+.authDivider span {
+  white-space: nowrap;
+}
+
+.authFormHeader h2,
+.authFormHeader p,
+.authFormSwitch {
+  margin: 0;
+}
+
+.authFormHeader p,
+.authFormSwitch {
+  color: var(--opus-muted);
+}
+
+.authFormOptions {
+  align-items: center;
+  display: flex;
+  gap: 12px;
+  justify-content: space-between;
+}
+
+.authFormLink {
+  border: 0;
+  padding: 0;
+  color: var(--opus-accent);
+  background: transparent;
+  cursor: pointer;
+  font: inherit;
+  font-weight: 650;
+}
+
+.authFormLink:hover,
+.authFormLink:focus-visible {
+  text-decoration: underline;
+}
+
+.authFormSubmit {
+  width: 100%;
+}
+
+.authFormSwitch {
+  text-align: center;
 }
 
 .homeStatsPanel {

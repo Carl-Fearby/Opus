@@ -2897,6 +2897,40 @@ export function ControlSettingsPanel({
         </div>
       );
     }
+    case "map": {
+      const s = settings as ControlSettingsBySlug["map"];
+      return (
+        <div className={shellStyles.settingsGrid}>
+          <DashboardPreviewLayoutSetting
+            value={s.previewLayout ?? "single"}
+            onChange={(previewLayout) => onChange({ ...s, previewLayout } as ControlSettings)}
+          />
+          <SettingToggle
+            label="Widget container"
+            checked={s.wrapInContainer ?? true}
+            onChange={(wrapInContainer) => onChange({ ...s, wrapInContainer } as ControlSettings)}
+          />
+          <DashboardWidgetWidthSetting settings={s} onChange={onChange} />
+          <SettingInput label="Longitude" type="number" value={String(s.longitude)} onChange={(value) => onChange({ ...s, longitude: Number(value) || 0 } as ControlSettings)} />
+          <SettingInput label="Latitude" type="number" value={String(s.latitude)} onChange={(value) => onChange({ ...s, latitude: Number(value) || 0 } as ControlSettings)} />
+          <SettingInput label="Zoom" type="number" value={String(s.zoom)} onChange={(value) => onChange({ ...s, zoom: Math.max(0, Math.min(20, Number(value) || 0)) } as ControlSettings)} />
+          <SettingSelect
+            label="Markers"
+            value={String(s.markerCount)}
+            options={[0, 1, 2, 3, 4, 5, 6].map((value) => ({ label: String(value), value: String(value) }))}
+            onChange={(value) => onChange({ ...s, markerCount: Number(value) } as ControlSettings)}
+          />
+          <SettingToggle label="Interactive" checked={s.interactive} onChange={(interactive) => onChange({ ...s, interactive } as ControlSettings)} />
+          <SettingToggle label="Navigation" checked={s.showNavigation} onChange={(showNavigation) => onChange({ ...s, showNavigation } as ControlSettings)} />
+          <SettingToggle label="Current location" checked={s.showGeolocate ?? true} onChange={(showGeolocate) => onChange({ ...s, showGeolocate } as ControlSettings)} />
+          <SettingToggle label="Place search" checked={s.showSearch ?? true} onChange={(showSearch) => onChange({ ...s, showSearch } as ControlSettings)} />
+          <SettingToggle label="Attribution" checked={s.showAttribution} onChange={(showAttribution) => onChange({ ...s, showAttribution } as ControlSettings)} />
+          <SettingToggle label="Coordinates" checked={s.showCoordinates ?? true} onChange={(showCoordinates) => onChange({ ...s, showCoordinates } as ControlSettings)} />
+          <SettingToggle label="Resolved address" checked={s.showAddress ?? true} onChange={(showAddress) => onChange({ ...s, showAddress } as ControlSettings)} />
+          <SettingToggle label="Hotspot panel" checked={s.showHotspots ?? true} onChange={(showHotspots) => onChange({ ...s, showHotspots } as ControlSettings)} />
+        </div>
+      );
+    }
     case "dashboard-content-container": {
       const s =
         settings as ControlSettingsBySlug["dashboard-content-container"];
@@ -3201,6 +3235,33 @@ export function ControlSettingsPanel({
         </div>
       );
     }
+    case "lab-contact-details": {
+      const s = settings as ControlSettingsBySlug["lab-contact-details"];
+      return (
+        <div className={shellStyles.settingsGrid}>
+          <SettingToggle
+            label="Staff / user record"
+            checked={s.isStaffRecord ?? false}
+            onChange={(isStaffRecord) => onChange({ ...s, isStaffRecord } as ControlSettings)}
+          />
+          <SettingToggle
+            label="Header actions"
+            checked={s.showActions}
+            onChange={(showActions) => onChange({ ...s, showActions } as ControlSettings)}
+          />
+          <SettingToggle
+            label="Contact status"
+            checked={s.showStatus}
+            onChange={(showStatus) => onChange({ ...s, showStatus } as ControlSettings)}
+          />
+          <SettingToggle
+            label="Notes activity (host)"
+            checked={s.showNotes}
+            onChange={(showNotes) => onChange({ ...s, showNotes } as ControlSettings)}
+          />
+        </div>
+      );
+    }
     case "lab-dashboard-welcome": {
       const s = settings as ControlSettingsBySlug["lab-dashboard-welcome"];
       return (
@@ -3249,6 +3310,33 @@ export function ControlSettingsPanel({
             label="Date"
             checked={s.showDate}
             onChange={(showDate) => onChange({ ...s, showDate } as ControlSettings)}
+          />
+        </div>
+      );
+    }
+    case "lab-login-form":
+    case "lab-register-form":
+    case "lab-otp-form":
+    case "lab-passkey-login-form":
+    case "lab-social-auth-form":
+    case "lab-social-register-form": {
+      const s = settings as ControlSettingsBySlug["lab-login-form"];
+      return (
+        <div className={shellStyles.settingsGrid}>
+          <SettingInput
+            label="Title"
+            value={s.title}
+            onChange={(title) => onChange({ ...s, title } as ControlSettings)}
+          />
+          <SettingInput
+            label="Subtitle"
+            value={s.subtitle}
+            onChange={(subtitle) => onChange({ ...s, subtitle } as ControlSettings)}
+          />
+          <SettingInput
+            label="Submit label"
+            value={s.submitLabel}
+            onChange={(submitLabel) => onChange({ ...s, submitLabel } as ControlSettings)}
           />
         </div>
       );

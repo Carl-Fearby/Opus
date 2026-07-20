@@ -33,7 +33,8 @@ export function CompositionTreePage() {
           </h1>
           <p className={styles.description}>
             This page only shows relationships between documented public components. Internal
-            helpers stay hidden unless they have their own component docs.
+            helpers stay hidden unless they have their own component docs. Third-party foundations
+            are recorded separately on the <Link href="/documentation/guide/licensed-components">Licensed components</Link> page.
           </p>
         </div>
         <dl className={styles.stats} aria-label="Relationship totals">

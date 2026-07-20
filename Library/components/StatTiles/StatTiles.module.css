@@ -19,6 +19,8 @@
   width: 100%;
   min-width: 0;
   overflow-x: auto;
+  overflow-y: hidden;
+  overscroll-behavior-y: none;
   -ms-overflow-style: none;
   scrollbar-width: none;
   scroll-behavior: smooth;
@@ -45,11 +47,11 @@
   width: 24px;
   height: 76px;
   padding: 0;
-  color: color-mix(in srgb, var(--accent-color, #9b72ff) 72%, white);
+  color: color-mix(in srgb, var(--opus-accent, #9b72ff) 72%, white);
   font-size: 14px;
   cursor: pointer;
-  background: color-mix(in srgb, var(--surface-raised, #11182a) 84%, var(--accent-color, #9b72ff) 16%);
-  border: 1px solid color-mix(in srgb, var(--accent-color, #9b72ff) 42%, transparent);
+  background: color-mix(in srgb, var(--opus-panel, #11182a) 84%, var(--opus-accent, #9b72ff) 16%);
+  border: 1px solid color-mix(in srgb, var(--opus-accent, #9b72ff) 42%, transparent);
   transform: translateY(-50%);
   backdrop-filter: blur(8px);
   transition:
@@ -62,33 +64,57 @@
 .moreButton svg {
   width: 9px;
   height: 14px;
-  filter: drop-shadow(0 0 3px color-mix(in srgb, var(--accent-color, #9b72ff) 72%, transparent));
+  filter: drop-shadow(0 0 3px color-mix(in srgb, var(--opus-accent, #9b72ff) 72%, transparent));
   transition: filter 160ms ease;
 }
 
 .moreButton:hover,
 .moreButton:focus-visible {
-  color: var(--surface-base, #080b18);
-  background: var(--accent-color, #9b72ff);
+  color: var(--opus-accent-contrast, #fff);
+  background: var(--opus-accent, #9b72ff);
   outline: none;
 }
 
 .moreButton:focus-visible {
-  box-shadow: 0 0 0 3px color-mix(in srgb, var(--accent-color, #9b72ff) 35%, transparent);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--opus-accent, #9b72ff) 35%, transparent);
 }
 
 .previousButton {
   left: 0;
   border-left: 0;
   border-radius: 0 18px 18px 0;
-  box-shadow: 10px 0 24px color-mix(in srgb, var(--surface-base, #080b18) 80%, transparent);
+  box-shadow: 10px 0 24px color-mix(in srgb, var(--opus-panel, #080b18) 80%, transparent);
 }
 
 .nextButton {
   right: 0;
   border-right: 0;
   border-radius: 18px 0 0 18px;
-  box-shadow: -10px 0 24px color-mix(in srgb, var(--surface-base, #080b18) 80%, transparent);
+  box-shadow: -10px 0 24px color-mix(in srgb, var(--opus-panel, #080b18) 80%, transparent);
+}
+
+:global([data-theme="light"]) .moreButton {
+  color: var(--opus-accent, #6b46ff);
+  background: color-mix(in srgb, var(--opus-input-fill, #fff) 90%, var(--opus-accent, #6b46ff) 10%);
+  border-color: color-mix(in srgb, var(--opus-accent, #6b46ff) 34%, transparent);
+}
+
+:global([data-theme="light"]) .moreButton svg {
+  filter: drop-shadow(0 0 3px color-mix(in srgb, var(--opus-accent, #6b46ff) 28%, transparent));
+}
+
+:global([data-theme="light"]) .previousButton {
+  box-shadow: 10px 0 20px color-mix(in srgb, var(--opus-muted, #655f83) 14%, transparent);
+}
+
+:global([data-theme="light"]) .nextButton {
+  box-shadow: -10px 0 20px color-mix(in srgb, var(--opus-muted, #655f83) 14%, transparent);
+}
+
+:global([data-theme="light"]) .moreButton:hover,
+:global([data-theme="light"]) .moreButton:focus-visible {
+  color: var(--opus-accent-contrast, #fff);
+  background: var(--opus-accent, #6b46ff);
 }
 
 .row[data-layout="fill"] {

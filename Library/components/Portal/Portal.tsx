@@ -9,6 +9,57 @@ type PortalHostContextValue = {
 
 const PortalHostContext = createContext<PortalHostContextValue>({ container: null });
 
+type PortalHostEntry = {
+  container: HTMLElement;
+  createdByOpus: boolean;
+  references: number;
+};
+
+const portalHostEntries = new Map<string, PortalHostEntry>();
+
+function acquirePortalHost(id: string) {
+  const registered = portalHostEntries.get(id);
+  if (registered?.container.isConnected) {
+    registered.references += 1;
+    return registered.container;
+  }
+
+  const existing = document.getElementById(id);
+  const container = existing ?? document.createElement("div");
+  const createdByOpus = existing === null;
+
+  if (createdByOpus) {
+    container.id = id;
+    container.dataset.opusPortalHost = "true";
+    document.body.appendChild(container);
+  }
+
+  portalHostEntries.set(id, {
+    container,
+    createdByOpus,
+    references: 1,
+  });
+
+  return container;
+}
+
+function releasePortalHost(id: string, container: HTMLElement) {
+  const registered = portalHostEntries.get(id);
+  if (!registered || registered.container !== container) {
+    return;
+  }
+
+  registered.references -= 1;
+  if (registered.references > 0) {
+    return;
+  }
+
+  portalHostEntries.delete(id);
+  if (registered.createdByOpus && registered.container.isConnected) {
+    registered.container.remove();
+  }
+}
+
 export function usePortalHost() {
   return useContext(PortalHostContext);
 }
@@ -22,22 +73,11 @@ export function PortalHost({ children, id = "opus-portal-host" }: PortalHostProp
   const [container, setContainer] = useState<HTMLElement | null>(null);
 
   useEffect(() => {
-    let host = document.getElementById(id);
-    let created = false;
-
-    if (!host) {
-      host = document.createElement("div");
-      host.id = id;
-      document.body.appendChild(host);
-      created = true;
-    }
-
+    const host = acquirePortalHost(id);
     setContainer(host);
 
     return () => {
-      if (created && host?.parentNode) {
-        host.parentNode.removeChild(host);
-      }
+      releasePortalHost(id, host);
     };
   }, [id]);
 

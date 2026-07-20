@@ -5,6 +5,7 @@ const localRoots = new Set([
   "development",
   "documentation",
   "marketing",
+  "Map",
   "theme",
 ]);
 
