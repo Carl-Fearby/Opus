@@ -12,6 +12,7 @@ export type ContactCardProps = {
   isStaffRecord?: boolean;
   moreActions?: MoreActionsMenuItem[];
   onAction?: (action: ContactDetailsAction) => void;
+  onAvatarChange?: (previewUrl: string) => void;
   onPasswordReset?: () => void;
   ownerAvatarSrc?: string;
   showActions?: boolean;
@@ -24,6 +25,7 @@ export function ContactCard({
   isStaffRecord = false,
   moreActions,
   onAction,
+  onAvatarChange,
   onPasswordReset,
   ownerAvatarSrc,
   showActions = true,
@@ -40,7 +42,10 @@ export function ContactCard({
         companies={contact.companies}
         isStaffRecord={isStaffRecord}
         name={contact.name}
-        onEdit={() => onAction?.("edit")}
+        onAvatarChange={(previewUrl) => {
+          onAvatarChange?.(previewUrl);
+          onAction?.("change-avatar");
+        }}
         showStatus={showStatus}
         status={contact.status}
       />

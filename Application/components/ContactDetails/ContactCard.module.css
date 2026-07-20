@@ -1,5 +1,5 @@
 .summaryLayout {
-  --contact-summary-height: 450px;
+  --contact-summary-height: 432px;
   display: grid;
   grid-template-columns: minmax(210px, 0.28fr) minmax(0, 1fr);
   align-items: stretch;
@@ -9,14 +9,14 @@
 
 @media (max-width: 1100px) {
   .summaryLayout {
-    --contact-summary-height: 570px;
+    --contact-summary-height: 552px;
     grid-template-columns: minmax(200px, 0.32fr) minmax(0, 1fr);
   }
 }
 
 @media (max-width: 760px) {
   .summaryLayout {
-    --contact-summary-height: 630px;
+    --contact-summary-height: 612px;
     grid-template-columns: 1fr;
   }
 }

@@ -88,7 +88,7 @@ function DetailsColumn({ children }: { children: ReactNode }) {
 }
 
 const tabShapePath =
-  "M 0 58 L 16 58 C 26 58 30 53 30 44 V 14 C 30 7 34 4 41 4 H 152 C 161 4 167 8 171 16 L 184 40 C 189 50 200 58 220 58 Z";
+  "M 0 43 L 16 43 C 26 43 30 39 30 33 V 10 C 30 6 34 3 41 3 H 152 C 161 3 167 6 171 12 L 184 30 C 189 37 200 43 220 43 Z";
 
 const tabLabels: Record<ContactSummaryTab, string> = {
   basic: "Overview",
@@ -122,6 +122,10 @@ export function ContactSummaryCard({
     }
   }, [detailsTab, isStaffRecord]);
 
+  const selectTab = (tab: ContactSummaryTab) => {
+    if (tab === detailsTab) return;
+    setDetailsTab(tab);
+  };
   return (
     <DashboardContentContainer
       className={[styles.detailsCard, className].filter(Boolean).join(" ")}
@@ -142,17 +146,17 @@ export function ContactSummaryCard({
               className={styles.detailsTab}
               data-active={detailsTab === tab}
               key={tab}
-              onClick={() => setDetailsTab(tab)}
+              onClick={() => selectTab(tab)}
               role="tab"
               type="button"
             >
               <span aria-hidden="true" className={styles.detailsTabShape}>
-                <svg preserveAspectRatio="none" viewBox="0 0 220 58">
+                <svg preserveAspectRatio="none" viewBox="0 0 220 43">
                   <path d={tabShapePath} />
                 </svg>
               </span>
               <span className={styles.detailsTabLabel}>{tabLabels[tab]}</span>
-              {detailsTab === tab ? <TabActiveLine className={styles.detailsTabLine} /> : null}
+              <TabActiveLine className={styles.detailsTabLine} />
             </button>
           ))}
         </div>
@@ -163,8 +167,15 @@ export function ContactSummaryCard({
         ) : null}
       </div>
 
-      <div className={styles.detailsPanel} id={`contact-${detailsTab}-details`} role="tabpanel">
-        {detailsTab === "basic" ? (
+      <div className={styles.detailsPanel} id={`contact-${detailsTab}-details`}>
+        <div
+          aria-hidden={detailsTab !== "basic"}
+          className={styles.detailsPanelContent}
+          data-active={detailsTab === "basic"}
+          id="contact-basic-details"
+          inert={detailsTab !== "basic" ? true : undefined}
+          role="tabpanel"
+        >
           <div className={styles.detailsGrid}>
             <DetailsColumn>
               <DetailItem icon="phone" label="Phone" value={contact.phone} />
@@ -221,7 +232,16 @@ export function ContactSummaryCard({
               />
             </DetailsColumn>
           </div>
-        ) : detailsTab === "other" ? (
+        </div>
+
+        <div
+          aria-hidden={detailsTab !== "other"}
+          className={styles.detailsPanelContent}
+          data-active={detailsTab === "other"}
+          id="contact-other-details"
+          inert={detailsTab !== "other" ? true : undefined}
+          role="tabpanel"
+        >
           <div className={styles.detailsGrid}>
             <DetailsColumn>
               <DetailItem icon="house" label="Address Line 1" value="24 Willow Crescent" />
@@ -264,35 +284,46 @@ export function ContactSummaryCard({
               ))}
             </DetailsColumn>
           </div>
-        ) : (
-          <div className={styles.detailsGrid}>
-            <DetailsColumn>
-              <SecurityField
-                icon="lock"
-                id="contact-staff-password"
-                label="Password"
-                onChange={setPassword}
-                value={password}
-              />
-              <SecurityField
-                icon="lock"
-                id="contact-staff-confirm-password"
-                label="Confirm password"
-                onChange={setConfirmPassword}
-                value={confirmPassword}
-              />
-              <DetailItem
-                icon="key"
-                label="Password reset"
-                value={
-                  <button className={styles.securityAction} onClick={onPasswordReset} type="button">
-                    Reset password
-                  </button>
-                }
-              />
-            </DetailsColumn>
+        </div>
+
+        {isStaffRecord ? (
+          <div
+            aria-hidden={detailsTab !== "security"}
+            className={styles.detailsPanelContent}
+            data-active={detailsTab === "security"}
+            id="contact-security-details"
+            inert={detailsTab !== "security" ? true : undefined}
+            role="tabpanel"
+          >
+            <div className={styles.detailsGrid}>
+              <DetailsColumn>
+                <SecurityField
+                  icon="lock"
+                  id="contact-staff-password"
+                  label="Password"
+                  onChange={setPassword}
+                  value={password}
+                />
+                <SecurityField
+                  icon="lock"
+                  id="contact-staff-confirm-password"
+                  label="Confirm password"
+                  onChange={setConfirmPassword}
+                  value={confirmPassword}
+                />
+                <DetailItem
+                  icon="key"
+                  label="Password reset"
+                  value={
+                    <button className={styles.securityAction} onClick={onPasswordReset} type="button">
+                      Reset password
+                    </button>
+                  }
+                />
+              </DetailsColumn>
+            </div>
           </div>
-        )}
+        ) : null}
       </div>
     </DashboardContentContainer>
   );

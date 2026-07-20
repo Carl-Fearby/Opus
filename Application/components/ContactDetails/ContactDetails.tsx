@@ -14,6 +14,7 @@ export function ContactDetails({
   contact,
   isStaffRecord = false,
   onAction,
+  onAvatarChange,
   onPasswordReset,
   showActions = true,
   showStatus = true,
@@ -38,6 +39,7 @@ export function ContactDetails({
         isStaffRecord={isStaffRecord}
         moreActions={moreActions}
         onAction={onAction}
+        onAvatarChange={onAvatarChange}
         onPasswordReset={onPasswordReset}
         showActions={showActions}
         showStatus={showStatus}

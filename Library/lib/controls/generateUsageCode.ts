@@ -2022,7 +2022,7 @@ ${wrapDashboardWidget(
         separator="›"
         items={[
           { id: "${collectionId}", href: "#${collectionId}", label: "${collectionLabel}" },
-          { id: "current", label: "Emma Davis" },
+          { id: "current", label: "Emma Winterhold-Smith" },
         ]}
       />
     }
@@ -2032,6 +2032,7 @@ ${wrapDashboardWidget(
     showActions={${s.showActions}}
     showStatus={${s.showStatus}}
     onAction={(action) => console.log(action)}
+    onAvatarChange={(previewUrl) => console.log(previewUrl)}
     onPasswordReset={() => console.log("reset-password")}
   />${notesBlock}
 </div>`,

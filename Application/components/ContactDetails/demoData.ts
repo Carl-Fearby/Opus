@@ -28,7 +28,7 @@ export const defaultContact: ContactDetailsContact = {
   lastContact: "7 May 2025",
   leadStatus: "Opportunity",
   mobile: "+44 7700 900123",
-  name: "Emma Davis",
+  name: "Emma Winterhold-Smith",
   owner: "Carl Fearby",
   password: "OpusStaff!2025",
   phone: "+44 20 7946 0958",

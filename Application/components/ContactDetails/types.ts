@@ -2,6 +2,7 @@ export type ContactDetailsAction =
   | "add-note"
   | "add-task"
   | "call"
+  | "change-avatar"
   | "edit"
   | "email"
   | "export-contact"
@@ -42,6 +43,7 @@ export type ContactDetailsProps = {
   contact?: Partial<ContactDetailsContact>;
   isStaffRecord?: boolean;
   onAction?: (action: ContactDetailsAction) => void;
+  onAvatarChange?: (previewUrl: string) => void;
   onPasswordReset?: () => void;
   showActions?: boolean;
   showStatus?: boolean;

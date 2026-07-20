@@ -17,7 +17,7 @@ export const labsCatalog = [
     description: "Contact/user record card (ContactCard) with staff password controls. Host route owns page chrome and optional ContactNotesActivity.",
     settingsType: "contact-details",
     navigationGroup: "Contacts",
-    compositionParts: ["avatar", "badge", "button", "dashboard-content-container", "icon", "lab-notes-activity", "tabs"],
+    compositionParts: ["avatar", "badge", "button", "dashboard-content-container", "icon", "image-crop-upload", "lab-notes-activity", "modal", "tabs"],
     sourceFiles: [
       "components/ContactDetails/ContactDetails.tsx",
       "components/ContactDetails/ContactDetails.module.css",
@@ -25,6 +25,8 @@ export const labsCatalog = [
       "components/ContactDetails/ContactNotesActivity.tsx",
       "components/ContactDetails/ContactIdentityCard.tsx",
       "components/ContactDetails/ContactSummaryCard.tsx",
+      "components/UserProfileWidget/ProfilePhotoUploadModal.tsx",
+      "components/fields/ImageCropUploadField/ImageCropUploadField.tsx",
       "components/Avatar/Avatar.tsx",
       "components/Badge/Badge.tsx",
       "components/NoteComposer/NoteComposer.tsx",

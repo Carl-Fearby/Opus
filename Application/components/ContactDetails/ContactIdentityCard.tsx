@@ -1,9 +1,11 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import { Avatar } from "@/components/Avatar";
 import { Badge } from "@/components/Badge";
 import { CatalogIcon } from "@/components/CatalogIcon";
 import { DashboardContentContainer } from "@/components/DashboardContentContainer";
+import { ProfilePhotoUploadModal } from "@/components/UserProfileWidget";
 import type { ContactCompany } from "./types";
 import { getPrimaryCompany } from "./types";
 import styles from "./ContactIdentityCard.module.css";
@@ -14,7 +16,8 @@ export type ContactIdentityCardProps = {
   companies: ContactCompany[];
   isStaffRecord?: boolean;
   name: string;
-  onEdit?: () => void;
+  onAvatarChange?: (previewUrl: string) => void;
+  photoUploadTitle?: string;
   showStatus?: boolean;
   status?: string;
 };
@@ -25,11 +28,18 @@ export function ContactIdentityCard({
   companies,
   isStaffRecord = false,
   name,
-  onEdit,
+  onAvatarChange,
+  photoUploadTitle = "Update contact photo",
   showStatus = true,
   status,
 }: ContactIdentityCardProps) {
   const primary = getPrimaryCompany(companies);
+  const [photoUploadOpen, setPhotoUploadOpen] = useState(false);
+  const [photoSrc, setPhotoSrc] = useState(avatarSrc);
+
+  useEffect(() => {
+    setPhotoSrc(avatarSrc);
+  }, [avatarSrc]);
 
   return (
     <DashboardContentContainer
@@ -40,8 +50,13 @@ export function ContactIdentityCard({
     >
       <div className={styles.identity}>
         <div className={styles.avatarWrap}>
-          <Avatar name={name} size="xl" src={avatarSrc} />
-          <button aria-label={`Edit ${name}`} className={styles.avatarEdit} onClick={onEdit} type="button">
+          <Avatar name={name} size="xl" src={photoSrc} />
+          <button
+            aria-label={`Update photo for ${name}`}
+            className={styles.avatarEdit}
+            onClick={() => setPhotoUploadOpen(true)}
+            type="button"
+          >
             <CatalogIcon iconName="pen" />
           </button>
         </div>
@@ -76,6 +91,20 @@ export function ContactIdentityCard({
           </div>
         ) : null}
       </div>
+
+      <ProfilePhotoUploadModal
+        fieldId="contact-avatar-upload"
+        open={photoUploadOpen}
+        options={{
+          title: isStaffRecord ? "Update user photo" : photoUploadTitle,
+        }}
+        value={photoSrc}
+        onClose={() => setPhotoUploadOpen(false)}
+        onPhotoChange={(previewUrl) => {
+          setPhotoSrc(previewUrl);
+          onAvatarChange?.(previewUrl);
+        }}
+      />
     </DashboardContentContainer>
   );
 }
