@@ -3,7 +3,7 @@
 import { ContactIdentityCard } from "./ContactIdentityCard";
 import { ContactSummaryCard } from "./ContactSummaryCard";
 import type { ContactDetailsAction, ContactDetailsContact } from "./types";
-import type { MoreActionsMenuItem } from "@/components/MoreActionsMenu";
+import type { MoreActionsMenuItem } from "opus-react";
 import styles from "./ContactCard.module.css";
 
 export type ContactCardProps = {

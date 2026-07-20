@@ -1,8 +1,8 @@
 "use client";
 
-import { CatalogIcon } from "@/components/CatalogIcon";
-import { DropdownMenu, type DropdownMenuItemData } from "@/components/DropdownMenu";
-import { Button } from "@/components/fields/Button";
+import { CatalogIcon } from "opus-react";
+import { DropdownMenu, type DropdownMenuItemData } from "opus-react";
+import { Button } from "opus-react";
 import styles from "./MoreActionsMenu.module.css";
 
 export type MoreActionsMenuItem = {

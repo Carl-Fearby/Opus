@@ -54,7 +54,7 @@ export function getPrimaryCompany(companies: ContactCompany[] = []): ContactComp
 }
 
 export function resolveContactDetailsContact(
-  contact?: Partial<ContactDetailsContact>,
+  contact: Partial<ContactDetailsContact> | undefined,
   defaults: ContactDetailsContact,
 ): ContactDetailsContact {
   return {

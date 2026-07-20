@@ -1,11 +1,11 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Avatar } from "@/components/Avatar";
-import { Badge } from "@/components/Badge";
-import { CatalogIcon } from "@/components/CatalogIcon";
-import { DashboardContentContainer } from "@/components/DashboardContentContainer";
-import { ProfilePhotoUploadModal } from "@/components/UserProfileWidget";
+import { Avatar } from "opus-react";
+import { Badge } from "opus-react";
+import { CatalogIcon } from "opus-react";
+import { DashboardContentContainer } from "opus-react";
+import { ProfilePhotoUploadModal } from "opus-react";
 import type { ContactCompany } from "./types";
 import { getPrimaryCompany } from "./types";
 import styles from "./ContactIdentityCard.module.css";

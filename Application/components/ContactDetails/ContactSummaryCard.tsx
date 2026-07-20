@@ -1,13 +1,13 @@
 "use client";
 
 import { Children, useEffect, useState, type CSSProperties, type ReactNode } from "react";
-import { Avatar } from "@/components/Avatar";
-import { Badge } from "@/components/Badge";
-import { CatalogIcon } from "@/components/CatalogIcon";
-import { DashboardContentContainer } from "@/components/DashboardContentContainer";
-import { TextField } from "@/components/fields/TextField";
-import { MoreActionsMenu, type MoreActionsMenuItem } from "@/components/MoreActionsMenu";
-import { TabActiveLine } from "@/components/TabActiveLine";
+import { Avatar } from "opus-react";
+import { Badge } from "opus-react";
+import { CatalogIcon } from "opus-react";
+import { DashboardContentContainer } from "opus-react";
+import { TextField } from "opus-react";
+import { MoreActionsMenu, type MoreActionsMenuItem } from "opus-react";
+import { TabActiveLine } from "opus-react";
 import type { ContactDetailsAction, ContactDetailsContact } from "./types";
 import { getPrimaryCompany } from "./types";
 import styles from "./ContactSummaryCard.module.css";

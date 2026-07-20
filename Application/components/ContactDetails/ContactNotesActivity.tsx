@@ -1,10 +1,10 @@
 "use client";
 
 import { useState } from "react";
-import { CatalogIcon } from "@/components/CatalogIcon";
-import { DashboardContentContainer } from "@/components/DashboardContentContainer";
-import { NotesActivity, type NotesActivityItem } from "@/components/NotesActivity";
-import { Tabs } from "@/components/Tabs";
+import { CatalogIcon } from "opus-react";
+import { DashboardContentContainer } from "opus-react";
+import { NotesActivity, type NotesActivityItem } from "opus-react";
+import { Tabs } from "opus-react";
 import type { ContactDetailsAction } from "./types";
 import { defaultContactNotes } from "./demoData";
 import styles from "./ContactNotesActivity.module.css";

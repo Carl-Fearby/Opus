@@ -1,6 +1,6 @@
 "use client";
 
-import type { MoreActionsMenuItem } from "@/components/MoreActionsMenu";
+import type { MoreActionsMenuItem } from "opus-react";
 import { ContactCard } from "./ContactCard";
 import { defaultContact } from "./demoData";
 import type { ContactDetailsProps } from "./types";

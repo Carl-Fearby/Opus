@@ -1,4 +1,4 @@
-import type { NotesActivityItem } from "@/components/NotesActivity";
+import type { NotesActivityItem } from "opus-react";
 import type { ContactDetailsContact } from "./types";
 
 export const defaultContact: ContactDetailsContact = {
