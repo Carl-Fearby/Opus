@@ -2,13 +2,13 @@
 
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { CatalogIcon } from "opus-react";
-import { ContentTimeline } from "@/components/ContentTimeline";
-import { NotesActivity } from "@/components/NotesActivity";
-import { ApplicationHeader } from "@/components/ApplicationHeader";
-import { ApplicationFooter } from "@/components/ApplicationFooter";
-import { WelcomeMessage } from "@/components/WelcomeMessage";
+import { ContentTimeline } from "opus-react";
+import { NotesActivity } from "opus-react";
+import { ApplicationHeader } from "opus-react";
+import { ApplicationFooter } from "opus-react";
+import { WelcomeMessage } from "opus-react";
 import { Map } from "@/components/Map";
-import { ContactDetails, ContactNotesActivity } from "@/components/ContactDetails";
+import { ContactDetails, ContactNotesActivity } from "opus-react";
 import {
   Button,
   Card,
