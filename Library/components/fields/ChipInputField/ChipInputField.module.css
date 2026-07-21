@@ -167,7 +167,7 @@
     linear-gradient(
       135deg,
       color-mix(in srgb, var(--opus-accent) 85%, #4f8cff),
-      color-mix(in srgb, var(--opus-accent) 55%, #7c3aed)
+      color-mix(in srgb, var(--opus-accent) 55%, white)
     )
       border-box;
   color: var(--opus-accent);

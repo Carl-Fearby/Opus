@@ -269,6 +269,7 @@ const componentIcons: Record<string, IconDefinition> = {
   cascader: faLayerGroup,
   "theme-toggle": faSun,
   "accent-color-picker": faPalette,
+  "colour-clouds": faPalette,
   "icon-picker": faIcons,
   "emoji-picker": faFaceSmile,
   "time-picker": faClock,

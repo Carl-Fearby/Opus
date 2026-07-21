@@ -107,8 +107,7 @@
 }
 
 :global([data-preview-root][data-theme="light"]) .line[data-orientation="horizontal"]::before,
-:global([data-theme="light"]) .line[data-orientation="horizontal"]::before,
-:global([data-shell-theme="light"]) .line[data-orientation="horizontal"]::before {
+:global([data-theme="light"]) .line[data-orientation="horizontal"]::before {
   background: radial-gradient(
     ellipse 55% 70% at 50% 50%,
     color-mix(in srgb, var(--opus-accent) 32%, transparent) 0%,
@@ -118,8 +117,7 @@
 }
 
 :global([data-preview-root][data-theme="light"]) .line[data-orientation="vertical"]::before,
-:global([data-theme="light"]) .line[data-orientation="vertical"]::before,
-:global([data-shell-theme="light"]) .line[data-orientation="vertical"]::before {
+:global([data-theme="light"]) .line[data-orientation="vertical"]::before {
   background: radial-gradient(
     ellipse 70% 55% at 50% 50%,
     color-mix(in srgb, var(--opus-accent) 32%, transparent) 0%,
@@ -129,15 +127,14 @@
 }
 
 :global([data-preview-root][data-theme="light"]) .line[data-orientation="horizontal"]::after,
-:global([data-theme="light"]) .line[data-orientation="horizontal"]::after,
-:global([data-shell-theme="light"]) .line[data-orientation="horizontal"]::after {
+:global([data-theme="light"]) .line[data-orientation="horizontal"]::after {
   background: linear-gradient(
     90deg,
     transparent 0%,
     color-mix(in srgb, var(--opus-accent) 28%, transparent) 10%,
-    color-mix(in srgb, var(--opus-accent) 72%, #c4b5fd) 28%,
-    color-mix(in srgb, #c4b5fd 55%, var(--opus-accent)) 50%,
-    color-mix(in srgb, var(--opus-accent) 72%, #c4b5fd) 72%,
+    color-mix(in srgb, var(--opus-accent) 72%, white) 28%,
+    color-mix(in srgb, white 55%, var(--opus-accent)) 50%,
+    color-mix(in srgb, var(--opus-accent) 72%, white) 72%,
     color-mix(in srgb, var(--opus-accent) 28%, transparent) 90%,
     transparent 100%
   );
@@ -148,15 +145,14 @@
 }
 
 :global([data-preview-root][data-theme="light"]) .line[data-orientation="vertical"]::after,
-:global([data-theme="light"]) .line[data-orientation="vertical"]::after,
-:global([data-shell-theme="light"]) .line[data-orientation="vertical"]::after {
+:global([data-theme="light"]) .line[data-orientation="vertical"]::after {
   background: linear-gradient(
     180deg,
     transparent 0%,
     color-mix(in srgb, var(--opus-accent) 28%, transparent) 10%,
-    color-mix(in srgb, var(--opus-accent) 72%, #c4b5fd) 28%,
-    color-mix(in srgb, #c4b5fd 55%, var(--opus-accent)) 50%,
-    color-mix(in srgb, var(--opus-accent) 72%, #c4b5fd) 72%,
+    color-mix(in srgb, var(--opus-accent) 72%, white) 28%,
+    color-mix(in srgb, white 55%, var(--opus-accent)) 50%,
+    color-mix(in srgb, var(--opus-accent) 72%, white) 72%,
     color-mix(in srgb, var(--opus-accent) 28%, transparent) 90%,
     transparent 100%
   );

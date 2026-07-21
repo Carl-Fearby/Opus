@@ -146,7 +146,7 @@ export function SettingToggle({ label, checked, onChange }: SettingToggleProps) 
       {...panelFieldProps}
       id={id}
       label={label}
-      checked={checked}
+      checked={Boolean(checked)}
       onChange={(event) => onChange(event.target.checked)}
     />
   );

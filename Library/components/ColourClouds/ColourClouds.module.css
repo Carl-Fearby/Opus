@@ -1,0 +1,218 @@
+.control {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  flex: 0 0 auto;
+  min-width: 0;
+}
+
+.controlCompact {
+  height: var(--opus-control-height, 28px);
+}
+
+.trigger {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+  height: var(--opus-control-height, 28px);
+  min-height: var(--opus-control-height, 28px);
+  max-height: var(--opus-control-height, 28px);
+  padding: 0 7px;
+  border: 1px solid color-mix(in srgb, var(--opus-accent, #8f6cff) 42%, var(--opus-border, rgba(168, 131, 255, 0.28)));
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--opus-accent-soft, rgba(143, 108, 255, 0.16)) 70%, var(--opus-input-bg, transparent));
+  box-shadow: 0 1px 0 rgba(255, 255, 255, 0.04) inset;
+  color: var(--opus-text, #f5f7ff);
+  cursor: pointer;
+  font: inherit;
+  line-height: 1;
+}
+
+.triggerStatic {
+  cursor: default;
+}
+
+.trigger:hover,
+.trigger:focus-visible {
+  border-color: color-mix(in srgb, var(--opus-accent, #8f6cff) 70%, var(--opus-border, transparent));
+  background: color-mix(in srgb, var(--opus-accent, #8f6cff) 18%, transparent);
+  outline: none;
+  box-shadow: 0 0 0 2px color-mix(in srgb, var(--opus-accent, #8f6cff) 16%, transparent);
+}
+
+.triggerStatic:hover,
+.triggerStatic:focus-visible {
+  border-color: color-mix(in srgb, var(--opus-accent, #8f6cff) 42%, var(--opus-border, rgba(168, 131, 255, 0.28)));
+  background: color-mix(in srgb, var(--opus-accent-soft, rgba(143, 108, 255, 0.16)) 70%, var(--opus-input-bg, transparent));
+  box-shadow: 0 1px 0 rgba(255, 255, 255, 0.04) inset;
+}
+
+.triggerCompact {
+  /* same footprint as default — kept for API compatibility */
+}
+
+.clouds {
+  display: inline-flex;
+  align-items: center;
+  gap: 2px;
+  flex: 0 0 auto;
+  margin: 0;
+  padding: 0;
+}
+
+.label {
+  padding-left: 4px;
+  color: var(--opus-text, #f5f7ff);
+  font-size: 0.72rem;
+  font-weight: 650;
+  line-height: 1;
+  white-space: nowrap;
+}
+
+.cloud {
+  width: 14px;
+  height: 14px;
+  border: 1px solid color-mix(in srgb, var(--cloud-primary) 55%, white 20%);
+  border-radius: 50%;
+  background:
+    radial-gradient(circle at 35% 28%, rgba(255, 255, 255, 0.55), transparent 30%),
+    linear-gradient(
+      135deg,
+      var(--cloud-primary) 0%,
+      var(--cloud-primary) 46%,
+      var(--cloud-secondary) 54%,
+      var(--cloud-secondary) 100%
+    );
+  box-shadow: 0 0 0 1px color-mix(in srgb, var(--cloud-primary) 18%, transparent);
+  flex: 0 0 auto;
+}
+
+.reset {
+  display: inline-flex;
+  flex: 0 0 auto;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+  width: var(--opus-control-height, 28px);
+  height: var(--opus-control-height, 28px);
+  margin: 0;
+  padding: 0;
+  border: 1px solid color-mix(in srgb, var(--opus-accent, #8f6cff) 42%, var(--opus-border, rgba(168, 131, 255, 0.28)));
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--opus-accent-soft, rgba(143, 108, 255, 0.16)) 70%, var(--opus-input-bg, transparent));
+  color: var(--opus-text, #f5f7ff);
+  cursor: pointer;
+  font-size: 0.62rem;
+  line-height: 1;
+}
+
+.reset:hover,
+.reset:focus-visible {
+  border-color: color-mix(in srgb, var(--opus-accent, #8f6cff) 70%, var(--opus-border, transparent));
+  background: color-mix(in srgb, var(--opus-accent, #8f6cff) 18%, transparent);
+  outline: none;
+  box-shadow: 0 0 0 2px color-mix(in srgb, var(--opus-accent, #8f6cff) 16%, transparent);
+}
+
+.reset:disabled {
+  opacity: 0.4;
+  cursor: default;
+  box-shadow: none;
+}
+
+.dropdown {
+  position: fixed;
+  z-index: 10050;
+  box-sizing: border-box;
+  display: grid;
+  gap: 10px;
+  max-width: min(360px, calc(100vw - 32px));
+  max-height: min(80vh, 640px);
+  overflow-x: hidden;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  padding: 12px;
+  border: 1px solid color-mix(in srgb, var(--opus-accent, #8f6cff) 24%, var(--opus-border, rgba(168, 131, 255, 0.28)));
+  border-radius: 12px;
+  background: color-mix(in srgb, var(--opus-panel, #121528) 97%, transparent);
+  box-shadow:
+    0 24px 70px rgba(2, 6, 23, 0.45),
+    0 0 0 1px color-mix(in srgb, var(--opus-accent, #8f6cff) 10%, transparent);
+  color: var(--opus-text, #f5f7ff);
+  -webkit-backdrop-filter: blur(12px) saturate(1.18);
+  backdrop-filter: blur(12px) saturate(1.18);
+}
+
+.dropdownTitle {
+  margin: 0;
+  color: var(--opus-text, #f5f7ff);
+  font-size: 0.88rem;
+  font-weight: 800;
+  line-height: 1.25;
+}
+
+.dropdownBody {
+  min-width: 0;
+}
+
+.menu {
+  display: grid;
+  gap: 8px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  min-width: 0;
+}
+
+.menuEmpty {
+  margin: 0;
+  color: var(--opus-muted);
+  font-size: 0.78rem;
+}
+
+.menuRow {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-width: 0;
+}
+
+.menuSwatch {
+  width: 22px;
+  height: 22px;
+  flex: 0 0 auto;
+  border: 1px solid color-mix(in srgb, var(--cloud-primary) 55%, white 20%);
+  border-radius: 50%;
+  background:
+    radial-gradient(circle at 35% 28%, rgba(255, 255, 255, 0.55), transparent 30%),
+    linear-gradient(
+      135deg,
+      var(--cloud-primary) 0%,
+      var(--cloud-primary) 46%,
+      var(--cloud-secondary) 54%,
+      var(--cloud-secondary) 100%
+    );
+  box-shadow: 0 0 0 1px color-mix(in srgb, var(--cloud-primary) 18%, transparent);
+}
+
+.menuMeta {
+  display: grid;
+  gap: 2px;
+  min-width: 0;
+}
+
+.menuLabel {
+  color: var(--opus-text);
+  font-size: 0.82rem;
+  font-weight: 650;
+  line-height: 1.2;
+}
+
+.menuHex {
+  color: var(--opus-muted);
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+  font-size: 0.7rem;
+  line-height: 1.3;
+  overflow-wrap: anywhere;
+}

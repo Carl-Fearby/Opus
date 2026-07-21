@@ -3,10 +3,16 @@ export * from "../../../components/fields";
 export {
   AccentColorPicker,
   accentColors,
+  accentPairs,
+  accentPalette,
+  accentPrimaryColors,
+  accentSecondaryColors,
   createAccentStyle,
+  createTileAccentStyle,
   useAccentPreference,
+  useTileAccentPreference,
 } from "../../../components/AccentColorPicker";
-export type { AccentColor } from "../../../components/AccentColorPicker";
+export type { AccentColor, AccentPair } from "../../../components/AccentColorPicker";
 
 export { CatalogIcon } from "../../../components/CatalogIcon";
 export { IconPicker } from "../../../components/IconPicker";
@@ -27,6 +33,21 @@ export type {
 } from "../../../components/ApplicationHeader";
 
 export * from "../../../components/FontPicker";
+
+export {
+  COLOUR_CLOUDS_MAX,
+  ColourClouds,
+  ColourCloudsMenu,
+  createColourCloudsDesignation,
+  parseColourClouds,
+  serializeColourClouds,
+} from "../../../components/ColourClouds";
+export type {
+  ColourCloud,
+  ColourCloudsDesignation,
+  ColourCloudsProps,
+  ColourCloudsValue,
+} from "../../../components/ColourClouds";
 
 export { CustomScrollbar } from "../../../components/CustomScrollbar";
 export type { CustomScrollbarOrientation, CustomScrollbarProps, CustomScrollbarShape } from "../../../components/CustomScrollbar";

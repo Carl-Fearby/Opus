@@ -338,8 +338,26 @@ export const defaultSettings: ControlSettingsBySlug = {
     labelPosition: "left",
     label: "Accent",
     helpEnabled: false,
-    help: "Choose the accent colour used across the interface.",
+    help: "Choose primary and secondary accent colours used across the interface.",
     value: "#8f6cff",
+    secondaryValue: "#0284c7",
+  },
+  "colour-clouds": {
+    label: "Demo colours",
+    compact: true,
+    open: false,
+    showReset: true,
+    cloudsJson: JSON.stringify(
+      {
+        clouds: [
+          { id: "alpha", label: "Primary", color: "#8f6cff", secondary: "#0284c7" },
+          { id: "beta", label: "Secondary", color: "#ec4899", secondary: "#0ea5e9" },
+          { id: "gamma", label: "Tertiary", color: "#f59e0b", secondary: "#22c55e" },
+        ],
+      },
+      null,
+      2,
+    ),
   },
   "icon-picker": {
     mode: "stacked",
@@ -997,10 +1015,11 @@ export const defaultSettings: ControlSettingsBySlug = {
   },
   "video-player": {
     autoPlay: false,
+    initialIndex: 0,
     loop: false,
+    loopPlaylist: true,
     muted: false,
     showTitle: true,
-    title: "I Look in the Mirror",
   },
   "audio-player": {
     autoPlay: false,

@@ -132,8 +132,7 @@
 }
 
 :global([data-theme="light"]) .primaryMark,
-:global([data-preview-root][data-theme="light"]) .primaryMark,
-:global([data-shell-theme="light"]) .primaryMark {
+:global([data-preview-root][data-theme="light"]) .primaryMark {
   border-color: color-mix(in srgb, var(--opus-accent) 40%, var(--opus-border));
   background: color-mix(in srgb, var(--opus-accent) 16%, #ffffff);
   color: color-mix(in srgb, var(--opus-accent) 82%, #4c0519);

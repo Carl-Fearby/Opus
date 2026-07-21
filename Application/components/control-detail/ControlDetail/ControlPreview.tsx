@@ -163,7 +163,13 @@ import {
 import { Tabs } from "@/components/Tabs";
 import { ImageCropUploadWidget } from "opus-react";
 import { IconPicker } from "opus-react";
-import { AccentColorPicker, createAccentStyle } from "opus-react";
+import { AccentColorPicker, accentPairs, createAccentStyle } from "@/components/AccentColorPicker";
+import {
+  ColourClouds,
+  parseColourClouds,
+  serializeColourClouds,
+  type ColourCloud,
+} from "opus-react";
 import { IconBadge } from "opus-react";
 import { EmojiPicker } from "opus-react";
 import { DEFAULT_TOAST_DURATION_MS } from "opus-react";
@@ -226,6 +232,7 @@ import {
 import { demoRecentActivity } from "@/lib/controls/recentActivityDemoData";
 import { demoNotesActivity } from "@/lib/controls/notesActivityDemoData";
 import { demoAudioTracks } from "@/lib/controls/audioDemoData";
+import { demoVideoTracks } from "@/lib/controls/videoDemoData";
 import { testLayoutMenu } from "@/lib/controls/testLayoutDemoData";
 import { demoTopPerformingUsers } from "@/lib/controls/topPerformingUsersDemoData";
 import {
@@ -281,6 +288,7 @@ import {
   treeSelectDemoNodes,
 } from "@/lib/controls/advancedFormDemoData";
 import { isChartSlug } from "@/lib/controls/chartCatalog";
+import { defaultSettings } from "@/lib/controls/defaults";
 import { cartesianSpecializedVariants } from "opus-react";
 import { DashboardPreviewGrid } from "./DashboardPreviewGrid";
 import styles from "./ControlDetail.module.css";
@@ -545,6 +553,78 @@ function fieldProps(settings: BaseFieldSettings) {
     required: settings.required,
     size: settings.size ?? "md",
   };
+}
+
+function ColourCloudsPreview({
+  onSettingsChange,
+  settings,
+}: {
+  onSettingsChange: (next: ControlSettings) => void;
+  settings: ControlSettingsBySlug["colour-clouds"];
+}) {
+  const defaultJson = defaultSettings["colour-clouds"].cloudsJson;
+  const cloudsJson = settings.cloudsJson ?? defaultJson;
+  const clouds = parseColourClouds(cloudsJson).slice(0, 3);
+  const defaults = parseColourClouds(defaultJson).slice(0, 3);
+
+  const writeClouds = (next: ColourCloud[]) => {
+    onSettingsChange({
+      ...settings,
+      cloudsJson: serializeColourClouds(next),
+    } as ControlSettings);
+  };
+
+  const patchCloud = (index: number, patch: Partial<ColourCloud>) => {
+    writeClouds(clouds.map((cloud, i) => (i === index ? { ...cloud, ...patch } : cloud)));
+  };
+
+  return (
+    <ColourClouds
+      compact={Boolean(settings.compact)}
+      label={settings.label || "Demo colours"}
+      menuTitle="Demo colour data"
+      open={Boolean(settings.open)}
+      showReset={Boolean(settings.showReset)}
+      value={clouds}
+      onOpenChange={(open) => onSettingsChange({ ...settings, open } as ControlSettings)}
+      onReset={settings.showReset ? () => writeClouds(defaults) : undefined}
+    >
+      <div className={styles.colourCloudsLab}>
+        {clouds.map((cloud, index) => {
+          const fallback = defaults[index] ?? cloud;
+          const title = cloud.label ?? `Colour ${index + 1}`;
+
+          return (
+            <section className={styles.colourCloudsLabSection} key={cloud.id ?? `demo-${index}`}>
+              <h3 className={styles.colourCloudsLabTitle}>{title}</h3>
+              <p className={styles.colourCloudsLabHint}>
+                Lab test data only — changing these does not update shell / preview theme.
+              </p>
+              <AccentColorPicker
+                defaultSecondaryValue={fallback.secondary ?? fallback.color}
+                defaultValue={fallback.color}
+                id={`preview-colour-clouds-${cloud.id ?? index}`}
+                label={title}
+                primarySectionLabel="Primary"
+                secondarySectionLabel="Secondary"
+                secondaryValue={cloud.secondary ?? cloud.color}
+                value={cloud.color}
+                variant="panel"
+                onChange={(color) => patchCloud(index, { color })}
+                onReset={() =>
+                  patchCloud(index, {
+                    color: fallback.color,
+                    secondary: fallback.secondary,
+                  })
+                }
+                onSecondaryChange={(secondary) => patchCloud(index, { secondary })}
+              />
+            </section>
+          );
+        })}
+      </div>
+    </ColourClouds>
+  );
 }
 
 function TilesPreview({
@@ -3292,7 +3372,11 @@ export function ControlPreview({
     }
     case "accent-color-picker": {
       const s = settings as ControlSettingsBySlug["accent-color-picker"];
-      const accentStyle = createAccentStyle(s.value);
+      const secondary =
+        (s as { secondaryValue?: string }).secondaryValue ??
+        accentPairs.find((pair) => pair.primary === s.value)?.secondary ??
+        "#0284c7";
+      const accentStyle = createAccentStyle(s.value, secondary);
 
       return (
         <div className={styles.accentPreview} style={accentStyle}>
@@ -3302,14 +3386,27 @@ export function ControlPreview({
             label={s.label}
             labelPosition={s.labelPosition}
             mode={s.mode}
+            secondaryValue={secondary}
             value={s.value}
             onChange={(value) =>
-              onSettingsChange({ ...s, value } as ControlSettings)
+              onSettingsChange({
+                ...s,
+                value,
+                secondaryValue:
+                  accentPairs.find((pair) => pair.primary === value)?.secondary ?? secondary,
+              } as ControlSettings)
+            }
+            onSecondaryChange={(secondaryValue) =>
+              onSettingsChange({ ...s, secondaryValue } as ControlSettings)
             }
           />
           <Button variant="primary">Preview accent</Button>
         </div>
       );
+    }
+    case "colour-clouds": {
+      const s = settings as ControlSettingsBySlug["colour-clouds"];
+      return <ColourCloudsPreview settings={s} onSettingsChange={onSettingsChange} />;
     }
     case "icon-picker": {
       const s = settings as ControlSettingsBySlug["icon-picker"];
@@ -4358,11 +4455,12 @@ export function ControlPreview({
       return (
         <VideoPlayer
           autoPlay={s.autoPlay}
+          initialIndex={s.initialIndex}
           loop={s.loop}
+          loopPlaylist={s.loopPlaylist}
           muted={s.muted}
           showTitle={s.showTitle}
-          src="/media/demo-video.mp4"
-          title={s.title}
+          tracks={demoVideoTracks}
         />
       );
     }

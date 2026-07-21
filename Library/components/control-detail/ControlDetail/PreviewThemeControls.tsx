@@ -3,6 +3,7 @@
 import { ThemeToggleField } from "@/components/fields";
 import type { Theme } from "@/components/fields/types";
 import { useComponentsTheme } from "@/components/development/ComponentsThemeProvider";
+import { ThemeSettingsButton } from "@/components/documentation/ThemeSettingsButton";
 import styles from "./ControlDetail.module.css";
 
 type PreviewThemeControlsProps = {
@@ -18,7 +19,22 @@ export function PreviewThemeControls({
   theme: controlledTheme,
   variant = "panel",
 }: PreviewThemeControlsProps) {
-  const { previewTheme, setPreviewTheme } = useComponentsTheme();
+  const {
+    accent,
+    accentSecondary,
+    fontFamily,
+    previewTheme,
+    resetAccent,
+    resetTileAccent,
+    setAccent,
+    setAccentSecondary,
+    setFontFamily,
+    setPreviewTheme,
+    setTileAccent,
+    setTileAccentSecondary,
+    tileAccent,
+    tileAccentSecondary,
+  } = useComponentsTheme();
   const theme = controlledTheme ?? previewTheme;
   const handleThemeChange = onThemeChange ?? setPreviewTheme;
 
@@ -30,6 +46,25 @@ export function PreviewThemeControls({
           : styles.previewThemeControls
       }
     >
+      <ThemeSettingsButton
+        accent={accent}
+        accentSecondary={accentSecondary}
+        compact
+        fontFamily={fontFamily}
+        idPrefix={`${id}-preview`}
+        theme={theme}
+        themeLabel="Preview theme"
+        tileAccent={tileAccent}
+        tileAccentSecondary={tileAccentSecondary}
+        onAccentChange={setAccent}
+        onAccentSecondaryChange={setAccentSecondary}
+        onFontFamilyChange={setFontFamily}
+        onResetAccent={resetAccent}
+        onResetTileAccent={resetTileAccent}
+        onThemeChange={handleThemeChange}
+        onTileAccentChange={setTileAccent}
+        onTileAccentSecondaryChange={setTileAccentSecondary}
+      />
       <span className={styles.previewThemeLabel} id={`${id}-label`}>
         Preview theme
       </span>

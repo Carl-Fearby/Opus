@@ -8,6 +8,8 @@ import {
   useState,
   type CSSProperties,
 } from "react";
+import { faRotateLeft } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { googleFonts, type GoogleFontFamily } from "./googleFonts";
 import styles from "./FontPicker.module.css";
 
@@ -95,12 +97,13 @@ export function useFontPreference() {
 }
 
 type FontPickerProps = {
+  compact?: boolean;
   id: string;
   value: GoogleFontFamily;
   onChange: (value: GoogleFontFamily) => void;
 };
 
-export function FontPicker({ id, onChange, value }: FontPickerProps) {
+export function FontPicker({ compact = false, id, onChange, value }: FontPickerProps) {
   const [open, setOpen] = useState(false);
   const [query, setQuery] = useState("");
   const rootRef = useRef<HTMLDivElement>(null);
@@ -132,13 +135,14 @@ export function FontPicker({ id, onChange, value }: FontPickerProps) {
   }, [open]);
 
   return (
-    <div className={styles.field} ref={rootRef}>
-      <span className={styles.label}>Font</span>
+    <div className={compact ? `${styles.field} ${styles.fieldCompact}` : styles.field} ref={rootRef}>
+      {compact ? null : <span className={styles.label}>Font</span>}
       <div className={styles.picker}>
         <button
           aria-controls={`${id}-options`}
           aria-expanded={open}
           aria-haspopup="listbox"
+          aria-label={compact ? `Font, ${value}` : undefined}
           className={styles.trigger}
           id={id}
           style={{ fontFamily: fontStack(value) }}
@@ -163,7 +167,9 @@ export function FontPicker({ id, onChange, value }: FontPickerProps) {
               />
               {value !== DEFAULT_FONT_FAMILY ? (
                 <button
+                  aria-label="Reset font"
                   className={styles.reset}
+                  title="Reset font"
                   type="button"
                   onClick={() => {
                     onChange(DEFAULT_FONT_FAMILY);
@@ -171,7 +177,7 @@ export function FontPicker({ id, onChange, value }: FontPickerProps) {
                     setOpen(false);
                   }}
                 >
-                  Reset
+                  <FontAwesomeIcon icon={faRotateLeft} />
                 </button>
               ) : null}
             </div>

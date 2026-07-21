@@ -1,13 +1,13 @@
 "use client";
 
-import { AccentColorPicker, useAccentPreference } from "opus-react";
-import { OpusThemeProvider } from "opus-react";
-import { ThemeToggleField } from "opus-react";
+import { useAccentPreference, useTileAccentPreference } from "@/components/AccentColorPicker";
+import { OpusThemeProvider } from "@/components/OpusThemeProvider";
 import type { VersionEntry } from "@/lib/documentation/versionLog";
 import { libraryVersion } from "@/lib/documentation/libraryVersion";
 import { versionLog } from "@/lib/documentation/versionLog";
 import { DocumentationTopBar } from "@/components/documentation/DocumentationTopBar";
 import { DocumentationBreadcrumbs } from "@/components/documentation/DocumentationBreadcrumbs";
+import { ThemeSettingsButton } from "@/components/documentation/ThemeSettingsButton";
 import { useStoredTheme } from "@/lib/theme/useStoredTheme";
 import styles from "./documentation.module.css";
 
@@ -53,25 +53,39 @@ function VersionEntryBody({ entry }: { entry: VersionEntry }) {
 
 export function VersionPage() {
   const [theme, setTheme] = useStoredTheme();
-  const { accent, accentStyle, setAccent } = useAccentPreference();
+  const { accent, accentSecondary, accentStyle, resetAccent, setAccent, setAccentSecondary } =
+    useAccentPreference();
+  const {
+    resetTileAccent,
+    setTileAccent,
+    setTileAccentSecondary,
+    tileAccent,
+    tileAccentSecondary,
+    tileAccentStyle,
+  } = useTileAccentPreference();
 
   return (
     <OpusThemeProvider applyToDocument={false} theme={theme}>
-      <div className={styles.shell} style={accentStyle}>
+      <div className={styles.shell} style={{ ...accentStyle, ...tileAccentStyle }}>
         <DocumentationTopBar
           current="version"
           trailing={
-            <>
-              <AccentColorPicker id="version-accent-picker" value={accent} onChange={setAccent} />
-              <ThemeToggleField
-                id="version-theme-toggle"
-                label="Theme"
-                labelPosition="left"
-                mode="flagged"
-                value={theme}
-                onChange={setTheme}
-              />
-            </>
+            <ThemeSettingsButton
+              accent={accent}
+              accentSecondary={accentSecondary}
+              idPrefix="version"
+              theme={theme}
+              themeLabel="Page theme"
+              tileAccent={tileAccent}
+              tileAccentSecondary={tileAccentSecondary}
+              onAccentChange={setAccent}
+              onAccentSecondaryChange={setAccentSecondary}
+              onResetAccent={resetAccent}
+              onResetTileAccent={resetTileAccent}
+              onThemeChange={setTheme}
+              onTileAccentChange={setTileAccent}
+              onTileAccentSecondaryChange={setTileAccentSecondary}
+            />
           }
         />
         <div className={styles.versionPage}>
@@ -81,8 +95,8 @@ export function VersionPage() {
             <h1 className={styles.versionTitle}>v{libraryVersion}</h1>
             <p className={styles.versionDescription}>
               Shipped changes grouped by library release. Run{" "}
-              <code className={styles.versionInlineCode}>npm run sync-versions --prefix ../Library</code>{" "}
-              after new commits to refresh this log.
+              <code className={styles.versionInlineCode}>npm run sync-versions</code> after shipping
+              changes to refresh this log.
             </p>
           </div>
           <ol className={styles.versionList}>

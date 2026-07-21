@@ -1,41 +1,51 @@
 "use client";
 
 import Link from "next/link";
-import { AccentColorPicker, useAccentPreference } from "@/components/AccentColorPicker";
+import { useAccentPreference, useTileAccentPreference } from "@/components/AccentColorPicker";
 import { OpusThemeProvider } from "@/components/OpusThemeProvider";
-import { ThemeToggleField } from "@/components/fields";
 import { COMPONENTS_BASE_PATH, GUIDE_BASE_PATH, VERSION_BASE_PATH } from "@/lib/documentation/routes";
 import { libraryVersion } from "@/lib/documentation/libraryVersion";
 import { DocumentationTopBar } from "@/components/documentation/DocumentationTopBar";
 import { DocumentationBreadcrumbs } from "@/components/documentation/DocumentationBreadcrumbs";
+import { ThemeSettingsButton } from "@/components/documentation/ThemeSettingsButton";
 import { useStoredTheme } from "@/lib/theme/useStoredTheme";
 import styles from "./documentation.module.css";
 
 export function DocumentationHub() {
   const [theme, setTheme] = useStoredTheme();
-  const { accent, accentStyle, setAccent } = useAccentPreference();
+  const { accent, accentSecondary, accentStyle, resetAccent, setAccent, setAccentSecondary } =
+    useAccentPreference();
+  const {
+    resetTileAccent,
+    setTileAccent,
+    setTileAccentSecondary,
+    tileAccent,
+    tileAccentSecondary,
+    tileAccentStyle,
+  } = useTileAccentPreference();
 
   return (
     <OpusThemeProvider theme={theme}>
-      <div className={styles.shell} style={accentStyle}>
+      <div className={styles.shell} style={{ ...accentStyle, ...tileAccentStyle }}>
         <DocumentationTopBar
           current="home"
           trailing={
-            <>
-              <AccentColorPicker
-                id="documentation-accent-picker"
-                value={accent}
-                onChange={setAccent}
-              />
-              <ThemeToggleField
-                id="documentation-theme-toggle"
-                label="Theme"
-                labelPosition="left"
-                mode="flagged"
-                value={theme}
-                onChange={setTheme}
-              />
-            </>
+            <ThemeSettingsButton
+              accent={accent}
+              accentSecondary={accentSecondary}
+              idPrefix="documentation"
+              theme={theme}
+              themeLabel="Page theme"
+              tileAccent={tileAccent}
+              tileAccentSecondary={tileAccentSecondary}
+              onAccentChange={setAccent}
+              onAccentSecondaryChange={setAccentSecondary}
+              onResetAccent={resetAccent}
+              onResetTileAccent={resetTileAccent}
+              onThemeChange={setTheme}
+              onTileAccentChange={setTileAccent}
+              onTileAccentSecondaryChange={setTileAccentSecondary}
+            />
           }
         />
         <div className={styles.hub}>

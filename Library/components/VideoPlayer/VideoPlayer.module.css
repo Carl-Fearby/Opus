@@ -1,7 +1,11 @@
 .player {
   position: relative;
+  display: block;
   overflow: hidden;
   width: 100%;
+  height: 100%;
+  min-width: 0;
+  min-height: 0;
   border: 1px solid var(--opus-border-strong);
   border-radius: 14px;
   background:
@@ -9,18 +13,17 @@
     color-mix(in srgb, var(--opus-panel) 94%, transparent);
   box-shadow: var(--opus-shadow);
   color: var(--opus-text);
+  /* Docs fallback when parent height is indefinite */
+  aspect-ratio: 16 / 9;
 }
 
 .player[data-fullscreen="true"] {
-  display: flex;
-  flex-direction: column;
-  width: 100%;
-  height: 100%;
+  aspect-ratio: auto;
   border: 0 !important;
   border-radius: 0;
-  background: #05070f;
   box-shadow: none;
   outline: none;
+  background: var(--opus-panel);
 }
 
 .player[data-fullscreen="true"][data-controls-visible="false"] {
@@ -28,26 +31,24 @@
 }
 
 .stage {
-  position: relative;
+  position: absolute;
+  inset: 0;
   overflow: hidden;
-  aspect-ratio: 16 / 9;
-  background: color-mix(in srgb, var(--opus-input-bg) 84%, black 16%);
-}
-
-.player[data-fullscreen="true"] .stage {
-  flex: 1 1 auto;
-  width: 100%;
-  min-height: 0;
-  height: 100%;
-  aspect-ratio: auto;
+  background: color-mix(in srgb, var(--opus-input-bg) 55%, #05070f 45%);
 }
 
 .video {
+  position: absolute;
+  inset: 0;
   display: block;
   width: 100%;
   height: 100%;
+  margin: 0;
+  border: 0;
+  /* Fill width or height — whichever hits first — and letterbox the rest */
   object-fit: contain;
-  background: #05070f;
+  object-position: center center;
+  background: color-mix(in srgb, var(--opus-input-bg) 55%, #05070f 45%);
 }
 
 .centerPlay {
@@ -63,10 +64,11 @@
   border: 0;
   border-radius: 999px;
   background: transparent;
-  color: #fff;
+  color: var(--opus-text);
   cursor: pointer;
   transform: translate(-50%, -50%) scale(1);
-  filter: drop-shadow(0 2px 10px rgba(0, 0, 0, 0.55));
+  filter: drop-shadow(0 1px 2px color-mix(in srgb, var(--opus-panel) 35%, transparent))
+    drop-shadow(0 2px 10px color-mix(in srgb, #000 35%, transparent));
   transition:
     opacity 180ms ease,
     transform 180ms ease,
@@ -92,27 +94,24 @@
 }
 
 .controls {
-  display: grid;
-  gap: 10px;
-  padding: 12px 14px 14px;
-  transition:
-    opacity 220ms ease,
-    transform 220ms ease;
-}
-
-.player[data-fullscreen="true"] .controls {
   position: absolute;
   z-index: 3;
   right: 0;
   bottom: 0;
   left: 0;
-  padding: 28px 18px 18px;
+  display: grid;
+  gap: 10px;
+  padding: 28px 14px 14px;
   background: linear-gradient(
     180deg,
     transparent 0%,
-    color-mix(in srgb, #05070f 72%, transparent) 42%,
-    color-mix(in srgb, #05070f 92%, transparent) 100%
+    color-mix(in srgb, var(--opus-panel) 62%, transparent) 42%,
+    color-mix(in srgb, var(--opus-panel) 94%, transparent) 100%
   );
+  color: var(--opus-text);
+  transition:
+    opacity 220ms ease,
+    transform 220ms ease;
 }
 
 .player[data-fullscreen="true"][data-controls-visible="false"] .controls {
@@ -121,12 +120,30 @@
   transform: translateY(10px);
 }
 
+.titleRow {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+  min-width: 0;
+}
+
 .title {
   margin: 0;
   overflow: hidden;
+  color: var(--opus-text);
   font-size: 0.88rem;
   font-weight: 650;
   text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.trackCount {
+  margin: 0;
+  flex-shrink: 0;
+  color: var(--opus-text-muted, color-mix(in srgb, var(--opus-text) 62%, transparent));
+  font-size: 0.75rem;
+  font-weight: 550;
+  letter-spacing: 0.02em;
   white-space: nowrap;
 }
 
@@ -206,6 +223,20 @@
 .iconButton:focus-visible {
   color: var(--opus-accent);
   outline: none;
+}
+
+.iconButton[data-active="true"] {
+  color: var(--opus-accent);
+}
+
+.iconButton:disabled {
+  cursor: not-allowed;
+  opacity: 0.38;
+}
+
+.iconButton:disabled:hover,
+.iconButton:disabled:focus-visible {
+  color: var(--opus-text);
 }
 
 .time {

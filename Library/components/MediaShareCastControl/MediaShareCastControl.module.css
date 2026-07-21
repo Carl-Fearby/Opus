@@ -1,0 +1,104 @@
+.root {
+  position: relative;
+  display: inline-flex;
+  flex-shrink: 0;
+}
+
+.trigger {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  padding: 0;
+  border: 0;
+  border-radius: 8px;
+  background: transparent;
+  color: var(--opus-text);
+  cursor: pointer;
+  line-height: 0;
+  transition: color 160ms ease;
+}
+
+.trigger:hover,
+.trigger:focus-visible,
+.trigger[data-active="true"] {
+  color: var(--opus-accent);
+  outline: none;
+}
+
+.icon {
+  width: 14px;
+  height: 14px;
+  font-size: 14px;
+}
+
+.menu {
+  position: absolute;
+  z-index: 8;
+  right: 0;
+  bottom: calc(100% + 8px);
+  display: grid;
+  gap: 2px;
+  min-width: 13.5rem;
+  padding: 6px;
+  border: 1px solid var(--opus-border-strong);
+  border-radius: 12px;
+  background: color-mix(in srgb, var(--opus-panel) 96%, transparent);
+  box-shadow: var(--opus-shadow);
+  backdrop-filter: blur(10px);
+}
+
+.item {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  grid-template-rows: auto auto;
+  column-gap: 10px;
+  row-gap: 1px;
+  align-items: center;
+  width: 100%;
+  padding: 8px 10px;
+  border: 0;
+  border-radius: 8px;
+  background: transparent;
+  color: var(--opus-text);
+  text-align: left;
+  cursor: pointer;
+}
+
+.item:hover,
+.item:focus-visible {
+  background: color-mix(in srgb, var(--opus-accent) 16%, transparent);
+  outline: none;
+}
+
+.item:disabled {
+  cursor: not-allowed;
+  opacity: 0.48;
+}
+
+.item:disabled:hover,
+.item:disabled:focus-visible {
+  background: transparent;
+}
+
+.itemIcon {
+  grid-row: 1 / span 2;
+  width: 13px;
+  height: 13px;
+  font-size: 13px;
+  color: var(--opus-accent);
+}
+
+.itemLabel {
+  font-size: 0.82rem;
+  font-weight: 650;
+  line-height: 1.2;
+}
+
+.itemHint {
+  color: var(--opus-muted);
+  font-size: 0.68rem;
+  font-weight: 600;
+  line-height: 1.2;
+}

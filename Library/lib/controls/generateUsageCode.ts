@@ -1181,23 +1181,70 @@ const [${state}, ${toSetter(state)}] = useState(${formatObjectLiteral(s.value)})
     }
     case "accent-color-picker": {
       const s = settings as ControlSettingsBySlug["accent-color-picker"];
+      const secondary = s.secondaryValue ?? "#0284c7";
       const props = [
         formatStringProp("id", id),
         formatStringProp("label", s.label),
         formatStringProp("mode", s.mode),
         formatStringProp("labelPosition", s.labelPosition),
         formatExpressionProp("value", "accent"),
+        formatExpressionProp("secondaryValue", "accentSecondary"),
         formatExpressionProp("onChange", "setAccent"),
+        formatExpressionProp("onSecondaryChange", "setAccentSecondary"),
       ];
       return `${usageClientPrefix()}\nimport { AccentColorPicker, createAccentStyle } from "opus-react";
 
 const [accent, setAccent] = useState(${quote(s.value)});
-const accentStyle = createAccentStyle(accent);
+const [accentSecondary, setAccentSecondary] = useState(${quote(secondary)});
+const accentStyle = createAccentStyle(accent, accentSecondary);
 
 return (
   <div style={accentStyle}>
 ${formatSelfClosingElement("AccentColorPicker", props, "    ")}
   </div>
+);`;
+    }
+    case "colour-clouds": {
+      const s = settings as ControlSettingsBySlug["colour-clouds"];
+      const props = [
+        formatStringProp("label", s.label || "Demo colours"),
+        s.compact ? formatExpressionProp("compact", "true") : null,
+        formatExpressionProp("value", "clouds"),
+        formatExpressionProp("open", "open"),
+        formatExpressionProp("onOpenChange", "setOpen"),
+      ].filter((prop): prop is string => Boolean(prop));
+      const propLines = props.map((prop) => `    ${prop}`).join("\n");
+      return `${usageClientPrefix()}\nimport { AccentColorPicker, ColourClouds, parseColourClouds } from "opus-react";
+
+/** Lab demo data — not wired to app theme. */
+const clouds = ${s.cloudsJson};
+const [open, setOpen] = useState(${s.open ? "true" : "false"});
+const [items, setItems] = useState(() => parseColourClouds(clouds).slice(0, 3));
+
+return (
+  <ColourClouds
+${propLines}
+  >
+    {items.map((cloud, index) => (
+      <AccentColorPicker
+        key={cloud.id ?? index}
+        label={cloud.label ?? \`Colour \${index + 1}\`}
+        value={cloud.color}
+        secondaryValue={cloud.secondary ?? cloud.color}
+        variant="panel"
+        onChange={(color) =>
+          setItems((current) =>
+            current.map((entry, i) => (i === index ? { ...entry, color } : entry)),
+          )
+        }
+        onSecondaryChange={(secondary) =>
+          setItems((current) =>
+            current.map((entry, i) => (i === index ? { ...entry, secondary } : entry)),
+          )
+        }
+      />
+    ))}
+  </ColourClouds>
 );`;
     }
     case "icon-picker": {
@@ -3002,14 +3049,32 @@ const images = [
     case "video-player": {
       const s = settings as ControlSettingsBySlug["video-player"];
       const props = [
-        formatStringProp("src", "/media/demo-video.mp4"),
-        ...(s.title !== "Video" ? [formatStringProp("title", s.title)] : []),
+        formatExpressionProp("tracks", "tracks"),
+        ...(s.initialIndex !== 0
+          ? [formatNumberProp("initialIndex", s.initialIndex)]
+          : []),
         ...(s.showTitle ? [] : [formatBoolProp("showTitle", false)]),
         ...(s.autoPlay ? [formatBoolProp("autoPlay", true)] : []),
         ...(s.loop ? [formatBoolProp("loop", true)] : []),
+        ...(s.loopPlaylist ? [] : [formatBoolProp("loopPlaylist", false)]),
         ...(s.muted ? [formatBoolProp("muted", true)] : []),
       ];
       return `${importLine(["VideoPlayer"])}
+
+const tracks = [
+  {
+    id: "mirror-acoustic",
+    src: "/media/demo-video.mp4",
+    title: "I Look in the Mirror",
+    previewTime: 10,
+  },
+  {
+    id: "into-the-abyss",
+    src: "/media/demo-video-abyss.mp4",
+    title: "Into the Abyss",
+    previewTime: 8,
+  },
+];
 
 <VideoPlayer${formatSelfClosing(props)}`;
     }

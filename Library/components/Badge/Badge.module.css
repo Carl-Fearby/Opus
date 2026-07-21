@@ -110,54 +110,47 @@
 }
 
 :global([data-theme="light"]) .badge[data-variant="soft"],
-:global([data-preview-root][data-theme="light"]) .badge[data-variant="soft"],
-:global([data-shell-theme="light"]) .badge[data-variant="soft"] {
+:global([data-preview-root][data-theme="light"]) .badge[data-variant="soft"] {
   --badge-soft-bg: color-mix(in srgb, var(--badge-soft-fg) 14%, #ffffff);
 }
 
 :global([data-theme="light"]) .badge[data-tone="neutral"][data-variant="soft"],
-:global([data-preview-root][data-theme="light"]) .badge[data-tone="neutral"][data-variant="soft"],
-:global([data-shell-theme="light"]) .badge[data-tone="neutral"][data-variant="soft"] {
+:global([data-preview-root][data-theme="light"]) .badge[data-tone="neutral"][data-variant="soft"] {
   --badge-soft-bg: color-mix(in srgb, var(--opus-muted) 18%, #ffffff);
   --badge-soft-fg: color-mix(in srgb, var(--opus-text) 72%, var(--opus-muted));
   --badge-soft-border: color-mix(in srgb, var(--opus-muted) 36%, transparent);
 }
 
 :global([data-theme="light"]) .badge[data-tone="accent"][data-variant="soft"],
-:global([data-preview-root][data-theme="light"]) .badge[data-tone="accent"][data-variant="soft"],
-:global([data-shell-theme="light"]) .badge[data-tone="accent"][data-variant="soft"] {
+:global([data-preview-root][data-theme="light"]) .badge[data-tone="accent"][data-variant="soft"] {
   --badge-soft-bg: color-mix(in srgb, var(--opus-accent) 16%, #ffffff);
   --badge-soft-fg: color-mix(in srgb, var(--opus-accent) 82%, #4c0519);
   --badge-soft-border: color-mix(in srgb, var(--opus-accent) 34%, transparent);
 }
 
 :global([data-theme="light"]) .badge[data-tone="success"][data-variant="soft"],
-:global([data-preview-root][data-theme="light"]) .badge[data-tone="success"][data-variant="soft"],
-:global([data-shell-theme="light"]) .badge[data-tone="success"][data-variant="soft"] {
+:global([data-preview-root][data-theme="light"]) .badge[data-tone="success"][data-variant="soft"] {
   --badge-soft-bg: color-mix(in srgb, #16a34a 14%, #ffffff);
   --badge-soft-fg: #166534;
   --badge-soft-border: color-mix(in srgb, #16a34a 34%, transparent);
 }
 
 :global([data-theme="light"]) .badge[data-tone="info"][data-variant="soft"],
-:global([data-preview-root][data-theme="light"]) .badge[data-tone="info"][data-variant="soft"],
-:global([data-shell-theme="light"]) .badge[data-tone="info"][data-variant="soft"] {
+:global([data-preview-root][data-theme="light"]) .badge[data-tone="info"][data-variant="soft"] {
   --badge-soft-bg: color-mix(in srgb, #2563eb 14%, #ffffff);
   --badge-soft-fg: #1e40af;
   --badge-soft-border: color-mix(in srgb, #2563eb 34%, transparent);
 }
 
 :global([data-theme="light"]) .badge[data-tone="warning"][data-variant="soft"],
-:global([data-preview-root][data-theme="light"]) .badge[data-tone="warning"][data-variant="soft"],
-:global([data-shell-theme="light"]) .badge[data-tone="warning"][data-variant="soft"] {
+:global([data-preview-root][data-theme="light"]) .badge[data-tone="warning"][data-variant="soft"] {
   --badge-soft-bg: color-mix(in srgb, #d97706 14%, #ffffff);
   --badge-soft-fg: #92400e;
   --badge-soft-border: color-mix(in srgb, #d97706 34%, transparent);
 }
 
 :global([data-theme="light"]) .badge[data-tone="danger"][data-variant="soft"],
-:global([data-preview-root][data-theme="light"]) .badge[data-tone="danger"][data-variant="soft"],
-:global([data-shell-theme="light"]) .badge[data-tone="danger"][data-variant="soft"] {
+:global([data-preview-root][data-theme="light"]) .badge[data-tone="danger"][data-variant="soft"] {
   --badge-soft-bg: color-mix(in srgb, #dc2626 14%, #ffffff);
   --badge-soft-fg: #991b1b;
   --badge-soft-border: color-mix(in srgb, #dc2626 34%, transparent);

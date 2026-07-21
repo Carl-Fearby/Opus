@@ -3,13 +3,13 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import type { ReactNode } from "react";
-import { AccentColorPicker, useAccentPreference } from "opus-react";
-import { ThemeToggleField } from "opus-react";
-import { OpusThemeProvider } from "opus-react";
+import { useAccentPreference, useTileAccentPreference } from "@/components/AccentColorPicker";
+import { OpusThemeProvider } from "@/components/OpusThemeProvider";
 import type { GuidePage } from "@/lib/documentation/content";
 import { guidePath } from "@/lib/documentation/routes";
 import { DocumentationTopBar } from "@/components/documentation/DocumentationTopBar";
 import { DocumentationBreadcrumbs } from "@/components/documentation/DocumentationBreadcrumbs";
+import { ThemeSettingsButton } from "@/components/documentation/ThemeSettingsButton";
 import { useStoredTheme } from "@/lib/theme/useStoredTheme";
 import styles from "./documentation.module.css";
 
@@ -21,29 +21,39 @@ type GuideShellProps = {
 export function GuideShell({ children, pages }: GuideShellProps) {
   const pathname = usePathname();
   const [theme, setTheme] = useStoredTheme();
-  const { accent, accentStyle, setAccent } = useAccentPreference();
+  const { accent, accentSecondary, accentStyle, resetAccent, setAccent, setAccentSecondary } =
+    useAccentPreference();
+  const {
+    resetTileAccent,
+    setTileAccent,
+    setTileAccentSecondary,
+    tileAccent,
+    tileAccentSecondary,
+    tileAccentStyle,
+  } = useTileAccentPreference();
 
   return (
     <OpusThemeProvider theme={theme}>
-      <div className={styles.shell} style={accentStyle}>
+      <div className={styles.shell} style={{ ...accentStyle, ...tileAccentStyle }}>
         <DocumentationTopBar
           current="guide"
           trailing={
-            <>
-              <AccentColorPicker
-                id="guide-accent-picker"
-                value={accent}
-                onChange={setAccent}
-              />
-              <ThemeToggleField
-                id="guide-theme-toggle"
-                label="Theme"
-                labelPosition="left"
-                mode="flagged"
-                value={theme}
-                onChange={setTheme}
-              />
-            </>
+            <ThemeSettingsButton
+              accent={accent}
+              accentSecondary={accentSecondary}
+              idPrefix="guide"
+              theme={theme}
+              themeLabel="Page theme"
+              tileAccent={tileAccent}
+              tileAccentSecondary={tileAccentSecondary}
+              onAccentChange={setAccent}
+              onAccentSecondaryChange={setAccentSecondary}
+              onResetAccent={resetAccent}
+              onResetTileAccent={resetTileAccent}
+              onThemeChange={setTheme}
+              onTileAccentChange={setTileAccent}
+              onTileAccentSecondaryChange={setTileAccentSecondary}
+            />
           }
         />
         <div className={styles.body}>

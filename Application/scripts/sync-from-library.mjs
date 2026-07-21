@@ -103,6 +103,21 @@ syncTextFile(
   { rewire: true },
 );
 syncTextFile(
+  join(libraryDir, "lib", "theme", "accentThemeStorage.ts"),
+  join(appDir, "lib", "theme", "accentThemeStorage.ts"),
+  { rewire: true },
+);
+syncTextFile(
+  join(libraryDir, "lib", "theme", "componentsThemeStorage.ts"),
+  join(appDir, "lib", "theme", "componentsThemeStorage.ts"),
+  { rewire: true },
+);
+syncTextFile(
+  join(libraryDir, "lib", "theme", "readServerTheme.ts"),
+  join(appDir, "lib", "theme", "readServerTheme.ts"),
+  { rewire: true },
+);
+syncTextFile(
   join(libraryDir, "lib", "theme", "useStoredTheme.ts"),
   join(appDir, "lib", "theme", "useStoredTheme.ts"),
   { rewire: true },

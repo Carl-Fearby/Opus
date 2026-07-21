@@ -1,0 +1,212 @@
+.themeWindow {
+  position: fixed !important;
+  z-index: 10050 !important;
+  display: grid;
+  grid-template-rows: auto minmax(0, 1fr) auto;
+  overflow: hidden;
+  border: 1px solid color-mix(in srgb, var(--opus-accent, #8f6cff) 32%, rgba(168, 131, 255, 0.28));
+  border-radius: 14px;
+  background: color-mix(in srgb, var(--opus-panel, #121528) 96%, #0a0c18);
+  box-shadow:
+    0 28px 80px rgba(2, 6, 23, 0.55),
+    0 0 0 1px color-mix(in srgb, var(--opus-accent, #8f6cff) 14%, transparent);
+  color: var(--opus-text, #f5f7ff);
+  pointer-events: auto;
+}
+
+.themeWindow[data-interaction="move"],
+.themeWindow[data-interaction="resize"] {
+  user-select: none;
+}
+
+.windowHeader {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 12px;
+  align-items: start;
+  padding: 14px 14px 12px;
+  border-bottom: 1px solid color-mix(in srgb, var(--opus-border) 72%, transparent);
+  cursor: grab;
+  touch-action: none;
+}
+
+.themeWindow[data-interaction="move"] .windowHeader {
+  cursor: grabbing;
+}
+
+.windowHeading {
+  display: grid;
+  gap: 4px;
+  min-width: 0;
+}
+
+.windowTitle {
+  margin: 0;
+  color: var(--opus-text);
+  font-size: 0.95rem;
+  font-weight: 800;
+  line-height: 1.25;
+}
+
+.windowDescription {
+  margin: 0;
+  color: var(--opus-muted);
+  font-size: 0.72rem;
+  line-height: 1.4;
+}
+
+.windowClose {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  padding: 0;
+  border: 1px solid color-mix(in srgb, var(--opus-border) 80%, transparent);
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--opus-input-bg) 72%, transparent);
+  color: var(--opus-muted);
+  cursor: pointer;
+}
+
+.windowClose:hover,
+.windowClose:focus-visible {
+  border-color: color-mix(in srgb, var(--opus-accent) 42%, var(--opus-border));
+  color: var(--opus-text);
+  outline: none;
+}
+
+.windowCloseIcon {
+  width: 16px;
+  height: 16px;
+}
+
+.windowBody {
+  min-height: 0;
+  overflow: auto;
+  padding: 14px;
+}
+
+.windowFooter {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  justify-content: flex-end;
+  align-items: center;
+  padding: 12px 14px 14px;
+  border-top: 1px solid color-mix(in srgb, var(--opus-border) 72%, transparent);
+}
+
+.footerSpacer {
+  flex: 1 1 auto;
+  min-width: 8px;
+}
+
+.resizeE,
+.resizeS,
+.resizeSe {
+  position: absolute;
+  z-index: 2;
+  touch-action: none;
+}
+
+.resizeE {
+  top: 12px;
+  right: -4px;
+  bottom: 18px;
+  width: 10px;
+  cursor: ew-resize;
+}
+
+.resizeS {
+  right: 18px;
+  bottom: -4px;
+  left: 12px;
+  height: 10px;
+  cursor: ns-resize;
+}
+
+.resizeSe {
+  right: -2px;
+  bottom: -2px;
+  width: 18px;
+  height: 18px;
+  cursor: nwse-resize;
+}
+
+.resizeSe::after {
+  content: "";
+  position: absolute;
+  right: 5px;
+  bottom: 5px;
+  width: 8px;
+  height: 8px;
+  border-right: 2px solid color-mix(in srgb, var(--opus-muted) 70%, transparent);
+  border-bottom: 2px solid color-mix(in srgb, var(--opus-muted) 70%, transparent);
+}
+
+.panel {
+  display: grid;
+  gap: 18px;
+}
+
+.row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 14px 16px;
+}
+
+.section {
+  display: grid;
+  gap: 8px;
+}
+
+.section + .section,
+.section + .export {
+  padding-top: 4px;
+  border-top: 1px solid color-mix(in srgb, var(--opus-border) 80%, transparent);
+}
+
+.sectionTitle {
+  margin: 0;
+  color: var(--opus-text);
+  font-size: 0.82rem;
+  font-weight: 750;
+}
+
+.sectionHint {
+  margin: 0;
+  color: var(--opus-muted);
+  font-size: 0.72rem;
+  line-height: 1.4;
+}
+
+.export {
+  display: grid;
+  gap: 8px;
+  padding-top: 4px;
+  border-top: 1px solid color-mix(in srgb, var(--opus-border) 80%, transparent);
+}
+
+.exportNotice {
+  margin: 0;
+  color: var(--opus-muted);
+  font-size: 0.78rem;
+  line-height: 1.4;
+}
+
+.json {
+  margin: 0;
+  max-height: 160px;
+  overflow: auto;
+  padding: 10px 12px;
+  border: 1px solid color-mix(in srgb, var(--opus-border) 80%, transparent);
+  border-radius: 10px;
+  background: color-mix(in srgb, var(--opus-input-bg) 88%, transparent);
+  color: var(--opus-text);
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+  font-size: 0.72rem;
+  line-height: 1.45;
+  white-space: pre;
+}

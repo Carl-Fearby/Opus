@@ -1,11 +1,14 @@
 .toggle {
-  --theme-option-size: calc(var(--opus-control-height) + 2px);
+  --theme-option-size: calc(var(--opus-control-height) - 4px);
   --theme-option-gap: 2px;
+  box-sizing: border-box;
   position: relative;
   display: inline-flex;
   align-items: center;
   gap: var(--theme-option-gap);
+  height: var(--opus-control-height);
   min-height: var(--opus-control-height);
+  max-height: var(--opus-control-height);
   padding: 2px;
   border: 1px solid var(--opus-border-strong);
   border-radius: 999px;
@@ -16,6 +19,7 @@
   color: inherit;
   cursor: pointer;
   font: inherit;
+  line-height: 1;
   transition:
     background 220ms ease,
     border-color 220ms ease,
@@ -33,7 +37,7 @@
   left: 2px;
   z-index: 0;
   width: var(--theme-option-size);
-  height: calc(var(--opus-control-height) - 4px);
+  height: var(--theme-option-size);
   border-radius: 999px;
   background: linear-gradient(
     135deg,
@@ -59,12 +63,13 @@
   align-items: center;
   justify-content: center;
   width: var(--theme-option-size);
-  height: calc(var(--opus-control-height) - 4px);
+  height: var(--theme-option-size);
   border: 0;
   border-radius: 999px;
   background: transparent;
   color: var(--opus-muted);
-  font-size: 0.82rem;
+  font-size: 0.72rem;
+  line-height: 1;
   transition: color 220ms ease;
 }
 

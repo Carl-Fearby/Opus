@@ -1,3 +1,5 @@
+import { COMPONENTS_ACCENT_BOOTSTRAP_SCRIPT } from "./accentThemeStorage";
+
 export type Theme = "dark" | "light";
 
 export const THEME_STORAGE_KEY = "opus-components-theme";
@@ -100,9 +102,10 @@ export function applyDocumentTheme(theme: Theme) {
   }
 
   const root = document.documentElement;
+  // Shell UI theme only — never write data-theme on <html>, or preview
+  // (which owns data-theme on [data-preview-root]) inherits the shell toggle.
   root.setAttribute("data-shell-theme", theme);
-  root.setAttribute("data-theme", theme);
   root.style.colorScheme = theme;
 }
 
-export const COMPONENTS_THEME_BOOTSTRAP_SCRIPT = `(function(){try{var k="${THEME_STORAGE_KEY}";var pk="${PREVIEW_THEME_STORAGE_KEY}";var r=document.documentElement;var t=localStorage.getItem(k);t=t==="light"||t==="dark"?t:(r.getAttribute("data-shell-theme")==="light"?"light":"dark");var p=localStorage.getItem(pk);p=p==="light"||p==="dark"?p:(r.getAttribute("data-preview-theme")==="light"?"light":"dark");r.setAttribute("data-shell-theme",t);r.setAttribute("data-theme",t);r.setAttribute("data-preview-theme",p);r.style.colorScheme=t;r.classList.add("opus-no-transitions");window.__OPUS_THEME__=t;window.__OPUS_PREVIEW_THEME__=p;document.cookie=k+"="+t+";path=/;max-age=31536000;SameSite=Lax";document.cookie=pk+"="+p+";path=/;max-age=31536000;SameSite=Lax";requestAnimationFrame(function(){requestAnimationFrame(function(){r.classList.remove("opus-no-transitions");});});}catch(e){}})();`;
+export const COMPONENTS_THEME_BOOTSTRAP_SCRIPT = `(function(){try{var k="${THEME_STORAGE_KEY}";var pk="${PREVIEW_THEME_STORAGE_KEY}";var r=document.documentElement;var t=localStorage.getItem(k);t=t==="light"||t==="dark"?t:(r.getAttribute("data-shell-theme")==="light"?"light":"dark");var p=localStorage.getItem(pk);p=p==="light"||p==="dark"?p:(r.getAttribute("data-preview-theme")==="light"?"light":"dark");r.setAttribute("data-shell-theme",t);r.setAttribute("data-preview-theme",p);r.style.colorScheme=t;r.classList.add("opus-no-transitions");window.__OPUS_THEME__=t;window.__OPUS_PREVIEW_THEME__=p;document.cookie=k+"="+t+";path=/;max-age=31536000;SameSite=Lax";document.cookie=pk+"="+p+";path=/;max-age=31536000;SameSite=Lax";requestAnimationFrame(function(){requestAnimationFrame(function(){r.classList.remove("opus-no-transitions");});});}catch(e){}})();${COMPONENTS_ACCENT_BOOTSTRAP_SCRIPT}`;

@@ -1,12 +1,12 @@
 import type { Metadata } from "next";
 import { IBM_Plex_Mono, Space_Grotesk } from "next/font/google";
-import "opus-react/styles.css";
-import "opus-react/index.css";
+import "../packages/opus-react/dist/flags.css";
+import "../packages/opus-react/dist/index.css";
 import "./globals.css";
 import "./preview-theme.css";
 import { ThemeBootstrapScript } from "@/components/theme/ThemeBootstrapScript";
-import { readServerPreviewTheme, readServerTheme } from "@/lib/theme/readServerTheme";
-import { OpusAppShell } from "./OpusAppShell";
+import { createAccentStyle } from "@/lib/theme/accentThemeStorage";
+import { readServerAccent, readServerPreviewTheme, readServerTheme } from "@/lib/theme/readServerTheme";
 
 const spaceGrotesk = Space_Grotesk({
   variable: "--font-space-grotesk",
@@ -20,13 +20,85 @@ const ibmPlexMono = IBM_Plex_Mono({
 });
 
 export const metadata: Metadata = {
-  title: {
-    default: "Opus — Design system for modern business apps",
-    template: "%s · Opus",
-  },
-  description:
-    "Opus is a themeable React component library for forms, dashboards, overlays, and data-rich interfaces — with live documentation and a Code Playground.",
+  title: "Opus",
+  description: "Opus form component library demo",
 };
+
+const performanceMeasureGuardScript = `
+(() => {
+  const performanceRef = window.performance;
+
+  if (!performanceRef || performanceRef.__opusMeasureGuard === true) {
+    return;
+  }
+
+  const nativeMeasure = performanceRef.measure.bind(performanceRef);
+
+  Object.defineProperty(performanceRef, "__opusMeasureGuard", {
+    configurable: false,
+    enumerable: false,
+    value: true,
+  });
+
+  Object.defineProperty(performanceRef, "measure", {
+    configurable: true,
+    value(name, startOrOptions, endMark) {
+      if (startOrOptions && typeof startOrOptions === "object") {
+        const options = { ...startOrOptions };
+        const start = Number(options.start);
+        const end = Number(options.end);
+
+        if (Number.isFinite(start) && start < 0) {
+          options.start = 0;
+        }
+
+        if (Number.isFinite(end) && end < 0) {
+          options.end = 0;
+        }
+
+        if (
+          Number.isFinite(Number(options.start)) &&
+          Number.isFinite(Number(options.end)) &&
+          Number(options.end) < Number(options.start)
+        ) {
+          options.end = options.start;
+        }
+
+        try {
+          return nativeMeasure(name, options);
+        } catch (error) {
+          if (String(error && error.message).includes("negative time stamp")) {
+            return nativeMeasure(name, { ...options, start: 0, end: 0 });
+          }
+
+          throw error;
+        }
+      }
+
+      return nativeMeasure(name, startOrOptions, endMark);
+    },
+  });
+})();
+`;
+
+const fontBootstrapScript = `
+(() => {
+  try {
+    const family = window.localStorage.getItem("opus-components-font");
+    if (!family) return;
+    const safeFamily = family.replace(/'/g, "\\\\'");
+    document.documentElement.style.setProperty(
+      "--opus-font-family",
+      "'" + safeFamily + "', ui-sans-serif, system-ui, sans-serif"
+    );
+    const link = document.createElement("link");
+    link.rel = "stylesheet";
+    link.href = "https://fonts.googleapis.com/css2?family=" +
+      encodeURIComponent(family).replace(/%20/g, "+") + "&display=swap";
+    document.head.appendChild(link);
+  } catch {}
+})();
+`;
 
 export default async function RootLayout({
   children,
@@ -35,19 +107,21 @@ export default async function RootLayout({
 }>) {
   const theme = await readServerTheme();
   const previewTheme = await readServerPreviewTheme();
+  const accent = await readServerAccent();
 
   return (
     <html
       data-preview-theme={previewTheme}
       data-shell-theme={theme}
-      data-theme={theme}
       lang="en-GB"
-      style={{ colorScheme: theme }}
+      style={{ colorScheme: theme, ...createAccentStyle(accent.accent, accent.accentSecondary) }}
       suppressHydrationWarning
     >
       <body className={`${spaceGrotesk.variable} ${ibmPlexMono.variable}`}>
+        <script dangerouslySetInnerHTML={{ __html: fontBootstrapScript }} />
+        <script dangerouslySetInnerHTML={{ __html: performanceMeasureGuardScript }} />
         <ThemeBootstrapScript />
-        <OpusAppShell>{children}</OpusAppShell>
+        {children}
       </body>
     </html>
   );

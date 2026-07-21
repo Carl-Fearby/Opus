@@ -1,7 +1,7 @@
 .statTile {
-  --tile-accent: #93c5fd;
-  --tile-glow: #38bdf8;
-  --tile-fill: #0d1728;
+  --tile-accent: var(--opus-tile-accent-secondary, #0ea5e9);
+  --tile-glow: var(--opus-tile-accent-secondary-mid, #38bdf8);
+  --tile-fill: color-mix(in srgb, var(--opus-tile-accent-secondary, #0ea5e9) 30%, #071018);
   --tile-label: #ffffff;
   --tile-muted: color-mix(in srgb, var(--tile-label) 68%, transparent);
   --tile-highlight: color-mix(in srgb, var(--tile-accent) 42%, transparent);
@@ -35,15 +35,15 @@
 }
 
 .statTile[data-tone="purple"] {
-  --tile-accent: #c4b5fd;
-  --tile-glow: #d946ef;
-  --tile-fill: #171022;
+  --tile-accent: var(--opus-tile-accent, #ec4899);
+  --tile-glow: var(--opus-tile-accent, #d946ef);
+  --tile-fill: color-mix(in srgb, var(--opus-tile-accent, #ec4899) 30%, #120a1c);
 }
 
 .statTile[data-tone="blue"] {
-  --tile-accent: #93c5fd;
-  --tile-glow: #38bdf8;
-  --tile-fill: #0d1728;
+  --tile-accent: var(--opus-tile-accent-secondary, #0ea5e9);
+  --tile-glow: var(--opus-tile-accent-secondary-mid, #38bdf8);
+  --tile-fill: color-mix(in srgb, var(--opus-tile-accent-secondary, #0ea5e9) 30%, #071018);
 }
 
 :global([data-theme="light"]) .statTile {
@@ -57,18 +57,18 @@
 }
 
 :global([data-theme="light"]) .statTile[data-tone="purple"] {
-  --tile-accent: #a78bfa;
-  --tile-glow: #c026d3;
-  --tile-fill: #f6f1ff;
-  --tile-label: #3b2565;
+  --tile-accent: var(--opus-tile-accent, #ec4899);
+  --tile-glow: var(--opus-tile-accent, #c026d3);
+  --tile-fill: color-mix(in srgb, var(--opus-tile-accent, #ec4899) 22%, #ffffff);
+  --tile-label: color-mix(in srgb, var(--opus-tile-accent, #ec4899) 42%, #1e1033);
   --tile-muted: color-mix(in srgb, var(--tile-label) 72%, transparent);
 }
 
 :global([data-theme="light"]) .statTile[data-tone="blue"] {
-  --tile-accent: #60a5fa;
-  --tile-glow: #0284c7;
-  --tile-fill: #edf6ff;
-  --tile-label: #123a5c;
+  --tile-accent: var(--opus-tile-accent-secondary, #0ea5e9);
+  --tile-glow: var(--opus-tile-accent-secondary, #0284c7);
+  --tile-fill: color-mix(in srgb, var(--opus-tile-accent-secondary, #0ea5e9) 22%, #ffffff);
+  --tile-label: color-mix(in srgb, var(--opus-tile-accent-secondary, #0ea5e9) 42%, #0b1f33);
   --tile-muted: color-mix(in srgb, var(--tile-label) 72%, transparent);
 }
 

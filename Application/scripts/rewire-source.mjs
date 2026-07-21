@@ -1,5 +1,6 @@
 // Rewrites `@/components/<X>` specifiers to `opus-react` for Application builds.
 const localRoots = new Set([
+  "AccentColorPicker",
   "AudioPlayer",
   "control-detail",
   "DeployUpdateNotifier",
@@ -7,6 +8,7 @@ const localRoots = new Set([
   "documentation",
   "marketing",
   "Map",
+  "MediaShareCastControl",
   "NotesActivity",
   "Tabs",
   "theme",

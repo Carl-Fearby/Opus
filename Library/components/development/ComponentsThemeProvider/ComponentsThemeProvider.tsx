@@ -1,7 +1,7 @@
 "use client";
 
 import { createContext, useCallback, useContext, useEffect, useMemo, useState, type CSSProperties, type ReactNode } from "react";
-import { useAccentPreference } from "@/components/AccentColorPicker";
+import { useAccentPreference, useTileAccentPreference } from "@/components/AccentColorPicker";
 import { useFontPreference, type GoogleFontFamily } from "@/components/FontPicker";
 import type { Theme } from "@/components/fields";
 import { OpusThemeProvider } from "@/components/OpusThemeProvider";
@@ -15,15 +15,26 @@ type ComponentsThemeContextValue = {
     title: string;
   };
   accent: string;
-  accentStyle: CSSProperties;
+  accentPairId: string;
+  accentSecondary: string;
+  accentStyle: CSSProperties | undefined;
   fontFamily: GoogleFontFamily;
   previewTheme: Theme;
+  resetAccent: () => void;
+  resetTileAccent: () => void;
   setPageHeader: (header: { description?: string; title: string }) => void;
   setAccent: (accent: string) => void;
+  setAccentPair: (pairId: string) => void;
+  setAccentSecondary: (accent: string) => void;
   setFontFamily: (fontFamily: string) => void;
   setPreviewTheme: (theme: Theme) => void;
   setTheme: (theme: Theme) => void;
+  setTileAccent: (accent: string) => void;
+  setTileAccentSecondary: (accent: string) => void;
   theme: Theme;
+  tileAccent: string;
+  tileAccentSecondary: string;
+  tileAccentStyle: CSSProperties | undefined;
 };
 
 const defaultPageHeader = {
@@ -54,7 +65,24 @@ export function ComponentsThemeProvider({ children }: { children: ReactNode }) {
   const [theme, setTheme] = useStoredTheme();
   const [previewTheme, setPreviewTheme] = useStoredPreviewTheme();
   const [pageHeader, setPageHeaderState] = useState(defaultPageHeader);
-  const { accent, accentStyle, setAccent } = useAccentPreference();
+  const {
+    accent,
+    accentPairId,
+    accentSecondary,
+    accentStyle,
+    resetAccent,
+    setAccent,
+    setAccentPair,
+    setAccentSecondary,
+  } = useAccentPreference();
+  const {
+    resetTileAccent,
+    setTileAccent,
+    setTileAccentSecondary,
+    tileAccent,
+    tileAccentSecondary,
+    tileAccentStyle,
+  } = useTileAccentPreference();
   const { fontFamily, setFontFamily } = useFontPreference();
 
   const setPageHeader = useCallback((header: { description?: string; title: string }) => {
@@ -72,27 +100,66 @@ export function ComponentsThemeProvider({ children }: { children: ReactNode }) {
     });
   }, []);
 
+  const combinedStyle = useMemo(
+    () => ({ ...accentStyle, ...tileAccentStyle }) as CSSProperties | undefined,
+    [accentStyle, tileAccentStyle],
+  );
+
   const contextValue = useMemo(
     () => ({
       accent,
-      accentStyle,
+      accentPairId,
+      accentSecondary,
+      accentStyle: combinedStyle,
       fontFamily,
       pageHeader,
       previewTheme,
+      resetAccent,
+      resetTileAccent,
       setAccent,
+      setAccentPair,
+      setAccentSecondary,
       setFontFamily,
       setPageHeader,
       setPreviewTheme,
       setTheme,
+      setTileAccent,
+      setTileAccentSecondary,
       theme,
+      tileAccent,
+      tileAccentSecondary,
+      tileAccentStyle,
     }),
-    [accent, accentStyle, fontFamily, pageHeader, previewTheme, setAccent, setFontFamily, setPageHeader, setPreviewTheme, setTheme, theme],
+    [
+      accent,
+      accentPairId,
+      accentSecondary,
+      combinedStyle,
+      fontFamily,
+      pageHeader,
+      previewTheme,
+      resetAccent,
+      resetTileAccent,
+      setAccent,
+      setAccentPair,
+      setAccentSecondary,
+      setFontFamily,
+      setPageHeader,
+      setPreviewTheme,
+      setTheme,
+      setTileAccent,
+      setTileAccentSecondary,
+      theme,
+      tileAccent,
+      tileAccentSecondary,
+      tileAccentStyle,
+    ],
   );
 
   return (
     <ComponentsThemeContext.Provider value={contextValue}>
       <OpusThemeProvider applyToDocument={false} theme={theme}>
-        <div style={accentStyle}>
+        <div style={combinedStyle}>
           <ToastProvider>
             <ContextMenuProvider>{children}</ContextMenuProvider>
           </ToastProvider>

@@ -90,8 +90,11 @@
 .topBarTrailing {
   display: inline-flex;
   align-items: center;
-  gap: 12px;
+  justify-content: flex-end;
+  gap: 10px;
+  margin-inline-start: auto;
   flex-shrink: 0;
+  min-width: 0;
 }
 
 .versionBadge {

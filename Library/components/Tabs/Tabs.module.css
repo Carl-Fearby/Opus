@@ -167,8 +167,7 @@
 }
 
 :global([data-preview-root][data-theme="light"]) .root[data-variant="card"],
-:global([data-theme="light"]) .root[data-variant="card"],
-:global([data-shell-theme="light"]) .root[data-variant="card"] {
+:global([data-theme="light"]) .root[data-variant="card"] {
   --tabs-card-border: color-mix(in srgb, var(--opus-border) 72%, var(--opus-accent) 28%);
   --tabs-card-rail-bg: color-mix(
     in srgb,
@@ -195,8 +194,7 @@
 }
 
 :global([data-preview-root][data-theme="light"]) .root[data-variant="card"] .tab:disabled .tabLabel,
-:global([data-theme="light"]) .root[data-variant="card"] .tab:disabled .tabLabel,
-:global([data-shell-theme="light"]) .root[data-variant="card"] .tab:disabled .tabLabel {
+:global([data-theme="light"]) .root[data-variant="card"] .tab:disabled .tabLabel {
   color: color-mix(in srgb, var(--opus-muted) 28%, transparent);
 }
 

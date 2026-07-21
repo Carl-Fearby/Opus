@@ -104,6 +104,7 @@ export type ControlSlug =
   | "cascader"
   | "theme-toggle"
   | "accent-color-picker"
+  | "colour-clouds"
   | "icon-picker"
   | "emoji-picker"
   | "tooltip"
@@ -389,7 +390,17 @@ export type AccentColorPickerSettings = {
   label: string;
   helpEnabled: boolean;
   help: string;
+  secondaryValue?: string;
   value: string;
+};
+
+export type ColourCloudsSettings = {
+  compact: boolean;
+  label: string;
+  open: boolean;
+  showReset: boolean;
+  /** JSON designation: `{ "clouds": [ { "color": "#…", "secondary": "#…" } ] }` — up to 5. */
+  cloudsJson: string;
 };
 
 export type IconPickerSettings = {
@@ -894,10 +905,11 @@ export type CarouselSettings = {
 
 export type VideoPlayerSettings = {
   autoPlay: boolean;
+  initialIndex: number;
   loop: boolean;
+  loopPlaylist: boolean;
   muted: boolean;
   showTitle: boolean;
-  title: string;
 };
 
 export type AudioPlayerSettings = {
@@ -1486,6 +1498,7 @@ export type ControlSettingsBySlug = {
   cascader: CascaderSettings;
   "theme-toggle": ThemeToggleSettings;
   "accent-color-picker": AccentColorPickerSettings;
+  "colour-clouds": ColourCloudsSettings;
   "icon-picker": IconPickerSettings;
   "emoji-picker": EmojiPickerSettings;
   tooltip: TooltipSettings;

@@ -85,8 +85,8 @@
   padding: 0 14px;
   border: 0;
   border-radius: 8px;
-  background: #7c3aed;
-  color: #f8fafc;
+  background: var(--opus-accent);
+  color: var(--opus-accent-contrast, #f8fafc);
   font: inherit;
   font-size: 0.72rem;
   font-weight: 700;
@@ -94,11 +94,11 @@
 }
 
 .saveButton:hover {
-  background: #6d28d9;
+  background: color-mix(in srgb, var(--opus-accent) 82%, #000 18%);
 }
 
 .saveButton:focus-visible {
-  outline: 2px solid color-mix(in srgb, #a855f7 55%, transparent);
+  outline: 2px solid color-mix(in srgb, var(--opus-accent) 55%, transparent);
   outline-offset: 2px;
 }
 

@@ -19,6 +19,7 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import "@/lib/fontawesome";
+import { MediaShareCastControl } from "@/components/MediaShareCastControl";
 import styles from "./AudioPlayer.module.css";
 
 export type AudioTrack = {
@@ -37,7 +38,9 @@ export type AudioPlayerProps = {
   initialIndex?: number;
   loop?: boolean;
   loopPlaylist?: boolean;
+  shareUrl?: string;
   showArtwork?: boolean;
+  showShare?: boolean;
   /** Preferred multi-track API. Falls back to `src` / `title` / `artist` / `artworkSrc`. */
   tracks?: AudioTrack[];
   src?: string;
@@ -88,7 +91,9 @@ export function AudioPlayer({
   initialIndex = 0,
   loop = false,
   loopPlaylist = true,
+  shareUrl,
   showArtwork = true,
+  showShare = true,
   src,
   title = "Audio track",
   tracks,
@@ -299,7 +304,13 @@ export function AudioPlayer({
       data-component="audio-player"
       data-has-artwork={activeArtwork ? "true" : "false"}
     >
-      <audio loop={loop} preload="metadata" ref={audioRef} src={activeSrc} />
+      <audio
+        loop={loop}
+        preload="metadata"
+        ref={audioRef}
+        src={activeSrc}
+        {...{ "x-webkit-airplay": "allow" }}
+      />
 
       {showArtwork ? (
         <div aria-hidden="true" className={styles.artwork}>
@@ -416,6 +427,16 @@ export function AudioPlayer({
               setIsMuted(next === 0);
             }}
           />
+          {showShare ? (
+            <MediaShareCastControl
+              fileUrl={activeSrc}
+              iconClassName={styles.icon}
+              mediaRef={audioRef}
+              shareUrl={shareUrl}
+              text={activeArtist ? `${activeTitle} — ${activeArtist}` : activeTitle}
+              title={activeTitle}
+            />
+          ) : null}
         </div>
       </div>
     </div>

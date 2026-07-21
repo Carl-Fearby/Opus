@@ -32,6 +32,29 @@
   cursor: pointer;
 }
 
+.fieldCompact .trigger {
+  box-sizing: border-box;
+  width: 118px;
+  height: var(--opus-control-height, 28px);
+  min-height: var(--opus-control-height, 28px);
+  max-height: var(--opus-control-height, 28px);
+  gap: 6px;
+  padding: 0 8px;
+  border-radius: 999px;
+  line-height: 1;
+}
+
+.fieldCompact .triggerText {
+  font-size: 0.72rem;
+  line-height: 1;
+}
+
+.fieldCompact .chevron {
+  width: 8px;
+  height: 8px;
+  transform: translateY(-1px) rotate(45deg);
+}
+
 .trigger:hover,
 .trigger:focus-visible,
 .trigger[aria-expanded="true"] {
@@ -98,19 +121,20 @@
 }
 
 .reset {
+  display: inline-flex;
   flex: 0 0 auto;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
   height: 36px;
   margin: 0;
-  padding: 0 12px;
+  padding: 0;
   border: 1px solid color-mix(in srgb, var(--opus-accent) 42%, var(--opus-border));
   border-radius: var(--opus-input-radius-large, 6px);
   background: color-mix(in srgb, var(--opus-accent) 12%, transparent);
   color: var(--opus-text);
   cursor: pointer;
-  font: inherit;
-  font-size: 0.76rem;
-  font-weight: 650;
-  white-space: nowrap;
+  font-size: 0.82rem;
 }
 
 .reset:hover,

@@ -179,6 +179,10 @@
   outline: none;
 }
 
+.iconButton[data-active="true"] {
+  color: var(--opus-accent);
+}
+
 .iconButton:disabled {
   cursor: not-allowed;
   opacity: 0.38;

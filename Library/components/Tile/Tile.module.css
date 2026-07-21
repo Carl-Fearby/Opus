@@ -1,7 +1,7 @@
 .tile {
-  --tile-accent: #d946ef;
-  --tile-glow: #d946ef;
-  --tile-fill: #1a1024;
+  --tile-accent: var(--opus-tile-accent, #ec4899);
+  --tile-glow: var(--opus-tile-accent, #d946ef);
+  --tile-fill: color-mix(in srgb, var(--opus-tile-accent, #ec4899) 30%, #120a1c);
   --tile-label: #ffffff;
   --tile-highlight: color-mix(in srgb, var(--tile-accent) 42%, transparent);
   --tile-sheen: color-mix(in srgb, var(--tile-fill) 88%, #ffffff 6%);
@@ -36,15 +36,15 @@
 }
 
 .tile[data-tone="purple"] {
-  --tile-accent: #c4b5fd;
-  --tile-glow: #d946ef;
-  --tile-fill: #171022;
+  --tile-accent: var(--opus-tile-accent, #ec4899);
+  --tile-glow: var(--opus-tile-accent, #d946ef);
+  --tile-fill: color-mix(in srgb, var(--opus-tile-accent, #ec4899) 30%, #120a1c);
 }
 
 .tile[data-tone="blue"] {
-  --tile-accent: #93c5fd;
-  --tile-glow: #38bdf8;
-  --tile-fill: #0d1728;
+  --tile-accent: var(--opus-tile-accent-secondary, #0ea5e9);
+  --tile-glow: var(--opus-tile-accent-secondary-mid, #38bdf8);
+  --tile-fill: color-mix(in srgb, var(--opus-tile-accent-secondary, #0ea5e9) 30%, #071018);
 }
 
 :global([data-theme="light"]) .tile {
@@ -58,17 +58,17 @@
 }
 
 :global([data-theme="light"]) .tile[data-tone="purple"] {
-  --tile-accent: #a78bfa;
-  --tile-glow: #c026d3;
-  --tile-fill: #f6f1ff;
-  --tile-label: #3b2565;
+  --tile-accent: var(--opus-tile-accent, #ec4899);
+  --tile-glow: var(--opus-tile-accent, #c026d3);
+  --tile-fill: color-mix(in srgb, var(--opus-tile-accent, #ec4899) 22%, #ffffff);
+  --tile-label: color-mix(in srgb, var(--opus-tile-accent, #ec4899) 42%, #1e1033);
 }
 
 :global([data-theme="light"]) .tile[data-tone="blue"] {
-  --tile-accent: #60a5fa;
-  --tile-glow: #0284c7;
-  --tile-fill: #edf6ff;
-  --tile-label: #123a5c;
+  --tile-accent: var(--opus-tile-accent-secondary, #0ea5e9);
+  --tile-glow: var(--opus-tile-accent-secondary, #0284c7);
+  --tile-fill: color-mix(in srgb, var(--opus-tile-accent-secondary, #0ea5e9) 22%, #ffffff);
+  --tile-label: color-mix(in srgb, var(--opus-tile-accent-secondary, #0ea5e9) 42%, #0b1f33);
 }
 
 :global([data-theme="light"]) .tile:hover {
@@ -112,11 +112,11 @@
 }
 
 .tile[data-tone="purple"] .icon {
-  --tile-glow: #d946ef;
+  --tile-glow: var(--opus-tile-accent, #d946ef);
 }
 
 .tile[data-tone="blue"] .icon {
-  --tile-glow: #38bdf8;
+  --tile-glow: var(--opus-tile-accent-secondary-mid, #38bdf8);
 }
 
 .icon[data-tone="purple"] :global(svg),

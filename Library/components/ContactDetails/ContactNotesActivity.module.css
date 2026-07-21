@@ -9,17 +9,17 @@
   --contact-tab-rail-bg: color-mix(in srgb, var(--dashboard-section-bg, var(--opus-panel)) 84%, #05070f 16%);
   /* Same chrome as DashboardContentContainer / contact identity card. */
   --notes-tab-widget-bg:
-    radial-gradient(85% 65% at 14% 0%, color-mix(in srgb, #9333ea 16%, transparent), transparent 58%),
-    radial-gradient(72% 58% at 100% 100%, color-mix(in srgb, #0284c7 12%, transparent), transparent 62%),
+    radial-gradient(85% 65% at 14% 0%, color-mix(in srgb, var(--opus-accent) 16%, transparent), transparent 58%),
+    radial-gradient(72% 58% at 100% 100%, color-mix(in srgb, var(--opus-accent-secondary, #0284c7) 12%, transparent), transparent 62%),
     linear-gradient(
       180deg,
       color-mix(in srgb, var(--dashboard-section-bg, #070d18) 94%, #ffffff 3%),
       var(--dashboard-section-bg, #070d18)
     );
-  /* Solid match for the purple-tinted top-left of the widget chrome (SVG tab fill). */
+  /* Solid match for the accent-tinted top-left of the widget chrome (SVG tab fill). */
   --notes-tab-widget-fill: color-mix(
     in srgb,
-    #9333ea 16%,
+    var(--opus-accent) 16%,
     color-mix(in srgb, var(--dashboard-section-bg, #070d18) 94%, #ffffff 3%)
   );
   display: flex;
@@ -113,16 +113,15 @@
 }
 
 :global([data-preview-root][data-theme="light"]) .tabsCardCard,
-:global([data-theme="light"]) .tabsCardCard,
-:global([data-shell-theme="light"]) .tabsCardCard {
+:global([data-theme="light"]) .tabsCardCard {
   --contact-tab-rail-bg: color-mix(
     in srgb,
     var(--dashboard-section-bg, var(--opus-panel)) 58%,
     color-mix(in srgb, var(--opus-accent) 6%, #d7dceb) 42%
   );
   --notes-tab-widget-bg:
-    radial-gradient(85% 65% at 14% 0%, color-mix(in srgb, #9333ea 10%, transparent), transparent 58%),
-    radial-gradient(72% 58% at 100% 100%, color-mix(in srgb, #0284c7 8%, transparent), transparent 62%),
+    radial-gradient(85% 65% at 14% 0%, color-mix(in srgb, var(--opus-accent) 10%, transparent), transparent 58%),
+    radial-gradient(72% 58% at 100% 100%, color-mix(in srgb, var(--opus-accent-secondary, #0284c7) 8%, transparent), transparent 62%),
     linear-gradient(
       180deg,
       color-mix(in srgb, var(--dashboard-section-bg, #f8fbff) 94%, #ffffff 6%),
@@ -130,7 +129,7 @@
     );
   --notes-tab-widget-fill: color-mix(
     in srgb,
-    #9333ea 10%,
+    var(--opus-accent) 10%,
     var(--dashboard-section-bg, #f8fbff)
   );
 }

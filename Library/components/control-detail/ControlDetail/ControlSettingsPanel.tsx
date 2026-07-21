@@ -1573,6 +1573,38 @@ export function ControlSettingsPanel({
         </div>
       );
     }
+    case "colour-clouds": {
+      const s = settings as ControlSettingsBySlug["colour-clouds"];
+      return (
+        <div className={shellStyles.settingsGrid}>
+          <SettingInput
+            label="Label"
+            value={s.label}
+            onChange={(label) => onChange({ ...s, label } as ControlSettings)}
+          />
+          <SettingToggle
+            label="Compact"
+            checked={Boolean(s.compact)}
+            onChange={(compact) => onChange({ ...s, compact } as ControlSettings)}
+          />
+          <SettingToggle
+            label="Menu open"
+            checked={Boolean(s.open)}
+            onChange={(open) => onChange({ ...s, open } as ControlSettings)}
+          />
+          <SettingToggle
+            label="Show reset"
+            checked={Boolean(s.showReset)}
+            onChange={(showReset) => onChange({ ...s, showReset } as ControlSettings)}
+          />
+          <SettingTextarea
+            label="Demo clouds JSON (3 colours → 3 sections)"
+            value={s.cloudsJson ?? ""}
+            onChange={(cloudsJson) => onChange({ ...s, cloudsJson } as ControlSettings)}
+          />
+        </div>
+      );
+    }
     case "icon-picker": {
       const s = settings as ControlSettingsBySlug["icon-picker"];
       return (
@@ -4595,9 +4627,16 @@ export function ControlSettingsPanel({
       return (
         <div className={shellStyles.settingsGrid}>
           <SettingInput
-            label="Title"
-            value={s.title}
-            onChange={(title) => onChange({ ...s, title } as ControlSettings)}
+            label="Start track"
+            type="number"
+            value={String(s.initialIndex + 1)}
+            onChange={(initialIndex) =>
+              onChange({
+                ...s,
+                initialIndex:
+                  Math.min(Math.max(Number(initialIndex) || 1, 1), 2) - 1,
+              } as ControlSettings)
+            }
           />
           <SettingToggle
             label="Show title"
@@ -4614,9 +4653,16 @@ export function ControlSettingsPanel({
             }
           />
           <SettingToggle
-            label="Loop"
+            label="Loop track"
             checked={s.loop}
             onChange={(loop) => onChange({ ...s, loop } as ControlSettings)}
+          />
+          <SettingToggle
+            label="Loop playlist"
+            checked={s.loopPlaylist}
+            onChange={(loopPlaylist) =>
+              onChange({ ...s, loopPlaylist } as ControlSettings)
+            }
           />
           <SettingToggle
             label="Muted"

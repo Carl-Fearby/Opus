@@ -48,6 +48,7 @@ const compositionPartsBySlug: Partial<Record<ControlSlug, ControlSlug[]>> = {
   "content-timeline": ["avatar"],
   "context-menu": ["dropdown-menu"],
   "copy-button": ["button"],
+  "colour-clouds": ["accent-color-picker"],
   dialog: ["button", "portal"],
   drawer: ["button", "portal"],
   "dropdown-menu": ["button"],
@@ -611,6 +612,19 @@ const rawControls: ControlDefinition[] = [
     usesFieldShell: true,
   },
   {
+    slug: "colour-clouds",
+    title: "Colour clouds",
+    category: "forms",
+    componentName: "ColourClouds",
+    description:
+      "Compact pill of up to five colourable orbs from a JSON designation — single or split dual-tone clouds.",
+    sourceFiles: [
+      "components/ColourClouds/ColourClouds.tsx",
+      "components/ColourClouds/ColourClouds.module.css",
+    ],
+    usesFieldShell: false,
+  },
+  {
     slug: "icon-picker",
     title: "Icon picker",
     category: "forms",
@@ -831,7 +845,7 @@ const rawControls: ControlDefinition[] = [
     title: "Video Player",
     category: "content",
     componentName: "VideoPlayer",
-    description: "Custom-styled HTML video player with play controls, scrubbing, mute, volume, and fullscreen.",
+    description: "Custom-styled HTML video player with playlist previous/next, scrubbing, mute, volume, and fullscreen.",
     navigationGroup: "Media",
     sourceFiles: ["components/VideoPlayer/VideoPlayer.tsx", "components/VideoPlayer/VideoPlayer.module.css"],
     usesFieldShell: false,
