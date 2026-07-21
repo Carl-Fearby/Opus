@@ -124,6 +124,8 @@ export type ControlSlug =
   | "data-grid"
   | "skeleton"
   | "carousel"
+  | "video-player"
+  | "audio-player"
   | "lightbox"
   | "image-thumbnail"
   | "image-gallery"
@@ -790,6 +792,7 @@ export type DashboardListColumnsSettings = {
 };
 
 export type NotesActivitySettings = {
+  activeTab: "notes" | "activities" | "documents" | "additional";
   addNoteButtonLabel: string;
   addNoteModalDescription: string;
   addNoteModalTitle: string;
@@ -800,6 +803,7 @@ export type NotesActivitySettings = {
   notesFooterLabel: string;
   previewLayout: DashboardPreviewLayout;
   saveButtonLabel: string;
+  tabsVariant: TabsVariant;
   width: DashboardSectionWidth;
   wrapInContainer?: boolean;
 };
@@ -886,6 +890,22 @@ export type CarouselSettings = {
   loop: boolean;
   showCaptions: boolean;
   showPips: boolean;
+};
+
+export type VideoPlayerSettings = {
+  autoPlay: boolean;
+  loop: boolean;
+  muted: boolean;
+  showTitle: boolean;
+  title: string;
+};
+
+export type AudioPlayerSettings = {
+  autoPlay: boolean;
+  initialIndex: number;
+  loop: boolean;
+  loopPlaylist: boolean;
+  showArtwork: boolean;
 };
 
 export type LightboxSettings = {
@@ -1167,9 +1187,19 @@ export type DashboardWelcomeSettings = {
 
 export type ContactDetailsSettings = {
   isStaffRecord: boolean;
+  notesActiveTab: "notes" | "activities" | "documents" | "additional";
+  notesTabsVariant: TabsVariant;
   showActions: boolean;
   showNotes: boolean;
   showStatus: boolean;
+  summaryTabsVariant: TabsVariant;
+};
+
+export type ContactCardSettings = {
+  isStaffRecord: boolean;
+  showActions: boolean;
+  showStatus: boolean;
+  summaryTabsVariant: TabsVariant;
 };
 
 export type BottomNavigationSettings = {
@@ -1476,6 +1506,8 @@ export type ControlSettingsBySlug = {
   "data-grid": DataGridSettings;
   skeleton: SkeletonSettings;
   carousel: CarouselSettings;
+  "video-player": VideoPlayerSettings;
+  "audio-player": AudioPlayerSettings;
   lightbox: LightboxSettings;
   "image-thumbnail": ImageThumbnailSettings;
   "image-gallery": ImageGallerySettings;
@@ -1578,6 +1610,8 @@ export type ControlSettingsBySlug = {
     "lab-dashboard-list-columns": DashboardListColumnsSettings;
     "lab-dashboard-welcome": DashboardWelcomeSettings;
     "lab-contact-details": ContactDetailsSettings;
+    "lab-contact-card": ContactCardSettings;
+    "lab-contact-notes": NotesActivitySettings;
     "lab-notes-activity": NotesActivitySettings;
     "lab-sidebar": SidebarSettings;
     "lab-test-layout": ThreePaneLayoutSettings;

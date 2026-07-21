@@ -1,7 +1,7 @@
 "use client";
 
 import { useId, useState, type ReactNode, type KeyboardEvent } from "react";
-import type { TabsOrientation, TabsVariant } from "@/components/fields/types";
+import type { TabsOrientation, TabsPanelMode, TabsVariant } from "@/components/fields/types";
 import { TabActiveLine } from "@/components/TabActiveLine";
 import styles from "./Tabs.module.css";
 
@@ -12,13 +12,23 @@ export type TabItem = {
   value: string;
 };
 
+const CARD_TAB_SHAPE_PATH =
+  "M 0 43 L 16 43 C 26 43 30 39 30 33 V 10 C 30 6 34 3 41 3 H 152 C 161 3 167 6 171 12 L 184 30 C 189 37 200 43 220 43 Z";
+
 type TabsProps = {
   "aria-label"?: string;
+  className?: string;
+  /** Card variant only: inset padding on the panel body (active mode). Prefer wrapping panel content instead. */
+  cardPanelPadding?: boolean;
   defaultValue?: string;
   fitted?: boolean;
   items: TabItem[];
   onValueChange?: (value: string) => void;
   orientation?: TabsOrientation;
+  panelClassName?: string;
+  panelContentClassName?: string;
+  /** How tab panels are rendered. Card variant defaults to crossfade. */
+  panelMode?: TabsPanelMode;
   /** Content aligned to the end of the tab row (e.g. context actions). */
   trailing?: ReactNode;
   value?: string;
@@ -27,11 +37,16 @@ type TabsProps = {
 
 export function Tabs({
   "aria-label": ariaLabel = "Tabs",
+  cardPanelPadding = false,
+  className,
   defaultValue,
   fitted = false,
   items,
   onValueChange,
   orientation = "horizontal",
+  panelClassName,
+  panelContentClassName,
+  panelMode,
   trailing,
   value,
   variant = "line",
@@ -41,6 +56,8 @@ export function Tabs({
   const [internalValue, setInternalValue] = useState(defaultValue ?? firstEnabledValue);
   const activeValue = value ?? internalValue;
   const activeItem = items.find((item) => item.value === activeValue) ?? items[0];
+  const resolvedPanelMode = panelMode ?? (variant === "card" ? "crossfade" : "active");
+  const isCardVariant = variant === "card";
 
   const setValue = (nextValue: string, focusTab = false) => {
     const item = items.find((candidate) => candidate.value === nextValue);
@@ -88,11 +105,17 @@ export function Tabs({
     setValue(enabledItems[nextIndex]?.value ?? activeValue, true);
   };
 
+  const rootClassName = [styles.root, className].filter(Boolean).join(" ");
+  const panelClassNames = [styles.panel, panelClassName].filter(Boolean).join(" ");
+  const panelContentClassNames = [styles.panelContent, panelContentClassName].filter(Boolean).join(" ");
+
   return (
     <div
-      className={styles.root}
+      className={rootClassName}
+      data-card-panel-padding={isCardVariant && cardPanelPadding ? "true" : "false"}
       data-fitted={fitted}
       data-orientation={orientation}
+      data-panel-mode={resolvedPanelMode}
       data-variant={variant}
     >
       <div className={styles.header}>
@@ -121,18 +144,56 @@ export function Tabs({
                 tabIndex={selected ? 0 : -1}
                 type="button"
               >
-                {item.label}
-                {selected && variant === "line" ? <TabActiveLine orientation={orientation} /> : null}
+                {isCardVariant ? (
+                  <>
+                    <span aria-hidden="true" className={styles.tabShape}>
+                      <svg preserveAspectRatio="none" viewBox="0 0 220 43">
+                        <path d={CARD_TAB_SHAPE_PATH} />
+                      </svg>
+                    </span>
+                    <span className={styles.tabLabel}>{item.label}</span>
+                    <TabActiveLine className={styles.cardTabLine} />
+                  </>
+                ) : (
+                  item.label
+                )}
+                {!isCardVariant && selected && variant === "line" ? (
+                  <TabActiveLine orientation={orientation} />
+                ) : null}
               </button>
             );
           })}
         </div>
         {trailing ? <div className={styles.trailing}>{trailing}</div> : null}
       </div>
-      {activeItem ? (
+      {resolvedPanelMode === "crossfade" ? (
+        <div className={panelClassNames}>
+          {items.map((item) => {
+            const selected = item.value === activeValue;
+            const tabId = `${generatedId}-${item.value}-tab`;
+            const panelId = `${generatedId}-${item.value}-panel`;
+
+            return (
+              <div
+                aria-hidden={!selected}
+                aria-labelledby={tabId}
+                className={panelContentClassNames}
+                data-active={selected ? "true" : "false"}
+                id={panelId}
+                inert={!selected ? true : undefined}
+                key={item.value}
+                role="tabpanel"
+                tabIndex={selected ? -1 : undefined}
+              >
+                {item.content}
+              </div>
+            );
+          })}
+        </div>
+      ) : activeItem ? (
         <div
           aria-labelledby={`${generatedId}-${activeItem.value}-tab`}
-          className={styles.panel}
+          className={panelClassNames}
           id={`${generatedId}-${activeItem.value}-panel`}
           role="tabpanel"
           tabIndex={-1}

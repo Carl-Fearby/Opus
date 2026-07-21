@@ -5,7 +5,7 @@ export type { ContactCompany, ContactDetailsAction, ContactDetailsContact, Conta
 export { ContactIdentityCard } from "./ContactIdentityCard";
 export type { ContactIdentityCardProps } from "./ContactIdentityCard";
 export { ContactNotesActivity } from "./ContactNotesActivity";
-export type { ContactNotesActivityProps } from "./ContactNotesActivity";
+export type { ContactNotesActivityProps, ContactNotesWorkspaceTab } from "./ContactNotesActivity";
 export { ContactSummaryCard } from "./ContactSummaryCard";
 export type { ContactSummaryCardProps, ContactSummaryTab } from "./ContactSummaryCard";
 export { defaultContact, defaultContactNotes } from "./demoData";

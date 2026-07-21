@@ -97,6 +97,7 @@ export type NotesActivityProps = {
   /** When false, the built-in Add Note/Activity trigger is hidden (use an external control). */
   showComposerTrigger?: boolean;
   showEmoji?: boolean;
+  showFooter?: boolean;
   showMention?: boolean;
   showTabs?: boolean;
   showTags?: boolean;
@@ -548,6 +549,7 @@ export function NotesActivity({
   showAttach = true,
   showComposerTrigger = true,
   showEmoji = true,
+  showFooter = true,
   showMention = true,
   showTabs = true,
   showTags = true,
@@ -847,6 +849,7 @@ export function NotesActivity({
       className={[styles.root, className].filter(Boolean).join(" ")}
       data-active-tab={activeTab}
       data-density={density}
+      data-show-footer={showFooter}
       data-show-tabs={showTabs}
     >
       {showTabs ? (
@@ -1003,21 +1006,23 @@ export function NotesActivity({
         />
       </CustomScrollbar>
 
-      <footer className={styles.footer}>
-        {activeFooterHref ? (
-          <a className={styles.footerAction} href={activeFooterHref}>
-            {footerContent}
-          </a>
-        ) : (
-          <button
-            className={styles.footerAction}
-            onClick={activeFooterClick}
-            type="button"
-          >
-            {footerContent}
-          </button>
-        )}
-      </footer>
+      {showFooter ? (
+        <footer className={styles.footer}>
+          {activeFooterHref ? (
+            <a className={styles.footerAction} href={activeFooterHref}>
+              {footerContent}
+            </a>
+          ) : (
+            <button
+              className={styles.footerAction}
+              onClick={activeFooterClick}
+              type="button"
+            >
+              {footerContent}
+            </button>
+          )}
+        </footer>
+      ) : null}
     </div>
   );
 }

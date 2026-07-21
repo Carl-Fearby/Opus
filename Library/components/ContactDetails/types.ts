@@ -1,3 +1,5 @@
+import type { TabsVariant } from "@/components/fields/types";
+
 export type ContactDetailsAction =
   | "add-note"
   | "add-task"
@@ -47,6 +49,7 @@ export type ContactDetailsProps = {
   onPasswordReset?: () => void;
   showActions?: boolean;
   showStatus?: boolean;
+  tabsVariant?: TabsVariant;
 };
 
 export function getPrimaryCompany(companies: ContactCompany[] = []): ContactCompany | undefined {

@@ -1,4 +1,4 @@
-import type { NotesActivityItem } from "opus-react";
+import type { NotesActivityItem } from "@/components/NotesActivity";
 import { defaultUserProfilePhotoSrc } from "./userProfileDemoData";
 
 export const demoNotesActivity: NotesActivityItem[] = [

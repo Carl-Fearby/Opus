@@ -150,6 +150,341 @@
   margin: 0;
 }
 
+.root[data-variant="card"] {
+  --tabs-card-border: color-mix(in srgb, #4a5068 36%, color-mix(in srgb, var(--opus-accent) 8%, #2a2f3d));
+  --tabs-card-rail-bg: color-mix(in srgb, var(--dashboard-section-bg, var(--opus-panel)) 84%, #05070f 16%);
+  --tabs-card-active-fill: color-mix(
+    in srgb,
+    var(--opus-accent) 10%,
+    color-mix(in srgb, var(--dashboard-section-panel, var(--opus-panel)) 78%, #0b0f1a 22%)
+  );
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  height: 100%;
+  min-height: 0;
+  min-width: 0;
+}
+
+:global([data-preview-root][data-theme="light"]) .root[data-variant="card"],
+:global([data-theme="light"]) .root[data-variant="card"],
+:global([data-shell-theme="light"]) .root[data-variant="card"] {
+  --tabs-card-border: color-mix(in srgb, var(--opus-border) 72%, var(--opus-accent) 28%);
+  --tabs-card-rail-bg: color-mix(
+    in srgb,
+    var(--dashboard-section-bg, var(--opus-panel)) 58%,
+    color-mix(in srgb, var(--opus-accent) 6%, #d7dceb) 42%
+  );
+  --tabs-card-active-fill: color-mix(
+    in srgb,
+    var(--opus-accent) 4%,
+    var(--dashboard-section-panel, var(--opus-input-fill, #ffffff))
+  );
+}
+
+.root[data-variant="card"] .header {
+  --tabs-card-tab-height: 43px;
+  --tabs-card-rail-pad-top: 10px;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 16px;
+  box-sizing: border-box;
+  min-height: calc(var(--tabs-card-tab-height) + var(--tabs-card-rail-pad-top) + 1px);
+  padding-top: var(--tabs-card-rail-pad-top);
+  border-bottom: 1px solid var(--tabs-card-border);
+}
+
+:global([data-preview-root][data-theme="light"]) .root[data-variant="card"] .tab:disabled .tabLabel,
+:global([data-theme="light"]) .root[data-variant="card"] .tab:disabled .tabLabel,
+:global([data-shell-theme="light"]) .root[data-variant="card"] .tab:disabled .tabLabel {
+  color: color-mix(in srgb, var(--opus-muted) 28%, transparent);
+}
+
+.root[data-variant="card"] .list {
+  align-items: stretch;
+}
+
+.root[data-variant="card"] .tab {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  flex: 0 0 auto;
+  width: auto;
+  min-width: 0;
+  height: var(--tabs-card-tab-height);
+  margin: 0 0 -1px;
+  padding: 0 52px 0 46px;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  color: var(--dashboard-section-muted, var(--opus-muted));
+  cursor: pointer;
+  font: inherit;
+  font-size: 0.88rem;
+  font-weight: 650;
+  text-align: left;
+  transition:
+    color 420ms cubic-bezier(0.22, 1, 0.36, 1),
+    z-index 0s linear 200ms;
+}
+
+.root[data-variant="card"] .tab + .tab {
+  margin-left: -56px;
+}
+
+.root[data-variant="card"] .tab:disabled {
+  cursor: not-allowed;
+  opacity: 0.58;
+}
+
+.root[data-variant="card"] .tab:disabled .tabLabel {
+  color: color-mix(in srgb, var(--dashboard-section-muted, var(--opus-muted)) 34%, transparent);
+}
+
+.root[data-variant="card"] .tab:disabled .tabShape path {
+  fill: color-mix(in srgb, var(--tabs-card-rail-bg) 92%, var(--opus-muted) 8%);
+  stroke: color-mix(in srgb, var(--tabs-card-border) 28%, transparent);
+}
+
+.root[data-variant="card"] .tab:disabled .cardTabLine {
+  opacity: 0;
+  transform: scaleX(0.82);
+}
+
+.root[data-variant="card"] .tab:disabled:hover,
+.root[data-variant="card"] .tab:disabled:focus-visible {
+  color: var(--dashboard-section-muted, var(--opus-muted));
+  outline: none;
+}
+
+.root[data-variant="card"] .tabShape {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+}
+
+.root[data-variant="card"] .tabShape svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+}
+
+.root[data-variant="card"] .tabShape path {
+  fill: transparent;
+  stroke: transparent;
+  stroke-width: 1px;
+  vector-effect: non-scaling-stroke;
+  transition:
+    fill 420ms cubic-bezier(0.22, 1, 0.36, 1),
+    stroke 420ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.root[data-variant="card"] .tabLabel {
+  position: relative;
+  z-index: 1;
+  transition: color 420ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.root[data-variant="card"] .tab[aria-selected="true"] {
+  z-index: 3;
+  color: var(--dashboard-section-text, var(--opus-text));
+  transition:
+    color 420ms cubic-bezier(0.22, 1, 0.36, 1),
+    z-index 0s;
+}
+
+.root[data-variant="card"] .tab[aria-selected="true"] .tabShape path {
+  fill: var(--tabs-card-active-fill);
+  stroke: var(--tabs-card-border);
+}
+
+.root[data-variant="card"] .cardTabLine {
+  --tab-active-line-width: calc(100% - 88px);
+  --tab-active-line-min-width: 0;
+  left: 46px;
+  right: auto;
+  bottom: 0;
+  width: var(--tab-active-line-width);
+  opacity: 0;
+  transform: scaleX(0.82);
+  transform-origin: left bottom;
+  transition:
+    opacity 360ms cubic-bezier(0.22, 1, 0.36, 1),
+    transform 420ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.root[data-variant="card"] .tab[aria-selected="true"] .cardTabLine {
+  opacity: 1;
+  transform: scaleX(1);
+}
+
+.root[data-variant="card"] .tab:focus-visible {
+  outline: 2px solid var(--opus-accent);
+  outline-offset: -4px;
+}
+
+.root[data-variant="card"] .trailing {
+  display: flex;
+  align-self: stretch;
+  align-items: center;
+  flex-wrap: nowrap;
+  box-sizing: border-box;
+  height: calc(var(--tabs-card-tab-height) + var(--tabs-card-rail-pad-top));
+  margin-top: calc(-1 * var(--tabs-card-rail-pad-top));
+  padding: 0 14px 0 0;
+}
+
+.root[data-variant="card"] .trailing button {
+  white-space: nowrap;
+}
+
+.root[data-variant="card"] .panel {
+  position: relative;
+  display: flex;
+  flex: 1 1 auto;
+  flex-direction: column;
+  box-sizing: border-box;
+  min-width: 0;
+  min-height: 0;
+  overflow: auto;
+  padding: 0;
+  border: 0;
+  border-radius: 0;
+  background: var(--tabs-card-active-fill);
+  box-shadow: none;
+  color: inherit;
+  scrollbar-width: thin;
+  scrollbar-color: color-mix(in srgb, var(--opus-accent) 42%, var(--opus-border)) transparent;
+}
+
+.root[data-variant="card"] .panel::-webkit-scrollbar {
+  width: 8px;
+}
+
+.root[data-variant="card"] .panel::-webkit-scrollbar-thumb {
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--opus-accent) 42%, var(--opus-border));
+}
+
+.root[data-variant="card"] .panel::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.root[data-variant="card"][data-card-panel-padding="true"] .panel {
+  display: flex;
+  flex-direction: column;
+  padding: 8px 14px 28px;
+}
+
+.root[data-variant="card"] .panelContent {
+  position: absolute;
+  inset: 0;
+  box-sizing: border-box;
+  overflow: auto;
+  padding: 8px 14px 28px;
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transform: translate3d(0, 10px, 0) scale(0.985);
+  transform-origin: top center;
+  transition:
+    opacity 380ms cubic-bezier(0.22, 1, 0.36, 1),
+    transform 460ms cubic-bezier(0.22, 1, 0.36, 1),
+    visibility 0s linear 380ms;
+  scrollbar-width: thin;
+  scrollbar-color: color-mix(in srgb, var(--opus-accent) 42%, var(--opus-border)) transparent;
+  z-index: 0;
+}
+
+.root[data-variant="card"] .panelContent[data-active="true"] {
+  opacity: 1;
+  visibility: visible;
+  pointer-events: auto;
+  transform: translate3d(0, 0, 0) scale(1);
+  transition:
+    opacity 420ms cubic-bezier(0.16, 1, 0.3, 1),
+    transform 480ms cubic-bezier(0.16, 1, 0.3, 1),
+    visibility 0s;
+  z-index: 1;
+}
+
+.root[data-variant="card"] .panelContent::-webkit-scrollbar {
+  width: 8px;
+}
+
+.root[data-variant="card"] .panelContent::-webkit-scrollbar-thumb {
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--opus-accent) 42%, var(--opus-border));
+}
+
+.root[data-variant="card"] .panelContent::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .root[data-variant="card"] .tab,
+  .root[data-variant="card"] .tab[aria-selected="true"],
+  .root[data-variant="card"] .tabLabel,
+  .root[data-variant="card"] .tabShape path,
+  .root[data-variant="card"] .cardTabLine,
+  .root[data-variant="card"] .panelContent,
+  .root[data-variant="card"] .panelContent[data-active="true"] {
+    transition: none;
+  }
+
+  .root[data-variant="card"] .cardTabLine,
+  .root[data-variant="card"] .panelContent,
+  .root[data-variant="card"] .panelContent[data-active="true"] {
+    transform: none;
+  }
+}
+
+@media (max-width: 1100px) {
+  .root[data-variant="card"] .header {
+    align-items: stretch;
+    flex-direction: column;
+    gap: 0;
+  }
+
+  .root[data-variant="card"] .trailing {
+    align-self: stretch;
+    justify-content: flex-start;
+    height: auto;
+    margin-top: 0;
+    padding: 10px 16px;
+    border-top: 1px solid var(--opus-border);
+  }
+}
+
+@media (max-width: 760px) {
+  .root[data-variant="card"] .list {
+    width: 100%;
+  }
+
+  .root[data-variant="card"] .tab {
+    flex: 1 1 auto;
+    width: auto;
+    min-width: 0;
+    padding: 0 40px;
+  }
+
+  .root[data-variant="card"] .tab + .tab {
+    margin-left: -48px;
+  }
+
+  .root[data-variant="card"] .tabShape {
+    inset: 0 4px;
+  }
+
+  .root[data-variant="card"] .trailing {
+    flex-wrap: wrap;
+  }
+}
+
 @media (max-width: 680px) {
   .root[data-orientation="vertical"] {
     grid-template-columns: 1fr;

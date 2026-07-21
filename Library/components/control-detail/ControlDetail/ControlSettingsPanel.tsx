@@ -3259,6 +3259,89 @@ export function ControlSettingsPanel({
             checked={s.showNotes}
             onChange={(showNotes) => onChange({ ...s, showNotes } as ControlSettings)}
           />
+          <SettingSelect
+            label="Summary tabs variant"
+            value={s.summaryTabsVariant}
+            onChange={(summaryTabsVariant) =>
+              onChange({
+                ...s,
+                summaryTabsVariant: summaryTabsVariant as typeof s.summaryTabsVariant,
+              } as ControlSettings)
+            }
+            options={[
+              { label: "Line", value: "line" },
+              { label: "Contained", value: "contained" },
+              { label: "Card", value: "card" },
+            ]}
+          />
+          <SettingSelect
+            label="Notes active tab"
+            value={s.notesActiveTab ?? "notes"}
+            onChange={(notesActiveTab) =>
+              onChange({
+                ...s,
+                notesActiveTab: notesActiveTab as typeof s.notesActiveTab,
+              } as ControlSettings)
+            }
+            options={[
+              { label: "Notes", value: "notes" },
+              { label: "Activities", value: "activities" },
+              { label: "Documents", value: "documents" },
+              { label: "Other Details", value: "additional" },
+            ]}
+          />
+          <SettingSelect
+            label="Notes tabs variant"
+            value={s.notesTabsVariant}
+            onChange={(notesTabsVariant) =>
+              onChange({
+                ...s,
+                notesTabsVariant: notesTabsVariant as typeof s.notesTabsVariant,
+              } as ControlSettings)
+            }
+            options={[
+              { label: "Line", value: "line" },
+              { label: "Contained", value: "contained" },
+              { label: "Card", value: "card" },
+            ]}
+          />
+        </div>
+      );
+    }
+    case "lab-contact-card": {
+      const s = settings as ControlSettingsBySlug["lab-contact-card"];
+      return (
+        <div className={shellStyles.settingsGrid}>
+          <SettingToggle
+            label="Staff / user record"
+            checked={s.isStaffRecord ?? false}
+            onChange={(isStaffRecord) => onChange({ ...s, isStaffRecord } as ControlSettings)}
+          />
+          <SettingToggle
+            label="Header actions"
+            checked={s.showActions}
+            onChange={(showActions) => onChange({ ...s, showActions } as ControlSettings)}
+          />
+          <SettingToggle
+            label="Contact status"
+            checked={s.showStatus}
+            onChange={(showStatus) => onChange({ ...s, showStatus } as ControlSettings)}
+          />
+          <SettingSelect
+            label="Summary tabs variant"
+            value={s.summaryTabsVariant}
+            onChange={(summaryTabsVariant) =>
+              onChange({
+                ...s,
+                summaryTabsVariant: summaryTabsVariant as typeof s.summaryTabsVariant,
+              } as ControlSettings)
+            }
+            options={[
+              { label: "Line", value: "line" },
+              { label: "Contained", value: "contained" },
+              { label: "Card", value: "card" },
+            ]}
+          />
         </div>
       );
     }
@@ -3341,21 +3424,46 @@ export function ControlSettingsPanel({
         </div>
       );
     }
+    case "lab-contact-notes":
     case "lab-notes-activity": {
       const s = settings as ControlSettingsBySlug["notes-activity"];
       return (
         <div className={shellStyles.settingsGrid}>
+          <SettingSelect
+            label="Active tab"
+            value={s.activeTab ?? "notes"}
+            onChange={(activeTab) =>
+              onChange({
+                ...s,
+                activeTab: activeTab as typeof s.activeTab,
+              } as ControlSettings)
+            }
+            options={[
+              { label: "Notes", value: "notes" },
+              { label: "Activities", value: "activities" },
+              { label: "Documents", value: "documents" },
+              { label: "Other Details", value: "additional" },
+            ]}
+          />
+          <SettingSelect
+            label="Tabs variant"
+            value={s.tabsVariant ?? "card"}
+            onChange={(tabsVariant) =>
+              onChange({
+                ...s,
+                tabsVariant: tabsVariant as typeof s.tabsVariant,
+              } as ControlSettings)
+            }
+            options={[
+              { label: "Line", value: "line" },
+              { label: "Contained", value: "contained" },
+              { label: "Card", value: "card" },
+            ]}
+          />
           <DashboardPreviewLayoutSetting
             value={s.previewLayout}
             onChange={(previewLayout) =>
               onChange({ ...s, previewLayout } as ControlSettings)
-            }
-          />
-          <SettingToggle
-            label="Inside widget container"
-            checked={s.wrapInContainer ?? true}
-            onChange={(wrapInContainer) =>
-              onChange({ ...s, wrapInContainer } as ControlSettings)
             }
           />
           <DashboardWidgetWidthSetting settings={s} onChange={onChange} />
@@ -4482,6 +4590,87 @@ export function ControlSettingsPanel({
         </div>
       );
     }
+    case "video-player": {
+      const s = settings as ControlSettingsBySlug["video-player"];
+      return (
+        <div className={shellStyles.settingsGrid}>
+          <SettingInput
+            label="Title"
+            value={s.title}
+            onChange={(title) => onChange({ ...s, title } as ControlSettings)}
+          />
+          <SettingToggle
+            label="Show title"
+            checked={s.showTitle}
+            onChange={(showTitle) =>
+              onChange({ ...s, showTitle } as ControlSettings)
+            }
+          />
+          <SettingToggle
+            label="Autoplay"
+            checked={s.autoPlay}
+            onChange={(autoPlay) =>
+              onChange({ ...s, autoPlay } as ControlSettings)
+            }
+          />
+          <SettingToggle
+            label="Loop"
+            checked={s.loop}
+            onChange={(loop) => onChange({ ...s, loop } as ControlSettings)}
+          />
+          <SettingToggle
+            label="Muted"
+            checked={s.muted}
+            onChange={(muted) => onChange({ ...s, muted } as ControlSettings)}
+          />
+        </div>
+      );
+    }
+    case "audio-player": {
+      const s = settings as ControlSettingsBySlug["audio-player"];
+      return (
+        <div className={shellStyles.settingsGrid}>
+          <SettingInput
+            label="Start track"
+            type="number"
+            value={String(s.initialIndex + 1)}
+            onChange={(initialIndex) =>
+              onChange({
+                ...s,
+                initialIndex:
+                  Math.min(Math.max(Number(initialIndex) || 1, 1), 2) - 1,
+              } as ControlSettings)
+            }
+          />
+          <SettingToggle
+            label="Show artwork"
+            checked={s.showArtwork}
+            onChange={(showArtwork) =>
+              onChange({ ...s, showArtwork } as ControlSettings)
+            }
+          />
+          <SettingToggle
+            label="Autoplay"
+            checked={s.autoPlay}
+            onChange={(autoPlay) =>
+              onChange({ ...s, autoPlay } as ControlSettings)
+            }
+          />
+          <SettingToggle
+            label="Loop track"
+            checked={s.loop}
+            onChange={(loop) => onChange({ ...s, loop } as ControlSettings)}
+          />
+          <SettingToggle
+            label="Loop playlist"
+            checked={s.loopPlaylist}
+            onChange={(loopPlaylist) =>
+              onChange({ ...s, loopPlaylist } as ControlSettings)
+            }
+          />
+        </div>
+      );
+    }
     case "lightbox": {
       const s = settings as ControlSettingsBySlug["lightbox"];
       return (
@@ -4766,12 +4955,15 @@ export function ControlSettingsPanel({
             onChange={(variant) =>
               onChange({
                 ...s,
+                activeValue:
+                  variant === "card" && s.activeValue === "form" ? "overview" : s.activeValue,
                 variant: variant as typeof s.variant,
               } as ControlSettings)
             }
             options={[
               { label: "Line", value: "line" },
               { label: "Contained", value: "contained" },
+              { label: "Card", value: "card" },
             ]}
           />
           <SettingToggle

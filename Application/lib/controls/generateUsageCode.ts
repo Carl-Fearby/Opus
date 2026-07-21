@@ -2007,8 +2007,9 @@ ${wrapDashboardWidget(
       const notesBlock = s.showNotes
         ? `
   <ContactNotesActivity
+    activeTab="${s.notesActiveTab ?? "notes"}"
     onAction={(action) => console.log(action)}
-    onAddNote={(note) => console.log(note)}
+    onAddNote={(note) => console.log(note)}${s.notesTabsVariant !== "card" ? `\n    tabsVariant="${s.notesTabsVariant}"` : ""}
   />`
         : "";
       return interactiveUsage({
@@ -2030,12 +2031,61 @@ ${wrapDashboardWidget(
   <ContactDetails
     isStaffRecord={${s.isStaffRecord ?? false}}
     showActions={${s.showActions}}
-    showStatus={${s.showStatus}}
+    showStatus={${s.showStatus}}${s.summaryTabsVariant !== "card" ? `\n    tabsVariant="${s.summaryTabsVariant}"` : ""}
     onAction={(action) => console.log(action)}
     onAvatarChange={(previewUrl) => console.log(previewUrl)}
     onPasswordReset={() => console.log("reset-password")}
   />${notesBlock}
 </div>`,
+      });
+    }
+    case "lab-contact-card": {
+      const s = settings as ControlSettingsBySlug["lab-contact-card"];
+      const recordLabel = s.isStaffRecord ? "User" : "Contact";
+      const collectionLabel = s.isStaffRecord ? "Users" : "Contacts";
+      const collectionId = s.isStaffRecord ? "users" : "contacts";
+      return interactiveUsage({
+        components: ["ContactDetails", "PageHeader", "Breadcrumb"],
+        state: [],
+        jsx: `<div style={{ display: "grid", gap: 18, width: "100%" }}>
+  <PageHeader
+    title="${recordLabel} Card"
+    breadcrumbs={
+      <Breadcrumb
+        separator="›"
+        items={[
+          { id: "${collectionId}", href: "#${collectionId}", label: "${collectionLabel}" },
+          { id: "current", label: "Emma Winterhold-Smith" },
+        ]}
+      />
+    }
+  />
+  <ContactDetails
+    isStaffRecord={${s.isStaffRecord ?? false}}
+    showActions={${s.showActions}}
+    showStatus={${s.showStatus}}${s.summaryTabsVariant !== "card" ? `\n    tabsVariant="${s.summaryTabsVariant}"` : ""}
+    onAction={(action) => console.log(action)}
+    onAvatarChange={(previewUrl) => console.log(previewUrl)}
+    onPasswordReset={() => console.log("reset-password")}
+  />
+</div>`,
+      });
+    }
+    case "lab-contact-notes":
+    case "lab-notes-activity": {
+      const s = settings as ControlSettingsBySlug["notes-activity"];
+      const tabsVariantProp =
+        (s.tabsVariant ?? "card") !== "card" ? `\n  tabsVariant="${s.tabsVariant}"` : "";
+      const activeTabProp =
+        (s.activeTab ?? "notes") !== "notes" ? `\n  activeTab="${s.activeTab}"` : "";
+      const widget = `<ContactNotesActivity
+  onAction={(action) => console.log(action)}
+  onAddNote={(note) => console.log(note)}${activeTabProp}${tabsVariantProp}
+/>`;
+      return interactiveUsage({
+        components: ["ContactNotesActivity", "NotesActivity", "Tabs"],
+        state: [],
+        jsx: widget,
       });
     }
     case "lab-dashboard-welcome": {
@@ -2237,47 +2287,6 @@ ${wrapDashboardWidget(
     <Button type="submit">${s.submitLabel}</Button>
   </form>
 </DashboardContentContainer>`,
-      });
-    }
-    case "lab-notes-activity": {
-      const s = settings as ControlSettingsBySlug["notes-activity"];
-      const wrap = s.wrapInContainer ?? true;
-      const widget = `<NotesActivity
-  addNoteButtonLabel=${quote(s.addNoteButtonLabel ?? "Add note")}
-  addNoteModalDescription=${quote(s.addNoteModalDescription ?? "Capture supporting detail, attach files, or mention teammates.")}
-  addNoteModalTitle=${quote(s.addNoteModalTitle ?? "Add a note")}
-  activityFooterLabel=${quote(s.activityFooterLabel)}
-  composerPlaceholder=${quote(s.composerPlaceholder)}
-  density=${quote(s.density)}
-  items={activity}
-  noteAuthorName="Carl Fearby"
-  notesFooterLabel=${quote(s.notesFooterLabel)}
-  saveButtonLabel=${quote(s.saveButtonLabel)}
-  onActivityFooterClick={() => console.log(${quote(s.activityFooterLabel)})}
-  onItemClick={(item) => console.log(item.body)}
-  onNoteAttachClick={() => console.log("Attach file")}
-  onNoteEmojiSelect={(emoji) => console.log("Emoji", emoji)}
-  onNoteMentionClick={() => console.log("Mention teammate")}
-  onNotesFooterClick={() => console.log(${quote(s.notesFooterLabel)})}
-  onNoteSave={(note, parentNote) =>
-    console.log("Saved note", note, parentNote ? \`on \${parentNote.author}\` : "as a top-level note")
-  }
-  onTabChange={(tab) => console.log("Tab", tab)}
-/>`;
-      return interactiveUsage({
-        components: wrap
-          ? ["DashboardContentContainer", "NoteComposer", "NotesActivity"]
-          : ["NoteComposer", "NotesActivity"],
-        preamble: [
-          `const activity = ${JSON.stringify(demoNotesActivity, null, 2)};`,
-        ],
-        state: [],
-        jsx: maybeWrapDashboardContent(widget, {
-          dataComponent: "notes-activity",
-          height: s.height,
-          width: s.width ?? "widget",
-          wrap,
-        }),
       });
     }
     case "lab-test-layout": {
@@ -2989,6 +2998,52 @@ const images = [
 ];
 
 <Carousel${formatSelfClosing(props)}`;
+    }
+    case "video-player": {
+      const s = settings as ControlSettingsBySlug["video-player"];
+      const props = [
+        formatStringProp("src", "/media/demo-video.mp4"),
+        ...(s.title !== "Video" ? [formatStringProp("title", s.title)] : []),
+        ...(s.showTitle ? [] : [formatBoolProp("showTitle", false)]),
+        ...(s.autoPlay ? [formatBoolProp("autoPlay", true)] : []),
+        ...(s.loop ? [formatBoolProp("loop", true)] : []),
+        ...(s.muted ? [formatBoolProp("muted", true)] : []),
+      ];
+      return `${importLine(["VideoPlayer"])}
+
+<VideoPlayer${formatSelfClosing(props)}`;
+    }
+    case "audio-player": {
+      const s = settings as ControlSettingsBySlug["audio-player"];
+      const props = [
+        formatExpressionProp("tracks", "tracks"),
+        ...(s.initialIndex !== 0
+          ? [formatNumberProp("initialIndex", s.initialIndex)]
+          : []),
+        ...(s.showArtwork ? [] : [formatBoolProp("showArtwork", false)]),
+        ...(s.autoPlay ? [formatBoolProp("autoPlay", true)] : []),
+        ...(s.loop ? [formatBoolProp("loop", true)] : []),
+        ...(s.loopPlaylist ? [] : [formatBoolProp("loopPlaylist", false)]),
+      ];
+      return `${importLine(["AudioPlayer"])}
+
+const tracks = [
+  {
+    id: "mirror-acoustic",
+    src: "/media/demo-audio.mp3",
+    title: "I Look in the Mirror",
+    artist: "Acoustic Mix",
+  },
+  {
+    id: "abysmal-3",
+    src: "/media/demo-audio-abysmal.mp3",
+    title: "Abysmal",
+    artist: "neofuture",
+    artworkSrc: "/media/demo-audio-abysmal-art.jpg",
+  },
+];
+
+<AudioPlayer${formatSelfClosing(props)}`;
     }
     case "lightbox": {
       const s = settings as ControlSettingsBySlug["lightbox"];

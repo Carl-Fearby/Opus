@@ -4,6 +4,7 @@ import { ContactIdentityCard } from "./ContactIdentityCard";
 import { ContactSummaryCard } from "./ContactSummaryCard";
 import type { ContactDetailsAction, ContactDetailsContact } from "./types";
 import type { MoreActionsMenuItem } from "opus-react";
+import type { TabsVariant } from "opus-react";
 import styles from "./ContactCard.module.css";
 
 export type ContactCardProps = {
@@ -17,6 +18,7 @@ export type ContactCardProps = {
   ownerAvatarSrc?: string;
   showActions?: boolean;
   showStatus?: boolean;
+  tabsVariant?: TabsVariant;
 };
 
 export function ContactCard({
@@ -30,6 +32,7 @@ export function ContactCard({
   ownerAvatarSrc,
   showActions = true,
   showStatus = true,
+  tabsVariant,
 }: ContactCardProps) {
   return (
     <div
@@ -53,13 +56,13 @@ export function ContactCard({
         contact={contact}
         isStaffRecord={isStaffRecord}
         moreActions={moreActions}
-        onAction={onAction}
         onPasswordReset={() => {
           onPasswordReset?.();
           onAction?.("reset-password");
         }}
         ownerAvatarSrc={ownerAvatarSrc}
         showActions={showActions}
+        tabsVariant={tabsVariant}
       />
     </div>
   );

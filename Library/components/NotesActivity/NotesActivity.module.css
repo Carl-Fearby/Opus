@@ -47,13 +47,20 @@
   grid-template-rows: auto minmax(0, 1fr) auto;
 }
 
+.root[data-show-tabs="false"][data-show-footer="false"] {
+  grid-template-areas:
+    "composer"
+    "feed";
+  grid-template-rows: auto minmax(0, 1fr);
+}
+
 .root[data-density="compact"] .tab {
   padding-bottom: 10px;
   font-size: 0.76rem;
 }
 
 .root[data-density="compact"] .footer {
-  padding: 8px 0 14px;
+  padding: 8px 0 8px;
 }
 
 .tabsRow {
@@ -581,7 +588,7 @@
 
 .footer {
   grid-area: footer;
-  padding: 10px 0 14px;
+  padding: 10px 0 10px;
   border-top: 1px solid
     color-mix(in srgb, var(--dashboard-section-text) 10%, transparent);
 }

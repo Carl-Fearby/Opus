@@ -161,6 +161,19 @@ export function FontPicker({ id, onChange, value }: FontPickerProps) {
                 value={query}
                 onChange={(event) => setQuery(event.target.value)}
               />
+              {value !== DEFAULT_FONT_FAMILY ? (
+                <button
+                  className={styles.reset}
+                  type="button"
+                  onClick={() => {
+                    onChange(DEFAULT_FONT_FAMILY);
+                    setQuery("");
+                    setOpen(false);
+                  }}
+                >
+                  Reset
+                </button>
+              ) : null}
             </div>
             <div aria-label="Google Fonts" className={styles.options} id={`${id}-options`} role="listbox">
               {filteredFonts.map((font) => {

@@ -679,6 +679,7 @@ export const defaultSettings: ControlSettingsBySlug = {
     topPerformingUsersFooterLabel: "View full report",
   },
   "notes-activity": {
+    activeTab: "notes",
     addNoteButtonLabel: "Add note",
     addNoteModalDescription:
       "Capture supporting detail, attach files, or mention teammates.",
@@ -690,6 +691,7 @@ export const defaultSettings: ControlSettingsBySlug = {
     notesFooterLabel: "View all notes",
     previewLayout: "single",
     saveButtonLabel: "Save Note",
+    tabsVariant: "card",
     width: "widget",
     wrapInContainer: true,
   },
@@ -716,11 +718,21 @@ export const defaultSettings: ControlSettingsBySlug = {
   },
   "lab-contact-details": {
     isStaffRecord: false,
+    notesActiveTab: "notes",
+    notesTabsVariant: "card",
     showActions: true,
     showNotes: true,
     showStatus: true,
+    summaryTabsVariant: "card",
   },
-  "lab-notes-activity": {
+  "lab-contact-card": {
+    isStaffRecord: false,
+    showActions: true,
+    showStatus: true,
+    summaryTabsVariant: "card",
+  },
+  "lab-contact-notes": {
+    activeTab: "notes",
     addNoteButtonLabel: "Add note",
     addNoteModalDescription:
       "Capture supporting detail, attach files, or mention teammates.",
@@ -732,8 +744,26 @@ export const defaultSettings: ControlSettingsBySlug = {
     notesFooterLabel: "View all notes",
     previewLayout: "single",
     saveButtonLabel: "Save Note",
-    width: "widget",
-    wrapInContainer: true,
+    tabsVariant: "card",
+    width: "full",
+    wrapInContainer: false,
+  },
+  "lab-notes-activity": {
+    activeTab: "notes",
+    addNoteButtonLabel: "Add note",
+    addNoteModalDescription:
+      "Capture supporting detail, attach files, or mention teammates.",
+    addNoteModalTitle: "Add a note",
+    activityFooterLabel: "View all activities",
+    composerPlaceholder: "Add a note...",
+    density: "comfortable",
+    height: "auto",
+    notesFooterLabel: "View all notes",
+    previewLayout: "single",
+    saveButtonLabel: "Save Note",
+    tabsVariant: "card",
+    width: "full",
+    wrapInContainer: false,
   },
   "lab-sidebar": {
     side: "left",
@@ -964,6 +994,20 @@ export const defaultSettings: ControlSettingsBySlug = {
     loop: true,
     showCaptions: true,
     showPips: true,
+  },
+  "video-player": {
+    autoPlay: false,
+    loop: false,
+    muted: false,
+    showTitle: true,
+    title: "I Look in the Mirror",
+  },
+  "audio-player": {
+    autoPlay: false,
+    initialIndex: 0,
+    loop: false,
+    loopPlaylist: true,
+    showArtwork: true,
   },
   lightbox: {
     dismissOnBackdrop: true,

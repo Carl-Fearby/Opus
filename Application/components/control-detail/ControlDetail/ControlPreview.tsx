@@ -3,12 +3,14 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { CatalogIcon } from "opus-react";
 import { ContentTimeline } from "opus-react";
-import { NotesActivity } from "opus-react";
+import { NotesActivity } from "@/components/NotesActivity";
 import { ApplicationHeader } from "opus-react";
 import { ApplicationFooter } from "opus-react";
 import { WelcomeMessage } from "opus-react";
 import { Map } from "@/components/Map";
 import { ContactDetails, ContactNotesActivity } from "opus-react";
+import { VideoPlayer } from "@/components/VideoPlayer";
+import { AudioPlayer } from "@/components/AudioPlayer";
 import {
   Button,
   Card,
@@ -138,7 +140,6 @@ import {
   Sidebar,
   SidebarHeader,
   Table,
-  Tabs,
   Gauge,
   MetricTile,
   NoteComposer,
@@ -159,6 +160,7 @@ import {
   TrendBadge,
   useToast,
 } from "opus-react";
+import { Tabs } from "@/components/Tabs";
 import { ImageCropUploadWidget } from "opus-react";
 import { IconPicker } from "opus-react";
 import { AccentColorPicker, createAccentStyle } from "opus-react";
@@ -223,6 +225,7 @@ import {
 } from "@/lib/controls/dealsOverTimeDemoData";
 import { demoRecentActivity } from "@/lib/controls/recentActivityDemoData";
 import { demoNotesActivity } from "@/lib/controls/notesActivityDemoData";
+import { demoAudioTracks } from "@/lib/controls/audioDemoData";
 import { testLayoutMenu } from "@/lib/controls/testLayoutDemoData";
 import { demoTopPerformingUsers } from "@/lib/controls/topPerformingUsersDemoData";
 import {
@@ -2279,10 +2282,11 @@ function TabsPreview({
   const [projectName, setProjectName] = useState("Opus");
   const [releaseTrack, setReleaseTrack] = useState("Stable");
   const [notifyTeam, setNotifyTeam] = useState(true);
+  const isCardVariant = settings.variant === "card";
 
-  return (
+  const tabs = (
     <Tabs
-      fitted={settings.fitted}
+      fitted={settings.fitted && !isCardVariant}
       items={[
         {
           content: (
@@ -2315,48 +2319,75 @@ function TabsPreview({
           label: "Settings",
           value: "settings",
         },
-        {
-          content: (
-            <div className={styles.modalFormDemo}>
-              <TextField
-                id="tabs-demo-project-name"
-                label="Project name"
-                mode="stacked"
-                labelPosition="left"
-                type="text"
-                value={projectName}
-                onChange={(event) => setProjectName(event.target.value)}
-              />
-              <SelectField
-                id="tabs-demo-release-track"
-                label="Release track"
-                mode="stacked"
-                labelPosition="left"
-                options={["Stable", "Beta", "Experimental"]}
-                value={releaseTrack}
-                onChange={(event) => setReleaseTrack(event.target.value)}
-              />
-              <SwitchField
-                id="tabs-demo-notify-team"
-                label="Notify team on publish"
-                mode="flagged"
-                labelPosition="right"
-                checked={notifyTeam}
-                onChange={(event) => setNotifyTeam(event.target.checked)}
-              />
-            </div>
-          ),
-          label: "Form",
-          value: "form",
-        },
+        ...(isCardVariant
+          ? []
+          : [
+              {
+                content: (
+                  <div className={styles.modalFormDemo}>
+                    <TextField
+                      id="tabs-demo-project-name"
+                      label="Project name"
+                      mode="stacked"
+                      labelPosition="left"
+                      type="text"
+                      value={projectName}
+                      onChange={(event) => setProjectName(event.target.value)}
+                    />
+                    <SelectField
+                      id="tabs-demo-release-track"
+                      label="Release track"
+                      mode="stacked"
+                      labelPosition="left"
+                      options={["Stable", "Beta", "Experimental"]}
+                      value={releaseTrack}
+                      onChange={(event) => setReleaseTrack(event.target.value)}
+                    />
+                    <SwitchField
+                      id="tabs-demo-notify-team"
+                      label="Notify team on publish"
+                      mode="flagged"
+                      labelPosition="right"
+                      checked={notifyTeam}
+                      onChange={(event) => setNotifyTeam(event.target.checked)}
+                    />
+                  </div>
+                ),
+                label: "Form",
+                value: "form",
+              },
+            ]),
       ]}
       orientation={settings.orientation}
+      trailing={
+        isCardVariant ? (
+          <Button size="sm" variant="secondary">
+            Export
+          </Button>
+        ) : undefined
+      }
       value={settings.activeValue}
       variant={settings.variant}
       onValueChange={(activeValue) =>
         onSettingsChange({ ...settings, activeValue } as ControlSettings)
       }
     />
+  );
+
+  if (!isCardVariant) {
+    return tabs;
+  }
+
+  return (
+    <div
+      style={{
+        height: 320,
+        maxWidth: 860,
+        width: "100%",
+      }}
+    >
+      {tabs}
+    </div>
   );
 }
 
@@ -3735,16 +3766,53 @@ export function ControlPreview({
             isStaffRecord={s.isStaffRecord ?? false}
             showActions={s.showActions}
             showStatus={s.showStatus}
+            tabsVariant={s.summaryTabsVariant}
             onAction={(action) => console.log(action)}
             onAvatarChange={(previewUrl) => console.log(previewUrl)}
             onPasswordReset={() => console.log("reset-password")}
           />
           {s.showNotes ? (
             <ContactNotesActivity
+              activeTab={s.notesActiveTab ?? "notes"}
               onAction={(action) => console.log(action)}
               onAddNote={(note) => console.log(note)}
+              onTabChange={(notesActiveTab) =>
+                onSettingsChange({ ...s, notesActiveTab } as ControlSettings)
+              }
+              tabsVariant={s.notesTabsVariant}
             />
           ) : null}
+        </div>
+      );
+    }
+    case "lab-contact-card": {
+      const s = settings as ControlSettingsBySlug["lab-contact-card"];
+      const recordLabel = s.isStaffRecord ? "User" : "Contact";
+      const collectionLabel = s.isStaffRecord ? "Users" : "Contacts";
+      const collectionId = s.isStaffRecord ? "users" : "contacts";
+      return (
+        <div className={styles.contactDetailsPage}>
+          <PageHeader
+            breadcrumbs={
+              <Breadcrumb
+                items={[
+                  { id: collectionId, href: `#${collectionId}`, label: collectionLabel },
+                  { id: "current", label: "Emma Winterhold-Smith" },
+                ]}
+                separator="›"
+              />
+            }
+            title={`${recordLabel} Card`}
+          />
+          <ContactDetails
+            isStaffRecord={s.isStaffRecord ?? false}
+            showActions={s.showActions}
+            showStatus={s.showStatus}
+            tabsVariant={s.summaryTabsVariant}
+            onAction={(action) => console.log(action)}
+            onAvatarChange={(previewUrl) => console.log(previewUrl)}
+            onPasswordReset={() => console.log("reset-password")}
+          />
         </div>
       );
     }
@@ -3984,55 +4052,27 @@ export function ControlPreview({
         </DashboardActionPreview>
       );
     }
+    case "lab-contact-notes":
     case "lab-notes-activity": {
       const s = settings as ControlSettingsBySlug["notes-activity"];
       return (
         <DashboardActionPreview>
           {(reportAction) => (
             <DashboardPreviewGrid
-              containerDataComponent="notes-activity"
+              containerDataComponent="contact-notes-activity"
               containerHeight={s.height ?? "auto"}
-              containerWidth={s.width ?? "widget"}
+              containerWidth={s.width ?? "full"}
               layout={s.previewLayout}
-              unwrapped={!(s.wrapInContainer ?? true)}
+              unwrapped
               renderItem={() => (
-                <NotesActivity
-                  addNoteButtonLabel={s.addNoteButtonLabel ?? "Add note"}
-                  addNoteModalDescription={
-                    s.addNoteModalDescription ??
-                    "Capture supporting detail, attach files, or mention teammates."
+                <ContactNotesActivity
+                  activeTab={s.activeTab ?? "notes"}
+                  onAction={(action) => reportAction(action)}
+                  onAddNote={(note) => reportAction(`Saved note: ${note}`)}
+                  onTabChange={(activeTab) =>
+                    onSettingsChange({ ...s, activeTab } as ControlSettings)
                   }
-                  addNoteModalTitle={s.addNoteModalTitle ?? "Add a note"}
-                  activityFooterLabel={s.activityFooterLabel}
-                  composerPlaceholder={s.composerPlaceholder}
-                  density={s.density}
-                  items={demoNotesActivity}
-                  noteAuthorAvatarSrc={defaultUserProfilePhotoSrc}
-                  noteAuthorName="Carl Fearby"
-                  notesFooterLabel={s.notesFooterLabel}
-                  onActivityFooterClick={() =>
-                    reportAction(s.activityFooterLabel)
-                  }
-                  onItemClick={(item) => reportAction(`Reply: ${item.author}`)}
-                  onNoteAttachClick={() => reportAction("Attach file")}
-                  onNoteEmojiSelect={(emoji) => reportAction(`Emoji: ${emoji}`)}
-                  onNoteMentionClick={() => reportAction("Mention teammate")}
-                  onNotesFooterClick={() => reportAction(s.notesFooterLabel)}
-                  onNoteSave={(note, parentNote, tags) => {
-                    const tagText = tags?.length
-                      ? ` [${tags.map((tag) => tag.label).join(", ")}]`
-                      : "";
-                    reportAction(
-                      parentNote
-                        ? `Saved note on ${parentNote.author}: ${note}${tagText}`
-                        : `Saved note: ${note}${tagText}`,
-                    );
-                  }}
-                  onOpenTask={(item) =>
-                    reportAction(`OpenTask: ${item.author}`)
-                  }
-                  onTabChange={(tab) => reportAction(`Tab: ${tab}`)}
-                  saveButtonLabel={s.saveButtonLabel}
+                  tabsVariant={s.tabsVariant ?? "card"}
                 />
               )}
             />
@@ -4310,6 +4350,32 @@ export function ControlPreview({
           loop={s.loop}
           showCaptions={s.showCaptions}
           showPips={s.showPips}
+        />
+      );
+    }
+    case "video-player": {
+      const s = settings as ControlSettingsBySlug["video-player"];
+      return (
+        <VideoPlayer
+          autoPlay={s.autoPlay}
+          loop={s.loop}
+          muted={s.muted}
+          showTitle={s.showTitle}
+          src="/media/demo-video.mp4"
+          title={s.title}
+        />
+      );
+    }
+    case "audio-player": {
+      const s = settings as ControlSettingsBySlug["audio-player"];
+      return (
+        <AudioPlayer
+          autoPlay={s.autoPlay}
+          initialIndex={s.initialIndex}
+          loop={s.loop}
+          loopPlaylist={s.loopPlaylist}
+          showArtwork={s.showArtwork}
+          tracks={demoAudioTracks}
         />
       );
     }

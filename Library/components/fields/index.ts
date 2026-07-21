@@ -41,6 +41,7 @@ export type {
   TableDensity,
   TabsOrientation,
   TabsVariant,
+  TabsPanelMode,
   Theme,
   ToastHorizontalPosition,
   ToastVerticalPosition,
@@ -172,6 +173,10 @@ export { Chart } from "../Chart";
 export type { ChartDatum, ChartSeries } from "../Chart";
 export { Skeleton } from "../Skeleton";
 export { Carousel } from "../Carousel";
+export { VideoPlayer } from "../VideoPlayer";
+export type { VideoPlayerProps } from "../VideoPlayer";
+export { AudioPlayer } from "../AudioPlayer";
+export type { AudioPlayerProps, AudioTrack } from "../AudioPlayer";
 export { Lightbox } from "../Lightbox";
 export { ImageThumbnail } from "../ImageThumbnail";
 export { ImageGallery } from "../ImageGallery";

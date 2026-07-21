@@ -18,6 +18,7 @@ export function ContactDetails({
   onPasswordReset,
   showActions = true,
   showStatus = true,
+  tabsVariant,
 }: ContactDetailsProps) {
   const data = resolveContactDetailsContact(contact, defaultContact);
   const moreActions: MoreActionsMenuItem[] = [
@@ -43,6 +44,7 @@ export function ContactDetails({
         onPasswordReset={onPasswordReset}
         showActions={showActions}
         showStatus={showStatus}
+        tabsVariant={tabsVariant}
       />
     </section>
   );

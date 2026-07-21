@@ -1,6 +1,138 @@
-.tabsCard {
+.tabsCardLine {
+  --notes-workspace-panel-height: 23.25rem; /* ~75% of previous 31rem notes height */
   overflow: hidden;
-  padding: 0 24px 18px;
+  padding: 0 24px 12px;
+}
+
+.tabsCardCard {
+  --notes-workspace-panel-height: 23.25rem;
+  --contact-tab-rail-bg: color-mix(in srgb, var(--dashboard-section-bg, var(--opus-panel)) 84%, #05070f 16%);
+  /* Same chrome as DashboardContentContainer / contact identity card. */
+  --notes-tab-widget-bg:
+    radial-gradient(85% 65% at 14% 0%, color-mix(in srgb, #9333ea 16%, transparent), transparent 58%),
+    radial-gradient(72% 58% at 100% 100%, color-mix(in srgb, #0284c7 12%, transparent), transparent 62%),
+    linear-gradient(
+      180deg,
+      color-mix(in srgb, var(--dashboard-section-bg, #070d18) 94%, #ffffff 3%),
+      var(--dashboard-section-bg, #070d18)
+    );
+  /* Solid match for the purple-tinted top-left of the widget chrome (SVG tab fill). */
+  --notes-tab-widget-fill: color-mix(
+    in srgb,
+    #9333ea 16%,
+    color-mix(in srgb, var(--dashboard-section-bg, #070d18) 94%, #ffffff 3%)
+  );
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  height: auto;
+  min-width: 0;
+  padding: 0;
+  background: var(--contact-tab-rail-bg);
+  background-image: none;
+}
+
+.workspaceTabs {
+  min-width: 0;
+}
+
+.tabsCardLine .workspaceTabs {
+  height: 100%;
+}
+
+.tabsCardCard .workspaceTabs[data-variant="card"] {
+  --tabs-card-active-fill: var(--notes-tab-widget-fill);
+  --tabs-card-rail-bg: var(--contact-tab-rail-bg);
+  width: 100%;
+  height: auto;
+  min-height: 0;
+}
+
+/* Shared fixed panel height across Notes / Activities / Documents / Other Details. */
+.scrollPanel,
+.cardNotesPanel {
+  height: var(--notes-workspace-panel-height) !important;
+  min-height: var(--notes-workspace-panel-height) !important;
+  max-height: var(--notes-workspace-panel-height) !important;
+}
+
+.scrollPanel {
+  padding: 0 !important;
+  overflow: hidden !important;
+}
+
+/* Widget wrapper background on scroll content under the dark tab rail. */
+.cardNotesPanel {
+  position: relative !important;
+  flex: 0 0 auto !important;
+  width: 100% !important;
+  min-width: 0 !important;
+  padding: 0 !important;
+  border: 0 !important;
+  border-radius: 0 !important;
+  box-shadow: none !important;
+  background: var(--notes-tab-widget-bg) !important;
+  overflow: hidden !important;
+}
+
+.cardNotesPanelContent {
+  padding: 0 !important;
+}
+
+.notesActivity {
+  --notes-activity-gap: 0;
+  --notes-activity-height: 100%;
+  height: 100%;
+}
+
+/* Footer lives outside the bordered scroll panel. */
+.notesActivity :global(footer) {
+  display: none !important;
+}
+
+/* Pad the list content inside the scroll area, not the scroll container. */
+.notesActivity :global([data-custom-scrollbar-root=""]) {
+  padding-right: 0;
+}
+
+.notesActivity :global([data-content-timeline-list="true"]) {
+  box-sizing: border-box;
+  padding: 16px 14px 14px;
+}
+
+.emptyPanel {
+  box-sizing: border-box;
+  display: flex;
+  align-items: flex-start;
+  height: 100%;
+  min-height: 100%;
+  padding: 28px 18px;
+  color: var(--dashboard-section-muted, var(--opus-muted));
+  font-size: 0.9rem;
+  font-weight: 550;
+}
+
+:global([data-preview-root][data-theme="light"]) .tabsCardCard,
+:global([data-theme="light"]) .tabsCardCard,
+:global([data-shell-theme="light"]) .tabsCardCard {
+  --contact-tab-rail-bg: color-mix(
+    in srgb,
+    var(--dashboard-section-bg, var(--opus-panel)) 58%,
+    color-mix(in srgb, var(--opus-accent) 6%, #d7dceb) 42%
+  );
+  --notes-tab-widget-bg:
+    radial-gradient(85% 65% at 14% 0%, color-mix(in srgb, #9333ea 10%, transparent), transparent 58%),
+    radial-gradient(72% 58% at 100% 100%, color-mix(in srgb, #0284c7 8%, transparent), transparent 62%),
+    linear-gradient(
+      180deg,
+      color-mix(in srgb, var(--dashboard-section-bg, #f8fbff) 94%, #ffffff 6%),
+      var(--dashboard-section-bg, #f8fbff)
+    );
+  --notes-tab-widget-fill: color-mix(
+    in srgb,
+    #9333ea 10%,
+    var(--dashboard-section-bg, #f8fbff)
+  );
 }
 
 .workspaceAction {
@@ -33,19 +165,8 @@
   height: 0.78rem;
 }
 
-.notesActivity {
-  --notes-activity-height: 31rem;
-}
-
-.emptyPanel {
-  box-sizing: border-box;
-  height: 31rem;
-  padding: 30px 4px;
-  color: var(--opus-muted);
-}
-
 @media (max-width: 760px) {
-  .tabsCard {
+  .tabsCardLine {
     padding-inline: 14px;
   }
 }

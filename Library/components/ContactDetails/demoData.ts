@@ -34,7 +34,7 @@ export const defaultContact: ContactDetailsContact = {
   phone: "+44 20 7946 0958",
   role: "Decision Maker",
   source: "LinkedIn",
-  status: "Active Contact",
+  status: "Active",
   tags: ["Procurement", "ROI Focused", "Strategic"],
 };
 
