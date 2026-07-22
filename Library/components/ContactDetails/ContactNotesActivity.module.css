@@ -42,6 +42,7 @@
 
 .tabsCardCard .workspaceTabs[data-variant="card"] {
   --tabs-card-active-fill: var(--notes-tab-widget-fill);
+  --tabs-card-panel-bg: var(--notes-tab-widget-bg);
   --tabs-card-rail-bg: var(--contact-tab-rail-bg);
   width: 100%;
   height: auto;

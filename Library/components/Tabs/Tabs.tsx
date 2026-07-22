@@ -24,6 +24,11 @@ export type TabItem = {
 const CARD_TAB_SHAPE_PATH =
   "M 0 43 L 16 43 C 26 43 30 39 30 33 V 10 C 30 6 34 3 41 3 H 152 C 161 3 167 6 171 12 L 184 30 C 189 37 200 43 220 43 Z";
 
+/* White fill: luminance masks treat black as transparent (tab looked solid black). */
+const CARD_TAB_SHAPE_MASK = `url("data:image/svg+xml,${encodeURIComponent(
+  `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 220 43" preserveAspectRatio="none"><path fill="white" d="${CARD_TAB_SHAPE_PATH}"/></svg>`,
+)}")`;
+
 type TabsProps = {
   "aria-label"?: string;
   className?: string;
@@ -61,6 +66,8 @@ export function Tabs({
   variant = "line",
 }: TabsProps) {
   const generatedId = useId();
+  const rootRef = useRef<HTMLDivElement>(null);
+  const panelRef = useRef<HTMLDivElement>(null);
   const listRef = useRef<HTMLDivElement>(null);
   const firstEnabledValue = items.find((item) => !item.disabled)?.value ?? items[0]?.value ?? "";
   const [internalValue, setInternalValue] = useState(defaultValue ?? firstEnabledValue);
@@ -71,6 +78,45 @@ export function Tabs({
   const resolvedPanelMode = panelMode ?? (variant === "card" ? "crossfade" : "active");
   const isCardVariant = variant === "card";
   const canScrollTabs = orientation === "horizontal";
+
+  const syncCardBackgroundSample = useCallback(() => {
+    const root = rootRef.current;
+    const panel = panelRef.current;
+    const tab = document.getElementById(`${generatedId}-${activeValue}-tab`);
+    if (!root || !panel || !tab || !isCardVariant) {
+      root?.removeAttribute("data-card-sample");
+      return;
+    }
+
+    const panelRect = panel.getBoundingClientRect();
+    const tabRect = tab.getBoundingClientRect();
+    if (panelRect.width < 1 || panelRect.height < 1 || tabRect.width < 1) {
+      return;
+    }
+
+    const rootStyle = getComputedStyle(root);
+    const panelStyle = getComputedStyle(panel);
+    const tokenBg = rootStyle.getPropertyValue("--tabs-card-panel-bg").trim();
+    const bgImage = panelStyle.backgroundImage;
+    /* Keep var(--tabs-card-panel-bg) when set so layers resolve in CSS; else use computed image. */
+    const resolvedBg =
+      tokenBg ||
+      (bgImage && bgImage !== "none" ? bgImage : panelStyle.backgroundColor) ||
+      "transparent";
+
+    /*
+      Align the panel-sized background to this tab on X only.
+      Y stays 0 so the tab is filled with the top strip of the panel gradient at that X —
+      (panel.top - tab.top) would park the image under the tab and leave only the flat fill.
+    */
+    root.style.setProperty("--tabs-card-sample-bg", resolvedBg);
+    root.style.setProperty("--tabs-card-sample-width", `${panelRect.width}px`);
+    root.style.setProperty("--tabs-card-sample-height", `${panelRect.height}px`);
+    root.style.setProperty("--tabs-card-sample-x", `${panelRect.left - tabRect.left}px`);
+    root.style.setProperty("--tabs-card-sample-y", "0px");
+    root.style.setProperty("--tabs-card-sample-mask", CARD_TAB_SHAPE_MASK);
+    root.dataset.cardSample = "true";
+  }, [activeValue, generatedId, isCardVariant]);
 
   const updateOverflow = useCallback(() => {
     const list = listRef.current;
@@ -101,6 +147,36 @@ export function Tabs({
       list.removeEventListener("scroll", updateOverflow);
     };
   }, [canScrollTabs, items, updateOverflow, variant]);
+
+  useEffect(() => {
+    if (!isCardVariant) {
+      rootRef.current?.removeAttribute("data-card-sample");
+      return;
+    }
+
+    const frame = window.requestAnimationFrame(() => {
+      syncCardBackgroundSample();
+    });
+
+    const root = rootRef.current;
+    const panel = panelRef.current;
+    const list = listRef.current;
+    const observer = new ResizeObserver(() => syncCardBackgroundSample());
+    if (root) observer.observe(root);
+    if (panel) observer.observe(panel);
+    if (list) {
+      observer.observe(list);
+      list.addEventListener("scroll", syncCardBackgroundSample, { passive: true });
+    }
+    window.addEventListener("resize", syncCardBackgroundSample);
+
+    return () => {
+      window.cancelAnimationFrame(frame);
+      observer.disconnect();
+      list?.removeEventListener("scroll", syncCardBackgroundSample);
+      window.removeEventListener("resize", syncCardBackgroundSample);
+    };
+  }, [activeValue, isCardVariant, items, panelClassName, syncCardBackgroundSample, variant]);
 
   useEffect(() => {
     if (!canScrollTabs) {
@@ -189,6 +265,7 @@ export function Tabs({
       data-orientation={orientation}
       data-panel-mode={resolvedPanelMode}
       data-variant={variant}
+      ref={rootRef}
     >
       <div className={styles.header}>
         <div
@@ -266,7 +343,7 @@ export function Tabs({
         {trailing ? <div className={styles.trailing}>{trailing}</div> : null}
       </div>
       {resolvedPanelMode === "crossfade" ? (
-        <div className={panelClassNames}>
+        <div className={panelClassNames} ref={panelRef}>
           {items.map((item) => {
             const selected = item.value === activeValue;
             const tabId = `${generatedId}-${item.value}-tab`;
@@ -294,6 +371,7 @@ export function Tabs({
           aria-labelledby={`${generatedId}-${activeItem.value}-tab`}
           className={panelClassNames}
           id={`${generatedId}-${activeItem.value}-panel`}
+          ref={panelRef}
           role="tabpanel"
           tabIndex={-1}
         >

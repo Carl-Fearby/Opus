@@ -438,6 +438,37 @@
   stroke: var(--tabs-card-border);
 }
 
+.root[data-variant="card"][data-card-sample="true"] .tab[aria-selected="true"] .tabShape::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  background-color: transparent;
+  background-image: var(--tabs-card-sample-bg);
+  background-size: var(--tabs-card-sample-width) var(--tabs-card-sample-height);
+  background-position: var(--tabs-card-sample-x) var(--tabs-card-sample-y);
+  background-repeat: no-repeat;
+  -webkit-mask-image: var(--tabs-card-sample-mask);
+  -webkit-mask-size: 100% 100%;
+  -webkit-mask-repeat: no-repeat;
+  -webkit-mask-mode: luminance;
+  mask-image: var(--tabs-card-sample-mask);
+  mask-size: 100% 100%;
+  mask-repeat: no-repeat;
+  mask-mode: luminance;
+}
+
+.root[data-variant="card"][data-card-sample="true"] .tab[aria-selected="true"] .tabShape svg {
+  position: relative;
+  z-index: 1;
+}
+
+.root[data-variant="card"][data-card-sample="true"] .tab[aria-selected="true"] .tabShape path {
+  fill: none;
+  stroke: var(--tabs-card-border);
+}
+
 .root[data-variant="card"] .cardTabLine {
   --tab-active-line-width: calc(100% - 88px);
   --tab-active-line-min-width: 0;

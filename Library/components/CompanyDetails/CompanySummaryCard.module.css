@@ -34,6 +34,7 @@
 .detailsCard .summaryTabs[data-variant="card"] {
   --tabs-card-rail-bg: var(--contact-tab-rail-bg);
   --tabs-card-active-fill: var(--contact-tab-widget-fill);
+  --tabs-card-panel-bg: var(--contact-tab-widget-bg);
 }
 
 .summaryPanel {
