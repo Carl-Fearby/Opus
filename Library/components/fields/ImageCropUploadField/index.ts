@@ -1,2 +1,7 @@
 export { ImageCropUploadField } from "./ImageCropUploadField";
-export type { ImageCropUploadFieldProps, ImageCropUploadResult } from "./ImageCropUploadField";
+export type {
+  ImageCropShape,
+  ImageCropUploadFieldProps,
+  ImageCropUploadResult,
+} from "./ImageCropUploadField";
+

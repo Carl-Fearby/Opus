@@ -73,7 +73,7 @@
 }
 
 .periodSelect:focus-visible {
-  outline: 2px solid color-mix(in srgb, #38bdf8 42%, transparent);
+  outline: 2px solid color-mix(in srgb, var(--opus-accent, #8f6cff) 42%, transparent);
   outline-offset: 2px;
 }
 

@@ -1,6 +1,6 @@
 .tile {
   --tile-accent: var(--opus-tile-accent, #ec4899);
-  --tile-glow: var(--opus-tile-accent, #d946ef);
+  --tile-glow: var(--opus-tile-accent, #ec4899);
   --tile-fill: color-mix(in srgb, var(--opus-tile-accent, #ec4899) 30%, #120a1c);
   --tile-label: #ffffff;
   --tile-highlight: color-mix(in srgb, var(--tile-accent) 42%, transparent);
@@ -37,13 +37,13 @@
 
 .tile[data-tone="purple"] {
   --tile-accent: var(--opus-tile-accent, #ec4899);
-  --tile-glow: var(--opus-tile-accent, #d946ef);
+  --tile-glow: var(--opus-tile-accent, #ec4899);
   --tile-fill: color-mix(in srgb, var(--opus-tile-accent, #ec4899) 30%, #120a1c);
 }
 
 .tile[data-tone="blue"] {
   --tile-accent: var(--opus-tile-accent-secondary, #0ea5e9);
-  --tile-glow: var(--opus-tile-accent-secondary-mid, #38bdf8);
+  --tile-glow: var(--opus-tile-accent-secondary, #0ea5e9);
   --tile-fill: color-mix(in srgb, var(--opus-tile-accent-secondary, #0ea5e9) 30%, #071018);
 }
 
@@ -112,21 +112,23 @@
 }
 
 .tile[data-tone="purple"] .icon {
-  --tile-glow: var(--opus-tile-accent, #d946ef);
+  --tile-glow: var(--opus-tile-accent, #ec4899);
 }
 
 .tile[data-tone="blue"] .icon {
-  --tile-glow: var(--opus-tile-accent-secondary-mid, #38bdf8);
+  --tile-glow: var(--opus-tile-accent-secondary, #0ea5e9);
 }
 
 .icon[data-tone="purple"] :global(svg),
-.icon[data-tone="purple"] :global(svg path) {
-  fill: url(#opus-action-tile-purple);
+.icon[data-tone="purple"] :global(svg path),
+.icon[data-tone="purple"] :global(svg *) {
+  fill: url(#opus-action-tile-purple) !important;
 }
 
 .icon[data-tone="blue"] :global(svg),
-.icon[data-tone="blue"] :global(svg path) {
-  fill: url(#opus-action-tile-blue);
+.icon[data-tone="blue"] :global(svg path),
+.icon[data-tone="blue"] :global(svg *) {
+  fill: url(#opus-action-tile-blue) !important;
 }
 
 .icon :global(svg) {

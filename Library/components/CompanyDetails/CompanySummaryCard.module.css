@@ -1,0 +1,256 @@
+.detailsCard {
+  --contact-tab-rail-bg: color-mix(in srgb, var(--dashboard-section-bg, var(--opus-panel)) 84%, #05070f 16%);
+  /* Same chrome as DashboardContentContainer / notes card panels. */
+  --contact-tab-widget-bg:
+    radial-gradient(85% 65% at 14% 0%, color-mix(in srgb, var(--opus-accent) 16%, transparent), transparent 58%),
+    radial-gradient(72% 58% at 100% 100%, color-mix(in srgb, var(--opus-accent-secondary, #0284c7) 12%, transparent), transparent 62%),
+    linear-gradient(
+      180deg,
+      color-mix(in srgb, var(--dashboard-section-bg, #070d18) 94%, #ffffff 3%),
+      var(--dashboard-section-bg, #070d18)
+    );
+  --contact-tab-widget-fill: color-mix(
+    in srgb,
+    var(--opus-accent) 16%,
+    color-mix(in srgb, var(--dashboard-section-bg, #070d18) 94%, #ffffff 3%)
+  );
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  height: var(--contact-summary-height, 432px);
+  min-width: 0;
+  background: var(--contact-tab-rail-bg);
+  background-image: none;
+}
+
+.summaryTabs {
+  flex: 1 1 auto;
+  height: auto;
+  min-height: 0;
+  min-width: 0;
+}
+
+/* Must beat Tabs `.root[data-variant="card"]` token defaults (equal class+attr weight). */
+.detailsCard .summaryTabs[data-variant="card"] {
+  --tabs-card-rail-bg: var(--contact-tab-rail-bg);
+  --tabs-card-active-fill: var(--contact-tab-widget-fill);
+}
+
+.summaryPanel {
+  background: var(--contact-tab-widget-bg) !important;
+}
+
+:global([data-preview-root][data-theme="light"]) .detailsCard,
+:global([data-theme="light"]) .detailsCard {
+  --contact-tab-rail-bg: color-mix(
+    in srgb,
+    var(--dashboard-section-bg, var(--opus-panel)) 58%,
+    color-mix(in srgb, var(--opus-accent) 6%, #d7dceb) 42%
+  );
+  --contact-tab-widget-bg:
+    radial-gradient(85% 65% at 14% 0%, color-mix(in srgb, var(--opus-accent) 10%, transparent), transparent 58%),
+    radial-gradient(72% 58% at 100% 100%, color-mix(in srgb, var(--opus-accent-secondary, #0284c7) 8%, transparent), transparent 62%),
+    linear-gradient(
+      180deg,
+      color-mix(in srgb, var(--dashboard-section-bg, #f8fbff) 94%, #ffffff 6%),
+      var(--dashboard-section-bg, #f8fbff)
+    );
+  --contact-tab-widget-fill: color-mix(
+    in srgb,
+    var(--opus-accent) 10%,
+    var(--dashboard-section-bg, #f8fbff)
+  );
+}
+
+.detailsGrid {
+  --detail-row-gap: 1rem;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  align-items: start;
+  min-width: 0;
+  column-gap: 0;
+}
+
+.detailsGrid[data-columns="2"] {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.detailsColumn {
+  display: flex;
+  flex-direction: column;
+  gap: var(--detail-row-gap);
+  min-width: 0;
+  padding: 16px 14px 12px;
+  border-left: 1px solid color-mix(in srgb, var(--opus-border) 78%, transparent);
+}
+
+.detailsColumn:first-child {
+  border-left: 0;
+}
+
+.detailsColumn[data-empty="true"] {
+  border-left-color: color-mix(in srgb, var(--opus-border) 40%, transparent);
+}
+
+.detailsColumn[data-empty="true"]:empty {
+  min-height: 1px;
+}
+
+.detailItem {
+  position: relative;
+  z-index: 0;
+  display: grid;
+  grid-template-columns: 24px minmax(0, 1fr);
+  gap: 11px;
+  min-width: 0;
+  overflow: visible;
+}
+
+.detailItem:hover,
+.detailItem:focus-within {
+  z-index: 1;
+}
+
+.detailIcon {
+  padding-top: 3px;
+  color: var(--opus-accent);
+  font-size: 1.1rem;
+}
+
+.detailItem > span:last-child {
+  display: grid;
+  gap: 4px;
+  min-width: 0;
+}
+
+.detailItem small {
+  color: var(--opus-muted);
+  font-size: 0.74rem;
+  font-weight: 650;
+}
+
+.detailItem strong {
+  min-width: 0;
+  overflow-wrap: anywhere;
+  font-size: 0.9rem;
+  font-weight: 600;
+}
+
+.statusValue {
+  color: var(--opus-success, #3ecf8e);
+}
+
+.owner {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.companies {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 14px;
+}
+
+.companyEmployment {
+  display: grid;
+  gap: 2px;
+  min-width: 0;
+}
+
+.companyEmployment small {
+  color: var(--opus-muted);
+  font-size: 0.74rem;
+  font-weight: 550;
+}
+
+.branchName {
+  display: inline-flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+}
+
+.branchesEmpty {
+  box-sizing: border-box;
+  padding: 28px 18px;
+  color: var(--dashboard-section-muted, var(--opus-muted));
+  font-size: 0.9rem;
+  font-weight: 550;
+}
+
+@media (max-width: 1100px) {
+  .detailsCard {
+    height: var(--contact-summary-height, 552px);
+  }
+
+  .detailsGrid:not([data-columns="2"]) {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .detailsGrid:not([data-columns="2"]) .detailsColumn:last-child:not([data-empty="true"]) {
+    grid-column: 1 / -1;
+    margin-top: 22px;
+    padding-top: 22px;
+    border-top: 1px solid var(--opus-border);
+    border-left: 0;
+  }
+
+  .detailsGrid:not([data-columns="2"]) .detailsColumn[data-empty="true"] {
+    display: none;
+  }
+}
+
+@media (max-width: 760px) {
+  .detailsGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .detailsColumn,
+  .detailsColumn:last-child {
+    grid-column: auto;
+    margin: 0;
+    padding: 20px 0;
+    border-top: 1px solid var(--opus-border);
+    border-left: 0;
+  }
+
+  .detailsColumn:first-child {
+    padding-top: 0;
+    border-top: 0;
+  }
+}
+
+.securityField {
+  display: grid;
+  gap: 4px;
+  min-width: 0;
+  width: min(100%, 280px);
+}
+
+.securityField :global([data-field-shell]),
+.securityField > div {
+  min-width: 0;
+}
+
+.securityAction {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: var(--opus-accent);
+  cursor: pointer;
+  font: inherit;
+  font-weight: 650;
+  text-align: left;
+}
+
+.securityAction:hover {
+  text-decoration: underline;
+}

@@ -2,14 +2,115 @@ export type LabsCatalogEntry = {
   componentName: string;
   compositionParts: readonly string[];
   description: string;
-  navigationGroup: "Application" | "Authentication" | "Contacts" | "Dashboard";
-  settingsType: "application-footer" | "application-header" | "auth-form" | "contact-details" | "dashboard-list-columns" | "dashboard-welcome" | "notes-activity" | "sidebar" | "three-pane-layout" | "user-profile";
+  navigationGroup: "Application" | "Authentication" | "Companies" | "Contacts" | "Dashboard";
+  settingsType:
+    | "application-footer"
+    | "application-header"
+    | "auth-form"
+    | "company-details"
+    | "contact-details"
+    | "dashboard-list-columns"
+    | "dashboard-welcome"
+    | "notes-activity"
+    | "sidebar"
+    | "three-pane-layout"
+    | "user-profile";
   slug: string;
   sourceFiles: string[];
   title: string;
 };
 
 export const labsCatalog = [
+  {
+    slug: "lab-company-details",
+    title: "Company Details",
+    componentName: "CompanyDetails",
+    description:
+      "Company record card with notes workspace. Includes a Company Contacts tab for people linked to the account.",
+    settingsType: "company-details",
+    navigationGroup: "Companies",
+    compositionParts: [
+      "avatar",
+      "badge",
+      "dashboard-content-container",
+      "icon",
+      "image-crop-upload",
+      "lab-company-notes",
+      "modal",
+      "tabs",
+    ],
+    sourceFiles: [
+      "components/CompanyDetails/CompanyDetails.tsx",
+      "components/CompanyDetails/CompanyDetails.module.css",
+      "components/CompanyDetails/CompanyCard.tsx",
+      "components/CompanyDetails/CompanyNotesActivity.tsx",
+      "components/CompanyDetails/CompanyIdentityCard.tsx",
+      "components/CompanyDetails/CompanySummaryCard.tsx",
+      "components/UserProfileWidget/ProfilePhotoUploadModal.tsx",
+      "components/fields/ImageCropUploadField/ImageCropUploadField.tsx",
+      "components/Avatar/Avatar.tsx",
+      "components/Badge/Badge.tsx",
+      "components/Tabs/Tabs.tsx",
+    ],
+  },
+  {
+    slug: "lab-company-card",
+    title: "Company Card",
+    componentName: "CompanyDetails",
+    description: "Company record card only — identity, overview, and address tabs.",
+    settingsType: "company-details",
+    navigationGroup: "Companies",
+    compositionParts: [
+      "avatar",
+      "badge",
+      "dashboard-content-container",
+      "icon",
+      "image-crop-upload",
+      "modal",
+      "tabs",
+    ],
+    sourceFiles: [
+      "components/CompanyDetails/CompanyDetails.tsx",
+      "components/CompanyDetails/CompanyDetails.module.css",
+      "components/CompanyDetails/CompanyCard.tsx",
+      "components/CompanyDetails/CompanyIdentityCard.tsx",
+      "components/CompanyDetails/CompanySummaryCard.tsx",
+      "components/UserProfileWidget/ProfilePhotoUploadModal.tsx",
+      "components/fields/ImageCropUploadField/ImageCropUploadField.tsx",
+      "components/Avatar/Avatar.tsx",
+      "components/Badge/Badge.tsx",
+      "components/Tabs/Tabs.tsx",
+    ],
+  },
+  {
+    slug: "lab-company-notes",
+    title: "Company Notes",
+    componentName: "CompanyNotesActivity",
+    description:
+      "Company notes workspace alone — Notes, Activities, Company Contacts, and Documents tabs.",
+    settingsType: "notes-activity",
+    navigationGroup: "Companies",
+    compositionParts: [
+      "content-timeline",
+      "custom-scrollbar",
+      "dashboard-content-container",
+      "emoji-picker",
+      "icon",
+      "tabs",
+    ],
+    sourceFiles: [
+      "components/CompanyDetails/CompanyNotesActivity.tsx",
+      "components/CompanyDetails/CompanyNotesActivity.module.css",
+      "components/NotesActivity/NotesActivity.tsx",
+      "components/NotesActivity/NotesActivity.module.css",
+      "components/Tabs/Tabs.tsx",
+      "components/ContentTimeline/ContentTimeline.tsx",
+      "components/CustomScrollbar/CustomScrollbar.tsx",
+      "components/EmojiPicker/EmojiPicker.tsx",
+      "components/CatalogIcon/CatalogIcon.tsx",
+      "components/DashboardContentContainer/DashboardContentContainer.tsx",
+    ],
+  },
   {
     slug: "lab-contact-details",
     title: "Contact Details",

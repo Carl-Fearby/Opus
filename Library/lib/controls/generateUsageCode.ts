@@ -2046,6 +2046,82 @@ ${wrapDashboardWidget(
 </Columns>`,
       });
     }
+    case "lab-company-details": {
+      const s = settings as ControlSettingsBySlug["lab-company-details"];
+      const notesBlock = s.showNotes
+        ? `
+  <CompanyNotesActivity
+    activeTab="${s.notesActiveTab ?? "notes"}"
+    onAction={(action) => console.log(action)}
+    onAddNote={(note) => console.log(note)}${s.notesTabsVariant !== "card" ? `\n    tabsVariant="${s.notesTabsVariant}"` : ""}
+  />`
+        : "";
+      return interactiveUsage({
+        components: ["CompanyDetails", "CompanyNotesActivity", "PageHeader", "Breadcrumb"],
+        state: [],
+        jsx: `<div style={{ display: "grid", gap: 18, width: "100%" }}>
+  <PageHeader
+    title="Company Details"
+    breadcrumbs={
+      <Breadcrumb
+        separator="›"
+        items={[
+          { id: "companies", href: "#companies", label: "Companies" },
+          { id: "current", label: "Acme Ltd" },
+        ]}
+      />
+    }
+  />
+  <CompanyDetails
+    showActions={${s.showActions}}
+    showStatus={${s.showStatus}}${s.summaryTabsVariant !== "card" ? `\n    tabsVariant="${s.summaryTabsVariant}"` : ""}
+    onAction={(action) => console.log(action)}
+  />${notesBlock}
+</div>`,
+      });
+    }
+    case "lab-company-card": {
+      const s = settings as ControlSettingsBySlug["lab-company-card"];
+      return interactiveUsage({
+        components: ["CompanyDetails", "PageHeader", "Breadcrumb"],
+        state: [],
+        jsx: `<div style={{ display: "grid", gap: 18, width: "100%" }}>
+  <PageHeader
+    title="Company Card"
+    breadcrumbs={
+      <Breadcrumb
+        separator="›"
+        items={[
+          { id: "companies", href: "#companies", label: "Companies" },
+          { id: "current", label: "Acme Ltd" },
+        ]}
+      />
+    }
+  />
+  <CompanyDetails
+    showActions={${s.showActions}}
+    showStatus={${s.showStatus}}${s.summaryTabsVariant !== "card" ? `\n    tabsVariant="${s.summaryTabsVariant}"` : ""}
+    onAction={(action) => console.log(action)}
+  />
+</div>`,
+      });
+    }
+    case "lab-company-notes": {
+      const s = settings as ControlSettingsBySlug["lab-company-notes"];
+      const tabsVariantProp =
+        (s.tabsVariant ?? "card") !== "card" ? `\n  tabsVariant="${s.tabsVariant}"` : "";
+      const activeTabProp =
+        (s.activeTab ?? "notes") !== "notes" ? `\n  activeTab="${s.activeTab}"` : "";
+      const widget = `<CompanyNotesActivity
+  onAction={(action) => console.log(action)}
+  onAddNote={(note) => console.log(note)}${activeTabProp}${tabsVariantProp}
+/>`;
+      return interactiveUsage({
+        components: ["CompanyNotesActivity", "NotesActivity", "Tabs"],
+        state: [],
+        jsx: widget,
+      });
+    }
     case "lab-contact-details": {
       const s = settings as ControlSettingsBySlug["lab-contact-details"];
       const recordLabel = s.isStaffRecord ? "User" : "Contact";

@@ -25,7 +25,7 @@ export function DocumentationHub() {
   } = useTileAccentPreference();
 
   return (
-    <OpusThemeProvider theme={theme}>
+    <OpusThemeProvider applyToDocument={false} theme={theme}>
       <div className={styles.shell} style={{ ...accentStyle, ...tileAccentStyle }}>
         <DocumentationTopBar
           current="home"

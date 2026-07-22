@@ -16,10 +16,10 @@ import {
   DEFAULT_TILE_ACCENT,
   DEFAULT_TILE_ACCENT_SECONDARY,
 } from "@/components/AccentColorPicker";
-import { ColourClouds, type ColourCloudsDesignation } from "@/components/ColourClouds";
-import { Button } from "@/components/fields/Button";
-import type { Theme } from "@/components/fields/types";
-import type { GoogleFontFamily } from "@/components/FontPicker";
+import { ColourClouds, type ColourCloudsDesignation } from "opus-react";
+import { Button } from "opus-react";
+import type { Theme } from "opus-react";
+import type { GoogleFontFamily } from "opus-react";
 import styles from "./ThemeSettingsButton.module.css";
 
 export type OpusThemeExport = {

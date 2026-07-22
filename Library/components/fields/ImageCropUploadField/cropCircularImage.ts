@@ -1,21 +1,31 @@
-export type CircularCropState = {
+export type ImageCropState = {
   offsetX: number;
   offsetY: number;
   zoom: number;
 };
 
-export function getCircularCropMetrics(
+export type ImageCropViewport = {
+  height: number;
+  width: number;
+};
+
+export type ImageCropFit = "cover" | "contain";
+
+export function getImageCropMetrics(
   imageWidth: number,
   imageHeight: number,
-  viewportSize: number,
-  state: CircularCropState,
+  viewport: ImageCropViewport,
+  state: ImageCropState,
+  fit: ImageCropFit = "cover",
 ) {
-  const baseScale = Math.max(viewportSize / imageWidth, viewportSize / imageHeight);
+  const widthRatio = viewport.width / imageWidth;
+  const heightRatio = viewport.height / imageHeight;
+  const baseScale = fit === "contain" ? Math.min(widthRatio, heightRatio) : Math.max(widthRatio, heightRatio);
   const scale = baseScale * state.zoom;
   const drawWidth = imageWidth * scale;
   const drawHeight = imageHeight * scale;
-  const centerX = viewportSize / 2 + state.offsetX;
-  const centerY = viewportSize / 2 + state.offsetY;
+  const centerX = viewport.width / 2 + state.offsetX;
+  const centerY = viewport.height / 2 + state.offsetY;
 
   return {
     baseScale,
@@ -29,15 +39,16 @@ export function getCircularCropMetrics(
   };
 }
 
-export function clampCircularCropOffset(
+export function clampImageCropOffset(
   imageWidth: number,
   imageHeight: number,
-  viewportSize: number,
-  state: CircularCropState,
+  viewport: ImageCropViewport,
+  state: ImageCropState,
+  fit: ImageCropFit = "cover",
 ) {
-  const { drawHeight, drawWidth } = getCircularCropMetrics(imageWidth, imageHeight, viewportSize, state);
-  const maxX = Math.max(0, (drawWidth - viewportSize) / 2);
-  const maxY = Math.max(0, (drawHeight - viewportSize) / 2);
+  const { drawHeight, drawWidth } = getImageCropMetrics(imageWidth, imageHeight, viewport, state, fit);
+  const maxX = Math.max(0, (drawWidth - viewport.width) / 2);
+  const maxY = Math.max(0, (drawHeight - viewport.height) / 2);
 
   return {
     offsetX: Math.min(maxX, Math.max(-maxX, state.offsetX)),
@@ -46,37 +57,63 @@ export function clampCircularCropOffset(
   };
 }
 
-export async function cropCircularImage(
+export async function cropImageToViewport(
   image: HTMLImageElement,
-  viewportSize: number,
-  outputSize: number,
-  state: CircularCropState,
-  fileName = "profile-photo.png",
+  viewport: ImageCropViewport,
+  output: ImageCropViewport,
+  state: ImageCropState,
+  options?: {
+    circular?: boolean;
+    fileName?: string;
+    fillStyle?: string;
+    fit?: ImageCropFit;
+  },
 ): Promise<{ file: File; previewUrl: string }> {
   const canvas = document.createElement("canvas");
-  canvas.width = outputSize;
-  canvas.height = outputSize;
+  canvas.width = output.width;
+  canvas.height = output.height;
   const context = canvas.getContext("2d");
 
   if (!context) {
     throw new Error("Canvas is unavailable.");
   }
 
-  const { drawHeight, drawWidth, drawX, drawY } = getCircularCropMetrics(
+  const fit = options?.fit ?? "cover";
+  const { drawHeight, drawWidth, drawX, drawY } = getImageCropMetrics(
     image.naturalWidth,
     image.naturalHeight,
-    viewportSize,
+    viewport,
     state,
+    fit,
   );
-  const ratio = outputSize / viewportSize;
+  const ratioX = output.width / viewport.width;
+  const ratioY = output.height / viewport.height;
 
-  context.clearRect(0, 0, outputSize, outputSize);
+  context.clearRect(0, 0, output.width, output.height);
+
+  if (options?.fillStyle) {
+    context.fillStyle = options.fillStyle;
+    context.fillRect(0, 0, output.width, output.height);
+  }
+
   context.save();
-  context.beginPath();
-  context.arc(outputSize / 2, outputSize / 2, outputSize / 2, 0, Math.PI * 2);
-  context.clip();
-  context.drawImage(image, drawX * ratio, drawY * ratio, drawWidth * ratio, drawHeight * ratio);
+
+  if (options?.circular) {
+    context.beginPath();
+    context.arc(output.width / 2, output.height / 2, Math.min(output.width, output.height) / 2, 0, Math.PI * 2);
+    context.clip();
+  }
+
+  context.drawImage(
+    image,
+    drawX * ratioX,
+    drawY * ratioY,
+    drawWidth * ratioX,
+    drawHeight * ratioY,
+  );
   context.restore();
+
+  const fileName = options?.fileName ?? (options?.circular ? "profile-photo.png" : "company-logo.png");
 
   return new Promise((resolve, reject) => {
     canvas.toBlob((blob) => {
@@ -91,4 +128,44 @@ export async function cropCircularImage(
       });
     }, "image/png");
   });
+}
+
+/** @deprecated Prefer getImageCropMetrics with a square viewport. */
+export type CircularCropState = ImageCropState;
+
+/** @deprecated Prefer getImageCropMetrics. */
+export function getCircularCropMetrics(
+  imageWidth: number,
+  imageHeight: number,
+  viewportSize: number,
+  state: ImageCropState,
+) {
+  return getImageCropMetrics(imageWidth, imageHeight, { width: viewportSize, height: viewportSize }, state, "cover");
+}
+
+/** @deprecated Prefer clampImageCropOffset. */
+export function clampCircularCropOffset(
+  imageWidth: number,
+  imageHeight: number,
+  viewportSize: number,
+  state: ImageCropState,
+) {
+  return clampImageCropOffset(imageWidth, imageHeight, { width: viewportSize, height: viewportSize }, state, "cover");
+}
+
+/** @deprecated Prefer cropImageToViewport with circular: true. */
+export async function cropCircularImage(
+  image: HTMLImageElement,
+  viewportSize: number,
+  outputSize: number,
+  state: ImageCropState,
+  fileName = "profile-photo.png",
+) {
+  return cropImageToViewport(
+    image,
+    { width: viewportSize, height: viewportSize },
+    { width: outputSize, height: outputSize },
+    state,
+    { circular: true, fileName, fit: "cover" },
+  );
 }

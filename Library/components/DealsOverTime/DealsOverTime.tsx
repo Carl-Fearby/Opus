@@ -1,10 +1,17 @@
 "use client";
 
-import { useEffect, useId, useMemo, useRef, useState, type CSSProperties } from "react";
+import { useEffect, useId, useMemo, useRef, useState, useSyncExternalStore, type CSSProperties } from "react";
 import {
   getDealsOverTimePalette,
   type DealsOverTimePalette,
 } from "@/lib/controls/dealsOverTimePalettes";
+import {
+  ACCENT_CHANGE_EVENT,
+  DEFAULT_ACCENT_COLOR,
+  DEFAULT_ACCENT_SECONDARY,
+  readStoredAccentState,
+  type AccentPreferenceState,
+} from "@/lib/theme/accentThemeStorage";
 import styles from "./DealsOverTime.module.css";
 
 export type { DealsOverTimePalette };
@@ -37,6 +44,45 @@ const PLOT_TOP = 8;
 const PLOT_BOTTOM = 26;
 
 type PlotPoint = { x: number; y: number };
+
+function subscribeAccent(onStoreChange: () => void) {
+  window.addEventListener(ACCENT_CHANGE_EVENT, onStoreChange);
+  window.addEventListener("storage", onStoreChange);
+  return () => {
+    window.removeEventListener(ACCENT_CHANGE_EVENT, onStoreChange);
+    window.removeEventListener("storage", onStoreChange);
+  };
+}
+
+const serverAccentSnapshot: AccentPreferenceState = {
+  accent: DEFAULT_ACCENT_COLOR,
+  accentPairId: "violet-cyan",
+  accentSecondary: DEFAULT_ACCENT_SECONDARY,
+};
+
+let clientAccentSnapshot: AccentPreferenceState = serverAccentSnapshot;
+
+function getAccentSnapshot() {
+  const next = readStoredAccentState();
+  if (
+    clientAccentSnapshot.accent === next.accent &&
+    clientAccentSnapshot.accentSecondary === next.accentSecondary &&
+    clientAccentSnapshot.accentPairId === next.accentPairId
+  ) {
+    return clientAccentSnapshot;
+  }
+
+  clientAccentSnapshot = next;
+  return clientAccentSnapshot;
+}
+
+function getServerAccentSnapshot() {
+  return serverAccentSnapshot;
+}
+
+function useAccentColors() {
+  return useSyncExternalStore(subscribeAccent, getAccentSnapshot, getServerAccentSnapshot);
+}
 
 function smoothPath(points: PlotPoint[]) {
   if (points.length < 2) {
@@ -128,7 +174,15 @@ function DealsOverTimeChart({
   const pointGlowFilterId = useId();
   const [activeIndex, setActiveIndex] = useState<number | null>(null);
   const { chartWidth, wrapRef } = useChartWidth();
-  const colors = getDealsOverTimePalette(palette);
+  const accent = useAccentColors();
+  const colors = useMemo(
+    () =>
+      getDealsOverTimePalette(palette, {
+        primary: accent.accent,
+        secondary: accent.accentSecondary,
+      }),
+    [accent.accent, accent.accentSecondary, palette],
+  );
 
   const plotBottom = CHART_HEIGHT - PLOT_BOTTOM;
   const plotRight = chartWidth - PLOT_RIGHT;

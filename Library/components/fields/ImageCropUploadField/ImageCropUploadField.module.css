@@ -151,6 +151,17 @@
   cursor: grab;
 }
 
+.root[data-shape="rect"] .viewport {
+  border-radius: 16px;
+  background: #ffffff;
+}
+
+.root[data-shape="rect"] .previewImage {
+  border-radius: 16px;
+  object-fit: contain;
+  background: #ffffff;
+}
+
 .viewportDragging {
   cursor: grabbing;
 }
@@ -260,27 +271,34 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
+  width: 42px;
+  height: 42px;
   padding: 0;
-  border: 0;
-  background: transparent;
-  color: #fff;
+  border: 1px solid color-mix(in srgb, #ffffff 55%, transparent);
+  border-radius: 50%;
+  background: color-mix(in srgb, #0b1220 78%, transparent);
+  color: #ffffff;
   transform: translateX(-50%);
   cursor: pointer;
-  filter: drop-shadow(0 1px 2px rgb(0 0 0 / 0.55));
+  backdrop-filter: blur(8px);
+  box-shadow:
+    0 6px 16px color-mix(in srgb, #000000 35%, transparent),
+    inset 0 1px 0 color-mix(in srgb, #ffffff 18%, transparent);
 }
 
 .previewCameraButton svg {
   display: block;
-  width: 36px;
-  height: 36px;
+  width: 18px;
+  height: 18px;
 }
 
 .previewCameraButton:hover {
-  filter: drop-shadow(0 1px 2px rgb(0 0 0 / 0.55)) brightness(1.08);
+  background: color-mix(in srgb, #0b1220 88%, var(--opus-accent) 12%);
+  border-color: color-mix(in srgb, #ffffff 72%, var(--opus-accent) 28%);
 }
 
 .previewCameraButton:focus-visible {
-  outline: 2px solid rgb(255 255 255 / 0.85);
+  outline: 2px solid color-mix(in srgb, var(--opus-accent) 70%, #ffffff);
   outline-offset: 2px;
 }
 

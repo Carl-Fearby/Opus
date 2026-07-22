@@ -385,6 +385,30 @@ export {
   getPrimaryCompany,
   resolveContactDetailsContact,
 } from "../ContactDetails";
+export { CompanyDetails } from "../CompanyDetails";
+export type {
+  CompanyCardProps,
+  CompanyBranch,
+  CompanyContactPerson,
+  CompanyDetailsAction,
+  CompanyDetailsCompany,
+  CompanyDetailsProps,
+  CompanyIdentityCardProps,
+  CompanyNotesActivityProps,
+  CompanySummaryCardProps,
+  CompanySummaryTab,
+} from "../CompanyDetails";
+export {
+  CompanyCard,
+  CompanyIdentityCard,
+  CompanyNotesActivity,
+  CompanySummaryCard,
+  defaultCompany,
+  defaultCompanyContacts,
+  defaultCompanyNotes,
+  getPrimaryBranch,
+  resolveCompanyDetailsCompany,
+} from "../CompanyDetails";
 export { MoreActionsMenu } from "../MoreActionsMenu";
 export type { MoreActionsMenuItem, MoreActionsMenuProps } from "../MoreActionsMenu";
 export type {

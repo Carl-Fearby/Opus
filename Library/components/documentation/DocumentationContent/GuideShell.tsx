@@ -33,7 +33,7 @@ export function GuideShell({ children, pages }: GuideShellProps) {
   } = useTileAccentPreference();
 
   return (
-    <OpusThemeProvider theme={theme}>
+    <OpusThemeProvider applyToDocument={false} theme={theme}>
       <div className={styles.shell} style={{ ...accentStyle, ...tileAccentStyle }}>
         <DocumentationTopBar
           current="guide"

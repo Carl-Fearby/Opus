@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useAccentPreference, useTileAccentPreference } from "@/components/AccentColorPicker";
-import { OpusThemeProvider } from "@/components/OpusThemeProvider";
+import { OpusThemeProvider } from "opus-react";
 import { COMPONENTS_BASE_PATH, GUIDE_BASE_PATH, VERSION_BASE_PATH } from "@/lib/documentation/routes";
 import { libraryVersion } from "@/lib/documentation/libraryVersion";
 import { DocumentationTopBar } from "@/components/documentation/DocumentationTopBar";
@@ -25,7 +25,7 @@ export function DocumentationHub() {
   } = useTileAccentPreference();
 
   return (
-    <OpusThemeProvider theme={theme}>
+    <OpusThemeProvider applyToDocument={false} theme={theme}>
       <div className={styles.shell} style={{ ...accentStyle, ...tileAccentStyle }}>
         <DocumentationTopBar
           current="home"

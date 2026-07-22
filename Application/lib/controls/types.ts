@@ -819,6 +819,23 @@ export type NotesActivitySettings = {
   wrapInContainer?: boolean;
 };
 
+export type CompanyNotesSettings = {
+  activeTab: "notes" | "activities" | "contacts" | "documents";
+  addNoteButtonLabel: string;
+  addNoteModalDescription: string;
+  addNoteModalTitle: string;
+  activityFooterLabel: string;
+  composerPlaceholder: string;
+  density: SurfaceDensity;
+  height: DashboardSectionHeight;
+  notesFooterLabel: string;
+  previewLayout: DashboardPreviewLayout;
+  saveButtonLabel: string;
+  tabsVariant: TabsVariant;
+  width: DashboardSectionWidth;
+  wrapInContainer?: boolean;
+};
+
 export type UpcomingTasksSettings = DashboardListWidgetSettings & {
   checkboxSize: ChoiceControlSize;
 };
@@ -1209,6 +1226,21 @@ export type ContactDetailsSettings = {
 
 export type ContactCardSettings = {
   isStaffRecord: boolean;
+  showActions: boolean;
+  showStatus: boolean;
+  summaryTabsVariant: TabsVariant;
+};
+
+export type CompanyDetailsSettings = {
+  notesActiveTab: "notes" | "activities" | "contacts" | "documents";
+  notesTabsVariant: TabsVariant;
+  showActions: boolean;
+  showNotes: boolean;
+  showStatus: boolean;
+  summaryTabsVariant: TabsVariant;
+};
+
+export type CompanyCardSettings = {
   showActions: boolean;
   showStatus: boolean;
   summaryTabsVariant: TabsVariant;
@@ -1622,6 +1654,9 @@ export type ControlSettingsBySlug = {
     "notes-activity": NotesActivitySettings;
     "lab-dashboard-list-columns": DashboardListColumnsSettings;
     "lab-dashboard-welcome": DashboardWelcomeSettings;
+    "lab-company-details": CompanyDetailsSettings;
+    "lab-company-card": CompanyCardSettings;
+    "lab-company-notes": CompanyNotesSettings;
     "lab-contact-details": ContactDetailsSettings;
     "lab-contact-card": ContactCardSettings;
     "lab-contact-notes": NotesActivitySettings;

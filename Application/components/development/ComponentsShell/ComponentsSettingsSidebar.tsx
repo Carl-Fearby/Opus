@@ -136,7 +136,7 @@ export function ComponentsSettingsSidebar() {
         </div>
         <CustomScrollbar className={styles.settingsSidebarBody} label="Component settings" orientation="vertical">
           <div className={styles.settingsSidebarBodyInner}>
-          <OpusThemeProvider theme={theme}>
+          <OpusThemeProvider applyToDocument={false} theme={theme}>
             <ControlSettingsPanel slug={activeSlug} settings={settings} onChange={setSettings} />
             {hasCompositionLinks ? (
               <div className={styles.settingsCompositionLinks}>

@@ -4,7 +4,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import type { ReactNode } from "react";
 import { useAccentPreference, useTileAccentPreference } from "@/components/AccentColorPicker";
-import { OpusThemeProvider } from "@/components/OpusThemeProvider";
+import { OpusThemeProvider } from "opus-react";
 import type { GuidePage } from "@/lib/documentation/content";
 import { guidePath } from "@/lib/documentation/routes";
 import { DocumentationTopBar } from "@/components/documentation/DocumentationTopBar";
@@ -33,7 +33,7 @@ export function GuideShell({ children, pages }: GuideShellProps) {
   } = useTileAccentPreference();
 
   return (
-    <OpusThemeProvider theme={theme}>
+    <OpusThemeProvider applyToDocument={false} theme={theme}>
       <div className={styles.shell} style={{ ...accentStyle, ...tileAccentStyle }}>
         <DocumentationTopBar
           current="guide"

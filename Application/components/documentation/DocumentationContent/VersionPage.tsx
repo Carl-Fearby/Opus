@@ -1,7 +1,7 @@
 "use client";
 
 import { useAccentPreference, useTileAccentPreference } from "@/components/AccentColorPicker";
-import { OpusThemeProvider } from "@/components/OpusThemeProvider";
+import { OpusThemeProvider } from "opus-react";
 import type { VersionEntry } from "@/lib/documentation/versionLog";
 import { libraryVersion } from "@/lib/documentation/libraryVersion";
 import { versionLog } from "@/lib/documentation/versionLog";

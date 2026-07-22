@@ -5,6 +5,7 @@ import {
   DEFAULT_TILE_ACCENT,
   DEFAULT_TILE_ACCENT_SECONDARY,
   TILE_ACCENT_CHANGE_EVENT,
+  isHexColor,
   readStoredTileAccentState,
   type TileAccentPreferenceState,
 } from "@/lib/theme/accentThemeStorage";
@@ -66,17 +67,28 @@ function mixHex(primary: string, secondary: string, primaryWeight = 0.55) {
   }
 }
 
+function lighten(hex: string, amount: number) {
+  return mixHex(hex, "#ffffff", 1 - amount);
+}
+
 type TileGradientDefsProps = {
+  /** Override tiles primary (purple-tone icons). */
   primary?: string;
+  /** Override tiles secondary (blue-tone icons). */
   secondary?: string;
 };
 
+/**
+ * Shared SVG paint servers for tile / stat-tile icons.
+ * Uses literal hex stops (SVG cannot reliably resolve CSS `var()` / `color-mix`).
+ * Purple-tone icons follow tiles primary only; blue-tone follows secondary only.
+ */
 export function TileGradientDefs({ primary, secondary }: TileGradientDefsProps = {}) {
   const stored = useTileAccentColors();
-  const tilePrimary = primary ?? stored.tileAccent;
-  const tileSecondary = secondary ?? stored.tileAccentSecondary;
-  const purpleMid = mixHex(tilePrimary, tileSecondary, 0.55);
-  const blueMid = mixHex(tileSecondary, "#ffffff", 0.7);
+  const tilePrimary = isHexColor(primary) ? primary : stored.tileAccent;
+  const tileSecondary = isHexColor(secondary) ? secondary : stored.tileAccentSecondary;
+  const purpleTop = lighten(tilePrimary, 0.28);
+  const blueTop = lighten(tileSecondary, 0.35);
 
   return (
     <svg
@@ -89,13 +101,13 @@ export function TileGradientDefs({ primary, secondary }: TileGradientDefsProps =
     >
       <defs>
         <linearGradient id="opus-action-tile-purple" x1="0.5" x2="0.5" y1="0" y2="1">
-          <stop offset="0%" stopColor={purpleMid} />
-          <stop offset="48%" stopColor={purpleMid} />
+          <stop offset="0%" stopColor={purpleTop} />
+          <stop offset="48%" stopColor={purpleTop} />
           <stop offset="100%" stopColor={tilePrimary} />
         </linearGradient>
         <linearGradient id="opus-action-tile-blue" x1="0.5" x2="0.5" y1="0" y2="1">
-          <stop offset="0%" stopColor={blueMid} />
-          <stop offset="48%" stopColor={blueMid} />
+          <stop offset="0%" stopColor={blueTop} />
+          <stop offset="48%" stopColor={blueTop} />
           <stop offset="100%" stopColor={tileSecondary} />
         </linearGradient>
       </defs>

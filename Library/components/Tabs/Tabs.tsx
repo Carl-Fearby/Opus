@@ -1,7 +1,16 @@
 "use client";
 
-import { useId, useState, type ReactNode, type KeyboardEvent } from "react";
+import {
+  useCallback,
+  useEffect,
+  useId,
+  useRef,
+  useState,
+  type ReactNode,
+  type KeyboardEvent,
+} from "react";
 import type { TabsOrientation, TabsPanelMode, TabsVariant } from "@/components/fields/types";
+import { CatalogIcon } from "@/components/CatalogIcon";
 import { TabActiveLine } from "@/components/TabActiveLine";
 import styles from "./Tabs.module.css";
 
@@ -52,12 +61,75 @@ export function Tabs({
   variant = "line",
 }: TabsProps) {
   const generatedId = useId();
+  const listRef = useRef<HTMLDivElement>(null);
   const firstEnabledValue = items.find((item) => !item.disabled)?.value ?? items[0]?.value ?? "";
   const [internalValue, setInternalValue] = useState(defaultValue ?? firstEnabledValue);
+  const [hasPrevious, setHasPrevious] = useState(false);
+  const [hasMore, setHasMore] = useState(false);
   const activeValue = value ?? internalValue;
   const activeItem = items.find((item) => item.value === activeValue) ?? items[0];
   const resolvedPanelMode = panelMode ?? (variant === "card" ? "crossfade" : "active");
   const isCardVariant = variant === "card";
+  const canScrollTabs = orientation === "horizontal";
+
+  const updateOverflow = useCallback(() => {
+    const list = listRef.current;
+    if (!list || !canScrollTabs) {
+      setHasPrevious(false);
+      setHasMore(false);
+      return;
+    }
+
+    setHasPrevious(list.scrollLeft > 2);
+    setHasMore(list.scrollWidth - list.scrollLeft - list.clientWidth > 2);
+  }, [canScrollTabs]);
+
+  useEffect(() => {
+    const list = listRef.current;
+    if (!list || !canScrollTabs) {
+      return;
+    }
+
+    updateOverflow();
+    const observer = new ResizeObserver(updateOverflow);
+    observer.observe(list);
+    Array.from(list.children).forEach((child) => observer.observe(child));
+    list.addEventListener("scroll", updateOverflow, { passive: true });
+
+    return () => {
+      observer.disconnect();
+      list.removeEventListener("scroll", updateOverflow);
+    };
+  }, [canScrollTabs, items, updateOverflow, variant]);
+
+  useEffect(() => {
+    if (!canScrollTabs) {
+      return;
+    }
+
+    const list = listRef.current;
+    const activeTab = document.getElementById(`${generatedId}-${activeValue}-tab`);
+    if (!list || !activeTab) {
+      return;
+    }
+
+    const listRect = list.getBoundingClientRect();
+    const tabRect = activeTab.getBoundingClientRect();
+    const overflowLeft = tabRect.left < listRect.left + 8;
+    const overflowRight = tabRect.right > listRect.right - 8;
+
+    if (overflowLeft || overflowRight) {
+      activeTab.scrollIntoView({ behavior: "smooth", block: "nearest", inline: "nearest" });
+    }
+  }, [activeValue, canScrollTabs, generatedId, items]);
+
+  const scrollTabs = (direction: -1 | 1) => {
+    const list = listRef.current;
+    if (!list) {
+      return;
+    }
+    list.scrollBy({ left: direction * Math.max(list.clientWidth * 0.65, 140), behavior: "smooth" });
+  };
 
   const setValue = (nextValue: string, focusTab = false) => {
     const item = items.find((candidate) => candidate.value === nextValue);
@@ -120,49 +192,76 @@ export function Tabs({
     >
       <div className={styles.header}>
         <div
-          aria-label={ariaLabel}
-          aria-orientation={orientation}
-          className={styles.list}
-          onKeyDown={handleKeyDown}
-          role="tablist"
+          className={styles.listViewport}
+          data-has-more={hasMore ? "true" : "false"}
+          data-has-previous={hasPrevious ? "true" : "false"}
         >
-          {items.map((item) => {
-            const selected = item.value === activeValue;
-            const tabId = `${generatedId}-${item.value}-tab`;
-            const panelId = `${generatedId}-${item.value}-panel`;
+          <div
+            aria-label={ariaLabel}
+            aria-orientation={orientation}
+            className={styles.list}
+            onKeyDown={handleKeyDown}
+            ref={listRef}
+            role="tablist"
+          >
+            {items.map((item) => {
+              const selected = item.value === activeValue;
+              const tabId = `${generatedId}-${item.value}-tab`;
+              const panelId = `${generatedId}-${item.value}-panel`;
 
-            return (
-              <button
-                aria-controls={panelId}
-                aria-selected={selected}
-                className={styles.tab}
-                disabled={item.disabled}
-                id={tabId}
-                key={item.value}
-                onClick={() => setValue(item.value)}
-                role="tab"
-                tabIndex={selected ? 0 : -1}
-                type="button"
-              >
-                {isCardVariant ? (
-                  <>
-                    <span aria-hidden="true" className={styles.tabShape}>
-                      <svg preserveAspectRatio="none" viewBox="0 0 220 43">
-                        <path d={CARD_TAB_SHAPE_PATH} />
-                      </svg>
-                    </span>
-                    <span className={styles.tabLabel}>{item.label}</span>
-                    <TabActiveLine className={styles.cardTabLine} />
-                  </>
-                ) : (
-                  item.label
-                )}
-                {!isCardVariant && selected && variant === "line" ? (
-                  <TabActiveLine orientation={orientation} />
-                ) : null}
-              </button>
-            );
-          })}
+              return (
+                <button
+                  aria-controls={panelId}
+                  aria-selected={selected}
+                  className={styles.tab}
+                  disabled={item.disabled}
+                  id={tabId}
+                  key={item.value}
+                  onClick={() => setValue(item.value)}
+                  role="tab"
+                  tabIndex={selected ? 0 : -1}
+                  type="button"
+                >
+                  {isCardVariant ? (
+                    <>
+                      <span aria-hidden="true" className={styles.tabShape}>
+                        <svg preserveAspectRatio="none" viewBox="0 0 220 43">
+                          <path d={CARD_TAB_SHAPE_PATH} />
+                        </svg>
+                      </span>
+                      <span className={styles.tabLabel}>{item.label}</span>
+                      <TabActiveLine className={styles.cardTabLine} />
+                    </>
+                  ) : (
+                    item.label
+                  )}
+                  {!isCardVariant && selected && variant === "line" ? (
+                    <TabActiveLine orientation={orientation} />
+                  ) : null}
+                </button>
+              );
+            })}
+          </div>
+          {hasPrevious ? (
+            <button
+              aria-label="Show previous tabs"
+              className={[styles.scrollButton, styles.previousButton].join(" ")}
+              onClick={() => scrollTabs(-1)}
+              type="button"
+            >
+              <CatalogIcon iconName="chevron-left" />
+            </button>
+          ) : null}
+          {hasMore ? (
+            <button
+              aria-label="Show more tabs"
+              className={[styles.scrollButton, styles.nextButton].join(" ")}
+              onClick={() => scrollTabs(1)}
+              type="button"
+            >
+              <CatalogIcon iconName="chevron-right" />
+            </button>
+          ) : null}
         </div>
         {trailing ? <div className={styles.trailing}>{trailing}</div> : null}
       </div>

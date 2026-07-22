@@ -3267,6 +3267,106 @@ export function ControlSettingsPanel({
         </div>
       );
     }
+    case "lab-company-details": {
+      const s = settings as ControlSettingsBySlug["lab-company-details"];
+      return (
+        <div className={shellStyles.settingsGrid}>
+          <SettingToggle
+            label="Header actions"
+            checked={s.showActions}
+            onChange={(showActions) => onChange({ ...s, showActions } as ControlSettings)}
+          />
+          <SettingToggle
+            label="Company status"
+            checked={s.showStatus}
+            onChange={(showStatus) => onChange({ ...s, showStatus } as ControlSettings)}
+          />
+          <SettingToggle
+            label="Notes activity (host)"
+            checked={s.showNotes}
+            onChange={(showNotes) => onChange({ ...s, showNotes } as ControlSettings)}
+          />
+          <SettingSelect
+            label="Summary tabs variant"
+            value={s.summaryTabsVariant}
+            onChange={(summaryTabsVariant) =>
+              onChange({
+                ...s,
+                summaryTabsVariant: summaryTabsVariant as typeof s.summaryTabsVariant,
+              } as ControlSettings)
+            }
+            options={[
+              { label: "Line", value: "line" },
+              { label: "Contained", value: "contained" },
+              { label: "Card", value: "card" },
+            ]}
+          />
+          <SettingSelect
+            label="Notes active tab"
+            value={s.notesActiveTab ?? "notes"}
+            onChange={(notesActiveTab) =>
+              onChange({
+                ...s,
+                notesActiveTab: notesActiveTab as typeof s.notesActiveTab,
+              } as ControlSettings)
+            }
+            options={[
+              { label: "Notes", value: "notes" },
+              { label: "Activities", value: "activities" },
+              { label: "Company Contacts", value: "contacts" },
+              { label: "Documents", value: "documents" },
+            ]}
+          />
+          <SettingSelect
+            label="Notes tabs variant"
+            value={s.notesTabsVariant}
+            onChange={(notesTabsVariant) =>
+              onChange({
+                ...s,
+                notesTabsVariant: notesTabsVariant as typeof s.notesTabsVariant,
+              } as ControlSettings)
+            }
+            options={[
+              { label: "Line", value: "line" },
+              { label: "Contained", value: "contained" },
+              { label: "Card", value: "card" },
+            ]}
+          />
+        </div>
+      );
+    }
+    case "lab-company-card": {
+      const s = settings as ControlSettingsBySlug["lab-company-card"];
+      return (
+        <div className={shellStyles.settingsGrid}>
+          <SettingToggle
+            label="Header actions"
+            checked={s.showActions}
+            onChange={(showActions) => onChange({ ...s, showActions } as ControlSettings)}
+          />
+          <SettingToggle
+            label="Company status"
+            checked={s.showStatus}
+            onChange={(showStatus) => onChange({ ...s, showStatus } as ControlSettings)}
+          />
+          <SettingSelect
+            label="Summary tabs variant"
+            value={s.summaryTabsVariant}
+            onChange={(summaryTabsVariant) =>
+              onChange({
+                ...s,
+                summaryTabsVariant: summaryTabsVariant as typeof s.summaryTabsVariant,
+              } as ControlSettings)
+            }
+            options={[
+              { label: "Line", value: "line" },
+              { label: "Contained", value: "contained" },
+              { label: "Card", value: "card" },
+            ]}
+          />
+        </div>
+      );
+    }
     case "lab-contact-details": {
       const s = settings as ControlSettingsBySlug["lab-contact-details"];
       return (
@@ -3452,6 +3552,44 @@ export function ControlSettingsPanel({
             label="Submit label"
             value={s.submitLabel}
             onChange={(submitLabel) => onChange({ ...s, submitLabel } as ControlSettings)}
+          />
+        </div>
+      );
+    }
+    case "lab-company-notes": {
+      const s = settings as ControlSettingsBySlug["lab-company-notes"];
+      return (
+        <div className={shellStyles.settingsGrid}>
+          <SettingSelect
+            label="Active tab"
+            value={s.activeTab ?? "notes"}
+            onChange={(activeTab) =>
+              onChange({
+                ...s,
+                activeTab: activeTab as typeof s.activeTab,
+              } as ControlSettings)
+            }
+            options={[
+              { label: "Notes", value: "notes" },
+              { label: "Activities", value: "activities" },
+              { label: "Company Contacts", value: "contacts" },
+              { label: "Documents", value: "documents" },
+            ]}
+          />
+          <SettingSelect
+            label="Tabs variant"
+            value={s.tabsVariant ?? "card"}
+            onChange={(tabsVariant) =>
+              onChange({
+                ...s,
+                tabsVariant: tabsVariant as typeof s.tabsVariant,
+              } as ControlSettings)
+            }
+            options={[
+              { label: "Line", value: "line" },
+              { label: "Contained", value: "contained" },
+              { label: "Card", value: "card" },
+            ]}
           />
         </div>
       );

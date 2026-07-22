@@ -1,0 +1,6 @@
+.root {
+  display: grid;
+  gap: 18px;
+  width: 100%;
+  color: var(--opus-text);
+}

@@ -17,11 +17,111 @@
   border-bottom: 1px solid color-mix(in srgb, var(--opus-border) 72%, transparent);
 }
 
+.listViewport {
+  position: relative;
+  display: flex;
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
 .list {
   display: flex;
   flex: 1 1 auto;
   gap: 0;
   min-width: 0;
+  overflow-x: auto;
+  overflow-y: hidden;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+.list::-webkit-scrollbar {
+  display: none;
+}
+
+.listViewport[data-has-previous="true"]::before,
+.listViewport[data-has-more="true"]::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  z-index: 1;
+  width: 28px;
+  pointer-events: none;
+}
+
+.listViewport[data-has-previous="true"]::before {
+  left: 0;
+  background: linear-gradient(
+    to right,
+    color-mix(in srgb, var(--tabs-card-rail-bg, var(--opus-panel)) 92%, transparent),
+    transparent
+  );
+}
+
+.listViewport[data-has-more="true"]::after {
+  right: 0;
+  background: linear-gradient(
+    to left,
+    color-mix(in srgb, var(--tabs-card-rail-bg, var(--opus-panel)) 92%, transparent),
+    transparent
+  );
+}
+
+.scrollButton {
+  position: absolute;
+  z-index: 3;
+  top: 50%;
+  display: grid;
+  place-items: center;
+  width: 26px;
+  height: 32px;
+  padding: 0;
+  border: 1px solid color-mix(in srgb, var(--opus-accent) 42%, var(--opus-border));
+  background: color-mix(in srgb, var(--dashboard-section-bg, var(--opus-panel)) 88%, var(--opus-accent) 12%);
+  color: color-mix(in srgb, var(--opus-accent) 78%, var(--opus-text));
+  cursor: pointer;
+  transform: translateY(-50%);
+  backdrop-filter: blur(8px);
+}
+
+.scrollButton svg {
+  display: block;
+  width: 0.7rem;
+  height: 0.7rem;
+}
+
+.scrollButton:hover,
+.scrollButton:focus-visible {
+  color: var(--opus-accent-contrast, #fff);
+  background: var(--opus-accent);
+  outline: none;
+}
+
+.previousButton {
+  left: 0;
+  border-radius: 0 14px 14px 0;
+  box-shadow: 8px 0 18px color-mix(in srgb, #000000 22%, transparent);
+}
+
+.nextButton {
+  right: 0;
+  border-radius: 14px 0 0 14px;
+  box-shadow: -8px 0 18px color-mix(in srgb, #000000 22%, transparent);
+}
+
+:global([data-preview-root][data-theme="light"]) .scrollButton,
+:global([data-theme="light"]) .scrollButton {
+  background: color-mix(in srgb, #ffffff 90%, var(--opus-accent) 10%);
+  box-shadow: 0 4px 14px color-mix(in srgb, var(--opus-muted) 16%, transparent);
+}
+
+:global([data-preview-root][data-theme="light"]) .scrollButton:hover,
+:global([data-preview-root][data-theme="light"]) .scrollButton:focus-visible,
+:global([data-theme="light"]) .scrollButton:hover,
+:global([data-theme="light"]) .scrollButton:focus-visible {
+  color: var(--opus-accent-contrast, #fff);
+  background: var(--opus-accent);
 }
 
 .trailing {
@@ -32,6 +132,20 @@
   /* Tabs use 12px top / 16px bottom padding, so bias the action slightly down. */
   padding-top: 8px;
   padding-bottom: 2px;
+}
+
+.root[data-orientation="vertical"] .listViewport {
+  display: contents;
+}
+
+.root[data-orientation="vertical"] .list {
+  overflow: visible;
+}
+
+.root[data-orientation="vertical"] .scrollButton,
+.root[data-orientation="vertical"] .listViewport::before,
+.root[data-orientation="vertical"] .listViewport::after {
+  display: none;
 }
 
 .root[data-orientation="vertical"] .header {
@@ -193,13 +307,37 @@
   border-bottom: 1px solid var(--tabs-card-border);
 }
 
-:global([data-preview-root][data-theme="light"]) .root[data-variant="card"] .tab:disabled .tabLabel,
-:global([data-theme="light"]) .root[data-variant="card"] .tab:disabled .tabLabel {
-  color: color-mix(in srgb, var(--opus-muted) 28%, transparent);
+.root[data-variant="card"] .listViewport {
+  align-self: stretch;
+  height: calc(var(--tabs-card-tab-height) + var(--tabs-card-rail-pad-top));
+  margin-top: calc(-1 * var(--tabs-card-rail-pad-top));
 }
 
 .root[data-variant="card"] .list {
+  align-self: flex-end;
   align-items: stretch;
+  height: var(--tabs-card-tab-height);
+}
+
+.root[data-variant="card"] .scrollButton {
+  box-sizing: border-box;
+  width: var(--opus-control-height, 28px);
+  height: var(--opus-control-height, 28px);
+  border-color: color-mix(in srgb, var(--opus-accent) 46%, var(--opus-border));
+  background: var(--opus-input-bg, color-mix(in srgb, var(--dashboard-section-bg, var(--opus-panel)) 88%, var(--opus-accent) 12%));
+  color: var(--opus-text);
+}
+
+.root[data-variant="card"] .scrollButton:hover,
+.root[data-variant="card"] .scrollButton:focus-visible {
+  border-color: var(--opus-accent);
+  background: color-mix(in srgb, var(--opus-accent) 12%, var(--opus-input-bg, var(--opus-panel)));
+  color: var(--opus-text);
+}
+
+:global([data-preview-root][data-theme="light"]) .root[data-variant="card"] .tab:disabled .tabLabel,
+:global([data-theme="light"]) .root[data-variant="card"] .tab:disabled .tabLabel {
+  color: color-mix(in srgb, var(--opus-muted) 28%, transparent);
 }
 
 .root[data-variant="card"] .tab {
@@ -334,6 +472,9 @@
   height: calc(var(--tabs-card-tab-height) + var(--tabs-card-rail-pad-top));
   margin-top: calc(-1 * var(--tabs-card-rail-pad-top));
   padding: 0 14px 0 0;
+  /* Undo default line-variant trailing bias so this matches scroll chevrons. */
+  padding-top: 0;
+  padding-bottom: 0;
 }
 
 .root[data-variant="card"] .trailing button {

@@ -159,6 +159,7 @@ export function ComponentsThemeProvider({ children }: { children: ReactNode }) {
   return (
     <ComponentsThemeContext.Provider value={contextValue}>
       <OpusThemeProvider applyToDocument={false} theme={theme}>
+        <DocsShellThemeIsolation />
         <div style={combinedStyle}>
           <ToastProvider>
             <ContextMenuProvider>{children}</ContextMenuProvider>
@@ -167,4 +168,17 @@ export function ComponentsThemeProvider({ children }: { children: ReactNode }) {
       </OpusThemeProvider>
     </ComponentsThemeContext.Provider>
   );
+}
+
+/** Keep catalogue shell on data-shell-theme only — never leave data-theme on <html>. */
+function DocsShellThemeIsolation() {
+  useEffect(() => {
+    if (typeof document === "undefined") {
+      return;
+    }
+
+    document.documentElement.removeAttribute("data-theme");
+  }, []);
+
+  return null;
 }

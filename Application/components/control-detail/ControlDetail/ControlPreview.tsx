@@ -9,6 +9,7 @@ import { ApplicationFooter } from "opus-react";
 import { WelcomeMessage } from "opus-react";
 import { Map } from "@/components/Map";
 import { ContactDetails, ContactNotesActivity } from "opus-react";
+import { CompanyDetails, CompanyNotesActivity } from "opus-react";
 import { VideoPlayer } from "@/components/VideoPlayer";
 import { AudioPlayer } from "@/components/AudioPlayer";
 import {
@@ -3840,6 +3841,67 @@ export function ControlPreview({
       const s = settings as ControlSettingsBySlug["dashboard-list-columns"];
       return <DashboardListColumnsDashboardPreview settings={s} />;
     }
+    case "lab-company-details": {
+      const s = settings as ControlSettingsBySlug["lab-company-details"];
+      return (
+        <div className={styles.contactDetailsPage}>
+          <PageHeader
+            breadcrumbs={
+              <Breadcrumb
+                items={[
+                  { id: "companies", href: "#companies", label: "Companies" },
+                  { id: "current", label: "Acme Ltd" },
+                ]}
+                separator="›"
+              />
+            }
+            title="Company Details"
+          />
+          <CompanyDetails
+            showActions={s.showActions}
+            showStatus={s.showStatus}
+            tabsVariant={s.summaryTabsVariant}
+            onAction={(action) => console.log(action)}
+          />
+          {s.showNotes ? (
+            <CompanyNotesActivity
+              activeTab={s.notesActiveTab ?? "notes"}
+              onAction={(action) => console.log(action)}
+              onAddNote={(note) => console.log(note)}
+              onTabChange={(notesActiveTab) =>
+                onSettingsChange({ ...s, notesActiveTab } as ControlSettings)
+              }
+              tabsVariant={s.notesTabsVariant}
+            />
+          ) : null}
+        </div>
+      );
+    }
+    case "lab-company-card": {
+      const s = settings as ControlSettingsBySlug["lab-company-card"];
+      return (
+        <div className={styles.contactDetailsPage}>
+          <PageHeader
+            breadcrumbs={
+              <Breadcrumb
+                items={[
+                  { id: "companies", href: "#companies", label: "Companies" },
+                  { id: "current", label: "Acme Ltd" },
+                ]}
+                separator="›"
+              />
+            }
+            title="Company Card"
+          />
+          <CompanyDetails
+            showActions={s.showActions}
+            showStatus={s.showStatus}
+            tabsVariant={s.summaryTabsVariant}
+            onAction={(action) => console.log(action)}
+          />
+        </div>
+      );
+    }
     case "lab-contact-details": {
       const s = settings as ControlSettingsBySlug["lab-contact-details"];
       const recordLabel = s.isStaffRecord ? "User" : "Contact";
@@ -4145,6 +4207,33 @@ export function ControlPreview({
                 </form>
               </DashboardContentContainer>
             </div>
+          )}
+        </DashboardActionPreview>
+      );
+    }
+    case "lab-company-notes": {
+      const s = settings as ControlSettingsBySlug["lab-company-notes"];
+      return (
+        <DashboardActionPreview>
+          {(reportAction) => (
+            <DashboardPreviewGrid
+              containerDataComponent="company-notes-activity"
+              containerHeight={s.height ?? "auto"}
+              containerWidth={s.width ?? "full"}
+              layout={s.previewLayout}
+              unwrapped
+              renderItem={() => (
+                <CompanyNotesActivity
+                  activeTab={s.activeTab ?? "notes"}
+                  onAction={(action) => reportAction(action)}
+                  onAddNote={(note) => reportAction(`Saved note: ${note}`)}
+                  onTabChange={(activeTab) =>
+                    onSettingsChange({ ...s, activeTab } as ControlSettings)
+                  }
+                  tabsVariant={s.tabsVariant ?? "card"}
+                />
+              )}
+            />
           )}
         </DashboardActionPreview>
       );

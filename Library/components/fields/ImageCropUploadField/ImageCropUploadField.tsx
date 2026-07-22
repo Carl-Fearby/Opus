@@ -15,10 +15,11 @@ import {
   type PointerEventHandler,
 } from "react";
 import {
-  clampCircularCropOffset,
-  cropCircularImage,
-  getCircularCropMetrics,
-  type CircularCropState,
+  clampImageCropOffset,
+  cropImageToViewport,
+  getImageCropMetrics,
+  type ImageCropFit,
+  type ImageCropState,
 } from "./cropCircularImage";
 import styles from "./ImageCropUploadField.module.css";
 import { inputControlSizeClassName } from "../shared/inputControlSizes";
@@ -28,12 +29,16 @@ export type ImageCropUploadResult = {
   previewUrl: string;
 };
 
+export type ImageCropShape = "circle" | "rect";
+
 export type ImageCropUploadFieldProps = {
   accept?: string;
   changeButtonLabel?: string;
   cropButtonLabel?: string;
   embedded?: boolean;
   error?: string;
+  /** cover fills the frame; contain fits the full image (zoom out to see max width/height). */
+  fit?: ImageCropFit;
   help?: string;
   hideActions?: boolean;
   id: string;
@@ -50,11 +55,18 @@ export type ImageCropUploadFieldProps = {
     canApply: boolean;
     isCropping: boolean;
   }) => void;
+  /** Square output size for circle crops. Ignored when outputWidth/Height are set. */
   outputSize?: number;
+  outputHeight?: number;
+  outputWidth?: number;
+  shape?: ImageCropShape;
   size?: InputControlSize;
   uploadLabel?: string;
   value?: string;
+  /** Square viewport size for circle crops. */
   viewportSize?: number;
+  viewportHeight?: number;
+  viewportWidth?: number;
   zoomLabel?: string;
   zoomStep?: number;
 };
@@ -67,7 +79,7 @@ type DragState = {
   startY: number;
 };
 
-const defaultCropState: CircularCropState = {
+const defaultCropState: ImageCropState = {
   offsetX: 0,
   offsetY: 0,
   zoom: 1,
@@ -101,6 +113,7 @@ export function ImageCropUploadField({
   cropButtonLabel = "Apply crop",
   embedded = false,
   error,
+  fit,
   help,
   hideActions = false,
   id,
@@ -113,11 +126,16 @@ export function ImageCropUploadField({
   onChange,
   onCrop,
   onCropAvailabilityChange,
+  outputHeight,
   outputSize = 256,
+  outputWidth,
+  shape = "circle",
   size = "md",
   uploadLabel = "Browse image",
   value,
+  viewportHeight,
   viewportSize = 240,
+  viewportWidth,
   zoomLabel = "Zoom",
   zoomStep = 0.05,
 }: ImageCropUploadFieldProps) {
@@ -132,13 +150,23 @@ export function ImageCropUploadField({
     startX: 0,
     startY: 0,
   });
+  const isRect = shape === "rect";
+  const resolvedFit: ImageCropFit = fit ?? (isRect ? "contain" : "cover");
+  const viewport = {
+    width: viewportWidth ?? viewportSize,
+    height: viewportHeight ?? viewportSize,
+  };
+  const output = {
+    width: outputWidth ?? outputSize,
+    height: outputHeight ?? outputSize,
+  };
   const [isDraggingFile, setIsDraggingFile] = useState(false);
   const [isPointerDragging, setIsPointerDragging] = useState(false);
   const [isCropping, setIsCropping] = useState(false);
   const [sourceUrl, setSourceUrl] = useState<string | null>(null);
   const [sourceName, setSourceName] = useState("");
   const [isEditing, setIsEditing] = useState(false);
-  const [cropState, setCropState] = useState<CircularCropState>(defaultCropState);
+  const [cropState, setCropState] = useState<ImageCropState>(defaultCropState);
   const [imageSize, setImageSize] = useState({ height: 0, width: 0 });
 
   const clearSource = useCallback(() => {
@@ -228,13 +256,13 @@ export function ImageCropUploadField({
     assignFiles(event.dataTransfer.files);
   };
 
-  const updateCropState = (next: CircularCropState) => {
+  const updateCropState = (next: ImageCropState) => {
     if (!imageSize.width || !imageSize.height) {
       setCropState(next);
       return;
     }
 
-    setCropState(clampCircularCropOffset(imageSize.width, imageSize.height, viewportSize, next));
+    setCropState(clampImageCropOffset(imageSize.width, imageSize.height, viewport, next, resolvedFit));
   };
 
   const handlePointerDown: PointerEventHandler<HTMLDivElement> = (event) => {
@@ -294,14 +322,25 @@ export function ImageCropUploadField({
     setIsCropping(true);
 
     try {
-      const result = await cropCircularImage(image, viewportSize, outputSize, cropState, sourceName || "profile-photo.png");
+      const result = await cropImageToViewport(
+        image,
+        viewport,
+        output,
+        cropState,
+        {
+          circular: !isRect,
+          fileName: sourceName || (isRect ? "company-logo.png" : "profile-photo.png"),
+          fillStyle: isRect ? "#ffffff" : undefined,
+          fit: resolvedFit,
+        },
+      );
       onCrop?.(result);
       onChange?.(result.previewUrl);
       clearSource();
     } finally {
       setIsCropping(false);
     }
-  }, [clearSource, cropState, onChange, onCrop, outputSize, sourceName, viewportSize]);
+  }, [clearSource, cropState, isRect, onChange, onCrop, output, resolvedFit, sourceName, viewport]);
 
   const applyCropRef = useRef(handleApplyCrop);
   applyCropRef.current = handleApplyCrop;
@@ -319,7 +358,7 @@ export function ImageCropUploadField({
 
   const metrics =
     imageSize.width && imageSize.height
-      ? getCircularCropMetrics(imageSize.width, imageSize.height, viewportSize, cropState)
+      ? getImageCropMetrics(imageSize.width, imageSize.height, viewport, cropState, resolvedFit)
       : null;
 
   const imageStyle = metrics
@@ -344,10 +383,15 @@ export function ImageCropUploadField({
       <div
         className={`${styles.root} ${inputControlSizeClassName[size]}`}
         data-embedded={embedded ? "true" : undefined}
+        data-shape={shape}
       >
         {isEditing && sourceUrl ? (
           <div className={styles.editor}>
-            <p className={styles.instruction}>Drag the image to reposition it inside the circle.</p>
+            <p className={styles.instruction}>
+              {isRect
+                ? "Drag to reposition. Zoom out to fit the full logo; zoom in to crop."
+                : "Drag the image to reposition it inside the circle."}
+            </p>
             <div
               aria-label="Image crop viewport"
               className={`${styles.viewport} ${isPointerDragging ? styles.viewportDragging : ""}`}
@@ -356,7 +400,7 @@ export function ImageCropUploadField({
               onPointerMove={handlePointerMove}
               onPointerUp={endPointerDrag}
               role="application"
-              style={{ height: viewportSize, width: viewportSize }}
+              style={{ height: viewport.height, width: viewport.width }}
             >
               <img
                 ref={imageRef}
@@ -372,7 +416,15 @@ export function ImageCropUploadField({
                     width: image.naturalWidth,
                   };
                   setImageSize(nextSize);
-                  setCropState(clampCircularCropOffset(nextSize.width, nextSize.height, viewportSize, defaultCropState));
+                  setCropState(
+                    clampImageCropOffset(
+                      nextSize.width,
+                      nextSize.height,
+                      viewport,
+                      defaultCropState,
+                      resolvedFit,
+                    ),
+                  );
                 }}
               />
               <span aria-hidden="true" className={styles.viewportRing} />
@@ -429,13 +481,23 @@ export function ImageCropUploadField({
               {embedded ? (
                 <div
                   className={styles.previewFrame}
-                  style={{ height: viewportSize, width: viewportSize }}
+                  style={{ height: viewport.height, width: viewport.width }}
                 >
                   <img
                     alt=""
                     className={styles.previewImage}
                     src={value}
-                    style={{ height: viewportSize, width: viewportSize }}
+                    style={
+                      isRect
+                        ? {
+                            width: "100%",
+                            height: "100%",
+                            objectFit: "contain",
+                            objectPosition: "center",
+                            background: "#ffffff",
+                          }
+                        : { height: viewport.height, width: viewport.width }
+                    }
                   />
                   <button
                     aria-label={changeButtonLabel}
@@ -450,8 +512,10 @@ export function ImageCropUploadField({
                 <>
                   <img alt="" className={styles.previewImage} src={value} />
                   <div className={styles.previewCopy}>
-                    <span className={styles.previewTitle}>Photo ready</span>
-                    <span className={styles.previewHint}>Cropped to a circular profile image.</span>
+                    <span className={styles.previewTitle}>{isRect ? "Logo ready" : "Photo ready"}</span>
+                    <span className={styles.previewHint}>
+                      {isRect ? "Cropped to a rectangular company logo." : "Cropped to a circular profile image."}
+                    </span>
                   </div>
                 </>
               )}
@@ -478,7 +542,7 @@ export function ImageCropUploadField({
             </span>
             <div className={styles.dropContent}>
               <div className={styles.dropTitle}>
-                <strong>Drag</strong> and drop a profile photo
+                <strong>Drag</strong> and drop {isRect ? "a company logo" : "a profile photo"}
               </div>
               <div className={styles.dropHint}>or</div>
               <span className={styles.dropAction}>{uploadLabel}</span>
