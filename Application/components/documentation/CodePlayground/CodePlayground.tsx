@@ -10,6 +10,7 @@ import { SwitchField, ThemeToggleField } from "opus-react";
 import { patchAppSetupPlaygroundTheme } from "@/lib/controls/appSetupBoilerplate";
 import { getDefaultSettings } from "@/lib/controls/defaults";
 import { generateUsageCode } from "@/lib/controls/generateUsageCode";
+import { isFullBleedPreview } from "@/lib/controls/previewPresentation";
 import { getControl } from "@/lib/controls/registry";
 import type { AppSetupSettings, ControlSettings, ControlSlug } from "@/lib/controls/types";
 import { DEFAULT_PLAYGROUND_CODE } from "@/lib/playground/defaultPlaygroundCode";
@@ -133,7 +134,7 @@ export function CodePlayground({ initialCategory = null, initialSlug = null }: C
   const [playgroundTheme, setPlaygroundTheme] = usePlaygroundTheme();
   const [layout, setLayout] = useState<PlaygroundLayout>("split");
   const [isFullWidth, setIsFullWidth] = useState(false);
-  const [previewPadding, setPreviewPadding] = useState(true);
+  const [previewPadding, setPreviewPadding] = useState(() => !isFullBleedPreview(initialSlug));
   const [previewResetKey, setPreviewResetKey] = useState(0);
   const [previewMenuOpen, setPreviewMenuOpen] = useState(false);
   const previewMenuRef = useRef<HTMLDivElement | null>(null);
@@ -168,6 +169,7 @@ export function CodePlayground({ initialCategory = null, initialSlug = null }: C
       const nextCode = resolveInitialCode(slug, category, seedSettings, playgroundTheme);
 
       setPlaygroundContext({ category, slug });
+      setPreviewPadding(!isFullBleedPreview(slug));
       setPreviewError(null);
       setSeedCode(nextCode);
 

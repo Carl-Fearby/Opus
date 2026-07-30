@@ -25,6 +25,7 @@
 }
 
 .list {
+  position: relative;
   display: flex;
   flex: 1 1 auto;
   gap: 0;
@@ -34,6 +35,20 @@
   scrollbar-width: none;
   -ms-overflow-style: none;
 }
+
+.movingActiveLine {
+  z-index: 5;
+  will-change: left, top, width, height;
+  transition:
+    left 380ms cubic-bezier(0.22, 1, 0.36, 1),
+    top 380ms cubic-bezier(0.22, 1, 0.36, 1),
+    width 380ms cubic-bezier(0.22, 1, 0.36, 1),
+    height 380ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.cardMovingActiveLine { bottom: 0; }
+.containedMovingActiveLine { bottom: 5px; }
+.containedMovingActiveLine[data-orientation="vertical"] { right: 5px; }
 
 .list::-webkit-scrollbar {
   display: none;
@@ -596,6 +611,7 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
+  .movingActiveLine,
   .root[data-variant="card"] .tab,
   .root[data-variant="card"] .tab[aria-selected="true"],
   .root[data-variant="card"] .tabLabel,

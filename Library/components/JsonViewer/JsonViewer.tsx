@@ -3,8 +3,9 @@
 import { useMemo, useState } from "react";
 import styles from "./JsonViewer.module.css";
 
-type JsonViewerProps = {
+export type JsonViewerProps = {
   collapsedDepth?: number;
+  onToggle?: (path: string, open: boolean) => void;
   value: unknown;
 };
 
@@ -12,6 +13,8 @@ type JsonNodeProps = {
   collapsedDepth: number;
   depth: number;
   name?: string;
+  onToggle?: (path: string, open: boolean) => void;
+  path: string;
   value: unknown;
 };
 
@@ -35,7 +38,7 @@ function PrimitiveValue({ value }: { value: unknown }) {
   return <span className={styles.string}>{String(value)}</span>;
 }
 
-function JsonNode({ collapsedDepth, depth, name, value }: JsonNodeProps) {
+function JsonNode({ collapsedDepth, depth, name, onToggle, path, value }: JsonNodeProps) {
   const isExpandable = Array.isArray(value) || isPlainObject(value);
   const [open, setOpen] = useState(depth < collapsedDepth);
 
@@ -58,7 +61,11 @@ function JsonNode({ collapsedDepth, depth, name, value }: JsonNodeProps) {
       <button
         aria-expanded={open}
         className={styles.toggleLine}
-        onClick={() => setOpen((current) => !current)}
+        onClick={() => {
+          const nextOpen = !open;
+          setOpen(nextOpen);
+          onToggle?.(path, nextOpen);
+        }}
         style={{ paddingLeft: `${depth * 14}px` }}
         type="button"
       >
@@ -76,6 +83,8 @@ function JsonNode({ collapsedDepth, depth, name, value }: JsonNodeProps) {
               depth={depth + 1}
               key={childName}
               name={childName}
+              onToggle={onToggle}
+              path={`${path}.${childName}`}
               value={childValue}
             />
           ))}
@@ -85,12 +94,18 @@ function JsonNode({ collapsedDepth, depth, name, value }: JsonNodeProps) {
   );
 }
 
-export function JsonViewer({ collapsedDepth = 1, value }: JsonViewerProps) {
+export function JsonViewer({ collapsedDepth = 1, onToggle, value }: JsonViewerProps) {
   const parsed = useMemo(() => value, [value]);
 
   return (
     <div className={styles.root}>
-      <JsonNode collapsedDepth={Math.max(0, collapsedDepth)} depth={0} value={parsed} />
+      <JsonNode
+        collapsedDepth={Math.max(0, collapsedDepth)}
+        depth={0}
+        onToggle={onToggle}
+        path="$"
+        value={parsed}
+      />
     </div>
   );
 }

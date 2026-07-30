@@ -19,6 +19,7 @@ import { demoUpcomingTasks } from "@/lib/controls/upcomingTasksDemoData";
 import { topNavigationDemoMenus } from "@/lib/controls/topNavigationDemo";
 import { demoAudioTracks } from "@/lib/controls/audioDemoData";
 import { demoVideoTracks } from "@/lib/controls/videoDemoData";
+import { continueWithApple, continueWithGoogle } from "@/lib/auth/socialAuth";
 
 export function createPlaygroundScope() {
   return {
@@ -44,6 +45,8 @@ export function createPlaygroundScope() {
     demoAudioTracks,
     demoVideoTracks,
     topNavigationDemoMenus,
+    continueWithGoogle,
+    continueWithApple,
     ...Fields,
     ContactDetails,
     ContactNotesActivity,

@@ -9,18 +9,20 @@ export type PropertyGridItem = {
   value: string;
 };
 
-type PropertyGridProps = {
+export type PropertyGridProps = {
   bordered?: boolean;
   items: PropertyGridItem[];
+  onCopy?: (item: PropertyGridItem, index: number) => void;
 };
 
-export function PropertyGrid({ bordered = false, items }: PropertyGridProps) {
+export function PropertyGrid({ bordered = false, items, onCopy }: PropertyGridProps) {
   const [copiedIndex, setCopiedIndex] = useState<number | null>(null);
 
   async function copyValue(value: string, index: number) {
     try {
       await navigator.clipboard.writeText(value);
       setCopiedIndex(index);
+      onCopy?.(items[index]!, index);
       window.setTimeout(() => setCopiedIndex((current) => (current === index ? null : current)), 1200);
     } catch {
       setCopiedIndex(null);

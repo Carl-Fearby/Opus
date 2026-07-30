@@ -4,6 +4,7 @@ import {
   useCallback,
   useEffect,
   useId,
+  useLayoutEffect,
   useRef,
   useState,
   type ReactNode,
@@ -49,6 +50,14 @@ type TabsProps = {
   variant?: TabsVariant;
 };
 
+type ActiveLinePosition = {
+  height: number;
+  orientation: TabsOrientation;
+  width: number;
+  x: number;
+  y: number;
+};
+
 export function Tabs({
   "aria-label": ariaLabel = "Tabs",
   cardPanelPadding = false,
@@ -73,11 +82,59 @@ export function Tabs({
   const [internalValue, setInternalValue] = useState(defaultValue ?? firstEnabledValue);
   const [hasPrevious, setHasPrevious] = useState(false);
   const [hasMore, setHasMore] = useState(false);
+  const [activeLine, setActiveLine] = useState<ActiveLinePosition | null>(null);
   const activeValue = value ?? internalValue;
   const activeItem = items.find((item) => item.value === activeValue) ?? items[0];
   const resolvedPanelMode = panelMode ?? (variant === "card" ? "crossfade" : "active");
   const isCardVariant = variant === "card";
   const canScrollTabs = orientation === "horizontal";
+
+  const measureActiveLine = useCallback(() => {
+    const list = listRef.current;
+    const tab = document.getElementById(`${generatedId}-${activeValue}-tab`);
+    if (!list || !tab) {
+      setActiveLine(null);
+      return;
+    }
+
+    const renderedOrientation: TabsOrientation =
+      getComputedStyle(list).flexDirection === "column" ? "vertical" : "horizontal";
+    const inset = variant === "card" ? 28 : 5;
+    const next: ActiveLinePosition = {
+      height: Math.max(0, tab.offsetHeight - inset * 2),
+      orientation: renderedOrientation,
+      width: Math.max(0, tab.offsetWidth - inset * 2),
+      x: tab.offsetLeft + inset,
+      y: tab.offsetTop + inset,
+    };
+
+    setActiveLine((current) =>
+      current &&
+      current.height === next.height &&
+      current.orientation === next.orientation &&
+      current.width === next.width &&
+      current.x === next.x &&
+      current.y === next.y
+        ? current
+        : next,
+    );
+  }, [activeValue, generatedId, variant]);
+
+  useLayoutEffect(() => {
+    const list = listRef.current;
+    if (!list) return;
+
+    measureActiveLine();
+    const observer = new ResizeObserver(measureActiveLine);
+    observer.observe(list);
+    Array.from(list.children).forEach((child) => observer.observe(child));
+    window.addEventListener("resize", measureActiveLine);
+
+    return () => {
+      observer.disconnect();
+      window.removeEventListener("resize", measureActiveLine);
+    };
+  }, [items, measureActiveLine, orientation]);
 
   const syncCardBackgroundSample = useCallback(() => {
     const root = rootRef.current;
@@ -194,9 +251,15 @@ export function Tabs({
     const overflowLeft = tabRect.left < listRect.left + 8;
     const overflowRight = tabRect.right > listRect.right - 8;
 
-    if (overflowLeft || overflowRight) {
-      activeTab.scrollIntoView({ behavior: "smooth", block: "nearest", inline: "nearest" });
+    if (!overflowLeft && !overflowRight) {
+      return;
     }
+
+    /* Scroll only the tab list — scrollIntoView also moves the page (labs overviews). */
+    const delta = overflowLeft
+      ? tabRect.left - listRect.left - 8
+      : tabRect.right - listRect.right + 8;
+    list.scrollBy({ left: delta, behavior: "smooth" });
   }, [activeValue, canScrollTabs, generatedId, items]);
 
   const scrollTabs = (direction: -1 | 1) => {
@@ -307,17 +370,26 @@ export function Tabs({
                         </svg>
                       </span>
                       <span className={styles.tabLabel}>{item.label}</span>
-                      <TabActiveLine className={styles.cardTabLine} />
                     </>
                   ) : (
                     item.label
                   )}
-                  {!isCardVariant && selected && variant === "line" ? (
-                    <TabActiveLine orientation={orientation} />
-                  ) : null}
                 </button>
               );
             })}
+            {activeLine ? (
+              <TabActiveLine
+                className={[
+                  styles.movingActiveLine,
+                  variant === "card" ? styles.cardMovingActiveLine : "",
+                  variant === "contained" ? styles.containedMovingActiveLine : "",
+                ].filter(Boolean).join(" ")}
+                orientation={activeLine.orientation}
+                style={activeLine.orientation === "horizontal"
+                  ? { left: activeLine.x, transform: "none", width: activeLine.width }
+                  : { height: activeLine.height, top: activeLine.y, transform: "none" }}
+              />
+            ) : null}
           </div>
           {hasPrevious ? (
             <button

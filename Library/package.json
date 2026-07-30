@@ -13,6 +13,7 @@
     "start": "next start",
     "lint": "eslint",
     "audit:a11y": "node scripts/audit-components-a11y.mjs",
+    "audit:actions": "node scripts/audit-component-actions.mjs",
     "sync-versions": "node scripts/sync-version-log.mjs",
     "generate-emoji-catalog": "node scripts/generate-emoji-catalog.mjs"
   },

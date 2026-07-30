@@ -27,7 +27,10 @@ function resolveComponentHref(href: string) {
 function stripStaticCodeFromComponentDocs(content: string): string {
   let result = content;
 
-  result = result.replace(/^## (Usage|Import)\s*\n[\s\S]*?(?=^## |\Z)/gm, "");
+  result = result.replace(
+    /^## (Usage|Import|Built with|Built from)\s*\n[\s\S]*?(?=^## |(?![\s\S]))/gim,
+    "",
+  );
   result = result.replace(/```[\s\S]*?```\s*/g, "");
   result = result.replace(/\n{3,}/g, "\n\n").trim();
 

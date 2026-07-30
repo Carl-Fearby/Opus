@@ -27,6 +27,16 @@ const features = [
       "Tables, charts, KPI cards, gauges, sparklines, and status indicators for dashboards that need more than a form on a blank page.",
   },
   {
+    title: "Auth happy path",
+    description:
+      "Login, register, Google and Apple continue, OTP, passkeys, forgot and reset password, check-email, verified, and expired-link screens — composed from the same field and button primitives as the rest of Opus.",
+  },
+  {
+    title: "CRM-ready labs",
+    description:
+      "Company and contact records, document folders, sales invoices and orders, appointment diaries, and notification centres — composed from the same Opus primitives as the rest of the catalog.",
+  },
+  {
     title: "Published for real apps",
     description:
       "Install `opus-react` from npm, import the styles once, and drop components into Next.js, Vite, or any React 19 project.",

@@ -98,6 +98,14 @@ export type ControlSlug =
   | "rating-input"
   | "segmented-control"
   | "slider-range"
+  | "otp-input"
+  | "date-range-picker"
+  | "combobox"
+  | "currency-input"
+  | "masked-input"
+  | "multi-file-upload"
+  | "checkbox-group"
+  | "form-validation-summary"
   | "phone-number-input"
   | "country-picker"
   | "tree-select"
@@ -145,6 +153,7 @@ export type ControlSlug =
   | "description-list"
   | "divider"
   | "content-timeline"
+  | "tree-menu"
   | "tree-view"
   | "masonry-grid"
   | "property-grid"
@@ -284,6 +293,19 @@ export type SliderRangeSettings = BaseFieldSettings & {
   max: number;
   step: number;
 };
+
+export type OtpInputSettings = BaseFieldSettings & {
+  length: number;
+  value: string;
+};
+
+export type DateRangeSettings = BaseFieldSettings & { from: string; to: string };
+export type ComboboxSettings = BaseFieldSettings & { options: string; placeholder: string; value: string };
+export type CurrencyInputSettings = BaseFieldSettings & { currency: string; value: number };
+export type MaskedInputSettings = BaseFieldSettings & { mask: string; placeholder: string; value: string };
+export type MultiFileUploadSettings = BaseFieldSettings & { fileNames: string; maxFiles: number };
+export type CheckboxGroupSettings = BaseFieldSettings & { options: string; value: string[] };
+export type FormValidationSettings = { showErrors: boolean; title: string };
 
 export type MultiSelectSettings = BaseFieldSettings & {
   value: string[];
@@ -1068,6 +1090,11 @@ export type TreeViewSettings = {
   expandRoots: boolean;
 };
 
+export type TreeMenuSettings = {
+  expandRoots: boolean;
+  showMeta: boolean;
+};
+
 export type MasonryGridSettings = {
   columns: number;
   gap: number;
@@ -1118,6 +1145,18 @@ export type DockLayoutSettings = {
   showBottom: boolean;
 };
 
+export type DesktopDockSettings = {
+  autoHide: boolean;
+  position: "bottom" | "left" | "right";
+  resizable: boolean;
+  size: number;
+};
+
+export type DesktopEnvironmentSettings = {
+  dockAutoHide: boolean;
+  dockSize: number;
+};
+
 export type ThreePaneLayoutSettings = {
   defaultLeftWidth: number;
   defaultRightWidth: number;
@@ -1158,6 +1197,7 @@ export type AuthFormSettings = {
   name: string;
   password: string;
   confirmPassword: string;
+  currentPassword: string;
   remember: boolean;
   submitLabel: string;
   subtitle: string;
@@ -1213,6 +1253,8 @@ export type DashboardWelcomeSettings = {
   tileLayout: "fill" | "fixed";
   wrapInContainer: boolean;
 };
+
+export type CrmWorkspaceSettings = Record<string, never>;
 
 export type ContactDetailsSettings = {
   isStaffRecord: boolean;
@@ -1524,6 +1566,14 @@ export type ControlSettingsBySlug = {
   "rating-input": RatingInputSettings;
   "segmented-control": SegmentedControlSettings;
   "slider-range": SliderRangeSettings;
+  "otp-input": OtpInputSettings;
+  "date-range-picker": DateRangeSettings;
+  combobox: ComboboxSettings;
+  "currency-input": CurrencyInputSettings;
+  "masked-input": MaskedInputSettings;
+  "multi-file-upload": MultiFileUploadSettings;
+  "checkbox-group": CheckboxGroupSettings;
+  "form-validation-summary": FormValidationSettings;
   "phone-number-input": PhoneNumberInputSettings;
   "country-picker": CountryPickerSettings;
   "tree-select": TreeSelectSettings;
@@ -1571,6 +1621,7 @@ export type ControlSettingsBySlug = {
   "description-list": DescriptionListSettings;
   divider: DividerSettings;
   "content-timeline": ContentTimelineSettings;
+  "tree-menu": TreeMenuSettings;
   "tree-view": TreeViewSettings;
   "masonry-grid": MasonryGridSettings;
   "property-grid": PropertyGridSettings;
@@ -1629,6 +1680,10 @@ export type ControlSettingsBySlug = {
   "theme-switcher": ThemeSwitcherSettings;
   "resize-observer": ResizeObserverSettings;
   "intersection-observer": IntersectionObserverSettings;
+  desktop: CrmWorkspaceSettings;
+  "desktop-window": CrmWorkspaceSettings;
+  "desktop-dock": DesktopDockSettings;
+  "desktop-icon": CrmWorkspaceSettings;
   sidebar: SidebarSettings;
   "mega-menu": MegaMenuSettings;
   "top-navigation": TopNavigationSettings;
@@ -1654,6 +1709,20 @@ export type ControlSettingsBySlug = {
     "notes-activity": NotesActivitySettings;
     "lab-dashboard-list-columns": DashboardListColumnsSettings;
     "lab-dashboard-welcome": DashboardWelcomeSettings;
+    "lab-desktop-environment": DesktopEnvironmentSettings;
+    "lab-contact-directory": CrmWorkspaceSettings;
+    "lab-company-directory": CrmWorkspaceSettings;
+    "lab-sales-pipeline": CrmWorkspaceSettings;
+    "lab-task-workspace": CrmWorkspaceSettings;
+    "lab-notification-centre": CrmWorkspaceSettings;
+    "lab-document-manager": CrmWorkspaceSettings;
+    "lab-product-catalogue": CrmWorkspaceSettings;
+    "lab-quotation-builder": CrmWorkspaceSettings;
+    "lab-sales-order": CrmWorkspaceSettings;
+    "lab-sales-invoice": CrmWorkspaceSettings;
+    "lab-appointment-diary": CrmWorkspaceSettings;
+    "lab-stock-control": CrmWorkspaceSettings;
+    "lab-system-configuration": CrmWorkspaceSettings;
     "lab-company-details": CompanyDetailsSettings;
     "lab-company-card": CompanyCardSettings;
     "lab-company-notes": CompanyNotesSettings;
@@ -1670,6 +1739,12 @@ export type ControlSettingsBySlug = {
     "lab-passkey-login-form": AuthFormSettings;
     "lab-social-auth-form": AuthFormSettings;
     "lab-social-register-form": AuthFormSettings;
+    "lab-forgot-password-form": AuthFormSettings;
+    "lab-reset-password-form": AuthFormSettings;
+    "lab-check-email-form": AuthFormSettings;
+    "lab-email-verified-form": AuthFormSettings;
+    "lab-link-expired-form": AuthFormSettings;
+    "lab-change-password-form": AuthFormSettings;
     "404-page": ErrorPageSettings;
     "403-page": ErrorPageSettings;
     "app-setup": AppSetupSettings;
@@ -1730,6 +1805,14 @@ export const formsControlOrder = [
   "rating-input",
   "segmented-control",
   "slider-range",
+  "otp-input",
+  "date-range-picker",
+  "combobox",
+  "currency-input",
+  "masked-input",
+  "multi-file-upload",
+  "checkbox-group",
+  "form-validation-summary",
   "phone-number-input",
   "country-picker",
   "tree-select",

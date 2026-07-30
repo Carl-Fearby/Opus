@@ -1,10 +1,11 @@
 "use client";
 
 import { useState } from "react";
-import { ControlPreview } from "@/components/control-detail/ControlDetail/ControlPreview";
+import { UsagePreview } from "@/components/control-detail/ControlDetail/UsagePreview";
 import { PreviewThemeBoundary } from "@/components/control-detail/ControlDetail/PreviewThemeBoundary";
 import { PreviewThemeControls } from "@/components/control-detail/ControlDetail/PreviewThemeControls";
 import { decodeRawSettingsParam, readRawPreviewSettings } from "@/lib/controls/rawSettings";
+import { isFullBleedPreview } from "@/lib/controls/previewPresentation";
 import {
   formatRawPreviewCanvasLabel,
   getRawPreviewWidthOption,
@@ -26,7 +27,7 @@ type ControlRawProps = {
 };
 
 export function ControlRaw({ defaultSettings, encodedSettings, previewId, slug }: ControlRawProps) {
-  const [settings, setSettings] = useState<ControlSettings>(() =>
+  const [settings] = useState<ControlSettings>(() =>
     previewId
       ? readRawPreviewSettings(previewId, defaultSettings)
       : decodeRawSettingsParam(encodedSettings, defaultSettings),
@@ -38,9 +39,7 @@ export function ControlRaw({ defaultSettings, encodedSettings, previewId, slug }
   const orientationDisabled = canvasSize.full;
   const { areaRef, scale } = useRawViewportScale(canvasSize.width, canvasSize.height, canvasSize.full);
 
-  const preview = (
-    <ControlPreview slug={slug} settings={settings} onSettingsChange={setSettings} />
-  );
+  const preview = <UsagePreview slug={slug} settings={settings} showActionStatus={false} />;
 
   return (
     <div className={styles.frame}>
@@ -97,7 +96,7 @@ export function ControlRaw({ defaultSettings, encodedSettings, previewId, slug }
           {canvasSize.full || canvasSize.width === null || canvasSize.height === null ? (
             <PreviewThemeBoundary
               className={styles.canvas}
-              data-borderless={slug === "lab-test-layout" ? "true" : "false"}
+              data-borderless={isFullBleedPreview(slug) ? "true" : "false"}
               data-full="true"
               data-raw-preview-root
             >
@@ -113,7 +112,7 @@ export function ControlRaw({ defaultSettings, encodedSettings, previewId, slug }
             >
               <PreviewThemeBoundary
                 className={styles.canvas}
-                data-borderless={slug === "lab-test-layout" ? "true" : "false"}
+                data-borderless={isFullBleedPreview(slug) ? "true" : "false"}
                 data-fixed-width="true"
                 data-orientation={orientation}
                 data-raw-preview-root

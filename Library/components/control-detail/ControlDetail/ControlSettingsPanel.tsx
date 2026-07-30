@@ -802,6 +802,57 @@ export function ControlSettingsPanel({
         </div>
       );
     }
+    case "otp-input": {
+      const s = settings as ControlSettingsBySlug["otp-input"];
+      return (
+        <div className={shellStyles.settingsGrid}>
+          <CommonFieldSettings
+            settings={s}
+            onChange={(next) => onChange({ ...s, ...next })}
+          />
+          <SettingInput
+            label="Digits"
+            type="number"
+            value={String(s.length)}
+            onChange={(length) =>
+              onChange({
+                ...s,
+                length: Math.min(8, Math.max(4, Number(length) || 6)),
+                value: s.value.slice(0, Math.min(8, Math.max(4, Number(length) || 6))),
+              } as ControlSettings)
+            }
+          />
+        </div>
+      );
+    }
+    case "date-range-picker": {
+      const s = settings as ControlSettingsBySlug["date-range-picker"];
+      return <div className={shellStyles.settingsGrid}><CommonFieldSettings includeValue={false} settings={s} onChange={(next) => onChange({ ...s, ...next })} /><SettingInput label="From" type="date" value={s.from} onChange={(from) => onChange({ ...s, from } as ControlSettings)} /><SettingInput label="To" type="date" value={s.to} onChange={(to) => onChange({ ...s, to } as ControlSettings)} /></div>;
+    }
+    case "combobox": {
+      const s = settings as ControlSettingsBySlug["combobox"];
+      return <div className={shellStyles.settingsGrid}><CommonFieldSettings settings={s} onChange={(next) => onChange({ ...s, ...next })} /><SettingInput label="Placeholder" value={s.placeholder} onChange={(placeholder) => onChange({ ...s, placeholder } as ControlSettings)} /><div className={shellStyles.settingsFullWidth}><SettingTextarea label="Options (comma-separated)" value={s.options} onChange={(options) => onChange({ ...s, options } as ControlSettings)} /></div></div>;
+    }
+    case "currency-input": {
+      const s = settings as ControlSettingsBySlug["currency-input"];
+      return <div className={shellStyles.settingsGrid}><CommonFieldSettings includeValue={false} settings={s} onChange={(next) => onChange({ ...s, ...next })} /><SettingInput label="Value" type="number" value={String(s.value)} onChange={(value) => onChange({ ...s, value: Number(value) || 0 } as ControlSettings)} /><SettingSelect label="Currency" value={s.currency} onChange={(currency) => onChange({ ...s, currency } as ControlSettings)} options={[{ label: "GBP", value: "GBP" }, { label: "EUR", value: "EUR" }, { label: "USD", value: "USD" }]} /></div>;
+    }
+    case "masked-input": {
+      const s = settings as ControlSettingsBySlug["masked-input"];
+      return <div className={shellStyles.settingsGrid}><CommonFieldSettings settings={s} onChange={(next) => onChange({ ...s, ...next })} /><SettingInput label="Mask" value={s.mask} onChange={(mask) => onChange({ ...s, mask } as ControlSettings)} /><SettingInput label="Placeholder" value={s.placeholder} onChange={(placeholder) => onChange({ ...s, placeholder } as ControlSettings)} /></div>;
+    }
+    case "multi-file-upload": {
+      const s = settings as ControlSettingsBySlug["multi-file-upload"];
+      return <div className={shellStyles.settingsGrid}><CommonFieldSettings includeValue={false} settings={s} onChange={(next) => onChange({ ...s, ...next })} /><SettingInput label="Maximum files" type="number" value={String(s.maxFiles)} onChange={(maxFiles) => onChange({ ...s, maxFiles: Math.max(1, Number(maxFiles) || 1) } as ControlSettings)} /><div className={shellStyles.settingsFullWidth}><SettingTextarea label="Demo files (comma-separated)" value={s.fileNames} onChange={(fileNames) => onChange({ ...s, fileNames } as ControlSettings)} /></div></div>;
+    }
+    case "checkbox-group": {
+      const s = settings as ControlSettingsBySlug["checkbox-group"];
+      return <div className={shellStyles.settingsGrid}><CommonFieldSettings includeValue={false} settings={s} onChange={(next) => onChange({ ...s, ...next })} /><div className={shellStyles.settingsFullWidth}><SettingTextarea label="Options (comma-separated)" value={s.options} onChange={(options) => onChange({ ...s, options } as ControlSettings)} /></div><div className={shellStyles.settingsFullWidth}><SettingTextarea label="Selected (comma-separated)" value={s.value.join(", ")} onChange={(value) => onChange({ ...s, value: value.split(",").map((item) => item.trim()).filter(Boolean) } as ControlSettings)} /></div></div>;
+    }
+    case "form-validation-summary": {
+      const s = settings as ControlSettingsBySlug["form-validation-summary"];
+      return <div className={shellStyles.settingsGrid}><SettingToggle label="Show errors" checked={s.showErrors} onChange={(showErrors) => onChange({ ...s, showErrors } as ControlSettings)} /><SettingInput label="Summary title" value={s.title} onChange={(title) => onChange({ ...s, title } as ControlSettings)} /></div>;
+    }
     case "phone-number-input": {
       const s = settings as ControlSettingsBySlug["phone-number-input"];
       return (
@@ -3440,6 +3491,71 @@ export function ControlSettingsPanel({
         </div>
       );
     }
+    case "desktop-dock": {
+      const s = settings as ControlSettingsBySlug["desktop-dock"];
+      return (
+        <div className={shellStyles.settingsGrid}>
+          <SettingToggle
+            label="Auto hide"
+            checked={s.autoHide}
+            onChange={(autoHide) => onChange({ ...s, autoHide } as ControlSettings)}
+          />
+          <SettingToggle
+            label="Resizable"
+            checked={s.resizable}
+            onChange={(resizable) => onChange({ ...s, resizable } as ControlSettings)}
+          />
+          <SettingSelect
+            label="Position"
+            value={s.position}
+            onChange={(position) =>
+              onChange({ ...s, position: position as typeof s.position } as ControlSettings)
+            }
+            options={[
+              { label: "Bottom", value: "bottom" },
+              { label: "Left", value: "left" },
+              { label: "Right", value: "right" },
+            ]}
+          />
+          <SettingInput
+            label="Dock size"
+            type="number"
+            value={String(s.size)}
+            onChange={(value) =>
+              onChange({
+                ...s,
+                size: Math.max(24, Math.min(76, Number(value) || 24)),
+              } as ControlSettings)
+            }
+          />
+        </div>
+      );
+    }
+    case "lab-desktop-environment": {
+      const s = settings as ControlSettingsBySlug["lab-desktop-environment"];
+      return (
+        <div className={shellStyles.settingsGrid}>
+          <SettingToggle
+            label="Dock auto hide"
+            checked={s.dockAutoHide}
+            onChange={(dockAutoHide) =>
+              onChange({ ...s, dockAutoHide } as ControlSettings)
+            }
+          />
+          <SettingInput
+            label="Dock size"
+            type="number"
+            value={String(s.dockSize)}
+            onChange={(value) =>
+              onChange({
+                ...s,
+                dockSize: Math.max(24, Math.min(76, Number(value) || 24)),
+              } as ControlSettings)
+            }
+          />
+        </div>
+      );
+    }
     case "lab-contact-card": {
       const s = settings as ControlSettingsBySlug["lab-contact-card"];
       return (
@@ -3534,7 +3650,13 @@ export function ControlSettingsPanel({
     case "lab-otp-form":
     case "lab-passkey-login-form":
     case "lab-social-auth-form":
-    case "lab-social-register-form": {
+    case "lab-social-register-form":
+    case "lab-forgot-password-form":
+    case "lab-reset-password-form":
+    case "lab-check-email-form":
+    case "lab-email-verified-form":
+    case "lab-link-expired-form":
+    case "lab-change-password-form": {
       const s = settings as ControlSettingsBySlug["lab-login-form"];
       return (
         <div className={shellStyles.settingsGrid}>
@@ -5719,6 +5841,27 @@ export function ControlSettingsPanel({
             checked={s.includeStatus}
             onChange={(includeStatus) =>
               onChange({ ...s, includeStatus } as ControlSettings)
+            }
+          />
+        </div>
+      );
+    }
+    case "tree-menu": {
+      const s = settings as ControlSettingsBySlug["tree-menu"];
+      return (
+        <div className={shellStyles.settingsGrid}>
+          <SettingToggle
+            label="Expand root nodes"
+            checked={s.expandRoots}
+            onChange={(expandRoots) =>
+              onChange({ ...s, expandRoots } as ControlSettings)
+            }
+          />
+          <SettingToggle
+            label="Show counts"
+            checked={s.showMeta}
+            onChange={(showMeta) =>
+              onChange({ ...s, showMeta } as ControlSettings)
             }
           />
         </div>

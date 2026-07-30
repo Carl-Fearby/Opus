@@ -21,6 +21,7 @@ Open [http://localhost:3000/documentation](http://localhost:3000/documentation) 
 | [Development site](./development-site.md) | Sidebar, overviews, and the interactive playground |
 | [Theming](./theming.md) | Light/dark mode, CSS tokens, and `OpusThemeProvider` |
 | [Adding a component](./adding-a-component.md) | Step-by-step guide to register a new control |
+| [Component audit](./component-audit.md) | Current coverage, quality gates, remediation work, and component roadmap |
 
 ## Public API
 

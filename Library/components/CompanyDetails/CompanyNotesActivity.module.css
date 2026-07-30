@@ -113,6 +113,10 @@
   font-weight: 550;
 }
 
+.compactDocuments {
+  height: 100%;
+}
+
 .contactsList {
   box-sizing: border-box;
   display: grid;

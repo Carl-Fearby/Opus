@@ -316,6 +316,22 @@ export const versionLog: VersionEntry[] = [
     commitShort: "75dae53",
     summary: "Application chrome, composed workspace shell, and interaction polish.",
     changes: ["Add the composed ApplicationHeader Lab with Opus branding, global search shortcut, JSON-driven create actions, notification badges, and profile controls.","Add the standalone ApplicationFooter Lab with matching application-surface styling, product identity, version information, copyright, and utility actions.","Integrate the header and footer around Test Layout so Component Lab and generated Playground source share the complete CRM workspace shell.","Adopt the transparent Opus brand asset and refine responsive header surfaces, connected pane spacing, resize grips, and light-theme presentation.","Make ThemeSwitcher a single accessible light-dark toggle and remove theme selection from ApplicationHeader so it can move into dedicated settings."],
+  },
+  {
+    version: "0.4.0",
+    releasedAt: "2026-07-30",
+    commit: "768129858b3e01ae30434eea9a88e9860ad42591",
+    commitShort: "7681298",
+    summary: "Expanded component platform, desktop environment, and npm-consumer alignment.",
+    changes: ["Add reusable desktop, window, dock, desktop-icon, tree-menu, compact-documents, OTP, and advanced-field primitives.","Expand CRM workspace, contact, company, document, media, dashboard, and authentication compositions.","Align Component Lab previews, generated usage examples, Playground, and external previews around the same reusable package APIs.","Audit the public component surface and publish the complete opus-react package for Application consumption.","Update Application to consume the published package CSS and runtime exports instead of local package build paths."],
+  },
+  {
+    version: "0.4.1",
+    releasedAt: "2026-07-30",
+    commit: "768129858b3e01ae30434eea9a88e9860ad42591",
+    commitShort: "7681298",
+    summary: "Panel CSS compatibility and clean Webpack consumer builds.",
+    changes: ["Replace the mixed-support Panel flex alignment value with its compatible flex-start equivalent.","Remove the resulting Autoprefixer and Webpack cache-serialization warnings in Library and Application builds.","Publish the corrected package and update Application to consume opus-react 0.4.1 from npm."],
   }
 ].reverse();
 

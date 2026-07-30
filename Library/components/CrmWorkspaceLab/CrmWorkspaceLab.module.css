@@ -1,0 +1,999 @@
+.root[data-component] {
+  width: 100%;
+  min-height: 0;
+  gap: 6px;
+  padding: 6px 8px;
+}
+
+.header,
+.toolbar,
+.row,
+.identity,
+.timelineTitleRow,
+.feedTitleRow,
+.catalogueTitleRow,
+.docToolbar,
+.breadcrumb,
+.docTreeItem {
+  display: flex;
+  align-items: center;
+}
+
+.header {
+  justify-content: space-between;
+  gap: 10px;
+  margin: 0;
+  padding: 0 0 4px;
+  border-bottom: 1px solid color-mix(in srgb, var(--opus-border) 70%, transparent);
+}
+
+.headerAction {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  gap: 7px;
+  min-width: 0;
+  white-space: nowrap;
+}
+
+.headerAction svg {
+  width: 0.85rem;
+  height: 0.85rem;
+  flex: 0 0 0.85rem;
+}
+
+.heading {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+}
+
+.headingIcon,
+.rowIcon,
+.catalogueIcon,
+.settingsIcon,
+.docCardIcon {
+  display: grid;
+  place-items: center;
+  flex-shrink: 0;
+  color: var(--opus-accent);
+  background: none;
+  border: 0;
+}
+
+.timelineIcon,
+.feedIcon {
+  display: grid;
+  place-items: center;
+  flex-shrink: 0;
+  width: 1.25rem;
+  height: 1.25rem;
+  margin-top: 1px;
+  color: var(--opus-accent);
+  font-size: 1.25rem;
+  background: none;
+  border: 0;
+}
+
+.headingIcon {
+  width: 1.35rem;
+  height: 1.35rem;
+  font-size: 1.35rem;
+}
+
+.openChevron {
+  align-items: center;
+  color: var(--opus-muted, var(--opus-text-muted));
+  display: inline-flex;
+  flex-shrink: 0;
+  min-height: 0;
+  padding: 0;
+  text-decoration: none;
+}
+
+.openChevron :global(svg) {
+  height: 0.82rem;
+  width: 0.82rem;
+}
+
+button:hover .openChevron,
+button:focus-visible .openChevron {
+  color: var(--opus-accent);
+  text-decoration: none;
+}
+
+.heading h2 {
+  margin: 0;
+  color: var(--opus-text);
+  font-size: 1rem;
+  font-weight: 750;
+  line-height: 1.15;
+}
+
+.heading p {
+  margin: 0;
+  color: var(--opus-muted, var(--opus-text-muted));
+  font-size: 0.78rem;
+  line-height: 1.25;
+}
+
+.toolbar {
+  gap: 10px;
+  margin: 0;
+  padding: 6px 8px;
+  border: 1px solid var(--opus-border);
+  border-radius: 10px 10px 0 0;
+  background: color-mix(in srgb, var(--opus-surface, var(--opus-panel)) 82%, transparent);
+}
+
+.toolbar > :first-child {
+  flex: 1;
+  max-width: 420px;
+}
+
+.resultCount {
+  margin-left: auto;
+  color: var(--opus-muted, var(--opus-text-muted));
+  font-size: 0.82rem;
+  white-space: nowrap;
+}
+
+.table {
+  overflow: hidden;
+  border: 1px solid var(--opus-border);
+  border-top: 0;
+  border-radius: 0 0 12px 12px;
+}
+
+.row {
+  display: grid;
+  grid-template-columns: 28px minmax(220px, 1.5fr) minmax(100px, 0.55fr) minmax(160px, 1fr) 36px;
+  gap: 12px;
+  min-height: 0;
+  padding: 7px 12px;
+  border-top: 1px solid color-mix(in srgb, var(--opus-border) 70%, transparent);
+  color: var(--opus-text);
+}
+
+.row:first-child {
+  border-top: 0;
+}
+
+.row:hover:not(.tableHead) {
+  background: color-mix(in srgb, var(--opus-accent) 8%, transparent);
+}
+
+.actionRow {
+  position: relative;
+}
+
+.actionRow > :not(.rowActionOverlay) {
+  pointer-events: none;
+  position: relative;
+  z-index: 1;
+}
+
+.actionRow > input {
+  pointer-events: auto;
+  z-index: 2;
+}
+
+.rowActionOverlay {
+  background: transparent;
+  border: 0;
+  cursor: pointer;
+  inset: 0;
+  padding: 0;
+  position: absolute;
+  z-index: 0;
+}
+
+.rowActionOverlay .openChevron {
+  position: absolute;
+  right: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+.rowActionOverlay:focus-visible {
+  border-radius: 4px;
+  outline: 2px solid color-mix(in srgb, var(--opus-accent) 72%, transparent);
+  outline-offset: -3px;
+}
+
+.identity {
+  gap: 10px;
+  min-width: 0;
+}
+
+.rowIcon {
+  width: 1.15rem;
+  height: 1.15rem;
+  font-size: 1.15rem;
+}
+
+.row strong,
+.row small,
+.timelineBody p,
+.timelineBody small,
+.feedItem p,
+.feedItem small,
+.boardCard small,
+.catalogueBody p,
+.settingsBody small,
+.docCard small {
+  display: block;
+}
+
+.row strong,
+.timelineBody h3,
+.feedItem h3,
+.boardCard strong,
+.catalogueBody h3,
+.settingsBody strong,
+.docCard strong {
+  color: var(--opus-text);
+  font-size: 0.92rem;
+  font-weight: 700;
+}
+
+.row small,
+.meta,
+.timelineBody p,
+.timelineBody small,
+.feedItem p,
+.feedItem small,
+.boardCard small,
+.catalogueBody p,
+.settingsBody small,
+.docCard small {
+  margin-top: 2px;
+  color: var(--opus-muted, var(--opus-text-muted));
+  font-size: 0.78rem;
+  line-height: 1.25;
+}
+
+.tableHead {
+  min-height: 40px;
+  color: var(--opus-muted, var(--opus-text-muted));
+  font-size: 0.72rem;
+  font-weight: 800;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  background: color-mix(in srgb, var(--opus-surface, var(--opus-panel)) 88%, transparent);
+}
+
+/* Appointment timeline */
+.timeline {
+  display: grid;
+  gap: 8px;
+}
+
+.timelineItem {
+  display: grid;
+  grid-template-columns: 64px minmax(0, 1fr);
+  gap: 10px;
+  align-items: stretch;
+}
+
+.timelineTime {
+  display: grid;
+  align-content: start;
+  gap: 2px;
+  padding-top: 10px;
+  text-align: right;
+}
+
+.timelineTime strong {
+  color: var(--opus-text);
+  font-size: 0.95rem;
+}
+
+.timelineTime span {
+  color: var(--opus-muted, var(--opus-text-muted));
+  font-size: 0.72rem;
+}
+
+.timelineCard {
+  display: flex;
+  gap: 8px;
+  align-items: flex-start;
+  padding: 6px 8px;
+  border: 1px solid color-mix(in srgb, var(--opus-accent) 22%, var(--opus-border));
+  border-radius: 8px;
+  background:
+    linear-gradient(90deg, color-mix(in srgb, var(--opus-accent) 10%, transparent), transparent 42%),
+    color-mix(in srgb, var(--opus-panel) 92%, transparent);
+  color: inherit;
+  cursor: pointer;
+  font: inherit;
+  text-align: left;
+}
+
+.timelineBody {
+  min-width: 0;
+  flex: 1;
+}
+
+.timelineTitleRow,
+.feedTitleRow,
+.catalogueTitleRow {
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.timelineBody h3,
+.timelineBody p,
+.timelineBody small {
+  margin: 0;
+  line-height: 1.25;
+}
+
+.timelineBody h3 {
+  color: var(--opus-text);
+  font-size: 0.9rem;
+  font-weight: 700;
+}
+
+.timelineBody p,
+.timelineBody small {
+  margin-top: 1px;
+  color: var(--opus-muted, var(--opus-text-muted));
+  font-size: 0.76rem;
+}
+
+/* Notifications feed */
+.feed {
+  display: grid;
+  gap: 6px;
+}
+
+.feedItem {
+  display: grid;
+  grid-template-columns: 1.25rem minmax(0, 1fr) auto auto;
+  align-items: start;
+  column-gap: 8px;
+  row-gap: 0;
+  padding: 6px 8px;
+  border: 1px solid var(--opus-border);
+  border-radius: 8px;
+  background: color-mix(in srgb, var(--opus-panel) 94%, transparent);
+  color: inherit;
+  cursor: pointer;
+  font: inherit;
+  text-align: left;
+}
+
+.feedBody {
+  display: grid;
+  gap: 1px;
+  min-width: 0;
+  padding: 0;
+}
+
+.feedBody h3,
+.feedBody p,
+.feedBody small {
+  margin: 0;
+  line-height: 1.25;
+}
+
+.feedBody h3 {
+  color: var(--opus-text);
+  font-size: 0.9rem;
+  font-weight: 700;
+}
+
+.feedBody p,
+.feedBody small {
+  color: var(--opus-muted, var(--opus-text-muted));
+  font-size: 0.76rem;
+}
+
+.feedBadge {
+  margin-top: 1px;
+}
+
+.feedItem[data-unread="true"] {
+  border-color: color-mix(in srgb, var(--opus-accent) 40%, var(--opus-border));
+  background: color-mix(in srgb, var(--opus-accent) 8%, var(--opus-panel));
+}
+
+/* Pipeline board */
+.board {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 12px;
+  align-items: start;
+}
+
+.boardColumn {
+  min-width: 0;
+  padding: 10px;
+  border: 1px solid var(--opus-border);
+  border-radius: 12px;
+  background: color-mix(in srgb, var(--opus-surface, var(--opus-panel)) 80%, transparent);
+}
+
+.boardColumn header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  margin-bottom: 10px;
+}
+
+.boardColumn h3 {
+  margin: 0;
+  color: var(--opus-text);
+  font-size: 0.82rem;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.boardColumn header span {
+  color: var(--opus-muted, var(--opus-text-muted));
+  font-size: 0.78rem;
+  font-weight: 700;
+}
+
+.boardCards {
+  display: grid;
+  gap: 8px;
+}
+
+.boardCard {
+  display: grid;
+  gap: 2px;
+  padding: 6px 8px;
+  border: 1px solid var(--opus-border);
+  border-radius: 10px;
+  background: color-mix(in srgb, var(--opus-panel) 96%, transparent);
+  color: inherit;
+  cursor: pointer;
+  font: inherit;
+  text-align: left;
+}
+
+.boardCardHeader {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 6px;
+}
+
+.boardCard span {
+  color: var(--opus-accent);
+  font-size: 0.78rem;
+  font-weight: 700;
+}
+
+/* Product catalogue cards */
+.catalogue {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.catalogueCard {
+  display: grid;
+  gap: 8px;
+  padding: 10px;
+  border: 1px solid var(--opus-border);
+  border-radius: 12px;
+  background:
+    radial-gradient(80% 70% at 0% 0%, color-mix(in srgb, var(--opus-accent) 12%, transparent), transparent 55%),
+    color-mix(in srgb, var(--opus-panel) 94%, transparent);
+  color: inherit;
+  cursor: pointer;
+  font: inherit;
+  text-align: left;
+}
+
+.catalogueTitleRow {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 8px;
+}
+
+.catalogueTitleRow .openChevron {
+  margin-left: auto;
+}
+
+.catalogueIcon {
+  width: 1.35rem;
+  height: 1.35rem;
+  font-size: 1.35rem;
+}
+
+.price {
+  margin-top: 8px;
+  color: var(--opus-text);
+  font-size: 0.95rem;
+}
+
+/* Settings list */
+.settings {
+  display: grid;
+  gap: 8px;
+}
+
+.settingsRow {
+  display: grid;
+  grid-template-columns: 1.4rem minmax(0, 1.4fr) auto minmax(120px, 0.8fr) auto;
+  gap: 12px;
+  align-items: center;
+  width: 100%;
+  padding: 6px 8px;
+  border: 1px solid var(--opus-border);
+  border-radius: 12px;
+  background: color-mix(in srgb, var(--opus-panel) 94%, transparent);
+  color: inherit;
+  text-align: left;
+  cursor: pointer;
+  font: inherit;
+}
+
+.timelineCard:hover,
+.feedItem:hover,
+.boardCard:hover,
+.catalogueCard:hover {
+  border-color: color-mix(in srgb, var(--opus-accent) 36%, var(--opus-border));
+  background-color: color-mix(in srgb, var(--opus-accent) 7%, var(--opus-panel));
+}
+
+.timelineCard:focus-visible,
+.feedItem:focus-visible,
+.boardCard:focus-visible,
+.catalogueCard:focus-visible,
+.settingsRow:focus-visible,
+.docCard:focus-visible,
+.docListRow:focus-visible,
+.docColumnItem:focus-visible {
+  outline: 2px solid color-mix(in srgb, var(--opus-accent) 72%, transparent);
+  outline-offset: 2px;
+}
+
+.settingsRow:hover {
+  border-color: color-mix(in srgb, var(--opus-accent) 36%, var(--opus-border));
+  background: color-mix(in srgb, var(--opus-accent) 7%, var(--opus-panel));
+}
+
+.settingsIcon {
+  width: 1.25rem;
+  height: 1.25rem;
+  font-size: 1.25rem;
+}
+
+.settingsBody {
+  min-width: 0;
+}
+
+/* Documents file system */
+.documents {
+  display: grid;
+  grid-template-columns: minmax(170px, 200px) minmax(0, 1fr);
+  gap: 10px;
+  min-height: 300px;
+}
+
+.docTree {
+  padding: 10px;
+  border: 1px solid var(--opus-border);
+  border-radius: 12px;
+  background: color-mix(in srgb, var(--opus-surface, var(--opus-panel)) 84%, transparent);
+}
+
+.docTreeHeading {
+  margin: 0 4px 8px;
+  color: var(--opus-muted, var(--opus-text-muted));
+  font-size: 0.7rem;
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.docTree ul {
+  display: grid;
+  gap: 2px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.docTree ul ul {
+  margin-left: 12px;
+}
+
+.docTreeItem {
+  gap: 8px;
+  width: 100%;
+  padding: 7px 8px;
+  border: 0;
+  border-radius: 8px;
+  background: transparent;
+  color: var(--opus-text);
+  font: inherit;
+  font-size: 0.84rem;
+  font-weight: 650;
+  text-align: left;
+  cursor: pointer;
+}
+
+.docTreeItem :global(svg) {
+  width: 0.9em;
+  height: 0.9em;
+  color: var(--opus-accent);
+  flex-shrink: 0;
+}
+
+.docTreeItem span {
+  min-width: 0;
+  flex: 1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.docTreeItem small {
+  color: var(--opus-muted, var(--opus-text-muted));
+  font-size: 0.72rem;
+}
+
+.docTreeItem[data-nested="true"] {
+  font-weight: 600;
+}
+
+.docTreeItem[data-active="true"],
+.docTreeItem:hover {
+  background: color-mix(in srgb, var(--opus-accent) 12%, transparent);
+}
+
+.docBrowser {
+  display: grid;
+  grid-template-rows: auto minmax(0, 1fr);
+  gap: 10px;
+  min-width: 0;
+}
+
+.docToolbar {
+  justify-content: space-between;
+  gap: 12px;
+  padding: 6px 8px;
+  border: 1px solid var(--opus-border);
+  border-radius: 12px;
+  background: color-mix(in srgb, var(--opus-panel) 94%, transparent);
+}
+
+.docToolbarControls {
+  align-items: center;
+  display: flex;
+  flex: 0 1 360px;
+  gap: 8px;
+  min-width: 260px;
+}
+
+.docToolbarControls > :first-child {
+  flex: 1 1 190px;
+  min-width: 130px;
+}
+
+.docViewOptions {
+  align-items: center;
+  background: color-mix(in srgb, var(--opus-input-bg, var(--opus-panel)) 88%, transparent);
+  border: 1px solid var(--opus-border);
+  border-radius: 9px;
+  display: inline-flex;
+  flex: 0 0 auto;
+  gap: 2px;
+  padding: 3px;
+}
+
+.docViewButton {
+  align-items: center;
+  background: transparent;
+  border: 0;
+  border-radius: 6px;
+  color: var(--opus-accent);
+  cursor: pointer;
+  display: inline-flex;
+  height: 30px;
+  justify-content: center;
+  padding: 0;
+  transition: background 140ms ease, color 140ms ease;
+  width: 30px;
+}
+
+.docViewButton:hover {
+  background: color-mix(in srgb, var(--opus-accent) 10%, transparent);
+  color: var(--opus-accent);
+}
+
+.docViewButton[aria-pressed="true"] {
+  background: color-mix(in srgb, var(--opus-accent) 18%, var(--opus-panel));
+  color: var(--opus-accent);
+}
+
+.docViewButton:focus-visible {
+  outline: 2px solid color-mix(in srgb, var(--opus-accent) 70%, transparent);
+  outline-offset: 1px;
+}
+
+.docViewButton :global(svg) {
+  height: 0.9rem;
+  width: 0.9rem;
+}
+
+.breadcrumb {
+  flex-wrap: wrap;
+  gap: 4px;
+  min-width: 0;
+  color: var(--opus-muted, var(--opus-text-muted));
+  font-size: 0.82rem;
+}
+
+.breadcrumb button {
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: var(--opus-text);
+  font: inherit;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.breadcrumb button:hover {
+  color: var(--opus-accent);
+}
+
+.breadcrumb :global(svg) {
+  width: 0.7em;
+  height: 0.7em;
+  margin: 0 2px;
+  opacity: 0.7;
+}
+
+.docGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+  gap: 10px;
+  align-content: start;
+  min-height: 0;
+  padding: 12px;
+  border: 1px solid var(--opus-border);
+  border-radius: 12px;
+  background: color-mix(in srgb, var(--opus-panel) 92%, transparent);
+}
+
+.docList,
+.docColumns {
+  min-height: 0;
+  border: 1px solid var(--opus-border);
+  border-radius: 12px;
+  background: color-mix(in srgb, var(--opus-panel) 92%, transparent);
+}
+
+.docList {
+  align-content: start;
+  display: grid;
+  overflow: auto;
+  padding: 6px;
+}
+
+.docListHeading,
+.docListRow {
+  align-items: center;
+  display: grid;
+  gap: 12px;
+  grid-template-columns: minmax(180px, 2fr) minmax(70px, 0.7fr) minmax(110px, 1fr) 34px;
+  min-width: 520px;
+  padding: 8px 10px;
+}
+
+.docListHeading {
+  color: var(--opus-muted, var(--opus-text-muted));
+  font-size: 0.7rem;
+  font-weight: 800;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+.docListRow {
+  background: transparent;
+  border: 0;
+  border-top: 1px solid color-mix(in srgb, var(--opus-border) 72%, transparent);
+  color: var(--opus-muted, var(--opus-text-muted));
+  cursor: pointer;
+  font: inherit;
+  font-size: 0.8rem;
+  text-align: left;
+}
+
+.docListRow:hover {
+  background: color-mix(in srgb, var(--opus-accent) 7%, transparent);
+}
+
+.docListName {
+  align-items: center;
+  color: var(--opus-text);
+  display: flex;
+  gap: 9px;
+  min-width: 0;
+}
+
+.docListName strong {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.docColumns {
+  display: flex;
+  overflow: auto;
+}
+
+.docColumn {
+  align-content: start;
+  display: grid;
+  flex: 0 0 clamp(170px, 26%, 240px);
+  min-height: 100%;
+  padding: 8px;
+}
+
+.docColumn + .docColumn {
+  border-left: 1px solid var(--opus-border);
+}
+
+.docColumnHeading {
+  color: var(--opus-muted, var(--opus-text-muted));
+  font-size: 0.7rem;
+  font-weight: 800;
+  letter-spacing: 0.05em;
+  padding: 5px 8px 9px;
+  text-transform: uppercase;
+}
+
+.docColumnItem {
+  align-items: center;
+  background: transparent;
+  border: 0;
+  border-radius: 7px;
+  color: var(--opus-text);
+  cursor: pointer;
+  display: grid;
+  font: inherit;
+  font-size: 0.8rem;
+  font-weight: 650;
+  gap: 8px;
+  grid-template-columns: 20px minmax(0, 1fr) 12px;
+  min-height: 36px;
+  padding: 5px 7px;
+  text-align: left;
+}
+
+.docColumnItem:hover,
+.docColumnItem[data-active="true"] {
+  background: color-mix(in srgb, var(--opus-accent) 12%, transparent);
+}
+
+.docColumnItem > span:nth-child(2) {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.docColumnItem > :global(svg):last-child {
+  color: var(--opus-muted, var(--opus-text-muted));
+  height: 0.7rem;
+  width: 0.7rem;
+}
+
+.docColumnEmpty {
+  color: var(--opus-muted, var(--opus-text-muted));
+  font-size: 0.78rem;
+  padding: 16px 8px;
+}
+
+.docCard {
+  display: grid;
+  gap: 6px;
+  align-content: start;
+  padding: 12px;
+  border: 1px solid var(--opus-border);
+  border-radius: 12px;
+  background: color-mix(in srgb, var(--opus-surface, var(--opus-panel)) 70%, transparent);
+  color: inherit;
+  text-align: left;
+  cursor: default;
+}
+
+.docCardHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+button.docCard {
+  cursor: pointer;
+  font: inherit;
+}
+
+button.docCard:hover,
+.docCard[data-kind="folder"]:hover {
+  border-color: color-mix(in srgb, var(--opus-accent) 40%, var(--opus-border));
+  background: color-mix(in srgb, var(--opus-accent) 8%, var(--opus-panel));
+}
+
+.docCardIcon {
+  color: var(--opus-accent);
+  width: 1.4rem;
+  height: 1.4rem;
+  font-size: 1.4rem;
+}
+
+.docCard[data-kind="folder"] .docCardIcon {
+  color: var(--opus-accent);
+}
+
+.docEmpty {
+  grid-column: 1 / -1;
+  padding: 28px 12px;
+  color: var(--opus-muted, var(--opus-text-muted));
+  text-align: center;
+}
+
+@media (max-width: 900px) {
+  .board,
+  .catalogue {
+    grid-template-columns: 1fr;
+  }
+
+  .documents {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 760px) {
+  .header {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .toolbar,
+  .docToolbar {
+    flex-wrap: wrap;
+  }
+
+  .docToolbarControls {
+    flex: 1 1 100%;
+    min-width: 0;
+  }
+
+  .row {
+    grid-template-columns: 24px minmax(0, 1fr) 36px;
+  }
+
+  .row > :nth-child(3),
+  .row > :nth-child(4),
+  .tableHead {
+    display: none;
+  }
+
+  .timelineItem {
+    grid-template-columns: 56px minmax(0, 1fr);
+  }
+
+  .settingsRow {
+    grid-template-columns: 34px minmax(0, 1fr) auto;
+  }
+
+  .settingsRow .meta,
+  .settingsRow > :last-child {
+    display: none;
+  }
+}

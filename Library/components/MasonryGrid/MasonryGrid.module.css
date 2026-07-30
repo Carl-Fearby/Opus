@@ -13,6 +13,26 @@
     color-mix(in srgb, var(--opus-panel) 94%, transparent);
 }
 
+button.card {
+  border: 0;
+  color: inherit;
+  cursor: pointer;
+  font: inherit;
+  text-align: left;
+  width: 100%;
+}
+
+button.card:hover {
+  background:
+    linear-gradient(180deg, color-mix(in srgb, var(--opus-accent) 15%, transparent), transparent 58%),
+    color-mix(in srgb, var(--opus-panel) 94%, transparent);
+}
+
+button.card:focus-visible {
+  outline: 2px solid color-mix(in srgb, var(--opus-accent) 72%, transparent);
+  outline-offset: -3px;
+}
+
 .title {
   margin: 0;
   color: var(--opus-text);

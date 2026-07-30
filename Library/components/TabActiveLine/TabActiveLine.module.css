@@ -31,8 +31,8 @@
 .line[data-orientation="horizontal"]::before {
   left: 50%;
   bottom: -6px;
-  width: 92%;
-  height: 12px;
+  width: 96%;
+  height: 14px;
   transform: translateX(-50%);
   background: radial-gradient(
     ellipse 55% 70% at 50% 50%,
@@ -45,8 +45,8 @@
 .line[data-orientation="vertical"]::before {
   top: 50%;
   right: -6px;
-  width: 12px;
-  height: 92%;
+  width: 14px;
+  height: 96%;
   transform: translateY(-50%);
   background: radial-gradient(
     ellipse 70% 55% at 50% 50%,
@@ -66,16 +66,16 @@
   left: 0;
   bottom: 0;
   width: 100%;
-  height: 1.5px;
+  height: 2.5px;
   clip-path: polygon(0 50%, 14% 0, 86% 0, 100% 50%, 86% 100%, 14% 100%);
   background: linear-gradient(
     90deg,
     transparent 0%,
-    color-mix(in srgb, var(--opus-accent) 35%, transparent) 10%,
-    color-mix(in srgb, var(--opus-accent) 78%, #d4c4ff) 28%,
-    color-mix(in srgb, #e8deff 58%, var(--opus-accent)) 50%,
-    color-mix(in srgb, var(--opus-accent) 78%, #d4c4ff) 72%,
-    color-mix(in srgb, var(--opus-accent) 35%, transparent) 90%,
+    color-mix(in srgb, var(--opus-accent) 52%, transparent) 8%,
+    color-mix(in srgb, var(--opus-accent) 88%, #d4c4ff) 26%,
+    color-mix(in srgb, #ffffff 66%, var(--opus-accent)) 50%,
+    color-mix(in srgb, var(--opus-accent) 88%, #d4c4ff) 74%,
+    color-mix(in srgb, var(--opus-accent) 52%, transparent) 92%,
     transparent 100%
   );
   filter:
@@ -87,17 +87,17 @@
 .line[data-orientation="vertical"]::after {
   top: 0;
   right: 0;
-  width: 1.5px;
+  width: 2.5px;
   height: 100%;
   clip-path: polygon(50% 0, 100% 14%, 100% 86%, 50% 100%, 0 86%, 0 14%);
   background: linear-gradient(
     180deg,
     transparent 0%,
-    color-mix(in srgb, var(--opus-accent) 35%, transparent) 10%,
-    color-mix(in srgb, var(--opus-accent) 78%, #d4c4ff) 28%,
-    color-mix(in srgb, #e8deff 58%, var(--opus-accent)) 50%,
-    color-mix(in srgb, var(--opus-accent) 78%, #d4c4ff) 72%,
-    color-mix(in srgb, var(--opus-accent) 35%, transparent) 90%,
+    color-mix(in srgb, var(--opus-accent) 52%, transparent) 8%,
+    color-mix(in srgb, var(--opus-accent) 88%, #d4c4ff) 26%,
+    color-mix(in srgb, #ffffff 66%, var(--opus-accent)) 50%,
+    color-mix(in srgb, var(--opus-accent) 88%, #d4c4ff) 74%,
+    color-mix(in srgb, var(--opus-accent) 52%, transparent) 92%,
     transparent 100%
   );
   filter:
@@ -131,11 +131,11 @@
   background: linear-gradient(
     90deg,
     transparent 0%,
-    color-mix(in srgb, var(--opus-accent) 28%, transparent) 10%,
-    color-mix(in srgb, var(--opus-accent) 72%, white) 28%,
-    color-mix(in srgb, white 55%, var(--opus-accent)) 50%,
-    color-mix(in srgb, var(--opus-accent) 72%, white) 72%,
-    color-mix(in srgb, var(--opus-accent) 28%, transparent) 90%,
+    color-mix(in srgb, var(--opus-accent) 44%, transparent) 8%,
+    color-mix(in srgb, var(--opus-accent) 84%, white) 26%,
+    color-mix(in srgb, white 38%, var(--opus-accent)) 50%,
+    color-mix(in srgb, var(--opus-accent) 84%, white) 74%,
+    color-mix(in srgb, var(--opus-accent) 44%, transparent) 92%,
     transparent 100%
   );
   filter:
@@ -149,11 +149,11 @@
   background: linear-gradient(
     180deg,
     transparent 0%,
-    color-mix(in srgb, var(--opus-accent) 28%, transparent) 10%,
-    color-mix(in srgb, var(--opus-accent) 72%, white) 28%,
-    color-mix(in srgb, white 55%, var(--opus-accent)) 50%,
-    color-mix(in srgb, var(--opus-accent) 72%, white) 72%,
-    color-mix(in srgb, var(--opus-accent) 28%, transparent) 90%,
+    color-mix(in srgb, var(--opus-accent) 44%, transparent) 8%,
+    color-mix(in srgb, var(--opus-accent) 84%, white) 26%,
+    color-mix(in srgb, white 38%, var(--opus-accent)) 50%,
+    color-mix(in srgb, var(--opus-accent) 84%, white) 74%,
+    color-mix(in srgb, var(--opus-accent) 44%, transparent) 92%,
     transparent 100%
   );
   filter:

@@ -8,7 +8,7 @@ import { ErrorPage } from "@/components/documentation/ErrorPage";
 import { ForbiddenPage, ForbiddenPageContent } from "@/components/documentation/ForbiddenPage";
 import { NotFoundPage, NotFoundPageContent } from "@/components/documentation/NotFoundPage";
 import { Map } from "@/components/Map";
-import { ContactDetails, ContactNotesActivity } from "@/components/ContactDetails";
+import { ContactDetails, ContactNotesActivity } from "opus-react";
 import { VideoPlayer } from "@/components/VideoPlayer";
 import { AudioPlayer } from "@/components/AudioPlayer";
 import * as Fields from "opus-react";
@@ -19,6 +19,7 @@ import { demoUpcomingTasks } from "@/lib/controls/upcomingTasksDemoData";
 import { topNavigationDemoMenus } from "@/lib/controls/topNavigationDemo";
 import { demoAudioTracks } from "@/lib/controls/audioDemoData";
 import { demoVideoTracks } from "@/lib/controls/videoDemoData";
+import { continueWithApple, continueWithGoogle } from "@/lib/auth/socialAuth";
 
 export function createPlaygroundScope() {
   return {
@@ -44,6 +45,8 @@ export function createPlaygroundScope() {
     demoAudioTracks,
     demoVideoTracks,
     topNavigationDemoMenus,
+    continueWithGoogle,
+    continueWithApple,
     ...Fields,
     ContactDetails,
     ContactNotesActivity,

@@ -10,8 +10,18 @@ import { WelcomeMessage } from "opus-react";
 import { Map } from "@/components/Map";
 import { ContactDetails, ContactNotesActivity } from "opus-react";
 import { CompanyDetails, CompanyNotesActivity } from "opus-react";
+import { CrmWorkspaceLab, type CrmWorkspaceLabVariant } from "opus-react";
+import { DesktopLab } from "opus-react";
+import { Desktop } from "opus-react";
+import { DesktopDock } from "opus-react";
+import { DesktopIcon } from "opus-react";
+import { DesktopWindow } from "opus-react";
+import { TreeMenu } from "opus-react";
+import { continueWithApple, continueWithGoogle } from "@/lib/auth/socialAuth";
 import { VideoPlayer } from "@/components/VideoPlayer";
 import { AudioPlayer } from "@/components/AudioPlayer";
+import { OtpField } from "opus-react";
+import { CheckboxGroupField, ComboboxField, CurrencyField, DateRangeField, Form, FormActions, FormSection, FormValidationSummary, MaskedField, MultiFileField } from "opus-react";
 import {
   Button,
   Card,
@@ -162,6 +172,7 @@ import {
   useToast,
 } from "opus-react";
 import { Tabs } from "@/components/Tabs";
+import { MoreActionsMenu } from "opus-react";
 import { ImageCropUploadWidget } from "opus-react";
 import { IconPicker } from "opus-react";
 import { AccentColorPicker, accentPairs, createAccentStyle } from "@/components/AccentColorPicker";
@@ -2363,90 +2374,96 @@ function TabsPreview({
   const [projectName, setProjectName] = useState("Opus");
   const [releaseTrack, setReleaseTrack] = useState("Stable");
   const [notifyTeam, setNotifyTeam] = useState(true);
+  const [widgetSampleValue, setWidgetSampleValue] = useState("overview");
   const isCardVariant = settings.variant === "card";
+  const cardTrailing = (
+    <MoreActionsMenu
+      items={[
+        { iconName: "wave-square", id: "log-activity", label: "Log activity" },
+        { iconName: "list-check", id: "add-task", label: "Add task" },
+        { iconName: "calendar", id: "schedule-meeting", label: "Schedule meeting" },
+        { iconName: "note-sticky", id: "add-note", label: "Add note" },
+        { iconName: "download", id: "export", label: "Export" },
+      ]}
+      label="More actions"
+    />
+  );
+
+  const buildTabItems = (includeFormTab: boolean) => [
+    {
+      content: (
+        <p>
+          Review the main project status, recent activity, and current design-system health.
+        </p>
+      ),
+      label: "Overview",
+      value: "overview",
+    },
+    {
+      content: (
+        <p>
+          Track component usage, accessibility checks, and adoption across product surfaces.
+        </p>
+      ),
+      disabled: settings.disabledSecond,
+      label: "Insights",
+      value: "insights",
+    },
+    {
+      content: (
+        <p>
+          Configure release notes, component ownership, and library publishing preferences.
+        </p>
+      ),
+      label: "Settings",
+      value: "settings",
+    },
+    ...(includeFormTab
+      ? [
+          {
+            content: (
+              <div className={styles.modalFormDemo}>
+                <TextField
+                  id="tabs-demo-project-name"
+                  label="Project name"
+                  mode="stacked"
+                  labelPosition="left"
+                  type="text"
+                  value={projectName}
+                  onChange={(event) => setProjectName(event.target.value)}
+                />
+                <SelectField
+                  id="tabs-demo-release-track"
+                  label="Release track"
+                  mode="stacked"
+                  labelPosition="left"
+                  options={["Stable", "Beta", "Experimental"]}
+                  value={releaseTrack}
+                  onChange={(event) => setReleaseTrack(event.target.value)}
+                />
+                <SwitchField
+                  id="tabs-demo-notify-team"
+                  label="Notify team on publish"
+                  mode="flagged"
+                  labelPosition="right"
+                  checked={notifyTeam}
+                  onChange={(event) => setNotifyTeam(event.target.checked)}
+                />
+              </div>
+            ),
+            label: "Form",
+            value: "form",
+          },
+        ]
+      : []),
+  ];
 
   const tabs = (
     <Tabs
       fitted={settings.fitted && !isCardVariant}
-      items={[
-        {
-          content: (
-            <p>
-              Review the main project status, recent activity, and current
-              design-system health.
-            </p>
-          ),
-          label: "Overview",
-          value: "overview",
-        },
-        {
-          content: (
-            <p>
-              Track component usage, accessibility checks, and adoption across
-              product surfaces.
-            </p>
-          ),
-          disabled: settings.disabledSecond,
-          label: "Insights",
-          value: "insights",
-        },
-        {
-          content: (
-            <p>
-              Configure release notes, component ownership, and library
-              publishing preferences.
-            </p>
-          ),
-          label: "Settings",
-          value: "settings",
-        },
-        ...(isCardVariant
-          ? []
-          : [
-              {
-                content: (
-                  <div className={styles.modalFormDemo}>
-                    <TextField
-                      id="tabs-demo-project-name"
-                      label="Project name"
-                      mode="stacked"
-                      labelPosition="left"
-                      type="text"
-                      value={projectName}
-                      onChange={(event) => setProjectName(event.target.value)}
-                    />
-                    <SelectField
-                      id="tabs-demo-release-track"
-                      label="Release track"
-                      mode="stacked"
-                      labelPosition="left"
-                      options={["Stable", "Beta", "Experimental"]}
-                      value={releaseTrack}
-                      onChange={(event) => setReleaseTrack(event.target.value)}
-                    />
-                    <SwitchField
-                      id="tabs-demo-notify-team"
-                      label="Notify team on publish"
-                      mode="flagged"
-                      labelPosition="right"
-                      checked={notifyTeam}
-                      onChange={(event) => setNotifyTeam(event.target.checked)}
-                    />
-                  </div>
-                ),
-                label: "Form",
-                value: "form",
-              },
-            ]),
-      ]}
+      items={buildTabItems(!isCardVariant)}
       orientation={settings.orientation}
-      trailing={
-        isCardVariant ? (
-          <Button size="sm" variant="secondary">
-            Export
-          </Button>
-        ) : undefined
-      }
+      trailing={isCardVariant ? cardTrailing : undefined}
       value={settings.activeValue}
       variant={settings.variant}
       onValueChange={(activeValue) =>
@@ -2459,15 +2476,58 @@ function TabsPreview({
     return tabs;
   }
 
+  const widgetSampleItems = [
+    "Overview",
+    "London HQ",
+    "Manchester",
+    "Birmingham",
+    "Leeds",
+    "Glasgow",
+    "Bristol",
+    "Cardiff",
+  ].map((label) => ({
+    content: (
+      <p>
+        Active tab: <strong>{label}</strong>. The tab fill reuses this panel’s
+        gradient at the tab’s horizontal position — same pattern as Company and
+        Contact summary cards.
+      </p>
+    ),
+    label,
+    value: label.toLowerCase().replace(/\s+/g, "-"),
+  }));
+
   return (
-    <div
-      style={{
-        height: 320,
-        maxWidth: 860,
-        width: "100%",
-      }}
-    >
-      {tabs}
+    <div className={styles.tabsPreviewStack}>
+      <p className={styles.tabsPreviewNote}>
+        This preview is the bare card Tabs control. The panel uses a flat fill, so
+        the active tab matches that colour. Host widgets (Company / Contact cards)
+        set a panel gradient via <code>--tabs-card-panel-bg</code>; the active tab
+        samples that background so it stays continuous as tabs move right.
+      </p>
+
+      <div className={styles.tabsPreviewFrame}>{tabs}</div>
+
+      <div className={styles.tabsPreviewSampleBlock}>
+        <div className={styles.tabsPreviewSampleHeading}>
+          <span className={styles.tabsPreviewSampleTitle}>Widget sampling</span>
+          <span className={styles.tabsPreviewSampleHint}>
+            Same Tabs instance with host gradient tokens — try a tab further right.
+          </span>
+        </div>
+        <div className={styles.tabsPreviewWidgetHost}>
+          <Tabs
+            className={styles.tabsPreviewWidgetTabs}
+            items={widgetSampleItems}
+            orientation={settings.orientation}
+            panelClassName={styles.tabsPreviewWidgetPanel}
+            trailing={cardTrailing}
+            value={widgetSampleValue}
+            variant="card"
+            onValueChange={setWidgetSampleValue}
+          />
+        </div>
+      </div>
     </div>
   );
 }
@@ -2724,12 +2784,19 @@ function DualListBuilderPreview({ selectedCount }: { selectedCount: number }) {
   );
 }
 
-function KanbanBoardPreview({ interactive }: { interactive: boolean }) {
+function KanbanBoardPreview({
+  interactive,
+  onCardClick,
+}: {
+  interactive: boolean;
+  onCardClick?: (title: string) => void;
+}) {
   const [columns, setColumns] = useState(demoKanbanColumns);
   return (
     <KanbanBoard
       cards={demoKanbanCards}
       columns={columns}
+      onCardClick={(card) => onCardClick?.(card.title)}
       onChange={interactive ? setColumns : undefined}
     />
   );
@@ -2773,7 +2840,7 @@ function CalendarPreview({
   );
 }
 
-export function ControlPreview({
+function ControlPreviewContent({
   category,
   slug,
   settings,
@@ -3019,6 +3086,52 @@ export function ControlPreview({
           }
         />
       );
+    }
+    case "otp-input": {
+      const s = settings as ControlSettingsBySlug["otp-input"];
+      return (
+        <OtpField
+          {...fieldProps(s)}
+          id="preview-otp-input"
+          length={s.length}
+          value={s.value}
+          onChange={(value) =>
+            onSettingsChange({ ...s, value } as ControlSettings)
+          }
+        />
+      );
+    }
+    case "date-range-picker": {
+      const s = settings as ControlSettingsBySlug["date-range-picker"];
+      return <DateRangeField {...fieldProps(s)} id="preview-date-range" value={{ from: s.from, to: s.to }} onChange={(value) => onSettingsChange({ ...s, ...value } as ControlSettings)} />;
+    }
+    case "combobox": {
+      const s = settings as ControlSettingsBySlug["combobox"];
+      const options = s.options.split(",").map((item) => item.trim()).filter(Boolean).map((item) => ({ label: item, value: item }));
+      return <ComboboxField {...fieldProps(s)} id="preview-combobox" options={options} placeholder={s.placeholder} value={s.value} onChange={(value) => onSettingsChange({ ...s, value } as ControlSettings)} />;
+    }
+    case "currency-input": {
+      const s = settings as ControlSettingsBySlug["currency-input"];
+      return <CurrencyField {...fieldProps(s)} currency={s.currency} id="preview-currency" value={s.value} onChange={(value) => onSettingsChange({ ...s, value: value ?? 0 } as ControlSettings)} />;
+    }
+    case "masked-input": {
+      const s = settings as ControlSettingsBySlug["masked-input"];
+      return <MaskedField {...fieldProps(s)} id="preview-masked" mask={s.mask} placeholder={s.placeholder} value={s.value} onChange={(value) => onSettingsChange({ ...s, value } as ControlSettings)} />;
+    }
+    case "multi-file-upload": {
+      const s = settings as ControlSettingsBySlug["multi-file-upload"];
+      const files = s.fileNames.split(",").map((name) => name.trim()).filter(Boolean).map((name) => ({ name, size: 0 }));
+      return <MultiFileField {...fieldProps(s)} files={files} id="preview-multi-files" maxFiles={s.maxFiles} onChange={(next) => onSettingsChange({ ...s, fileNames: next.map((file) => file.name).join(", ") } as ControlSettings)} />;
+    }
+    case "checkbox-group": {
+      const s = settings as ControlSettingsBySlug["checkbox-group"];
+      const options = s.options.split(",").map((item) => item.trim()).filter(Boolean).map((item) => ({ label: item, value: item }));
+      return <CheckboxGroupField {...fieldProps(s)} id="preview-checkbox-group" options={options} value={s.value} onChange={(value) => onSettingsChange({ ...s, value } as ControlSettings)} />;
+    }
+    case "form-validation-summary": {
+      const s = settings as ControlSettingsBySlug["form-validation-summary"];
+      const errors = s.showErrors ? [{ fieldId: "example-email", message: "Enter a valid email address" }, { fieldId: "example-company", message: "Choose a company" }] : [];
+      return <Form onSubmit={(event) => event.preventDefault()}><FormValidationSummary errors={errors} title={s.title} /><FormSection title="Account details"><TextField id="example-email" label="Email address" type="email" value="invalid-address" onChange={() => undefined} /><TextField id="example-company" label="Company" type="text" value="" onChange={() => undefined} /></FormSection><FormActions><Button type="submit">Save changes</Button></FormActions></Form>;
     }
     case "phone-number-input": {
       const s = settings as ControlSettingsBySlug["phone-number-input"];
@@ -3841,6 +3954,77 @@ export function ControlPreview({
       const s = settings as ControlSettingsBySlug["dashboard-list-columns"];
       return <DashboardListColumnsDashboardPreview settings={s} />;
     }
+    case "lab-desktop-environment": {
+      const s = settings as ControlSettingsBySlug["lab-desktop-environment"];
+      return (
+        <DesktopLab
+          dockAutoHide={s.dockAutoHide}
+          dockSize={s.dockSize}
+          onDockSizeChange={(dockSize) =>
+            onSettingsChange({ ...s, dockSize } as ControlSettings)
+          }
+          onAction={(action) => console.log(action)}
+        />
+      );
+    }
+    case "desktop": {
+      return (
+        <div style={{ height: 580, width: "100%" }}>
+          <Desktop
+            dockItems={[{ id: "files", icon: "folder-open", label: "Files", tone: "blue" }]}
+            shortcuts={[{ id: "files", icon: "folder-open", label: "Documents", tone: "blue" }]}
+            windows={[]}
+          />
+        </div>
+      );
+    }
+    case "desktop-window": {
+      return (
+        <div style={{ height: 420, position: "relative", width: "100%" }}>
+          <DesktopWindow defaultRect={{ height: 300, width: 500, x: 80, y: 40 }} title="Customer record">
+            <div style={{ padding: 20 }}>Drag the title bar or resize from any edge.</div>
+          </DesktopWindow>
+        </div>
+      );
+    }
+    case "desktop-dock": {
+      const s = settings as ControlSettingsBySlug["desktop-dock"];
+      return (
+        <div style={{ height: 160, position: "relative", width: "100%" }}>
+          <DesktopDock
+            autoHide={s.autoHide}
+            items={[
+              { active: true, id: "files", icon: "folder-open", label: "Files", tone: "blue" },
+              { id: "contacts", icon: "users", label: "Contacts" },
+              { id: "settings", icon: "gear", label: "Settings", tone: "blue" },
+            ]}
+            position={s.position}
+            resizable={s.resizable}
+            size={s.size}
+            onSizeChange={(size) => onSettingsChange({ ...s, size } as ControlSettings)}
+          />
+        </div>
+      );
+    }
+    case "desktop-icon": {
+      return <DesktopIcon icon="folder-open" label="Documents" tone="blue" />;
+    }
+    case "lab-contact-directory":
+    case "lab-company-directory":
+    case "lab-sales-pipeline":
+    case "lab-task-workspace":
+    case "lab-notification-centre":
+    case "lab-document-manager":
+    case "lab-product-catalogue":
+    case "lab-quotation-builder":
+    case "lab-sales-order":
+    case "lab-sales-invoice":
+    case "lab-appointment-diary":
+    case "lab-stock-control":
+    case "lab-system-configuration": {
+      const variant = slug.replace("lab-", "") as CrmWorkspaceLabVariant;
+      return <CrmWorkspaceLab variant={variant} />;
+    }
     case "lab-company-details": {
       const s = settings as ControlSettingsBySlug["lab-company-details"];
       return (
@@ -4038,28 +4222,130 @@ export function ControlPreview({
     case "lab-otp-form":
     case "lab-passkey-login-form":
     case "lab-social-auth-form":
-    case "lab-social-register-form": {
+    case "lab-social-register-form":
+    case "lab-forgot-password-form":
+    case "lab-reset-password-form":
+    case "lab-check-email-form":
+    case "lab-email-verified-form":
+    case "lab-link-expired-form":
+    case "lab-change-password-form": {
       const s = settings as ControlSettingsBySlug["lab-login-form"];
       const isSocialRegister = slug === "lab-social-register-form";
       const isRegister = slug === "lab-register-form" || isSocialRegister;
       const isOtp = slug === "lab-otp-form";
       const isPasskey = slug === "lab-passkey-login-form";
       const isSocial = slug === "lab-social-auth-form" || isSocialRegister;
-      const formId = isOtp ? "otp" : isPasskey ? "passkey" : isSocialRegister ? "social-register" : isSocial ? "social" : isRegister ? "register" : "login";
+      const isForgot = slug === "lab-forgot-password-form";
+      const isReset = slug === "lab-reset-password-form";
+      const isChange = slug === "lab-change-password-form";
+      const isCheckEmail = slug === "lab-check-email-form";
+      const isEmailVerified = slug === "lab-email-verified-form";
+      const isLinkExpired = slug === "lab-link-expired-form";
+      const isStatusScreen = isCheckEmail || isEmailVerified || isLinkExpired;
+      const isLogin = slug === "lab-login-form" || slug === "lab-social-auth-form";
+      const showSocialProviders = (isSocial || isRegister) && !isOtp && !isPasskey;
+      const showEmail = !isOtp && !isPasskey && !isReset && !isChange && !isStatusScreen;
+      const showPassword = !isOtp && !isPasskey && !isForgot && !isStatusScreen;
+      const showConfirmPassword = isRegister || isReset || isChange;
+      const showConsentRow = isLogin || isRegister;
+      const statusIcon = isCheckEmail ? "envelope" : isEmailVerified ? "circle-check" : isLinkExpired ? "triangle-exclamation" : null;
+      const dataComponent = isOtp
+        ? "otp-form"
+        : isPasskey
+          ? "passkey-login-form"
+          : isSocialRegister
+            ? "social-register-form"
+            : isSocial
+              ? "social-auth-form"
+              : isForgot
+                ? "forgot-password-form"
+                : isReset
+                  ? "reset-password-form"
+                  : isCheckEmail
+                    ? "check-email-form"
+                    : isEmailVerified
+                      ? "email-verified-form"
+                      : isLinkExpired
+                        ? "link-expired-form"
+                        : isChange
+                          ? "change-password-form"
+                          : isRegister
+                            ? "register-form"
+                            : "login-form";
+      const formId = dataComponent.replace(/-form$/, "");
+      const submitAction = isOtp
+        ? "Verify code"
+        : isPasskey
+          ? "Continue with passkey"
+          : isForgot
+            ? "Send reset link"
+            : isReset
+              ? "Update password"
+              : isChange
+                ? "Change password"
+                : isCheckEmail
+                  ? "Open email app"
+                  : isEmailVerified
+                    ? "Continue to sign in"
+                    : isLinkExpired
+                      ? "Request a new link"
+                      : isRegister
+                        ? "Create account"
+                        : "Sign in";
+      const switchPrompt = isOtp
+        ? "Didn’t receive a code?"
+        : isPasskey
+          ? "Prefer to use your password?"
+          : isCheckEmail
+            ? "Didn’t get the email?"
+            : isLinkExpired
+              ? "Or return to sign-in"
+              : isEmailVerified
+                ? null
+                : isChange
+                  ? "Changed your mind?"
+                  : isForgot || isReset
+                    ? "Remembered your password?"
+                    : isRegister
+                      ? "Already have an account?"
+                      : "New to Opus?";
+      const switchAction = isOtp
+        ? "Resend code"
+        : isPasskey
+          ? "Use password"
+          : isCheckEmail
+            ? "Resend email"
+            : isForgot || isReset || isChange || isLinkExpired
+              ? "Back to sign in"
+              : isRegister
+                ? "Open login"
+                : "Open registration";
+      const switchLabel = isOtp
+        ? "Resend code"
+        : isPasskey
+          ? "Use password instead"
+          : isCheckEmail
+            ? "Resend email"
+            : isForgot || isReset || isChange || isLinkExpired
+              ? "Back to sign in"
+              : isRegister
+                ? "Sign in"
+                : "Create an account";
       return (
         <DashboardActionPreview>
           {(reportAction) => (
             <div className={styles.authFormStage}>
               <DashboardContentContainer
                 className={styles.authFormContainer}
-                data-component={isOtp ? "otp-form" : isPasskey ? "passkey-login-form" : isSocialRegister ? "social-register-form" : isSocial ? "social-auth-form" : isRegister ? "register-form" : "login-form"}
+                data-component={dataComponent}
                 width="widget"
               >
                 <form
                   className={styles.authForm}
+                  noValidate={showSocialProviders}
                   onSubmit={(event) => {
                     event.preventDefault();
-                    reportAction(isOtp ? "Verify code" : isPasskey ? "Continue with passkey" : isRegister ? "Create account" : "Sign in");
+                    reportAction(submitAction);
                   }}
                 >
                   <img alt="Opus" className={styles.authFormLogo} src="/opus-logo.png" />
@@ -4067,86 +4353,64 @@ export function ControlPreview({
                     <h2>{s.title}</h2>
                     <p>{s.subtitle}</p>
                   </header>
-                  {isPasskey ? (
-                    <div aria-hidden="true" className={styles.passkeyGraphic}>
-                      <CatalogIcon iconName="fingerprint" />
+                  {isPasskey || statusIcon ? (
+                    <div
+                      aria-hidden="true"
+                      className={`${styles.passkeyGraphic}${isEmailVerified ? ` ${styles.authStatusSuccess}` : ""}${isLinkExpired ? ` ${styles.authStatusWarning}` : ""}`}
+                    >
+                      <CatalogIcon iconName={isPasskey ? "fingerprint" : statusIcon!} />
                     </div>
                   ) : null}
-                  {isSocial ? (
+                  {showSocialProviders ? (
                     <div className={styles.socialAuthOptions}>
-                      <button className={`${styles.providerButton} ${styles.googleButton}`} onClick={() => reportAction(isSocialRegister ? "Sign up with Google" : "Continue with Google")} type="button">
+                      <button
+                        className={`${styles.providerButton} ${styles.googleButton}`}
+                        onClick={() => {
+                          void (async () => {
+                            reportAction("Continue with Google");
+                            const result = await continueWithGoogle({
+                              mode: isRegister ? "register" : "login",
+                            });
+                            if (!result.ok) {
+                              reportAction(result.error);
+                            }
+                          })();
+                        }}
+                        type="button"
+                      >
                         <svg aria-hidden="true" className={styles.googleLogo} viewBox="0 0 18 18">
                           <path d="M17.64 9.205c0-.638-.057-1.252-.164-1.841H9v3.482h4.844c-.209 1.125-.843 2.078-1.797 2.716v2.258h2.909c1.702-1.567 2.684-3.874 2.684-6.615Z" fill="#4285F4" />
                           <path d="M9 18c2.43 0 4.467-.806 5.956-2.18l-2.909-2.258c-.806.54-1.835.859-3.047.859-2.344 0-4.329-1.585-5.037-3.711H.956v2.333C2.437 15.983 5.482 18 9 18Z" fill="#34A853" />
                           <path d="M3.963 10.71A5.423 5.423 0 0 1 3.68 9c0-.593.103-1.17.283-1.71V4.957H.956A9.002 9.002 0 0 0 0 9c0 1.451.347 2.827.956 4.043l3.007-2.333Z" fill="#FBBC05" />
                           <path d="M9 3.579c1.321 0 2.508.454 3.44 1.346l2.582-2.581C13.464.892 11.426 0 9 0 5.482 0 2.437 2.017.956 4.957L3.963 7.29C4.67 5.164 6.656 3.579 9 3.579Z" fill="#EA4335" />
                         </svg>
-                        <span>{isSocialRegister ? "Sign up with Google" : "Continue with Google"}</span>
+                        <span>Continue with Google</span>
                       </button>
-                      <button className={`${styles.providerButton} ${styles.appleButton}`} onClick={() => reportAction(isSocialRegister ? "Sign up with Apple" : "Continue with Apple")} type="button">
+                      <button
+                        className={`${styles.providerButton} ${styles.appleButton}`}
+                        onClick={() => {
+                          void (async () => {
+                            reportAction("Continue with Apple");
+                            const result = await continueWithApple({
+                              mode: isRegister ? "register" : "login",
+                            });
+                            if (!result.ok) {
+                              reportAction(result.error);
+                            }
+                          })();
+                        }}
+                        type="button"
+                      >
                         <svg aria-hidden="true" className={styles.appleLogo} viewBox="0 0 384 512">
                           <path d="M319.1 268.7c-.2-36.7 16.4-64.4 50-84.8-18.8-26.9-47.2-41.7-84.7-44.6-35.5-2.8-74.3 20.7-88.5 20.7-15 0-49.4-19.7-76.4-19.7-55.8.9-115.1 44.5-115.1 133.2 0 26.2 4.8 53.3 14.4 81.2 12.8 36.7 59 126.7 107.2 125.2 25.2-.6 43-17.9 75.8-17.9 31.8 0 48.3 17.9 76.4 17.9 48.6-.7 90.4-82.5 102.6-119.3-65.2-30.7-61.7-90-61.7-91.9zM262.5 104.5c27.3-32.4 24.8-61.9 24-72.5-24.1 1.4-52 16.4-67.9 34.9-17.5 19.8-27.8 44.3-25.6 71.9 26.1 2 49.9-11.4 69.5-34.3z" fill="currentColor" />
                         </svg>
-                        <span>{isSocialRegister ? "Sign up with Apple" : "Continue with Apple"}</span>
+                        <span>Continue with Apple</span>
                       </button>
                       <div className={styles.authDivider}><span>or continue with email</span></div>
                     </div>
                   ) : null}
-                  {isOtp ? (
-                    <fieldset className={styles.otpFieldset}>
-                      <legend>Six-digit verification code</legend>
-                      <div className={styles.otpInputs}>
-                        {Array.from({ length: 6 }, (_, index) => (
-                          <input
-                            aria-label={`Digit ${index + 1} of 6`}
-                            autoComplete={index === 0 ? "one-time-code" : "off"}
-                            className={styles.otpInput}
-                            id={`${formId}-digit-${index + 1}`}
-                            inputMode="numeric"
-                            key={index}
-                            maxLength={1}
-                            onChange={(event) => {
-                              const rawDigits = event.target.value.replace(/\D/g, "");
-                              const inputs = Array.from(
-                                event.currentTarget.parentElement?.querySelectorAll<HTMLInputElement>("input") ?? [],
-                              );
-                              if (rawDigits.length > 1) {
-                                const pastedCode = rawDigits.slice(0, 6);
-                                onSettingsChange({ ...s, verificationCode: pastedCode } as ControlSettings);
-                                window.requestAnimationFrame(() => inputs[Math.min(pastedCode.length, 5)]?.focus());
-                                return;
-                              }
-                              const digit = rawDigits.slice(-1);
-                              const digits = s.verificationCode.padEnd(6, " ").split("");
-                              digits[index] = digit || " ";
-                              onSettingsChange({ ...s, verificationCode: digits.join("").trimEnd() } as ControlSettings);
-                              if (digit) window.requestAnimationFrame(() => inputs[index + 1]?.focus());
-                            }}
-                            onKeyDown={(event) => {
-                              if (event.key !== "Backspace" || event.currentTarget.value) return;
-                              const inputs = Array.from(
-                                event.currentTarget.parentElement?.querySelectorAll<HTMLInputElement>("input") ?? [],
-                              );
-                              inputs[index - 1]?.focus();
-                            }}
-                            onPaste={(event) => {
-                              const pastedCode = event.clipboardData.getData("text").replace(/\D/g, "").slice(0, 6);
-                              if (!pastedCode) return;
-                              event.preventDefault();
-                              const inputs = Array.from(
-                                event.currentTarget.parentElement?.querySelectorAll<HTMLInputElement>("input") ?? [],
-                              );
-                              onSettingsChange({ ...s, verificationCode: pastedCode } as ControlSettings);
-                              window.requestAnimationFrame(() => inputs[Math.min(pastedCode.length, 5)]?.focus());
-                            }}
-                            pattern="[0-9]*"
-                            value={s.verificationCode[index] ?? ""}
-                          />
-                        ))}
-                      </div>
-                    </fieldset>
-                  ) : null}
-                  {!isOtp && !isPasskey && isRegister ? (
+                  {isOtp ? <OtpField id={`${formId}-code`} label="Six-digit verification code" value={s.verificationCode} onChange={(verificationCode) => onSettingsChange({ ...s, verificationCode } as ControlSettings)} /> : null}
+                  {isRegister ? (
                     <TextField
                       id={`${formId}-name`}
                       label="Full name"
@@ -4157,25 +4421,40 @@ export function ControlPreview({
                       onChange={(event) => onSettingsChange({ ...s, name: event.target.value } as ControlSettings)}
                     />
                   ) : null}
-                  {!isOtp && !isPasskey ? <TextField
-                    id={`${formId}-email`}
-                    label="Email address"
-                    placeholder="name@company.com"
-                    required
-                    type="email"
-                    value={s.email}
-                    onChange={(event) => onSettingsChange({ ...s, email: event.target.value } as ControlSettings)}
-                  /> : null}
-                  {!isOtp && !isPasskey ? <TextField
-                    id={`${formId}-password`}
-                    label="Password"
-                    placeholder="Enter your password"
-                    required
-                    type="password"
-                    value={s.password}
-                    onChange={(event) => onSettingsChange({ ...s, password: event.target.value } as ControlSettings)}
-                  /> : null}
-                  {!isOtp && !isPasskey && isRegister ? (
+                  {showEmail ? (
+                    <TextField
+                      id={`${formId}-email`}
+                      label="Email address"
+                      placeholder="name@company.com"
+                      required
+                      type="email"
+                      value={s.email}
+                      onChange={(event) => onSettingsChange({ ...s, email: event.target.value } as ControlSettings)}
+                    />
+                  ) : null}
+                  {isChange ? (
+                    <TextField
+                      id={`${formId}-current-password`}
+                      label="Current password"
+                      placeholder="Enter your current password"
+                      required
+                      type="password"
+                      value={s.currentPassword}
+                      onChange={(event) => onSettingsChange({ ...s, currentPassword: event.target.value } as ControlSettings)}
+                    />
+                  ) : null}
+                  {showPassword ? (
+                    <TextField
+                      id={`${formId}-password`}
+                      label={isReset || isChange ? "New password" : "Password"}
+                      placeholder={isReset || isChange ? "Choose a new password" : "Enter your password"}
+                      required
+                      type="password"
+                      value={s.password}
+                      onChange={(event) => onSettingsChange({ ...s, password: event.target.value } as ControlSettings)}
+                    />
+                  ) : null}
+                  {showConfirmPassword ? (
                     <TextField
                       id={`${formId}-confirm-password`}
                       label="Confirm password"
@@ -4186,24 +4465,32 @@ export function ControlPreview({
                       onChange={(event) => onSettingsChange({ ...s, confirmPassword: event.target.value } as ControlSettings)}
                     />
                   ) : null}
-                  {!isOtp && !isPasskey ? <div className={styles.authFormOptions}>
-                    <CheckboxField
-                      checked={s.remember}
-                      fitContent
-                      id={`${formId}-consent`}
-                      label={isRegister ? "I agree to the terms" : "Remember me"}
-                      labelPosition="right"
-                      onChange={(event) => onSettingsChange({ ...s, remember: event.target.checked } as ControlSettings)}
-                    />
-                    {!isRegister ? <button className={styles.authFormLink} onClick={() => reportAction("Forgot password")} type="button">Forgot password?</button> : null}
-                  </div> : null}
+                  {showConsentRow ? (
+                    <div className={styles.authFormOptions}>
+                      <CheckboxField
+                        checked={s.remember}
+                        fitContent
+                        id={`${formId}-consent`}
+                        label={isRegister ? "I agree to the terms" : "Remember me"}
+                        labelPosition="right"
+                        onChange={(event) => onSettingsChange({ ...s, remember: event.target.checked } as ControlSettings)}
+                      />
+                      {isLogin ? (
+                        <button className={styles.authFormLink} onClick={() => reportAction("Forgot password")} type="button">
+                          Forgot password?
+                        </button>
+                      ) : null}
+                    </div>
+                  ) : null}
                   <Button className={styles.authFormSubmit} type="submit">{s.submitLabel}</Button>
-                  <p className={styles.authFormSwitch}>
-                    {isOtp ? "Didn’t receive a code?" : isPasskey ? "Prefer to use your password?" : isRegister ? "Already have an account?" : "New to Opus?"}{" "}
-                    <button className={styles.authFormLink} onClick={() => reportAction(isOtp ? "Resend code" : isPasskey ? "Use password" : isRegister ? "Open login" : "Open registration")} type="button">
-                      {isOtp ? "Resend code" : isPasskey ? "Use password instead" : isRegister ? "Sign in" : "Create an account"}
-                    </button>
-                  </p>
+                  {switchPrompt ? (
+                    <p className={styles.authFormSwitch}>
+                      {switchPrompt}{" "}
+                      <button className={styles.authFormLink} onClick={() => reportAction(switchAction)} type="button">
+                        {switchLabel}
+                      </button>
+                    </p>
+                  ) : null}
                 </form>
               </DashboardContentContainer>
             </div>
@@ -4761,6 +5048,7 @@ export function ControlPreview({
           density={s.density}
           items={demoListItems(s.showIcons)}
           ordered={s.ordered}
+          onItemClick={() => undefined}
         />
       );
     }
@@ -4818,6 +5106,43 @@ export function ControlPreview({
         />
       );
     }
+    case "tree-menu": {
+      const s = settings as ControlSettingsBySlug["tree-menu"];
+      return (
+        <TreeMenu
+          defaultExpandedIds={s.expandRoots ? ["documents", "customers"] : []}
+          defaultSelectedId="contracts"
+          nodes={[
+            {
+              id: "documents",
+              label: "Documents",
+              icon: "folder",
+              meta: 3,
+              children: [
+                { id: "contracts", label: "Contracts", icon: "folder", meta: 12 },
+                { id: "proposals", label: "Proposals", icon: "folder", meta: 8 },
+                { id: "design", label: "Design", icon: "folder", meta: 4 },
+              ],
+            },
+            {
+              id: "customers",
+              label: "Customers",
+              icon: "folder",
+              meta: 2,
+              children: [
+                { id: "acme", label: "Acme Ltd", icon: "building", meta: 6 },
+                { id: "global", label: "Global Corp", icon: "building", meta: 3 },
+              ],
+            },
+          ]}
+          showMeta={s.showMeta}
+          onExpandedChange={(_ids, node, expanded) =>
+            console.log(expanded ? "Expanded" : "Collapsed", node.label)
+          }
+          onSelect={(node) => console.log("Selected", node.label)}
+        />
+      );
+    }
     case "tree-view": {
       const s = settings as ControlSettingsBySlug["tree-view"];
       return (
@@ -4830,7 +5155,12 @@ export function ControlPreview({
     case "masonry-grid": {
       const s = settings as ControlSettingsBySlug["masonry-grid"];
       return (
-        <MasonryGrid columns={s.columns} gap={s.gap} items={demoMasonryItems} />
+        <MasonryGrid
+          columns={s.columns}
+          gap={s.gap}
+          items={demoMasonryItems}
+          onItemClick={() => undefined}
+        />
       );
     }
     case "property-grid": {
@@ -5386,7 +5716,12 @@ export function ControlPreview({
     }
     case "kanban-board": {
       const s = settings as ControlSettingsBySlug["kanban-board"];
-      return <KanbanBoardPreview interactive={s.interactive} />;
+      return (
+        <KanbanBoardPreview
+          interactive={s.interactive}
+          onCardClick={() => undefined}
+        />
+      );
     }
     case "calendar": {
       const s = settings as ControlSettingsBySlug["calendar"];
@@ -5404,6 +5739,7 @@ export function ControlPreview({
         <ResourcePlanner
           endHour={s.endHour}
           items={demoResourceItems}
+          onItemClick={() => undefined}
           resources={demoResources}
           startHour={s.startHour}
         />
@@ -5717,4 +6053,30 @@ export function ControlPreview({
     default:
       return null;
   }
+}
+
+export function ControlPreview(props: ControlPreviewProps) {
+  const [lastAction, setLastAction] = useState("Waiting for action");
+
+  const reportCapturedAction = (event: React.SyntheticEvent<HTMLElement>) => {
+    const target = event.target as HTMLElement;
+    const action = target.closest<HTMLElement>("button, a[href], [role='button'], input, select, textarea");
+    if (!action || action.hasAttribute("disabled")) return;
+    const label = action.getAttribute("aria-label")
+      ?? action.getAttribute("title")
+      ?? (action instanceof HTMLInputElement ? action.name || action.type : action.textContent?.trim())
+      ?? action.tagName.toLowerCase();
+    setLastAction(`Last action: ${label || "Control updated"}`);
+  };
+
+  return (
+    <div
+      className={styles.globalActionPreview}
+      onClickCapture={reportCapturedAction}
+      onChangeCapture={reportCapturedAction}
+    >
+      <ControlPreviewContent {...props} />
+      <p className={styles.globalActionStatus} aria-live="polite">{lastAction}</p>
+    </div>
+  );
 }

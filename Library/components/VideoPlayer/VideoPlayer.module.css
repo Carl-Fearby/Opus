@@ -26,6 +26,13 @@
   background: var(--opus-panel);
 }
 
+.player[data-edge-to-edge="true"] {
+  aspect-ratio: auto;
+  border: 0;
+  border-radius: 0;
+  box-shadow: none;
+}
+
 .player[data-fullscreen="true"][data-controls-visible="false"] {
   cursor: none;
 }
@@ -34,11 +41,29 @@
   position: absolute;
   inset: 0;
   overflow: hidden;
-  background: color-mix(in srgb, var(--opus-input-bg) 55%, #05070f 45%);
+  background: transparent;
+}
+
+.videoBackdrop {
+  position: absolute;
+  z-index: 0;
+  inset: -30px;
+  display: block;
+  width: calc(100% + 60px);
+  height: calc(100% + 60px);
+  border: 0;
+  background: #05070f;
+  object-fit: cover;
+  object-position: center;
+  opacity: 0.68;
+  filter: blur(24px) saturate(1.18) brightness(0.72);
+  pointer-events: none;
+  transform: scale(1.04);
 }
 
 .video {
   position: absolute;
+  z-index: 1;
   inset: 0;
   display: block;
   width: 100%;
@@ -48,7 +73,7 @@
   /* Fill width or height — whichever hits first — and letterbox the rest */
   object-fit: contain;
   object-position: center center;
-  background: color-mix(in srgb, var(--opus-input-bg) 55%, #05070f 45%);
+  background: transparent;
 }
 
 .centerPlay {
@@ -109,15 +134,33 @@
     color-mix(in srgb, var(--opus-panel) 94%, transparent) 100%
   );
   color: var(--opus-text);
+  opacity: 0;
+  pointer-events: none;
+  transform: translateY(10px);
   transition:
     opacity 220ms ease,
     transform 220ms ease;
+}
+
+.player:hover .controls,
+.player:has(:focus-visible) .controls {
+  opacity: 1;
+  pointer-events: auto;
+  transform: translateY(0);
 }
 
 .player[data-fullscreen="true"][data-controls-visible="false"] .controls {
   opacity: 0;
   pointer-events: none;
   transform: translateY(10px);
+}
+
+@media (hover: none) {
+  .controls {
+    opacity: 1;
+    pointer-events: auto;
+    transform: translateY(0);
+  }
 }
 
 .titleRow {

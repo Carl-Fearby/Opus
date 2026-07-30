@@ -2,6 +2,11 @@
 
 import { useState } from "react";
 import { CatalogIcon } from "@/components/CatalogIcon";
+import {
+  CompactDocuments,
+  type CompactDocumentNode,
+  type CompactDocumentView,
+} from "@/components/CompactDocuments";
 import { DashboardContentContainer } from "@/components/DashboardContentContainer";
 import { NotesActivity, type NotesActivityItem } from "@/components/NotesActivity";
 import { Tabs } from "@/components/Tabs";
@@ -19,6 +24,9 @@ export type ContactNotesActivityProps = {
   items?: NotesActivityItem[];
   onAction?: (action: ContactDetailsAction) => void;
   onAddNote?: (note: string) => void;
+  onDocumentOpen?: (document: CompactDocumentNode) => void;
+  onDocumentFolderOpen?: (folder: CompactDocumentNode) => void;
+  onDocumentViewChange?: (view: CompactDocumentView) => void;
   onTabChange?: (tab: ContactNotesWorkspaceTab) => void;
   tabsVariant?: TabsVariant;
 };
@@ -30,6 +38,9 @@ export function ContactNotesActivity({
   items = defaultContactNotes,
   onAction,
   onAddNote,
+  onDocumentOpen,
+  onDocumentFolderOpen,
+  onDocumentViewChange,
   onTabChange,
   tabsVariant = "card",
 }: ContactNotesActivityProps) {
@@ -79,7 +90,39 @@ export function ContactNotesActivity({
   );
 
   const documentsPanel = (
-    <div className={styles.emptyPanel}>No documents added yet.</div>
+    <CompactDocuments
+      className={styles.compactDocuments}
+      defaultView="list"
+      documents={[
+        {
+          id: "contact-contracts",
+          kind: "folder",
+          name: "Contracts",
+          children: [
+            { id: "contact-nda", kind: "file", name: "Mutual NDA.pdf", meta: "PDF · 420 KB", status: "Signed" },
+            { id: "contact-msa", kind: "file", name: "Service agreement.pdf", meta: "PDF · 1.2 MB", status: "Current" },
+          ],
+        },
+        {
+          id: "contact-proposals",
+          kind: "folder",
+          name: "Proposals",
+          children: [
+            { id: "contact-proposal", kind: "file", name: "Enterprise proposal.pdf", meta: "PDF · 4.8 MB", status: "Approved" },
+          ],
+        },
+        { id: "contact-profile", kind: "file", name: "Contact profile.pdf", meta: "PDF · 180 KB", status: "Current" },
+      ]}
+      onFileOpen={(document) => {
+        onDocumentOpen?.(document);
+        onAction?.("open-document");
+      }}
+      onFolderOpen={(folder) => {
+        onDocumentFolderOpen?.(folder);
+        onAction?.("open-document-folder");
+      }}
+      onViewChange={onDocumentViewChange}
+    />
   );
 
   const additionalPanel = (

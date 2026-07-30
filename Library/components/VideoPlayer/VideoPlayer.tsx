@@ -35,10 +35,14 @@ export type VideoTrack = {
 export type VideoPlayerProps = {
   autoPlay?: boolean;
   className?: string;
+  /** Removes the component frame so the player can fill a window or media surface edge-to-edge. */
+  edgeToEdge?: boolean;
   initialIndex?: number;
   loop?: boolean;
   loopPlaylist?: boolean;
   muted?: boolean;
+  /** Reports every user-facing player action. */
+  onAction?: (action: string) => void;
   shareUrl?: string;
   showShare?: boolean;
   showTitle?: boolean;
@@ -153,10 +157,12 @@ async function paintVideoFrame(video: HTMLVideoElement, time: number) {
 export function VideoPlayer({
   autoPlay = false,
   className,
+  edgeToEdge = false,
   initialIndex = 0,
   loop = false,
   loopPlaylist = true,
   muted = false,
+  onAction,
   shareUrl,
   showShare = true,
   showTitle = true,
@@ -172,10 +178,12 @@ export function VideoPlayer({
   const canNavigate = trackCount > 1;
 
   const videoRef = useRef<HTMLVideoElement>(null);
+  const backgroundVideoRef = useRef<HTMLVideoElement>(null);
   const rootRef = useRef<HTMLDivElement>(null);
   const hideControlsTimeoutRef = useRef<number | null>(null);
   const draggingRef = useRef(false);
   const framePaintedRef = useRef(false);
+  const playingRef = useRef(false);
   const resumeFromStartRef = useRef(false);
   const shouldResumeRef = useRef(false);
   const progressId = useId();
@@ -213,7 +221,8 @@ export function VideoPlayer({
 
     setCurrentTime(video.currentTime);
     setDuration(video.duration || 0);
-    setPlaying(!video.paused);
+    playingRef.current = !video.paused;
+    setPlaying(playingRef.current);
   }, []);
 
   const clearHideControlsTimer = useCallback(() => {
@@ -314,25 +323,40 @@ export function VideoPlayer({
       }
 
       const wrapped = ((nextIndex % trackCount) + trackCount) % trackCount;
-      shouldResumeRef.current = resume ?? playing;
+      shouldResumeRef.current = resume ?? playingRef.current;
       setTrackIndex(wrapped);
     },
-    [loopPlaylist, playing, trackCount],
+    [loopPlaylist, trackCount],
   );
 
   useEffect(() => {
     const video = videoRef.current;
+    const backgroundVideo = backgroundVideoRef.current;
     if (!video || !activeSrc) {
       return;
     }
 
     let cancelled = false;
 
-    const onPlay = () => setPlaying(true);
-    const onPause = () => setPlaying(false);
+    const onPlay = () => {
+      playingRef.current = true;
+      setPlaying(true);
+      if (backgroundVideo) {
+        backgroundVideo.currentTime = video.currentTime;
+        void backgroundVideo.play().catch(() => {});
+      }
+    };
+    const onPause = () => {
+      playingRef.current = false;
+      setPlaying(false);
+      backgroundVideo?.pause();
+    };
     const onTime = () => {
       if (!draggingRef.current) {
         setCurrentTime(video.currentTime);
+      }
+      if (backgroundVideo && Math.abs(backgroundVideo.currentTime - video.currentTime) > 0.15) {
+        backgroundVideo.currentTime = video.currentTime;
       }
     };
     const onMeta = () => setDuration(video.duration || 0);
@@ -346,6 +370,7 @@ export function VideoPlayer({
         return;
       }
 
+      playingRef.current = false;
       setPlaying(false);
     };
 
@@ -362,6 +387,7 @@ export function VideoPlayer({
           }
           resumeFromStartRef.current = video.currentTime > 0.001;
           setCurrentTime(video.currentTime);
+          playingRef.current = false;
           setPlaying(false);
           setDuration(video.duration || 0);
         })
@@ -382,6 +408,7 @@ export function VideoPlayer({
 
     setCurrentTime(0);
     setDuration(0);
+    backgroundVideo?.load();
     video.load();
 
     const resume = shouldResumeRef.current || autoPlay;
@@ -391,10 +418,12 @@ export function VideoPlayer({
       framePaintedRef.current = true;
       resumeFromStartRef.current = false;
       void video.play().catch(() => {
+        playingRef.current = false;
         setPlaying(false);
       });
     } else {
       video.pause();
+      playingRef.current = false;
       setPlaying(false);
       if (video.readyState >= 2) {
         paintFirstFrame();
@@ -507,8 +536,19 @@ export function VideoPlayer({
       className={[styles.player, className].filter(Boolean).join(" ")}
       data-component="video-player"
       data-controls-visible={controlsVisible ? "true" : "false"}
+      data-edge-to-edge={edgeToEdge ? "true" : "false"}
       data-fullscreen={isFullscreen ? "true" : "false"}
       ref={rootRef}
+      onClickCapture={(event) => {
+        const button = (event.target as HTMLElement).closest("button");
+        if (button) {
+          onAction?.(button.getAttribute("aria-label") ?? button.textContent?.trim() ?? "Player action");
+        }
+      }}
+      onChangeCapture={(event) => {
+        const input = event.target as HTMLInputElement;
+        onAction?.(`${input.getAttribute("aria-label") ?? "Player value"} changed`);
+      }}
       onPointerDown={() => {
         if (isFullscreen) {
           revealControls();
@@ -521,6 +561,17 @@ export function VideoPlayer({
       }}
     >
       <div className={styles.stage}>
+        <video
+          aria-hidden="true"
+          className={styles.videoBackdrop}
+          loop={loop}
+          muted
+          playsInline
+          preload="auto"
+          ref={backgroundVideoRef}
+          src={activeSrc}
+          tabIndex={-1}
+        />
         <video
           autoPlay={autoPlay}
           className={styles.video}

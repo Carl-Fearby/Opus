@@ -38,6 +38,8 @@ export type AudioPlayerProps = {
   initialIndex?: number;
   loop?: boolean;
   loopPlaylist?: boolean;
+  /** Reports every user-facing player action. */
+  onAction?: (action: string) => void;
   shareUrl?: string;
   showArtwork?: boolean;
   showShare?: boolean;
@@ -91,6 +93,7 @@ export function AudioPlayer({
   initialIndex = 0,
   loop = false,
   loopPlaylist = true,
+  onAction,
   shareUrl,
   showArtwork = true,
   showShare = true,
@@ -303,6 +306,16 @@ export function AudioPlayer({
       className={[styles.player, className].filter(Boolean).join(" ")}
       data-component="audio-player"
       data-has-artwork={activeArtwork ? "true" : "false"}
+      onClickCapture={(event) => {
+        const button = (event.target as HTMLElement).closest("button");
+        if (button) {
+          onAction?.(button.getAttribute("aria-label") ?? button.textContent?.trim() ?? "Player action");
+        }
+      }}
+      onChangeCapture={(event) => {
+        const input = event.target as HTMLInputElement;
+        onAction?.(`${input.getAttribute("aria-label") ?? "Player value"} changed`);
+      }}
     >
       <audio
         loop={loop}

@@ -9,6 +9,8 @@ export type ContactDetailsAction =
   | "email"
   | "export-contact"
   | "log-activity"
+  | "open-document"
+  | "open-document-folder"
   | "reset-password"
   | "schedule-meeting";
 

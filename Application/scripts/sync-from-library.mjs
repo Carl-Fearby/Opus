@@ -81,6 +81,7 @@ function linkMissingComponents() {
 console.log("Syncing Application from Library...");
 
 syncDirectory(join(libraryDir, "lib", "controls"), join(appDir, "lib", "controls"), { rewire: true });
+syncDirectory(join(libraryDir, "lib", "auth"), join(appDir, "lib", "auth"), { rewire: true });
 
 for (const file of [
   "emojiCatalog.generated.ts",
@@ -95,6 +96,11 @@ syncDirectory(join(libraryDir, "lib", "ui"), join(appDir, "lib", "ui"), { rewire
 syncTextFile(
   join(libraryDir, "lib", "playground", "externalPreviewStorage.ts"),
   join(appDir, "lib", "playground", "externalPreviewStorage.ts"),
+  { rewire: true },
+);
+syncTextFile(
+  join(libraryDir, "lib", "playground", "playgroundScope.ts"),
+  join(appDir, "lib", "playground", "playgroundScope.ts"),
   { rewire: true },
 );
 syncTextFile(

@@ -21,7 +21,7 @@ export function ComponentDocumentation({ content }: ComponentDocumentationProps)
           Documentation
         </h2>
       </div>
-      <ComponentMarkdown content={content} />
+      <ComponentMarkdown content={prepared} />
     </section>
   );
 }

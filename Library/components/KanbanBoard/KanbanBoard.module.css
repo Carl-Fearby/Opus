@@ -58,6 +58,22 @@
   cursor: grab;
 }
 
+button.card {
+  color: inherit;
+  font: inherit;
+  text-align: left;
+  width: 100%;
+}
+
+.card:hover {
+  background: color-mix(in srgb, var(--opus-accent) 8%, var(--opus-panel));
+}
+
+.card:focus-visible {
+  outline: 2px solid color-mix(in srgb, var(--opus-accent) 72%, transparent);
+  outline-offset: 2px;
+}
+
 .card:active {
   cursor: grabbing;
 }

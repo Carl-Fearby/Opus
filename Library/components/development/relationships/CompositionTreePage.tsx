@@ -32,7 +32,8 @@ export function CompositionTreePage() {
             Built from relationships
           </h1>
           <p className={styles.description}>
-            This page only shows relationships between documented public components. Internal
+            This page only shows relationships between documented public components — including Labs
+            compositions such as Login Form, Forgot Password, Company Details, and Sales Invoice. Internal
             helpers stay hidden unless they have their own component docs. Third-party foundations
             are recorded separately on the <Link href="/documentation/guide/licensed-components">Licensed components</Link> page.
           </p>

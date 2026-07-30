@@ -12,9 +12,9 @@ export function Hero() {
             Ship polished business apps with a component library built for real workflows.
           </h1>
           <p className={styles.lead}>
-            Opus brings together forms, overlays, navigation, charts, and dashboard widgets in one
-            themeable system — with live documentation, a Code Playground, and generated usage
-            examples that stay in sync with the components.
+            Opus brings together forms, overlays, navigation, charts, dashboard widgets, and auth
+            compositions in one themeable system — with live documentation, a Code Playground, and
+            generated usage examples that stay in sync with the components.
           </p>
           <div className={styles.actions}>
             <Link className={styles.primary} href="/pricing">
@@ -26,7 +26,7 @@ export function Hero() {
           </div>
           <div className={styles.meta}>
             <span>npm install opus-react</span>
-            <span>100+ documented components</span>
+            <span>135+ documented components</span>
             <span>Accessible by default</span>
           </div>
         </div>

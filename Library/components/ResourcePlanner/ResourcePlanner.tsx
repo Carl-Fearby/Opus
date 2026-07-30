@@ -22,11 +22,13 @@ export type ResourcePlannerProps = {
   items: ResourcePlannerItem[];
   resources: ResourcePlannerResource[];
   startHour?: number;
+  onItemClick?: (item: ResourcePlannerItem) => void;
 };
 
 export function ResourcePlanner({
   endHour = 17,
   items,
+  onItemClick,
   resources,
   startHour = 8,
 }: ResourcePlannerProps) {
@@ -64,14 +66,23 @@ export function ResourcePlanner({
                 {rowItems.map((item) => {
                   const left = ((item.start - startHour) / span) * 100;
                   const width = (Math.max(item.end - item.start, 0.5) / span) * 100;
-                  return (
-                    <div
-                      className={styles.block}
-                      data-tone={item.tone ?? "accent"}
+                  const blockProps = {
+                    className: styles.block,
+                    "data-tone": item.tone ?? "accent",
+                    style: { left: `${left}%`, width: `${width}%` },
+                    title: `${item.label} (${item.start}–${item.end})`,
+                  };
+                  return onItemClick ? (
+                    <button
+                      {...blockProps}
                       key={item.id}
-                      style={{ left: `${left}%`, width: `${width}%` }}
-                      title={`${item.label} (${item.start}–${item.end})`}
+                      onClick={() => onItemClick(item)}
+                      type="button"
                     >
+                      {item.label}
+                    </button>
+                  ) : (
+                    <div {...blockProps} key={item.id}>
                       {item.label}
                     </div>
                   );

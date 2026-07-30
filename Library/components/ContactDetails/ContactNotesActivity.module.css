@@ -113,6 +113,10 @@
   font-weight: 550;
 }
 
+.compactDocuments {
+  height: 100%;
+}
+
 :global([data-preview-root][data-theme="light"]) .tabsCardCard,
 :global([data-theme="light"]) .tabsCardCard {
   --contact-tab-rail-bg: color-mix(

@@ -1,0 +1,41 @@
+{
+  "name": "opus-desktop",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Cross-platform Opus desktop application spike",
+  "main": "dist-electron/electron/main.js",
+  "scripts": {
+    "dev": "concurrently -k \"npm:dev:renderer\" \"npm:dev:shell\"",
+    "dev:renderer": "next dev --webpack --port 3010",
+    "dev:shell": "wait-on http-get://127.0.0.1:3010 && npm run build:electron && cross-env ELECTRON_RENDERER_URL=http://127.0.0.1:3010 electron .",
+    "build": "npm run build:renderer && npm run build:electron",
+    "build:renderer": "next build --webpack",
+    "build:electron": "tsc -p electron/tsconfig.json",
+    "lint": "eslint .",
+    "typecheck": "tsc --noEmit && tsc -p electron/tsconfig.json --noEmit",
+    "start": "electron .",
+    "package": "npm run build && electron-forge package",
+    "make": "npm run build && electron-forge make"
+  },
+  "devDependencies": {
+    "@electron-forge/cli": "^7.10.2",
+    "@electron-forge/maker-deb": "^7.10.2",
+    "@electron-forge/maker-dmg": "^7.10.2",
+    "@electron-forge/maker-squirrel": "^7.10.2",
+    "@electron-forge/maker-zip": "^7.10.2",
+    "@types/node": "^20",
+    "@types/react": "^19",
+    "@types/react-dom": "^19",
+    "concurrently": "^9.2.1",
+    "cross-env": "^10.1.0",
+    "electron": "^39.2.7",
+    "eslint": "^9",
+    "eslint-config-next": "16.2.12",
+    "next": "16.2.12",
+    "opus-react": "file:../Library/packages/opus-react",
+    "react": "19.2.0",
+    "react-dom": "19.2.0",
+    "typescript": "^5.9.3",
+    "wait-on": "^9.0.3"
+  }
+}

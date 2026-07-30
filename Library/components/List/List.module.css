@@ -30,6 +30,40 @@
   border-bottom: 0;
 }
 
+.item:has(.itemAction) {
+  display: block;
+  padding: 0;
+}
+
+.itemAction {
+  align-items: start;
+  background: transparent;
+  border: 0;
+  color: inherit;
+  cursor: pointer;
+  display: grid;
+  font: inherit;
+  gap: 12px;
+  grid-template-columns: auto minmax(0, 1fr);
+  padding: 14px 16px;
+  text-align: left;
+  width: 100%;
+}
+
+.list[data-density="compact"] .itemAction {
+  gap: 10px;
+  padding: 10px 12px;
+}
+
+.itemAction:hover {
+  background: color-mix(in srgb, var(--opus-accent) 8%, transparent);
+}
+
+.itemAction:focus-visible {
+  outline: 2px solid color-mix(in srgb, var(--opus-accent) 72%, transparent);
+  outline-offset: -3px;
+}
+
 .list[data-ordered="true"] .item {
   counter-increment: opus-list;
 }
@@ -46,6 +80,24 @@
   color: var(--opus-accent);
   font-size: 0.72rem;
   font-weight: 700;
+}
+
+.list[data-ordered="true"] .item:has(.itemAction)::before {
+  content: none;
+}
+
+.list[data-ordered="true"] .itemAction:not(:has(.icon))::before {
+  align-items: center;
+  background: color-mix(in srgb, var(--opus-accent) 14%, transparent);
+  border-radius: 999px;
+  color: var(--opus-accent);
+  content: counter(opus-list);
+  display: inline-flex;
+  font-size: 0.72rem;
+  font-weight: 700;
+  height: 24px;
+  justify-content: center;
+  width: 24px;
 }
 
 .icon {

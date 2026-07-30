@@ -2,13 +2,15 @@ export type LabsCatalogEntry = {
   componentName: string;
   compositionParts: readonly string[];
   description: string;
-  navigationGroup: "Application" | "Authentication" | "Companies" | "Contacts" | "Dashboard";
+  isNew?: boolean;
+  navigationGroup: "Application" | "Authentication" | "Calendar" | "Companies" | "Contacts" | "Dashboard" | "Desktop" | "Documents" | "Inventory" | "Products" | "Sales" | "Settings" | "Tasks";
   settingsType:
     | "application-footer"
     | "application-header"
     | "auth-form"
     | "company-details"
     | "contact-details"
+    | "crm-workspace"
     | "dashboard-list-columns"
     | "dashboard-welcome"
     | "notes-activity"
@@ -21,6 +23,64 @@ export type LabsCatalogEntry = {
 };
 
 export const labsCatalog = [
+  {
+    slug: "lab-desktop-environment",
+    title: "Desktop Environment",
+    componentName: "DesktopLab",
+    description:
+      "Opus desktop shell with glowing shortcuts, dock applications, and draggable, resizable, minimizable and maximizable windows.",
+    settingsType: "crm-workspace",
+    isNew: true,
+    navigationGroup: "Desktop",
+    compositionParts: ["desktop", "desktop-window", "desktop-dock", "desktop-icon", "video-player", "badge", "icon"],
+    sourceFiles: [
+      "components/DesktopLab/DesktopLab.tsx",
+      "components/DesktopLab/DesktopLab.module.css",
+      "components/Desktop/Desktop.tsx",
+      "components/Desktop/Desktop.module.css",
+      "components/DesktopWindow/DesktopWindow.tsx",
+      "components/DesktopWindow/DesktopWindow.module.css",
+      "components/DesktopDock/DesktopDock.tsx",
+      "components/DesktopDock/DesktopDock.module.css",
+      "components/DesktopIcon/DesktopIcon.tsx",
+      "components/DesktopIcon/DesktopIcon.module.css",
+    ],
+  },
+  ...([
+    ["lab-contact-directory", "Contact Directory", "contact-directory", "Contacts"],
+    ["lab-company-directory", "Company Directory", "company-directory", "Companies"],
+    ["lab-sales-pipeline", "Sales Opportunity Pipeline", "sales-pipeline", "Sales"],
+    ["lab-task-workspace", "Task Workspace", "task-workspace", "Tasks"],
+    ["lab-notification-centre", "Notification Centre", "notification-centre", "Application"],
+    ["lab-document-manager", "Document Manager", "document-manager", "Documents"],
+    ["lab-product-catalogue", "Product Catalogue", "product-catalogue", "Products"],
+    ["lab-quotation-builder", "Quotation Builder", "quotation-builder", "Sales"],
+    ["lab-sales-order", "Sales Order", "sales-order", "Sales"],
+    ["lab-sales-invoice", "Sales Invoice", "sales-invoice", "Sales"],
+    ["lab-appointment-diary", "Appointment Diary", "appointment-diary", "Calendar"],
+    ["lab-stock-control", "Stock Control", "stock-control", "Inventory"],
+    ["lab-system-configuration", "System Configuration", "system-configuration", "Settings"],
+  ] as const).map(([slug, title, , navigationGroup]) => ({
+    slug,
+    title,
+    componentName: "CrmWorkspaceLab",
+    description: `${title} product composition built from shared Opus controls.`,
+    settingsType: "crm-workspace" as const,
+    navigationGroup,
+    compositionParts: [
+      "badge",
+      "button",
+      "dashboard-content-container",
+      "icon",
+      "search-input",
+      "text-input",
+      ...(slug === "lab-document-manager" ? ["tree-menu" as const] : []),
+    ] as const,
+    sourceFiles: [
+      "components/CrmWorkspaceLab/CrmWorkspaceLab.tsx",
+      "components/CrmWorkspaceLab/CrmWorkspaceLab.module.css",
+    ],
+  })),
   {
     slug: "lab-company-details",
     title: "Company Details",
@@ -44,6 +104,8 @@ export const labsCatalog = [
       "components/CompanyDetails/CompanyDetails.module.css",
       "components/CompanyDetails/CompanyCard.tsx",
       "components/CompanyDetails/CompanyNotesActivity.tsx",
+      "components/CompactDocuments/CompactDocuments.tsx",
+      "components/CompactDocuments/CompactDocuments.module.css",
       "components/CompanyDetails/CompanyIdentityCard.tsx",
       "components/CompanyDetails/CompanySummaryCard.tsx",
       "components/UserProfileWidget/ProfilePhotoUploadModal.tsx",
@@ -134,6 +196,8 @@ export const labsCatalog = [
       "components/ContactDetails/ContactDetails.module.css",
       "components/ContactDetails/ContactCard.tsx",
       "components/ContactDetails/ContactNotesActivity.tsx",
+      "components/CompactDocuments/CompactDocuments.tsx",
+      "components/CompactDocuments/CompactDocuments.module.css",
       "components/ContactDetails/ContactIdentityCard.tsx",
       "components/ContactDetails/ContactSummaryCard.tsx",
       "components/UserProfileWidget/ProfilePhotoUploadModal.tsx",
@@ -453,6 +517,90 @@ export const labsCatalog = [
     sourceFiles: [
       "components/fields/TextField/TextField.tsx",
       "components/fields/CheckboxField/CheckboxField.tsx",
+      "components/fields/Button/Button.tsx",
+      "components/DashboardContentContainer/DashboardContentContainer.tsx",
+    ],
+  },
+  {
+    slug: "lab-forgot-password-form",
+    title: "Forgot Password Form",
+    componentName: "ForgotPasswordFormComposition",
+    description: "Request a password reset link by email.",
+    settingsType: "auth-form",
+    navigationGroup: "Authentication",
+    compositionParts: ["dashboard-content-container", "email-input", "button"],
+    sourceFiles: [
+      "components/fields/TextField/TextField.tsx",
+      "components/fields/Button/Button.tsx",
+      "components/DashboardContentContainer/DashboardContentContainer.tsx",
+    ],
+  },
+  {
+    slug: "lab-reset-password-form",
+    title: "Reset Password Form",
+    componentName: "ResetPasswordFormComposition",
+    description: "Set a new password after following a recovery link.",
+    settingsType: "auth-form",
+    navigationGroup: "Authentication",
+    compositionParts: ["dashboard-content-container", "password-input", "button"],
+    sourceFiles: [
+      "components/fields/TextField/TextField.tsx",
+      "components/fields/Button/Button.tsx",
+      "components/DashboardContentContainer/DashboardContentContainer.tsx",
+    ],
+  },
+  {
+    slug: "lab-check-email-form",
+    title: "Check Email Screen",
+    componentName: "CheckEmailFormComposition",
+    description: "Confirmation screen after sending a magic link or password reset email.",
+    settingsType: "auth-form",
+    navigationGroup: "Authentication",
+    compositionParts: ["dashboard-content-container", "button", "icon"],
+    sourceFiles: [
+      "components/fields/Button/Button.tsx",
+      "components/CatalogIcon/CatalogIcon.tsx",
+      "components/DashboardContentContainer/DashboardContentContainer.tsx",
+    ],
+  },
+  {
+    slug: "lab-email-verified-form",
+    title: "Email Verified Screen",
+    componentName: "EmailVerifiedFormComposition",
+    description: "Success screen after confirming an email address.",
+    settingsType: "auth-form",
+    navigationGroup: "Authentication",
+    compositionParts: ["dashboard-content-container", "button", "icon"],
+    sourceFiles: [
+      "components/fields/Button/Button.tsx",
+      "components/CatalogIcon/CatalogIcon.tsx",
+      "components/DashboardContentContainer/DashboardContentContainer.tsx",
+    ],
+  },
+  {
+    slug: "lab-link-expired-form",
+    title: "Link Expired Screen",
+    componentName: "LinkExpiredFormComposition",
+    description: "Recovery or verification link expiry screen with a path to request a new link.",
+    settingsType: "auth-form",
+    navigationGroup: "Authentication",
+    compositionParts: ["dashboard-content-container", "button", "icon"],
+    sourceFiles: [
+      "components/fields/Button/Button.tsx",
+      "components/CatalogIcon/CatalogIcon.tsx",
+      "components/DashboardContentContainer/DashboardContentContainer.tsx",
+    ],
+  },
+  {
+    slug: "lab-change-password-form",
+    title: "Change Password Form",
+    componentName: "ChangePasswordFormComposition",
+    description: "Signed-in password change with current password and confirmation.",
+    settingsType: "auth-form",
+    navigationGroup: "Authentication",
+    compositionParts: ["dashboard-content-container", "password-input", "button"],
+    sourceFiles: [
+      "components/fields/TextField/TextField.tsx",
       "components/fields/Button/Button.tsx",
       "components/DashboardContentContainer/DashboardContentContainer.tsx",
     ],

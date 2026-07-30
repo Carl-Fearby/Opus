@@ -28,8 +28,13 @@ const categories = [
   },
   {
     title: "Dashboard & Labs",
-    count: "Compositions",
-    items: ["User profile widget", "Pipeline and task widgets", "Recent activity lists", "Ready-made CRM rows"],
+    count: "CRM & auth compositions",
+    items: [
+      "Login, register, and social auth",
+      "Forgot, reset, and change password",
+      "Company and contact detail cards",
+      "Sales invoices, documents, and diaries",
+    ],
   },
 ];
 

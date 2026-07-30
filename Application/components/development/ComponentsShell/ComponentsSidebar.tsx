@@ -61,6 +61,10 @@ function normalise(value: string) {
 }
 
 function matchesControl(control: ControlDefinition, query: string) {
+  if (query === "*") {
+    return control.isNew === true;
+  }
+
   const haystack = [
     control.title,
     control.slug,
@@ -77,10 +81,12 @@ function matchesControl(control: ControlDefinition, query: string) {
 }
 
 function matchesOverview(query: string) {
+  if (query === "*") return false;
   return "overview components documentation".includes(query);
 }
 
 function matchesRelationships(query: string) {
+  if (query === "*") return false;
   return "relationships relationship composition built from tree graph dependencies".includes(query);
 }
 

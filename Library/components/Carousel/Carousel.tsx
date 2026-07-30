@@ -10,11 +10,12 @@ import "@/lib/fontawesome";
 import { Lightbox } from "@/components/Lightbox";
 import styles from "./Carousel.module.css";
 
-type CarouselProps = {
+export type CarouselProps = {
   ariaLabel?: string;
   images: GalleryImage[];
   initialIndex?: number;
   loop?: boolean;
+  onAction?: (action: string) => void;
   showCaptions?: boolean;
   showPips?: boolean;
 };
@@ -67,6 +68,7 @@ export function Carousel({
   images,
   initialIndex = 0,
   loop = true,
+  onAction,
   showCaptions = true,
   showPips = true,
 }: CarouselProps) {
@@ -219,6 +221,12 @@ export function Carousel({
     <section
       aria-label={ariaLabel}
       className={styles.carousel}
+      onClickCapture={(event) => {
+        const button = (event.target as HTMLElement).closest("button");
+        if (button) {
+          onAction?.(button.getAttribute("aria-label") ?? button.textContent?.trim() ?? "Carousel action");
+        }
+      }}
       tabIndex={hasMultiple ? 0 : undefined}
       onKeyDown={(event) => {
         if (!hasMultiple || isAnimating) {

@@ -9,6 +9,8 @@ export type CompanyDetailsAction =
   | "email"
   | "export-company"
   | "log-activity"
+  | "open-document"
+  | "open-document-folder"
   | "schedule-meeting"
   | "visit-website";
 

@@ -1,0 +1,153 @@
+.root {
+  position: absolute;
+  z-index: 1000;
+  display: flex;
+  gap: 3px;
+  padding: 5px 7px;
+  border: 1px solid color-mix(in srgb, var(--opus-accent) 32%, var(--opus-border));
+  border-radius: calc(var(--desktop-dock-size, 54px) * 0.32);
+  background:
+    linear-gradient(160deg, color-mix(in srgb, var(--opus-panel) 80%, #fff 5%), color-mix(in srgb, var(--opus-panel) 92%, transparent));
+  box-shadow:
+    inset 0 1px 0 color-mix(in srgb, #fff 13%, transparent),
+    0 14px 35px color-mix(in srgb, #000 48%, transparent);
+  backdrop-filter: blur(18px) saturate(135%);
+  transition: transform 180ms ease, opacity 180ms ease;
+}
+
+.root[data-position="bottom"] {
+  right: 50%;
+  bottom: 14px;
+  transform: translateX(50%);
+}
+
+.root[data-position="bottom"][data-auto-hide]:not(:hover):not(:focus-within) {
+  opacity: 0.58;
+  transform: translate(50%, calc(100% - 8px));
+}
+
+.root[data-position="left"],
+.root[data-position="right"] {
+  top: 50%;
+  flex-direction: column;
+  transform: translateY(-50%);
+}
+
+.root[data-position="left"] { left: 14px; }
+.root[data-position="right"] { right: 14px; }
+
+.root[data-position="left"][data-auto-hide]:not(:hover):not(:focus-within) {
+  opacity: 0.58;
+  transform: translate(calc(-100% + 8px), -50%);
+}
+
+.root[data-position="right"][data-auto-hide]:not(:hover):not(:focus-within) {
+  opacity: 0.58;
+  transform: translate(calc(100% - 8px), -50%);
+}
+
+.item {
+  position: relative;
+  display: block;
+}
+
+.item :global([data-component="desktop-icon"]),
+.item button {
+  width: var(--desktop-dock-size, 54px);
+  padding: 2px;
+}
+
+.item button > span:first-child {
+  width: calc(var(--desktop-dock-size, 54px) - 8px);
+  height: calc(var(--desktop-dock-size, 54px) - 8px);
+  border-radius: calc(var(--desktop-dock-size, 54px) * 0.24);
+}
+
+.item button > span:first-child svg {
+  width: calc((var(--desktop-dock-size, 40px) - 8px) * 0.55);
+  height: calc((var(--desktop-dock-size, 40px) - 8px) * 0.55);
+}
+
+.item button > span:last-child {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+}
+
+.indicator {
+  position: absolute;
+  right: 50%;
+  bottom: -3px;
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: var(--opus-accent);
+  box-shadow: 0 0 8px var(--opus-accent);
+  transform: translateX(50%);
+  transition: width 140ms ease, height 140ms ease, border-radius 140ms ease;
+}
+
+.indicator[data-minimized] {
+  width: 13px;
+  height: 3px;
+  border-radius: 99px;
+}
+
+.root[data-position="left"] .indicator,
+.root[data-position="right"] .indicator {
+  right: -3px;
+  bottom: 50%;
+  transform: translateY(50%);
+}
+
+.root[data-position="left"] .indicator[data-minimized],
+.root[data-position="right"] .indicator[data-minimized] {
+  width: 3px;
+  height: 13px;
+}
+
+.resizeHandle {
+  position: absolute;
+  z-index: 3;
+  border-radius: 99px;
+  background: color-mix(in srgb, var(--opus-accent) 48%, var(--opus-border));
+  opacity: 0.52;
+  touch-action: none;
+  transition: opacity 120ms ease, background 120ms ease;
+}
+
+.resizeHandle:hover,
+.resizeHandle:focus-visible {
+  background: var(--opus-accent);
+  opacity: 1;
+  outline: none;
+}
+
+.root[data-position="bottom"] .resizeHandle {
+  top: -4px;
+  left: 50%;
+  width: 30px;
+  height: 7px;
+  cursor: ns-resize;
+  transform: translateX(-50%);
+}
+
+.root[data-position="left"] .resizeHandle {
+  top: 50%;
+  right: -4px;
+  width: 7px;
+  height: 30px;
+  cursor: ew-resize;
+  transform: translateY(-50%);
+}
+
+.root[data-position="right"] .resizeHandle {
+  top: 50%;
+  left: -4px;
+  width: 7px;
+  height: 30px;
+  cursor: ew-resize;
+  transform: translateY(-50%);
+}

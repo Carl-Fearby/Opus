@@ -3,7 +3,7 @@
 import Link from "next/link";
 import type { ReactNode } from "react";
 import { useState } from "react";
-import { ControlPreview } from "@/components/control-detail/ControlDetail/ControlPreview";
+import { UsagePreview } from "@/components/control-detail/ControlDetail/UsagePreview";
 import { PreviewStage } from "@/components/control-detail/ControlDetail/PreviewStage";
 import { PreviewThemeControls } from "@/components/control-detail/ControlDetail/PreviewThemeControls";
 import { OpenInPlaygroundLink } from "@/components/control-detail/ControlDetail/OpenInPlaygroundLink";
@@ -22,7 +22,7 @@ type OverviewDemoCardProps = {
 
 export function OverviewDemoCard({ children, slug, title }: OverviewDemoCardProps) {
   const control = getControl(slug);
-  const [settings, setSettings] = useState<ControlSettings>(() => {
+  const [settings] = useState<ControlSettings>(() => {
     return getDefaultSettings(slug);
   });
 
@@ -45,11 +45,10 @@ export function OverviewDemoCard({ children, slug, title }: OverviewDemoCardProp
       <div className={styles.demoCardBody}>
         <PreviewStage>
           {children ?? (
-            <ControlPreview
+            <UsagePreview
               category={control.category}
               slug={slug}
               settings={settings}
-              onSettingsChange={setSettings}
             />
           )}
         </PreviewStage>

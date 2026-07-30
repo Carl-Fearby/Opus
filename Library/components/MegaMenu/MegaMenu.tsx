@@ -35,6 +35,7 @@ export type MegaMenuFeatured = {
   actionLabel?: string;
   description: string;
   eyebrow?: string;
+  onAction?: () => void;
   title: string;
 };
 
@@ -45,7 +46,7 @@ export type MegaMenuConfig = {
   sections: MegaMenuSection[];
 };
 
-type MegaMenuProps = {
+export type MegaMenuProps = {
   activeMenu?: string;
   closeOnEscape?: boolean;
   closeOnOutside?: boolean;
@@ -55,6 +56,7 @@ type MegaMenuProps = {
   menus?: MegaMenuConfig[];
   navigationId?: string;
   onActiveMenuChange?: (menuId: string) => void;
+  onFeaturedAction?: (featured: MegaMenuFeatured, menu: MegaMenuConfig) => void;
   onOpenChange?: (open: boolean) => void;
   onSelect?: (item: MegaMenuItem) => void;
   open?: boolean;
@@ -259,6 +261,7 @@ export function MegaMenu({
   menus,
   navigationId,
   onActiveMenuChange,
+  onFeaturedAction,
   onOpenChange,
   onSelect,
   open,
@@ -442,6 +445,19 @@ export function MegaMenu({
     }
   };
 
+  const handleFeaturedAction = () => {
+    if (!activeConfig?.featured) {
+      return;
+    }
+
+    activeConfig.featured.onAction?.();
+    onFeaturedAction?.(activeConfig.featured, activeConfig);
+
+    if (!isStaticPanel && (!inTopNavigation || topNavigation.closeOnSelect)) {
+      setVisible(false);
+    }
+  };
+
   const showPanel = isStaticPanel ? Boolean(activeConfig) : renderPanel && Boolean(activeConfig);
 
   const portaledPanelStyle: CSSProperties | undefined = isStaticPanel
@@ -505,7 +521,11 @@ export function MegaMenu({
               <strong>{activeConfig.featured.title}</strong>
               <p>{activeConfig.featured.description}</p>
               {activeConfig.featured.actionLabel ? (
-                <button className={styles.featuredAction} type="button">
+                <button
+                  className={styles.featuredAction}
+                  type="button"
+                  onClick={handleFeaturedAction}
+                >
                   {activeConfig.featured.actionLabel}
                 </button>
               ) : null}

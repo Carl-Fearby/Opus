@@ -1,7 +1,7 @@
 export type LayoutCatalogEntry = {
   componentName: string;
   description: string;
-  navigationGroup: "Layout";
+  navigationGroup: "Desktop" | "Layout";
   slug:
     | "stack"
     | "columns"
@@ -15,12 +15,48 @@ export type LayoutCatalogEntry = {
     | "scroll-area"
     | "aspect-ratio"
     | "container"
-    | "spacer";
+    | "spacer"
+    | "desktop"
+    | "desktop-window"
+    | "desktop-dock"
+    | "desktop-icon";
   sourceFiles: string[];
   title: string;
 };
 
 export const layoutCatalog = [
+  {
+    slug: "desktop",
+    title: "Desktop",
+    componentName: "Desktop",
+    navigationGroup: "Desktop",
+    description: "Desktop canvas that coordinates shortcuts, application windows, focus order, and a dock.",
+    sourceFiles: ["components/Desktop/Desktop.tsx", "components/Desktop/Desktop.module.css"],
+  },
+  {
+    slug: "desktop-window",
+    title: "Desktop Window",
+    componentName: "DesktopWindow",
+    navigationGroup: "Desktop",
+    description: "Draggable and edge-resizable window with close, minimize, maximize, restore, and focus callbacks.",
+    sourceFiles: ["components/DesktopWindow/DesktopWindow.tsx", "components/DesktopWindow/DesktopWindow.module.css"],
+  },
+  {
+    slug: "desktop-dock",
+    title: "Desktop Dock",
+    componentName: "DesktopDock",
+    navigationGroup: "Desktop",
+    description: "Glass desktop application dock with active and minimized application state.",
+    sourceFiles: ["components/DesktopDock/DesktopDock.tsx", "components/DesktopDock/DesktopDock.module.css"],
+  },
+  {
+    slug: "desktop-icon",
+    title: "Desktop Icon",
+    componentName: "DesktopIcon",
+    navigationGroup: "Desktop",
+    description: "Tile-inspired glowing desktop shortcut with selection and open behavior.",
+    sourceFiles: ["components/DesktopIcon/DesktopIcon.tsx", "components/DesktopIcon/DesktopIcon.module.css"],
+  },
   {
     slug: "stack",
     title: "Stack",

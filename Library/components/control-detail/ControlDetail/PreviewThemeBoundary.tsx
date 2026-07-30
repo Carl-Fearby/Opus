@@ -22,7 +22,7 @@ export function PreviewThemeBoundary({
   const previewTheme = controlledTheme ?? contextTheme;
 
   return (
-    <OpusThemeProvider applyToDocument={false} key={previewTheme} theme={previewTheme}>
+    <OpusThemeProvider applyToDocument={false} theme={previewTheme}>
       <div
         {...rest}
         className={className}

@@ -132,14 +132,6 @@ html[data-shell-theme="light"] .settingsSidebar {
   padding: 12px 14px 18px;
 }
 
-.settingsCompositionLinks {
-  display: grid;
-  gap: 12px;
-  margin-top: 16px;
-  padding-top: 16px;
-  border-top: 1px solid color-mix(in srgb, var(--opus-border) 88%, transparent);
-}
-
 .settingsLoading,
 .catalogLoading {
   color: var(--opus-muted);

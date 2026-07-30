@@ -18,8 +18,9 @@ export function LabOverview() {
       <section className={styles.hubIntro} aria-label="About Labs">
         <p>
           Labs entries are <strong>compositions</strong> — pre-wired examples that combine layout,
-          containers, and widgets. Individual building blocks stay in Content, Forms, Graphs, and
-          Overlays.
+          containers, and widgets. Browse Authentication for login through password recovery, or CRM
+          groups for company, contact, and sales patterns. Individual building blocks stay in Content,
+          Forms, Graphs, and Overlays.
         </p>
       </section>
       <section className={styles.demoSection}>

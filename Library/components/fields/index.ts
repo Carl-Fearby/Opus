@@ -144,6 +144,11 @@ export { StatusIndicator } from "../StatusIndicator";
 export type { StatusIndicatorState } from "../StatusIndicator";
 export { TrendBadge } from "../TrendBadge";
 export type { TrendBadgeDirection } from "../TrendBadge";
+export { CrmWorkspaceLab } from "../CrmWorkspaceLab";
+export type { CrmWorkspaceLabVariant } from "../CrmWorkspaceLab";
+export { OtpField } from "./OtpField";
+export type { OtpFieldProps } from "./OtpField";
+export * from "./AdvancedFields";
 export { Panel } from "../Panel";
 export { Section } from "../Section";
 export type {

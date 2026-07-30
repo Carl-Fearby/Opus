@@ -189,7 +189,7 @@
   color: var(--opus-muted);
 }
 
-.previewStage:has(> [data-full-bleed="true"]) {
+.previewStage:has([data-full-bleed="true"]) {
   height: 44rem;
   padding: 0;
   border: 0;
@@ -197,7 +197,7 @@
   overflow: hidden;
 }
 
-.testLayoutPreviewPanel .previewStage:has(> [data-full-bleed="true"]) {
+.testLayoutPreviewPanel .previewStage:has([data-full-bleed="true"]) {
   height: 60rem;
 }
 
@@ -619,6 +619,111 @@
   gap: 12px;
 }
 
+.tabsPreviewStack {
+  display: grid;
+  gap: 18px;
+  width: 100%;
+  max-width: 920px;
+  min-width: 0;
+}
+
+.tabsPreviewNote {
+  margin: 0;
+  color: var(--opus-muted);
+  font-size: 0.9rem;
+  line-height: 1.45;
+}
+
+.tabsPreviewNote code {
+  font-size: 0.84em;
+  color: var(--opus-text);
+}
+
+.tabsPreviewFrame {
+  height: 280px;
+  width: 100%;
+  min-width: 0;
+}
+
+.tabsPreviewSampleBlock {
+  display: grid;
+  gap: 10px;
+  min-width: 0;
+}
+
+.tabsPreviewSampleHeading {
+  display: grid;
+  gap: 2px;
+}
+
+.tabsPreviewSampleTitle {
+  color: var(--opus-text);
+  font-size: 0.92rem;
+  font-weight: 700;
+}
+
+.tabsPreviewSampleHint {
+  color: var(--opus-muted);
+  font-size: 0.84rem;
+  line-height: 1.4;
+}
+
+.tabsPreviewWidgetHost {
+  --tabs-preview-widget-rail: color-mix(in srgb, var(--dashboard-section-bg, var(--opus-panel)) 84%, #05070f 16%);
+  --tabs-preview-widget-bg:
+    radial-gradient(85% 65% at 14% 0%, color-mix(in srgb, var(--opus-accent) 16%, transparent), transparent 58%),
+    radial-gradient(72% 58% at 100% 100%, color-mix(in srgb, var(--opus-accent-secondary, #0284c7) 12%, transparent), transparent 62%),
+    linear-gradient(
+      180deg,
+      color-mix(in srgb, var(--dashboard-section-bg, #070d18) 94%, #ffffff 3%),
+      var(--dashboard-section-bg, #070d18)
+    );
+  --tabs-preview-widget-fill: color-mix(
+    in srgb,
+    var(--opus-accent) 16%,
+    color-mix(in srgb, var(--dashboard-section-bg, #070d18) 94%, #ffffff 3%)
+  );
+  height: 280px;
+  width: 100%;
+  min-width: 0;
+  overflow: hidden;
+  border-radius: var(--opus-input-radius-large, 14px);
+  background: var(--tabs-preview-widget-rail);
+}
+
+:global([data-preview-root][data-theme="light"]) .tabsPreviewWidgetHost,
+:global([data-theme="light"]) .tabsPreviewWidgetHost {
+  --tabs-preview-widget-rail: color-mix(
+    in srgb,
+    var(--dashboard-section-bg, var(--opus-panel)) 58%,
+    color-mix(in srgb, var(--opus-accent) 6%, #d7dceb) 42%
+  );
+  --tabs-preview-widget-bg:
+    radial-gradient(85% 65% at 14% 0%, color-mix(in srgb, var(--opus-accent) 10%, transparent), transparent 58%),
+    radial-gradient(72% 58% at 100% 100%, color-mix(in srgb, var(--opus-accent-secondary, #0284c7) 8%, transparent), transparent 62%),
+    linear-gradient(
+      180deg,
+      color-mix(in srgb, var(--dashboard-section-bg, #f8fbff) 94%, #ffffff 6%),
+      var(--dashboard-section-bg, #f8fbff)
+    );
+  --tabs-preview-widget-fill: color-mix(
+    in srgb,
+    var(--opus-accent) 10%,
+    var(--dashboard-section-bg, #f8fbff)
+  );
+}
+
+.tabsPreviewWidgetHost .tabsPreviewWidgetTabs[data-variant="card"] {
+  --tabs-card-rail-bg: var(--tabs-preview-widget-rail);
+  --tabs-card-active-fill: var(--tabs-preview-widget-fill);
+  --tabs-card-panel-bg: var(--tabs-preview-widget-bg);
+  height: 100%;
+}
+
+.tabsPreviewWidgetPanel {
+  background: var(--tabs-preview-widget-bg) !important;
+}
+
 .dashboardPreview {
   display: grid;
   gap: 16px;
@@ -917,6 +1022,20 @@
   height: 1em;
 }
 
+.authStatusSuccess {
+  color: color-mix(in srgb, #16a34a 80%, var(--opus-accent));
+  border-color: color-mix(in srgb, #16a34a 45%, var(--opus-border));
+  background: color-mix(in srgb, #16a34a 12%, var(--opus-input-bg));
+  box-shadow: 0 0 24px color-mix(in srgb, #16a34a 18%, transparent);
+}
+
+.authStatusWarning {
+  color: color-mix(in srgb, #ca8a04 85%, var(--opus-accent));
+  border-color: color-mix(in srgb, #ca8a04 45%, var(--opus-border));
+  background: color-mix(in srgb, #ca8a04 12%, var(--opus-input-bg));
+  box-shadow: 0 0 24px color-mix(in srgb, #ca8a04 18%, transparent);
+}
+
 .socialAuthOptions {
   display: grid;
   gap: 10px;
@@ -1110,3 +1229,16 @@
     flex-direction: column;
   }
 }
+.globalActionPreview {
+  min-width: 0;
+}
+
+.globalActionPreview:has(> [data-full-bleed="true"]) {
+  display: grid;
+  grid-template-rows: minmax(0, 1fr) auto;
+  height: 100%;
+  min-height: 0;
+}
+
+.globalActionPreview .dialogResult{display:none}
+.globalActionStatus{margin:12px 0 0;padding-top:10px;border-top:1px solid var(--opus-border);color:var(--opus-text-muted);font-size:.85rem;font-weight:700}

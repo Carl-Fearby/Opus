@@ -1,7 +1,7 @@
 import styles from "./StatBand.module.css";
 
 const stats = [
-  { value: "100+", label: "Documented components" },
+  { value: "135+", label: "Documented components" },
   { value: "2", label: "Built-in themes" },
   { value: "100%", label: "TypeScript coverage" },
   { value: "npm", label: "Published as opus-react" },

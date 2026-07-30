@@ -4,6 +4,11 @@ import { useState } from "react";
 import { Avatar } from "@/components/Avatar";
 import { Badge } from "@/components/Badge";
 import { CatalogIcon } from "@/components/CatalogIcon";
+import {
+  CompactDocuments,
+  type CompactDocumentNode,
+  type CompactDocumentView,
+} from "@/components/CompactDocuments";
 import { DashboardContentContainer } from "@/components/DashboardContentContainer";
 import { NotesActivity, type NotesActivityItem } from "@/components/NotesActivity";
 import { Tabs } from "@/components/Tabs";
@@ -22,6 +27,9 @@ export type CompanyNotesActivityProps = {
   items?: NotesActivityItem[];
   onAction?: (action: CompanyDetailsAction) => void;
   onAddNote?: (note: string) => void;
+  onDocumentOpen?: (document: CompactDocumentNode) => void;
+  onDocumentFolderOpen?: (folder: CompactDocumentNode) => void;
+  onDocumentViewChange?: (view: CompactDocumentView) => void;
   onTabChange?: (tab: CompanyNotesWorkspaceTab) => void;
   tabsVariant?: TabsVariant;
 };
@@ -34,6 +42,9 @@ export function CompanyNotesActivity({
   items = defaultCompanyNotes,
   onAction,
   onAddNote,
+  onDocumentOpen,
+  onDocumentFolderOpen,
+  onDocumentViewChange,
   onTabChange,
   tabsVariant = "card",
 }: CompanyNotesActivityProps) {
@@ -107,7 +118,42 @@ export function CompanyNotesActivity({
       </ul>
     );
 
-  const documentsPanel = <div className={styles.emptyPanel}>No documents added yet.</div>;
+  const documentsPanel = (
+    <CompactDocuments
+      className={styles.compactDocuments}
+      defaultView="list"
+      documents={[
+        {
+          id: "company-contracts",
+          kind: "folder",
+          name: "Contracts",
+          children: [
+            { id: "company-msa", kind: "file", name: "Master services agreement.pdf", meta: "PDF · 1.2 MB", status: "Signed" },
+            { id: "company-dpa", kind: "file", name: "Data processing agreement.pdf", meta: "PDF · 640 KB", status: "Current" },
+          ],
+        },
+        {
+          id: "company-proposals",
+          kind: "folder",
+          name: "Proposals",
+          children: [
+            { id: "company-proposal", kind: "file", name: "Enterprise proposal.pdf", meta: "PDF · 4.8 MB", status: "Approved" },
+            { id: "company-terms", kind: "file", name: "Commercial terms.docx", meta: "Word · 820 KB", status: "Review" },
+          ],
+        },
+        { id: "company-registration", kind: "file", name: "Company registration.pdf", meta: "PDF · 310 KB", status: "Current" },
+      ]}
+      onFileOpen={(document) => {
+        onDocumentOpen?.(document);
+        onAction?.("open-document");
+      }}
+      onFolderOpen={(folder) => {
+        onDocumentFolderOpen?.(folder);
+        onAction?.("open-document-folder");
+      }}
+      onViewChange={onDocumentViewChange}
+    />
+  );
 
   const workspaceTrailing =
     workspaceTab === "notes" ? (

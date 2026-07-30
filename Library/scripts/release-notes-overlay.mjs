@@ -342,4 +342,26 @@ export const releaseNotesOverlay = [
       "Make ThemeSwitcher a single accessible light-dark toggle and remove theme selection from ApplicationHeader so it can move into dedicated settings.",
     ],
   },
+  {
+    version: "0.4.0",
+    releasedAt: "2026-07-30",
+    summary: "Expanded component platform, desktop environment, and npm-consumer alignment.",
+    changes: [
+      "Add reusable desktop, window, dock, desktop-icon, tree-menu, compact-documents, OTP, and advanced-field primitives.",
+      "Expand CRM workspace, contact, company, document, media, dashboard, and authentication compositions.",
+      "Align Component Lab previews, generated usage examples, Playground, and external previews around the same reusable package APIs.",
+      "Audit the public component surface and publish the complete opus-react package for Application consumption.",
+      "Update Application to consume the published package CSS and runtime exports instead of local package build paths.",
+    ],
+  },
+  {
+    version: "0.4.1",
+    releasedAt: "2026-07-30",
+    summary: "Panel CSS compatibility and clean Webpack consumer builds.",
+    changes: [
+      "Replace the mixed-support Panel flex alignment value with its compatible flex-start equivalent.",
+      "Remove the resulting Autoprefixer and Webpack cache-serialization warnings in Library and Application builds.",
+      "Publish the corrected package and update Application to consume opus-react 0.4.1 from npm.",
+    ],
+  },
 ];

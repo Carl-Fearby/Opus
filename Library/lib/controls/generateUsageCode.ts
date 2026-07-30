@@ -843,6 +843,50 @@ const [${state}, ${toSetter(state)}] = useState([${s.value.map((value) => quote(
         initial: String(s.min),
       });
     }
+    case "otp-input": {
+      const s = settings as ControlSettingsBySlug["otp-input"];
+      const state = "verificationCode";
+      const props = [
+        formatStringProp("id", id),
+        ...fieldProps(s),
+        ...(s.length !== 6 ? [formatNumberProp("length", s.length)] : []),
+        formatExpressionProp("value", state),
+        formatExpressionProp("onChange", `setVerificationCode`),
+      ];
+      return controlledFieldUsage(["OtpField"], "OtpField", state, props, {
+        initial: JSON.stringify(s.value),
+      });
+    }
+    case "date-range-picker": {
+      const s = settings as ControlSettingsBySlug["date-range-picker"];
+      return `${usageClientPrefix()}\n${importLine(["DateRangeField"])}\n\nconst [range, setRange] = useState(${JSON.stringify({ from: s.from, to: s.to })});\n\nreturn <DateRangeField id="date-range" label=${quote(s.label)} value={range} onChange={setRange} />;`;
+    }
+    case "combobox": {
+      const s = settings as ControlSettingsBySlug["combobox"];
+      const options = s.options.split(",").map((item) => item.trim()).filter(Boolean).map((item) => ({ label: item, value: item }));
+      return `${usageClientPrefix()}\n${importLine(["ComboboxField"])}\n\nconst options = ${JSON.stringify(options, null, 2)};\nconst [value, setValue] = useState(${JSON.stringify(s.value)});\n\nreturn <ComboboxField id="company" label=${quote(s.label)} options={options} value={value} onChange={setValue} />;`;
+    }
+    case "currency-input": {
+      const s = settings as ControlSettingsBySlug["currency-input"];
+      return `${usageClientPrefix()}\n${importLine(["CurrencyField"])}\n\nconst [value, setValue] = useState<number | null>(${s.value});\n\nreturn <CurrencyField currency=${quote(s.currency)} id="currency" label=${quote(s.label)} value={value} onChange={setValue} />;`;
+    }
+    case "masked-input": {
+      const s = settings as ControlSettingsBySlug["masked-input"];
+      return `${usageClientPrefix()}\n${importLine(["MaskedField"])}\n\nconst [value, setValue] = useState(${JSON.stringify(s.value)});\n\nreturn <MaskedField id="masked" label=${quote(s.label)} mask=${quote(s.mask)} value={value} onChange={setValue} />;`;
+    }
+    case "multi-file-upload": {
+      const s = settings as ControlSettingsBySlug["multi-file-upload"];
+      return `${usageClientPrefix()}\n${importLine(["MultiFileField"])}\n\nconst [files, setFiles] = useState<File[]>([]);\n\nreturn <MultiFileField files={files} id="documents" label=${quote(s.label)} maxFiles={${s.maxFiles}} onChange={(next) => setFiles(next.filter((file): file is File => file instanceof File)} />;`;
+    }
+    case "checkbox-group": {
+      const s = settings as ControlSettingsBySlug["checkbox-group"];
+      const options = s.options.split(",").map((item) => item.trim()).filter(Boolean).map((item) => ({ label: item, value: item }));
+      return `${usageClientPrefix()}\n${importLine(["CheckboxGroupField"])}\n\nconst options = ${JSON.stringify(options, null, 2)};\nconst [value, setValue] = useState(${JSON.stringify(s.value)});\n\nreturn <CheckboxGroupField id="notifications" label=${quote(s.label)} options={options} value={value} onChange={setValue} />;`;
+    }
+    case "form-validation-summary": {
+      const s = settings as ControlSettingsBySlug["form-validation-summary"];
+      return `${usageClientPrefix(false)}\n${importLine(["Form", "FormActions", "FormSection", "FormValidationSummary", "Button"])}\n\nconst errors = [{ fieldId: "email", message: "Enter a valid email address" }];\n\nreturn (\n  <Form>\n    <FormValidationSummary errors={errors} title=${quote(s.title)} />\n    <FormSection title="Account details">Your fields</FormSection>\n    <FormActions><Button type="submit">Save</Button></FormActions>\n  </Form>\n);`;
+    }
     case "number-input": {
       const s = settings as ControlSettingsBySlug["number-input"];
       const state = toStateName(s.label);
@@ -2046,6 +2090,33 @@ ${wrapDashboardWidget(
 </Columns>`,
       });
     }
+    case "lab-desktop-environment": {
+      const s = settings as ControlSettingsBySlug["lab-desktop-environment"];
+      return generateUsageCodeContent(
+        "desktop",
+        s as unknown as ControlSettings,
+        category,
+      );
+    }
+    case "lab-contact-directory":
+    case "lab-company-directory":
+    case "lab-sales-pipeline":
+    case "lab-task-workspace":
+    case "lab-notification-centre":
+    case "lab-document-manager":
+    case "lab-product-catalogue":
+    case "lab-quotation-builder":
+    case "lab-sales-order":
+    case "lab-sales-invoice":
+    case "lab-appointment-diary":
+    case "lab-stock-control":
+    case "lab-system-configuration": {
+      const variant = slug.replace("lab-", "");
+      return `<CrmWorkspaceLab
+  variant=${quote(variant)}
+  onAction={(action) => console.log(action)}
+/>`;
+    }
     case "lab-company-details": {
       const s = settings as ControlSettingsBySlug["lab-company-details"];
       const notesBlock = s.showNotes
@@ -2262,13 +2333,25 @@ ${wrapDashboardWidget(
     case "lab-otp-form":
     case "lab-passkey-login-form":
     case "lab-social-auth-form":
-    case "lab-social-register-form": {
+    case "lab-social-register-form":
+    case "lab-forgot-password-form":
+    case "lab-reset-password-form":
+    case "lab-check-email-form":
+    case "lab-email-verified-form":
+    case "lab-link-expired-form":
+    case "lab-change-password-form": {
       const s = settings as ControlSettingsBySlug["lab-login-form"];
       const isSocialRegister = slug === "lab-social-register-form";
       const isRegister = slug === "lab-register-form" || isSocialRegister;
       const isOtp = slug === "lab-otp-form";
       const isPasskey = slug === "lab-passkey-login-form";
       const isSocial = slug === "lab-social-auth-form" || isSocialRegister;
+      const isForgot = slug === "lab-forgot-password-form";
+      const isReset = slug === "lab-reset-password-form";
+      const isChange = slug === "lab-change-password-form";
+      const isCheckEmail = slug === "lab-check-email-form";
+      const isEmailVerified = slug === "lab-email-verified-form";
+      const isLinkExpired = slug === "lab-link-expired-form";
       if (isOtp) {
         return interactiveUsage({
           components: ["Button", "DashboardContentContainer"],
@@ -2349,39 +2432,131 @@ ${wrapDashboardWidget(
 </DashboardContentContainer>`,
         });
       }
-      if (isSocial) {
+      if (isForgot) {
         return interactiveUsage({
-          components: ["Button", "CheckboxField", "DashboardContentContainer", "TextField"],
-          state: [
-            `const [email, setEmail] = useState(${quote(s.email)});`,
-            ...(isSocialRegister ? [`const [name, setName] = useState(${quote(s.name)});`] : []),
-            `const [password, setPassword] = useState(${quote(s.password)});`,
-            ...(isSocialRegister ? [`const [confirmPassword, setConfirmPassword] = useState(${quote(s.confirmPassword)});`] : []),
-            `const [remember, setRemember] = useState(${s.remember});`,
-          ],
-          jsx: `<DashboardContentContainer data-component="${isSocialRegister ? "social-register-form" : "social-auth-form"}" width="widget">
-  <form onSubmit={(event) => { event.preventDefault(); console.log("${isSocialRegister ? "Create account" : "Sign in"}", { email${isSocialRegister ? ", name" : ""} }); }} style={{ display: "grid", gap: 16 }}>
+          components: ["Button", "DashboardContentContainer", "TextField"],
+          state: [`const [email, setEmail] = useState(${quote(s.email)});`],
+          jsx: `<DashboardContentContainer data-component="forgot-password-form" width="widget">
+  <form onSubmit={(event) => { event.preventDefault(); console.log("Send reset link", { email }); }} style={{ display: "grid", gap: 16 }}>
     <img alt="Opus" src="/opus-logo.png" style={{ display: "block", height: "auto", margin: "0 auto", width: "12rem" }} />
     <header style={{ display: "grid", gap: 6, textAlign: "center" }}>
       <h2 style={{ margin: 0 }}>${s.title}</h2>
       <p style={{ margin: 0, color: "var(--opus-muted)" }}>${s.subtitle}</p>
     </header>
-    <button onClick={() => console.log("${isSocialRegister ? "Sign up with Google" : "Continue with Google"}")} style={{ alignItems: "center", background: "#fff", border: "1px solid #747775", borderRadius: 4, color: "#1f1f1f", cursor: "pointer", display: "flex", font: "500 14px Arial, sans-serif", gap: 12, justifyContent: "center", minHeight: 44, width: "100%" }} type="button">
+    <TextField id="auth-email" label="Email address" required type="email" value={email} onChange={(event) => setEmail(event.target.value)} />
+    <Button type="submit">${s.submitLabel}</Button>
+    <Button onClick={() => console.log("Back to sign in")} type="button" variant="link">Back to sign in</Button>
+  </form>
+</DashboardContentContainer>`,
+        });
+      }
+      if (isReset) {
+        return interactiveUsage({
+          components: ["Button", "DashboardContentContainer", "TextField"],
+          state: [
+            `const [password, setPassword] = useState(${quote(s.password)});`,
+            `const [confirmPassword, setConfirmPassword] = useState(${quote(s.confirmPassword)});`,
+          ],
+          jsx: `<DashboardContentContainer data-component="reset-password-form" width="widget">
+  <form onSubmit={(event) => { event.preventDefault(); console.log("Update password"); }} style={{ display: "grid", gap: 16 }}>
+    <img alt="Opus" src="/opus-logo.png" style={{ display: "block", height: "auto", margin: "0 auto", width: "12rem" }} />
+    <header style={{ display: "grid", gap: 6, textAlign: "center" }}>
+      <h2 style={{ margin: 0 }}>${s.title}</h2>
+      <p style={{ margin: 0, color: "var(--opus-muted)" }}>${s.subtitle}</p>
+    </header>
+    <TextField id="auth-password" label="New password" required type="password" value={password} onChange={(event) => setPassword(event.target.value)} />
+    <TextField id="auth-confirm-password" label="Confirm password" required type="password" value={confirmPassword} onChange={(event) => setConfirmPassword(event.target.value)} />
+    <Button type="submit">${s.submitLabel}</Button>
+    <Button onClick={() => console.log("Back to sign in")} type="button" variant="link">Back to sign in</Button>
+  </form>
+</DashboardContentContainer>`,
+        });
+      }
+      if (isChange) {
+        return interactiveUsage({
+          components: ["Button", "DashboardContentContainer", "TextField"],
+          state: [
+            `const [currentPassword, setCurrentPassword] = useState(${quote(s.currentPassword)});`,
+            `const [password, setPassword] = useState(${quote(s.password)});`,
+            `const [confirmPassword, setConfirmPassword] = useState(${quote(s.confirmPassword)});`,
+          ],
+          jsx: `<DashboardContentContainer data-component="change-password-form" width="widget">
+  <form onSubmit={(event) => { event.preventDefault(); console.log("Change password"); }} style={{ display: "grid", gap: 16 }}>
+    <img alt="Opus" src="/opus-logo.png" style={{ display: "block", height: "auto", margin: "0 auto", width: "12rem" }} />
+    <header style={{ display: "grid", gap: 6, textAlign: "center" }}>
+      <h2 style={{ margin: 0 }}>${s.title}</h2>
+      <p style={{ margin: 0, color: "var(--opus-muted)" }}>${s.subtitle}</p>
+    </header>
+    <TextField id="auth-current-password" label="Current password" required type="password" value={currentPassword} onChange={(event) => setCurrentPassword(event.target.value)} />
+    <TextField id="auth-password" label="New password" required type="password" value={password} onChange={(event) => setPassword(event.target.value)} />
+    <TextField id="auth-confirm-password" label="Confirm password" required type="password" value={confirmPassword} onChange={(event) => setConfirmPassword(event.target.value)} />
+    <Button type="submit">${s.submitLabel}</Button>
+    <Button onClick={() => console.log("Cancel")} type="button" variant="link">Back to sign in</Button>
+  </form>
+</DashboardContentContainer>`,
+        });
+      }
+      if (isCheckEmail || isEmailVerified || isLinkExpired) {
+        const dataComponent = isCheckEmail ? "check-email-form" : isEmailVerified ? "email-verified-form" : "link-expired-form";
+        const iconName = isCheckEmail ? "envelope" : isEmailVerified ? "circle-check" : "triangle-exclamation";
+        const secondary = isCheckEmail
+          ? `<Button onClick={() => console.log("Resend email")} type="button" variant="link">Resend email</Button>`
+          : isLinkExpired
+            ? `<Button onClick={() => console.log("Back to sign in")} type="button" variant="link">Back to sign in</Button>`
+            : "";
+        return interactiveUsage({
+          components: ["Button", "CatalogIcon", "DashboardContentContainer"],
+          state: [],
+          jsx: `<DashboardContentContainer data-component="${dataComponent}" width="widget">
+  <form onSubmit={(event) => { event.preventDefault(); console.log(${quote(s.submitLabel)}); }} style={{ display: "grid", gap: 16 }}>
+    <img alt="Opus" src="/opus-logo.png" style={{ display: "block", height: "auto", margin: "0 auto", width: "12rem" }} />
+    <header style={{ display: "grid", gap: 6, textAlign: "center" }}>
+      <h2 style={{ margin: 0 }}>${s.title}</h2>
+      <p style={{ margin: 0, color: "var(--opus-muted)" }}>${s.subtitle}</p>
+    </header>
+    <div aria-hidden="true" style={{ alignItems: "center", background: "color-mix(in srgb, var(--opus-accent) 12%, var(--opus-input-bg))", border: "1px solid color-mix(in srgb, var(--opus-accent) 40%, var(--opus-border))", borderRadius: "50%", color: "var(--opus-accent)", display: "flex", fontSize: 36, height: 80, justifyContent: "center", margin: "4px auto", width: 80 }}>
+      <CatalogIcon iconName="${iconName}" />
+    </div>
+    <Button type="submit">${s.submitLabel}</Button>
+    ${secondary}
+  </form>
+</DashboardContentContainer>`,
+        });
+      }
+      if (isSocial || isRegister) {
+        const showRegisterFields = isRegister;
+        return interactiveUsage({
+          components: ["Button", "CheckboxField", "DashboardContentContainer", "TextField"],
+          state: [
+            `const [email, setEmail] = useState(${quote(s.email)});`,
+            ...(showRegisterFields ? [`const [name, setName] = useState(${quote(s.name)});`] : []),
+            `const [password, setPassword] = useState(${quote(s.password)});`,
+            ...(showRegisterFields ? [`const [confirmPassword, setConfirmPassword] = useState(${quote(s.confirmPassword)});`] : []),
+            `const [remember, setRemember] = useState(${s.remember});`,
+          ],
+          jsx: `<DashboardContentContainer data-component="${isSocialRegister ? "social-register-form" : isSocial ? "social-auth-form" : isRegister ? "register-form" : "login-form"}" width="widget">
+  <form onSubmit={(event) => { event.preventDefault(); console.log("${showRegisterFields ? "Create account" : "Sign in"}", { email${showRegisterFields ? ", name" : ""} }); }} style={{ display: "grid", gap: 16 }}>
+    <img alt="Opus" src="/opus-logo.png" style={{ display: "block", height: "auto", margin: "0 auto", width: "12rem" }} />
+    <header style={{ display: "grid", gap: 6, textAlign: "center" }}>
+      <h2 style={{ margin: 0 }}>${s.title}</h2>
+      <p style={{ margin: 0, color: "var(--opus-muted)" }}>${s.subtitle}</p>
+    </header>
+    <button onClick={() => void continueWithGoogle({ mode: "${showRegisterFields ? "register" : "login"}" })} style={{ alignItems: "center", background: "#fff", border: "1px solid #747775", borderRadius: 4, color: "#1f1f1f", cursor: "pointer", display: "flex", font: "500 14px Arial, sans-serif", gap: 12, justifyContent: "center", minHeight: 44, width: "100%" }} type="button">
       <svg aria-hidden="true" height="18" viewBox="0 0 18 18" width="18"><path d="M17.64 9.205c0-.638-.057-1.252-.164-1.841H9v3.482h4.844c-.209 1.125-.843 2.078-1.797 2.716v2.258h2.909c1.702-1.567 2.684-3.874 2.684-6.615Z" fill="#4285F4"/><path d="M9 18c2.43 0 4.467-.806 5.956-2.18l-2.909-2.258c-.806.54-1.835.859-3.047.859-2.344 0-4.329-1.585-5.037-3.711H.956v2.333C2.437 15.983 5.482 18 9 18Z" fill="#34A853"/><path d="M3.963 10.71A5.423 5.423 0 0 1 3.68 9c0-.593.103-1.17.283-1.71V4.957H.956A9.002 9.002 0 0 0 0 9c0 1.451.347 2.827.956 4.043l3.007-2.333Z" fill="#FBBC05"/><path d="M9 3.579c1.321 0 2.508.454 3.44 1.346l2.582-2.581C13.464.892 11.426 0 9 0 5.482 0 2.437 2.017.956 4.957L3.963 7.29C4.67 5.164 6.656 3.579 9 3.579Z" fill="#EA4335"/></svg>
-      ${isSocialRegister ? "Sign up with Google" : "Continue with Google"}
+      Continue with Google
     </button>
-    <button onClick={() => console.log("${isSocialRegister ? "Sign up with Apple" : "Continue with Apple"}")} style={{ alignItems: "center", background: "#000", border: "1px solid #000", borderRadius: 4, color: "#fff", cursor: "pointer", display: "flex", font: "500 15px -apple-system, BlinkMacSystemFont, sans-serif", gap: 12, justifyContent: "center", minHeight: 44, width: "100%" }} type="button">
+    <button onClick={() => void continueWithApple({ mode: "${showRegisterFields ? "register" : "login"}" })} style={{ alignItems: "center", background: "#000", border: "1px solid #000", borderRadius: 4, color: "#fff", cursor: "pointer", display: "flex", font: "500 15px -apple-system, BlinkMacSystemFont, sans-serif", gap: 12, justifyContent: "center", minHeight: 44, width: "100%" }} type="button">
       <svg aria-hidden="true" height="19" viewBox="0 0 384 512" width="15"><path d="M319.1 268.7c-.2-36.7 16.4-64.4 50-84.8-18.8-26.9-47.2-41.7-84.7-44.6-35.5-2.8-74.3 20.7-88.5 20.7-15 0-49.4-19.7-76.4-19.7-55.8.9-115.1 44.5-115.1 133.2 0 26.2 4.8 53.3 14.4 81.2 12.8 36.7 59 126.7 107.2 125.2 25.2-.6 43-17.9 75.8-17.9 31.8 0 48.3 17.9 76.4 17.9 48.6-.7 90.4-82.5 102.6-119.3-65.2-30.7-61.7-90-61.7-91.9zM262.5 104.5c27.3-32.4 24.8-61.9 24-72.5-24.1 1.4-52 16.4-67.9 34.9-17.5 19.8-27.8 44.3-25.6 71.9 26.1 2 49.9-11.4 69.5-34.3z" fill="currentColor"/></svg>
-      ${isSocialRegister ? "Sign up with Apple" : "Continue with Apple"}
+      Continue with Apple
     </button>
     <div role="separator" style={{ color: "var(--opus-muted)", textAlign: "center" }}>or continue with email</div>
-    ${isSocialRegister ? '<TextField id="social-name" label="Full name" required type="text" value={name} onChange={(event) => setName(event.target.value)} />' : ""}
-    <TextField id="social-email" label="Email address" required type="email" value={email} onChange={(event) => setEmail(event.target.value)} />
-    <TextField id="social-password" label="Password" required type="password" value={password} onChange={(event) => setPassword(event.target.value)} />
-    ${isSocialRegister ? '<TextField id="social-confirm-password" label="Confirm password" required type="password" value={confirmPassword} onChange={(event) => setConfirmPassword(event.target.value)} />' : ""}
-    <CheckboxField checked={remember} fitContent id="social-remember" label="${isSocialRegister ? "I agree to the terms" : "Remember me"}" labelPosition="right" onChange={(event) => setRemember(event.target.checked)} />
+    ${showRegisterFields ? '<TextField id="auth-name" label="Full name" required type="text" value={name} onChange={(event) => setName(event.target.value)} />' : ""}
+    <TextField id="auth-email" label="Email address" required type="email" value={email} onChange={(event) => setEmail(event.target.value)} />
+    <TextField id="auth-password" label="Password" required type="password" value={password} onChange={(event) => setPassword(event.target.value)} />
+    ${showRegisterFields ? '<TextField id="auth-confirm-password" label="Confirm password" required type="password" value={confirmPassword} onChange={(event) => setConfirmPassword(event.target.value)} />' : ""}
+    <CheckboxField checked={remember} fitContent id="auth-consent" label="${showRegisterFields ? "I agree to the terms" : "Remember me"}" labelPosition="right" onChange={(event) => setRemember(event.target.checked)} />
     <Button type="submit">${s.submitLabel}</Button>
-    <Button onClick={() => console.log("${isSocialRegister ? "Sign in" : "Create account"}")} type="button" variant="link">${isSocialRegister ? "Sign in" : "Create an account"}</Button>
+    <Button onClick={() => console.log("${showRegisterFields ? "Sign in" : "Create account"}")} type="button" variant="link">${showRegisterFields ? "Sign in" : "Create an account"}</Button>
   </form>
 </DashboardContentContainer>`,
         });
@@ -2390,24 +2565,24 @@ ${wrapDashboardWidget(
         components: ["Button", "CheckboxField", "DashboardContentContainer", "TextField"],
         state: [
           `const [email, setEmail] = useState(${quote(s.email)});`,
-          `const [name, setName] = useState(${quote(s.name)});`,
           `const [password, setPassword] = useState(${quote(s.password)});`,
-          `const [confirmPassword, setConfirmPassword] = useState(${quote(s.confirmPassword)});`,
           `const [remember, setRemember] = useState(${s.remember});`,
         ],
-        jsx: `<DashboardContentContainer data-component="${isRegister ? "register-form" : "login-form"}" width="widget">
-  <form onSubmit={(event) => { event.preventDefault(); console.log(${isRegister ? '"Create account"' : '"Sign in"'}, { email${isRegister ? ", name" : ""} }); }} style={{ display: "grid", gap: 16 }}>
+        jsx: `<DashboardContentContainer data-component="login-form" width="widget">
+  <form onSubmit={(event) => { event.preventDefault(); console.log("Sign in", { email }); }} style={{ display: "grid", gap: 16 }}>
     <img alt="Opus" src="/opus-logo.png" style={{ display: "block", height: "auto", margin: "0 auto", width: "12rem" }} />
     <header style={{ display: "grid", gap: 6, textAlign: "center" }}>
       <h2 style={{ margin: 0 }}>${s.title}</h2>
       <p style={{ margin: 0, color: "var(--opus-muted)" }}>${s.subtitle}</p>
     </header>
-    ${isRegister ? '<TextField id="register-name" label="Full name" required type="text" value={name} onChange={(event) => setName(event.target.value)} />' : ""}
     <TextField id="auth-email" label="Email address" required type="email" value={email} onChange={(event) => setEmail(event.target.value)} />
     <TextField id="auth-password" label="Password" required type="password" value={password} onChange={(event) => setPassword(event.target.value)} />
-    ${isRegister ? '<TextField id="register-confirm-password" label="Confirm password" required type="password" value={confirmPassword} onChange={(event) => setConfirmPassword(event.target.value)} />' : ""}
-    <CheckboxField checked={remember} fitContent id="auth-consent" label="${isRegister ? "I agree to the terms" : "Remember me"}" labelPosition="right" onChange={(event) => setRemember(event.target.checked)} />
+    <div style={{ alignItems: "center", display: "flex", justifyContent: "space-between", gap: 12 }}>
+      <CheckboxField checked={remember} fitContent id="auth-consent" label="Remember me" labelPosition="right" onChange={(event) => setRemember(event.target.checked)} />
+      <Button onClick={() => console.log("Forgot password")} type="button" variant="link">Forgot password?</Button>
+    </div>
     <Button type="submit">${s.submitLabel}</Button>
+    <Button onClick={() => console.log("Create an account")} type="button" variant="link">Create an account</Button>
   </form>
 </DashboardContentContainer>`,
       });
@@ -3542,6 +3717,7 @@ const items = ${formatAvatarGroupItemsForUsage()};
       const s = settings as ControlSettingsBySlug["list"];
       const props = [
         formatExpressionProp("items", "items"),
+        formatExpressionProp("onItemClick", '(item) => console.log("Open", item.title)'),
         ...(s.density !== "comfortable"
           ? [formatStringProp("density", s.density)]
           : []),
@@ -3597,6 +3773,30 @@ const items = ${formatContentTimelineItemsForUsage(s.includeStatus, s.rowStyles,
 
 <ContentTimeline items={items} />`;
     }
+    case "tree-menu": {
+      const s = settings as ControlSettingsBySlug["tree-menu"];
+      return `${importLine(["TreeMenu"])}
+
+const nodes = [
+  {
+    id: "documents",
+    label: "Documents",
+    icon: "folder",
+    meta: 3,
+    children: [
+      { id: "contracts", label: "Contracts", icon: "folder", meta: 12 },
+      { id: "proposals", label: "Proposals", icon: "folder", meta: 8 },
+    ],
+  },
+];
+
+<TreeMenu
+  nodes={nodes}
+  defaultSelectedId="contracts"${s.expandRoots ? '\n  defaultExpandedIds={["documents"]}' : ""}${s.showMeta ? "" : "\n  showMeta={false}"}
+  onSelect={(node) => console.log("Selected", node.label)}
+  onExpandedChange={(ids, node, expanded) => console.log(ids, node.label, expanded)}
+/>`;
+    }
     case "tree-view": {
       const s = settings as ControlSettingsBySlug["tree-view"];
       return `${importLine(["TreeView"])}
@@ -3609,6 +3809,7 @@ const nodes = ${formatTreeViewNodesForUsage()};
       const s = settings as ControlSettingsBySlug["masonry-grid"];
       const props = [
         formatExpressionProp("items", "items"),
+        formatExpressionProp("onItemClick", '(item) => console.log("Open", item.title)'),
         ...(s.columns !== 3 ? [formatNumberProp("columns", s.columns)] : []),
         ...(s.gap !== 12 ? [formatNumberProp("gap", s.gap)] : []),
       ];
@@ -3625,6 +3826,176 @@ const items = ${formatMasonryItemsForUsage()};
 const items = ${formatPropertyItemsForUsage(s.copyable)};
 
 <PropertyGrid items={items}${s.bordered ? " bordered" : ""} />`;
+    }
+    case "desktop": {
+      const desktopSettings = settings as Partial<
+        ControlSettingsBySlug["lab-desktop-environment"]
+      >;
+      return interactiveUsage({
+        components: ["CatalogIcon", "Desktop", "VideoPlayer"],
+        preamble: [
+          `const demoVideoTracks = [
+  { id: "product-tour", src: "/media/demo-video.mp4", title: "Product tour" },
+  { id: "feature-film", src: "/media/demo-video-abyss.mp4", title: "Feature film" },
+];
+
+const rowStyle = {
+  display: "flex",
+  alignItems: "center",
+  gap: 10,
+  width: "100%",
+  padding: 10,
+  border: "1px solid var(--opus-border)",
+  borderRadius: 8,
+  background: "var(--opus-panel)",
+  color: "var(--opus-text)",
+};
+
+const desktopIconStyle = {
+  width: 18,
+  height: 18,
+  flex: "0 0 18px",
+  color: "var(--opus-accent)",
+};
+
+const desktopApps = [
+  {
+    id: "files",
+    label: "Documents",
+    icon: "folder-open",
+    tone: "blue",
+    showInDock: true,
+    showOnDesktop: true,
+    initiallyOpen: true,
+    rect: { x: 120, y: 54, width: 560, height: 390 },
+    render: (onAction) => (
+      <div style={{ display: "grid", gridTemplateColumns: "150px 1fr", height: "100%" }}>
+        <aside style={{ padding: 10, borderRight: "1px solid var(--opus-border)" }}>
+          {["Home", "Documents", "Pictures", "Shared"].map((label) => (
+            <button key={label} onClick={() => onAction(\`Open \${label}\`)} style={{ ...rowStyle, marginBottom: 6 }} type="button">
+              <CatalogIcon iconName="folder" style={desktopIconStyle} /> {label}
+            </button>
+          ))}
+        </aside>
+        <main style={{ padding: 16 }}>
+          <h2 style={{ marginTop: 0 }}>Recent documents</h2>
+          {["CRM brief.pdf", "Q3 forecast.xlsx", "Brand assets", "Customer notes.docx"].map((name) => (
+            <button key={name} onClick={() => onAction(\`Open \${name}\`)} style={{ ...rowStyle, marginBottom: 8 }} type="button">
+              <CatalogIcon iconName="file-lines" style={desktopIconStyle} /> {name}
+            </button>
+          ))}
+        </main>
+      </div>
+    ),
+  },
+  {
+    id: "activity",
+    label: "Notifications",
+    icon: "bell",
+    showInDock: true,
+    showOnDesktop: false,
+    initiallyOpen: true,
+    rect: { x: 410, y: 225, width: 330, height: 290 },
+    render: (onAction) => (
+      <div style={{ display: "grid", gap: 8, padding: 14 }}>
+        <h2 style={{ margin: 0 }}>Activity</h2>
+        {["Proposal approved", "New task assigned", "Invoice needs review"].map((label) => (
+          <button key={label} onClick={() => onAction(label)} style={rowStyle} type="button">
+            <CatalogIcon iconName="bell" style={desktopIconStyle} /> {label}
+          </button>
+        ))}
+      </div>
+    ),
+  },
+  {
+    id: "contacts",
+    label: "Contacts",
+    icon: "users",
+    tone: "blue",
+    showInDock: true,
+    showOnDesktop: true,
+    initiallyOpen: false,
+    rect: { x: 170, y: 74, width: 500, height: 380 },
+    render: (onAction) => (
+      <div style={{ display: "grid", gap: 8, padding: 14 }}>
+        <h2 style={{ margin: 0 }}>Contacts</h2>
+        {["Emma Davis", "Michael Brown", "Olivia Wilson", "Noah Patel"].map((name) => (
+          <button key={name} onClick={() => onAction(\`Open contact \${name}\`)} style={rowStyle} type="button">
+            <CatalogIcon iconName="user" style={desktopIconStyle} /> {name}
+          </button>
+        ))}
+      </div>
+    ),
+  },
+  {
+    id: "video",
+    label: "Video Player",
+    icon: "circle-play",
+    tone: "blue",
+    showInDock: true,
+    showOnDesktop: true,
+    initiallyOpen: false,
+    rect: { x: 195, y: 88, width: 650, height: 430 },
+    render: (onAction) => (
+      <VideoPlayer
+        edgeToEdge
+        onAction={(action) => onAction(\`Video \${action}\`)}
+        showShare
+        showTitle
+        tracks={demoVideoTracks}
+      />
+    ),
+  },
+  {
+    id: "settings",
+    label: "Settings",
+    icon: "gear",
+    tone: "blue",
+    showInDock: true,
+    showOnDesktop: true,
+    initiallyOpen: false,
+    rect: { x: 210, y: 92, width: 470, height: 360 },
+    render: (onAction) => (
+      <div style={{ display: "grid", gap: 8, padding: 14 }}>
+        <h2 style={{ margin: 0 }}>Settings</h2>
+        {["Appearance", "Notifications", "Privacy & Security", "Accessibility"].map((label) => (
+          <button key={label} onClick={() => onAction(\`Open \${label} settings\`)} style={rowStyle} type="button">
+            <CatalogIcon iconName="gear" style={desktopIconStyle} /> {label}
+          </button>
+        ))}
+      </div>
+    ),
+  },
+];`,
+        ],
+        state: [
+          `const handleAppAction = (action) => console.log(action);`,
+          `const dockItems = desktopApps.filter((app) => app.showInDock).map(({ id, icon, label, tone }) => ({ id, icon, label, tone }));`,
+          `const shortcuts = desktopApps.filter((app) => app.showOnDesktop).map(({ id, icon, label, tone }) => ({ id, icon, label, tone }));`,
+          `const windows = desktopApps.map((app, index) => ({
+  id: app.id,
+  icon: app.icon,
+  title: app.label,
+  tone: app.tone,
+  open: app.initiallyOpen,
+  rect: app.rect,
+  zIndex: index + 2,
+  content: app.render(handleAppAction),
+}));`,
+        ],
+        jsx: `<div data-full-bleed="true" style={{ width: "100%", height: "100%" }}>
+  <Desktop
+    dockAutoHide={${desktopSettings.dockAutoHide ?? false}}
+    dockSize={${desktopSettings.dockSize ?? 40}}
+    dockItems={dockItems}
+    edgeToEdge
+    shortcuts={shortcuts}
+    windows={windows}
+    onAction={(action, id) => console.log(action, id)}
+    wallpaper="aurora"
+  />
+</div>`,
+      });
     }
     case "stack": {
       const s = settings as ControlSettingsBySlug["stack"];
@@ -4055,7 +4426,11 @@ ${importLine(["KanbanBoard"])}
 const cards = ${formatKanbanCardsForUsage()};
 const [columns, setColumns] = useState(${formatKanbanColumnsForUsage()});
 
-<KanbanBoard cards={cards} columns={columns}${s.interactive ? " onChange={setColumns}" : ""} />`;
+<KanbanBoard
+  cards={cards}
+  columns={columns}${s.interactive ? "\n  onChange={setColumns}" : ""}
+  onCardClick={(card) => console.log("Open", card.title)}
+/>`;
     }
     case "calendar": {
       const s = settings as ControlSettingsBySlug["calendar"];
@@ -4088,6 +4463,7 @@ function CalendarExample() {
   endHour={${s.endHour}}
   resources={${formatResourcePlannerResourcesForUsage()}}
   items={${formatResourcePlannerItemsForUsage()}}
+  onItemClick={(item) => console.log("Open", item.label)}
 />`;
     }
     case "json-viewer": {
@@ -4389,6 +4765,11 @@ return (
       const props = [
         formatExpressionProp("menus", "menus"),
         formatBoolProp("staticPanel", true),
+        formatExpressionProp(
+          "onFeaturedAction",
+          "(featured, menu) => console.log(menu.id, featured.actionLabel)",
+        ),
+        formatExpressionProp("onSelect", "(item) => console.log(item.id)"),
         ...(s.density !== "comfortable"
           ? [formatStringProp("density", s.density)]
           : []),

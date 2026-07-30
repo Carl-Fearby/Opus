@@ -4,14 +4,8 @@ import dynamic from "next/dynamic";
 import { useCallback, useEffect, useRef } from "react";
 import { OpusThemeProvider } from "@/components/OpusThemeProvider";
 import { CustomScrollbar } from "@/components/CustomScrollbar";
-import {
-  CompositionPartsList,
-  CompositionUsageList,
-} from "@/components/control-detail/ControlDetail/CompositionPartsList";
 import { useComponentsTheme } from "@/components/development/ComponentsThemeProvider";
-import { getCompositionParentsForControl } from "@/lib/controls/compositionGraph";
 import { controlHasSettingsPanel } from "@/lib/controls/controlSettingsPanel";
-import { getControl } from "@/lib/controls/registry";
 import {
   clampSettingsWidth,
   SETTINGS_WIDTH_KEY,
@@ -107,10 +101,6 @@ export function ComponentsSettingsSidebar() {
     return null;
   }
 
-  const control = getControl(activeSlug);
-  const compositionParents = control ? getCompositionParentsForControl(control) : [];
-  const hasCompositionLinks = Boolean(control?.compositionParts?.length || compositionParents.length);
-
   return (
     <div className={styles.settingsSidebarWrap}>
       <div
@@ -138,16 +128,6 @@ export function ComponentsSettingsSidebar() {
           <div className={styles.settingsSidebarBodyInner}>
           <OpusThemeProvider applyToDocument={false} theme={theme}>
             <ControlSettingsPanel slug={activeSlug} settings={settings} onChange={setSettings} />
-            {hasCompositionLinks ? (
-              <div className={styles.settingsCompositionLinks}>
-                {control?.compositionParts?.length ? (
-                  <CompositionPartsList control={control} parts={control.compositionParts} />
-                ) : null}
-                {compositionParents.length ? (
-                  <CompositionUsageList controls={compositionParents} parents={compositionParents.map((entry) => entry.slug)} />
-                ) : null}
-              </div>
-            ) : null}
           </OpusThemeProvider>
           </div>
         </CustomScrollbar>

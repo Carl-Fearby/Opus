@@ -32,6 +32,23 @@ export type {
   ApplicationHeaderProps,
 } from "../../../components/ApplicationHeader";
 
+export * from "../../../components/AudioPlayer";
+export * from "../../../components/Carousel";
+export * from "../../../components/CompactDocuments";
+export * from "../../../components/CompanyDetails";
+export * from "../../../components/ContactDetails";
+export * from "../../../components/CrmWorkspaceLab";
+export * from "../../../components/Desktop";
+export * from "../../../components/DesktopDock";
+export * from "../../../components/DesktopIcon";
+export * from "../../../components/DesktopLab";
+export * from "../../../components/DesktopWindow";
+export * from "../../../components/JsonViewer";
+export * from "../../../components/MegaMenu";
+export * from "../../../components/PropertyGrid";
+export * from "../../../components/TreeMenu";
+export * from "../../../components/VideoPlayer";
+
 export * from "../../../components/FontPicker";
 
 export {

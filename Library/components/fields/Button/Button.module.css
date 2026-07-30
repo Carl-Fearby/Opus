@@ -2,6 +2,7 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
+  gap: 0.45em;
   min-height: var(--opus-control-height);
   padding: 0 var(--opus-button-padding-x, 12px);
   border: 1px solid transparent;
@@ -10,11 +11,18 @@
   font-size: var(--opus-control-font-size);
   font-weight: 700;
   line-height: 1;
+  white-space: nowrap;
   transition:
     border-color 160ms ease,
     background 160ms ease,
     box-shadow 160ms ease,
     color 160ms ease;
+}
+
+.button :global(svg) {
+  width: 0.92em;
+  height: 0.92em;
+  flex-shrink: 0;
 }
 
 .button:focus-visible {

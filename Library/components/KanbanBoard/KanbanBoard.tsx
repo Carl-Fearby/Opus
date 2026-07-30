@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useMemo, useState, type DragEvent } from "react";
 import styles from "./KanbanBoard.module.css";
 
 export type KanbanCard = {
@@ -20,9 +20,10 @@ export type KanbanBoardProps = {
   cards: Record<string, KanbanCard>;
   columns: KanbanColumn[];
   onChange?: (columns: KanbanColumn[]) => void;
+  onCardClick?: (card: KanbanCard) => void;
 };
 
-export function KanbanBoard({ cards, columns, onChange }: KanbanBoardProps) {
+export function KanbanBoard({ cards, columns, onCardClick, onChange }: KanbanBoardProps) {
   const [draggingId, setDraggingId] = useState<string | null>(null);
 
   const cardLookup = useMemo(() => cards, [cards]);
@@ -65,22 +66,38 @@ export function KanbanBoard({ cards, columns, onChange }: KanbanBoardProps) {
             {column.cardIds.map((cardId) => {
               const card = cardLookup[cardId];
               if (!card) return null;
+              const content = (
+                <>
+                  <div className={styles.cardTitle}>{card.title}</div>
+                  {card.meta ? <div className={styles.cardMeta}>{card.meta}</div> : null}
+                </>
+              );
+              const dragProps = {
+                draggable: Boolean(onChange),
+                onDragEnd: () => setDraggingId(null),
+                onDragStart: (event: DragEvent<HTMLElement>) => {
+                  setDraggingId(card.id);
+                  event.dataTransfer.setData("text/plain", card.id);
+                  event.dataTransfer.effectAllowed = "move";
+                },
+              };
               return (
                 <li key={card.id}>
-                  <article
-                    className={styles.card}
-                    data-tone={card.tone ?? "default"}
-                    draggable={Boolean(onChange)}
-                    onDragEnd={() => setDraggingId(null)}
-                    onDragStart={(event) => {
-                      setDraggingId(card.id);
-                      event.dataTransfer.setData("text/plain", card.id);
-                      event.dataTransfer.effectAllowed = "move";
-                    }}
-                  >
-                    <div className={styles.cardTitle}>{card.title}</div>
-                    {card.meta ? <div className={styles.cardMeta}>{card.meta}</div> : null}
-                  </article>
+                  {onCardClick ? (
+                    <button
+                      {...dragProps}
+                      className={styles.card}
+                      data-tone={card.tone ?? "default"}
+                      onClick={() => onCardClick(card)}
+                      type="button"
+                    >
+                      {content}
+                    </button>
+                  ) : (
+                    <article {...dragProps} className={styles.card} data-tone={card.tone ?? "default"}>
+                      {content}
+                    </article>
+                  )}
                 </li>
               );
             })}

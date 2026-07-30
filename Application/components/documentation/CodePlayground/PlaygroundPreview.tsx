@@ -91,7 +91,10 @@ class PreviewErrorBoundary extends Component<PreviewErrorBoundaryProps, PreviewE
 export function PlaygroundPreview({ code, padded = true, theme, onErrorChange }: PlaygroundPreviewProps) {
   const preview = useMemo(() => computePreview(code), [code]);
   const alignForm = useMemo(
-    () => /data-component=["'](?:login-form|register-form|otp-form|passkey-login-form|social-auth-form|social-register-form)["']/.test(code),
+    () =>
+      /data-component=["'](?:login-form|register-form|otp-form|passkey-login-form|social-auth-form|social-register-form|forgot-password-form|reset-password-form|check-email-form|email-verified-form|link-expired-form|change-password-form)["']/.test(
+        code,
+      ),
     [code],
   );
 

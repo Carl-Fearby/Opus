@@ -47,7 +47,7 @@
   display: flex;
   flex-wrap: nowrap;
   gap: 12px;
-  align-items: start;
+  align-items: flex-start;
   justify-content: space-between;
   padding: var(--surface-pad);
   min-width: 0;

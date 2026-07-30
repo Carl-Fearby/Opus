@@ -1,0 +1,52 @@
+.explorer { display: grid; grid-template-columns: 150px minmax(0, 1fr); height: 100%; }
+.explorer aside { display: grid; align-content: start; gap: 3px; padding: 8px; border-right: 1px solid var(--opus-border); }
+.explorer aside button { display: flex; gap: 8px; align-items: center; padding: 8px; border: 0; border-radius: 8px; background: transparent; color: var(--opus-muted); font: inherit; font-size: 0.76rem; cursor: pointer; }
+.explorer aside button:hover { background: color-mix(in srgb, var(--opus-accent) 14%, transparent); color: var(--opus-text); }
+.explorer aside svg { width: 0.8rem; color: var(--opus-accent); }
+.explorer main { min-width: 0; padding: 12px; }
+.explorer h2, .activity h2 { margin: 0 0 14px; font-size: 1rem; }
+.files { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
+.files button { display: grid; grid-template-columns: auto minmax(0, 1fr); gap: 8px; align-items: center; padding: 9px; border: 1px solid var(--opus-border); border-radius: 8px; background: color-mix(in srgb, var(--opus-panel) 82%, transparent); color: var(--opus-text); font: inherit; text-align: left; cursor: pointer; }
+.files svg { width: 1.2rem; color: var(--opus-accent); }
+.activity { display: grid; gap: 6px; padding: 10px; }
+.activity button { display: grid; grid-template-columns: auto minmax(0, 1fr) auto; gap: 8px; align-items: center; padding: 8px; border: 1px solid var(--opus-border); border-radius: 8px; background: color-mix(in srgb, var(--opus-panel) 82%, transparent); color: var(--opus-text); font: inherit; text-align: left; cursor: pointer; }
+.activity button > svg { width: 1rem; color: var(--opus-accent); }
+.activity button span:nth-child(2) { display: grid; gap: 2px; }
+.activity small { color: var(--opus-muted); font-size: 0.72rem; }
+.settings { height: 100%; padding: 12px; overflow: auto; }
+.settings h2 { margin: 0; font-size: 1rem; }
+.settings > p { margin: 4px 0 12px; color: var(--opus-muted); font-size: 0.76rem; }
+.settingsList { display: grid; gap: 6px; }
+.settingsList button { display: grid; grid-template-columns: auto minmax(0, 1fr) auto; gap: 10px; align-items: center; width: 100%; padding: 9px 10px; border: 1px solid var(--opus-border); border-radius: 8px; background: color-mix(in srgb, var(--opus-panel) 82%, transparent); color: var(--opus-text); font: inherit; text-align: left; cursor: pointer; }
+.settingsList button:hover { border-color: color-mix(in srgb, var(--opus-accent) 58%, var(--opus-border)); background: color-mix(in srgb, var(--opus-accent) 11%, var(--opus-panel)); }
+.settingsList button > svg { width: 1rem; color: var(--opus-accent); }
+.settingsList button > svg:last-child { width: 0.65rem; color: var(--opus-muted); }
+.settingsList button span { display: grid; gap: 2px; }
+.settingsList strong { font-size: 0.78rem; }
+.settingsList small { color: var(--opus-muted); font-size: 0.69rem; }
+.contacts { height: 100%; padding: 12px; overflow: auto; }
+.contacts header { display: flex; justify-content: space-between; gap: 12px; align-items: center; margin-bottom: 12px; }
+.contacts h2 { margin: 0; font-size: 1rem; }
+.contacts header p { margin: 3px 0 0; color: var(--opus-muted); font-size: 0.72rem; }
+.contacts header button { display: inline-flex; gap: 6px; align-items: center; padding: 7px 10px; border: 1px solid color-mix(in srgb, var(--opus-accent) 55%, var(--opus-border)); border-radius: 7px; background: color-mix(in srgb, var(--opus-accent) 17%, var(--opus-panel)); color: var(--opus-text); font: inherit; font-size: 0.72rem; font-weight: 700; cursor: pointer; }
+.contacts header button svg { width: 0.75rem; color: var(--opus-accent); }
+.contactList { display: grid; gap: 5px; }
+.contactList > button { display: grid; grid-template-columns: auto minmax(0, 1fr) auto auto; gap: 9px; align-items: center; width: 100%; padding: 8px; border: 1px solid var(--opus-border); border-radius: 8px; background: color-mix(in srgb, var(--opus-panel) 82%, transparent); color: var(--opus-text); font: inherit; text-align: left; cursor: pointer; }
+.contactList > button:hover { border-color: color-mix(in srgb, var(--opus-accent) 58%, var(--opus-border)); background: color-mix(in srgb, var(--opus-accent) 11%, var(--opus-panel)); }
+.contactList > button > span:nth-child(2) { display: grid; gap: 2px; }
+.contactList small { color: var(--opus-muted); font-size: 0.68rem; }
+.contactList > button > svg { width: 0.6rem; color: var(--opus-muted); }
+.contactAvatar { display: grid; place-items: center; width: 30px; height: 30px; border: 1px solid color-mix(in srgb, var(--opus-accent) 45%, var(--opus-border)); border-radius: 50%; background: color-mix(in srgb, var(--opus-accent) 18%, var(--opus-panel)); color: var(--opus-text); font-size: 0.68rem; font-weight: 800; }
+.video {
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+}
+
+.video > :global([data-component="video-player"]) {
+  width: 100%;
+  height: 100%;
+  border: 0;
+  border-radius: 0;
+  box-shadow: none;
+}

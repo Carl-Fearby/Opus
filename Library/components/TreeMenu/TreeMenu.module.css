@@ -1,0 +1,122 @@
+.tree,
+.children {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.tree {
+  display: grid;
+  gap: 3px;
+  min-width: 0;
+  width: 100%;
+}
+
+.node {
+  display: grid;
+  min-width: 0;
+}
+
+.row {
+  align-items: center;
+  border: 1px solid transparent;
+  border-radius: 8px;
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  min-width: 0;
+}
+
+.row:hover {
+  background: color-mix(in srgb, var(--opus-accent) 8%, transparent);
+}
+
+.row[data-selected="true"] {
+  background: color-mix(in srgb, var(--opus-accent) 15%, var(--opus-panel));
+  border-color: color-mix(in srgb, var(--opus-accent) 48%, var(--opus-border));
+}
+
+.toggle,
+.item {
+  border: 0;
+  color: var(--opus-muted);
+  cursor: pointer;
+}
+
+.toggle {
+  align-items: center;
+  background: transparent;
+  border-radius: 6px;
+  display: inline-flex;
+  height: 30px;
+  justify-content: center;
+  padding: 0;
+  width: 28px;
+}
+
+.toggle:disabled {
+  cursor: default;
+  opacity: 0;
+}
+
+.toggle svg {
+  height: 0.72rem;
+  width: 0.72rem;
+}
+
+.item {
+  align-items: center;
+  background: transparent;
+  display: grid;
+  font: inherit;
+  gap: 8px;
+  grid-template-columns: 20px minmax(0, 1fr) auto;
+  min-height: 36px;
+  min-width: 0;
+  padding: 3px 8px 3px 2px;
+  text-align: left;
+}
+
+.toggle:hover,
+.toggle:focus-visible,
+.item:hover,
+.item:focus-visible {
+  color: var(--opus-text);
+}
+
+.toggle:focus-visible,
+.item:focus-visible {
+  outline: 2px solid color-mix(in srgb, var(--opus-accent) 70%, transparent);
+  outline-offset: -2px;
+}
+
+.icon {
+  align-items: center;
+  color: var(--opus-accent);
+  display: inline-flex;
+  justify-content: center;
+}
+
+.icon svg {
+  height: 0.95rem;
+  width: 0.95rem;
+}
+
+.label {
+  color: var(--opus-text);
+  font-size: 0.84rem;
+  font-weight: 650;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.meta {
+  color: var(--opus-muted);
+  font-size: 0.74rem;
+  font-weight: 700;
+}
+
+.children {
+  display: grid;
+  gap: 3px;
+}
