@@ -2,26 +2,27 @@
 
 **Build modern business applications without rebuilding the foundations.**
 
-Opus is a production-ready, themeable React design system for dashboards, CRM products, internal tools and data-rich workflows. It combines polished visual design with accessible interaction patterns, strong TypeScript support and a broad component catalogue—from form primitives to complete application layouts.
+Opus is a production-ready, themeable React design system for dashboards, CRM products, internal tools, data-rich workflows, and browser-based desktop experiences. It combines polished visual design with accessible interaction patterns, strong TypeScript support and a broad component catalogue—from form primitives to complete application layouts and draggable multi-window workspaces.
 
-[Website](https://project-opus.netlify.app) · [Component library](https://project-opus.netlify.app/documentation/components) · [Live playground](https://project-opus.netlify.app/documentation/playground) · [Pricing](https://project-opus.netlify.app/pricing) · [GitHub](https://github.com/Carl-Fearby/Opus)
+[Component catalogue](https://project-opus.netlify.app/documentation/components) · [GitHub](https://github.com/Carl-Fearby/Opus)
 
-[![Opus website and design system](https://raw.githubusercontent.com/Carl-Fearby/Opus/main/Library/packages/opus-react/assets/npm/marketing.png)](https://project-opus.netlify.app)
+[![Opus website and design system](https://raw.githubusercontent.com/Carl-Fearby/Opus/main/Library/packages/opus-react/assets/npm/marketing.png)](https://project-opus.netlify.app/documentation/components)
 
 <table>
   <tr>
     <td width="50%"><a href="https://project-opus.netlify.app/documentation/components"><img src="https://raw.githubusercontent.com/Carl-Fearby/Opus/main/Library/packages/opus-react/assets/npm/components.png" alt="Browse the Opus component library" /></a></td>
-    <td width="50%"><a href="https://project-opus.netlify.app/documentation/playground"><img src="https://raw.githubusercontent.com/Carl-Fearby/Opus/main/Library/packages/opus-react/assets/npm/playground.png" alt="Experiment in the Opus live playground" /></a></td>
+    <td width="50%"><a href="https://project-opus.netlify.app/documentation/components"><img src="https://raw.githubusercontent.com/Carl-Fearby/Opus/main/Library/packages/opus-react/assets/npm/playground.png" alt="Explore the Opus component catalogue" /></a></td>
   </tr>
   <tr>
     <td align="center"><strong>Component library</strong></td>
-    <td align="center"><strong>Live playground</strong></td>
+    <td align="center"><strong>Component catalogue</strong></td>
   </tr>
 </table>
 
 ## Why Opus
 
 - **Hundreds of composable components** covering forms, content, navigation, overlays, charts, dashboards, media and desktop-style experiences.
+- **Build complete web desktops** with draggable and resizable windows, desktop shortcuts, a responsive dock, minimise/maximise behaviour, focus management, and application-defined window content.
 - **Designed for real application interfaces**, with responsive layouts, resizable panes, rich data views and reusable workflow components.
 - **Themeable by default**, including light and dark modes, CSS design tokens and runtime accent colours.
 - **Accessible and typed**, with keyboard-aware interactions and complete TypeScript definitions.
@@ -219,6 +220,73 @@ import {
   </DashboardContentContainer>
 </Columns>;
 ```
+
+### Desktop applications
+
+Create browser-based desktop and workspace experiences from reusable primitives. Opus supplies the shell and interaction model while your application owns every shortcut, dock item, window, and piece of content.
+
+[![Opus browser desktop with draggable application windows, shortcuts, and dock](https://raw.githubusercontent.com/Carl-Fearby/Opus/main/Library/packages/opus-react/assets/npm/desktop.png)](https://project-opus.netlify.app/documentation/components)
+
+- `Desktop` — stateful workspace shell with wallpaper, shortcuts, windows, dock placement, and edge-to-edge mode
+- `DesktopWindow` — draggable, resizable, focus-aware windows with close, minimise, maximise, and restore transitions
+- `DesktopDock` — resizable dock with bottom, left, and right placement plus optional auto-hide
+- `DesktopIcon` — keyboard-accessible, selectable shortcuts with single- or double-click opening
+- `VideoPlayer` — window-ready media playback with responsive controls and ambient blurred video fill
+
+```tsx
+import {
+  Desktop,
+  type DesktopDockItem,
+  type DesktopShortcut,
+  type DesktopWindowItem,
+} from "opus-react";
+
+const shortcuts: DesktopShortcut[] = [
+  { id: "documents", icon: "folder-open", label: "Documents", x: 20, y: 20 },
+  { id: "contacts", icon: "users", label: "Contacts", x: 20, y: 124 },
+];
+
+const dockItems: DesktopDockItem[] = shortcuts.map(({ id, icon, label }) => ({
+  id,
+  icon,
+  label,
+}));
+
+const windows: DesktopWindowItem[] = [
+  {
+    id: "documents",
+    title: "Documents",
+    icon: "folder-open",
+    open: true,
+    rect: { x: 180, y: 64, width: 640, height: 420 },
+    content: <div style={{ padding: 24 }}>Your documents application</div>,
+  },
+  {
+    id: "contacts",
+    title: "Contacts",
+    icon: "users",
+    open: false,
+    rect: { x: 320, y: 120, width: 560, height: 400 },
+    content: <div style={{ padding: 24 }}>Your contacts application</div>,
+  },
+];
+
+export function Workspace() {
+  return (
+    <Desktop
+      dockAutoHide
+      dockItems={dockItems}
+      edgeToEdge
+      onAction={(action, id) => console.log(action, id)}
+      shortcuts={shortcuts}
+      wallpaper="aurora"
+      windows={windows}
+    />
+  );
+}
+```
+
+The same React composition works in a normal web application or inside a desktop wrapper such as Electron—without moving application behaviour into the shell component.
 
 ### Media and 3D
 

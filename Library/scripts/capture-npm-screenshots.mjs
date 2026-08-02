@@ -15,6 +15,13 @@ const captures = [
   { name: "marketing", path: "/", width: 1440, height: 900 },
   { name: "components", path: "/documentation/components", width: 1440, height: 900 },
   { name: "playground", path: "/documentation/playground", width: 1440, height: 900 },
+  {
+    name: "desktop",
+    path: "/documentation/components/raw/lab-desktop-environment",
+    width: 1440,
+    height: 960,
+    clipTop: 60,
+  },
 ];
 
 await mkdir(outputDirectory, { recursive: true });
@@ -44,6 +51,14 @@ try {
     }, displayVersion);
     await page.screenshot({
       animations: "disabled",
+      clip: capture.clipTop
+        ? {
+            x: 0,
+            y: capture.clipTop,
+            width: capture.width,
+            height: capture.height - capture.clipTop,
+          }
+        : undefined,
       path: resolve(outputDirectory, `${capture.name}.png`),
     });
     await page.close();

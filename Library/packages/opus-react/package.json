@@ -1,8 +1,8 @@
 {
   "name": "opus-react",
-  "version": "0.4.2",
+  "version": "0.4.6",
   "description": "A production-ready React design system for modern business applications, dashboards and data-rich workflows.",
-  "homepage": "https://project-opus.netlify.app",
+  "homepage": "https://project-opus.netlify.app/documentation/components",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/Carl-Fearby/Opus.git",
