@@ -1,71 +1,68 @@
+import Link from "next/link";
+import {
+  categoryDescriptions,
+  componentCategories,
+  controls,
+  getControlSectionsByCategory,
+  getControlsByCategory,
+} from "@/lib/controls/registry";
+import { categoryPath, componentPath, COMPONENTS_BASE_PATH } from "@/lib/controls/routes";
 import styles from "./ComponentCategories.module.css";
-
-const categories = [
-  {
-    title: "Forms",
-    count: "30+ controls",
-    items: ["Text and password inputs", "Date, time, and colour pickers", "Multi-select and cascader", "Rich text and chip input"],
-  },
-  {
-    title: "Overlays",
-    count: "8 patterns",
-    items: ["Dialog and modal", "Drawer and popover", "Toast notifications", "Command palette"],
-  },
-  {
-    title: "Navigation",
-    count: "6 layouts",
-    items: ["Sidebar shell", "Top navigation", "Tabs and accordion", "Breadcrumbs and pagination"],
-  },
-  {
-    title: "Data display",
-    count: "Charts and widgets",
-    items: ["Tables and data grid", "KPI and stat cards", "Gauges and sparklines", "Status indicators"],
-  },
-  {
-    title: "Layout",
-    count: "10 primitives",
-    items: ["Columns and grid", "Splitter and dock layout", "Resizable panel", "Scroll area and container"],
-  },
-  {
-    title: "Application compositions",
-    count: "CRM, auth & desktop labs",
-    items: [
-      "Login, register, and social auth",
-      "Resizable CRM dashboard shells",
-      "Company, contact, and document workflows",
-      "Desktop, window, dock, and media experiences",
-    ],
-  },
-];
 
 export function ComponentCategories() {
   return (
     <section className={styles.section} id="components">
       <div className={styles.inner}>
-        <div className={styles.intro}>
-          <p className={styles.eyebrow}>Component library</p>
-          <h2>From first input to full application shell.</h2>
-          <p>
-            Opus groups components by the jobs they do in real products — so your team can find the
-            right primitive quickly and compose screens without reinventing spacing, states, or
-            accessibility patterns.
-          </p>
+        <div className={styles.introRow}>
+          <div className={styles.intro}>
+            <p className={styles.eyebrow}>Component library</p>
+            <h2>Every component. One coherent system.</h2>
+            <p>
+              Explore all {controls.length} documented primitives, visualisations, application
+              patterns, and complete compositions available in Opus today.
+            </p>
+          </div>
+          <Link className={styles.catalogueLink} href={COMPONENTS_BASE_PATH}>
+            Open the full catalogue <span aria-hidden="true">→</span>
+          </Link>
         </div>
 
         <div className={styles.grid}>
-          {categories.map((category) => (
-            <article key={category.title} className={styles.card}>
-              <div className={styles.cardHead}>
-                <h3>{category.title}</h3>
-                <span>{category.count}</span>
-              </div>
-              <ul>
-                {category.items.map((item) => (
-                  <li key={item}>{item}</li>
-                ))}
-              </ul>
-            </article>
-          ))}
+          {componentCategories.map((category) => {
+            const categoryControls = getControlsByCategory(category.id);
+            const sections = getControlSectionsByCategory(category.id);
+
+            return (
+              <article key={category.id} className={styles.card}>
+                <div className={styles.cardHead}>
+                  <div>
+                    <h3>{category.label}</h3>
+                    <p>{categoryDescriptions[category.id]}</p>
+                  </div>
+                  <span>{categoryControls.length}</span>
+                </div>
+
+                <div className={styles.groups}>
+                  {sections.map((section) => (
+                    <div className={styles.group} key={section.label ?? `${category.id}-components`}>
+                      {section.label ? <h4>{section.label}</h4> : null}
+                      <ul>
+                        {section.controls.map((control) => (
+                          <li key={control.slug}>
+                            <Link href={componentPath(control.slug)}>{control.title}</Link>
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  ))}
+                </div>
+
+                <Link className={styles.categoryLink} href={categoryPath(category.id)}>
+                  Browse {category.label.toLowerCase()} <span aria-hidden="true">→</span>
+                </Link>
+              </article>
+            );
+          })}
         </div>
       </div>
     </section>
