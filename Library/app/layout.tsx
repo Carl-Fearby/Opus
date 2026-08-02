@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { IBM_Plex_Mono, Space_Grotesk } from "next/font/google";
+import "@fortawesome/fontawesome-svg-core/styles.css";
 import "../packages/opus-react/dist/index.css";
 import "./globals.css";
 import "./preview-theme.css";
