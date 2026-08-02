@@ -1,10 +1,31 @@
-# opus-react
+# Opus React
 
-React component library for the **Opus Design System** — a themeable UI kit for professional business applications.
+**Build modern business applications without rebuilding the foundations.**
 
-Includes form controls, overlays, navigation, data display, charts, dashboard widgets, layout primitives, and utilities. Ships with light and dark themes, CSS variable tokens, runtime accent colour support, and full TypeScript definitions.
+Opus is a production-ready, themeable React design system for dashboards, CRM products, internal tools and data-rich workflows. It combines polished visual design with accessible interaction patterns, strong TypeScript support and a broad component catalogue—from form primitives to complete application layouts.
 
-**Current version:** `0.2.22`
+[Website](https://project-opus.netlify.app) · [Component library](https://project-opus.netlify.app/documentation/components) · [Live playground](https://project-opus.netlify.app/documentation/playground) · [Pricing](https://project-opus.netlify.app/pricing) · [GitHub](https://github.com/Carl-Fearby/Opus)
+
+[![Opus website and design system](https://raw.githubusercontent.com/Carl-Fearby/Opus/main/Library/packages/opus-react/assets/npm/marketing.png)](https://project-opus.netlify.app)
+
+<table>
+  <tr>
+    <td width="50%"><a href="https://project-opus.netlify.app/documentation/components"><img src="https://raw.githubusercontent.com/Carl-Fearby/Opus/main/Library/packages/opus-react/assets/npm/components.png" alt="Browse the Opus component library" /></a></td>
+    <td width="50%"><a href="https://project-opus.netlify.app/documentation/playground"><img src="https://raw.githubusercontent.com/Carl-Fearby/Opus/main/Library/packages/opus-react/assets/npm/playground.png" alt="Experiment in the Opus live playground" /></a></td>
+  </tr>
+  <tr>
+    <td align="center"><strong>Component library</strong></td>
+    <td align="center"><strong>Live playground</strong></td>
+  </tr>
+</table>
+
+## Why Opus
+
+- **Hundreds of composable components** covering forms, content, navigation, overlays, charts, dashboards, media and desktop-style experiences.
+- **Designed for real application interfaces**, with responsive layouts, resizable panes, rich data views and reusable workflow components.
+- **Themeable by default**, including light and dark modes, CSS design tokens and runtime accent colours.
+- **Accessible and typed**, with keyboard-aware interactions and complete TypeScript definitions.
+- **Preview before you build** in the live component library and editable playground.
 
 ## Requirements
 
@@ -330,6 +351,10 @@ npm publish -w opus-react --access public
 
 `prepublishOnly` runs the package build automatically. Bump the version in `packages/opus-react/package.json` before publishing.
 
+## Contact
+
+Carl Fearby — [carlfearby@me.com](mailto:carlfearby@me.com)
+
 ## License
 
-UNLICENSED — see `package.json`.
+MIT — see [`LICENSE`](./LICENSE).

@@ -1,8 +1,34 @@
 {
   "name": "opus-react",
-  "version": "0.4.1",
-  "description": "Opus design system React components",
-  "license": "UNLICENSED",
+  "version": "0.4.2",
+  "description": "A production-ready React design system for modern business applications, dashboards and data-rich workflows.",
+  "homepage": "https://project-opus.netlify.app",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Carl-Fearby/Opus.git",
+    "directory": "Library/packages/opus-react"
+  },
+  "bugs": {
+    "url": "https://github.com/Carl-Fearby/Opus/issues"
+  },
+  "author": {
+    "name": "Carl Fearby",
+    "email": "carlfearby@me.com"
+  },
+  "keywords": [
+    "react",
+    "components",
+    "design-system",
+    "typescript",
+    "ui",
+    "dashboard",
+    "forms",
+    "data-visualization",
+    "accessibility",
+    "dark-mode",
+    "themeable"
+  ],
+  "license": "MIT",
   "type": "module",
   "main": "./dist/index.cjs",
   "module": "./dist/index.js",
@@ -20,6 +46,8 @@
   },
   "files": [
     "dist",
+    "assets/npm",
+    "LICENSE",
     "README.md"
   ],
   "sideEffects": [
