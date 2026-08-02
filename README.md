@@ -33,6 +33,18 @@ Routes:
 - `/pricing`
 - `/documentation` — component catalog, guide, playground, version log
 
+## Netlify
+
+The root [`netlify.toml`](./netlify.toml) deploys `Application` as the public Next.js site:
+
+- `/` serves the marketing introduction.
+- `/documentation/components` serves the component library.
+- `/documentation/playground` serves the editable playground.
+
+Connect Netlify to the repository root. The file-based configuration sets `Application` as the
+base directory, runs `npm run build`, and publishes the `.next` output using Netlify's automatic
+OpenNext adapter.
+
 ## Publish opus-react
 
 ```bash

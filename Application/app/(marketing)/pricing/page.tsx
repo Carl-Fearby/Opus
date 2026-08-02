@@ -62,8 +62,8 @@ export default function PricingPage() {
         <p className={styles.eyebrow}>Pricing</p>
         <h1>Start free. Scale with your team.</h1>
         <p>
-          The component library is available on npm today. Team and enterprise plans are placeholders
-          for review — adjust copy, tiers, and contact details before launch.
+          Start with the published npm package, then add governance, rollout support, and dedicated
+          guidance as your product team grows.
         </p>
       </section>
 

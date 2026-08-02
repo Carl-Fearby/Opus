@@ -17,6 +17,10 @@ function resolveBuildVersion() {
     return process.env.VERCEL_GIT_COMMIT_SHA.slice(0, 12);
   }
 
+  if (process.env.COMMIT_REF) {
+    return process.env.COMMIT_REF.slice(0, 12);
+  }
+
   try {
     const packageJson = JSON.parse(readFileSync(join(process.cwd(), "package.json"), "utf8")) as {
       version?: string;

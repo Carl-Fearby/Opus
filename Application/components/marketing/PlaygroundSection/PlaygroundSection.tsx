@@ -6,6 +6,7 @@ const highlights = [
   "Edit complete component examples with syntax highlighting",
   "Live preview updates as you type",
   "Open in Playground from any component page with your current settings",
+  "Preview, Playground, and external windows use the same generated source",
   "Resizable source and preview panes powered by Splitter",
 ];
 
@@ -19,6 +20,8 @@ export function PlaygroundSection() {
           <p>
             Jump from any component page into the Playground with generated JSX for your current
             settings, then tweak imports, state, and render logic before you paste it into your app.
+            The same source is compiled for the catalogue preview, Playground, and external view, so
+            the example you inspect is the example you run.
           </p>
 
           <ul className={styles.list}>

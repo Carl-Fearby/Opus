@@ -17,6 +17,11 @@ const features = [
       "Live previews, settings panels, generated usage code, and Open in Playground links make it easy to explore components before you commit them to a screen.",
   },
   {
+    title: "Verified beyond a screenshot",
+    description:
+      "Interactive examples are exercised in a real browser for callbacks, navigation, value changes, visible state, and drag gestures. Presentational components receive explicit render coverage.",
+  },
+  {
     title: "Overlays and navigation",
     description:
       "Dialogs, drawers, modals, popovers, toasts, sidebars, and top navigation — composed to work together across complex application shells.",
@@ -32,9 +37,9 @@ const features = [
       "Login, register, Google and Apple continue, OTP, passkeys, forgot and reset password, check-email, verified, and expired-link screens — composed from the same field and button primitives as the rest of Opus.",
   },
   {
-    title: "CRM-ready labs",
+    title: "Application-ready labs",
     description:
-      "Company and contact records, document folders, sales invoices and orders, appointment diaries, and notification centres — composed from the same Opus primitives as the rest of the catalog.",
+      "CRM workspaces, authentication journeys, desktop environments, document managers, contact records, sales flows, maps, and media experiences — composed from the same published primitives.",
   },
   {
     title: "Published for real apps",

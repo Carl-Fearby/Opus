@@ -7,14 +7,14 @@ export function Hero() {
     <section className={styles.hero}>
       <div className={styles.inner}>
         <div className={styles.copy}>
-          <p className={styles.eyebrow}>Design system · React · npm</p>
+          <p className={styles.eyebrow}>Design system · React 19 · npm · browser verified</p>
           <h1 className={styles.title}>
             Ship polished business apps with a component library built for real workflows.
           </h1>
           <p className={styles.lead}>
-            Opus brings together forms, overlays, navigation, charts, dashboard widgets, and auth
-            compositions in one themeable system — with live documentation, a Code Playground, and
-            generated usage examples that stay in sync with the components.
+            Opus brings together forms, overlays, navigation, charts, application shells, desktop
+            primitives, and production-ready compositions in one themeable system — with live
+            documentation, editable previews, and usage examples verified against the real package.
           </p>
           <div className={styles.actions}>
             <Link className={styles.primary} href="/pricing">
@@ -26,8 +26,9 @@ export function Hero() {
           </div>
           <div className={styles.meta}>
             <span>npm install opus-react</span>
-            <span>135+ documented components</span>
-            <span>Accessible by default</span>
+            <span>267 live component examples</span>
+            <span>270 browser interaction checks</span>
+            <span>Accessible foundations</span>
           </div>
         </div>
 

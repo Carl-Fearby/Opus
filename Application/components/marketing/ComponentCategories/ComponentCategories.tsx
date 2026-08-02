@@ -27,13 +27,13 @@ const categories = [
     items: ["Columns and grid", "Splitter and dock layout", "Resizable panel", "Scroll area and container"],
   },
   {
-    title: "Dashboard & Labs",
-    count: "CRM & auth compositions",
+    title: "Application compositions",
+    count: "CRM, auth & desktop labs",
     items: [
       "Login, register, and social auth",
-      "Forgot, reset, and change password",
-      "Company and contact detail cards",
-      "Sales invoices, documents, and diaries",
+      "Resizable CRM dashboard shells",
+      "Company, contact, and document workflows",
+      "Desktop, window, dock, and media experiences",
     ],
   },
 ];
