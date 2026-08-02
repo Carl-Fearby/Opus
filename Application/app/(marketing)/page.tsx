@@ -1,5 +1,6 @@
 import { ComponentCategories } from "@/components/marketing/ComponentCategories";
 import { CtaBand } from "@/components/marketing/CtaBand";
+import { DesktopShowcase } from "@/components/marketing/DesktopShowcase";
 import { FeatureGrid } from "@/components/marketing/FeatureGrid";
 import { Hero } from "@/components/marketing/Hero";
 import { PlaygroundSection } from "@/components/marketing/PlaygroundSection";
@@ -12,6 +13,7 @@ export default function HomePage() {
       <Hero />
       <StatBand />
       <FeatureGrid />
+      <DesktopShowcase />
       <PlaygroundSection />
       <ComponentCategories />
       <WorkflowSection />

@@ -1,10 +1,11 @@
-import { mkdir, readFile } from "node:fs/promises";
+import { copyFile, mkdir, readFile } from "node:fs/promises";
 import { dirname, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 import { chromium } from "@playwright/test";
 
 const libraryRoot = resolve(dirname(fileURLToPath(import.meta.url)), "..");
 const outputDirectory = resolve(libraryRoot, "packages/opus-react/assets/npm");
+const marketingOutputDirectory = resolve(libraryRoot, "../Application/public/marketing");
 const baseUrl = process.env.OPUS_SCREENSHOT_BASE_URL ?? "https://project-opus.netlify.app";
 const packageJson = JSON.parse(
   await readFile(resolve(libraryRoot, "packages/opus-react/package.json"), "utf8"),
@@ -25,6 +26,7 @@ const captures = [
 ];
 
 await mkdir(outputDirectory, { recursive: true });
+await mkdir(marketingOutputDirectory, { recursive: true });
 
 const browser = await chromium.launch();
 const context = await browser.newContext({
@@ -66,5 +68,10 @@ try {
 } finally {
   await browser.close();
 }
+
+await copyFile(
+  resolve(outputDirectory, "desktop.png"),
+  resolve(marketingOutputDirectory, "desktop.png"),
+);
 
 console.log(`Captured ${captures.length} NPM screenshots from ${baseUrl}`);
