@@ -246,8 +246,8 @@ html[data-shell-theme="light"] .shell {
 
 .versionPage {
   display: grid;
-  gap: 18px;
-  width: min(720px, 100%);
+  gap: 36px;
+  width: min(1120px, 100%);
   margin: 0 auto;
   padding: 16px 18px 28px;
   align-content: start;
@@ -282,6 +282,181 @@ html[data-shell-theme="light"] .shell {
   font-size: 0.9rem;
   line-height: 1.55;
   max-width: 58ch;
+}
+
+.roadmap,
+.releaseHistory {
+  display: grid;
+  gap: 22px;
+}
+
+.roadmapHeading,
+.releaseHistoryHeading {
+  display: flex;
+  align-items: end;
+  justify-content: space-between;
+  gap: 28px;
+}
+
+.roadmapHeading h2,
+.releaseHistoryHeading h2 {
+  margin: 4px 0 0;
+  color: var(--opus-text);
+  font-size: clamp(1.35rem, 2vw, 1.8rem);
+  line-height: 1.15;
+}
+
+.roadmapHeading > p,
+.releaseHistoryHeading > p {
+  max-width: 56ch;
+  margin: 0;
+  color: var(--opus-muted);
+  font-size: 0.84rem;
+  line-height: 1.5;
+}
+
+.roadmapList {
+  position: relative;
+  display: grid;
+  gap: 16px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.roadmapList::before {
+  content: "";
+  position: absolute;
+  top: 24px;
+  bottom: 24px;
+  left: 23px;
+  width: 1px;
+  background: linear-gradient(var(--opus-accent), var(--opus-border));
+}
+
+.roadmapItem {
+  position: relative;
+  display: grid;
+  grid-template-columns: 48px minmax(0, 1fr);
+  gap: 14px;
+}
+
+.roadmapMarker {
+  z-index: 1;
+  display: grid;
+  width: 48px;
+  height: 48px;
+  place-items: center;
+  border: 1px solid color-mix(in srgb, var(--opus-accent) 58%, var(--opus-border));
+  border-radius: 50%;
+  background: var(--opus-page-bg);
+  box-shadow: 0 0 18px color-mix(in srgb, var(--opus-accent) 20%, transparent);
+}
+
+.roadmapMarker span {
+  color: var(--opus-accent);
+  font-family: var(--font-ibm-plex-mono), monospace;
+  font-size: 0.72rem;
+  font-weight: 800;
+}
+
+.roadmapCard {
+  min-width: 0;
+  padding: 18px 20px 20px;
+  border: 1px solid var(--opus-border);
+  border-radius: var(--opus-input-radius-large);
+  background:
+    linear-gradient(135deg, color-mix(in srgb, var(--opus-accent) 10%, transparent), transparent 42%),
+    color-mix(in srgb, var(--opus-panel) 90%, transparent);
+  box-shadow: var(--opus-shadow);
+}
+
+.roadmapCardHeader {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 18px;
+}
+
+.roadmapMonth {
+  margin: 0 0 4px;
+  color: var(--opus-accent);
+  font-family: var(--font-ibm-plex-mono), monospace;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+.roadmapCard h3 {
+  margin: 0;
+  color: var(--opus-text);
+  font-size: 1.08rem;
+  line-height: 1.25;
+}
+
+.roadmapStatus,
+.roadmapStatusActive {
+  flex: 0 0 auto;
+  padding: 4px 8px;
+  border: 1px solid var(--opus-border);
+  border-radius: 999px;
+  color: var(--opus-muted);
+  background: color-mix(in srgb, var(--opus-panel) 84%, transparent);
+  font-size: 0.7rem;
+  font-weight: 750;
+}
+
+.roadmapStatusActive {
+  border-color: color-mix(in srgb, #36d98b 52%, var(--opus-border));
+  color: #45df98;
+  background: color-mix(in srgb, #13864f 18%, transparent);
+}
+
+.roadmapOutcome {
+  max-width: 78ch;
+  margin: 12px 0 16px;
+  color: var(--opus-muted);
+  font-size: 0.86rem;
+  line-height: 1.5;
+}
+
+.roadmapWork {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8px 24px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.roadmapWork li {
+  position: relative;
+  padding-left: 16px;
+  color: var(--opus-text);
+  font-size: 0.82rem;
+  line-height: 1.4;
+}
+
+.roadmapWork li::before {
+  content: "";
+  position: absolute;
+  top: 0.55em;
+  left: 0;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--opus-accent);
+  box-shadow: 0 0 8px color-mix(in srgb, var(--opus-accent) 48%, transparent);
+}
+
+.releaseHistory {
+  padding-top: 28px;
+  border-top: 1px solid var(--opus-border);
+}
+
+.releaseHistory .versionList {
+  width: min(760px, 100%);
 }
 
 .versionInlineCode {
@@ -384,5 +559,42 @@ html[data-shell-theme="light"] .shell {
 
   .hubGrid {
     grid-template-columns: 1fr;
+  }
+
+  .roadmapHeading,
+  .releaseHistoryHeading {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .roadmapWork {
+    grid-template-columns: 1fr;
+  }
+
+  .roadmapItem {
+    grid-template-columns: 38px minmax(0, 1fr);
+    gap: 10px;
+  }
+
+  .roadmapMarker {
+    width: 38px;
+    height: 38px;
+  }
+
+  .roadmapList::before {
+    top: 19px;
+    bottom: 19px;
+    left: 18px;
+  }
+
+  .roadmapCard {
+    padding: 16px;
+  }
+
+  .roadmapCardHeader {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 10px;
   }
 }

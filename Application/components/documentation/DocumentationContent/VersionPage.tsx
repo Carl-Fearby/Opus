@@ -5,6 +5,7 @@ import { OpusThemeProvider } from "opus-react";
 import type { VersionEntry } from "@/lib/documentation/versionLog";
 import { libraryVersion } from "@/lib/documentation/libraryVersion";
 import { versionLog } from "@/lib/documentation/versionLog";
+import { roadmapMilestones } from "@/lib/documentation/roadmap";
 import { DocumentationTopBar } from "@/components/documentation/DocumentationTopBar";
 import { DocumentationBreadcrumbs } from "@/components/documentation/DocumentationBreadcrumbs";
 import { ThemeSettingsButton } from "@/components/documentation/ThemeSettingsButton";
@@ -94,24 +95,82 @@ export function VersionPage() {
             <p className={styles.versionEyebrow}>opus-react</p>
             <h1 className={styles.versionTitle}>v{libraryVersion}</h1>
             <p className={styles.versionDescription}>
-              Shipped changes grouped by library release. Run{" "}
-              <code className={styles.versionInlineCode}>npm run sync-versions</code> after shipping
-              changes to refresh this log.
+              Current release, a detailed twelve-month delivery roadmap, and the complete history
+              of shipped library changes.
             </p>
           </div>
-          <ol className={styles.versionList}>
-            {versionLog.map((entry) => (
-              <li className={styles.versionItem} key={entry.commit}>
-                <div className={styles.versionItemHeader}>
-                  <span className={styles.versionBadge}>v{entry.version}</span>
-                  <time className={styles.versionDate} dateTime={entry.releasedAt}>
-                    {formatReleasedDate(entry.releasedAt)}
-                  </time>
-                </div>
-                <VersionEntryBody entry={entry} />
-              </li>
-            ))}
-          </ol>
+
+          <section className={styles.roadmap} aria-labelledby="roadmap-title">
+            <div className={styles.roadmapHeading}>
+              <div>
+                <p className={styles.versionEyebrow}>August 2026 — July 2027</p>
+                <h2 id="roadmap-title">Twelve-month roadmap</h2>
+              </div>
+              <p>
+                Monthly outcomes are divided into small, independently testable component and
+                platform changes. Timing may move as research and user feedback shape priorities.
+              </p>
+            </div>
+
+            <ol className={styles.roadmapList}>
+              {roadmapMilestones.map((milestone, index) => (
+                <li className={styles.roadmapItem} key={milestone.month}>
+                  <div className={styles.roadmapMarker} aria-hidden="true">
+                    <span>{String(index + 1).padStart(2, "0")}</span>
+                  </div>
+                  <article className={styles.roadmapCard}>
+                    <header className={styles.roadmapCardHeader}>
+                      <div>
+                        <p className={styles.roadmapMonth}>{milestone.month}</p>
+                        <h3>{milestone.title}</h3>
+                      </div>
+                      <span
+                        className={
+                          milestone.status === "In progress"
+                            ? styles.roadmapStatusActive
+                            : styles.roadmapStatus
+                        }
+                      >
+                        {milestone.status}
+                      </span>
+                    </header>
+                    <p className={styles.roadmapOutcome}>{milestone.outcome}</p>
+                    <ul className={styles.roadmapWork}>
+                      {milestone.work.map((item) => (
+                        <li key={item}>{item}</li>
+                      ))}
+                    </ul>
+                  </article>
+                </li>
+              ))}
+            </ol>
+          </section>
+
+          <section className={styles.releaseHistory} aria-labelledby="release-history-title">
+            <div className={styles.releaseHistoryHeading}>
+              <div>
+                <p className={styles.versionEyebrow}>Published packages</p>
+                <h2 id="release-history-title">Release history</h2>
+              </div>
+              <p>
+                Run <code className={styles.versionInlineCode}>npm run sync-versions</code> after
+                shipping changes to refresh this log.
+              </p>
+            </div>
+            <ol className={styles.versionList}>
+              {versionLog.map((entry) => (
+                <li className={styles.versionItem} key={entry.commit}>
+                  <div className={styles.versionItemHeader}>
+                    <span className={styles.versionBadge}>v{entry.version}</span>
+                    <time className={styles.versionDate} dateTime={entry.releasedAt}>
+                      {formatReleasedDate(entry.releasedAt)}
+                    </time>
+                  </div>
+                  <VersionEntryBody entry={entry} />
+                </li>
+              ))}
+            </ol>
+          </section>
         </div>
       </div>
     </OpusThemeProvider>
