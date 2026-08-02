@@ -50,6 +50,10 @@ const nextConfig: NextConfig = {
       ...config.resolve.alias,
       "opus-react$": join(appDir, "node_modules/opus-react/dist/index.js"),
     };
+    // Documentation components are synced into Application as symlinks. Resolve imports from the
+    // Application path so clean CI/Netlify builds use Application/node_modules rather than relying
+    // on a neighbouring Library/node_modules directory from a developer machine.
+    config.resolve.symlinks = false;
     return config;
   },
   // This app is a faithful fork of the Opus documentation site, which is run
