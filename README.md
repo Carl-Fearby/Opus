@@ -60,3 +60,18 @@ npm publish -w opus-react --access public
 ```
 
 The npm package contains components only. The public website, playground, and marketing pages live in Application and are not published to npm.
+
+## Contribute to Opus
+
+Opus is growing and we are looking for contributors who want to help build a thoughtful,
+accessible component system for modern business applications. Contributions can include small
+component improvements, accessibility fixes, interaction tests, documentation, design review,
+new primitives, dashboard patterns, and desktop or web-app features.
+
+You do not need to take on a large feature. Well-scoped fixes, tests, examples, and documentation
+improvements are all valuable.
+
+- Email [carlfearby@me.com](mailto:carlfearby@me.com)
+- WhatsApp [+44 7940 147138](https://wa.me/447940147138)
+
+Tell us a little about your interests and the area of Opus you would like to work on.

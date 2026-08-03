@@ -419,9 +419,17 @@ npm publish -w opus-react --access public
 
 `prepublishOnly` runs the package build automatically. Bump the version in `packages/opus-react/package.json` before publishing.
 
-## Contact
+## Contribute to Opus
 
-Carl Fearby — [carlfearby@me.com](mailto:carlfearby@me.com)
+We are looking for contributors who want to help improve Opus. Useful contributions range from
+small component refinements, accessibility fixes, tests, examples, and documentation through to
+new primitives, application compositions, dashboard patterns, and desktop features.
+
+You do not need to commit to a large feature. If you would like to get involved, tell us what you
+are interested in and which part of Opus you would like to work on:
+
+- Email [carlfearby@me.com](mailto:carlfearby@me.com)
+- WhatsApp [+44 7940 147138](https://wa.me/447940147138)
 
 ## License
 

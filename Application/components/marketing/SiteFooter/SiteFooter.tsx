@@ -7,6 +7,7 @@ const footerLinks = [
   { href: "/#features", label: "Features", external: false },
   { href: "/#playground", label: "Playground", external: false },
   { href: "/#components", label: "Components", external: false },
+  { href: "/#contributors", label: "Contribute", external: false },
   { href: docsComponentsUrl, label: "Component catalog", external: false },
   { href: docsPlaygroundUrl, label: "Code Playground", external: false },
   { href: "/pricing", label: "Pricing", external: false },
