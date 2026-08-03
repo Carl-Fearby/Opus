@@ -430,6 +430,7 @@ are interested in and which part of Opus you would like to work on:
 
 - Email [carlfearby@me.com](mailto:carlfearby@me.com)
 - WhatsApp [+44 7940 147138](https://wa.me/447940147138)
+- Browse the source, fork the project, or open a pull request at [Carl-Fearby/Opus](https://github.com/Carl-Fearby/Opus)
 
 ## License
 

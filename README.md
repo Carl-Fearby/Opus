@@ -73,5 +73,6 @@ improvements are all valuable.
 
 - Email [carlfearby@me.com](mailto:carlfearby@me.com)
 - WhatsApp [+44 7940 147138](https://wa.me/447940147138)
+- Browse, fork, or contribute through [Carl-Fearby/Opus](https://github.com/Carl-Fearby/Opus)
 
 Tell us a little about your interests and the area of Opus you would like to work on.

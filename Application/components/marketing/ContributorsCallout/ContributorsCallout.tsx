@@ -32,7 +32,15 @@ export function ContributorsCallout() {
           <p>Interested in contributing?</p>
           <span>Tell us what you enjoy working on and where you would like to help.</span>
           <div className={styles.actions}>
-            <a className={styles.primary} href="mailto:carlfearby@me.com?subject=Contributing%20to%20Opus">
+            <a
+              className={styles.primary}
+              href="https://github.com/Carl-Fearby/Opus"
+              rel="noreferrer"
+              target="_blank"
+            >
+              View GitHub repository
+            </a>
+            <a className={styles.secondary} href="mailto:carlfearby@me.com?subject=Contributing%20to%20Opus">
               Email Carl
             </a>
             <a
@@ -45,6 +53,10 @@ export function ContributorsCallout() {
             </a>
           </div>
           <small>
+            <a href="https://github.com/Carl-Fearby/Opus" rel="noreferrer" target="_blank">
+              Carl-Fearby/Opus
+            </a>
+            <span aria-hidden="true"> · </span>
             <a href="mailto:carlfearby@me.com">carlfearby@me.com</a>
             <span aria-hidden="true"> · </span>
             <a href="https://wa.me/447940147138" rel="noreferrer" target="_blank">

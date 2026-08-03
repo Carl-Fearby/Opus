@@ -12,6 +12,7 @@ const footerLinks = [
   { href: docsPlaygroundUrl, label: "Code Playground", external: false },
   { href: "/pricing", label: "Pricing", external: false },
   { href: npmPackageUrl, label: "npm", external: true },
+  { href: "https://github.com/Carl-Fearby/Opus", label: "GitHub", external: true },
 ];
 
 export function SiteFooter() {
