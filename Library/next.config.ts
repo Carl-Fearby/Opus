@@ -6,6 +6,9 @@ const appDir = path.dirname(fileURLToPath(import.meta.url));
 const liveOpusReactSource = "./packages/opus-react/src/index.ts";
 
 const nextConfig: NextConfig = {
+  ...(process.env.OPUS_NEXT_DIST_DIR
+    ? { distDir: process.env.OPUS_NEXT_DIST_DIR }
+    : {}),
   reactStrictMode: true,
   turbopack: {
     root: appDir,

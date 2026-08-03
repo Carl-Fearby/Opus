@@ -8,6 +8,8 @@ import { useComponentsTheme } from "@/components/development/ComponentsThemeProv
 import { controlHasSettingsPanel } from "@/lib/controls/controlSettingsPanel";
 import {
   clampSettingsWidth,
+  MAX_SETTINGS_WIDTH,
+  MIN_SETTINGS_WIDTH,
   SETTINGS_WIDTH_KEY,
   useComponentSettingsContext,
 } from "./ComponentSettingsContext";
@@ -106,6 +108,9 @@ export function ComponentsSettingsSidebar() {
       <div
         aria-label="Resize settings sidebar"
         aria-orientation="vertical"
+        aria-valuemax={MAX_SETTINGS_WIDTH}
+        aria-valuemin={MIN_SETTINGS_WIDTH}
+        aria-valuenow={settingsWidth}
         className={styles.settingsResizeHandle}
         role="separator"
         tabIndex={0}

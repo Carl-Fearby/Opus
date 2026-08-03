@@ -15,6 +15,10 @@ out/
 # production
 build/
 Library/packages/opus-react/dist/
+coverage/
+playwright-report/
+test-results/
+.next-e2e/
 
 # misc
 .DS_Store

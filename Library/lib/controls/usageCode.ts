@@ -76,7 +76,11 @@ function splitUsageCodeParts(code: string): Pick<UsageCode, "imports" | "jsx"> {
     return { imports: "", jsx: "" };
   }
 
-  const returnIndex = trimmed.search(/\n\s*return\s+/);
+  // `interactiveUsage` deliberately emits its component return at module
+  // indentation. Do not mistake a return inside a helper component/function
+  // for that top-level marker, otherwise the generated Example can compile
+  // successfully while rendering nothing.
+  const returnIndex = trimmed.search(/\nreturn\s+/);
   if (returnIndex !== -1) {
     return {
       imports: trimmed.slice(0, returnIndex).trim(),
@@ -153,7 +157,9 @@ export function formatFullUsageComponent(code: string): string {
     return trimmed;
   }
 
-  const returnIndex = trimmed.search(/\n\s*return\s+/);
+  // Only `interactiveUsage`'s unindented return is a wrapper marker. Returns
+  // inside helper components must remain inside those helpers.
+  const returnIndex = trimmed.search(/\nreturn\s+/);
   if (returnIndex !== -1) {
     const header = trimmed.slice(0, returnIndex).trim();
     const returnStatement = trimmed.slice(returnIndex + 1).trim();

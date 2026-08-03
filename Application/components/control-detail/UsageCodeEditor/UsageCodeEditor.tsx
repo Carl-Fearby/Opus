@@ -57,6 +57,9 @@ export function UsageCodeEditor({
       javascript({ jsx: true, typescript: true }),
       keymap.of([{ key: "Mod-a", run: selectAll }]),
       EditorView.lineWrapping,
+      EditorView.contentAttributes.of({
+        "aria-label": editable ? "Editable code" : "Generated usage code",
+      }),
     ];
 
     if (fillHeight) {
@@ -81,7 +84,7 @@ export function UsageCodeEditor({
     }
 
     return base;
-  }, [fillHeight]);
+  }, [editable, fillHeight]);
 
   const editor = (
     <div

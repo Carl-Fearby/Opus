@@ -1,7 +1,7 @@
 "use client";
 
-import { useMemo, useState } from "react";
-import type { SyntheticEvent } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
+import type { ComponentType } from "react";
 import { compilePlaygroundCode } from "@/lib/playground/compilePlaygroundCode";
 import { generateUsageCode } from "@/lib/controls/generateUsageCode";
 import type { ComponentCategory, ControlSettings, ControlSlug } from "@/lib/controls/types";
@@ -14,7 +14,7 @@ type UsagePreviewProps = {
   slug: ControlSlug;
 };
 
-function getActionLabel(event: SyntheticEvent<HTMLElement>) {
+function getActionLabel(event: Event) {
   const target = event.target as HTMLElement;
   const action = target.closest<HTMLElement>(
     "button, a[href], [role='button'], input, select, textarea",
@@ -45,23 +45,66 @@ export function UsagePreview({
     () => generateUsageCode(slug, settings, category).full,
     [category, settings, slug],
   );
-  const PreviewComponent = useMemo(() => compilePlaygroundCode(source), [source]);
-  const [lastAction, setLastAction] = useState("Waiting for action");
+  const preview = useMemo<{
+    Component?: ComponentType;
+    error?: string;
+  }>(() => {
+    if (!source.trim()) {
+      return { error: `No usage example is registered for ${slug}.` };
+    }
 
-  const reportAction = (event: SyntheticEvent<HTMLElement>) => {
-    const label = getActionLabel(event);
-    if (label) setLastAction(`Last action: ${label}`);
-  };
+    try {
+      return { Component: compilePlaygroundCode(source) };
+    } catch (error) {
+      return {
+        error:
+          error instanceof Error
+            ? error.message
+            : `Unable to compile the ${slug} usage example.`,
+      };
+    }
+  }, [slug, source]);
+  const [lastAction, setLastAction] = useState("Waiting for action");
+  const previewRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const previewElement = previewRef.current;
+    if (!previewElement || !showActionStatus) return;
+
+    const reportAction = (event: Event) => {
+      const label = getActionLabel(event);
+      if (label) queueMicrotask(() => setLastAction(`Last action: ${label}`));
+    };
+
+    previewElement.addEventListener("change", reportAction, true);
+    previewElement.addEventListener("click", reportAction, true);
+    previewElement.addEventListener("input", reportAction, true);
+    return () => {
+      previewElement.removeEventListener("change", reportAction, true);
+      previewElement.removeEventListener("click", reportAction, true);
+      previewElement.removeEventListener("input", reportAction, true);
+    };
+  }, [showActionStatus]);
 
   return (
     <div
       className={styles.globalActionPreview}
-      onChangeCapture={showActionStatus ? reportAction : undefined}
-      onClickCapture={showActionStatus ? reportAction : undefined}
+      data-testid="usage-preview"
+      ref={previewRef}
     >
-      <PreviewComponent />
+      {preview.Component ? (
+        <preview.Component />
+      ) : (
+        <p className={styles.globalActionStatus} role="alert">
+          {preview.error}
+        </p>
+      )}
       {showActionStatus ? (
-        <p className={styles.globalActionStatus} aria-live="polite">
+        <p
+          className={styles.globalActionStatus}
+          data-testid="usage-preview-action"
+          aria-live="polite"
+        >
           {lastAction}
         </p>
       ) : null}

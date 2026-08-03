@@ -157,6 +157,7 @@ export function CustomScrollbar({
       viewportRef.current = next;
       next.id ||= viewportId;
       next.setAttribute("aria-label", label);
+      if (!next.hasAttribute("role")) next.setAttribute("role", "region");
       next.addEventListener("scroll", handleScroll, { passive: true });
       if (frame !== null) window.cancelAnimationFrame(frame);
       frame = window.requestAnimationFrame(measure);
@@ -353,6 +354,7 @@ export function CustomScrollbar({
           className={styles.viewport}
           id={viewportId}
           ref={viewportRef as RefObject<HTMLDivElement | null>}
+          role="region"
           tabIndex={0}
           onScroll={handleScroll}
         >

@@ -14,8 +14,14 @@
     "lint": "eslint",
     "audit:a11y": "node scripts/audit-components-a11y.mjs",
     "audit:actions": "node scripts/audit-component-actions.mjs",
+    "audit:usage": "node -r ./scripts/register-css.cjs -r tsx/cjs scripts/audit-usage-code.ts",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "test:e2e": "env -u NO_COLOR BROWSERSLIST_IGNORE_OLD_DATA=true BASELINE_BROWSER_MAPPING_IGNORE_OLD_DATA=true playwright test",
+    "test:all": "npm run test && npm run test:e2e",
     "sync-versions": "node scripts/sync-version-log.mjs",
-    "generate-emoji-catalog": "node scripts/generate-emoji-catalog.mjs"
+    "generate-emoji-catalog": "node scripts/generate-emoji-catalog.mjs",
+    "test:coverage": "vitest run --coverage"
   },
   "dependencies": {
     "@babel/standalone": "^7.29.7",
@@ -27,7 +33,7 @@
     "@uiw/react-codemirror": "^4.25.10",
     "flag-icons": "^7.5.0",
     "maplibre-gl": "^5.24.0",
-    "next": "16.0.1",
+    "next": "16.2.12",
     "react": "19.2.0",
     "react-dom": "19.2.0",
     "react-markdown": "^10.1.0",
@@ -38,12 +44,21 @@
     "@axe-core/playwright": "^4.12.1",
     "@emoji-mart/data": "^1.2.1",
     "@playwright/test": "^1.61.1",
+    "@testing-library/jest-dom": "^7.0.0",
+    "@testing-library/react": "^16.3.2",
+    "@testing-library/user-event": "^14.6.1",
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",
     "@types/three": "^0.185.0",
+    "@vitejs/plugin-react": "^6.0.5",
+    "@vitest/coverage-v8": "^4.1.10",
+    "baseline-browser-mapping": "^2.11.8",
     "eslint": "^9",
-    "eslint-config-next": "16.0.1",
-    "typescript": "^5"
+    "eslint-config-next": "16.2.12",
+    "jsdom": "^29.1.1",
+    "tsx": "^4.23.1",
+    "typescript": "^5",
+    "vitest": "^4.1.10"
   }
 }

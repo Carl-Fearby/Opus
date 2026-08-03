@@ -876,7 +876,7 @@ const [${state}, ${toSetter(state)}] = useState([${s.value.map((value) => quote(
     }
     case "multi-file-upload": {
       const s = settings as ControlSettingsBySlug["multi-file-upload"];
-      return `${usageClientPrefix()}\n${importLine(["MultiFileField"])}\n\nconst [files, setFiles] = useState<File[]>([]);\n\nreturn <MultiFileField files={files} id="documents" label=${quote(s.label)} maxFiles={${s.maxFiles}} onChange={(next) => setFiles(next.filter((file): file is File => file instanceof File)} />;`;
+      return `${usageClientPrefix()}\n${importLine(["MultiFileField"])}\n\nconst [files, setFiles] = useState<File[]>([]);\n\nreturn <MultiFileField files={files} id="documents" label=${quote(s.label)} maxFiles={${s.maxFiles}} onChange={(next) => setFiles(next.filter((file) => file instanceof File))} />;`;
     }
     case "checkbox-group": {
       const s = settings as ControlSettingsBySlug["checkbox-group"];
@@ -1198,6 +1198,7 @@ const [${state}, ${toSetter(state)}] = useState(${formatObjectLiteral(s.value)})
             : "button";
       const props = [
         formatStringProp("variant", s.variant),
+        formatExpressionProp("onClick", `() => console.log(${quote(`${s.label} clicked`)})`),
         ...(buttonType !== "button"
           ? [formatStringProp("type", buttonType)]
           : []),
@@ -1732,7 +1733,7 @@ ${children}
         ...(s.dismissible
           ? [
               formatBoolProp("dismissible", true),
-              formatExpressionProp("onDismiss", "() => setAlertVisible(false)"),
+              formatExpressionProp("onDismiss", "() => console.log(\"Alert dismissed\")"),
             ]
           : []),
       ];
@@ -1741,12 +1742,12 @@ ${children}
     case "toast": {
       const s = settings as ControlSettingsBySlug["toast"];
       const showProps = [
-        formatStringProp("status", s.status),
-        formatStringProp("title", s.title),
+        `status: ${quote(s.status)}`,
+        `title: ${quote(s.title)}`,
         ...(s.descriptionEnabled
-          ? [formatStringProp("description", s.description)]
+          ? [`description: ${quote(s.description)}`]
           : []),
-        ...(s.dismissible ? [] : [formatBoolProp("dismissible", false)]),
+        ...(s.dismissible ? [] : ["dismissible: false"]),
       ];
       return interactiveUsage({
         components: ["ToastProvider", "useToast"],
@@ -1760,9 +1761,10 @@ ${children}
         state: ["const toast = useToast();"],
         jsx: `<button
   type="button"
-  onClick={() =>
-    toast.show({${showProps.length === 1 ? ` ${showProps[0]}` : `\n      ${showProps.join(",\n      ")},\n    `}})
-  }
+  onClick={() => {
+    console.log("show toast");
+    toast.show({${showProps.length === 1 ? ` ${showProps[0]}` : `\n      ${showProps.join(",\n      ")},\n    `}});
+  }}
 >
   Show toast
 </button>`,
@@ -1785,7 +1787,7 @@ ${children}
           ? [
               formatExpressionProp(
                 "actions",
-                '<Button variant="primary">Open</Button>',
+                '<Button variant="primary" onClick={() => console.log("open card")}>Open</Button>',
               ),
             ]
           : []),
@@ -1799,13 +1801,12 @@ ${formatJsxRichContent(s.content)}
     case "kpi-card":
     case "stat-card": {
       const s = settings as ControlSettingsBySlug["stat-card"];
-      const iconOption = getFontAwesomeIconOption(s.icon);
       const props = [
         formatStringProp("label", s.label),
         formatStringProp("value", s.value),
         formatExpressionProp(
           "icon",
-          `<FontAwesomeIcon icon={${iconOption.importName}} />`,
+          `<CatalogIcon iconName=${quote(s.icon)} />`,
         ),
         ...(s.showChange
           ? [
@@ -1818,10 +1819,7 @@ ${formatJsxRichContent(s.content)}
           : []),
       ];
 
-      return `import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { ${iconOption.importName} } from "@fortawesome/free-solid-svg-icons";
-import "@/lib/fontawesome";
-${wrapDashboardWidget(`<StatCard${formatSelfClosing(props)} />`, ["StatCard"], {
+      return `${wrapDashboardWidget(`<StatCard${formatSelfClosing(props)} />`, ["CatalogIcon", "StatCard"], {
   width: s.width ?? "widget",
   wrap: s.wrapInContainer ?? true,
 })}`;
@@ -1927,13 +1925,9 @@ ${wrapDashboardWidget(`<Gauge${formatSelfClosing(props)}`, ["Gauge"], {
     }
     case "metric-tile": {
       const s = settings as ControlSettingsBySlug["metric-tile"];
-      const iconOption = getFontAwesomeIconOption(s.icon);
-      return `import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { ${iconOption.importName} } from "@fortawesome/free-solid-svg-icons";
-import "@/lib/fontawesome";
-${wrapDashboardWidget(
-  `<MetricTile icon={<FontAwesomeIcon icon={${iconOption.importName}} />} label=${quote(s.label)} value=${quote(s.value)}${s.showSparkline ? " sparkline={[12, 18, 16, 24, 22, 30, 28]}" : ""} />`,
-  ["MetricTile"],
+      return `${wrapDashboardWidget(
+  `<MetricTile icon={<CatalogIcon iconName=${quote(s.icon)} />} label=${quote(s.label)} value=${quote(s.value)}${s.showSparkline ? " sparkline={[12, 18, 16, 24, 22, 30, 28]}" : ""} />`,
+  ["CatalogIcon", "MetricTile"],
   { width: s.width ?? "widget", wrap: s.wrapInContainer ?? true },
 )}`;
     }
@@ -2307,7 +2301,7 @@ ${wrapDashboardWidget(
         components: s.wrapInContainer
           ? ["CatalogIcon", "DashboardContentContainer", "Tiles", "WelcomeMessage"]
           : ["CatalogIcon", "Tiles", "WelcomeMessage"],
-        preamble: [
+        afterState: [
           `const quickActions = [
   { id: "contacts", icon: "users", label: "Contact Manager", tone: "purple" },
   { id: "product-catalogues", icon: "boxes-stacked", label: "Product Catalogues", tone: "blue" },
@@ -3522,7 +3516,7 @@ const assets = ${formatModelAssetsForUsage()};
       ];
       return interactiveUsage({
         components: ["SelectField", "SwitchField", "Tabs", "TextField"],
-        preamble: [
+        afterState: [
           "",
           "const items = [",
           `  {
@@ -3645,12 +3639,12 @@ ${formatJsxParagraphContent(s.content)}
       const actionParts: string[] = [];
       if (s.secondaryAction) {
         actionParts.push(
-          `<Button variant="secondary">${s.secondaryActionLabel}</Button>`,
+          `<Button variant="secondary" onClick={() => console.log("${s.secondaryActionLabel.toLowerCase().replace(/\s+/g, "-")}")}>${s.secondaryActionLabel}</Button>`,
         );
       }
       if (s.primaryAction) {
         actionParts.push(
-          `<Button variant="primary">${s.primaryActionLabel}</Button>`,
+          `<Button variant="primary" onClick={() => console.log("${s.primaryActionLabel.toLowerCase().replace(/\s+/g, "-")}")}>${s.primaryActionLabel}</Button>`,
         );
       }
       const props = [
@@ -3826,6 +3820,64 @@ const items = ${formatMasonryItemsForUsage()};
 const items = ${formatPropertyItemsForUsage(s.copyable)};
 
 <PropertyGrid items={items}${s.bordered ? " bordered" : ""} />`;
+    }
+    case "desktop-window": {
+      return interactiveUsage({
+        components: ["DesktopWindow"],
+        state: [],
+        jsx: `<div style={{ height: 420, position: "relative", width: "100%" }}>
+  <DesktopWindow
+    defaultRect={{ height: 300, width: 500, x: 80, y: 40 }}
+    title="Customer record"
+    onClose={() => console.log("Close customer record")}
+    onFocus={() => console.log("Focus customer record")}
+    onMaximizeChange={(maximized) => console.log("Maximized", maximized)}
+    onMinimizeChange={(minimized) => console.log("Minimized", minimized)}
+    onRectChange={(rect) => console.log("Window rect", rect)}
+  >
+    <div style={{ padding: 20 }}>Drag the title bar or resize from any edge.</div>
+  </DesktopWindow>
+</div>`,
+      });
+    }
+    case "desktop-dock": {
+      const s = settings as ControlSettingsBySlug["desktop-dock"];
+      return interactiveUsage({
+        components: ["DesktopDock"],
+        preamble: [
+          `const dockItems = [
+  { active: true, id: "files", icon: "folder-open", label: "Files", tone: "blue" },
+  { id: "contacts", icon: "users", label: "Contacts" },
+  { id: "settings", icon: "gear", label: "Settings", tone: "blue" },
+];`,
+        ],
+        state: [`const [dockSize, setDockSize] = useState(${s.size});`],
+        jsx: `<div style={{ height: 160, position: "relative", width: "100%" }}>
+  <DesktopDock
+    autoHide={${s.autoHide}}
+    items={dockItems}
+    position=${quote(s.position)}
+    resizable={${s.resizable}}
+    size={dockSize}
+    onItemClick={(item) => console.log("Open", item.label)}
+    onSizeChange={setDockSize}
+  />
+</div>`,
+      });
+    }
+    case "desktop-icon": {
+      return interactiveUsage({
+        components: ["DesktopIcon"],
+        state: ["const [selected, setSelected] = useState(false);"],
+        jsx: `<DesktopIcon
+  icon="folder-open"
+  label="Documents"
+  selected={selected}
+  tone="blue"
+  onOpen={() => console.log("Open Documents")}
+  onSelect={() => setSelected(true)}
+/>`,
+      });
     }
     case "desktop": {
       const desktopSettings = settings as Partial<
@@ -4062,7 +4114,7 @@ ${importLine(["ResizeHandle"])}
 const ${minName} = ${minSize};
 const ${maxName} = ${maxSize};
 
-export default function ResizeHandleExample() {
+export default function Example() {
   const [${stateName}, ${setterName}] = useState(${initialSize});
 
   const clampSize = (size) => Math.min(Math.max(size, ${minName}), ${maxName});
@@ -4190,7 +4242,15 @@ ${formatScrollAreaContent()}
       return `${importLine(["AspectRatio"])}
 
 <AspectRatio ratio="${s.ratio}">
-  <img alt="" src="/hero.jpg" />
+  <div
+    aria-label="Example media"
+    role="img"
+    style={{
+      width: "100%",
+      height: "100%",
+      background: "linear-gradient(135deg, var(--opus-accent), var(--opus-panel))",
+    }}
+  />
 </AspectRatio>`;
     }
     case "container": {
@@ -4246,8 +4306,8 @@ ${formatScrollAreaContent()}
       const s = settings as ControlSettingsBySlug["toolbar"];
       return `${importLine(["Toolbar", "Button"])}
 
-<Toolbar${s.dense ? " dense" : ""} start={<Button variant="secondary">Filter</Button>} end={<Button>Publish</Button>}>
-  <Button variant="light">Undo</Button>
+<Toolbar${s.dense ? " dense" : ""} start={<Button variant="secondary" onClick={() => console.log("filter")}>Filter</Button>} end={<Button onClick={() => console.log("publish")}>Publish</Button>}>
+  <Button variant="light" onClick={() => console.log("undo")}>Undo</Button>
 </Toolbar>`;
     }
     case "application-footer": {
@@ -4298,6 +4358,8 @@ ${formatScrollAreaContent()}
 <SplitButton
   variant="${s.variant}"
   actions={${formatSplitActionsForUsage()}}
+  onClick={() => console.log("save")}
+  onActionSelect={(id) => console.log(id)}
 >
   Save
 </SplitButton>`;
@@ -4306,7 +4368,7 @@ ${formatScrollAreaContent()}
       const s = settings as ControlSettingsBySlug["fab"];
       return `${importLine(["FloatingActionButton"])}
 
-<FloatingActionButton label="Create" icon="+" size="${s.size}"${s.extended ? " extended" : ""} />`;
+<FloatingActionButton label="Create" icon="+" size="${s.size}"${s.extended ? " extended" : ""} onClick={() => console.log("create")} />`;
     }
     case "tile": {
       const s = settings as ControlSettingsBySlug["tile"];
@@ -4316,7 +4378,7 @@ ${formatScrollAreaContent()}
   label="${s.label}"
   tone="${s.tone}"
   icon="${s.icon}"
-  onClick={() => handleTile("${s.label.toLowerCase().replace(/\s+/g, "-")}")}
+  onClick={() => console.log("${s.label.toLowerCase().replace(/\s+/g, "-")}")}
 />`;
     }
     case "tiles": {
@@ -4341,7 +4403,7 @@ const items = ${formatTilesForUsage()};
   trend="${s.trend}"
   trendValue="${s.trendValue}"
   comparison="${s.comparison}"
-  onClick={() => handleStatTile("${s.label.toLowerCase().replace(/\s+/g, "-")}")}
+  onClick={() => console.log("${s.label.toLowerCase().replace(/\s+/g, "-")}")}
 />`;
     }
     case "stat-tiles": {
@@ -4582,12 +4644,13 @@ const value = ${formatJsonValueForUsage()};
     }
     case "hotkey-manager": {
       const s = settings as ControlSettingsBySlug["hotkey-manager"];
-      return `${importLine(["HotkeyManager", "useHotkey"])}\n\n<HotkeyManager enabled={${s.enabled}}>\n  {/* useHotkey({ id: "save", key: ${JSON.stringify(s.key)}, meta: true }, handler) */}\n  {children}\n</HotkeyManager>`;
+      return `${importLine(["HotkeyManager", "useHotkey"])}\n\n<HotkeyManager enabled={${s.enabled}}>\n  {/* useHotkey({ id: "save", key: ${JSON.stringify(s.key)}, meta: true }, handler) */}\n  <p>Keyboard shortcuts are ${s.enabled ? "enabled" : "disabled"}.</p>\n</HotkeyManager>`;
     }
     case "copy-button": {
       const s = settings as ControlSettingsBySlug["copy-button"];
       const props = [
         formatStringProp("value", s.value),
+        formatExpressionProp("onCopied", "() => console.log(\"copied\")"),
         ...(s.label !== "Copy" ? [formatStringProp("label", s.label)] : []),
         ...(s.copiedLabel !== "Copied"
           ? [formatStringProp("copiedLabel", s.copiedLabel)]
@@ -4596,11 +4659,11 @@ const value = ${formatJsonValueForUsage()};
       return `${importLine(["CopyButton"])}\n\n<CopyButton${formatSelfClosing(props)}`;
     }
     case "clipboard": {
-      return `${importLine(["Clipboard", "useClipboard"])}\n\n<Clipboard>\n  {children}\n</Clipboard>`;
+      return `${importLine(["Clipboard", "CopyButton", "useClipboard"])}\n\n<Clipboard>\n  <CopyButton value="Opus clipboard example" />\n</Clipboard>`;
     }
     case "theme-provider": {
       const s = settings as ControlSettingsBySlug["theme-provider"];
-      return `${importLine(["ThemeProvider"])}\n\n<ThemeProvider theme=${JSON.stringify(s.theme)}>\n  {children}\n</ThemeProvider>`;
+      return `${importLine(["ThemeProvider"])}\n\n<ThemeProvider theme=${JSON.stringify(s.theme)}>\n  <div style={{ padding: 16 }}>Theme-aware content</div>\n</ThemeProvider>`;
     }
     case "theme-switcher": {
       const s = settings as ControlSettingsBySlug["theme-switcher"];
