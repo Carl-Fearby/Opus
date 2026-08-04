@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useRef } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import type { ComponentType } from "react";
 import { compilePlaygroundCode } from "@/lib/playground/compilePlaygroundCode";
 import { generateUsageCode } from "@/lib/controls/generateUsageCode";
@@ -64,8 +64,8 @@ export function UsagePreview({
       };
     }
   }, [slug, source]);
+  const [lastAction, setLastAction] = useState("Waiting for action");
   const previewRef = useRef<HTMLDivElement>(null);
-  const actionStatusRef = useRef<HTMLParagraphElement>(null);
 
   useEffect(() => {
     const previewElement = previewRef.current;
@@ -73,22 +73,18 @@ export function UsagePreview({
 
     const reportAction = (event: Event) => {
       const label = getActionLabel(event);
-      if (label) {
-        queueMicrotask(() => {
-          if (actionStatusRef.current) {
-            actionStatusRef.current.textContent = `Last action: ${label}`;
-          }
-        });
-      }
+      if (label) queueMicrotask(() => setLastAction(`Last action: ${label}`));
     };
 
-    previewElement.addEventListener("change", reportAction);
-    previewElement.addEventListener("click", reportAction);
-    previewElement.addEventListener("input", reportAction);
+    previewElement.addEventListener("change", reportAction, true);
+    previewElement.addEventListener("click", reportAction, true);
+    previewElement.addEventListener("input", reportAction, true);
+    previewElement.dataset.hydrated = "true";
     return () => {
-      previewElement.removeEventListener("change", reportAction);
-      previewElement.removeEventListener("click", reportAction);
-      previewElement.removeEventListener("input", reportAction);
+      delete previewElement.dataset.hydrated;
+      previewElement.removeEventListener("change", reportAction, true);
+      previewElement.removeEventListener("click", reportAction, true);
+      previewElement.removeEventListener("input", reportAction, true);
     };
   }, [showActionStatus]);
 
@@ -110,9 +106,8 @@ export function UsagePreview({
           className={styles.globalActionStatus}
           data-testid="usage-preview-action"
           aria-live="polite"
-          ref={actionStatusRef}
         >
-          Waiting for action
+          {lastAction}
         </p>
       ) : null}
     </div>

@@ -79,7 +79,9 @@ export function UsagePreview({
     previewElement.addEventListener("change", reportAction, true);
     previewElement.addEventListener("click", reportAction, true);
     previewElement.addEventListener("input", reportAction, true);
+    previewElement.dataset.hydrated = "true";
     return () => {
+      delete previewElement.dataset.hydrated;
       previewElement.removeEventListener("change", reportAction, true);
       previewElement.removeEventListener("click", reportAction, true);
       previewElement.removeEventListener("input", reportAction, true);

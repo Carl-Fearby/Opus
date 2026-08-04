@@ -206,6 +206,7 @@ for (const slug of getAllSlugs()) {
 
     const preview = page.getByTestId("usage-preview").first();
     await expect(preview).toBeVisible();
+    await expect(preview).toHaveAttribute("data-hydrated", "true");
 
     const status = preview.getByTestId("usage-preview-action").first();
     await expect(status).toHaveText("Waiting for action");
@@ -295,6 +296,7 @@ test.describe("canonical control behaviour", () => {
   test("button press emits the named action", async ({ page }) => {
     await page.goto("/documentation/components/button");
     const preview = page.getByTestId("usage-preview");
+    await expect(preview).toHaveAttribute("data-hydrated", "true");
     const button = preview.getByRole("button").first();
     const label = (await button.textContent())?.trim();
 
@@ -304,7 +306,9 @@ test.describe("canonical control behaviour", () => {
 
   test("checkbox interaction emits its callback at the browser boundary", async ({ page }) => {
     await page.goto("/documentation/components/checkbox");
-    const checkbox = page.getByTestId("usage-preview").getByRole("checkbox").first();
+    const preview = page.getByTestId("usage-preview");
+    await expect(preview).toHaveAttribute("data-hydrated", "true");
+    const checkbox = preview.getByRole("checkbox").first();
 
     await checkbox.click({ force: true });
     await expect(page.getByTestId("usage-preview-action")).toContainText("Last action:");
@@ -313,6 +317,7 @@ test.describe("canonical control behaviour", () => {
   test("tabs change the selected panel and emit their callback", async ({ page }) => {
     await page.goto("/documentation/components/tabs");
     const preview = page.getByTestId("usage-preview");
+    await expect(preview).toHaveAttribute("data-hydrated", "true");
     const tabs = preview.getByRole("tab");
     const target = tabs.nth(1);
 

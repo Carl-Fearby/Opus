@@ -8,6 +8,7 @@
   "scripts": {
     "dev": "next dev --webpack",
     "dev:turbo": "next dev --turbo",
+    "prebuild": "node scripts/clean-e2e-build.mjs",
     "build": "npm run build:lib && next build",
     "build:lib": "npm run build -w opus-react",
     "start": "next start",
