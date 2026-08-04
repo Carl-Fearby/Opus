@@ -26,6 +26,14 @@ jobs:
           cache: npm
           cache-dependency-path: Library/package-lock.json
 
+      - name: Restore Next.js build cache
+        uses: actions/cache@v4
+        with:
+          path: Library/.next/cache
+          key: ${{ runner.os }}-next-${{ hashFiles('Library/package-lock.json') }}-${{ hashFiles('Library/**/*.js', 'Library/**/*.jsx', 'Library/**/*.ts', 'Library/**/*.tsx', 'Library/**/*.css') }}
+          restore-keys: |
+            ${{ runner.os }}-next-${{ hashFiles('Library/package-lock.json') }}-
+
       - run: npm ci
       - run: npm test
       - run: npm run audit:actions
