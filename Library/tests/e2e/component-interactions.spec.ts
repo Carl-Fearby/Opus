@@ -262,7 +262,10 @@ for (const slug of getAllSlugs()) {
       await page.waitForTimeout(150);
       const navigated = page.url() !== beforeUrl;
       const callbackLogged = browser.logs.length > logCount;
-      const callbackReported = (await status.textContent())?.startsWith("Last action:") === true;
+      // Some actions replace the preview or change route. Do not let a status
+      // probe for an element that no longer exists consume the test timeout.
+      const callbackReported = (await status.textContent({ timeout: 250 }).catch(() => null))
+        ?.startsWith("Last action:") === true;
 
       // A callback or navigation is already the strongest browser-boundary
       // evidence of an interaction. Avoid a costly DOM fingerprint after it,
