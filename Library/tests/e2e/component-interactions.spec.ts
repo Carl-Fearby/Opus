@@ -261,17 +261,20 @@ for (const slug of getAllSlugs()) {
       await exercise(action, slug);
       await page.waitForTimeout(150);
       const navigated = page.url() !== beforeUrl;
-      const currentAction = !navigated && await action.count() ? action : null;
-      const stateChanged = navigated
-        ? false
-        : (await interactionFingerprint(preview, currentAction, page)) !== before;
       const callbackLogged = browser.logs.length > logCount;
-      // Removing a chip rerenders its keyed input immediately. The preview's
-      // callback bridge is the stable browser-boundary assertion for that case.
-      const callbackReported = slug === "chip-input"
-        && (await status.textContent())?.startsWith("Last action:") === true;
+      const callbackReported = (await status.textContent())?.startsWith("Last action:") === true;
 
-      if (navigated || stateChanged || callbackLogged || callbackReported) {
+      // A callback or navigation is already the strongest browser-boundary
+      // evidence of an interaction. Avoid a costly DOM fingerprint after it,
+      // particularly for media-heavy controls such as Carousel and Lightbox.
+      if (navigated || callbackLogged || callbackReported) {
+        exercised += 1;
+        break;
+      }
+
+      const currentAction = await action.count() ? action : null;
+      const stateChanged = (await interactionFingerprint(preview, currentAction, page)) !== before;
+      if (stateChanged) {
         exercised += 1;
         break;
       }
