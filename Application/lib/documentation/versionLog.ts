@@ -320,18 +320,42 @@ export const versionLog: VersionEntry[] = [
   {
     version: "0.4.0",
     releasedAt: "2026-07-30",
-    commit: "768129858b3e01ae30434eea9a88e9860ad42591",
-    commitShort: "7681298",
+    commit: "cd061f6514967848df05bcfe2250b3c75fbc8dac",
+    commitShort: "cd061f6",
     summary: "Expanded component platform, desktop environment, and npm-consumer alignment.",
     changes: ["Add reusable desktop, window, dock, desktop-icon, tree-menu, compact-documents, OTP, and advanced-field primitives.","Expand CRM workspace, contact, company, document, media, dashboard, and authentication compositions.","Align Component Lab previews, generated usage examples, Playground, and external previews around the same reusable package APIs.","Audit the public component surface and publish the complete opus-react package for Application consumption.","Update Application to consume the published package CSS and runtime exports instead of local package build paths."],
   },
   {
     version: "0.4.1",
     releasedAt: "2026-07-30",
-    commit: "768129858b3e01ae30434eea9a88e9860ad42591",
-    commitShort: "7681298",
+    commit: "cd061f6514967848df05bcfe2250b3c75fbc8dac",
+    commitShort: "cd061f6",
     summary: "Panel CSS compatibility and clean Webpack consumer builds.",
     changes: ["Replace the mixed-support Panel flex alignment value with its compatible flex-start equivalent.","Remove the resulting Autoprefixer and Webpack cache-serialization warnings in Library and Application builds.","Publish the corrected package and update Application to consume opus-react 0.4.1 from npm."],
+  },
+  {
+    version: "0.4.7",
+    releasedAt: "2026-07-31",
+    commit: "cd061f6514967848df05bcfe2250b3c75fbc8dac",
+    commitShort: "cd061f6",
+    summary: "MIT license, contact metadata, and package consumer polish.",
+    changes: ["Declare MIT licensing and maintainer contact details on the published package.","Align package metadata and README guidance for npm consumers.","Publish opus-react 0.4.7 for Application consumption."],
+  },
+  {
+    version: "0.5.0",
+    releasedAt: "2026-08-05",
+    commit: "cd061f6514967848df05bcfe2250b3c75fbc8dac",
+    commitShort: "cd061f6",
+    summary: "Flip clock, pointed menus, and three-role colour themes.",
+    changes: ["Add FlipClock with hinged digit animation, optional seconds and 24 fps frame columns.","Add pointed menu positioning for dropdown and context menus.","Expand accent and tile colour theming with three-role colour support.","Publish opus-react 0.5.0 and update Application to consume the release from npm."],
+  },
+  {
+    version: "0.6.0",
+    releasedAt: "2026-08-05",
+    commit: "cd061f6514967848df05bcfe2250b3c75fbc8dac",
+    commitShort: "cd061f6",
+    summary: "Form state controller, native field attributes, and form-submission status demo.",
+    changes: ["Add useFormState for values, dirty and touched tracking, validation, reset, and register helpers.","Surface per-field dirty, touched, and error status in the Form Submission lab demo and generated usage code.","Forward shared native input attributes across text, textarea, select, date, phone, password-strength, and checkbox fields.","Expand accessibility coverage and document the Form Submission form-state behaviour.","Publish opus-react 0.6.0 and update Application to consume the release from npm."],
   }
 ].reverse();
 

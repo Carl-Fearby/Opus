@@ -58,6 +58,7 @@ export { CheckboxField } from "./CheckboxField";
 export { ColorField } from "./ColorField";
 export { DateField } from "./DateField";
 export type { DateInputType } from "./DateField";
+export type { DateFieldProps } from "./DateField";
 export { HiddenField } from "./HiddenField";
 export { FileField } from "./FileField";
 export { ImageCropUploadField } from "./ImageCropUploadField";
@@ -75,6 +76,9 @@ export { SwitchField } from "./SwitchField";
 export { TextAreaField } from "./TextAreaField";
 export { RichTextField } from "./RichTextField";
 export { TextField } from "./TextField";
+export type { TextFieldProps } from "./TextField";
+export type { TextAreaFieldProps } from "./TextAreaField";
+export type { NativeInputProps, NativeTextAreaProps, TextEntryBehaviourProps } from "./shared/nativeFieldProps";
 export { ThemeToggleField } from "./ThemeToggleField";
 export { FilterSelectField } from "./FilterSelectField";
 export type { FilterSelectGroup } from "./FilterSelectField";
@@ -430,6 +434,15 @@ export { Icon } from "../Icon";
 export type { IconSize, IconTone } from "../Icon";
 export { Spinner } from "../Spinner";
 export type { SpinnerSize, SpinnerTone } from "../Spinner";
+export { useFormState } from "./useFormState";
+export type {
+  FormFieldState,
+  FormFieldValue,
+  FormStateValidator,
+  FormValues,
+  UseFormStateOptions,
+  UseFormStateResult,
+} from "./useFormState";
 export { Clock } from "../Clock";
 export type { ClockSize } from "../Clock";
 export { FlipClock, FLIP_CLOCK_FRAME_RATE } from "../FlipClock";

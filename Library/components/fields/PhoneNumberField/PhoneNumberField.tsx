@@ -7,6 +7,7 @@ import shared from "../shared/fieldControl.module.css";
 import { inputControlSizeClassName } from "../shared/inputControlSizes";
 import styles from "./PhoneNumberField.module.css";
 import { countries as allCountries, type PhoneCountry } from "./countries";
+import type { NativeInputProps, TextEntryBehaviourProps } from "../shared/nativeFieldProps";
 
 function flagClassName(code: string) {
   return `fi fi-${code.toLowerCase()}`;
@@ -14,7 +15,7 @@ function flagClassName(code: string) {
 
 export type { PhoneCountry } from "./countries";
 
-type PhoneNumberFieldProps = {
+export type PhoneNumberFieldProps = TextEntryBehaviourProps & {
   countries?: PhoneCountry[];
   countryCode: string;
   error?: string;
@@ -24,6 +25,7 @@ type PhoneNumberFieldProps = {
   labelPosition?: LabelPosition;
   mode?: FieldMode;
   placeholder?: string;
+  inputProps?: NativeInputProps;
   required?: boolean;
   size?: InputControlSize;
   value: string;
@@ -32,6 +34,9 @@ type PhoneNumberFieldProps = {
 };
 
 export function PhoneNumberField({
+  autoComplete,
+  autoFocus,
+  disabled,
   countries = allCountries,
   countryCode,
   error,
@@ -41,6 +46,9 @@ export function PhoneNumberField({
   labelPosition = "left",
   mode = "stacked",
   placeholder = "7123 456789",
+  inputProps,
+  name,
+  readOnly,
   required,
   size = "md",
   value,
@@ -173,12 +181,19 @@ export function PhoneNumberField({
           ) : null}
         </div>
         <input
+          {...inputProps}
           aria-invalid={error ? "true" : undefined}
+          autoComplete={autoComplete}
+          autoFocus={autoFocus}
           className={`${shared.input} ${error ? shared.error : ""}`}
           id={id}
+          disabled={disabled}
           inputMode="tel"
+          name={name}
           placeholder={placeholder}
           type="tel"
+          readOnly={readOnly}
+          required={required}
           value={value}
           onChange={(event) => onChange(event.target.value)}
           {...fieldInputAriaProps(shellAria, { invalid: Boolean(error) })}

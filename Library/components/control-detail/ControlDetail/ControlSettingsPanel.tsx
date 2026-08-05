@@ -2,6 +2,7 @@
 
 import type {
   BaseFieldSettings,
+  NativeInputSettings,
   ControlSettings,
   ControlSettingsBySlug,
   ControlSlug,
@@ -201,6 +202,52 @@ function CommonFieldSettings({
   );
 }
 
+function NativeInputSettingsControls({
+  settings,
+  onChange,
+}: {
+  settings: NativeInputSettings;
+  onChange: (next: NativeInputSettings) => void;
+}) {
+  return (
+    <>
+      <SettingInput
+        label="Field name"
+        value={settings.name}
+        onChange={(name) => onChange({ ...settings, name })}
+      />
+      <SettingInput
+        label="Autocomplete token"
+        value={settings.autoComplete}
+        onChange={(autoComplete) => onChange({ ...settings, autoComplete })}
+      />
+      <SettingSelect
+        label="Autocapitalization"
+        value={settings.autoCapitalize}
+        onChange={(autoCapitalize) => onChange({ ...settings, autoCapitalize: autoCapitalize as NativeInputSettings["autoCapitalize"] })}
+        options={["none", "off", "on", "sentences", "words", "characters"].map((value) => ({ label: value, value }))}
+      />
+      <SettingSelect
+        label="Input mode"
+        value={settings.inputMode}
+        onChange={(inputMode) => onChange({ ...settings, inputMode: inputMode as NativeInputSettings["inputMode"] })}
+        options={["", "none", "text", "decimal", "numeric", "tel", "search", "email", "url"].map((value) => ({ label: value || "Browser default", value }))}
+      />
+      <SettingSelect
+        label="Enter key hint"
+        value={settings.enterKeyHint}
+        onChange={(enterKeyHint) => onChange({ ...settings, enterKeyHint: enterKeyHint as NativeInputSettings["enterKeyHint"] })}
+        options={["", "enter", "done", "go", "next", "previous", "search", "send"].map((value) => ({ label: value || "Browser default", value }))}
+      />
+      <SettingToggle label="Spell check" checked={settings.spellCheck} onChange={(spellCheck) => onChange({ ...settings, spellCheck })} />
+      <SettingToggle label="Autocorrect" checked={settings.autoCorrect} onChange={(autoCorrect) => onChange({ ...settings, autoCorrect })} />
+      <SettingToggle label="Autofocus" checked={settings.autoFocus} onChange={(autoFocus) => onChange({ ...settings, autoFocus })} />
+      <SettingToggle label="Read only" checked={settings.readOnly} onChange={(readOnly) => onChange({ ...settings, readOnly })} />
+      <SettingToggle label="Disabled" checked={settings.disabled} onChange={(disabled) => onChange({ ...settings, disabled })} />
+    </>
+  );
+}
+
 function HelpTextSettings<T extends { helpEnabled: boolean; help: string }>({
   settings,
   onChange,
@@ -395,6 +442,7 @@ export function ControlSettingsPanel({
             settings={s}
             onChange={(next) => onChange({ ...s, ...next })}
           />
+          <NativeInputSettingsControls settings={s} onChange={(next) => onChange({ ...s, ...next } as ControlSettings)} />
           <SettingToggle
             label="Show placeholder"
             checked={s.placeholderEnabled}
@@ -431,6 +479,9 @@ export function ControlSettingsPanel({
             settings={s}
             onChange={(next) => onChange({ ...s, ...next })}
           />
+          {["email-input", "password-input", "search-input", "url-input", "date-picker", "datetime-picker", "month-picker", "time-picker", "week-picker"].includes(slug) ? (
+            <NativeInputSettingsControls settings={s as NativeInputSettings} onChange={(next) => onChange({ ...s, ...next } as ControlSettings)} />
+          ) : null}
           {slug === "select" ? (
             <div className={shellStyles.settingsFullWidth}>
               <SettingTextarea
@@ -480,6 +531,7 @@ export function ControlSettingsPanel({
             settings={s}
             onChange={(next) => onChange({ ...s, ...next })}
           />
+          <NativeInputSettingsControls settings={s} onChange={(next) => onChange({ ...s, ...next } as ControlSettings)} />
           <SettingToggle
             label="Character limit"
             checked={s.maxCharsEnabled}
@@ -3659,6 +3711,27 @@ export function ControlSettingsPanel({
             label="Date"
             checked={s.showDate}
             onChange={(showDate) => onChange({ ...s, showDate } as ControlSettings)}
+          />
+        </div>
+      );
+    }
+    case "lab-form-submission": {
+      const s = settings as ControlSettingsBySlug["lab-form-submission"];
+      return (
+        <div className={shellStyles.settingsGrid}>
+          <SettingInput label="Title" value={s.title} onChange={(title) => onChange({ ...s, title } as ControlSettings)} />
+          <SettingInput label="Subtitle" value={s.subtitle} onChange={(subtitle) => onChange({ ...s, subtitle } as ControlSettings)} />
+          <SettingInput label="Submit label" value={s.submitLabel} onChange={(submitLabel) => onChange({ ...s, submitLabel } as ControlSettings)} />
+          <SettingInput
+            label="JSON expanded depth"
+            type="number"
+            value={String(s.collapsedDepth)}
+            onChange={(value) => onChange({ ...s, collapsedDepth: Math.max(0, Math.min(6, Number(value) || 0)) } as ControlSettings)}
+          />
+          <SettingToggle
+            label="Show field status"
+            checked={s.showFieldStatus}
+            onChange={(showFieldStatus) => onChange({ ...s, showFieldStatus } as ControlSettings)}
           />
         </div>
       );

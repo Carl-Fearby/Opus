@@ -10,6 +10,7 @@ import shared from "../shared/fieldControl.module.css";
 import { inputControlSizeClassName } from "../shared/inputControlSizes";
 import { PasswordToggle } from "../shared/PasswordToggle";
 import styles from "./PasswordStrengthField.module.css";
+import type { NativeInputProps, TextEntryBehaviourProps } from "../shared/nativeFieldProps";
 
 export type PasswordRequirement = {
   id: string;
@@ -33,7 +34,7 @@ function scorePassword(value: string, requirements: PasswordRequirement[]) {
   return Math.round((passed / requirements.length) * 100);
 }
 
-type PasswordStrengthFieldProps = {
+export type PasswordStrengthFieldProps = TextEntryBehaviourProps & {
   error?: string;
   help?: string;
   id: string;
@@ -41,6 +42,7 @@ type PasswordStrengthFieldProps = {
   labelPosition?: LabelPosition;
   mode?: FieldMode;
   placeholder?: string;
+  inputProps?: NativeInputProps;
   required?: boolean;
   requirements?: PasswordRequirement[];
   showRequirements?: boolean;
@@ -50,6 +52,9 @@ type PasswordStrengthFieldProps = {
 };
 
 export function PasswordStrengthField({
+  autoComplete = "new-password",
+  autoFocus,
+  disabled,
   error,
   help,
   id,
@@ -57,6 +62,9 @@ export function PasswordStrengthField({
   labelPosition = "left",
   mode = "stacked",
   placeholder = "Enter a password",
+  inputProps,
+  name,
+  readOnly,
   required,
   requirements = defaultRequirements,
   showRequirements = true,
@@ -87,12 +95,18 @@ export function PasswordStrengthField({
       <div className={styles.root}>
         <div className={`${shared.passwordWrap} ${inputControlSizeClassName[size]}`}>
           <input
+            {...inputProps}
             aria-invalid={error ? "true" : undefined}
-            autoComplete="new-password"
+            autoComplete={autoComplete}
+            autoFocus={autoFocus}
             className={`${shared.input} ${shared.passwordInput} ${error ? shared.error : ""}`}
             id={id}
+            disabled={disabled}
+            name={name}
             placeholder={placeholder}
             type={revealed ? "text" : "password"}
+            readOnly={readOnly}
+            required={required}
             value={value}
             onChange={(event) => onChange(event.target.value)}
             {...fieldInputAriaProps(shellAria, { invalid: Boolean(error) })}

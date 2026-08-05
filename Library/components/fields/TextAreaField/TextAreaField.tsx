@@ -3,14 +3,17 @@ import styles from "./TextAreaField.module.css";
 import { inputControlSizeClassName } from "../shared/inputControlSizes";
 import { FieldShell, fieldInputAriaProps, useFieldShellAria } from "@/components/fields/FieldShell";
 import type { FieldMode, InputControlSize, LabelPosition } from "@/components/fields/types";
+import type { NativeTextAreaProps, TextEntryBehaviourProps } from "../shared/nativeFieldProps";
 
-type TextAreaFieldProps = {
+export type TextAreaFieldProps = TextEntryBehaviourProps & {
   error?: string;
   help?: string;
   id: string;
   label: string;
   labelPosition?: LabelPosition;
   maxChars?: number;
+  minLength?: number;
+  inputProps?: NativeTextAreaProps;
   mode?: FieldMode;
   placeholder?: string;
   required?: boolean;
@@ -20,17 +23,29 @@ type TextAreaFieldProps = {
 };
 
 export function TextAreaField({
+  autoCapitalize,
+  autoComplete,
+  autoCorrect,
+  autoFocus,
+  disabled,
+  enterKeyHint,
   error,
   help,
   id,
   label,
   labelPosition = "left",
   maxChars,
+  minLength,
+  inputMode,
+  inputProps,
   mode = "stacked",
   placeholder,
   required,
+  name,
+  readOnly,
   size = "md",
   value,
+  spellCheck,
   onChange,
 }: TextAreaFieldProps) {
   const shellAria = useFieldShellAria();
@@ -56,7 +71,12 @@ export function TextAreaField({
       <div className={styles.field}>
         <div className={`${styles.inputWrap} ${inputControlSizeClassName[size]}`}>
           <textarea
+            {...inputProps}
             aria-invalid={error ? "true" : undefined}
+            autoCapitalize={autoCapitalize}
+            autoComplete={autoComplete}
+            autoCorrect={autoCorrect}
+            autoFocus={autoFocus}
             className={[
               styles.textarea,
               error ? styles.error : "",
@@ -65,9 +85,17 @@ export function TextAreaField({
               .filter(Boolean)
               .join(" ")}
             id={id}
+            disabled={disabled}
+            enterKeyHint={enterKeyHint}
+            inputMode={inputMode}
             maxLength={maxChars}
+            minLength={minLength}
+            name={name}
             onChange={onChange}
             placeholder={placeholder}
+            readOnly={readOnly}
+            required={required}
+            spellCheck={spellCheck}
             value={value}
             {...fieldInputAriaProps(shellAria, { invalid: Boolean(error) })}
             aria-describedby={describedBy || undefined}

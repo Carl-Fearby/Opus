@@ -1,14 +1,24 @@
 import AxeBuilder from "@axe-core/playwright";
 import { expect, test } from "@playwright/test";
+import { getAllSlugs } from "../../lib/controls/registry";
 
-test("Desktop Icon component page has no serious accessibility violations", async ({ page }) => {
-  await page.goto("/documentation/components/desktop-icon");
-  const results = await new AxeBuilder({ page })
-    .disableRules(["color-contrast"])
-    .analyze();
+const auditedImpacts = new Set(["critical", "serious"]);
 
-  const serious = results.violations.filter(
-    (violation) => violation.impact === "critical" || violation.impact === "serious",
-  );
-  expect(serious).toEqual([]);
-});
+for (const slug of getAllSlugs()) {
+  test(`${slug} preview has no serious accessibility violations`, async ({ page }) => {
+    const response = await page.goto(`/documentation/components/${slug}`);
+
+    expect(response?.ok()).toBe(true);
+    await expect(page.locator("[data-preview-root]")).toBeVisible();
+
+    const results = await new AxeBuilder({ page })
+      .include("[data-preview-root]")
+      .analyze();
+
+    const serious = results.violations.filter((violation) =>
+      violation.impact ? auditedImpacts.has(violation.impact) : false,
+    );
+
+    expect(serious, JSON.stringify(serious, null, 2)).toEqual([]);
+  });
+}

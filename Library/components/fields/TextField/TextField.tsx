@@ -7,8 +7,9 @@ import { inputControlSizeClassName } from "../shared/inputControlSizes";
 import { PasswordToggle } from "../shared/PasswordToggle";
 import { FieldShell, fieldInputAriaProps, useFieldShellAria } from "@/components/fields/FieldShell";
 import type { FieldMode, InputControlSize, LabelPosition } from "@/components/fields/types";
+import type { NativeInputProps, TextEntryBehaviourProps } from "../shared/nativeFieldProps";
 
-type TextFieldProps = {
+export type TextFieldProps = TextEntryBehaviourProps & {
   error?: string;
   help?: string;
   id: string;
@@ -18,6 +19,10 @@ type TextFieldProps = {
   labelPosition?: LabelPosition;
   mode?: FieldMode;
   placeholder?: string;
+  inputProps?: NativeInputProps;
+  maxLength?: number;
+  minLength?: number;
+  pattern?: string;
   required?: boolean;
   size?: InputControlSize;
   type: "email" | "password" | "search" | "tel" | "text" | "url";
@@ -27,6 +32,12 @@ type TextFieldProps = {
 };
 
 export function TextField({
+  autoCapitalize,
+  autoComplete,
+  autoCorrect,
+  autoFocus,
+  disabled,
+  enterKeyHint,
   error,
   help,
   id,
@@ -36,10 +47,18 @@ export function TextField({
   labelPosition = "left",
   mode = "stacked",
   placeholder,
+  inputMode,
+  inputProps,
+  maxLength,
+  minLength,
+  name,
+  pattern,
+  readOnly,
   required,
   size = "md",
   type,
   value,
+  spellCheck,
   endAdornment,
   onChange,
 }: TextFieldProps) {
@@ -52,7 +71,12 @@ export function TextField({
 
   const inputEl = (
     <input
+      {...inputProps}
       aria-invalid={error ? "true" : undefined}
+      autoCapitalize={autoCapitalize}
+      autoComplete={autoComplete}
+      autoCorrect={autoCorrect}
+      autoFocus={autoFocus}
       className={[
         isSearch ? shared.searchInput : shared.input,
         error ? shared.error : "",
@@ -61,11 +85,21 @@ export function TextField({
         .filter(Boolean)
         .join(" ")}
       id={id}
+      disabled={disabled}
+      enterKeyHint={enterKeyHint}
+      inputMode={inputMode}
+      maxLength={maxLength}
+      minLength={minLength}
+      name={name}
+      pattern={pattern}
+      readOnly={readOnly}
       ref={inputRef}
       placeholder={placeholder}
       onChange={onChange}
       type={inputType}
       value={value}
+      required={required}
+      spellCheck={spellCheck}
       {...fieldInputAriaProps(shellAria, { invalid: Boolean(error) })}
     />
   );

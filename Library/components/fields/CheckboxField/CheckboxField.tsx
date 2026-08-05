@@ -15,9 +15,11 @@ type CheckboxFieldProps = {
   labelPosition?: LabelPosition;
   labelVisuallyHidden?: boolean;
   mode?: FieldMode;
+  name?: string;
   onChange: ChangeEventHandler<HTMLInputElement>;
   shape?: ChoiceShape;
   size?: ChoiceControlSize;
+  value?: string;
 };
 
 export function CheckboxField({
@@ -31,9 +33,11 @@ export function CheckboxField({
   labelPosition = "left",
   labelVisuallyHidden,
   mode = "flagged",
+  name,
   onChange,
   shape = "square",
   size = "md",
+  value,
 }: CheckboxFieldProps) {
   const shellAria = useFieldShellAria();
 
@@ -58,8 +62,10 @@ export function CheckboxField({
             className={styles.nativeInput}
             checked={checked}
             id={id}
+            name={name}
             onChange={onChange}
             type="checkbox"
+            value={value}
             {...fieldInputAriaProps(shellAria, { invalid: Boolean(error) })}
           />
           <span

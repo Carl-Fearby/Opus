@@ -150,6 +150,7 @@ const componentIcons: Record<string, IconDefinition> = {
   "lab-sidebar": faTableColumns,
   "lab-test-layout": faTableColumns,
   "lab-user-profile": faCircleUser,
+  "lab-form-submission": faClipboardList,
   "lab-login-form": faLock,
   "lab-register-form": faUserShield,
   "lab-otp-form": faUserShield,

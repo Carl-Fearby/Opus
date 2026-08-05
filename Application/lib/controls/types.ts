@@ -168,6 +168,7 @@ export type ControlSlug =
   | "icon-badge"
   | "spinner"
   | "clock"
+  | "flip-clock"
   | "portal"
   | "portal-host"
   | "visually-hidden"
@@ -203,19 +204,32 @@ export type BaseFieldSettings = {
   size: InputControlSize;
 };
 
-export type ValueFieldSettings = BaseFieldSettings & {
+export type NativeInputSettings = {
+  autoCapitalize: "none" | "off" | "on" | "sentences" | "words" | "characters";
+  autoComplete: string;
+  autoCorrect: boolean;
+  autoFocus: boolean;
+  disabled: boolean;
+  enterKeyHint: "" | "enter" | "done" | "go" | "next" | "previous" | "search" | "send";
+  inputMode: "" | "none" | "text" | "decimal" | "numeric" | "tel" | "search" | "email" | "url";
+  name: string;
+  readOnly: boolean;
+  spellCheck: boolean;
+};
+
+export type ValueFieldSettings = BaseFieldSettings & NativeInputSettings & {
   value: string;
   placeholder?: string;
   placeholderEnabled?: boolean;
 };
 
-export type TextInputSettings = BaseFieldSettings & {
+export type TextInputSettings = BaseFieldSettings & NativeInputSettings & {
   value: string;
   placeholder: string;
   placeholderEnabled: boolean;
 };
 
-export type TextareaSettings = BaseFieldSettings & {
+export type TextareaSettings = BaseFieldSettings & NativeInputSettings & {
   value: string;
   maxCharsEnabled: boolean;
   maxChars: number;
@@ -512,6 +526,8 @@ export type DropdownMenuSettings = {
   showIcons: boolean;
   showDestructive: boolean;
   showDisabled: boolean;
+  showPointer: boolean;
+  triggerGap: number;
   open: boolean;
 };
 
@@ -1205,6 +1221,14 @@ export type AuthFormSettings = {
   verificationCode: string;
 };
 
+export type FormSubmissionDemoSettings = {
+  collapsedDepth: number;
+  showFieldStatus: boolean;
+  submitLabel: string;
+  subtitle: string;
+  title: string;
+};
+
 export type AspectRatioSettings = {
   ratio: "16 / 9" | "4 / 3" | "1 / 1" | "9 / 16";
 };
@@ -1420,6 +1444,13 @@ export type ClockSettings = {
   showAnalog: boolean;
   showDate: boolean;
   showDigital: boolean;
+  size: "sm" | "md" | "lg";
+};
+
+export type FlipClockSettings = {
+  showDate: boolean;
+  showSeconds: boolean;
+  showFrames: boolean;
   size: "sm" | "md" | "lg";
 };
 
@@ -1668,6 +1699,7 @@ export type ControlSettingsBySlug = {
   "icon-badge": IconBadgeSettings;
   spinner: SpinnerSettings;
   clock: ClockSettings;
+  "flip-clock": FlipClockSettings;
   portal: PortalSettings;
   "portal-host": PortalHostSettings;
   "visually-hidden": VisuallyHiddenSettings;
@@ -1745,6 +1777,7 @@ export type ControlSettingsBySlug = {
     "lab-email-verified-form": AuthFormSettings;
     "lab-link-expired-form": AuthFormSettings;
     "lab-change-password-form": AuthFormSettings;
+    "lab-form-submission": FormSubmissionDemoSettings;
     "404-page": ErrorPageSettings;
     "403-page": ErrorPageSettings;
     "app-setup": AppSetupSettings;

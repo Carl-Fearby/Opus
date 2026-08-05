@@ -36,6 +36,7 @@ Use this lab as a reference implementation for JSON-driven desktop applications.
 - Dock auto hide keeps the dock partially concealed until hover or keyboard focus.`,
   "otp-input": "## Overview\n\nReusable one-time passcode field extracted from the Opus authentication flow. It supports full-code paste, numeric filtering, automatic forward focus, backspace navigation, and arrow-key movement.\n\n## Props\n\n| Prop | Type | Default | Description |\n| --- | --- | --- | --- |\n| `value` | `string` | — | Controlled numeric code. |\n| `onChange` | `(value: string) => void` | — | Called whenever the code changes. |\n| `onComplete` | `(value: string) => void` | — | Called when every digit is populated. |\n| `length` | `number` | `6` | Number of code fields. |\n\n## Accessibility\n\n- Uses a labelled group with an explicit label for every digit.\n- The first field advertises the `one-time-code` autocomplete purpose.\n- Paste and keyboard navigation work without requiring pointer input.",
   map: "## Overview\n\nProvider-flexible interactive street map rendered with MapLibre GL JS and styled to match Opus surfaces, controls, markers, and focus states. The default detailed basemaps include roads, buildings, labels, boundaries, and points of interest.\n\n## Theme support\n\nWith `theme=\"auto\"`, the map follows the nearest Opus `data-theme` value and swaps between detailed OpenFreeMap Bright and Dark styles. Supply `lightStyleUrl` and `darkStyleUrl` to use your own paired styles, or `styleUrl` to force one provider style.\n\n## Coordinates and address\n\nEnable `showCoordinates` to expose longitude and latitude. With `showAddress`, Map performs a cached, debounced reverse lookup and displays the nearest address. Supply your own `reverseGeocode` callback for a production geocoding provider, private endpoint, or application API; pass `false` to disable lookup entirely.\n\n## Current location\n\nWith `showGeolocate` enabled (default), a locate control appears beside the navigation controls. It requests browser geolocation permission, flies to the user, and optionally tracks movement with an accuracy circle. Listen via `onUserLocation` for the resolved coordinates. Geolocation requires a secure context (HTTPS or localhost).\n\n## Provider strategy\n\nThe defaults use OpenFreeMap without an API key. Production apps can instead supply hosted MapTiler, another MapLibre-compatible vector style, or self-hosted style URLs. Reverse geocoding is separately provider-configurable.\n\n## Accessibility\n\n- The map exposes a labelled region.\n- Markers and hotspot rows are keyboard-focusable buttons with accessible labels.\n- Coordinate metadata uses a semantic description list.\n- Navigation can be disabled for static summaries.\n\n## Attribution\n\nKeep attribution enabled unless your selected provider and data licence explicitly allow a different presentation.",
+  "lab-form-submission": "## Overview\n\nA complete Next.js/React form example driven by the `useFormState` hook. The hook owns values, per-field status, and validation, and the submitted object is rendered with `JsonViewer`.\n\n## Form state\n\n`useFormState({ defaults, validate })` returns `values`, a `fields` record with `dirty`, `touched`, `defaultValue`, and `error` for each field, plus `dirtyFields`, `touchedFields`, `isDirty`, `isValid`, `setValue`, `setTouched`, `touchAll`, and `reset`. Spread `register(name)` onto text and select fields, or `registerCheckbox(name)` onto checkbox and switch fields.\n\n## Behaviour\n\nErrors surface only after a field is touched, submit is disabled until the form is dirty, and submitting an invalid form marks every field touched instead of sending. The payload includes an ISO timestamp and a `meta` block describing dirty and touched fields. In a production Next.js app, move validation and persistence into a server action, then return serialisable state for the client-side result view.\n\n## Accessibility\n\nEvery field has a visible label, required fields use native constraints, validation messages are wired through each field's `error` prop, and submission and reset use native form semantics.",
   "lab-login-form": "## Overview\n\nAccessible sign-in composition built from the Opus text, password, checkbox, button, and dashboard container components.\n\n## Behaviour\n\nThe form uses native submit semantics, labelled required fields, a remember-me control, password recovery action, and a link to registration. Replace the demo callbacks with your authentication service.",
   "lab-register-form": "## Overview\n\nAccessible account registration composition built from the Opus field and button components, including Continue with Google / Apple.\n\n## Behaviour\n\nProvider buttons call `continueWithGoogle` / `continueWithApple` with `mode: \"register\"`. The email path provides full name, email, password confirmation, terms consent, native submit semantics, and a route back to sign-in. Configure `NEXT_PUBLIC_GOOGLE_OAUTH_CLIENT_ID` / `NEXT_PUBLIC_APPLE_OAUTH_CLIENT_ID` and complete the code exchange on `/api/auth/callback/{provider}`.",
   "lab-otp-form": "## Overview\n\nAccessible one-time passcode verification composition with six numeric fields, native submit semantics, and a resend action.\n\n## Behaviour\n\nEach digit has an explicit accessible label. Replace the demo verification and resend callbacks with your authentication service, enforce expiry server-side, and never rely on client-side validation alone.",
@@ -137,6 +138,7 @@ Use this lab as a reference implementation for JSON-driven desktop applications.
   "icon-badge": "## Overview\n\nNotification-style icon with an optional count badge for toolbars, headers, and app chrome.\n\n## When to use\n\n- Unread notifications, messages, or alerts in a top bar.\n- Compact action icons that need a numeric indicator.\n\n## Props\n\n| Prop | Type | Default | Description |\n| --- | --- | --- | --- |\n| `iconName` | `string` | — | Font Awesome catalog icon name such as `bell` or `envelope`. |\n| `label` | `string` | — | Accessible name; includes count when a badge is shown. |\n| `count` | `number` | `0` | Badge count. Hidden when zero unless `showZero` is true. |\n| `max` | `number` | `99` | Maximum value before showing `99+`. |\n| `size` | `\"sm\" \\| \"md\" \\| \"lg\"` | `\"md\"` | Icon and hit-target scale. |\n| `tone` | `IconTone` | `\"muted\"` | Icon colour. |\n| `urgency` | `IconBadgeUrgency` | `\"standard\"` | Badge colour: standard, danger, warning, success, or info. |\n| `showZero` | `boolean` | `false` | Render the badge when count is zero. |\n| `onClick` | `() => void` | — | When set, renders as a button. |\n\n## Accessibility\n\n- Exposes a single accessible label that includes the unread count.\n- Badge text is decorative (`aria-hidden`).\n\n## Related\n\n- [Icon](/documentation/components/icon)\n- [Badge](/documentation/components/badge)",
   spinner: "## Overview\n\nInline indeterminate loading spinner.\n\n## Props\n\n| Prop | Type | Default | Description |\n| --- | --- | --- | --- |\n| `size` | `\"sm\" \\| \"md\" \\| \"lg\"` | `\"md\"` | Size. |\n| `tone` | `\"accent\" \\| \"muted\" \\| \"inverse\"` | `\"accent\"` | Colour. |\n| `label` | `string` | `\"Loading\"` | Accessible status. |",
   clock: "## Overview\n\nLive analog clock with digital readout and optional date.\n\n## Props\n\n| Prop | Type | Default | Description |\n| --- | --- | --- | --- |\n| `size` | `\"sm\" \\| \"md\" \\| \"lg\"` | `\"md\"` | Face diameter. |\n| `showAnalog` | `boolean` | `true` | Show analog face. |\n| `showDigital` | `boolean` | `true` | Show digital time readout. |\n| `showDate` | `boolean` | `true` | Show formatted date. |",
+  "flip-clock": "## Overview\n\nSplit-flap digital clock with animated flip cards for each digit. Cards use Opus accent colouring and announce the current time to assistive tech.\n\n## Props\n\n| Prop | Type | Default | Description |\n| --- | --- | --- | --- |\n| `size` | `\"sm\" \\| \"md\" \\| \"lg\"` | `\"md\"` | Digit card size. |\n| `showSeconds` | `boolean` | `true` | Include seconds cards. |\n| `showFrames` | `boolean` | `false` | Append a 24 fps frame column (`00`–`23`) for video-editing timecode (`HH:MM:SS:FF`). Implies seconds. |\n| `showDate` | `boolean` | `true` | Show formatted date below the board. |\n\n## Video frames\n\nWith `showFrames`, the clock ticks every `1/24` second and exposes `FLIP_CLOCK_FRAME_RATE` (`24`) for consumers that need the same constant.\n\n## Accessibility\n\n- The board exposes the current time via `aria-label` and a visually hidden `time` element with `aria-live=\"polite\"`.\n- Flip animation respects `prefers-reduced-motion`.",
   portal: "## Overview\n\nRender children into a host node outside the parent DOM hierarchy.\n\n## Props\n\n| Prop | Type | Default | Description |\n| --- | --- | --- | --- |\n| `children` | `ReactNode` | — | Content. |\n| `container` | `HTMLElement` | — | Optional explicit host. |\n| `disabled` | `boolean` | `false` | Render inline instead. |",
   "portal-host": "## Overview\n\nCreates a mount node and context for `Portal`.\n\n## Props\n\n| Prop | Type | Default | Description |\n| --- | --- | --- | --- |\n| `id` | `string` | `\"opus-portal-host\"` | Host element id. |\n| `children` | `ReactNode` | — | Tree that may portal. |",
   "visually-hidden": "## Overview\n\nHide content visually while exposing it to assistive technology.\n\n## Props\n\n| Prop | Type | Default | Description |\n| --- | --- | --- | --- |\n| `children` | `ReactNode` | — | Hidden content. |\n| `as` | `\"span\" \\| \"div\"` | `\"span\"` | Element type. |",
@@ -199,6 +201,42 @@ Use this lab as a reference implementation for JSON-driven desktop applications.
   "week-picker": "## Overview\n\nNative week input (`type=\"week\"`).\n\n## When to use\n\n- Week selection with browser-native picker.\n\n## Props\n\n| Prop | Type | Default | Description |\n| --- | --- | --- | --- |\n| `value` | `string` | \u2014 | Input value. |\n| `onChange` | `(event) => void` | \u2014 | Change handler. |\n| `mode` | `\"stacked\" \\| \"flagged\"` | `\"stacked\"` | Layout mode for label and control. |\n| `labelPosition` | `\"left\" \\| \"right\"` | `\"left\"` | Label placement in flagged mode. |\n| `error` | `string` | \u2014 | Validation message; sets `aria-invalid` when present. |\n| `help` | `string` | \u2014 | Supplementary help text linked via `aria-describedby`. |\n| `required` | `boolean` | `false` | Marks the field as required for assistive tech. |\n\n## Accessibility\n\n- Wrapped in `FieldShell` for label, help, error, and required wiring.\n- Labels associate with controls via `htmlFor` / `id`.",
 };
 
+const nativeInputDocumentationSlugs = new Set<ControlSlug>([
+  "text-input",
+  "email-input",
+  "password-input",
+  "search-input",
+  "url-input",
+  "textarea",
+  "date-picker",
+  "datetime-picker",
+  "month-picker",
+  "time-picker",
+  "week-picker",
+]);
+
+const nativeInputDocumentation = `
+
+## Native browser behaviour
+
+These controls expose the browser's native form behaviour instead of replacing it. Configure the following props directly; use \`inputProps\` for additional valid attributes that are specific to an input type.
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| \`name\` | \`string\` | — | Name submitted with the owning form. |
+| \`autoComplete\` | \`string\` | type-specific | Autofill purpose token such as \`name\`, \`email\`, \`current-password\`, or \`one-time-code\`. |
+| \`autoCapitalize\` | \`string\` | type-specific | Mobile text capitalization hint. |
+| \`autoCorrect\` | \`"on" \| "off"\` | type-specific | Browser/device autocorrection hint. |
+| \`spellCheck\` | \`boolean\` | type-specific | Enables or disables browser spell checking. |
+| \`inputMode\` | \`string\` | type-specific | Virtual keyboard hint such as \`email\`, \`tel\`, \`numeric\`, or \`search\`. |
+| \`enterKeyHint\` | \`string\` | browser default | Labels the virtual keyboard's enter key. |
+| \`autoFocus\` | \`boolean\` | \`false\` | Requests focus when mounted; use sparingly because it can disrupt assistive technology and mobile users. |
+| \`readOnly\` | \`boolean\` | \`false\` | Keeps the value focusable and submitted but prevents editing. |
+| \`disabled\` | \`boolean\` | \`false\` | Prevents interaction and excludes the value from submission. |
+| \`inputProps\` | native attribute object | — | Additional standards-based input or textarea attributes. Controlled value, ID, classes, and ARIA wiring remain owned by the component. |
+
+Use autocomplete purpose tokens that describe the data rather than arbitrary labels. Browser support varies by input type, and autofocus should be enabled only when the surrounding context remains clear.`;
+
 export function getComponentDocumentationMarkdown(slug: ControlSlug): string | null {
   const labDocumentationAliases: Partial<Record<ControlSlug, ControlSlug>> = {
     "lab-sidebar": "sidebar",
@@ -208,7 +246,9 @@ export function getComponentDocumentationMarkdown(slug: ControlSlug): string | n
   const documentationSlug = labDocumentationAliases[slug] ?? slug;
   const markdown = componentDocumentation[documentationSlug];
   if (markdown) {
-    return markdown;
+    return nativeInputDocumentationSlugs.has(documentationSlug)
+      ? `${markdown}${nativeInputDocumentation}`
+      : markdown;
   }
 
   const control = getControl(slug);

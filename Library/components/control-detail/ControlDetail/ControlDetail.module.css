@@ -940,6 +940,64 @@
   place-items: center;
 }
 
+.formSubmissionStage {
+  display: grid;
+  gap: 16px;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  padding: 24px;
+}
+
+.formSubmissionHeader,
+.formSubmissionResult {
+  display: grid;
+  gap: 8px;
+}
+
+.formSubmissionHeader h2,
+.formSubmissionHeader p,
+.formSubmissionResult h2 {
+  margin: 0;
+}
+
+.formSubmissionHeader p {
+  color: var(--opus-muted);
+}
+
+.formStateSummary {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.formStateTable {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.85rem;
+}
+
+.formStateTable th,
+.formStateTable td {
+  padding: 6px 8px;
+  border-bottom: 1px solid var(--opus-border);
+  text-align: left;
+}
+
+.formStateTable thead th {
+  color: var(--opus-muted);
+  font-weight: 600;
+}
+
+.formStateTable tbody th {
+  font-weight: 500;
+}
+
+@media (max-width: 760px) {
+  .formSubmissionStage {
+    grid-template-columns: minmax(0, 1fr);
+    padding: 16px;
+  }
+}
+
 .authFormContainer {
   width: min(100%, 28rem);
 }

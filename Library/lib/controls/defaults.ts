@@ -58,6 +58,19 @@ const baseFieldDefaults = {
   size: "md" as const,
 };
 
+const nativeInputDefaults = {
+  autoCapitalize: "sentences" as const,
+  autoComplete: "off",
+  autoCorrect: true,
+  autoFocus: false,
+  disabled: false,
+  enterKeyHint: "" as const,
+  inputMode: "" as const,
+  name: "",
+  readOnly: false,
+  spellCheck: true,
+};
+
 export const defaultSettings: ControlSettingsBySlug = {
   desktop: {},
   "desktop-window": {},
@@ -139,41 +152,60 @@ export const defaultSettings: ControlSettingsBySlug = {
   },
   "date-picker": {
     ...baseFieldDefaults,
+    ...nativeInputDefaults,
     label: "Date of birth",
     value: currentDateValue,
   },
   "time-picker": {
     ...baseFieldDefaults,
+    ...nativeInputDefaults,
     label: "Start time",
     value: currentTimeValue,
   },
   "datetime-picker": {
     ...baseFieldDefaults,
+    ...nativeInputDefaults,
     label: "Appointment",
     value: currentDateTimeValue,
   },
   "month-picker": {
     ...baseFieldDefaults,
+    ...nativeInputDefaults,
     label: "Billing month",
     value: currentMonthValue,
   },
   "week-picker": {
     ...baseFieldDefaults,
+    ...nativeInputDefaults,
     label: "Planning week",
     value: currentWeekValue,
   },
   "email-input": {
     ...baseFieldDefaults,
+    ...nativeInputDefaults,
+    autoCapitalize: "none",
+    autoComplete: "email",
+    inputMode: "email",
+    spellCheck: false,
     label: "Email address",
     value: "jane.cooper@example.com",
   },
   "url-input": {
     ...baseFieldDefaults,
+    ...nativeInputDefaults,
+    autoCapitalize: "none",
+    autoComplete: "url",
+    inputMode: "url",
+    spellCheck: false,
     label: "Website",
     value: "https://example.com",
   },
   "search-input": {
     ...baseFieldDefaults,
+    ...nativeInputDefaults,
+    autoComplete: "off",
+    enterKeyHint: "search",
+    inputMode: "search",
     label: "Search",
     value: "",
     placeholder: "Search contacts, companies, deals…",
@@ -216,6 +248,11 @@ export const defaultSettings: ControlSettingsBySlug = {
   },
   "password-input": {
     ...baseFieldDefaults,
+    ...nativeInputDefaults,
+    autoCapitalize: "none",
+    autoComplete: "current-password",
+    autoCorrect: false,
+    spellCheck: false,
     label: "Password",
     value: "hunter2!",
   },
@@ -235,6 +272,7 @@ export const defaultSettings: ControlSettingsBySlug = {
   },
   "text-input": {
     ...baseFieldDefaults,
+    ...nativeInputDefaults,
     label: "Full name",
     value: "Jane Cooper",
     placeholder: "Enter your full name",
@@ -242,6 +280,7 @@ export const defaultSettings: ControlSettingsBySlug = {
   },
   textarea: {
     ...baseFieldDefaults,
+    ...nativeInputDefaults,
     label: "Your message",
     value: "",
     maxCharsEnabled: true,
@@ -919,6 +958,13 @@ export const defaultSettings: ControlSettingsBySlug = {
     previewLayout: "single",
     width: "widget",
     wrapInContainer: true,
+  },
+  "lab-form-submission": {
+    collapsedDepth: 2,
+    showFieldStatus: true,
+    submitLabel: "Submit details",
+    subtitle: "Submit the form to inspect the collated payload.",
+    title: "Customer enquiry",
   },
   "lab-login-form": {
     email: "",

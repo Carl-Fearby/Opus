@@ -364,4 +364,37 @@ export const releaseNotesOverlay = [
       "Publish the corrected package and update Application to consume opus-react 0.4.1 from npm.",
     ],
   },
+  {
+    version: "0.4.7",
+    releasedAt: "2026-07-31",
+    summary: "MIT license, contact metadata, and package consumer polish.",
+    changes: [
+      "Declare MIT licensing and maintainer contact details on the published package.",
+      "Align package metadata and README guidance for npm consumers.",
+      "Publish opus-react 0.4.7 for Application consumption.",
+    ],
+  },
+  {
+    version: "0.5.0",
+    releasedAt: "2026-08-05",
+    summary: "Flip clock, pointed menus, and three-role colour themes.",
+    changes: [
+      "Add FlipClock with hinged digit animation, optional seconds and 24 fps frame columns.",
+      "Add pointed menu positioning for dropdown and context menus.",
+      "Expand accent and tile colour theming with three-role colour support.",
+      "Publish opus-react 0.5.0 and update Application to consume the release from npm.",
+    ],
+  },
+  {
+    version: "0.6.0",
+    releasedAt: "2026-08-05",
+    summary: "Form state controller, native field attributes, and form-submission status demo.",
+    changes: [
+      "Add useFormState for values, dirty and touched tracking, validation, reset, and register helpers.",
+      "Surface per-field dirty, touched, and error status in the Form Submission lab demo and generated usage code.",
+      "Forward shared native input attributes across text, textarea, select, date, phone, password-strength, and checkbox fields.",
+      "Expand accessibility coverage and document the Form Submission form-state behaviour.",
+      "Publish opus-react 0.6.0 and update Application to consume the release from npm.",
+    ],
+  },
 ];

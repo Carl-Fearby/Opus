@@ -126,14 +126,18 @@ export function ComponentsThemeProvider({ children }: { children: ReactNode }) {
   useEffect(() => {
     try {
       const stored = window.localStorage.getItem(BASE_COLOR_STORAGE_KEY);
-      if (stored && isHexColor(stored)) setBaseColorState(stored);
+      if (stored && isHexColor(stored)) {
+        setBaseColorState(stored);
+      }
     } catch {
       // Use the neutral default when storage is unavailable.
     }
   }, []);
 
   const setBaseColor = useCallback((color: string) => {
-    if (!isHexColor(color)) return;
+    if (!isHexColor(color)) {
+      return;
+    }
     setBaseColorState(color);
     try {
       window.localStorage.setItem(BASE_COLOR_STORAGE_KEY, color);

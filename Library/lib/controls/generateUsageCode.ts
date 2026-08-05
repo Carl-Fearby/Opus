@@ -130,6 +130,34 @@ type FieldUsageSettings = {
   size?: string;
 };
 
+type NativeInputUsageSettings = {
+  autoCapitalize: string;
+  autoComplete: string;
+  autoCorrect: boolean;
+  autoFocus: boolean;
+  disabled: boolean;
+  enterKeyHint: string;
+  inputMode: string;
+  name: string;
+  readOnly: boolean;
+  spellCheck: boolean;
+};
+
+function nativeInputUsageProps(settings: NativeInputUsageSettings): string[] {
+  return [
+    ...(settings.name ? [formatStringProp("name", settings.name)] : []),
+    ...(settings.autoComplete ? [formatStringProp("autoComplete", settings.autoComplete)] : []),
+    formatStringProp("autoCapitalize", settings.autoCapitalize),
+    formatStringProp("autoCorrect", settings.autoCorrect ? "on" : "off"),
+    formatBoolProp("spellCheck", settings.spellCheck),
+    ...(settings.inputMode ? [formatStringProp("inputMode", settings.inputMode)] : []),
+    ...(settings.enterKeyHint ? [formatStringProp("enterKeyHint", settings.enterKeyHint)] : []),
+    ...(settings.autoFocus ? [formatBoolProp("autoFocus", true)] : []),
+    ...(settings.readOnly ? [formatBoolProp("readOnly", true)] : []),
+    ...(settings.disabled ? [formatBoolProp("disabled", true)] : []),
+  ];
+}
+
 function toStateName(label: string): string {
   const words = label
     .trim()
@@ -497,6 +525,7 @@ ${
       const props = [
         formatStringProp("id", id),
         ...fieldProps(s),
+        ...nativeInputUsageProps(s),
         formatStringProp("type", "text"),
         ...(s.placeholderEnabled
           ? [formatStringProp("placeholder", s.placeholder)]
@@ -526,6 +555,7 @@ ${
       const props = [
         formatStringProp("id", id),
         ...fieldProps(s),
+        ...nativeInputUsageProps(s),
         formatStringProp("type", inputType),
         ...(slug === "search-input" && s.placeholderEnabled
           ? [formatStringProp("placeholder", s.placeholder ?? "")]
@@ -544,6 +574,7 @@ ${
       const props = [
         formatStringProp("id", id),
         ...fieldProps(s),
+        ...nativeInputUsageProps(s),
         ...(s.placeholderEnabled
           ? [formatStringProp("placeholder", s.placeholder)]
           : []),
@@ -679,6 +710,7 @@ ${
       const props = [
         formatStringProp("id", id),
         ...fieldProps(s),
+        ...nativeInputUsageProps(s),
         ...(inputType !== "date" ? [formatStringProp("type", inputType)] : []),
         formatExpressionProp("value", state),
         formatExpressionProp(
@@ -2322,6 +2354,107 @@ ${wrapDashboardWidget(
         jsx: s.wrapInContainer
           ? `<DashboardContentContainer data-component="dashboard-welcome" width="full">\n  ${widget.replaceAll("\n", "\n  ")}\n</DashboardContentContainer>`
           : widget,
+      });
+    }
+    case "lab-form-submission": {
+      const s = settings as ControlSettingsBySlug["lab-form-submission"];
+      const fieldStatusBlock = `      <h2>Form state</h2>
+      <div style={{ display: "flex", flexWrap: "wrap", gap: 8 }}>
+        <Badge label={form.isDirty ? "Dirty" : "Pristine"} tone={form.isDirty ? "warning" : "neutral"} />
+        <Badge label={form.isValid ? "Valid" : "Invalid"} tone={form.isValid ? "success" : "danger"} />
+        <Badge label={\`\${form.touchedFields.length} touched\`} tone="neutral" />
+      </div>
+      <table style={{ width: "100%", borderCollapse: "collapse", fontSize: "0.85rem" }}>
+        <thead>
+          <tr>
+            <th style={cell}>Field</th>
+            <th style={cell}>Dirty</th>
+            <th style={cell}>Touched</th>
+            <th style={cell}>Error</th>
+          </tr>
+        </thead>
+        <tbody>
+          {Object.keys(form.fields).map((name) => (
+            <tr key={name}>
+              <th style={cell}>{name}</th>
+              <td style={cell}>{form.fields[name].dirty ? "Yes" : "No"}</td>
+              <td style={cell}>{form.fields[name].touched ? "Yes" : "No"}</td>
+              <td style={cell}>{form.fields[name].error ?? "—"}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+`;
+
+      return interactiveUsage({
+        components: ["Badge", "Button", "CheckboxField", "DashboardContentContainer", "Form", "FormActions", "FormSection", "JsonViewer", "SelectField", "TextField", "useFormState"],
+        preamble: s.showFieldStatus
+          ? [
+              'const cell = { padding: "6px 8px", borderBottom: "1px solid var(--opus-border)", textAlign: "left" } as const;',
+            ]
+          : [],
+        state: [
+          `const form = useFormState({
+  defaults: {
+    fullName: "Emma Davis",
+    email: "emma.davis@acme.com",
+    enquiryType: "Product demonstration",
+    receiveUpdates: true,
+  },
+  validate: (values) => {
+    const errors: Record<string, string> = {};
+    if (!values.fullName.trim()) errors.fullName = "Full name is required";
+    if (!/^[^@\\s]+@[^@\\s]+\\.[^@\\s]+$/.test(values.email)) errors.email = "Enter a valid email address";
+    return errors;
+  },
+});`,
+          'const [submitted, setSubmitted] = useState({ status: "Waiting for submission" });',
+          `function submitForm() {
+  form.touchAll();
+
+  if (!form.isValid) {
+    setSubmitted({ status: "Blocked by validation", errors: form.errors });
+    return;
+  }
+
+  setSubmitted({
+    ...form.values,
+    submittedAt: new Date().toISOString(),
+    meta: {
+      dirtyFields: form.dirtyFields,
+      touchedFields: form.touchedFields,
+      isDirty: form.isDirty,
+    },
+  });
+}`,
+          `function resetForm() {
+  form.reset();
+  setSubmitted({ status: "Waiting for submission" });
+}`,
+        ],
+        jsx: `<div style={{ display: "grid", gap: 16, gridTemplateColumns: "repeat(auto-fit, minmax(min(100%, 320px), 1fr))" }}>
+  <DashboardContentContainer width="full">
+    <Form action={submitForm} noValidate>
+      <header><h2>${s.title}</h2><p>${s.subtitle}</p></header>
+      <FormSection title="Contact details">
+        <TextField {...form.register("fullName")} autoComplete="name" error={form.fields.fullName.touched ? form.fields.fullName.error : undefined} id="demo-full-name" label="Full name" required type="text" />
+        <TextField {...form.register("email")} autoComplete="email" error={form.fields.email.touched ? form.fields.email.error : undefined} id="demo-email" label="Email address" required spellCheck={false} type="email" />
+        <SelectField {...form.register("enquiryType")} id="demo-enquiry-type" label="Enquiry type" options={["Product demonstration", "Pricing", "Technical support"]} />
+        <CheckboxField {...form.registerCheckbox("receiveUpdates")} fitContent id="demo-updates" label="Send me product updates" labelPosition="right" value="yes" />
+      </FormSection>
+      <FormActions>
+        <Button onClick={resetForm} type="reset" variant="secondary">Reset form</Button>
+        <Button disabled={!form.isDirty} type="submit">${s.submitLabel}</Button>
+      </FormActions>
+    </Form>
+  </DashboardContentContainer>
+  <DashboardContentContainer width="full">
+    <section aria-labelledby="submitted-json-title">
+${s.showFieldStatus ? fieldStatusBlock : ""}      <h2 id="submitted-json-title">Submitted object</h2>
+      <JsonViewer collapsedDepth={${s.collapsedDepth}} value={submitted} />
+    </section>
+  </DashboardContentContainer>
+</div>`,
       });
     }
     case "lab-login-form":

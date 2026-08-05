@@ -1,6 +1,6 @@
 "use client";
 
-import { useId, useRef, type FormEvent, type ReactNode } from "react";
+import { useId, useRef, type ComponentPropsWithoutRef, type ReactNode } from "react";
 import { FieldShell } from "../FieldShell";
 import type { FieldMode, LabelPosition } from "../types";
 import styles from "./AdvancedFields.module.css";
@@ -79,6 +79,11 @@ export function FormValidationSummary({ errors, title = "Please correct the foll
   if (!errors.length) return null;
   return <section aria-labelledby="form-validation-title" className={styles.summary} role="alert"><h3 id="form-validation-title">{title}</h3><ul>{errors.map((error, index) => <li key={`${error.fieldId}-${index}`}>{error.fieldId ? <a href={`#${error.fieldId}`}>{error.message}</a> : error.message}</li>)}</ul></section>;
 }
-export function Form({ children, onSubmit }: { children: ReactNode; onSubmit?: (event: FormEvent<HTMLFormElement>) => void }) { return <form className={styles.form} noValidate onSubmit={onSubmit}>{children}</form>; }
+export type FormProps = Omit<ComponentPropsWithoutRef<"form">, "className"> & {
+  className?: string;
+};
+export function Form({ children, className, ...props }: FormProps) {
+  return <form {...props} className={[styles.form, className].filter(Boolean).join(" ")}>{children}</form>;
+}
 export function FormSection({ children, title }: { children: ReactNode; title?: string }) { const id = useId(); return <section aria-labelledby={title ? id : undefined} className={styles.formSection}>{title ? <h3 id={id}>{title}</h3> : null}{children}</section>; }
 export function FormActions({ children }: { children: ReactNode }) { return <div className={styles.actions}>{children}</div>; }

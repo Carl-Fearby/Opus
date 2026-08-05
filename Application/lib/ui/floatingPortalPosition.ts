@@ -53,8 +53,9 @@ export function resolveDropdownPortalStyle(
   menuRect: DOMRect | null,
   placement: DropdownMenuPlacement,
   elevated: boolean,
+  gapOverride?: number,
 ): FloatingPortalStyle {
-  const gap = elevated ? 6 : 8;
+  const gap = gapOverride ?? (elevated ? 6 : 8);
   const menuWidth = menuRect?.width ?? Math.min(260, window.innerWidth - 32);
   const menuHeight = menuRect?.height ?? 0;
 

@@ -3,7 +3,7 @@ export type LabsCatalogEntry = {
   compositionParts: readonly string[];
   description: string;
   isNew?: boolean;
-  navigationGroup: "Application" | "Authentication" | "Calendar" | "Companies" | "Contacts" | "Dashboard" | "Desktop" | "Documents" | "Inventory" | "Products" | "Sales" | "Settings" | "Tasks";
+  navigationGroup: "Application" | "Authentication" | "Calendar" | "Companies" | "Contacts" | "Dashboard" | "Desktop" | "Documents" | "Forms" | "Inventory" | "Products" | "Sales" | "Settings" | "Tasks";
   settingsType:
     | "application-footer"
     | "application-header"
@@ -13,6 +13,7 @@ export type LabsCatalogEntry = {
     | "crm-workspace"
     | "dashboard-list-columns"
     | "dashboard-welcome"
+    | "form-submission"
     | "notes-activity"
     | "sidebar"
     | "three-pane-layout"
@@ -432,6 +433,24 @@ export const labsCatalog = [
       "components/DropdownMenu/DropdownMenu.tsx",
       "components/Modal/Modal.tsx",
       "components/fields/ImageCropUploadField/ImageCropUploadField.tsx",
+    ],
+  },
+  {
+    slug: "lab-form-submission",
+    title: "Form Submission",
+    componentName: "FormSubmissionComposition",
+    description: "Next.js form-action composition that collates submitted values and displays the resulting object in the JSON viewer.",
+    settingsType: "form-submission",
+    navigationGroup: "Forms",
+    compositionParts: ["text-input", "select", "checkbox", "button", "json-viewer", "dashboard-content-container"],
+    sourceFiles: [
+      "components/fields/AdvancedFields/AdvancedFields.tsx",
+      "components/fields/TextField/TextField.tsx",
+      "components/fields/SelectField/SelectField.tsx",
+      "components/fields/CheckboxField/CheckboxField.tsx",
+      "components/fields/Button/Button.tsx",
+      "components/JsonViewer/JsonViewer.tsx",
+      "components/DashboardContentContainer/DashboardContentContainer.tsx",
     ],
   },
   {

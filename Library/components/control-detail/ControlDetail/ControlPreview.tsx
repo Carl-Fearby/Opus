@@ -170,6 +170,7 @@ import {
   StatusIndicator,
   TopNavigation,
   TrendBadge,
+  useFormState,
   useToast,
 } from "opus-react";
 import { Tabs } from "@/components/Tabs";
@@ -270,6 +271,7 @@ import { topNavigationDemoMenus } from "@/lib/controls/topNavigationDemo";
 import type { TopNavigationSelectItem } from "opus-react";
 import type {
   BaseFieldSettings,
+  NativeInputSettings,
   ComponentCategory,
   ControlSettings,
   ControlSettingsBySlug,
@@ -566,6 +568,21 @@ function fieldProps(settings: BaseFieldSettings) {
     required: settings.required,
     size: settings.size ?? "md",
   };
+}
+
+function nativeInputProps(settings: NativeInputSettings) {
+  return {
+    autoCapitalize: settings.autoCapitalize,
+    autoComplete: settings.autoComplete || undefined,
+    autoCorrect: settings.autoCorrect ? "on" : "off",
+    autoFocus: settings.autoFocus,
+    disabled: settings.disabled,
+    enterKeyHint: settings.enterKeyHint || undefined,
+    inputMode: settings.inputMode || undefined,
+    name: settings.name || undefined,
+    readOnly: settings.readOnly,
+    spellCheck: settings.spellCheck,
+  } as const;
 }
 
 function ColourCloudsPreview({
@@ -2843,6 +2860,160 @@ function CalendarPreview({
   );
 }
 
+const formSubmissionDefaults = {
+  fullName: "Emma Davis",
+  email: "emma.davis@acme.com",
+  enquiryType: "Product demonstration",
+  receiveUpdates: true,
+};
+
+function validateFormSubmission(values: typeof formSubmissionDefaults) {
+  const errors: Partial<Record<keyof typeof formSubmissionDefaults, string>> = {};
+  if (!values.fullName.trim()) {
+    errors.fullName = "Full name is required";
+  }
+  if (!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(values.email)) {
+    errors.email = "Enter a valid email address";
+  }
+  return errors;
+}
+
+function FormSubmissionDemo({
+  collapsedDepth,
+  showFieldStatus,
+  submitLabel,
+  subtitle,
+  title,
+}: ControlSettingsBySlug["lab-form-submission"]) {
+  const form = useFormState({
+    defaults: formSubmissionDefaults,
+    validate: validateFormSubmission,
+  });
+  const [submitted, setSubmitted] = useState<Record<string, unknown>>({
+    status: "Waiting for submission",
+  });
+
+  function submitForm() {
+    form.touchAll();
+
+    if (!form.isValid) {
+      setSubmitted({ status: "Blocked by validation", errors: form.errors });
+      return;
+    }
+
+    setSubmitted({
+      ...form.values,
+      submittedAt: new Date().toISOString(),
+      meta: {
+        dirtyFields: form.dirtyFields,
+        touchedFields: form.touchedFields,
+        isDirty: form.isDirty,
+      },
+    });
+  }
+
+  function resetForm() {
+    form.reset();
+    setSubmitted({ status: "Waiting for submission" });
+  }
+
+  return (
+    <div className={styles.formSubmissionStage} data-component="form-submission-demo">
+      <DashboardContentContainer data-component="form-submission" width="full">
+        <Form action={submitForm} noValidate>
+          <header className={styles.formSubmissionHeader}>
+            <h2>{title}</h2>
+            <p>{subtitle}</p>
+          </header>
+          <FormSection title="Contact details">
+            <TextField
+              {...form.register("fullName")}
+              autoComplete="name"
+              error={form.fields.fullName.touched ? form.fields.fullName.error : undefined}
+              id="demo-full-name"
+              label="Full name"
+              required
+              type="text"
+            />
+            <TextField
+              {...form.register("email")}
+              autoComplete="email"
+              error={form.fields.email.touched ? form.fields.email.error : undefined}
+              id="demo-email"
+              label="Email address"
+              required
+              spellCheck={false}
+              type="email"
+            />
+            <SelectField
+              {...form.register("enquiryType")}
+              id="demo-enquiry-type"
+              label="Enquiry type"
+              options={["Product demonstration", "Pricing", "Technical support"]}
+            />
+            <CheckboxField
+              {...form.registerCheckbox("receiveUpdates")}
+              fitContent
+              id="demo-updates"
+              label="Send me product updates"
+              labelPosition="right"
+              value="yes"
+            />
+          </FormSection>
+          <FormActions>
+            <Button onClick={resetForm} type="reset" variant="secondary">Reset form</Button>
+            <Button disabled={!form.isDirty} type="submit">{submitLabel}</Button>
+          </FormActions>
+        </Form>
+      </DashboardContentContainer>
+      <DashboardContentContainer data-component="submitted-json" width="full">
+        <section aria-labelledby="submitted-json-title" className={styles.formSubmissionResult}>
+          {showFieldStatus ? (
+            <>
+              <h2>Form state</h2>
+              <div className={styles.formStateSummary}>
+                <Badge
+                  label={form.isDirty ? "Dirty" : "Pristine"}
+                  tone={form.isDirty ? "warning" : "neutral"}
+                />
+                <Badge
+                  label={form.isValid ? "Valid" : "Invalid"}
+                  tone={form.isValid ? "success" : "danger"}
+                />
+                <Badge label={`${form.touchedFields.length} touched`} tone="neutral" />
+              </div>
+              <table className={styles.formStateTable}>
+                <thead>
+                  <tr>
+                    <th scope="col">Field</th>
+                    <th scope="col">Dirty</th>
+                    <th scope="col">Touched</th>
+                    <th scope="col">Error</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {(Object.keys(form.fields) as Array<keyof typeof formSubmissionDefaults>).map(
+                    (name) => (
+                      <tr key={name}>
+                        <th scope="row">{name}</th>
+                        <td>{form.fields[name].dirty ? "Yes" : "No"}</td>
+                        <td>{form.fields[name].touched ? "Yes" : "No"}</td>
+                        <td>{form.fields[name].error ?? "—"}</td>
+                      </tr>
+                    ),
+                  )}
+                </tbody>
+              </table>
+            </>
+          ) : null}
+          <h2 id="submitted-json-title">Submitted object</h2>
+          <JsonViewer collapsedDepth={collapsedDepth} value={submitted} />
+        </section>
+      </DashboardContentContainer>
+    </div>
+  );
+}
+
 function ControlPreviewContent({
   category,
   slug,
@@ -2900,6 +3071,7 @@ function ControlPreviewContent({
       return (
         <TextField
           {...fieldProps(s)}
+          {...nativeInputProps(s)}
           id="preview-text-input"
           placeholder={s.placeholderEnabled ? s.placeholder : undefined}
           type="text"
@@ -2921,6 +3093,7 @@ function ControlPreviewContent({
       return (
         <TextField
           {...fieldProps(s)}
+          {...nativeInputProps(s)}
           id={`preview-${slug}`}
           placeholder={
             "placeholderEnabled" in s && s.placeholderEnabled
@@ -2943,6 +3116,7 @@ function ControlPreviewContent({
       return (
         <TextAreaField
           {...fieldProps(s)}
+          {...nativeInputProps(s)}
           id="preview-textarea"
           maxChars={s.maxCharsEnabled ? s.maxChars : undefined}
           placeholder={s.placeholderEnabled ? s.placeholder : undefined}
@@ -3226,6 +3400,7 @@ function ControlPreviewContent({
       return (
         <DateField
           {...fieldProps(s)}
+          {...nativeInputProps(s)}
           id={`preview-${slug}`}
           type={dateFieldTypes[slug] as DateInputType}
           value={s.value}
@@ -4501,6 +4676,8 @@ function ControlPreviewContent({
         </DashboardActionPreview>
       );
     }
+    case "lab-form-submission":
+      return <FormSubmissionDemo {...(settings as ControlSettingsBySlug["lab-form-submission"])} />;
     case "lab-company-notes": {
       const s = settings as ControlSettingsBySlug["lab-company-notes"];
       return (

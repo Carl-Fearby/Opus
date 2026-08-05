@@ -11,6 +11,7 @@ type SelectFieldProps = {
   label: string;
   labelPosition?: LabelPosition;
   mode?: FieldMode;
+  name?: string;
   options: string[];
   required?: boolean;
   size?: InputControlSize;
@@ -25,6 +26,7 @@ export function SelectField({
   label,
   labelPosition = "left",
   mode = "stacked",
+  name,
   options,
   required,
   size = "md",
@@ -48,6 +50,7 @@ export function SelectField({
           aria-invalid={error ? "true" : undefined}
           className={`${styles.select} ${error ? styles.error : ""}`}
           id={id}
+          name={name}
           onChange={onChange}
           value={value}
           {...fieldInputAriaProps(shellAria, { invalid: Boolean(error) })}
