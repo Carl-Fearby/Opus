@@ -159,7 +159,7 @@ export function VersionPage() {
             </div>
             <ol className={styles.versionList}>
               {versionLog.map((entry) => (
-                <li className={styles.versionItem} key={entry.commit}>
+                <li className={styles.versionItem} key={entry.version}>
                   <div className={styles.versionItemHeader}>
                     <span className={styles.versionBadge}>v{entry.version}</span>
                     <time className={styles.versionDate} dateTime={entry.releasedAt}>

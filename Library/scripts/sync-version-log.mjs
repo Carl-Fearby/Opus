@@ -4,12 +4,27 @@ import path from "node:path";
 import { releaseNotesOverlay } from "./release-notes-overlay.mjs";
 
 const OUTPUT_PATH = path.join(process.cwd(), "lib/documentation/versionLog.ts");
-const RELEASE_VERSION_PATTERN = /chore:\s*release opus-react@(\d+\.\d+\.\d+)/i;
+const RELEASE_VERSION_PATTERNS = [
+  /chore:\s*release opus-react@(\d+\.\d+\.\d+)/i,
+  /release:\s*publish opus-react\s+(\d+\.\d+\.\d+)/i,
+  /feat:\s*release opus-react\s+(\d+\.\d+\.\d+)/i,
+  /publish(?:ed)?\s+opus-react@?(\d+\.\d+\.\d+)/i,
+];
 
 const SKIP_CHANGE_PATTERNS = [
   /^chore:\s*release opus-react@/i,
   /^sync version log/i,
 ];
+
+function parseReleaseVersion(summary) {
+  for (const pattern of RELEASE_VERSION_PATTERNS) {
+    const match = summary.match(pattern);
+    if (match) {
+      return match[1];
+    }
+  }
+  return null;
+}
 
 function parseCommitLine(line) {
   const [hash, dateTime, ...messageParts] = line.split("|");
@@ -94,7 +109,7 @@ function buildPreReleaseEntries(commits) {
   const entries = [];
 
   for (const commit of commits) {
-    if (RELEASE_VERSION_PATTERN.test(commit.summary)) {
+    if (parseReleaseVersion(commit.summary)) {
       break;
     }
 
@@ -123,23 +138,48 @@ function indexReleaseCommits(commits) {
   const byVersion = new Map();
 
   for (const commit of commits) {
-    const match = commit.summary.match(RELEASE_VERSION_PATTERN);
-    if (match) {
-      byVersion.set(match[1], commit);
+    const version = parseReleaseVersion(commit.summary);
+    if (version && !byVersion.has(version)) {
+      byVersion.set(version, commit);
     }
   }
 
   return byVersion;
 }
 
+function findCommitMentioningVersion(commits, version) {
+  const pattern = new RegExp(`opus-react[@\\s]+${version.replaceAll(".", "\\.")}\\b`, "i");
+  for (let index = commits.length - 1; index >= 0; index -= 1) {
+    if (pattern.test(commits[index].summary)) {
+      return commits[index];
+    }
+  }
+  return undefined;
+}
+
+function resolveOverlayCommit(note, commits, releaseCommits) {
+  if (note.commit) {
+    const exact = commits.find((item) => item.hash.startsWith(note.commit));
+    if (exact) {
+      return exact;
+    }
+  }
+
+  return (
+    releaseCommits.get(note.version) ??
+    findCommitMentioningVersion(commits, note.version) ?? {
+      hash: `overlay-${note.version}`,
+      releasedAt: note.releasedAt,
+      summary: note.summary,
+    }
+  );
+}
+
 function buildOverlayEntries(commits) {
   const releaseCommits = indexReleaseCommits(commits);
 
   return releaseNotesOverlay.map((note) => {
-    const commit =
-      (note.commit ? commits.find((item) => item.hash.startsWith(note.commit)) : undefined) ??
-      releaseCommits.get(note.version) ??
-      commits.at(-1);
+    const commit = resolveOverlayCommit(note, commits, releaseCommits);
 
     return createEntry({
       version: note.version,

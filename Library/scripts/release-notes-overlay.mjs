@@ -1,6 +1,51 @@
 /** Curated opus-react release notes for npm publishes that only left chore commits in git. */
 export const releaseNotesOverlay = [
   {
+    version: "0.2.5",
+    releasedAt: "2026-07-07",
+    summary: "Early packaging iteration before the public 0.2.15 line.",
+    changes: [
+      "Iterate on the first npm package shape while the Library/Application split settles.",
+      "Publish opus-react 0.2.5 as an intermediate consumer build.",
+    ],
+  },
+  {
+    version: "0.2.7",
+    releasedAt: "2026-07-07",
+    summary: "Follow-up packaging publish during the monorepo cutover.",
+    changes: [
+      "Continue hardening package exports and Application consumption paths.",
+      "Publish opus-react 0.2.7 after another packaging pass.",
+    ],
+  },
+  {
+    version: "0.2.8",
+    releasedAt: "2026-07-07",
+    summary: "Packaging republish with consumer wiring fixes.",
+    changes: [
+      "Adjust published package metadata and install paths for Application.",
+      "Publish opus-react 0.2.8 to npm.",
+    ],
+  },
+  {
+    version: "0.2.9",
+    releasedAt: "2026-07-07",
+    summary: "Packaging republish ahead of the stable 0.2.15 baseline.",
+    changes: [
+      "Keep Application and Library package versions aligned during cutover.",
+      "Publish opus-react 0.2.9 to npm.",
+    ],
+  },
+  {
+    version: "0.2.10",
+    releasedAt: "2026-07-07",
+    summary: "Final pre-baseline packaging publish before 0.2.15.",
+    changes: [
+      "Close out the early monorepo packaging ladder.",
+      "Publish opus-react 0.2.10 to npm.",
+    ],
+  },
+  {
     version: "0.2.15",
     releasedAt: "2026-07-08",
     summary: "First public npm publish after the Library/Application split.",
@@ -343,6 +388,58 @@ export const releaseNotesOverlay = [
     ],
   },
   {
+    version: "0.3.2",
+    releasedAt: "2026-07-18",
+    commit: "c9ae9cce",
+    summary: "Responsive home dashboard workspace.",
+    changes: [
+      "Build a responsive home dashboard workspace composition for Application and Component Lab.",
+      "Publish opus-react 0.3.2 and update consumers to the new dashboard baseline.",
+    ],
+  },
+  {
+    version: "0.3.3",
+    releasedAt: "2026-07-18",
+    commit: "5bb02b90",
+    summary: "Tile scrollbar styling encapsulation.",
+    changes: [
+      "Encapsulate tile scrollbar styling so dashboard tiles keep consistent overflow chrome.",
+      "Publish opus-react 0.3.3 with the scrollbar polish.",
+    ],
+  },
+  {
+    version: "0.3.4",
+    releasedAt: "2026-07-19",
+    commit: "6ec7cd21",
+    summary: "Scrollable home dashboard workspace.",
+    changes: [
+      "Add scrollable behaviour to the home dashboard workspace for denser tile layouts.",
+      "Publish opus-react 0.3.4 for Application consumption.",
+    ],
+  },
+  {
+    version: "0.3.6",
+    releasedAt: "2026-07-20",
+    commit: "2d1bde84",
+    summary: "Contact Details lab with notes, security, and Badge contrast polish.",
+    changes: [
+      "Add the Contact Details lab with composable card, notes, and staff security surfaces.",
+      "Refine Contact Details tabs, spacing, avatar upload, and Badge contrast.",
+      "Publish opus-react 0.3.6 (0.3.5 was never published).",
+    ],
+  },
+  {
+    version: "0.3.7",
+    releasedAt: "2026-07-21",
+    commit: "4e64d454",
+    summary: "Video and audio players with media demos.",
+    changes: [
+      "Add VideoPlayer and AudioPlayer with playlist controls and media demo assets.",
+      "Correct the ContactDetails resolveContactDetailsContact signature for the DTS build.",
+      "Publish opus-react 0.3.7 and update Application to consume the release.",
+    ],
+  },
+  {
     version: "0.4.0",
     releasedAt: "2026-07-30",
     summary: "Expanded component platform, desktop environment, and npm-consumer alignment.",
@@ -365,12 +462,59 @@ export const releaseNotesOverlay = [
     ],
   },
   {
+    version: "0.4.2",
+    releasedAt: "2026-08-02",
+    summary: "Netlify deployment packaging for marketing and docs.",
+    changes: [
+      "Deploy the marketing site and documentation on Netlify.",
+      "Publish opus-react 0.4.2 while wiring the hosted consumer builds.",
+    ],
+  },
+  {
+    version: "0.4.3",
+    releasedAt: "2026-08-02",
+    summary: "Netlify adapter and symlink resolution fixes.",
+    changes: [
+      "Enable the Netlify Next.js adapter and resolve Application symlinks in hosted builds.",
+      "Publish opus-react 0.4.3 after the deployment path corrections.",
+    ],
+  },
+  {
+    version: "0.4.4",
+    releasedAt: "2026-08-02",
+    summary: "Next.js upgrade for Netlify security policy.",
+    changes: [
+      "Upgrade Next.js to satisfy the Netlify security policy.",
+      "Publish opus-react 0.4.4 with the upgraded consumer baseline.",
+    ],
+  },
+  {
+    version: "0.4.5",
+    releasedAt: "2026-08-02",
+    summary: "Restore icons and relationships routing after deploy fixes.",
+    changes: [
+      "Restore icons and the relationships route after the Netlify cutover.",
+      "Publish opus-react 0.4.5 for Application and docs consumers.",
+    ],
+  },
+  {
+    version: "0.4.6",
+    releasedAt: "2026-08-02",
+    summary: "npm marketing gallery and desktop showcase assets.",
+    changes: [
+      "Add the npm marketing screenshot gallery and desktop component showcase assets.",
+      "Publish opus-react 0.4.6 ahead of the 0.4.7 license and metadata polish.",
+    ],
+  },
+  {
     version: "0.4.7",
-    releasedAt: "2026-07-31",
+    releasedAt: "2026-08-03",
+    commit: "24836688",
     summary: "MIT license, contact metadata, and package consumer polish.",
     changes: [
       "Declare MIT licensing and maintainer contact details on the published package.",
       "Align package metadata and README guidance for npm consumers.",
+      "Add Library quality workflow, Playwright coverage, and usage-code audit tooling.",
       "Publish opus-react 0.4.7 for Application consumption.",
     ],
   },
@@ -406,6 +550,17 @@ export const releaseNotesOverlay = [
       "Allow Form Submission demo submit without requiring a dirty form first.",
       "Keep Form and FormActions from stretching buttons when sibling panels grow taller.",
       "Publish opus-react 0.6.1 and update Application to consume the release from npm.",
+    ],
+  },
+  {
+    version: "0.6.2",
+    releasedAt: "2026-08-06",
+    summary: "Complete version history coverage and stable release-list keys.",
+    changes: [
+      "Key version history entries by version so duplicate commits cannot hide releases.",
+      "Harden version-log sync so overlay releases resolve to matching commits instead of shared HEAD fallbacks.",
+      "Backfill curated notes for every published npm version missing from the history page, including 0.2.5–0.2.10, 0.3.2–0.3.7, and 0.4.2–0.4.6.",
+      "Publish opus-react 0.6.2 and update Application to consume the release from npm.",
     ],
   },
 ];
