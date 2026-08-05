@@ -26,6 +26,7 @@ export type OpusThemeExport = {
   version: 1;
   theme: Theme;
   fontFamily?: string;
+  base?: string;
   accent: string;
   accentSecondary: string;
   tileAccent: string;
@@ -33,11 +34,13 @@ export type OpusThemeExport = {
 };
 
 type ThemeSettingsButtonProps = {
+  base?: string;
   accent: string;
   accentSecondary: string;
   compact?: boolean;
   fontFamily?: GoogleFontFamily;
   idPrefix: string;
+  onBaseChange?: (value: string) => void;
   onAccentChange: (value: string) => void;
   onAccentSecondaryChange: (value: string) => void;
   onFontFamilyChange?: (value: string) => void;
@@ -148,6 +151,7 @@ function persistRect(rect: WindowRect) {
 }
 
 function buildThemeExport({
+  base,
   accent,
   accentSecondary,
   fontFamily,
@@ -158,6 +162,7 @@ function buildThemeExport({
   ThemeSettingsButtonProps,
   | "accent"
   | "accentSecondary"
+  | "base"
   | "fontFamily"
   | "theme"
   | "tileAccent"
@@ -167,6 +172,7 @@ function buildThemeExport({
     version: 1,
     theme: theme ?? "dark",
     ...(fontFamily ? { fontFamily } : {}),
+    base: base ?? "#64748b",
     accent,
     accentSecondary,
     tileAccent,
@@ -175,11 +181,13 @@ function buildThemeExport({
 }
 
 export function ThemeSettingsButton({
+  base = "#64748b",
   accent,
   accentSecondary,
   compact = false,
   fontFamily,
   idPrefix,
+  onBaseChange,
   onAccentChange,
   onAccentSecondaryChange,
   onResetAccent,
@@ -204,6 +212,7 @@ export function ThemeSettingsButton({
     () =>
       JSON.stringify(
         buildThemeExport({
+          base,
           accent,
           accentSecondary,
           fontFamily,
@@ -214,7 +223,7 @@ export function ThemeSettingsButton({
         null,
         2,
       ),
-    [accent, accentSecondary, fontFamily, theme, tileAccent, tileAccentSecondary],
+    [accent, accentSecondary, base, fontFamily, theme, tileAccent, tileAccentSecondary],
   );
 
   useEffect(() => {
@@ -353,20 +362,23 @@ export function ThemeSettingsButton({
     () => ({
       clouds: [
         {
-          id: "ui",
-          label: "Base UI",
-          color: accent,
-          secondary: accentSecondary,
+          id: "base",
+          label: "Base",
+          color: base,
         },
         {
-          id: "tiles",
-          label: "Tiles",
-          color: tileAccent,
-          secondary: tileAccentSecondary,
+          id: "accent",
+          label: "Accent",
+          color: accent,
+        },
+        {
+          id: "accent-secondary",
+          label: "Secondary accent",
+          color: accentSecondary,
         },
       ],
     }),
-    [accent, accentSecondary, tileAccent, tileAccentSecondary],
+    [accent, accentSecondary, base],
   );
 
   const handleSaveTheme = useCallback(async () => {
@@ -474,13 +486,25 @@ export function ThemeSettingsButton({
                 <section className={styles.section}>
                   <h3 className={styles.sectionTitle}>Base UI</h3>
                   <p className={styles.sectionHint}>
-                    App chrome, focus rings, buttons, and atmospheric washes — not tiles.
+                    Surface colour plus primary and secondary accents — not tiles.
                   </p>
+                  {onBaseChange ? (
+                    <AccentColorPicker
+                      defaultValue="#64748b"
+                      id={`${idPrefix}-base-picker`}
+                      label="Base"
+                      primarySectionLabel="Base"
+                      showSecondary={false}
+                      value={base}
+                      variant="panel"
+                      onChange={onBaseChange}
+                    />
+                  ) : null}
                   <AccentColorPicker
                     id={`${idPrefix}-accent-picker`}
                     label="Base UI"
-                    primarySectionLabel="UI accent"
-                    secondarySectionLabel="UI second accent"
+                    primarySectionLabel="Accent"
+                    secondarySectionLabel="Secondary accent"
                     secondaryValue={accentSecondary}
                     value={accent}
                     variant="panel"

@@ -11,12 +11,14 @@ export function ComponentsShellHeader() {
   const {
     accent,
     accentSecondary,
+    baseColor,
     fontFamily,
     previewTheme,
     resetAccent,
     resetTileAccent,
     setAccent,
     setAccentSecondary,
+    setBaseColor,
     setFontFamily,
     setPreviewTheme,
     setTheme,
@@ -43,6 +45,7 @@ export function ComponentsShellHeader() {
             onChange={setTheme}
           />
           <ThemeSettingsButton
+            base={baseColor}
             accent={accent}
             accentSecondary={accentSecondary}
             compact
@@ -54,6 +57,7 @@ export function ComponentsShellHeader() {
             tileAccentSecondary={tileAccentSecondary}
             onAccentChange={setAccent}
             onAccentSecondaryChange={setAccentSecondary}
+            onBaseChange={setBaseColor}
             onFontFamilyChange={setFontFamily}
             onResetAccent={resetAccent}
             onResetTileAccent={resetTileAccent}

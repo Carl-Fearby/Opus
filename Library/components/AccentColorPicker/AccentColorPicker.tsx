@@ -364,6 +364,8 @@ type AccentColorPickerProps = {
   defaultSecondaryValue?: string;
   /** When true, also show the compact quick-swatch row. */
   showQuickSwatches?: boolean;
+  /** Show the companion secondary colour palette. */
+  showSecondary?: boolean;
   /**
    * `compact` — top-bar blob + dropdown.
    * `panel` — always-visible Accent / Second accent grids (modal).
@@ -425,6 +427,7 @@ export function AccentColorPicker({
   defaultSecondaryValue = DEFAULT_ACCENT_SECONDARY,
   secondaryValue,
   showQuickSwatches = false,
+  showSecondary = true,
   variant = "compact",
   value,
 }: AccentColorPickerProps) {
@@ -432,8 +435,8 @@ export function AccentColorPicker({
   const [open, setOpen] = useState(false);
   const rootRef = useRef<HTMLDivElement>(null);
   const menuId = useId();
-  const selectedLabel = pairLabel(value, resolvedSecondary);
-  const isDefault = value === defaultValue && resolvedSecondary === defaultSecondaryValue;
+  const selectedLabel = showSecondary ? pairLabel(value, resolvedSecondary) : colorLabel(value);
+  const isDefault = value === defaultValue && (!showSecondary || resolvedSecondary === defaultSecondaryValue);
 
   useEffect(() => {
     if (!open || variant !== "compact") {
@@ -472,11 +475,13 @@ export function AccentColorPicker({
   const paletteBody = (
     <>
       <AccentSwatchGrid label={primarySectionLabel} selectedValue={value} onSelect={onChange} />
-      <AccentSwatchGrid
-        label={secondarySectionLabel}
-        selectedValue={resolvedSecondary}
-        onSelect={(next) => onSecondaryChange?.(next)}
-      />
+      {showSecondary ? (
+        <AccentSwatchGrid
+          label={secondarySectionLabel}
+          selectedValue={resolvedSecondary}
+          onSelect={(next) => onSecondaryChange?.(next)}
+        />
+      ) : null}
     </>
   );
 

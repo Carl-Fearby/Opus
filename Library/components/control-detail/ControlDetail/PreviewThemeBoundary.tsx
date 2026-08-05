@@ -18,7 +18,7 @@ export function PreviewThemeBoundary({
   theme: controlledTheme,
   ...rest
 }: PreviewThemeBoundaryProps) {
-  const { previewTheme: contextTheme, accentStyle } = useComponentsTheme();
+  const { previewTheme: contextTheme, previewAccentStyle } = useComponentsTheme();
   const previewTheme = controlledTheme ?? contextTheme;
 
   return (
@@ -30,7 +30,7 @@ export function PreviewThemeBoundary({
         data-theme={previewTheme}
         style={{
           ...opusThemeTokens(previewTheme),
-          ...accentStyle,
+          ...previewAccentStyle,
           colorScheme: previewTheme,
           ...style,
         }}

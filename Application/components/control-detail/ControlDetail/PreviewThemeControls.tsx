@@ -20,20 +20,22 @@ export function PreviewThemeControls({
   variant = "panel",
 }: PreviewThemeControlsProps) {
   const {
-    accent,
-    accentSecondary,
     fontFamily,
+    previewAccent,
+    previewAccentSecondary,
+    previewBaseColor,
     previewTheme,
-    resetAccent,
-    resetTileAccent,
-    setAccent,
-    setAccentSecondary,
+    previewTileAccent,
+    previewTileAccentSecondary,
+    resetPreviewAccent,
+    resetPreviewTileAccent,
     setFontFamily,
+    setPreviewAccent,
+    setPreviewAccentSecondary,
+    setPreviewBaseColor,
     setPreviewTheme,
-    setTileAccent,
-    setTileAccentSecondary,
-    tileAccent,
-    tileAccentSecondary,
+    setPreviewTileAccent,
+    setPreviewTileAccentSecondary,
   } = useComponentsTheme();
   const theme = controlledTheme ?? previewTheme;
   const handleThemeChange = onThemeChange ?? setPreviewTheme;
@@ -47,23 +49,25 @@ export function PreviewThemeControls({
       }
     >
       <ThemeSettingsButton
-        accent={accent}
-        accentSecondary={accentSecondary}
+        base={previewBaseColor}
+        accent={previewAccent}
+        accentSecondary={previewAccentSecondary}
         compact
         fontFamily={fontFamily}
         idPrefix={`${id}-preview`}
         theme={theme}
         themeLabel="Preview theme"
-        tileAccent={tileAccent}
-        tileAccentSecondary={tileAccentSecondary}
-        onAccentChange={setAccent}
-        onAccentSecondaryChange={setAccentSecondary}
+        tileAccent={previewTileAccent}
+        tileAccentSecondary={previewTileAccentSecondary}
+        onAccentChange={setPreviewAccent}
+        onAccentSecondaryChange={setPreviewAccentSecondary}
+        onBaseChange={setPreviewBaseColor}
         onFontFamilyChange={setFontFamily}
-        onResetAccent={resetAccent}
-        onResetTileAccent={resetTileAccent}
+        onResetAccent={resetPreviewAccent}
+        onResetTileAccent={resetPreviewTileAccent}
         onThemeChange={handleThemeChange}
-        onTileAccentChange={setTileAccent}
-        onTileAccentSecondaryChange={setTileAccentSecondary}
+        onTileAccentChange={setPreviewTileAccent}
+        onTileAccentSecondaryChange={setPreviewTileAccentSecondary}
       />
       <span className={styles.previewThemeLabel} id={`${id}-label`}>
         Preview theme
