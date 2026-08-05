@@ -86,15 +86,25 @@ export function ModelLightbox({
 
   return (
     <div className={styles.lightbox}>
-      <button
-        aria-label={trigger ? triggerLabel : undefined}
-        className={styles.trigger}
-        data-custom={trigger ? "true" : "false"}
-        type="button"
-        onClick={() => setOpen(true)}
-      >
-        {trigger ?? <span>{triggerLabel}</span>}
-      </button>
+      {trigger ? (
+        /* The trigger content can hold its own controls (model-viewer renders a poster
+           button), so it stays outside the button and an overlay captures the click. */
+        <div className={styles.customTrigger}>
+          <div className={styles.customTriggerContent} inert>
+            {trigger}
+          </div>
+          <button
+            aria-label={triggerLabel}
+            className={styles.customTriggerButton}
+            type="button"
+            onClick={() => setOpen(true)}
+          />
+        </div>
+      ) : (
+        <button className={styles.trigger} type="button" onClick={() => setOpen(true)}>
+          <span>{triggerLabel}</span>
+        </button>
+      )}
 
       {isOpen || isRendered ? (
         <Portal>

@@ -388,12 +388,13 @@ export const releaseNotesOverlay = [
   {
     version: "0.6.0",
     releasedAt: "2026-08-05",
-    summary: "Form state controller, native field attributes, and form-submission status demo.",
+    summary: "Form state, FormHeader, Badge counts, and accessibility fixes across CRM and media previews.",
     changes: [
       "Add useFormState for values, dirty and touched tracking, validation, reset, and register helpers.",
-      "Surface per-field dirty, touched, and error status in the Form Submission lab demo and generated usage code.",
+      "Add FormHeader for consistent form titles, descriptions, and trailing actions.",
+      "Add Badge count pill support and use it for touched field status in the Form Submission demo.",
       "Forward shared native input attributes across text, textarea, select, date, phone, password-strength, and checkbox fields.",
-      "Expand accessibility coverage and document the Form Submission form-state behaviour.",
+      "Fix serious and critical axe issues in CrmWorkspaceLab tables, TreeMenu leaf toggles, scrollable Tabs and StatTiles, and ModelLightbox triggers.",
       "Publish opus-react 0.6.0 and update Application to consume the release from npm.",
     ],
   },

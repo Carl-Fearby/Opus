@@ -31,6 +31,7 @@ export function StatTiles({ className, items, layout = "fill" }: StatTilesProps)
   const rowRef = useRef<HTMLDivElement>(null);
   const [hasPrevious, setHasPrevious] = useState(false);
   const [hasMore, setHasMore] = useState(false);
+  const [scrollable, setScrollable] = useState(false);
   const rowStyle =
     layout === "fill" && items.length > 0
       ? ({ gridTemplateColumns: `repeat(${items.length}, minmax(var(--stat-tile-min), 1fr))` } as const)
@@ -42,6 +43,7 @@ export function StatTiles({ className, items, layout = "fill" }: StatTilesProps)
 
     setHasPrevious(row.scrollLeft > 2);
     setHasMore(row.scrollWidth - row.scrollLeft - row.clientWidth > 2);
+    setScrollable(row.scrollWidth - row.clientWidth > 2);
   }, []);
 
   useEffect(() => {
@@ -78,6 +80,7 @@ export function StatTiles({ className, items, layout = "fill" }: StatTilesProps)
         ref={rowRef}
         role="list"
         style={rowStyle}
+        tabIndex={scrollable ? 0 : undefined}
       >
         {items.map((item, index) => {
           const tone = item.tone ?? defaultToneForIndex(index);

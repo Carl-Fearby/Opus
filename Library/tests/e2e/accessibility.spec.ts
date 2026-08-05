@@ -9,7 +9,8 @@ for (const slug of getAllSlugs()) {
     const response = await page.goto(`/documentation/components/${slug}`);
 
     expect(response?.ok()).toBe(true);
-    await expect(page.locator("[data-preview-root]")).toBeVisible();
+    const preview = page.locator("[data-preview-root]").first();
+    await expect(preview).toBeVisible();
 
     const results = await new AxeBuilder({ page })
       .include("[data-preview-root]")

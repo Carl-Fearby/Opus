@@ -42,7 +42,8 @@
   cursor: pointer;
 }
 
-.toggle {
+.toggle,
+.toggleSpacer {
   align-items: center;
   background: transparent;
   border-radius: 6px;

@@ -947,26 +947,9 @@
   padding: 24px;
 }
 
-.formSubmissionHeader,
 .formSubmissionResult {
   display: grid;
-  gap: 8px;
-}
-
-.formSubmissionHeader h2,
-.formSubmissionHeader p,
-.formSubmissionResult h2 {
-  margin: 0;
-}
-
-.formSubmissionHeader p {
-  color: var(--opus-muted);
-}
-
-.formStateSummary {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
+  gap: 16px;
 }
 
 .formStateTable {
@@ -1005,13 +988,6 @@
 .authForm {
   display: grid;
   gap: 16px;
-}
-
-.authFormHeader {
-  display: grid;
-  gap: 6px;
-  margin-bottom: 4px;
-  text-align: center;
 }
 
 .authFormLogo {
@@ -1169,14 +1145,8 @@
   white-space: nowrap;
 }
 
-.authFormHeader h2,
-.authFormHeader p,
 .authFormSwitch {
   margin: 0;
-}
-
-.authFormHeader p,
-.authFormSwitch {
   color: var(--opus-muted);
 }
 

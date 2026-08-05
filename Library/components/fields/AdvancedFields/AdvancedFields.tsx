@@ -85,5 +85,29 @@ export type FormProps = Omit<ComponentPropsWithoutRef<"form">, "className"> & {
 export function Form({ children, className, ...props }: FormProps) {
   return <form {...props} className={[styles.form, className].filter(Boolean).join(" ")}>{children}</form>;
 }
+export type FormHeaderProps = {
+  /** Trailing controls, aligned opposite the title on wide layouts. */
+  actions?: ReactNode;
+  align?: "start" | "center";
+  description?: string;
+  /** Heading level for the document outline. Visual size is unchanged. */
+  headingLevel?: 2 | 3 | 4;
+  /** Small uppercase label above the title. */
+  eyebrow?: string;
+  title: string;
+  /** Id placed on the heading, for wiring `aria-labelledby` on the surrounding region. */
+  titleId?: string;
+};
+export function FormHeader({ actions, align = "start", description, eyebrow, headingLevel = 2, title, titleId }: FormHeaderProps) {
+  const Heading = `h${headingLevel}` as const;
+  return <header className={styles.formHeader} data-align={align}>
+    <div className={styles.formHeaderCopy}>
+      {eyebrow ? <p className={styles.formHeaderEyebrow}>{eyebrow}</p> : null}
+      <Heading className={styles.formHeaderTitle} id={titleId}>{title}</Heading>
+      {description ? <p className={styles.formHeaderDescription}>{description}</p> : null}
+    </div>
+    {actions ? <div className={styles.formHeaderActions}>{actions}</div> : null}
+  </header>;
+}
 export function FormSection({ children, title }: { children: ReactNode; title?: string }) { const id = useId(); return <section aria-labelledby={title ? id : undefined} className={styles.formSection}>{title ? <h3 id={id}>{title}</h3> : null}{children}</section>; }
 export function FormActions({ children }: { children: ReactNode }) { return <div className={styles.actions}>{children}</div>; }

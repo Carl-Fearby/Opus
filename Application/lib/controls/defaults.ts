@@ -1309,6 +1309,8 @@ export const defaultSettings: ControlSettingsBySlug = {
     variant: "soft",
     size: "md",
     dot: true,
+    showCount: false,
+    count: 4,
   },
   avatar: {
     name: "Alex Morgan",

@@ -32,6 +32,12 @@
   border: 0;
 }
 
+.row:focus-visible {
+  border-radius: 12px;
+  outline: 2px solid color-mix(in srgb, var(--opus-accent) 70%, transparent);
+  outline-offset: 2px;
+}
+
 .row::-webkit-scrollbar {
   display: none;
   width: 0;

@@ -2358,12 +2358,16 @@ ${wrapDashboardWidget(
     }
     case "lab-form-submission": {
       const s = settings as ControlSettingsBySlug["lab-form-submission"];
-      const fieldStatusBlock = `      <h2>Form state</h2>
-      <div style={{ display: "flex", flexWrap: "wrap", gap: 8 }}>
-        <Badge label={form.isDirty ? "Dirty" : "Pristine"} tone={form.isDirty ? "warning" : "neutral"} />
-        <Badge label={form.isValid ? "Valid" : "Invalid"} tone={form.isValid ? "success" : "danger"} />
-        <Badge label={\`\${form.touchedFields.length} touched\`} tone="neutral" />
-      </div>
+      const fieldStatusBlock = `      <FormHeader
+        actions={
+          <>
+            <Badge label={form.isDirty ? "Dirty" : "Pristine"} tone={form.isDirty ? "warning" : "neutral"} />
+            <Badge label={form.isValid ? "Valid" : "Invalid"} tone={form.isValid ? "success" : "danger"} />
+            <Badge count={form.touchedFields.length} label="Touched" tone="neutral" />
+          </>
+        }
+        title="Form state"
+      />
       <table style={{ width: "100%", borderCollapse: "collapse", fontSize: "0.85rem" }}>
         <thead>
           <tr>
@@ -2387,7 +2391,7 @@ ${wrapDashboardWidget(
 `;
 
       return interactiveUsage({
-        components: ["Badge", "Button", "CheckboxField", "DashboardContentContainer", "Form", "FormActions", "FormSection", "JsonViewer", "SelectField", "TextField", "useFormState"],
+        components: ["Badge", "Button", "CheckboxField", "DashboardContentContainer", "Form", "FormActions", "FormHeader", "FormSection", "JsonViewer", "SelectField", "TextField", "useFormState"],
         preamble: s.showFieldStatus
           ? [
               'const cell = { padding: "6px 8px", borderBottom: "1px solid var(--opus-border)", textAlign: "left" } as const;',
@@ -2435,7 +2439,7 @@ ${wrapDashboardWidget(
         jsx: `<div style={{ display: "grid", gap: 16, gridTemplateColumns: "repeat(auto-fit, minmax(min(100%, 320px), 1fr))" }}>
   <DashboardContentContainer width="full">
     <Form action={submitForm} noValidate>
-      <header><h2>${s.title}</h2><p>${s.subtitle}</p></header>
+      <FormHeader description={${quote(s.subtitle)}} title={${quote(s.title)}} />
       <FormSection title="Contact details">
         <TextField {...form.register("fullName")} autoComplete="name" error={form.fields.fullName.touched ? form.fields.fullName.error : undefined} id="demo-full-name" label="Full name" required type="text" />
         <TextField {...form.register("email")} autoComplete="email" error={form.fields.email.touched ? form.fields.email.error : undefined} id="demo-email" label="Email address" required spellCheck={false} type="email" />
@@ -2449,8 +2453,8 @@ ${wrapDashboardWidget(
     </Form>
   </DashboardContentContainer>
   <DashboardContentContainer width="full">
-    <section aria-labelledby="submitted-json-title">
-${s.showFieldStatus ? fieldStatusBlock : ""}      <h2 id="submitted-json-title">Submitted object</h2>
+    <section aria-labelledby="submitted-json-title" style={{ display: "grid", gap: 16 }}>
+${s.showFieldStatus ? fieldStatusBlock : ""}      <FormHeader title="Submitted object" titleId="submitted-json-title" />
       <JsonViewer collapsedDepth={${s.collapsedDepth}} value={submitted} />
     </section>
   </DashboardContentContainer>
@@ -2483,15 +2487,12 @@ ${s.showFieldStatus ? fieldStatusBlock : ""}      <h2 id="submitted-json-title">
       const isLinkExpired = slug === "lab-link-expired-form";
       if (isOtp) {
         return interactiveUsage({
-          components: ["Button", "DashboardContentContainer"],
+          components: ["Button", "DashboardContentContainer", "FormHeader"],
           state: [`const [code, setCode] = useState(${quote(s.verificationCode)});`],
           jsx: `<DashboardContentContainer data-component="otp-form" width="widget">
   <form onSubmit={(event) => { event.preventDefault(); console.log("Verify code", code); }} style={{ display: "grid", gap: 16 }}>
     <img alt="Opus" src="/opus-logo.png" style={{ display: "block", height: "auto", margin: "0 auto", width: "12rem" }} />
-    <header style={{ display: "grid", gap: 6, textAlign: "center" }}>
-      <h2 style={{ margin: 0 }}>${s.title}</h2>
-      <p style={{ margin: 0, color: "var(--opus-muted)" }}>${s.subtitle}</p>
-    </header>
+    <FormHeader align="center" description={${quote(s.subtitle)}} title={${quote(s.title)}} />
     <fieldset style={{ border: 0, margin: 0, padding: 0 }}>
       <legend style={{ marginBottom: 8, fontWeight: 650 }}>Six-digit verification code</legend>
       <div style={{ display: "grid", gap: 8, gridTemplateColumns: "repeat(6, minmax(0, 1fr))" }}>
@@ -2543,15 +2544,12 @@ ${s.showFieldStatus ? fieldStatusBlock : ""}      <h2 id="submitted-json-title">
       }
       if (isPasskey) {
         return interactiveUsage({
-          components: ["Button", "CatalogIcon", "DashboardContentContainer"],
+          components: ["Button", "CatalogIcon", "DashboardContentContainer", "FormHeader"],
           state: [],
           jsx: `<DashboardContentContainer data-component="passkey-login-form" width="widget">
   <form onSubmit={(event) => { event.preventDefault(); console.log("Start passkey sign-in"); }} style={{ display: "grid", gap: 16 }}>
     <img alt="Opus" src="/opus-logo.png" style={{ display: "block", height: "auto", margin: "0 auto", width: "12rem" }} />
-    <header style={{ display: "grid", gap: 6, textAlign: "center" }}>
-      <h2 style={{ margin: 0 }}>${s.title}</h2>
-      <p style={{ margin: 0, color: "var(--opus-muted)" }}>${s.subtitle}</p>
-    </header>
+    <FormHeader align="center" description={${quote(s.subtitle)}} title={${quote(s.title)}} />
     <div aria-hidden="true" style={{ alignItems: "center", background: "color-mix(in srgb, var(--opus-accent) 12%, var(--opus-input-bg))", border: "1px solid color-mix(in srgb, var(--opus-accent) 40%, var(--opus-border))", borderRadius: "50%", color: "var(--opus-accent)", display: "flex", fontSize: 36, height: 80, justifyContent: "center", margin: "4px auto", width: 80 }}>
       <CatalogIcon iconName="fingerprint" />
     </div>
@@ -2563,15 +2561,12 @@ ${s.showFieldStatus ? fieldStatusBlock : ""}      <h2 id="submitted-json-title">
       }
       if (isForgot) {
         return interactiveUsage({
-          components: ["Button", "DashboardContentContainer", "TextField"],
+          components: ["Button", "DashboardContentContainer", "FormHeader", "TextField"],
           state: [`const [email, setEmail] = useState(${quote(s.email)});`],
           jsx: `<DashboardContentContainer data-component="forgot-password-form" width="widget">
   <form onSubmit={(event) => { event.preventDefault(); console.log("Send reset link", { email }); }} style={{ display: "grid", gap: 16 }}>
     <img alt="Opus" src="/opus-logo.png" style={{ display: "block", height: "auto", margin: "0 auto", width: "12rem" }} />
-    <header style={{ display: "grid", gap: 6, textAlign: "center" }}>
-      <h2 style={{ margin: 0 }}>${s.title}</h2>
-      <p style={{ margin: 0, color: "var(--opus-muted)" }}>${s.subtitle}</p>
-    </header>
+    <FormHeader align="center" description={${quote(s.subtitle)}} title={${quote(s.title)}} />
     <TextField id="auth-email" label="Email address" required type="email" value={email} onChange={(event) => setEmail(event.target.value)} />
     <Button type="submit">${s.submitLabel}</Button>
     <Button onClick={() => console.log("Back to sign in")} type="button" variant="link">Back to sign in</Button>
@@ -2581,7 +2576,7 @@ ${s.showFieldStatus ? fieldStatusBlock : ""}      <h2 id="submitted-json-title">
       }
       if (isReset) {
         return interactiveUsage({
-          components: ["Button", "DashboardContentContainer", "TextField"],
+          components: ["Button", "DashboardContentContainer", "FormHeader", "TextField"],
           state: [
             `const [password, setPassword] = useState(${quote(s.password)});`,
             `const [confirmPassword, setConfirmPassword] = useState(${quote(s.confirmPassword)});`,
@@ -2589,10 +2584,7 @@ ${s.showFieldStatus ? fieldStatusBlock : ""}      <h2 id="submitted-json-title">
           jsx: `<DashboardContentContainer data-component="reset-password-form" width="widget">
   <form onSubmit={(event) => { event.preventDefault(); console.log("Update password"); }} style={{ display: "grid", gap: 16 }}>
     <img alt="Opus" src="/opus-logo.png" style={{ display: "block", height: "auto", margin: "0 auto", width: "12rem" }} />
-    <header style={{ display: "grid", gap: 6, textAlign: "center" }}>
-      <h2 style={{ margin: 0 }}>${s.title}</h2>
-      <p style={{ margin: 0, color: "var(--opus-muted)" }}>${s.subtitle}</p>
-    </header>
+    <FormHeader align="center" description={${quote(s.subtitle)}} title={${quote(s.title)}} />
     <TextField id="auth-password" label="New password" required type="password" value={password} onChange={(event) => setPassword(event.target.value)} />
     <TextField id="auth-confirm-password" label="Confirm password" required type="password" value={confirmPassword} onChange={(event) => setConfirmPassword(event.target.value)} />
     <Button type="submit">${s.submitLabel}</Button>
@@ -2603,7 +2595,7 @@ ${s.showFieldStatus ? fieldStatusBlock : ""}      <h2 id="submitted-json-title">
       }
       if (isChange) {
         return interactiveUsage({
-          components: ["Button", "DashboardContentContainer", "TextField"],
+          components: ["Button", "DashboardContentContainer", "FormHeader", "TextField"],
           state: [
             `const [currentPassword, setCurrentPassword] = useState(${quote(s.currentPassword)});`,
             `const [password, setPassword] = useState(${quote(s.password)});`,
@@ -2612,10 +2604,7 @@ ${s.showFieldStatus ? fieldStatusBlock : ""}      <h2 id="submitted-json-title">
           jsx: `<DashboardContentContainer data-component="change-password-form" width="widget">
   <form onSubmit={(event) => { event.preventDefault(); console.log("Change password"); }} style={{ display: "grid", gap: 16 }}>
     <img alt="Opus" src="/opus-logo.png" style={{ display: "block", height: "auto", margin: "0 auto", width: "12rem" }} />
-    <header style={{ display: "grid", gap: 6, textAlign: "center" }}>
-      <h2 style={{ margin: 0 }}>${s.title}</h2>
-      <p style={{ margin: 0, color: "var(--opus-muted)" }}>${s.subtitle}</p>
-    </header>
+    <FormHeader align="center" description={${quote(s.subtitle)}} title={${quote(s.title)}} />
     <TextField id="auth-current-password" label="Current password" required type="password" value={currentPassword} onChange={(event) => setCurrentPassword(event.target.value)} />
     <TextField id="auth-password" label="New password" required type="password" value={password} onChange={(event) => setPassword(event.target.value)} />
     <TextField id="auth-confirm-password" label="Confirm password" required type="password" value={confirmPassword} onChange={(event) => setConfirmPassword(event.target.value)} />
@@ -2634,15 +2623,12 @@ ${s.showFieldStatus ? fieldStatusBlock : ""}      <h2 id="submitted-json-title">
             ? `<Button onClick={() => console.log("Back to sign in")} type="button" variant="link">Back to sign in</Button>`
             : "";
         return interactiveUsage({
-          components: ["Button", "CatalogIcon", "DashboardContentContainer"],
+          components: ["Button", "CatalogIcon", "DashboardContentContainer", "FormHeader"],
           state: [],
           jsx: `<DashboardContentContainer data-component="${dataComponent}" width="widget">
   <form onSubmit={(event) => { event.preventDefault(); console.log(${quote(s.submitLabel)}); }} style={{ display: "grid", gap: 16 }}>
     <img alt="Opus" src="/opus-logo.png" style={{ display: "block", height: "auto", margin: "0 auto", width: "12rem" }} />
-    <header style={{ display: "grid", gap: 6, textAlign: "center" }}>
-      <h2 style={{ margin: 0 }}>${s.title}</h2>
-      <p style={{ margin: 0, color: "var(--opus-muted)" }}>${s.subtitle}</p>
-    </header>
+    <FormHeader align="center" description={${quote(s.subtitle)}} title={${quote(s.title)}} />
     <div aria-hidden="true" style={{ alignItems: "center", background: "color-mix(in srgb, var(--opus-accent) 12%, var(--opus-input-bg))", border: "1px solid color-mix(in srgb, var(--opus-accent) 40%, var(--opus-border))", borderRadius: "50%", color: "var(--opus-accent)", display: "flex", fontSize: 36, height: 80, justifyContent: "center", margin: "4px auto", width: 80 }}>
       <CatalogIcon iconName="${iconName}" />
     </div>
@@ -2655,7 +2641,7 @@ ${s.showFieldStatus ? fieldStatusBlock : ""}      <h2 id="submitted-json-title">
       if (isSocial || isRegister) {
         const showRegisterFields = isRegister;
         return interactiveUsage({
-          components: ["Button", "CheckboxField", "DashboardContentContainer", "TextField"],
+          components: ["Button", "CheckboxField", "DashboardContentContainer", "FormHeader", "TextField"],
           state: [
             `const [email, setEmail] = useState(${quote(s.email)});`,
             ...(showRegisterFields ? [`const [name, setName] = useState(${quote(s.name)});`] : []),
@@ -2666,10 +2652,7 @@ ${s.showFieldStatus ? fieldStatusBlock : ""}      <h2 id="submitted-json-title">
           jsx: `<DashboardContentContainer data-component="${isSocialRegister ? "social-register-form" : isSocial ? "social-auth-form" : isRegister ? "register-form" : "login-form"}" width="widget">
   <form onSubmit={(event) => { event.preventDefault(); console.log("${showRegisterFields ? "Create account" : "Sign in"}", { email${showRegisterFields ? ", name" : ""} }); }} style={{ display: "grid", gap: 16 }}>
     <img alt="Opus" src="/opus-logo.png" style={{ display: "block", height: "auto", margin: "0 auto", width: "12rem" }} />
-    <header style={{ display: "grid", gap: 6, textAlign: "center" }}>
-      <h2 style={{ margin: 0 }}>${s.title}</h2>
-      <p style={{ margin: 0, color: "var(--opus-muted)" }}>${s.subtitle}</p>
-    </header>
+    <FormHeader align="center" description={${quote(s.subtitle)}} title={${quote(s.title)}} />
     <button onClick={() => void continueWithGoogle({ mode: "${showRegisterFields ? "register" : "login"}" })} style={{ alignItems: "center", background: "#fff", border: "1px solid #747775", borderRadius: 4, color: "#1f1f1f", cursor: "pointer", display: "flex", font: "500 14px Arial, sans-serif", gap: 12, justifyContent: "center", minHeight: 44, width: "100%" }} type="button">
       <svg aria-hidden="true" height="18" viewBox="0 0 18 18" width="18"><path d="M17.64 9.205c0-.638-.057-1.252-.164-1.841H9v3.482h4.844c-.209 1.125-.843 2.078-1.797 2.716v2.258h2.909c1.702-1.567 2.684-3.874 2.684-6.615Z" fill="#4285F4"/><path d="M9 18c2.43 0 4.467-.806 5.956-2.18l-2.909-2.258c-.806.54-1.835.859-3.047.859-2.344 0-4.329-1.585-5.037-3.711H.956v2.333C2.437 15.983 5.482 18 9 18Z" fill="#34A853"/><path d="M3.963 10.71A5.423 5.423 0 0 1 3.68 9c0-.593.103-1.17.283-1.71V4.957H.956A9.002 9.002 0 0 0 0 9c0 1.451.347 2.827.956 4.043l3.007-2.333Z" fill="#FBBC05"/><path d="M9 3.579c1.321 0 2.508.454 3.44 1.346l2.582-2.581C13.464.892 11.426 0 9 0 5.482 0 2.437 2.017.956 4.957L3.963 7.29C4.67 5.164 6.656 3.579 9 3.579Z" fill="#EA4335"/></svg>
       Continue with Google
@@ -2691,7 +2674,7 @@ ${s.showFieldStatus ? fieldStatusBlock : ""}      <h2 id="submitted-json-title">
         });
       }
       return interactiveUsage({
-        components: ["Button", "CheckboxField", "DashboardContentContainer", "TextField"],
+        components: ["Button", "CheckboxField", "DashboardContentContainer", "FormHeader", "TextField"],
         state: [
           `const [email, setEmail] = useState(${quote(s.email)});`,
           `const [password, setPassword] = useState(${quote(s.password)});`,
@@ -2700,10 +2683,7 @@ ${s.showFieldStatus ? fieldStatusBlock : ""}      <h2 id="submitted-json-title">
         jsx: `<DashboardContentContainer data-component="login-form" width="widget">
   <form onSubmit={(event) => { event.preventDefault(); console.log("Sign in", { email }); }} style={{ display: "grid", gap: 16 }}>
     <img alt="Opus" src="/opus-logo.png" style={{ display: "block", height: "auto", margin: "0 auto", width: "12rem" }} />
-    <header style={{ display: "grid", gap: 6, textAlign: "center" }}>
-      <h2 style={{ margin: 0 }}>${s.title}</h2>
-      <p style={{ margin: 0, color: "var(--opus-muted)" }}>${s.subtitle}</p>
-    </header>
+    <FormHeader align="center" description={${quote(s.subtitle)}} title={${quote(s.title)}} />
     <TextField id="auth-email" label="Email address" required type="email" value={email} onChange={(event) => setEmail(event.target.value)} />
     <TextField id="auth-password" label="Password" required type="password" value={password} onChange={(event) => setPassword(event.target.value)} />
     <div style={{ alignItems: "center", display: "flex", justifyContent: "space-between", gap: 12 }}>
@@ -3816,6 +3796,7 @@ ${formatJsxParagraphContent(s.content)}
           : []),
         ...(s.size !== "md" ? [formatStringProp("size", s.size)] : []),
         ...(s.dot ? [formatBoolProp("dot", true)] : []),
+        ...(s.showCount ? [`count={${s.count}}`] : []),
       ];
       return `${importLine(["Badge"])}\n\n<Badge${formatSelfClosing(props)}`;
     }

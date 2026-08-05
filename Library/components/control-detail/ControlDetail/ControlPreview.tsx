@@ -21,7 +21,7 @@ import { continueWithApple, continueWithGoogle } from "@/lib/auth/socialAuth";
 import { VideoPlayer } from "@/components/VideoPlayer";
 import { AudioPlayer } from "@/components/AudioPlayer";
 import { OtpField } from "@/components/fields/OtpField";
-import { CheckboxGroupField, ComboboxField, CurrencyField, DateRangeField, Form, FormActions, FormSection, FormValidationSummary, MaskedField, MultiFileField } from "@/components/fields/AdvancedFields";
+import { CheckboxGroupField, ComboboxField, CurrencyField, DateRangeField, Form, FormActions, FormHeader, FormSection, FormValidationSummary, MaskedField, MultiFileField } from "@/components/fields/AdvancedFields";
 import {
   Button,
   Card,
@@ -2921,10 +2921,7 @@ function FormSubmissionDemo({
     <div className={styles.formSubmissionStage} data-component="form-submission-demo">
       <DashboardContentContainer data-component="form-submission" width="full">
         <Form action={submitForm} noValidate>
-          <header className={styles.formSubmissionHeader}>
-            <h2>{title}</h2>
-            <p>{subtitle}</p>
-          </header>
+          <FormHeader description={subtitle} title={title} />
           <FormSection title="Contact details">
             <TextField
               {...form.register("fullName")}
@@ -2970,18 +2967,22 @@ function FormSubmissionDemo({
         <section aria-labelledby="submitted-json-title" className={styles.formSubmissionResult}>
           {showFieldStatus ? (
             <>
-              <h2>Form state</h2>
-              <div className={styles.formStateSummary}>
-                <Badge
-                  label={form.isDirty ? "Dirty" : "Pristine"}
-                  tone={form.isDirty ? "warning" : "neutral"}
-                />
-                <Badge
-                  label={form.isValid ? "Valid" : "Invalid"}
-                  tone={form.isValid ? "success" : "danger"}
-                />
-                <Badge label={`${form.touchedFields.length} touched`} tone="neutral" />
-              </div>
+              <FormHeader
+                actions={
+                  <>
+                    <Badge
+                      label={form.isDirty ? "Dirty" : "Pristine"}
+                      tone={form.isDirty ? "warning" : "neutral"}
+                    />
+                    <Badge
+                      label={form.isValid ? "Valid" : "Invalid"}
+                      tone={form.isValid ? "success" : "danger"}
+                    />
+                    <Badge count={form.touchedFields.length} label="Touched" tone="neutral" />
+                  </>
+                }
+                title="Form state"
+              />
               <table className={styles.formStateTable}>
                 <thead>
                   <tr>
@@ -3006,7 +3007,7 @@ function FormSubmissionDemo({
               </table>
             </>
           ) : null}
-          <h2 id="submitted-json-title">Submitted object</h2>
+          <FormHeader title="Submitted object" titleId="submitted-json-title" />
           <JsonViewer collapsedDepth={collapsedDepth} value={submitted} />
         </section>
       </DashboardContentContainer>
@@ -4527,10 +4528,7 @@ function ControlPreviewContent({
                   }}
                 >
                   <img alt="Opus" className={styles.authFormLogo} src="/opus-logo.png" />
-                  <header className={styles.authFormHeader}>
-                    <h2>{s.title}</h2>
-                    <p>{s.subtitle}</p>
-                  </header>
+                  <FormHeader align="center" description={s.subtitle} title={s.title} />
                   {isPasskey || statusIcon ? (
                     <div
                       aria-hidden="true"
@@ -5196,6 +5194,7 @@ function ControlPreviewContent({
       const s = settings as ControlSettingsBySlug["badge"];
       return (
         <Badge
+          count={s.showCount ? s.count : undefined}
           dot={s.dot}
           label={s.label}
           size={s.size}

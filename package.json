@@ -1,5 +1,24 @@
 {
-  "dependencies": {
-    "@emoji-mart/data": "^1.2.1"
+  "name": "opus-monorepo",
+  "private": true,
+  "scripts": {
+    "dev": "npm run dev --prefix Library --",
+    "dev:turbo": "npm run dev:turbo --prefix Library --",
+    "build": "npm run build --prefix Library --",
+    "build:lib": "npm run build:lib --prefix Library --",
+    "start": "npm run start --prefix Library --",
+    "lint": "npm run lint --prefix Library --",
+    "test": "npm run test --prefix Library --",
+    "test:watch": "npm run test:watch --prefix Library --",
+    "test:e2e": "npm run test:e2e --prefix Library --",
+    "test:all": "npm run test:all --prefix Library --",
+    "test:coverage": "npm run test:coverage --prefix Library --",
+    "audit:a11y": "npm run audit:a11y --prefix Library --",
+    "audit:actions": "npm run audit:actions --prefix Library --",
+    "audit:usage": "npm run audit:usage --prefix Library --",
+    "sync-versions": "npm run sync-versions --prefix Library --",
+    "app:dev": "npm run dev --prefix Application --",
+    "app:build": "npm run build --prefix Application --",
+    "app:sync": "npm run sync-from-library --prefix Application --"
   }
 }

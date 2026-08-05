@@ -2,6 +2,8 @@ import type { BadgeSize, BadgeTone, BadgeVariant } from "@/components/fields/typ
 import styles from "./Badge.module.css";
 
 type BadgeProps = {
+  /** Trailing numeric pill, for counts that qualify the label. */
+  count?: number;
   dot?: boolean;
   label: string;
   size?: BadgeSize;
@@ -10,6 +12,7 @@ type BadgeProps = {
 };
 
 export function Badge({
+  count,
   dot = false,
   label,
   size = "md",
@@ -20,6 +23,7 @@ export function Badge({
     <span className={styles.badge} data-size={size} data-tone={tone} data-variant={variant}>
       {dot ? <span aria-hidden="true" className={styles.dot} /> : null}
       {label}
+      {count === undefined ? null : <span className={styles.count}>{count}</span>}
     </span>
   );
 }

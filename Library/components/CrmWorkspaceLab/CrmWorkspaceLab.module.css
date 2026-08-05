@@ -169,13 +169,20 @@ button:focus-visible .openChevron {
   position: relative;
 }
 
-.actionRow > :not(.rowActionOverlay) {
+.selectCell {
+  display: flex;
+  align-items: center;
+}
+
+/* Text cells sit above the row overlay but let clicks fall through to it. */
+.actionRow > :not(.actionCell) {
   pointer-events: none;
   position: relative;
   z-index: 1;
 }
 
-.actionRow > input {
+.actionRow > .selectCell,
+.actionRow > .selectCell input {
   pointer-events: auto;
   z-index: 2;
 }

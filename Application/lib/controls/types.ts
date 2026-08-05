@@ -1057,6 +1057,8 @@ export type BadgeSettings = {
   variant: BadgeVariant;
   size: BadgeSize;
   dot: boolean;
+  showCount: boolean;
+  count: number;
 };
 
 export type AvatarSettings = {

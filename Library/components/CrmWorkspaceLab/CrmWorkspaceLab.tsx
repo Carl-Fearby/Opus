@@ -435,12 +435,14 @@ function DirectoryLayout({
           const checked = selected.includes(row.id);
           return (
             <div className={`${styles.row} ${styles.actionRow}`} role="row" key={row.id}>
-              <input
-                aria-label={`Select ${row.primary}`}
-                checked={checked}
-                type="checkbox"
-                onChange={() => onToggle(row.id)}
-              />
+              <span className={styles.selectCell} role="cell">
+                <input
+                  aria-label={`Select ${row.primary}`}
+                  checked={checked}
+                  type="checkbox"
+                  onChange={() => onToggle(row.id)}
+                />
+              </span>
               <span className={styles.identity} role="cell">
                 {row.icon ? (
                   <span className={styles.rowIcon}>
@@ -458,14 +460,16 @@ function DirectoryLayout({
               <span className={styles.meta} role="cell">
                 {row.meta}
               </span>
-              <button
-                aria-label={`Open ${row.primary}`}
-                className={styles.rowActionOverlay}
-                onClick={() => onAction(`Open ${row.primary}`)}
-                type="button"
-              >
-                <RowChevron />
-              </button>
+              <span className={styles.actionCell} role="cell">
+                <button
+                  aria-label={`Open ${row.primary}`}
+                  className={styles.rowActionOverlay}
+                  onClick={() => onAction(`Open ${row.primary}`)}
+                  type="button"
+                >
+                  <RowChevron />
+                </button>
+              </span>
             </div>
           );
         })}

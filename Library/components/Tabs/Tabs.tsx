@@ -431,7 +431,7 @@ export function Tabs({
                 inert={!selected ? true : undefined}
                 key={item.value}
                 role="tabpanel"
-                tabIndex={selected ? -1 : undefined}
+                tabIndex={selected ? 0 : undefined}
               >
                 {item.content}
               </div>
@@ -445,7 +445,7 @@ export function Tabs({
           id={`${generatedId}-${activeItem.value}-panel`}
           ref={panelRef}
           role="tabpanel"
-          tabIndex={-1}
+          tabIndex={0}
         >
           {activeItem.content}
         </div>

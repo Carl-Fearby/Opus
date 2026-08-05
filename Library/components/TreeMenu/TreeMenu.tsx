@@ -58,17 +58,24 @@ function TreeMenuBranch({
       role="treeitem"
     >
       <div className={styles.row} data-selected={selected ? "true" : undefined}>
-        <button
-          aria-label={hasChildren ? `${isExpanded ? "Collapse" : "Expand"} ${node.label}` : undefined}
-          className={styles.toggle}
-          disabled={!hasChildren || node.disabled}
-          onClick={() => onToggle(node)}
-          style={{ marginLeft: depth * indent }}
-          tabIndex={hasChildren ? 0 : -1}
-          type="button"
-        >
-          {hasChildren ? <CatalogIcon iconName={isExpanded ? "chevron-down" : "chevron-right"} /> : null}
-        </button>
+        {hasChildren ? (
+          <button
+            aria-label={`${isExpanded ? "Collapse" : "Expand"} ${node.label}`}
+            className={styles.toggle}
+            disabled={node.disabled}
+            onClick={() => onToggle(node)}
+            style={{ marginLeft: depth * indent }}
+            type="button"
+          >
+            <CatalogIcon iconName={isExpanded ? "chevron-down" : "chevron-right"} />
+          </button>
+        ) : (
+          <span
+            aria-hidden="true"
+            className={styles.toggleSpacer}
+            style={{ marginLeft: depth * indent }}
+          />
+        )}
         <button
           className={styles.item}
           disabled={node.disabled}

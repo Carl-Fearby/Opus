@@ -5699,6 +5699,21 @@ export function ControlSettingsPanel({
             checked={s.dot}
             onChange={(dot) => onChange({ ...s, dot } as ControlSettings)}
           />
+          <SettingToggle
+            label="Show count"
+            checked={s.showCount}
+            onChange={(showCount) => onChange({ ...s, showCount } as ControlSettings)}
+          />
+          {s.showCount ? (
+            <SettingInput
+              label="Count"
+              type="number"
+              value={String(s.count)}
+              onChange={(count) =>
+                onChange({ ...s, count: Math.max(0, Number(count) || 0) } as ControlSettings)
+              }
+            />
+          ) : null}
         </div>
       );
     }
