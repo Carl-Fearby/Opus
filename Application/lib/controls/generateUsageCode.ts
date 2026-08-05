@@ -2448,7 +2448,7 @@ ${wrapDashboardWidget(
       </FormSection>
       <FormActions>
         <Button onClick={resetForm} type="reset" variant="secondary">Reset form</Button>
-        <Button disabled={!form.isDirty} type="submit">${s.submitLabel}</Button>
+        <Button type="submit">${s.submitLabel}</Button>
       </FormActions>
     </Form>
   </DashboardContentContainer>

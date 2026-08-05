@@ -2959,7 +2959,7 @@ function FormSubmissionDemo({
           </FormSection>
           <FormActions>
             <Button onClick={resetForm} type="reset" variant="secondary">Reset form</Button>
-            <Button disabled={!form.isDirty} type="submit">{submitLabel}</Button>
+            <Button type="submit">{submitLabel}</Button>
           </FormActions>
         </Form>
       </DashboardContentContainer>

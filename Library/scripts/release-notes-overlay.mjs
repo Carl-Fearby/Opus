@@ -398,4 +398,14 @@ export const releaseNotesOverlay = [
       "Publish opus-react 0.6.0 and update Application to consume the release from npm.",
     ],
   },
+  {
+    version: "0.6.1",
+    releasedAt: "2026-08-06",
+    summary: "Form submission demos stay submit-ready and keep action buttons at a fixed size.",
+    changes: [
+      "Allow Form Submission demo submit without requiring a dirty form first.",
+      "Keep Form and FormActions from stretching buttons when sibling panels grow taller.",
+      "Publish opus-react 0.6.1 and update Application to consume the release from npm.",
+    ],
+  },
 ];
