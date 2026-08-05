@@ -9,11 +9,16 @@ for (const slug of getAllSlugs()) {
     const response = await page.goto(`/documentation/components/${slug}`);
 
     expect(response?.ok()).toBe(true);
-    const preview = page.locator("[data-preview-root]").first();
+
+    // Under parallel load Next can briefly keep two streaming trees (id="S:0").
+    // Wait until a single catalogue preview root remains, then audit that root.
+    const preview = page.locator("#main-content [data-preview-root]");
+    await expect(preview).toHaveCount(1);
     await expect(preview).toBeVisible();
+    await expect(page.getByTestId("usage-preview")).toHaveAttribute("data-hydrated", "true");
 
     const results = await new AxeBuilder({ page })
-      .include("[data-preview-root]")
+      .include("#main-content [data-preview-root]")
       .analyze();
 
     const serious = results.violations.filter((violation) =>
