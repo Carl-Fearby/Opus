@@ -563,4 +563,14 @@ export const releaseNotesOverlay = [
       "Publish opus-react 0.6.2 and update Application to consume the release from npm.",
     ],
   },
+  {
+    version: "0.6.3",
+    releasedAt: "2026-08-06",
+    summary: "Form submission keeps controlled field values in sync after submit.",
+    changes: [
+      "Fix the Form Submission demo reverting select and text fields to defaults after submit, caused by React resetting the DOM form once a function action resolved.",
+      "Handle submit and reset in React so controlled useFormState values always match the rendered fields.",
+      "Publish opus-react 0.6.3 and update Application to consume the release from npm.",
+    ],
+  },
 ];

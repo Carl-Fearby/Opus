@@ -492,6 +492,14 @@ export const versionLog: VersionEntry[] = [
     commitShort: "bf30ecd",
     summary: "Complete version history coverage and stable release-list keys.",
     changes: ["Key version history entries by version so duplicate commits cannot hide releases.","Harden version-log sync so overlay releases resolve to matching commits instead of shared HEAD fallbacks.","Backfill curated notes for every published npm version missing from the history page, including 0.2.5–0.2.10, 0.3.2–0.3.7, and 0.4.2–0.4.6.","Publish opus-react 0.6.2 and update Application to consume the release from npm."],
+  },
+  {
+    version: "0.6.3",
+    releasedAt: "2026-08-06",
+    commit: "overlay-0.6.3",
+    commitShort: "overlay",
+    summary: "Form submission keeps controlled field values in sync after submit.",
+    changes: ["Fix the Form Submission demo reverting select and text fields to defaults after submit, caused by React resetting the DOM form once a function action resolved.","Handle submit and reset in React so controlled useFormState values always match the rendered fields.","Publish opus-react 0.6.3 and update Application to consume the release from npm."],
   }
 ].reverse();
 

@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState, type FormEvent } from "react";
 import { CatalogIcon } from "opus-react";
 import { ContentTimeline } from "@/components/ContentTimeline";
 import { NotesActivity } from "@/components/NotesActivity";
@@ -2893,7 +2893,10 @@ function FormSubmissionDemo({
     status: "Waiting for submission",
   });
 
-  function submitForm() {
+  // A React function `action` resets the DOM form once it resolves, which desyncs
+  // the controlled fields owned by useFormState. Handle submit manually instead.
+  function submitForm(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault();
     form.touchAll();
 
     if (!form.isValid) {
@@ -2920,7 +2923,7 @@ function FormSubmissionDemo({
   return (
     <div className={styles.formSubmissionStage} data-component="form-submission-demo">
       <DashboardContentContainer data-component="form-submission" width="full">
-        <Form action={submitForm} noValidate>
+        <Form noValidate onSubmit={submitForm}>
           <FormHeader description={subtitle} title={title} />
           <FormSection title="Contact details">
             <TextField
@@ -2958,7 +2961,7 @@ function FormSubmissionDemo({
             />
           </FormSection>
           <FormActions>
-            <Button onClick={resetForm} type="reset" variant="secondary">Reset form</Button>
+            <Button onClick={resetForm} type="button" variant="secondary">Reset form</Button>
             <Button type="submit">{submitLabel}</Button>
           </FormActions>
         </Form>

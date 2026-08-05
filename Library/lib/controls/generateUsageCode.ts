@@ -2413,7 +2413,8 @@ ${wrapDashboardWidget(
   },
 });`,
           'const [submitted, setSubmitted] = useState({ status: "Waiting for submission" });',
-          `function submitForm() {
+          `function submitForm(event) {
+  event.preventDefault();
   form.touchAll();
 
   if (!form.isValid) {
@@ -2438,7 +2439,7 @@ ${wrapDashboardWidget(
         ],
         jsx: `<div style={{ display: "grid", gap: 16, gridTemplateColumns: "repeat(auto-fit, minmax(min(100%, 320px), 1fr))" }}>
   <DashboardContentContainer width="full">
-    <Form action={submitForm} noValidate>
+    <Form noValidate onSubmit={submitForm}>
       <FormHeader description={${quote(s.subtitle)}} title={${quote(s.title)}} />
       <FormSection title="Contact details">
         <TextField {...form.register("fullName")} autoComplete="name" error={form.fields.fullName.touched ? form.fields.fullName.error : undefined} id="demo-full-name" label="Full name" required type="text" />
@@ -2447,7 +2448,7 @@ ${wrapDashboardWidget(
         <CheckboxField {...form.registerCheckbox("receiveUpdates")} fitContent id="demo-updates" label="Send me product updates" labelPosition="right" value="yes" />
       </FormSection>
       <FormActions>
-        <Button onClick={resetForm} type="reset" variant="secondary">Reset form</Button>
+        <Button onClick={resetForm} type="button" variant="secondary">Reset form</Button>
         <Button type="submit">${s.submitLabel}</Button>
       </FormActions>
     </Form>
