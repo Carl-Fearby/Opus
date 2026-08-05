@@ -168,6 +168,7 @@ export type ControlSlug =
   | "icon-badge"
   | "spinner"
   | "clock"
+  | "flip-clock"
   | "portal"
   | "portal-host"
   | "visually-hidden"
@@ -512,6 +513,8 @@ export type DropdownMenuSettings = {
   showIcons: boolean;
   showDestructive: boolean;
   showDisabled: boolean;
+  showPointer: boolean;
+  triggerGap: number;
   open: boolean;
 };
 
@@ -1423,6 +1426,13 @@ export type ClockSettings = {
   size: "sm" | "md" | "lg";
 };
 
+export type FlipClockSettings = {
+  showDate: boolean;
+  showSeconds: boolean;
+  showFrames: boolean;
+  size: "sm" | "md" | "lg";
+};
+
 export type PortalSettings = {
   disabled: boolean;
   message: string;
@@ -1668,6 +1678,7 @@ export type ControlSettingsBySlug = {
   "icon-badge": IconBadgeSettings;
   spinner: SpinnerSettings;
   clock: ClockSettings;
+  "flip-clock": FlipClockSettings;
   portal: PortalSettings;
   "portal-host": PortalHostSettings;
   "visually-hidden": VisuallyHiddenSettings;

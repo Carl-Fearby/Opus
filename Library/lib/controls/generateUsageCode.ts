@@ -1474,6 +1474,8 @@ ${children}
         ...(s.closeOnOutside ? [] : [formatBoolProp("closeOnOutside", false)]),
         ...(s.closeOnEscape ? [] : [formatBoolProp("closeOnEscape", false)]),
         ...(s.closeOnSelect ? [] : [formatBoolProp("closeOnSelect", false)]),
+        ...(s.showPointer ? [formatBoolProp("showPointer", true)] : []),
+        ...(s.showPointer ? [formatNumberProp("triggerGap", s.triggerGap)] : []),
         formatExpressionProp("items", "items"),
         formatExpressionProp(
           "trigger",
@@ -4613,6 +4615,16 @@ const value = ${formatJsonValueForUsage()};
         ...(s.showDate ? [] : [formatBoolProp("showDate", false)]),
       ];
       return `${importLine(["Clock"])}\n\n<Clock${formatSelfClosing(props)}`;
+    }
+    case "flip-clock": {
+      const s = settings as ControlSettingsBySlug["flip-clock"];
+      const props = [
+        ...(s.size !== "md" ? [formatStringProp("size", s.size)] : []),
+        ...(s.showSeconds ? [] : [formatBoolProp("showSeconds", false)]),
+        ...(s.showFrames ? [formatBoolProp("showFrames", true)] : []),
+        ...(s.showDate ? [] : [formatBoolProp("showDate", false)]),
+      ];
+      return `${importLine(["FlipClock"])}\n\n<FlipClock${formatSelfClosing(props)}`;
     }
     case "portal": {
       const s = settings as ControlSettingsBySlug["portal"];

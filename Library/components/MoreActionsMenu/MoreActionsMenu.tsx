@@ -19,12 +19,16 @@ export type MoreActionsMenuProps = {
   items: MoreActionsMenuItem[];
   label?: string;
   onSelect?: (item: MoreActionsMenuItem) => void;
+  showPointer?: boolean;
+  triggerGap?: number;
 };
 
 export function MoreActionsMenu({
   items,
   label = "More actions",
   onSelect,
+  showPointer = true,
+  triggerGap = 8,
 }: MoreActionsMenuProps) {
   const dropdownItems: DropdownMenuItemData[] = items.map((item) => ({
     destructive: item.destructive,
@@ -46,6 +50,8 @@ export function MoreActionsMenu({
         onSelect?.(item);
       }}
       placement="bottom-end"
+      showPointer={showPointer}
+      triggerGap={triggerGap}
       trigger={(
         <Button aria-label={label} className={styles.trigger} variant="dark">
           <CatalogIcon iconName="ellipsis-vertical" />

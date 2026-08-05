@@ -433,6 +433,8 @@ export const defaultSettings: ControlSettingsBySlug = {
     showIcons: true,
     showDestructive: true,
     showDisabled: true,
+    showPointer: true,
+    triggerGap: 8,
     open: false,
   },
   "context-menu": {
@@ -1513,6 +1515,12 @@ export const defaultSettings: ControlSettingsBySlug = {
     showAnalog: true,
     showDate: true,
     showDigital: true,
+    size: "md",
+  },
+  "flip-clock": {
+    showDate: true,
+    showSeconds: true,
+    showFrames: false,
     size: "md",
   },
   portal: {

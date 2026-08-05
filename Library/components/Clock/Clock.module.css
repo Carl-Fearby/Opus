@@ -7,18 +7,22 @@
   --clock-number-radius: 92px;
   --clock-text: #f8fafc;
   --clock-muted: #94a3b8;
-  --clock-face-border: rgba(255, 255, 255, 0.13);
-  --clock-face-bg: radial-gradient(circle at 40% 32%, #26364d 0%, #111c2e 45%, #08111f 100%);
+  --clock-face-border: color-mix(in srgb, var(--opus-accent) 32%, rgba(255, 255, 255, 0.13));
+  --clock-face-bg:
+    radial-gradient(circle at 40% 32%, color-mix(in srgb, var(--opus-accent) 28%, #26364d) 0%, color-mix(in srgb, var(--opus-accent) 14%, #111c2e) 45%, #08111f 100%);
   --clock-face-shadow:
     0 24px 60px rgba(0, 0, 0, 0.4),
+    0 0 40px color-mix(in srgb, var(--opus-accent) 18%, transparent),
     inset 0 0 35px rgba(0, 0, 0, 0.45),
     inset 0 1px 1px rgba(255, 255, 255, 0.1);
-  --clock-tick: #cbd5e1;
-  --clock-tick-opacity: 0.35;
-  --clock-number: #e2e8f0;
-  --clock-hour-hand-color: #f8fafc;
-  --clock-minute-hand-color: #cbd5e1;
+  --clock-tick: color-mix(in srgb, var(--opus-accent) 35%, #cbd5e1);
+  --clock-tick-opacity: 0.4;
+  --clock-hour-tick: var(--opus-accent);
+  --clock-number: color-mix(in srgb, var(--opus-accent) 22%, #e2e8f0);
+  --clock-hour-hand-color: color-mix(in srgb, var(--opus-accent) 18%, #f8fafc);
+  --clock-minute-hand-color: color-mix(in srgb, var(--opus-accent) 28%, #cbd5e1);
   --clock-hand-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+  --clock-digital: color-mix(in srgb, var(--opus-accent) 28%, var(--clock-text));
 
   display: flex;
   flex-direction: column;
@@ -31,18 +35,22 @@
 :global([data-theme="light"]) .root {
   --clock-text: var(--opus-text);
   --clock-muted: var(--opus-muted);
-  --clock-face-border: color-mix(in srgb, var(--opus-border) 85%, transparent);
-  --clock-face-bg: radial-gradient(circle at 40% 32%, #ffffff 0%, #f4f7fb 42%, #e6ebf3 100%);
+  --clock-face-border: color-mix(in srgb, var(--opus-accent) 28%, var(--opus-border));
+  --clock-face-bg:
+    radial-gradient(circle at 40% 32%, color-mix(in srgb, var(--opus-accent) 12%, #ffffff) 0%, color-mix(in srgb, var(--opus-accent) 8%, #f4f7fb) 42%, color-mix(in srgb, var(--opus-accent) 6%, #e6ebf3) 100%);
   --clock-face-shadow:
     0 20px 48px color-mix(in srgb, var(--opus-text) 10%, transparent),
+    0 0 36px color-mix(in srgb, var(--opus-accent) 14%, transparent),
     inset 0 0 28px color-mix(in srgb, var(--opus-text) 6%, transparent),
     inset 0 1px 1px rgba(255, 255, 255, 0.95);
-  --clock-tick: color-mix(in srgb, var(--opus-text) 42%, transparent);
-  --clock-tick-opacity: 0.45;
-  --clock-number: var(--opus-text);
-  --clock-hour-hand-color: var(--opus-text);
-  --clock-minute-hand-color: color-mix(in srgb, var(--opus-text) 62%, var(--opus-muted));
+  --clock-tick: color-mix(in srgb, var(--opus-accent) 40%, var(--opus-text));
+  --clock-tick-opacity: 0.35;
+  --clock-hour-tick: var(--opus-accent);
+  --clock-number: color-mix(in srgb, var(--opus-accent) 35%, var(--opus-text));
+  --clock-hour-hand-color: color-mix(in srgb, var(--opus-accent) 22%, var(--opus-text));
+  --clock-minute-hand-color: color-mix(in srgb, var(--opus-accent) 40%, var(--opus-muted));
   --clock-hand-shadow: 0 2px 8px color-mix(in srgb, var(--opus-text) 14%, transparent);
+  --clock-digital: color-mix(in srgb, var(--opus-accent) 45%, var(--opus-text));
 }
 
 .root[data-size="sm"] {
@@ -94,6 +102,8 @@
   width: 3px;
   height: 12px;
   opacity: 1;
+  background: var(--clock-hour-tick);
+  box-shadow: 0 0 8px color-mix(in srgb, var(--opus-accent) 45%, transparent);
 }
 
 .number {
@@ -159,6 +169,7 @@
 
 .digitalTime {
   margin-top: 30px;
+  color: var(--clock-digital);
   font-size: clamp(36px, 10vw, 52px);
   font-weight: 700;
   font-variant-numeric: tabular-nums;

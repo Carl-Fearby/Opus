@@ -1186,6 +1186,15 @@ const rawControls: ControlDefinition[] = [
     usesFieldShell: false,
   },
   {
+    slug: "flip-clock",
+    title: "Flip Clock",
+    category: "content",
+    componentName: "FlipClock",
+    description: "Split-flap digital clock with animated flip cards for hours, minutes, seconds, and optional 24 fps frames.",
+    sourceFiles: ["components/FlipClock/FlipClock.tsx", "components/FlipClock/FlipClock.module.css"],
+    usesFieldShell: false,
+  },
+  {
     slug: "portal",
     title: "Portal",
     category: "content",

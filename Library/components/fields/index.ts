@@ -432,6 +432,8 @@ export { Spinner } from "../Spinner";
 export type { SpinnerSize, SpinnerTone } from "../Spinner";
 export { Clock } from "../Clock";
 export type { ClockSize } from "../Clock";
+export { FlipClock, FLIP_CLOCK_FRAME_RATE } from "../FlipClock";
+export type { FlipClockSize } from "../FlipClock";
 export { Portal, PortalHost, usePortalHost } from "../Portal";
 export { VisuallyHidden } from "../VisuallyHidden";
 export { FocusTrap } from "../FocusTrap";

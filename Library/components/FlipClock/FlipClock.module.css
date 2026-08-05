@@ -1,0 +1,319 @@
+.root {
+  --flip-w: 74px;
+  --flip-h: 100px;
+  /* Always a fraction of card height so type scales with the rotor, not the theme font */
+  --flip-font: calc(var(--flip-h) * 0.78);
+  --flip-ink-x: 0px;
+  --flip-ink-y: 0px;
+  --flip-gap: 12px;
+  --flip-pair-gap: 6px;
+  --flip-radius: 12px;
+  --flip-duration: 650ms;
+  --flip-text: #f8fafc;
+  --flip-muted: #94a3b8;
+  --flip-face: linear-gradient(
+    180deg,
+    color-mix(in srgb, var(--opus-accent) 14%, #070b12) 0%,
+    color-mix(in srgb, var(--opus-accent) 18%, #0e1520) 18%,
+    color-mix(in srgb, var(--opus-accent) 34%, #2a3548) 50%,
+    color-mix(in srgb, var(--opus-accent) 18%, #0e1520) 82%,
+    color-mix(in srgb, var(--opus-accent) 14%, #070b12) 100%
+  );
+  --flip-border: color-mix(in srgb, var(--opus-accent) 40%, rgba(255, 255, 255, 0.14));
+  --flip-shadow:
+    0 22px 48px rgba(0, 0, 0, 0.42),
+    0 0 30px color-mix(in srgb, var(--opus-accent) 20%, transparent);
+  --flip-hinge: color-mix(in srgb, var(--opus-accent) 50%, rgba(0, 0, 0, 0.65));
+  --flip-digit: color-mix(in srgb, var(--opus-accent) 24%, var(--flip-text));
+  --flip-separator: var(--opus-accent);
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: relative;
+  color: var(--flip-text);
+  font-family: inherit;
+  font-size: var(--flip-font);
+  font-weight: 700;
+  font-style: normal;
+  line-height: 1;
+}
+
+:global([data-preview-root][data-theme="light"]) .root,
+:global([data-theme="light"]) .root {
+  --flip-text: var(--opus-text);
+  --flip-muted: var(--opus-muted);
+  --flip-face: linear-gradient(
+    180deg,
+    color-mix(in srgb, var(--opus-accent) 6%, #d5dbe6) 0%,
+    color-mix(in srgb, var(--opus-accent) 8%, #e4e9f1) 18%,
+    color-mix(in srgb, var(--opus-accent) 12%, #ffffff) 50%,
+    color-mix(in srgb, var(--opus-accent) 8%, #e4e9f1) 82%,
+    color-mix(in srgb, var(--opus-accent) 6%, #d5dbe6) 100%
+  );
+  --flip-border: color-mix(in srgb, var(--opus-accent) 30%, var(--opus-border));
+  --flip-shadow:
+    0 18px 40px color-mix(in srgb, var(--opus-text) 12%, transparent),
+    0 0 24px color-mix(in srgb, var(--opus-accent) 14%, transparent);
+  --flip-hinge: color-mix(in srgb, var(--opus-accent) 38%, var(--opus-border));
+  --flip-digit: color-mix(in srgb, var(--opus-accent) 42%, var(--opus-text));
+}
+
+.root[data-size="sm"] {
+  --flip-w: 50px;
+  --flip-h: 68px;
+  --flip-gap: 8px;
+  --flip-pair-gap: 4px;
+  --flip-radius: 10px;
+}
+
+.root[data-size="lg"] {
+  --flip-w: 100px;
+  --flip-h: 136px;
+  --flip-gap: 16px;
+  --flip-pair-gap: 8px;
+  --flip-radius: 16px;
+}
+
+.root[data-frames="true"] {
+  --flip-duration: 120ms;
+}
+
+.loading {
+  color: var(--flip-muted);
+  font-size: 14px;
+}
+
+.board {
+  display: flex;
+  align-items: center;
+  gap: var(--flip-gap);
+  perspective: 1200px;
+  perspective-origin: 50% 42%;
+}
+
+.pair {
+  display: flex;
+  gap: var(--flip-pair-gap);
+}
+
+.rotor {
+  position: relative;
+  width: var(--flip-w);
+  height: var(--flip-h);
+  border: 1px solid var(--flip-border);
+  border-radius: var(--flip-radius);
+  background: var(--flip-face);
+  box-shadow: var(--flip-shadow);
+  color: var(--flip-digit);
+  font-family: inherit;
+  font-size: var(--flip-font);
+  font-weight: 700;
+  font-variant-numeric: tabular-nums lining-nums;
+  font-feature-settings: "tnum" 1, "lnum" 1;
+  line-height: 1;
+  text-align: center;
+  overflow: hidden;
+  transform-style: preserve-3d;
+  user-select: none;
+}
+
+.rotor::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  right: 0;
+  left: 0;
+  z-index: 10;
+  height: 1px;
+  background: var(--flip-hinge);
+  transform: translateY(-50%);
+  pointer-events: none;
+}
+
+.panel {
+  position: absolute;
+  right: 0;
+  left: 0;
+  overflow: hidden;
+  height: 50%;
+  border: 0;
+  box-shadow: none;
+  background-image: var(--flip-face);
+  background-size: 100% var(--flip-h);
+  background-repeat: no-repeat;
+}
+
+.panelTop {
+  top: 0;
+  z-index: 1;
+  background-position: center top;
+}
+
+.panelBottom {
+  bottom: 0;
+  z-index: 1;
+  background-position: center bottom;
+}
+
+/*
+ * One full-height digit, clipped by each half.
+ * --flip-ink-x/y optically center the glyph for the active theme font.
+ */
+.figure {
+  position: absolute;
+  top: 0;
+  right: 0;
+  left: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: var(--flip-h);
+  margin: 0;
+  padding: 0;
+  line-height: 1;
+  text-align: center;
+}
+
+.glyph {
+  display: block;
+  width: 1em;
+  margin: 0;
+  padding: 0;
+  line-height: 1;
+  text-align: center;
+  font-variant-numeric: tabular-nums lining-nums;
+  font-feature-settings: "tnum" 1, "lnum" 1;
+  transform: translate(var(--flip-ink-x), var(--flip-ink-y));
+}
+
+.probe {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: var(--flip-w);
+  height: var(--flip-h);
+  overflow: hidden;
+  opacity: 0;
+  pointer-events: none;
+  z-index: -1;
+}
+
+.probe .figure {
+  position: relative;
+}
+
+.probe .glyph {
+  /* Measure the un-nudged ink box */
+  transform: none;
+}
+
+.panelBottom .figure,
+.leafRear .figure {
+  top: calc(var(--flip-h) / -2);
+}
+
+.leaf {
+  position: absolute;
+  inset: 0;
+  z-index: 4;
+  transform-origin: 50% 50%;
+  transform-style: preserve-3d;
+  animation: leafFlip var(--flip-duration) cubic-bezier(0.33, 0.1, 0.15, 1) forwards;
+  pointer-events: none;
+  will-change: transform;
+}
+
+@keyframes leafFlip {
+  from {
+    transform: rotateX(0deg);
+  }
+  to {
+    transform: rotateX(-180deg);
+  }
+}
+
+.leafFace {
+  position: absolute;
+  top: 0;
+  right: 0;
+  left: 0;
+  height: 50%;
+  overflow: hidden;
+  border: 0;
+  border-radius: 0;
+  box-shadow: none;
+  outline: none;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+  background-image: var(--flip-face);
+  background-size: 100% var(--flip-h);
+  background-repeat: no-repeat;
+}
+
+.leafFront {
+  background-position: center top;
+}
+
+.leafRear {
+  background-position: center bottom;
+  transform: rotateX(180deg);
+}
+
+.separator {
+  display: grid;
+  gap: calc(var(--flip-h) * 0.18);
+  place-items: center;
+  padding-inline: 2px;
+}
+
+.separator span {
+  width: calc(var(--flip-w) * 0.15);
+  height: calc(var(--flip-w) * 0.15);
+  border-radius: 50%;
+  background: var(--flip-separator);
+  box-shadow: 0 0 14px color-mix(in srgb, var(--opus-accent) 75%, transparent);
+  animation: colonPulse 1s steps(1, end) infinite;
+}
+
+@keyframes colonPulse {
+  0%,
+  49% {
+    opacity: 1;
+  }
+  50%,
+  100% {
+    opacity: 0.3;
+  }
+}
+
+.date {
+  margin-top: 18px;
+  color: var(--flip-muted);
+  font-size: 14px;
+  text-align: center;
+}
+
+.srOnly {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  border: 0;
+  white-space: nowrap;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .leaf {
+    animation: none;
+    display: none;
+  }
+
+  .separator span {
+    animation: none;
+  }
+}

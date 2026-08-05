@@ -31,7 +31,7 @@
   gap: 4px;
   width: min(260px, calc(100vw - 32px));
   padding: 6px;
-  overflow: hidden;
+  overflow: visible;
   border: 1px solid var(--opus-menu-glass-border);
   border-radius: var(--opus-input-radius-large);
   background:
@@ -44,7 +44,73 @@
   backdrop-filter: blur(20px) saturate(1.35);
 }
 
-.menu > * {
+.pointer {
+  position: absolute;
+  z-index: 2;
+  display: block;
+  width: 18px;
+  height: 10px;
+  overflow: visible;
+  pointer-events: none;
+}
+
+.menu[data-show-pointer="true"] {
+  --opus-pointed-menu-surface: color-mix(
+    in srgb,
+    var(--opus-accent) 5%,
+    #070b18
+  );
+
+  background:
+    radial-gradient(
+      circle at 10% 0%,
+      color-mix(in srgb, var(--opus-accent) 14%, transparent),
+      transparent 34%
+    ),
+    var(--opus-pointed-menu-surface);
+  -webkit-backdrop-filter: none;
+  backdrop-filter: none;
+}
+
+.menu[data-show-pointer="true"][data-theme="light"] {
+  --opus-pointed-menu-surface: color-mix(
+    in srgb,
+    var(--opus-accent) 4%,
+    #f8fafc
+  );
+}
+
+.menu[data-placement="bottom-start"] > .pointer {
+  top: -9.5px;
+  left: 14px;
+}
+
+.menu[data-placement="bottom-start"] > .pointer path:first-child {
+  fill: color-mix(
+    in srgb,
+    var(--opus-accent) 14%,
+    var(--opus-pointed-menu-surface)
+  );
+}
+
+.menu[data-placement="bottom-end"] > .pointer {
+  top: -9px;
+  right: 14px;
+}
+
+.menu[data-placement="top-start"] > .pointer {
+  bottom: -9px;
+  left: 14px;
+  transform: rotate(180deg);
+}
+
+.menu[data-placement="top-end"] > .pointer {
+  right: 14px;
+  bottom: -9px;
+  transform: rotate(180deg);
+}
+
+.menu > :not(.pointer) {
   position: relative;
   z-index: 1;
 }
@@ -106,6 +172,15 @@
   bottom: calc(100% + 8px);
   right: 0;
   transform-origin: bottom right;
+}
+
+.menu[data-portaled="true"][data-placement="top-start"] {
+  bottom: auto;
+}
+
+.menu[data-portaled="true"][data-placement="top-end"] {
+  right: auto;
+  bottom: auto;
 }
 
 .item {

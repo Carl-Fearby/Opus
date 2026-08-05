@@ -40,7 +40,7 @@ export type DropdownMenuItemData = {
   shortcut?: string;
 };
 
-type DropdownMenuProps = {
+export type DropdownMenuProps = {
   closeOnEscape?: boolean;
   closeOnOutside?: boolean;
   closeOnSelect?: boolean;
@@ -54,6 +54,8 @@ type DropdownMenuProps = {
   open?: boolean;
   openOnHover?: boolean;
   placement?: DropdownMenuPlacement;
+  showPointer?: boolean;
+  triggerGap?: number;
   trigger: ReactNode;
 };
 
@@ -160,6 +162,8 @@ export function DropdownMenu({
   open,
   openOnHover = false,
   placement = "bottom-start",
+  showPointer = false,
+  triggerGap,
   trigger,
 }: DropdownMenuProps) {
   const menuId = useId();
@@ -186,6 +190,12 @@ export function DropdownMenu({
   const resolvedElevated = elevated || inTopNavigation;
   const dismissOnOutside = openOnHover ? false : resolvedCloseOnOutside;
   const disableClickToggle = openOnHover;
+  const resolvedTriggerGap = Math.min(
+    16,
+    Math.max(0, triggerGap ?? 8),
+  );
+  const pointerExtent = placement === "bottom-start" ? 9.5 : 9;
+  const portalGap = showPointer ? pointerExtent + resolvedTriggerGap : resolvedTriggerGap;
 
   const setVisible = useCallback((nextOpen: boolean) => {
     if (!controlled) {
@@ -259,19 +269,28 @@ export function DropdownMenu({
           menuRef.current?.getBoundingClientRect() ?? null,
           placement,
           resolvedElevated,
+          portalGap,
         ),
       );
     };
 
     updatePosition();
+    const frame = window.requestAnimationFrame(updatePosition);
+    const resizeObserver = new ResizeObserver(updatePosition);
+    resizeObserver.observe(rootRef.current);
+    if (menuRef.current) {
+      resizeObserver.observe(menuRef.current);
+    }
     window.addEventListener("resize", updatePosition);
     window.addEventListener("scroll", updatePosition, true);
 
     return () => {
+      window.cancelAnimationFrame(frame);
+      resizeObserver.disconnect();
       window.removeEventListener("resize", updatePosition);
       window.removeEventListener("scroll", updatePosition, true);
     };
-  }, [placement, renderMenu, resolvedElevated, phase]);
+  }, [placement, portalGap, renderMenu, resolvedElevated, phase]);
 
   useEffect(() => {
     let timeout: number | undefined;
@@ -385,6 +404,7 @@ export function DropdownMenu({
       data-open-on-hover={openOnHover || resolvedElevated ? "true" : undefined}
       data-has-icon-column={showIconColumn ? "true" : undefined}
       data-placement={placement}
+      data-show-pointer={showPointer ? "true" : undefined}
       data-portaled="true"
       data-theme={theme}
       id={menuId}
@@ -394,6 +414,26 @@ export function DropdownMenu({
         handleMenuKeyDown(event.nativeEvent, event.currentTarget, () => setVisible(false));
       }}
     >
+      {showPointer ? (
+        <svg
+          aria-hidden="true"
+          className={styles.pointer}
+          focusable="false"
+          viewBox="0 0 18 10"
+        >
+          <path
+            d="M0 10 L9 0 L18 10 Z"
+            fill="var(--opus-pointed-menu-surface)"
+          />
+          <path
+            d="M0 10 L9 0 L18 10"
+            fill="none"
+            stroke="var(--opus-menu-glass-border)"
+            strokeWidth="1"
+            vectorEffect="non-scaling-stroke"
+          />
+        </svg>
+      ) : null}
       {items.map((item) => (
         <DropdownMenuItem
           item={item}

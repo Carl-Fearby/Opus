@@ -1996,6 +1996,24 @@ export function ControlSettingsPanel({
               onChange({ ...s, showIcons } as ControlSettings)
             }
           />
+          <SettingToggle
+            label="Pointer"
+            checked={s.showPointer}
+            onChange={(showPointer) =>
+              onChange({ ...s, showPointer } as ControlSettings)
+            }
+          />
+          <SettingInput
+            label="Trigger gap (px)"
+            type="number"
+            value={String(s.triggerGap)}
+            onChange={(value) =>
+              onChange({
+                ...s,
+                triggerGap: Math.min(16, Math.max(0, Number(value) || 0)),
+              } as ControlSettings)
+            }
+          />
           <div className={shellStyles.settingsFullWidth}>
             <p className={shellStyles.settingsHint}>
               The icon column appears only when at least one item includes an
@@ -7460,6 +7478,46 @@ export function ControlSettingsPanel({
             checked={s.showDigital}
             onChange={(showDigital) =>
               onChange({ ...s, showDigital } as ControlSettings)
+            }
+          />
+          <SettingToggle
+            label="Show date"
+            checked={s.showDate}
+            onChange={(showDate) =>
+              onChange({ ...s, showDate } as ControlSettings)
+            }
+          />
+        </div>
+      );
+    }
+    case "flip-clock": {
+      const s = settings as ControlSettingsBySlug["flip-clock"];
+      return (
+        <div className={shellStyles.settingsGrid}>
+          <SettingSelect
+            label="Size"
+            value={s.size}
+            onChange={(size) =>
+              onChange({ ...s, size: size as typeof s.size } as ControlSettings)
+            }
+            options={[
+              { label: "Small", value: "sm" },
+              { label: "Medium", value: "md" },
+              { label: "Large", value: "lg" },
+            ]}
+          />
+          <SettingToggle
+            label="Show seconds"
+            checked={s.showSeconds}
+            onChange={(showSeconds) =>
+              onChange({ ...s, showSeconds } as ControlSettings)
+            }
+          />
+          <SettingToggle
+            label="Show 24 fps frames"
+            checked={s.showFrames}
+            onChange={(showFrames) =>
+              onChange({ ...s, showFrames } as ControlSettings)
             }
           />
           <SettingToggle

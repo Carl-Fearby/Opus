@@ -235,6 +235,7 @@ const componentIcons: Record<string, IconDefinition> = {
   "icon-badge": faBell,
   spinner: faSpinner,
   clock: faClock,
+  "flip-clock": faClock,
   portal: faDoorOpen,
   "portal-host": faObjectGroup,
   "visually-hidden": faEyeSlash,

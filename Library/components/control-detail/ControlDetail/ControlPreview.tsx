@@ -127,6 +127,7 @@ import {
   Icon,
   Spinner,
   Clock,
+  FlipClock,
   Portal,
   PortalHost,
   VisuallyHidden,
@@ -1744,6 +1745,8 @@ function DropdownMenuPreviewDemo({
         label="Open dropdown menu demo"
         open={settings.open}
         placement={settings.placement}
+        showPointer={settings.showPointer}
+        triggerGap={settings.triggerGap}
         trigger={<Button variant="primary">Actions</Button>}
         onOpenChange={(open) =>
           onSettingsChange({ ...settings, open } as ControlSettings)
@@ -5791,6 +5794,17 @@ function ControlPreviewContent({
           showAnalog={s.showAnalog}
           showDate={s.showDate}
           showDigital={s.showDigital}
+          size={s.size}
+        />
+      );
+    }
+    case "flip-clock": {
+      const s = settings as ControlSettingsBySlug["flip-clock"];
+      return (
+        <FlipClock
+          showDate={s.showDate}
+          showFrames={s.showFrames}
+          showSeconds={s.showSeconds}
           size={s.size}
         />
       );
