@@ -528,8 +528,8 @@ export const versionLog: VersionEntry[] = [
   {
     version: "0.6.7",
     releasedAt: "2026-08-06",
-    commit: "overlay-0.6.7",
-    commitShort: "overlay",
+    commit: "a6af724dedb854c2932cd251ed92dc627e169bbb",
+    commitShort: "a6af724",
     summary: "Accent colour picker menu stays on screen with viewport-aware placement.",
     changes: ["Portal the AccentColorPicker compact menu and flip or clamp it to the viewport so it no longer spills off the left of the preview.","Document accent colour picker relationships to colour picker, colour clouds, and portal.","Publish opus-react 0.6.7 and update Application to consume the release from npm."],
   }
