@@ -6,69 +6,60 @@ import {
   useLayoutEffect,
   useRef,
   useState,
-  type ChangeEvent,
   type ChangeEventHandler,
   type CSSProperties,
 } from "react";
 import { createPortal } from "react-dom";
-import styles from "./ColorField.module.css";
-import { inputControlSizeClassName } from "../shared/inputControlSizes";
-import { FieldShell, fieldInputAriaProps, useFieldShellAria } from "@/components/fields/FieldShell";
-import type { FieldMode, InputControlSize, LabelPosition } from "@/components/fields/types";
+import { CatalogIcon } from "@/components/CatalogIcon";
 import {
   resolveEmojiPickerPortalStyle,
   type FloatingPortalStyle,
 } from "@/lib/ui/floatingPortalPosition";
-import { ColorPickerPanel } from "../ColorPickerPanel";
-import { normalizeHex } from "../ColorPickerPanel/colorPickerUtils";
+import { DatePickerPanel } from "./DatePickerPanel";
+import { emitDateInputChange, formatDateDisplay } from "./datePickerUtils";
+import styles from "./OpusDateInput.module.css";
 
-type ColorFieldProps = {
-  error?: string;
-  help?: string;
+export type OpusDateInputProps = {
+  "aria-describedby"?: string;
+  "aria-invalid"?: boolean | "true" | "false";
+  className?: string;
+  disabled?: boolean;
   id: string;
   label: string;
-  labelPosition?: LabelPosition;
-  mode?: FieldMode;
+  max?: string;
+  min?: string;
+  name?: string;
   onChange: ChangeEventHandler<HTMLInputElement>;
-  size?: InputControlSize;
+  placeholder?: string;
+  readOnly?: boolean;
+  required?: boolean;
   value: string;
 };
 
-function emitColorChange(
-  onChange: ChangeEventHandler<HTMLInputElement>,
-  nextValue: string,
-) {
-  const target = {
-    name: "",
-    type: "color",
-    value: nextValue,
-  } as HTMLInputElement;
-  onChange({
-    target,
-    currentTarget: target,
-  } as ChangeEvent<HTMLInputElement>);
-}
-
-export function ColorField({
-  error,
-  help,
+export function OpusDateInput({
+  "aria-describedby": ariaDescribedBy,
+  "aria-invalid": ariaInvalid,
+  className,
+  disabled,
   id,
   label,
-  labelPosition = "left",
-  mode = "stacked",
+  max,
+  min,
+  name,
   onChange,
-  size = "md",
+  placeholder = "Select date",
+  readOnly,
+  required,
   value,
-}: ColorFieldProps) {
-  const shellAria = useFieldShellAria();
-  const ariaProps = fieldInputAriaProps(shellAria, { invalid: Boolean(error) });
+}: OpusDateInputProps) {
   const panelId = useId();
   const rootRef = useRef<HTMLDivElement>(null);
   const panelRef = useRef<HTMLDivElement>(null);
   const [open, setOpen] = useState(false);
   const [portalReady, setPortalReady] = useState(false);
   const [portalStyle, setPortalStyle] = useState<FloatingPortalStyle | null>(null);
-  const hex = (normalizeHex(value) ?? "#8f6cff").toUpperCase();
+  const display = formatDateDisplay(value);
+  const canOpen = !disabled && !readOnly;
 
   useEffect(() => {
     const timeout = window.setTimeout(() => setPortalReady(true), 0);
@@ -111,8 +102,11 @@ export function ColorField({
         setOpen(false);
       }
     };
+
     const handleKeyDown = (event: KeyboardEvent) => {
-      if (event.key === "Escape") setOpen(false);
+      if (event.key === "Escape") {
+        setOpen(false);
+      }
     };
 
     document.addEventListener("pointerdown", handlePointerDown);
@@ -123,6 +117,15 @@ export function ColorField({
     };
   }, [open]);
 
+  function toggle() {
+    if (!canOpen) return;
+    setOpen((current) => !current);
+  }
+
+  function handleSelect(next: string) {
+    emitDateInputChange(onChange, next, name);
+  }
+
   const panel =
     open && portalReady && portalStyle
       ? createPortal(
@@ -131,12 +134,19 @@ export function ColorField({
             data-portaled="true"
             id={panelId}
             ref={panelRef}
-            style={{ left: portalStyle.left, top: portalStyle.top } as CSSProperties}
+            style={
+              {
+                left: portalStyle.left,
+                top: portalStyle.top,
+              } as CSSProperties
+            }
           >
-            <ColorPickerPanel
-              value={hex}
+            <DatePickerPanel
+              max={max}
+              min={min}
+              value={value}
               onClose={() => setOpen(false)}
-              onSelect={(next) => emitColorChange(onChange, next)}
+              onSelect={handleSelect}
             />
           </div>,
           document.body,
@@ -144,43 +154,46 @@ export function ColorField({
       : null;
 
   return (
-    <FieldShell
-      error={error}
-      help={help}
-      id={id}
-      label={label}
-      labelPosition={labelPosition}
-      labelTag="div"
-      mode={mode}
-    >
-      <div className={styles.root} ref={rootRef}>
-        <button
-          aria-controls={open ? panelId : undefined}
-          aria-describedby={ariaProps["aria-describedby"]}
-          aria-expanded={open}
-          aria-haspopup="dialog"
-          aria-invalid={error ? "true" : undefined}
-          aria-label={label}
-          className={[
-            styles.picker,
-            inputControlSizeClassName[size],
-            error ? styles.error : "",
-          ]
-            .filter(Boolean)
-            .join(" ")}
-          id={id}
-          type="button"
-          onClick={() => setOpen((current) => !current)}
-        >
-          <span aria-hidden="true" className={styles.swatch} style={{ background: hex }} />
-          <span className={styles.value}>{hex}</span>
-          <span aria-hidden="true" className={styles.icon}>
-            <span />
-            <span />
-          </span>
-        </button>
-        {panel}
-      </div>
-    </FieldShell>
+    <div className={styles.root} ref={rootRef}>
+      <button
+        aria-controls={open ? panelId : undefined}
+        aria-describedby={ariaDescribedBy}
+        aria-expanded={open}
+        aria-haspopup="dialog"
+        aria-invalid={ariaInvalid}
+        aria-label={label}
+        className={[styles.control, className].filter(Boolean).join(" ")}
+        disabled={disabled}
+        id={id}
+        type="button"
+        onClick={toggle}
+        onKeyDown={(event) => {
+          if (event.key === "Enter" || event.key === " ") {
+            event.preventDefault();
+            toggle();
+          }
+        }}
+      >
+        <span className={display ? styles.value : styles.placeholder}>
+          {display || placeholder}
+        </span>
+        <span aria-hidden="true" className={styles.icon}>
+          <CatalogIcon iconName="calendar" />
+        </span>
+      </button>
+      {/* Keep a hidden input for native form posts / autofill semantics. */}
+      <input
+        aria-hidden="true"
+        className={styles.hiddenInput}
+        disabled={disabled}
+        name={name}
+        readOnly
+        required={required}
+        tabIndex={-1}
+        type="text"
+        value={value}
+      />
+      {panel}
+    </div>
   );
 }

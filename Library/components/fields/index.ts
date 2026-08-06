@@ -56,9 +56,13 @@ export {
 } from "./FieldShell";
 export { CheckboxField } from "./CheckboxField";
 export { ColorField } from "./ColorField";
+export { ColorPickerPanel } from "./ColorPickerPanel";
+export type { ColorPickerPanelProps } from "./ColorPickerPanel";
 export { DateField } from "./DateField";
 export type { DateInputType } from "./DateField";
 export type { DateFieldProps } from "./DateField";
+export { DatePickerPanel, OpusDateInput } from "./DatePickerPanel";
+export type { DatePickerPanelProps, OpusDateInputProps } from "./DatePickerPanel";
 export { HiddenField } from "./HiddenField";
 export { FileField } from "./FileField";
 export { ImageCropUploadField } from "./ImageCropUploadField";

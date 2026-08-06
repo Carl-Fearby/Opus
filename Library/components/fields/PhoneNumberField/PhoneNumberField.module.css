@@ -48,9 +48,13 @@
 }
 
 .chevron {
+  flex-shrink: 0;
   margin-left: 4px;
-  color: var(--opus-muted);
-  font-size: 0.72rem;
+  width: 7px;
+  height: 7px;
+  border-right: 2px solid var(--opus-muted);
+  border-bottom: 2px solid var(--opus-muted);
+  transform: translateY(-2px) rotate(45deg);
 }
 
 .option {

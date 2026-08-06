@@ -1388,6 +1388,7 @@ export type SchedulerSettings = {
 };
 
 export type KanbanBoardSettings = {
+  cardClickAction: "callback" | "modal" | "none";
   interactive: boolean;
 };
 

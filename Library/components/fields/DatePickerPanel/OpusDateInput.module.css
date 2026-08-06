@@ -3,9 +3,9 @@
   width: 100%;
 }
 
-.picker {
+.control {
   display: grid;
-  grid-template-columns: auto minmax(0, 1fr) auto;
+  grid-template-columns: minmax(0, 1fr) auto;
   align-items: center;
   gap: 10px;
   width: 100%;
@@ -24,11 +24,11 @@
     0 14px 30px rgba(0, 0, 0, 0.06);
 }
 
-.picker:hover {
+.control:hover:not(:disabled) {
   border-color: color-mix(in srgb, var(--opus-accent) 36%, var(--opus-border-strong));
 }
 
-.picker:focus-visible {
+.control:focus-visible {
   outline: none;
   border-color: var(--opus-accent);
   box-shadow:
@@ -36,60 +36,46 @@
     0 14px 30px rgba(0, 0, 0, 0.06);
 }
 
-.picker:focus-visible .swatch {
-  box-shadow:
-    0 0 0 1px rgba(255, 255, 255, 0.25) inset,
-    0 0 0 4px color-mix(in srgb, var(--opus-accent) 24%, transparent);
-}
-
-.swatch {
-  width: 18px;
-  height: 18px;
-  border-radius: 999px;
-  flex-shrink: 0;
-  box-shadow:
-    0 0 0 1px rgba(255, 255, 255, 0.25) inset,
-    0 0 0 3px color-mix(in srgb, var(--opus-accent) 10%, transparent);
+.control:disabled {
+  opacity: 0.62;
+  cursor: not-allowed;
 }
 
 .value {
   min-width: 0;
   overflow: hidden;
-  color: var(--opus-text);
-  font-size: var(--opus-control-font-size);
-  font-weight: 700;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-weight: 600;
+}
+
+.placeholder {
+  min-width: 0;
+  color: var(--opus-muted);
+  overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
 }
 
 .icon {
-  position: relative;
-  width: 16px;
-  height: 16px;
+  display: grid;
+  place-items: center;
   color: var(--opus-accent);
+  font-size: 0.95rem;
 }
 
-.icon span {
+.hiddenInput {
   position: absolute;
-  width: 10px;
-  height: 5px;
-  border: 2px solid currentColor;
-  border-radius: var(--opus-input-radius-small);
-  transform: rotate(-45deg);
-}
-
-.icon span:first-child {
-  left: 1px;
-  top: 8px;
-}
-
-.icon span:last-child {
-  right: 1px;
-  top: 5px;
-}
-
-.error {
-  border-color: color-mix(in srgb, var(--opus-error) 75%, transparent);
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+  opacity: 0;
+  pointer-events: none;
 }
 
 .portal {

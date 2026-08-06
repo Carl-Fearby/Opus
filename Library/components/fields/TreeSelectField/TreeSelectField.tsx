@@ -147,9 +147,7 @@ export function TreeSelectField({
           <span className={value ? "" : shared.placeholder}>
             {value ? labels[value] ?? value : placeholder}
           </span>
-          <span aria-hidden="true" className={shared.chevron}>
-            ▾
-          </span>
+          <span aria-hidden="true" className={shared.chevron} />
         </button>
         {open ? (
           <div className={shared.panel}>

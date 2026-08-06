@@ -192,8 +192,12 @@
 }
 
 .chevron {
-  color: var(--opus-muted);
-  font-size: 0.72rem;
+  flex-shrink: 0;
+  width: 8px;
+  height: 8px;
+  border-right: 2px solid var(--opus-muted);
+  border-bottom: 2px solid var(--opus-muted);
+  transform: translateY(-2px) rotate(45deg);
 }
 
 .panel {

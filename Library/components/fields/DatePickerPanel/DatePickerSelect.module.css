@@ -1,0 +1,100 @@
+.root {
+  position: relative;
+  min-width: 0;
+}
+
+.trigger {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 6px;
+  width: 100%;
+  min-width: 0;
+  height: 30px;
+  padding: 0 8px 0 8px;
+  border: 1px solid color-mix(in srgb, var(--opus-border) 88%, transparent);
+  border-radius: 8px;
+  background: var(--opus-input-bg);
+  color: var(--opus-text);
+  font: inherit;
+  font-size: 0.8rem;
+  font-weight: 650;
+  text-align: left;
+  cursor: pointer;
+}
+
+.trigger:hover {
+  border-color: color-mix(in srgb, var(--opus-accent) 40%, var(--opus-border));
+}
+
+.triggerOpen,
+.trigger:focus-visible {
+  outline: none;
+  border-color: color-mix(in srgb, var(--opus-accent) 55%, var(--opus-border));
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--opus-accent) 22%, transparent);
+}
+
+.value {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.chevron {
+  flex-shrink: 0;
+  width: 7px;
+  height: 7px;
+  border-right: 2px solid var(--opus-muted);
+  border-bottom: 2px solid var(--opus-muted);
+  transform: translateY(-2px) rotate(45deg);
+}
+
+.panel {
+  position: absolute;
+  top: calc(100% + 4px);
+  left: 0;
+  right: 0;
+  z-index: 30;
+  min-width: 100%;
+  border: 1px solid var(--opus-border-strong);
+  border-radius: var(--opus-input-radius);
+  background: var(--opus-panel);
+  box-shadow: var(--opus-shadow);
+  overflow: hidden;
+}
+
+.list {
+  max-height: 180px;
+  overflow: auto;
+}
+
+.option {
+  display: block;
+  width: 100%;
+  padding: 7px 10px;
+  border: 0;
+  background: transparent;
+  color: var(--opus-text);
+  font: inherit;
+  font-size: 0.78rem;
+  font-weight: 600;
+  text-align: left;
+  cursor: pointer;
+}
+
+.option:hover {
+  background: color-mix(in srgb, var(--opus-accent-soft) 65%, transparent);
+}
+
+.option:focus-visible {
+  outline: none;
+  background: color-mix(in srgb, var(--opus-accent-soft) 65%, transparent);
+  box-shadow: inset 0 0 0 2px color-mix(in srgb, var(--opus-accent) 40%, transparent);
+}
+
+.optionActive {
+  background: var(--opus-accent-soft);
+  color: var(--opus-accent);
+  font-weight: 700;
+}

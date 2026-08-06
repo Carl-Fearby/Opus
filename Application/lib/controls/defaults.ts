@@ -1513,6 +1513,7 @@ export const defaultSettings: ControlSettingsBySlug = {
     endHour: 17,
   },
   "kanban-board": {
+    cardClickAction: "modal",
     interactive: true,
   },
   calendar: {

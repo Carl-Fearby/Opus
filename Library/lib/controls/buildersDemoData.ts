@@ -99,8 +99,8 @@ export const demoSchedulerEvents: SchedulerEvent[] = [
 ];
 
 export const demoKanbanCards: Record<string, KanbanCard> = {
-  c1: { id: "c1", title: "Property inspector polish", meta: "Builders", tone: "accent" },
-  c2: { id: "c2", title: "Filter builder validation", meta: "Forms", tone: "warning" },
+  c1: { id: "c1", title: "Filter builder validation", meta: "Forms", tone: "accent" },
+  c2: { id: "c2", title: "Property inspector polish", meta: "Builders", tone: "default" },
   c3: { id: "c3", title: "Kanban drag handle", meta: "Planning", tone: "default" },
   c4: { id: "c4", title: "Calendar event popover", meta: "Planning", tone: "success" },
   c5: { id: "c5", title: "Permissions matrix a11y", meta: "Security", tone: "danger" },

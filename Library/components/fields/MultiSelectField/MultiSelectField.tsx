@@ -107,9 +107,7 @@ export function MultiSelectField({
           {...fieldInputAriaProps(shellAria, { invalid: Boolean(error) })}
         >
           <span className={value.length ? "" : shared.placeholder}>{summary}</span>
-          <span aria-hidden="true" className={shared.chevron}>
-            ▾
-          </span>
+          <span aria-hidden="true" className={shared.chevron} />
         </button>
         {open ? (
           <div className={shared.panel}>

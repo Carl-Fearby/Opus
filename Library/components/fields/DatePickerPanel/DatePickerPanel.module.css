@@ -1,0 +1,164 @@
+.panel {
+  display: grid;
+  gap: 10px;
+  width: min(288px, calc(100vw - 32px));
+  padding: 12px;
+  border: 1px solid var(--opus-border);
+  border-radius: var(--opus-input-radius-large);
+  background:
+    radial-gradient(circle at 12% 0%, color-mix(in srgb, var(--opus-accent) 12%, transparent), transparent 36%),
+    var(--opus-panel);
+  box-shadow:
+    0 18px 40px rgba(0, 0, 0, 0.36),
+    0 0 0 1px color-mix(in srgb, var(--opus-accent) 8%, transparent);
+  color: var(--opus-text);
+}
+
+.toolbar {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: center;
+  gap: 6px;
+}
+
+.nav {
+  display: grid;
+  place-items: center;
+  width: 30px;
+  height: 30px;
+  border: 1px solid color-mix(in srgb, var(--opus-border) 88%, transparent);
+  border-radius: 8px;
+  background: var(--opus-input-bg);
+  color: var(--opus-text);
+  font-size: 1.1rem;
+  line-height: 1;
+  cursor: pointer;
+}
+
+.nav:hover {
+  border-color: color-mix(in srgb, var(--opus-accent) 40%, var(--opus-border));
+  color: var(--opus-accent);
+}
+
+.nav:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--opus-accent) 22%, transparent);
+}
+
+.picker {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  min-width: 0;
+}
+
+.monthSelect {
+  flex: 1 1 auto;
+  min-width: 108px;
+  max-width: 140px;
+}
+
+.yearSelect {
+  flex: 0 0 auto;
+  width: 78px;
+}
+
+.weekdays,
+.grid {
+  display: grid;
+  grid-template-columns: repeat(7, minmax(0, 1fr));
+  gap: 2px;
+}
+
+.weekday {
+  display: grid;
+  place-items: center;
+  height: 24px;
+  color: var(--opus-muted);
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+}
+
+.day {
+  display: grid;
+  place-items: center;
+  height: 32px;
+  border: 1px solid transparent;
+  border-radius: 8px;
+  background: transparent;
+  color: var(--opus-text);
+  font: inherit;
+  font-size: 0.82rem;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.day:hover:not(:disabled) {
+  background: color-mix(in srgb, var(--opus-accent) 10%, transparent);
+}
+
+.day:focus-visible {
+  outline: none;
+  border-color: color-mix(in srgb, var(--opus-border) 90%, transparent);
+  box-shadow: 0 0 0 2px color-mix(in srgb, var(--opus-accent) 24%, transparent);
+}
+
+.day:disabled {
+  opacity: 0.35;
+  cursor: not-allowed;
+}
+
+.outside {
+  color: var(--opus-muted);
+  font-weight: 500;
+}
+
+.today {
+  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--opus-accent) 45%, transparent);
+}
+
+.selected,
+.selected:hover:not(:disabled) {
+  border-color: transparent;
+  background: color-mix(in srgb, var(--opus-accent) 82%, #111);
+  color: #fff;
+  box-shadow: none;
+}
+
+.footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  padding-top: 2px;
+  border-top: 1px solid color-mix(in srgb, var(--opus-border) 70%, transparent);
+}
+
+.footerAction {
+  border: 0;
+  background: transparent;
+  color: var(--opus-accent);
+  font: inherit;
+  font-size: 0.8rem;
+  font-weight: 700;
+  cursor: pointer;
+  padding: 4px 2px;
+}
+
+.footerAction:hover:not(:disabled) {
+  text-decoration: underline;
+}
+
+.footerAction:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.footerAction:focus-visible {
+  outline: none;
+  border-radius: 4px;
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--opus-accent) 22%, transparent);
+}

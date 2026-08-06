@@ -1,19 +1,59 @@
 .root {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-  gap: 12px;
+  gap: 10px;
   width: 100%;
   align-items: start;
 }
 
 .column {
+  --dashboard-section-bg: #070d18;
+  --dashboard-section-border: color-mix(in srgb, var(--opus-accent-secondary, #0284c7) 20%, transparent);
+  --dashboard-section-text: #f8fafc;
+  --dashboard-section-muted: color-mix(in srgb, #f8fafc 56%, transparent);
+  --dashboard-section-panel: color-mix(in srgb, #0f172a 90%, #1e293b 10%);
+  --kanban-card-min-height: 72px;
+  --kanban-card-gap: 8px;
   display: grid;
-  gap: 8px;
-  min-height: 280px;
-  padding: 10px;
-  border: 1px solid var(--opus-border);
-  border-radius: var(--opus-input-radius-large, 6px);
-  background: color-mix(in srgb, var(--opus-panel) 92%, transparent);
+  align-content: start;
+  gap: 10px;
+  min-height: 0;
+  padding: 10px 10px 10px;
+  border: 1px solid var(--dashboard-section-border);
+  border-radius: 14px;
+  background:
+    radial-gradient(85% 65% at 14% 0%, color-mix(in srgb, var(--opus-accent) 16%, transparent), transparent 58%),
+    radial-gradient(72% 58% at 100% 100%, color-mix(in srgb, var(--opus-accent-secondary, #0284c7) 12%, transparent), transparent 62%),
+    linear-gradient(180deg, color-mix(in srgb, var(--dashboard-section-bg) 94%, #ffffff 3%), var(--dashboard-section-bg));
+  box-shadow:
+    inset 0 1px 0 color-mix(in srgb, #ffffff 6%, transparent),
+    0 12px 28px color-mix(in srgb, #020617 68%, transparent);
+  color: var(--dashboard-section-text);
+  box-sizing: border-box;
+  overflow: hidden;
+}
+
+:global([data-preview-root][data-theme="light"]) .column,
+:global([data-theme="light"]) .column {
+  --dashboard-section-bg: #f8fbff;
+  --dashboard-section-border: color-mix(in srgb, var(--opus-accent-secondary, #0284c7) 28%, transparent);
+  --dashboard-section-text: #0f172a;
+  --dashboard-section-muted: color-mix(in srgb, #0f172a 58%, transparent);
+  --dashboard-section-panel: #ffffff;
+  box-shadow:
+    inset 0 1px 0 color-mix(in srgb, #ffffff 90%, transparent),
+    0 8px 20px color-mix(in srgb, var(--opus-accent-secondary, #0284c7) 10%, transparent);
+}
+
+:global([data-preview-root][data-theme="dark"]) .column {
+  --dashboard-section-bg: #070d18;
+  --dashboard-section-border: color-mix(in srgb, var(--opus-accent-secondary, #0284c7) 20%, transparent);
+  --dashboard-section-text: #f8fafc;
+  --dashboard-section-muted: color-mix(in srgb, #f8fafc 56%, transparent);
+  --dashboard-section-panel: color-mix(in srgb, #0f172a 90%, #1e293b 10%);
+  box-shadow:
+    inset 0 1px 0 color-mix(in srgb, #ffffff 6%, transparent),
+    0 12px 28px color-mix(in srgb, #020617 68%, transparent);
 }
 
 .columnHeader {
@@ -21,56 +61,153 @@
   align-items: center;
   justify-content: space-between;
   gap: 8px;
+  min-height: 0;
 }
 
 .columnTitle {
   margin: 0;
-  color: var(--opus-text);
-  font-size: 0.82rem;
+  color: var(--dashboard-section-text);
+  font-size: 0.875rem;
   font-weight: 700;
+  letter-spacing: -0.01em;
+  line-height: 1.25;
 }
 
 .count {
   min-width: 1.5rem;
-  padding: 2px 6px;
+  padding: 2px 7px;
   border-radius: 999px;
-  background: color-mix(in srgb, var(--opus-muted) 14%, transparent);
-  color: var(--opus-muted);
-  font-size: 0.7rem;
+  background: color-mix(in srgb, var(--dashboard-section-muted) 18%, transparent);
+  color: var(--dashboard-section-muted);
+  font-size: 0.72rem;
   font-weight: 700;
   text-align: center;
+  line-height: 1.3;
 }
 
 .cards {
   margin: 0;
   padding: 0;
   list-style: none;
-  display: grid;
-  gap: 8px;
-  min-height: 120px;
+  display: flex;
+  flex-direction: column;
+  align-content: start;
+  gap: var(--kanban-card-gap, 8px);
+  min-height: calc(
+    8 * var(--kanban-card-min-height, 72px) + 7 * var(--kanban-card-gap, 8px)
+  );
+}
+
+.cards > li {
+  position: relative;
+  margin: 0;
+  padding: 0;
+  min-width: 0;
+  transition: transform 180ms cubic-bezier(0.2, 0.8, 0.2, 1);
+  will-change: transform;
+}
+
+.root[data-dropping="true"] .cards,
+.root[data-dropping="true"] .cards > li {
+  transition: none;
+}
+
+.ghostSlot {
+  display: none;
+}
+
+/* Keeps the home slot open while the pointer is still over the origin. */
+.homePlaceholder {
+  visibility: hidden;
+  pointer-events: none;
+}
+
+.landingSlot {
+  visibility: hidden;
+  pointer-events: none;
+}
+
+.dropGhost {
+  position: absolute;
+  left: 0;
+  right: 0;
+  z-index: 1;
+  box-sizing: border-box;
+  border: 1.5px dashed color-mix(in srgb, var(--card-accent, #38bdf8) 70%, transparent);
+  border-radius: 10px;
+  background: color-mix(in srgb, var(--card-accent, #38bdf8) 8%, transparent);
+  pointer-events: none;
+}
+
+.dropGhostEnd {
+  position: relative;
+  flex: 0 0 auto;
+  list-style: none;
+  pointer-events: none;
+}
+
+.dropGhostEnd .dropGhost {
+  position: absolute;
+  inset: 0;
+  height: auto;
+}
+
+.originGhostShell {
+  position: fixed;
+  z-index: 9990;
+  margin: 0;
+  pointer-events: none;
+}
+
+.originGhost {
+  opacity: 0.4;
+  box-shadow: none;
+  filter: saturate(0.85);
+  pointer-events: none;
 }
 
 .card {
-  padding: 10px;
-  border: 1px solid var(--opus-border);
-  border-radius: 8px;
-  background: color-mix(in srgb, var(--opus-panel) 98%, transparent);
+  --card-accent: var(--opus-accent-secondary, #38bdf8);
+  position: relative;
+  display: grid;
+  gap: 8px;
+  width: 100%;
+  min-height: var(--kanban-card-min-height, 72px);
+  padding: 14px 12px 14px 16px;
+  border: 0;
+  border-radius: 10px;
+  background: color-mix(in srgb, var(--dashboard-section-panel) 88%, #ffffff 4%);
+  color: var(--dashboard-section-text);
   cursor: grab;
+  box-shadow:
+    inset 0 1px 0 color-mix(in srgb, #ffffff 5%, transparent),
+    0 1px 0 color-mix(in srgb, #000000 18%, transparent);
+  overflow: hidden;
+  box-sizing: border-box;
+}
+
+.card::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  width: 4px;
+  background: var(--card-accent);
 }
 
 button.card {
   color: inherit;
   font: inherit;
   text-align: left;
-  width: 100%;
 }
 
 .card:hover {
-  background: color-mix(in srgb, var(--opus-accent) 8%, var(--opus-panel));
+  background: color-mix(in srgb, var(--card-accent) 10%, var(--dashboard-section-panel));
 }
 
 .card:focus-visible {
-  outline: 2px solid color-mix(in srgb, var(--opus-accent) 72%, transparent);
+  outline: 2px solid color-mix(in srgb, var(--card-accent) 72%, transparent);
   outline-offset: 2px;
 }
 
@@ -79,29 +216,86 @@ button.card {
 }
 
 .card[data-tone="accent"] {
-  border-color: color-mix(in srgb, var(--opus-accent) 45%, var(--opus-border));
+  --card-accent: var(--opus-accent);
 }
 
 .card[data-tone="success"] {
-  border-color: color-mix(in srgb, #22c55e 45%, var(--opus-border));
+  --card-accent: #22c55e;
 }
 
 .card[data-tone="warning"] {
-  border-color: color-mix(in srgb, #f59e0b 45%, var(--opus-border));
+  --card-accent: #f59e0b;
 }
 
 .card[data-tone="danger"] {
-  border-color: color-mix(in srgb, #ef4444 45%, var(--opus-border));
+  --card-accent: #f43f5e;
+}
+
+.card[data-tone="default"] {
+  --card-accent: var(--opus-accent-secondary, #38bdf8);
 }
 
 .cardTitle {
-  color: var(--opus-text);
-  font-size: 0.82rem;
-  font-weight: 650;
+  color: var(--dashboard-section-text);
+  font-size: 0.84rem;
+  font-weight: 700;
+  line-height: 1.3;
 }
 
 .cardMeta {
-  margin-top: 4px;
-  color: var(--opus-muted);
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  min-width: 0;
+  color: var(--card-accent);
   font-size: 0.72rem;
+  font-weight: 650;
+  line-height: 1.3;
+}
+
+.cardMetaIcon {
+  flex-shrink: 0;
+  width: 0.72rem;
+  height: 0.72rem;
+  font-size: 0.72rem;
+}
+
+.root[data-dragging="true"] {
+  user-select: none;
+  cursor: grabbing;
+}
+
+.dragPreviewShell {
+  position: fixed;
+  z-index: 10000;
+  margin: 0;
+  pointer-events: none;
+}
+
+.dragPreviewShell[data-dropping="true"] {
+  transition:
+    left 220ms cubic-bezier(0.2, 0.8, 0.2, 1),
+    top 220ms cubic-bezier(0.2, 0.8, 0.2, 1),
+    width 220ms cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+.dragPreview {
+  opacity: 1;
+  background: var(--dashboard-section-panel, #111827);
+  color: var(--dashboard-section-text, #f8fafc);
+  box-shadow:
+    0 0 0 1px color-mix(in srgb, var(--card-accent, #38bdf8) 50%, transparent),
+    0 0 20px color-mix(in srgb, var(--card-accent, #38bdf8) 42%, transparent),
+    0 0 40px color-mix(in srgb, var(--card-accent, #38bdf8) 22%, transparent),
+    0 18px 36px rgba(2, 6, 23, 0.55);
+  cursor: grabbing;
+  transition:
+    transform 220ms cubic-bezier(0.2, 0.8, 0.2, 1),
+    box-shadow 220ms ease;
+}
+
+.dragPreview[data-dropping="true"] {
+  box-shadow:
+    inset 0 1px 0 color-mix(in srgb, #ffffff 5%, transparent),
+    0 1px 0 color-mix(in srgb, #000000 18%, transparent);
 }

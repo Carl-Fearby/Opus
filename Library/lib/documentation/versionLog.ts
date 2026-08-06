@@ -500,6 +500,14 @@ export const versionLog: VersionEntry[] = [
     commitShort: "289cb85",
     summary: "Form submission keeps controlled field values in sync after submit.",
     changes: ["Fix the Form Submission demo reverting select and text fields to defaults after submit, caused by React resetting the DOM form once a function action resolved.","Handle submit and reset in React so controlled useFormState values always match the rendered fields.","Publish opus-react 0.6.3 and update Application to consume the release from npm."],
+  },
+  {
+    version: "0.6.4",
+    releasedAt: "2026-08-06",
+    commit: "overlay-0.6.4",
+    commitShort: "overlay",
+    summary: "Kanban drag polish, Opus colour/date pickers, and configurable card clicks.",
+    changes: ["Rebuild KanbanBoard around pointer drag with gap shifting, dashed drop ghosts, origin ghosts, and commit-on-drop so neighbours stay put.","Add configurable card click actions (modal, callback, or none) with live JSON board state in the usage preview.","Replace native colour and month/year selects with Opus ColorPickerPanel and DatePickerSelect listboxes, and align select chevrons.","Publish opus-react 0.6.4 and update Application to consume the release from npm."],
   }
 ].reverse();
 

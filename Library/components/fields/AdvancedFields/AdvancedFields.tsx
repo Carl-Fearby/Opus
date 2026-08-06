@@ -2,6 +2,7 @@
 
 import { useId, useRef, type ComponentPropsWithoutRef, type ReactNode } from "react";
 import { FieldShell } from "../FieldShell";
+import { OpusDateInput } from "../DatePickerPanel";
 import type { FieldMode, LabelPosition } from "../types";
 import styles from "./AdvancedFields.module.css";
 
@@ -12,8 +13,30 @@ export type DateRangeFieldProps = ShellProps & { value: DateRangeValue; min?: st
 export function DateRangeField({ error, help, id, label, labelPosition, max, min, mode, required, value, onChange }: DateRangeFieldProps) {
   return <FieldShell error={error} help={help} id={id} label={label} labelPosition={labelPosition} labelTag="div" mode={mode} required={required}>
     <div className={styles.rangeGrid}>
-      <label><span>From</span><input aria-invalid={Boolean(error)} id={id} max={value.to || max} min={min} type="date" value={value.from} onChange={(event) => onChange({ ...value, from: event.target.value })} /></label>
-      <label><span>To</span><input aria-invalid={Boolean(error)} max={max} min={value.from || min} type="date" value={value.to} onChange={(event) => onChange({ ...value, to: event.target.value })} /></label>
+      <div className={styles.rangeItem}>
+        <span className={styles.rangeLabel} id={`${id}-from-label`}>From</span>
+        <OpusDateInput
+          aria-invalid={Boolean(error)}
+          id={id}
+          label="From"
+          max={value.to || max}
+          min={min}
+          value={value.from}
+          onChange={(event) => onChange({ ...value, from: event.target.value })}
+        />
+      </div>
+      <div className={styles.rangeItem}>
+        <span className={styles.rangeLabel} id={`${id}-to-label`}>To</span>
+        <OpusDateInput
+          aria-invalid={Boolean(error)}
+          id={`${id}-to`}
+          label="To"
+          max={max}
+          min={value.from || min}
+          value={value.to}
+          onChange={(event) => onChange({ ...value, to: event.target.value })}
+        />
+      </div>
     </div>
   </FieldShell>;
 }

@@ -7193,6 +7193,7 @@ export function ControlSettingsPanel({
     }
     case "kanban-board": {
       const s = settings as ControlSettingsBySlug["kanban-board"];
+      const cardClickAction = s.cardClickAction ?? "modal";
       return (
         <div className={shellStyles.settingsGrid}>
           <SettingToggle
@@ -7201,6 +7202,21 @@ export function ControlSettingsPanel({
             onChange={(interactive) =>
               onChange({ ...s, interactive } as ControlSettings)
             }
+          />
+          <SettingSelect
+            label="Card click action"
+            value={cardClickAction}
+            onChange={(next) =>
+              onChange({
+                ...s,
+                cardClickAction: next as ControlSettingsBySlug["kanban-board"]["cardClickAction"],
+              } as ControlSettings)
+            }
+            options={[
+              { label: "Open modal", value: "modal" },
+              { label: "Callback only", value: "callback" },
+              { label: "None", value: "none" },
+            ]}
           />
         </div>
       );

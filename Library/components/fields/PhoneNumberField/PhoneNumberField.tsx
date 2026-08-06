@@ -135,9 +135,7 @@ export function PhoneNumberField({
               <span className={styles.dial}>{activeCountry.dialCode}</span>
               <span className={styles.code}>{activeCountry.code}</span>
             </span>
-            <span aria-hidden="true" className={styles.chevron}>
-              ▾
-            </span>
+            <span aria-hidden="true" className={styles.chevron} />
           </button>
           {open ? (
             <div className={`${shared.panel} ${styles.panel}`}>

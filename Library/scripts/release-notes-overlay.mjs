@@ -573,4 +573,15 @@ export const releaseNotesOverlay = [
       "Publish opus-react 0.6.3 and update Application to consume the release from npm.",
     ],
   },
+  {
+    version: "0.6.4",
+    releasedAt: "2026-08-06",
+    summary: "Kanban drag polish, Opus colour/date pickers, and configurable card clicks.",
+    changes: [
+      "Rebuild KanbanBoard around pointer drag with gap shifting, dashed drop ghosts, origin ghosts, and commit-on-drop so neighbours stay put.",
+      "Add configurable card click actions (modal, callback, or none) with live JSON board state in the usage preview.",
+      "Replace native colour and month/year selects with Opus ColorPickerPanel and DatePickerSelect listboxes, and align select chevrons.",
+      "Publish opus-react 0.6.4 and update Application to consume the release from npm.",
+    ],
+  },
 ];

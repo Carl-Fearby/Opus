@@ -61,10 +61,12 @@ describe("native form attributes", () => {
     expect(textarea).toHaveAttribute("wrap", "soft");
   });
 
-  it("forwards applicable native attributes to date controls", () => {
+  it("renders an Opus date control with a named hidden value and calendar dialog", async () => {
+    const { userEvent } = await import("@testing-library/user-event");
+    const user = userEvent.setup();
+
     render(
       <DateField
-        autoComplete="bday"
         id="birthday"
         inputProps={{ min: "1900-01-01", max: "2030-12-31" }}
         label="Birthday"
@@ -74,10 +76,16 @@ describe("native form attributes", () => {
       />,
     );
 
-    const input = screen.getByLabelText("Birthday");
-    expect(input).toHaveAttribute("autocomplete", "bday");
-    expect(input).toHaveAttribute("min", "1900-01-01");
-    expect(input).toHaveAttribute("max", "2030-12-31");
-    expect(input).toHaveAttribute("name", "birthday");
+    const control = screen.getByRole("button", { name: "Birthday" });
+    expect(control).toHaveAttribute("aria-haspopup", "dialog");
+    expect(control).toHaveTextContent(/\d{1,2}[/.]\d{1,2}[/.]\d{4}/);
+
+    const hidden = document.querySelector('input[name="birthday"]');
+    expect(hidden).toHaveAttribute("value", "2026-08-05");
+
+    await user.click(control);
+    expect(screen.getByRole("dialog", { name: "Choose date" })).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "Clear" })).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "Today" })).toBeInTheDocument();
   });
 });

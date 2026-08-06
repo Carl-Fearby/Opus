@@ -1,8 +1,18 @@
-import styles from "./SelectField.module.css";
-import { inputControlSizeClassName } from "../shared/inputControlSizes";
+"use client";
+
+import {
+  useEffect,
+  useId,
+  useRef,
+  useState,
+  type ChangeEvent,
+  type ChangeEventHandler,
+} from "react";
 import { FieldShell, fieldInputAriaProps, useFieldShellAria } from "@/components/fields/FieldShell";
 import type { FieldMode, InputControlSize, LabelPosition } from "@/components/fields/types";
-import type { ChangeEventHandler } from "react";
+import shared from "../shared/fieldControl.module.css";
+import { inputControlSizeClassName } from "../shared/inputControlSizes";
+import styles from "./SelectField.module.css";
 
 type SelectFieldProps = {
   error?: string;
@@ -19,6 +29,22 @@ type SelectFieldProps = {
   onChange: ChangeEventHandler<HTMLSelectElement>;
 };
 
+function emitSelectChange(
+  onChange: ChangeEventHandler<HTMLSelectElement>,
+  nextValue: string,
+  name?: string,
+) {
+  const target = {
+    name: name ?? "",
+    type: "select-one",
+    value: nextValue,
+  } as HTMLSelectElement;
+  onChange({
+    target,
+    currentTarget: target,
+  } as ChangeEvent<HTMLSelectElement>);
+}
+
 export function SelectField({
   error,
   help,
@@ -34,6 +60,38 @@ export function SelectField({
   onChange,
 }: SelectFieldProps) {
   const shellAria = useFieldShellAria();
+  const listboxId = useId();
+  const rootRef = useRef<HTMLDivElement>(null);
+  const [open, setOpen] = useState(false);
+  const display = value || options[0] || "";
+
+  useEffect(() => {
+    if (!open) return;
+
+    function handlePointerDown(event: MouseEvent) {
+      if (!rootRef.current?.contains(event.target as Node)) {
+        setOpen(false);
+      }
+    }
+
+    function handleKeyDown(event: KeyboardEvent) {
+      if (event.key === "Escape") {
+        setOpen(false);
+      }
+    }
+
+    document.addEventListener("mousedown", handlePointerDown);
+    document.addEventListener("keydown", handleKeyDown);
+    return () => {
+      document.removeEventListener("mousedown", handlePointerDown);
+      document.removeEventListener("keydown", handleKeyDown);
+    };
+  }, [open]);
+
+  function selectOption(option: string) {
+    emitSelectChange(onChange, option, name);
+    setOpen(false);
+  }
 
   return (
     <FieldShell
@@ -42,23 +100,82 @@ export function SelectField({
       id={id}
       label={label}
       labelPosition={labelPosition}
+      labelTag="div"
       mode={mode}
       required={required}
     >
-      <div className={`${styles.wrap} ${inputControlSizeClassName[size]}`}>
-        <select
-          aria-invalid={error ? "true" : undefined}
-          className={`${styles.select} ${error ? styles.error : ""}`}
+      <div className={styles.root} ref={rootRef}>
+        <button
+          aria-controls={open ? listboxId : undefined}
+          aria-expanded={open}
+          aria-haspopup="listbox"
+          className={[
+            inputControlSizeClassName[size],
+            shared.trigger,
+            open ? shared.triggerOpen : "",
+            error ? shared.triggerError : "",
+          ]
+            .filter(Boolean)
+            .join(" ")}
           id={id}
-          name={name}
-          onChange={onChange}
-          value={value}
+          type="button"
+          onClick={() => setOpen((current) => !current)}
+          onKeyDown={(event) => {
+            if (event.key === "ArrowDown" || event.key === "Enter" || event.key === " ") {
+              event.preventDefault();
+              setOpen(true);
+            }
+          }}
           {...fieldInputAriaProps(shellAria, { invalid: Boolean(error) })}
         >
+          <span className={display ? undefined : shared.placeholder}>
+            {display || "Select…"}
+          </span>
+          <span aria-hidden="true" className={shared.chevron} />
+        </button>
+        <select
+          aria-hidden="true"
+          className={styles.hiddenSelect}
+          name={name}
+          required={required}
+          tabIndex={-1}
+          value={value}
+          onChange={() => undefined}
+        >
           {options.map((option) => (
-            <option key={option}>{option}</option>
+            <option key={option} value={option}>
+              {option}
+            </option>
           ))}
         </select>
+        {open ? (
+          <div className={shared.panel}>
+            <div
+              aria-label={label}
+              className={shared.list}
+              id={listboxId}
+              role="listbox"
+            >
+              {options.map((option) => {
+                const selected = option === value || (!value && option === options[0]);
+                return (
+                  <button
+                    aria-selected={selected}
+                    className={[styles.option, selected ? styles.optionActive : ""]
+                      .filter(Boolean)
+                      .join(" ")}
+                    key={option}
+                    role="option"
+                    type="button"
+                    onClick={() => selectOption(option)}
+                  >
+                    {option}
+                  </button>
+                );
+              })}
+            </div>
+          </div>
+        ) : null}
       </div>
     </FieldShell>
   );
