@@ -829,13 +829,6 @@ html[data-shell-theme="light"] .shell .content {
   white-space: nowrap;
 }
 
-.navLinkNewMark {
-  color: #f97316;
-  font-weight: 900;
-  font-size: 1.05em;
-  line-height: 1;
-}
-
 @media (max-width: 960px) {
   .body {
     grid-template-columns: 210px minmax(0, 1fr);
