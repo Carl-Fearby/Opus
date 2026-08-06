@@ -1,4 +1,4 @@
-import type { SplitterOrientation } from "@/components/Splitter";
+import type { SplitterOrientation } from "opus-react";
 
 const PLAYGROUND_PANEL_SIZE_KEY = "opus-playground-panel-size";
 const PLAYGROUND_CHAT_SPLIT_SIZE_KEY = "opus-playground-chat-split-size-v1";

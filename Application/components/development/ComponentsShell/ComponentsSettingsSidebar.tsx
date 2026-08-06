@@ -6,6 +6,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faChevronLeft, faChevronRight } from "@fortawesome/free-solid-svg-icons";
 import { OpusThemeProvider } from "opus-react";
 import { CustomScrollbar } from "opus-react";
+import { ResizeHandle } from "opus-react";
 import { useComponentsTheme } from "@/components/development/ComponentsThemeProvider";
 import { controlHasSettingsPanel } from "@/lib/controls/controlSettingsPanel";
 import {
@@ -51,53 +52,67 @@ export function ComponentsSettingsSidebar() {
     window.localStorage.setItem(SETTINGS_WIDTH_KEY, String(widthRef.current));
   }, [setIsResizing]);
 
-  const handleResizePointerDown = useCallback(
-    (event: React.PointerEvent<HTMLDivElement>) => {
-      event.preventDefault();
-      dragRef.current = {
-        startWidth: widthRef.current,
-        startX: event.clientX,
-      };
-      setIsResizing(true);
-      event.currentTarget.setPointerCapture(event.pointerId);
-    },
-    [setIsResizing],
-  );
+  useEffect(() => {
+    if (!isResizing) {
+      return;
+    }
 
-  const handleResizePointerMove = useCallback(
-    (event: React.PointerEvent<HTMLDivElement>) => {
+    const handlePointerMove = (event: PointerEvent) => {
       if (!dragRef.current) {
         return;
       }
 
       const delta = dragRef.current.startX - event.clientX;
       setSettingsWidth(clampSettingsWidth(dragRef.current.startWidth + delta));
-    },
-    [setSettingsWidth],
-  );
+    };
 
-  const handleResizePointerUp = useCallback(
-    (event: React.PointerEvent<HTMLDivElement>) => {
+    const handlePointerUp = () => {
       if (!dragRef.current) {
         return;
       }
-
-      event.currentTarget.releasePointerCapture(event.pointerId);
       finishResize();
+    };
+
+    window.addEventListener("pointermove", handlePointerMove);
+    window.addEventListener("pointerup", handlePointerUp);
+    window.addEventListener("pointercancel", handlePointerUp);
+    return () => {
+      window.removeEventListener("pointermove", handlePointerMove);
+      window.removeEventListener("pointerup", handlePointerUp);
+      window.removeEventListener("pointercancel", handlePointerUp);
+    };
+  }, [finishResize, isResizing, setSettingsWidth]);
+
+  const handleResizePointerDown = useCallback(
+    (event: React.PointerEvent<HTMLButtonElement>) => {
+      event.preventDefault();
+      dragRef.current = {
+        startWidth: widthRef.current,
+        startX: event.clientX,
+      };
+      setIsResizing(true);
     },
-    [finishResize],
+    [setIsResizing],
   );
 
   const handleResizeKeyDown = useCallback(
-    (event: React.KeyboardEvent<HTMLDivElement>) => {
+    (event: React.KeyboardEvent<HTMLButtonElement>) => {
       const step = event.shiftKey ? 48 : 16;
 
       if (event.key === "ArrowLeft") {
         event.preventDefault();
         setSettingsWidth(clampSettingsWidth(settingsWidth + step));
+        window.localStorage.setItem(
+          SETTINGS_WIDTH_KEY,
+          String(clampSettingsWidth(settingsWidth + step)),
+        );
       } else if (event.key === "ArrowRight") {
         event.preventDefault();
         setSettingsWidth(clampSettingsWidth(settingsWidth - step));
+        window.localStorage.setItem(
+          SETTINGS_WIDTH_KEY,
+          String(clampSettingsWidth(settingsWidth - step)),
+        );
       }
     },
     [setSettingsWidth, settingsWidth],
@@ -133,20 +148,18 @@ export function ComponentsSettingsSidebar() {
 
   return (
     <div className={styles.settingsSidebarWrap}>
-      <div
+      <ResizeHandle
         aria-label="Resize settings sidebar"
         aria-orientation="vertical"
         aria-valuemax={MAX_SETTINGS_WIDTH}
         aria-valuemin={MIN_SETTINGS_WIDTH}
         aria-valuenow={settingsWidth}
+        background="subtle"
         className={styles.settingsResizeHandle}
-        role="separator"
-        tabIndex={0}
+        height="full"
+        orientation="vertical"
         onKeyDown={handleResizeKeyDown}
         onPointerDown={handleResizePointerDown}
-        onPointerMove={handleResizePointerMove}
-        onPointerUp={handleResizePointerUp}
-        onPointerCancel={handleResizePointerUp}
       />
       <aside
         aria-label="Component settings"
