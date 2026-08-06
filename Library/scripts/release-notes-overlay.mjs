@@ -606,4 +606,14 @@ export const releaseNotesOverlay = [
       "Publish opus-react 0.6.6 and update Application to consume the release from npm.",
     ],
   },
+  {
+    version: "0.6.7",
+    releasedAt: "2026-08-06",
+    summary: "Accent colour picker menu stays on screen with viewport-aware placement.",
+    changes: [
+      "Portal the AccentColorPicker compact menu and flip or clamp it to the viewport so it no longer spills off the left of the preview.",
+      "Document accent colour picker relationships to colour picker, colour clouds, and portal.",
+      "Publish opus-react 0.6.7 and update Application to consume the release from npm.",
+    ],
+  },
 ];

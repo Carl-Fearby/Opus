@@ -524,6 +524,14 @@ export const versionLog: VersionEntry[] = [
     commitShort: "e97de2d",
     summary: "Booking-style date range picker, masked input delete fix, and masonry demo polish.",
     changes: ["Replace the dual From/To date fields with a single calendar range control: first click sets the start, second click sets the end, with accent range highlighting and hover preview.","Fix MaskedField so backspace and clear work through mask separators instead of re-inserting them.","Improve the MasonryGrid demo with varied card heights and clearer card chrome.","Publish opus-react 0.6.6 and update Application to consume the release from npm."],
+  },
+  {
+    version: "0.6.7",
+    releasedAt: "2026-08-06",
+    commit: "overlay-0.6.7",
+    commitShort: "overlay",
+    summary: "Accent colour picker menu stays on screen with viewport-aware placement.",
+    changes: ["Portal the AccentColorPicker compact menu and flip or clamp it to the viewport so it no longer spills off the left of the preview.","Document accent colour picker relationships to colour picker, colour clouds, and portal.","Publish opus-react 0.6.7 and update Application to consume the release from npm."],
   }
 ].reverse();
 

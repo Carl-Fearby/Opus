@@ -10,10 +10,15 @@ import {
   useState,
   type CSSProperties,
 } from "react";
+import { createPortal } from "react-dom";
 import { faRotateLeft } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { FieldShell } from "@/components/fields/FieldShell";
 import type { FieldMode, LabelPosition } from "@/components/fields/types";
+import {
+  resolveEmojiPickerPortalStyle,
+  type FloatingPortalStyle,
+} from "@/lib/ui/floatingPortalPosition";
 import {
   ACCENT_PAIR_STORAGE_KEY,
   ACCENT_SECONDARY_STORAGE_KEY,
@@ -433,10 +438,49 @@ export function AccentColorPicker({
 }: AccentColorPickerProps) {
   const resolvedSecondary = secondaryValue ?? companionForPrimary(value);
   const [open, setOpen] = useState(false);
+  const [portalReady, setPortalReady] = useState(false);
+  const [portalStyle, setPortalStyle] = useState<FloatingPortalStyle | null>(null);
   const rootRef = useRef<HTMLDivElement>(null);
+  const menuRef = useRef<HTMLDivElement>(null);
   const menuId = useId();
   const selectedLabel = showSecondary ? pairLabel(value, resolvedSecondary) : colorLabel(value);
   const isDefault = value === defaultValue && (!showSecondary || resolvedSecondary === defaultSecondaryValue);
+
+  useEffect(() => {
+    const timeout = window.setTimeout(() => setPortalReady(true), 0);
+    return () => window.clearTimeout(timeout);
+  }, []);
+
+  useLayoutEffect(() => {
+    if (!open || variant !== "compact" || !rootRef.current) {
+      setPortalStyle(null);
+      return;
+    }
+
+    const updatePosition = () => {
+      const anchor = rootRef.current;
+      if (!anchor) return;
+      setPortalStyle(
+        resolveEmojiPickerPortalStyle(
+          anchor.getBoundingClientRect(),
+          menuRef.current?.getBoundingClientRect() ?? null,
+          "bottom",
+        ),
+      );
+    };
+
+    updatePosition();
+    const frame = window.requestAnimationFrame(() => {
+      updatePosition();
+    });
+    window.addEventListener("resize", updatePosition);
+    window.addEventListener("scroll", updatePosition, true);
+    return () => {
+      window.cancelAnimationFrame(frame);
+      window.removeEventListener("resize", updatePosition);
+      window.removeEventListener("scroll", updatePosition, true);
+    };
+  }, [open, showSecondary, variant, value, resolvedSecondary]);
 
   useEffect(() => {
     if (!open || variant !== "compact") {
@@ -444,7 +488,8 @@ export function AccentColorPicker({
     }
 
     const closeOnOutsideClick = (event: PointerEvent) => {
-      if (!rootRef.current?.contains(event.target as Node)) {
+      const target = event.target as Node;
+      if (!rootRef.current?.contains(target) && !menuRef.current?.contains(target)) {
         setOpen(false);
       }
     };
@@ -587,24 +632,35 @@ export function AccentColorPicker({
           </button>
         ) : null}
 
-        {open ? (
-          <div
-            aria-label={`${label} colours`}
-            className={styles.dropdown}
-            id={menuId}
-            role="dialog"
-          >
-            {paletteBody}
-            <div className={styles.footer}>
-              <p className={styles.summary}>{selectedLabel}</p>
-              {!isDefault ? (
-                <button className={styles.resetText} type="button" onClick={handleReset}>
-                  Reset
-                </button>
-              ) : null}
-            </div>
-          </div>
-        ) : null}
+        {open && portalReady && portalStyle
+          ? createPortal(
+              <div
+                aria-label={`${label} colours`}
+                className={styles.dropdown}
+                data-portaled="true"
+                id={menuId}
+                ref={menuRef}
+                role="dialog"
+                style={
+                  {
+                    left: portalStyle.left,
+                    top: portalStyle.top,
+                  } as CSSProperties
+                }
+              >
+                {paletteBody}
+                <div className={styles.footer}>
+                  <p className={styles.summary}>{selectedLabel}</p>
+                  {!isDefault ? (
+                    <button className={styles.resetText} type="button" onClick={handleReset}>
+                      Reset
+                    </button>
+                  ) : null}
+                </div>
+              </div>,
+              document.body,
+            )
+          : null}
       </div>
     </FieldShell>
   );

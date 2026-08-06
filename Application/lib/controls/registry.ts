@@ -49,6 +49,7 @@ const compositionPartsBySlug: Partial<Record<ControlSlug, ControlSlug[]>> = {
   "context-menu": ["dropdown-menu"],
   "copy-button": ["button"],
   "colour-clouds": ["accent-color-picker"],
+  "accent-color-picker": ["color-picker", "portal"],
   dialog: ["button", "portal"],
   desktop: ["desktop-window", "desktop-dock", "desktop-icon"],
   drawer: ["button", "portal"],
