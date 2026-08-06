@@ -627,4 +627,14 @@ export const releaseNotesOverlay = [
       "Publish opus-react 0.6.8 and update Application to consume the release from npm.",
     ],
   },
+  {
+    version: "0.6.9",
+    releasedAt: "2026-08-07",
+    summary: "OTP input autofocuses the first empty digit on mount.",
+    changes: [
+      "Add autoFocus to OtpField (on by default) so verification screens are ready to type immediately.",
+      "Expose an Autofocus setting in the OTP input docs panel.",
+      "Publish opus-react 0.6.9 and update Application to consume the release from npm.",
+    ],
+  },
 ];

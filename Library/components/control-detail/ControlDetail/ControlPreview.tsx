@@ -3331,6 +3331,7 @@ function ControlPreviewContent({
       return (
         <OtpField
           {...fieldProps(s)}
+          autoFocus={s.autoFocus}
           id="preview-otp-input"
           length={s.length}
           value={s.value}

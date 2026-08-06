@@ -874,6 +874,11 @@ export function ControlSettingsPanel({
               } as ControlSettings)
             }
           />
+          <SettingToggle
+            label="Autofocus"
+            checked={s.autoFocus}
+            onChange={(autoFocus) => onChange({ ...s, autoFocus } as ControlSettings)}
+          />
         </div>
       );
     }

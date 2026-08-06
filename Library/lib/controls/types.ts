@@ -309,6 +309,7 @@ export type SliderRangeSettings = BaseFieldSettings & {
 };
 
 export type OtpInputSettings = BaseFieldSettings & {
+  autoFocus: boolean;
   length: number;
   value: string;
 };

@@ -884,6 +884,7 @@ const [${state}, ${toSetter(state)}] = useState([${s.value.map((value) => quote(
         formatStringProp("id", id),
         ...fieldProps(s),
         ...(s.length !== 6 ? [formatNumberProp("length", s.length)] : []),
+        ...(s.autoFocus ? [] : [formatBoolProp("autoFocus", false)]),
         formatExpressionProp("value", state),
         formatExpressionProp("onChange", `setVerificationCode`),
       ];

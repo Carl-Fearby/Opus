@@ -354,6 +354,7 @@ export const defaultSettings: ControlSettingsBySlug = {
     label: "Verification code",
     value: "",
     length: 6,
+    autoFocus: true,
     helpEnabled: true,
     help: "Enter the code sent to your device.",
   },
