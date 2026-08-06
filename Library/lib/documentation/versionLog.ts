@@ -540,6 +540,14 @@ export const versionLog: VersionEntry[] = [
     commitShort: "df7cab6",
     summary: "Softer resize handles and playground ChatGPT bring-your-own key.",
     changes: ["Lengthen ResizeHandle accent lines with faded ends and a gentler hover treatment.","Require each visitor's OpenAI API key for playground ChatGPT instead of a shared server key.","Add a resizable split between playground Source and ChatGPT panes.","Publish opus-react 0.6.8 and update Application to consume the release from npm."],
+  },
+  {
+    version: "0.6.9",
+    releasedAt: "2026-08-07",
+    commit: "24a0e78e596a07ea475b5c6633ac82cd1636d8de",
+    commitShort: "24a0e78",
+    summary: "OTP input autofocuses the first empty digit on mount.",
+    changes: ["Add autoFocus to OtpField (on by default) so verification screens are ready to type immediately.","Expose an Autofocus setting in the OTP input docs panel.","Publish opus-react 0.6.9 and update Application to consume the release from npm."],
   }
 ].reverse();
 
