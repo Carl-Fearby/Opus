@@ -40,7 +40,7 @@ export function Hero() {
               <span />
               <span />
               <Link className={styles.previewTab} href={docsComponentsUrl} tabIndex={-1}>
-                Component catalog
+                Component catalogue
               </Link>
               <span className={styles.previewTab} data-active="true">
                 Playground

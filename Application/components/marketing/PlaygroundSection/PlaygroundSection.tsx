@@ -16,7 +16,7 @@ export function PlaygroundSection() {
       <div className={styles.inner}>
         <div className={styles.copy}>
           <p className={styles.eyebrow}>Code Playground</p>
-          <h2>Explore components in a live editor, not just a static catalog.</h2>
+          <h2>Explore components in a live editor, not just a static catalogue.</h2>
           <p>
             Jump from any component page into the Playground with generated JSX for your current
             settings, then tweak imports, state, and render logic before you paste it into your app.
@@ -35,7 +35,7 @@ export function PlaygroundSection() {
               Open Playground
             </Link>
             <Link className={styles.secondary} href={docsComponentsUrl}>
-              Component catalog
+              Component catalogue
             </Link>
           </div>
         </div>

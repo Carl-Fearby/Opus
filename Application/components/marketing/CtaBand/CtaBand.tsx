@@ -22,7 +22,7 @@ export function CtaBand() {
             Open Playground
           </Link>
           <Link className={styles.secondary} href={docsComponentsUrl}>
-            Component catalog
+            Component catalogue
           </Link>
           <a className={styles.secondary} href={npmPackageUrl} rel="noreferrer" target="_blank">
             npm package

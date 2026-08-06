@@ -57,7 +57,7 @@ export function FeatureGrid() {
           <h2>Everything you need to design, build, and ship consistent interfaces.</h2>
           <p>
             Opus is both a component library and a documented system. Use the primitives directly
-            in production, or browse the catalog to validate patterns before you wire them into your
+            in production, or browse the catalogue to validate patterns before you wire them into your
             product.
           </p>
         </div>

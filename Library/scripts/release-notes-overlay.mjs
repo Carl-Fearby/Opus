@@ -76,7 +76,7 @@ export const releaseNotesOverlay = [
   {
     version: "0.2.18",
     releasedAt: "2026-07-08",
-    summary: "Republish after catalog and preview wiring fixes.",
+    summary: "Republish after catalogue and preview wiring fixes.",
     changes: [
       "Sync generated usage code and preview imports with the published package surface.",
       "Republish to npm after Application integration fixes.",
@@ -108,7 +108,7 @@ export const releaseNotesOverlay = [
     changes: [
       "Add Data Grid pivot mode, layout helpers, and expanded demo datasets.",
       "Add Avatar, AvatarGroup, Badge, Clipboard, ContentTimeline, CopyButton, DescriptionList, Divider, FocusTrap, HotkeyManager, Icon, JsonViewer, List, and related utility components.",
-      "Expand chart catalog and SpecializedCharts with additional dashboard chart types.",
+      "Expand chart catalogue and SpecializedCharts with additional dashboard chart types.",
       "Add form overview layouts and richer generated usage code for complex controls.",
       "Add documentation top-bar version badge and improved component settings panels.",
       "Publish the large post-monorepo feature batch to npm as opus-react@0.2.22.",
@@ -130,11 +130,11 @@ export const releaseNotesOverlay = [
     version: "0.2.24",
     releasedAt: "2026-07-09",
     commit: "faa171450e8da8d2d13641c6dc469adff4c1dcef",
-    summary: "CRM dashboard list widgets, Labs/System catalogs, and error pages.",
+    summary: "CRM dashboard list widgets, Labs/System catalogues, and error pages.",
     changes: [
       "Add UpcomingTasks, RecentActivity, and TopPerformingUsers dashboard widgets.",
-      "Add Labs catalog with Dashboard List Columns composition preview.",
-      "Add System catalog with shared 403 and 404 documentation error pages.",
+      "Add Labs catalogue with Dashboard List Columns composition preview.",
+      "Add System catalogue with shared 403 and 404 documentation error pages.",
       "Add documentation breadcrumbs across guide, components, and version pages.",
       "Improve checkbox field sizing and interactive task-row behaviour.",
     ],
@@ -143,10 +143,10 @@ export const releaseNotesOverlay = [
     version: "0.2.25",
     releasedAt: "2026-07-09",
     commit: "4117aed4083166cb9ca9fc22831587723472027f",
-    summary: "Deals Over Time chart and dashboard catalog growth.",
+    summary: "Deals Over Time chart and dashboard catalogue growth.",
     changes: [
       "Add DealsOverTime line-chart widget with period selector and purple/blue palettes.",
-      "Register DealsOverTime in dashboard catalog, docs, icons, and usage-code generation.",
+      "Register DealsOverTime in dashboard catalogue, docs, icons, and usage-code generation.",
       "Expand dashboard preview grid and settings panels for new chart widgets.",
       "Tune metric tiles, gauges, progress visuals, and tabs styling for dashboard density.",
     ],
@@ -177,11 +177,11 @@ export const releaseNotesOverlay = [
   {
     version: "0.2.28",
     releasedAt: "2026-07-09",
-    summary: "Expanded component catalog and synchronised Application documentation.",
+    summary: "Expanded component catalogue and synchronised Application documentation.",
     changes: [
       "Expand builder, layout, navigation, tile, and dashboard component definitions.",
-      "Add richer preview settings and generated usage examples across the catalog.",
-      "Synchronise the growing Library catalog, emoji data, and documentation into Application.",
+      "Add richer preview settings and generated usage examples across the catalogue.",
+      "Synchronise the growing Library catalogue, emoji data, and documentation into Application.",
     ],
   },
   {
@@ -220,14 +220,14 @@ export const releaseNotesOverlay = [
     summary: "Calendar improvements, documentation navigation, and preview parity auditing.",
     changes: [
       "Improve Calendar behaviour and a broad set of interactive component previews.",
-      "Restructure documentation routes and navigation for catalog groups and Playground.",
+      "Restructure documentation routes and navigation for catalogue groups and Playground.",
       "Add preview-versus-usage auditing and improve the Application synchronisation workflow.",
     ],
   },
   {
     version: "0.2.33",
     releasedAt: "2026-07-12",
-    summary: "Forms catalog and generated example coverage expansion.",
+    summary: "Forms catalogue and generated example coverage expansion.",
     changes: [
       "Expand forms overview content, defaults, icons, and component registration.",
       "Add reusable usage-data formatters for richer generated examples.",
@@ -239,7 +239,7 @@ export const releaseNotesOverlay = [
     releasedAt: "2026-07-13",
     summary: "Emoji persistence and source-editor refinements.",
     changes: [
-      "Add recent-emoji persistence and shared emoji catalog utilities.",
+      "Add recent-emoji persistence and shared emoji catalogue utilities.",
       "Improve generated source and CodeMirror editor behaviour.",
       "Refresh preview and documentation registration for the updated controls.",
     ],
@@ -503,14 +503,14 @@ export const releaseNotesOverlay = [
     summary: "npm marketing gallery and desktop showcase assets.",
     changes: [
       "Add the npm marketing screenshot gallery and desktop component showcase assets.",
-      "Publish opus-react 0.4.6 ahead of the 0.4.7 license and metadata polish.",
+      "Publish opus-react 0.4.6 ahead of the 0.4.7 licence and metadata polish.",
     ],
   },
   {
     version: "0.4.7",
     releasedAt: "2026-08-03",
     commit: "24836688",
-    summary: "MIT license, contact metadata, and package consumer polish.",
+    summary: "MIT licence, contact metadata, and package consumer polish.",
     changes: [
       "Declare MIT licensing and maintainer contact details on the published package.",
       "Align package metadata and README guidance for npm consumers.",
@@ -590,7 +590,7 @@ export const releaseNotesOverlay = [
     summary: "Kanban board polish and collapsible component Settings pane.",
     changes: [
       "Expand Kanban demo data with a Backlog column and denser board contents.",
-      "Add sticky column headers, accent-tinted full-width headers, equal-height ellipsized cards, and a reliable auto-hiding card scrollbar.",
+      "Add sticky column headers, accent-tinted full-width headers, equal-height ellipsised cards, and a reliable auto-hiding card scrollbar.",
       "Add a collapsible Settings sidebar control in the component docs shell.",
       "Publish opus-react 0.6.5 and update Application to consume the release from npm.",
     ],

@@ -130,7 +130,7 @@ export const versionLog: VersionEntry[] = [
     releasedAt: "2026-07-08",
     commit: "86c2ccd8e48c7aefe32c4dc87bc45b04d6d266d9",
     commitShort: "86c2ccd",
-    summary: "Republish after catalog and preview wiring fixes.",
+    summary: "Republish after catalogue and preview wiring fixes.",
     changes: ["Sync generated usage code and preview imports with the published package surface.","Republish to npm after Application integration fixes."],
   },
   {
@@ -155,7 +155,7 @@ export const versionLog: VersionEntry[] = [
     commit: "b98fb2182d1d87b5c2723234b7ae94cbf34c424c",
     commitShort: "b98fb21",
     summary: "Major library expansion — data grid, utilities, content primitives, and charts.",
-    changes: ["Add Data Grid pivot mode, layout helpers, and expanded demo datasets.","Add Avatar, AvatarGroup, Badge, Clipboard, ContentTimeline, CopyButton, DescriptionList, Divider, FocusTrap, HotkeyManager, Icon, JsonViewer, List, and related utility components.","Expand chart catalog and SpecializedCharts with additional dashboard chart types.","Add form overview layouts and richer generated usage code for complex controls.","Add documentation top-bar version badge and improved component settings panels.","Publish the large post-monorepo feature batch to npm as opus-react@0.2.22."],
+    changes: ["Add Data Grid pivot mode, layout helpers, and expanded demo datasets.","Add Avatar, AvatarGroup, Badge, Clipboard, ContentTimeline, CopyButton, DescriptionList, Divider, FocusTrap, HotkeyManager, Icon, JsonViewer, List, and related utility components.","Expand chart catalogue and SpecializedCharts with additional dashboard chart types.","Add form overview layouts and richer generated usage code for complex controls.","Add documentation top-bar version badge and improved component settings panels.","Publish the large post-monorepo feature batch to npm as opus-react@0.2.22."],
   },
   {
     version: "0.2.23",
@@ -170,16 +170,16 @@ export const versionLog: VersionEntry[] = [
     releasedAt: "2026-07-09",
     commit: "faa171450e8da8d2d13641c6dc469adff4c1dcef",
     commitShort: "faa1714",
-    summary: "CRM dashboard list widgets, Labs/System catalogs, and error pages.",
-    changes: ["Add UpcomingTasks, RecentActivity, and TopPerformingUsers dashboard widgets.","Add Labs catalog with Dashboard List Columns composition preview.","Add System catalog with shared 403 and 404 documentation error pages.","Add documentation breadcrumbs across guide, components, and version pages.","Improve checkbox field sizing and interactive task-row behaviour."],
+    summary: "CRM dashboard list widgets, Labs/System catalogues, and error pages.",
+    changes: ["Add UpcomingTasks, RecentActivity, and TopPerformingUsers dashboard widgets.","Add Labs catalogue with Dashboard List Columns composition preview.","Add System catalogue with shared 403 and 404 documentation error pages.","Add documentation breadcrumbs across guide, components, and version pages.","Improve checkbox field sizing and interactive task-row behaviour."],
   },
   {
     version: "0.2.25",
     releasedAt: "2026-07-09",
     commit: "4117aed4083166cb9ca9fc22831587723472027f",
     commitShort: "4117aed",
-    summary: "Deals Over Time chart and dashboard catalog growth.",
-    changes: ["Add DealsOverTime line-chart widget with period selector and purple/blue palettes.","Register DealsOverTime in dashboard catalog, docs, icons, and usage-code generation.","Expand dashboard preview grid and settings panels for new chart widgets.","Tune metric tiles, gauges, progress visuals, and tabs styling for dashboard density."],
+    summary: "Deals Over Time chart and dashboard catalogue growth.",
+    changes: ["Add DealsOverTime line-chart widget with period selector and purple/blue palettes.","Register DealsOverTime in dashboard catalogue, docs, icons, and usage-code generation.","Expand dashboard preview grid and settings panels for new chart widgets.","Tune metric tiles, gauges, progress visuals, and tabs styling for dashboard density."],
   },
   {
     version: "0.2.26",
@@ -202,8 +202,8 @@ export const versionLog: VersionEntry[] = [
     releasedAt: "2026-07-09",
     commit: "126562fcc1923010bf717552e88c3eb3c8d219b4",
     commitShort: "126562f",
-    summary: "Expanded component catalog and synchronised Application documentation.",
-    changes: ["Expand builder, layout, navigation, tile, and dashboard component definitions.","Add richer preview settings and generated usage examples across the catalog.","Synchronise the growing Library catalog, emoji data, and documentation into Application."],
+    summary: "Expanded component catalogue and synchronised Application documentation.",
+    changes: ["Expand builder, layout, navigation, tile, and dashboard component definitions.","Add richer preview settings and generated usage examples across the catalogue.","Synchronise the growing Library catalogue, emoji data, and documentation into Application."],
   },
   {
     version: "0.2.29",
@@ -235,14 +235,14 @@ export const versionLog: VersionEntry[] = [
     commit: "18e675a77fd421722b0f3c60e90352dc0b5555a5",
     commitShort: "18e675a",
     summary: "Calendar improvements, documentation navigation, and preview parity auditing.",
-    changes: ["Improve Calendar behaviour and a broad set of interactive component previews.","Restructure documentation routes and navigation for catalog groups and Playground.","Add preview-versus-usage auditing and improve the Application synchronisation workflow."],
+    changes: ["Improve Calendar behaviour and a broad set of interactive component previews.","Restructure documentation routes and navigation for catalogue groups and Playground.","Add preview-versus-usage auditing and improve the Application synchronisation workflow."],
   },
   {
     version: "0.2.33",
     releasedAt: "2026-07-12",
     commit: "73337bcee50370e6c6fd1fad7d4ff3d69d463a25",
     commitShort: "73337bc",
-    summary: "Forms catalog and generated example coverage expansion.",
+    summary: "Forms catalogue and generated example coverage expansion.",
     changes: ["Expand forms overview content, defaults, icons, and component registration.","Add reusable usage-data formatters for richer generated examples.","Improve component previews and settings for newly documented form controls."],
   },
   {
@@ -251,7 +251,7 @@ export const versionLog: VersionEntry[] = [
     commit: "f968bfeed3ca5e6efb7837a2c478cc4f51acadc9",
     commitShort: "f968bfe",
     summary: "Emoji persistence and source-editor refinements.",
-    changes: ["Add recent-emoji persistence and shared emoji catalog utilities.","Improve generated source and CodeMirror editor behaviour.","Refresh preview and documentation registration for the updated controls."],
+    changes: ["Add recent-emoji persistence and shared emoji catalogue utilities.","Improve generated source and CodeMirror editor behaviour.","Refresh preview and documentation registration for the updated controls."],
   },
   {
     version: "0.2.35",
@@ -451,14 +451,14 @@ export const versionLog: VersionEntry[] = [
     commit: "overlay-0.4.6",
     commitShort: "overlay",
     summary: "npm marketing gallery and desktop showcase assets.",
-    changes: ["Add the npm marketing screenshot gallery and desktop component showcase assets.","Publish opus-react 0.4.6 ahead of the 0.4.7 license and metadata polish."],
+    changes: ["Add the npm marketing screenshot gallery and desktop component showcase assets.","Publish opus-react 0.4.6 ahead of the 0.4.7 licence and metadata polish."],
   },
   {
     version: "0.4.7",
     releasedAt: "2026-08-03",
     commit: "248366882a7136443f52f3e6f57706fa3b3b7c29",
     commitShort: "2483668",
-    summary: "MIT license, contact metadata, and package consumer polish.",
+    summary: "MIT licence, contact metadata, and package consumer polish.",
     changes: ["Declare MIT licensing and maintainer contact details on the published package.","Align package metadata and README guidance for npm consumers.","Add Library quality workflow, Playwright coverage, and usage-code audit tooling.","Publish opus-react 0.4.7 for Application consumption."],
   },
   {
@@ -515,7 +515,7 @@ export const versionLog: VersionEntry[] = [
     commit: "103a6fb4adb12391978bee01688106351e1420ba",
     commitShort: "103a6fb",
     summary: "Kanban board polish and collapsible component Settings pane.",
-    changes: ["Expand Kanban demo data with a Backlog column and denser board contents.","Add sticky column headers, accent-tinted full-width headers, equal-height ellipsized cards, and a reliable auto-hiding card scrollbar.","Add a collapsible Settings sidebar control in the component docs shell.","Publish opus-react 0.6.5 and update Application to consume the release from npm."],
+    changes: ["Expand Kanban demo data with a Backlog column and denser board contents.","Add sticky column headers, accent-tinted full-width headers, equal-height ellipsised cards, and a reliable auto-hiding card scrollbar.","Add a collapsible Settings sidebar control in the component docs shell.","Publish opus-react 0.6.5 and update Application to consume the release from npm."],
   }
 ].reverse();
 

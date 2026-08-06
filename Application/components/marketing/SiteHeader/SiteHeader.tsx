@@ -7,7 +7,7 @@ const navLinks = [
   { href: "/#features", label: "Features" },
   { href: "/#playground", label: "Playground" },
   { href: "/#components", label: "Components" },
-  { href: docsComponentsUrl, label: "Component catalog" },
+  { href: docsComponentsUrl, label: "Component catalogue" },
   { href: "/pricing", label: "Pricing" },
 ];
 
