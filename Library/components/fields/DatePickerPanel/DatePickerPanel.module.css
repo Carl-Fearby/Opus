@@ -64,11 +64,26 @@
   width: 78px;
 }
 
+.hint {
+  margin: 0;
+  color: var(--opus-muted);
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  text-align: center;
+  text-transform: uppercase;
+}
+
 .weekdays,
 .grid {
   display: grid;
   grid-template-columns: repeat(7, minmax(0, 1fr));
   gap: 2px;
+}
+
+.rangeGrid {
+  row-gap: 4px;
+  column-gap: 0;
 }
 
 .weekday {
@@ -96,7 +111,15 @@
   cursor: pointer;
 }
 
-.day:hover:not(:disabled) {
+.dayLabel {
+  display: grid;
+  place-items: center;
+  width: 100%;
+  height: 100%;
+  border-radius: inherit;
+}
+
+.day:hover:not(:disabled):not(.selected):not(.inRange):not(.rangePreview) {
   background: color-mix(in srgb, var(--opus-accent) 10%, transparent);
 }
 
@@ -116,16 +139,44 @@
   font-weight: 500;
 }
 
-.today {
+.today:not(.selected):not(.inRange):not(.rangePreview) {
   box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--opus-accent) 45%, transparent);
 }
 
 .selected,
-.selected:hover:not(:disabled) {
+.selected:hover:not(:disabled),
+.inRange,
+.inRange:hover:not(:disabled),
+.rangePreview,
+.rangePreview:hover:not(:disabled) {
   border-color: transparent;
   background: color-mix(in srgb, var(--opus-accent) 82%, #111);
   color: #fff;
   box-shadow: none;
+}
+
+.inRange,
+.inRange:hover:not(:disabled),
+.rangePreview,
+.rangePreview:hover:not(:disabled) {
+  border-radius: 0;
+}
+
+.rangeEndpoint {
+  position: relative;
+  z-index: 1;
+}
+
+.rangeStart {
+  border-radius: 8px 0 0 8px;
+}
+
+.rangeEnd {
+  border-radius: 0 8px 8px 0;
+}
+
+.rangeStart.rangeEnd {
+  border-radius: 8px;
 }
 
 .footer {

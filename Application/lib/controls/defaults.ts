@@ -357,7 +357,12 @@ export const defaultSettings: ControlSettingsBySlug = {
     helpEnabled: true,
     help: "Enter the code sent to your device.",
   },
-  "date-range-picker": { ...baseFieldDefaults, label: "Reporting period", from: currentDateValue, to: currentDateValue },
+  "date-range-picker": {
+    ...baseFieldDefaults,
+    label: "Reporting period",
+    from: currentDateValue,
+    to: toDateValue(new Date(now.getFullYear(), now.getMonth(), now.getDate() + 6)),
+  },
   combobox: { ...baseFieldDefaults, label: "Company", value: "", placeholder: "Search companies…", options: "Acme Ltd, Global Corp, Initech, Umbrella Group" },
   "currency-input": { ...baseFieldDefaults, label: "Budget", currency: "GBP", value: 24800 },
   "masked-input": { ...baseFieldDefaults, label: "Reference", mask: "AA-####-##", placeholder: "AB-1234-56", value: "OP-2026-01" },
@@ -1352,7 +1357,7 @@ export const defaultSettings: ControlSettingsBySlug = {
   },
   "masonry-grid": {
     columns: 3,
-    gap: 12,
+    gap: 16,
   },
   "property-grid": {
     copyable: true,

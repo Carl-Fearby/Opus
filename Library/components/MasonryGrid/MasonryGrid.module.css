@@ -1,16 +1,21 @@
 .grid {
   width: 100%;
+  column-fill: balance;
 }
 
 .card {
   display: grid;
+  align-content: start;
   gap: 8px;
   break-inside: avoid;
   page-break-inside: avoid;
   padding: 16px;
+  border: 1px solid color-mix(in srgb, var(--opus-border) 88%, transparent);
+  border-radius: 14px;
   background:
-    linear-gradient(180deg, color-mix(in srgb, var(--opus-accent) 8%, transparent), transparent 48%),
-    color-mix(in srgb, var(--opus-panel) 94%, transparent);
+    linear-gradient(180deg, color-mix(in srgb, var(--opus-accent) 10%, transparent), transparent 52%),
+    color-mix(in srgb, var(--opus-panel) 96%, transparent);
+  box-shadow: 0 10px 24px color-mix(in srgb, #000 8%, transparent);
 }
 
 button.card {
@@ -23,9 +28,10 @@ button.card {
 }
 
 button.card:hover {
+  border-color: color-mix(in srgb, var(--opus-accent) 42%, var(--opus-border));
   background:
-    linear-gradient(180deg, color-mix(in srgb, var(--opus-accent) 15%, transparent), transparent 58%),
-    color-mix(in srgb, var(--opus-panel) 94%, transparent);
+    linear-gradient(180deg, color-mix(in srgb, var(--opus-accent) 16%, transparent), transparent 58%),
+    color-mix(in srgb, var(--opus-panel) 96%, transparent);
 }
 
 button.card:focus-visible {

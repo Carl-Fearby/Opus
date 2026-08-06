@@ -2,42 +2,25 @@
 
 import { useId, useRef, type ComponentPropsWithoutRef, type ReactNode } from "react";
 import { FieldShell } from "../FieldShell";
-import { OpusDateInput } from "../DatePickerPanel";
+import { OpusDateRangeInput, type DateRangeValue } from "../DatePickerPanel";
 import type { FieldMode, LabelPosition } from "../types";
 import styles from "./AdvancedFields.module.css";
 
 type ShellProps = { error?: string; help?: string; id: string; label: string; labelPosition?: LabelPosition; mode?: FieldMode; required?: boolean };
 
-export type DateRangeValue = { from: string; to: string };
+export type { DateRangeValue };
 export type DateRangeFieldProps = ShellProps & { value: DateRangeValue; min?: string; max?: string; onChange: (value: DateRangeValue) => void };
 export function DateRangeField({ error, help, id, label, labelPosition, max, min, mode, required, value, onChange }: DateRangeFieldProps) {
   return <FieldShell error={error} help={help} id={id} label={label} labelPosition={labelPosition} labelTag="div" mode={mode} required={required}>
-    <div className={styles.rangeGrid}>
-      <div className={styles.rangeItem}>
-        <span className={styles.rangeLabel} id={`${id}-from-label`}>From</span>
-        <OpusDateInput
-          aria-invalid={Boolean(error)}
-          id={id}
-          label="From"
-          max={value.to || max}
-          min={min}
-          value={value.from}
-          onChange={(event) => onChange({ ...value, from: event.target.value })}
-        />
-      </div>
-      <div className={styles.rangeItem}>
-        <span className={styles.rangeLabel} id={`${id}-to-label`}>To</span>
-        <OpusDateInput
-          aria-invalid={Boolean(error)}
-          id={`${id}-to`}
-          label="To"
-          max={max}
-          min={value.from || min}
-          value={value.to}
-          onChange={(event) => onChange({ ...value, to: event.target.value })}
-        />
-      </div>
-    </div>
+    <OpusDateRangeInput
+      aria-invalid={Boolean(error)}
+      id={id}
+      label={label}
+      max={max}
+      min={min}
+      value={value}
+      onChange={onChange}
+    />
   </FieldShell>;
 }
 
@@ -60,21 +43,67 @@ export function CurrencyField({ currency = "GBP", error, help, id, label, labelP
 }
 
 export type MaskedFieldProps = ShellProps & { mask: string; placeholder?: string; value: string; onChange: (value: string) => void };
-function applyMask(raw: string, mask: string) {
-  const chars = raw.replace(/[^a-z0-9]/gi, "").split("");
+
+function significantMaskChars(value: string) {
+  return value.replace(/[^a-z0-9]/gi, "");
+}
+
+function matchesMaskToken(token: string, char: string) {
+  if (token === "#") return /\d/.test(char);
+  if (token === "A") return /[a-z]/i.test(char);
+  if (token === "*") return true;
+  return false;
+}
+
+/** Apply mask literals around significant characters. Never leave trailing separators, and treat
+ * deleting a separator as deleting the preceding significant character. */
+function applyMask(raw: string, mask: string, previous = "") {
+  let significant = significantMaskChars(raw);
+  const previousSignificant = significantMaskChars(previous);
+
+  // Backspacing a mask literal leaves the same significant chars — drop one so delete works.
+  if (
+    previous &&
+    raw.length < previous.length &&
+    significant.length === previousSignificant.length &&
+    previousSignificant.length > 0
+  ) {
+    significant = previousSignificant.slice(0, -1);
+  }
+
+  const chars = significant.split("");
+  let charIndex = 0;
   let result = "";
+
   for (const token of mask) {
     if (token === "#" || token === "A" || token === "*") {
-      const index = chars.findIndex((char) => token === "#" ? /\d/.test(char) : token === "A" ? /[a-z]/i.test(char) : true);
-      if (index < 0) break;
-      result += chars.splice(index, 1)[0];
-    } else if (result || chars.length) result += token;
+      if (charIndex >= chars.length) break;
+      const char = chars[charIndex];
+      if (!matchesMaskToken(token, char)) break;
+      result += char;
+      charIndex += 1;
+      continue;
+    }
+
+    // Only emit literals when more significant input remains (avoids sticky trailing separators).
+    if (charIndex < chars.length) {
+      result += token;
+    }
   }
+
   return result;
 }
+
 export function MaskedField({ error, help, id, label, labelPosition, mask, mode, placeholder, required, value, onChange }: MaskedFieldProps) {
   return <FieldShell error={error} help={help} id={id} label={label} labelPosition={labelPosition} mode={mode} required={required}>
-    <input aria-invalid={Boolean(error)} className={styles.input} id={id} placeholder={placeholder ?? mask} value={value} onChange={(event) => onChange(applyMask(event.target.value, mask))} />
+    <input
+      aria-invalid={Boolean(error)}
+      className={styles.input}
+      id={id}
+      placeholder={placeholder ?? mask}
+      value={value}
+      onChange={(event) => onChange(applyMask(event.target.value, mask, value))}
+    />
   </FieldShell>;
 }
 

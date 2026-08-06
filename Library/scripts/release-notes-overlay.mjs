@@ -595,4 +595,15 @@ export const releaseNotesOverlay = [
       "Publish opus-react 0.6.5 and update Application to consume the release from npm.",
     ],
   },
+  {
+    version: "0.6.6",
+    releasedAt: "2026-08-06",
+    summary: "Booking-style date range picker, masked input delete fix, and masonry demo polish.",
+    changes: [
+      "Replace the dual From/To date fields with a single calendar range control: first click sets the start, second click sets the end, with accent range highlighting and hover preview.",
+      "Fix MaskedField so backspace and clear work through mask separators instead of re-inserting them.",
+      "Improve the MasonryGrid demo with varied card heights and clearer card chrome.",
+      "Publish opus-react 0.6.6 and update Application to consume the release from npm.",
+    ],
+  },
 ];

@@ -1,5 +1,7 @@
 import type { ChangeEvent, ChangeEventHandler } from "react";
 
+export type DateRangeValue = { from: string; to: string };
+
 export function formatDateDisplay(value: string) {
   if (!/^\d{4}-\d{2}-\d{2}$/.test(value)) {
     return "";
@@ -18,6 +20,14 @@ export function formatDateDisplay(value: string) {
     month: "2-digit",
     year: "numeric",
   });
+}
+
+export function formatDateRangeDisplay(value: DateRangeValue) {
+  const from = formatDateDisplay(value.from);
+  const to = formatDateDisplay(value.to);
+  if (from && to) return `${from} – ${to}`;
+  if (from) return `${from} – …`;
+  return "";
 }
 
 /** Fire a ChangeEvent-compatible update so useFormState.register keeps working. */

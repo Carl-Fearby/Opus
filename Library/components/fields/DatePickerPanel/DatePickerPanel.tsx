@@ -2,15 +2,28 @@
 
 import { useMemo, useState } from "react";
 import { DatePickerSelect } from "./DatePickerSelect";
+import type { DateRangeValue } from "./datePickerUtils";
 import styles from "./DatePickerPanel.module.css";
 
-export type DatePickerPanelProps = {
+type DatePickerPanelBaseProps = {
   max?: string;
   min?: string;
   onClose?: () => void;
-  onSelect: (iso: string) => void;
-  value?: string;
 };
+
+export type DatePickerPanelSingleProps = DatePickerPanelBaseProps & {
+  selectionMode?: "single";
+  value?: string;
+  onSelect: (iso: string) => void;
+};
+
+export type DatePickerPanelRangeProps = DatePickerPanelBaseProps & {
+  selectionMode: "range";
+  value?: DateRangeValue;
+  onSelect: (value: DateRangeValue) => void;
+};
+
+export type DatePickerPanelProps = DatePickerPanelSingleProps | DatePickerPanelRangeProps;
 
 const weekdayLabels = ["Mo", "Tu", "We", "Th", "Fr", "Sa", "Su"];
 const monthLabels = Array.from({ length: 12 }, (_, month) =>
@@ -47,21 +60,35 @@ function isDisabled(iso: string, min?: string, max?: string) {
   return false;
 }
 
+function emptyRange(): DateRangeValue {
+  return { from: "", to: "" };
+}
+
 type Cell = {
   day: number;
   iso: string;
   outside: boolean;
 };
 
-export function DatePickerPanel({ max, min, onClose, onSelect, value }: DatePickerPanelProps) {
+export function DatePickerPanel(props: DatePickerPanelProps) {
+  const { max, min, onClose } = props;
+  const isRange = props.selectionMode === "range";
+  const singleValue = !isRange ? props.value : undefined;
+  const rangeValue = isRange ? (props.value ?? emptyRange()) : emptyRange();
+
   const today = useMemo(() => new Date(), []);
   const todayIso = toDateKey(today.getFullYear(), today.getMonth(), today.getDate());
-  const selected = parseIso(value);
+  const selected = parseIso(isRange ? rangeValue.from || rangeValue.to : singleValue);
 
   const [cursor, setCursor] = useState(() => {
     const seed = selected ?? today;
     return { year: seed.getFullYear(), month: seed.getMonth() };
   });
+  const [hoverIso, setHoverIso] = useState<string | null>(null);
+  /** True while waiting for the end date after the first click. */
+  const [pickingEnd, setPickingEnd] = useState(
+    () => isRange && Boolean(rangeValue.from) && !rangeValue.to,
+  );
 
   const { year, month } = cursor;
 
@@ -111,31 +138,134 @@ export function DatePickerPanel({ max, min, onClose, onSelect, value }: DatePick
     });
   }, [month, year]);
 
+  const previewRange = useMemo(() => {
+    if (!isRange) return null;
+    const start = rangeValue.from;
+    if (!start) return null;
+
+    if (pickingEnd && hoverIso) {
+      return start <= hoverIso
+        ? { from: start, to: hoverIso }
+        : { from: hoverIso, to: start };
+    }
+
+    if (rangeValue.to) {
+      return rangeValue.from <= rangeValue.to
+        ? { from: rangeValue.from, to: rangeValue.to }
+        : { from: rangeValue.to, to: rangeValue.from };
+    }
+
+    return { from: start, to: start };
+  }, [hoverIso, isRange, pickingEnd, rangeValue.from, rangeValue.to]);
+
   function shiftMonth(delta: number) {
     const next = new Date(year, month + delta, 1);
     setCursor({ year: next.getFullYear(), month: next.getMonth() });
   }
 
+  function emitRange(next: DateRangeValue, close: boolean) {
+    if (!isRange) return;
+    props.onSelect(next);
+    if (close) onClose?.();
+  }
+
   function handleSelect(iso: string) {
     if (isDisabled(iso, min, max)) return;
-    onSelect(iso);
-    onClose?.();
+
+    if (!isRange) {
+      props.onSelect(iso);
+      onClose?.();
+      return;
+    }
+
+    // Completed range (or empty): first click starts a new selection.
+    if (!pickingEnd || !rangeValue.from) {
+      setPickingEnd(true);
+      setHoverIso(iso);
+      emitRange({ from: iso, to: "" }, false);
+      return;
+    }
+
+    // Second click: if before start, treat as a new start; otherwise complete.
+    if (iso < rangeValue.from) {
+      setHoverIso(iso);
+      emitRange({ from: iso, to: "" }, false);
+      return;
+    }
+
+    setPickingEnd(false);
+    setHoverIso(null);
+    emitRange({ from: rangeValue.from, to: iso }, true);
   }
 
   function handleClear() {
-    onSelect("");
+    if (isRange) {
+      setPickingEnd(false);
+      setHoverIso(null);
+      emitRange(emptyRange(), true);
+      return;
+    }
+    props.onSelect("");
     onClose?.();
   }
 
   function handleToday() {
     if (isDisabled(todayIso, min, max)) return;
     setCursor({ year: today.getFullYear(), month: today.getMonth() });
-    onSelect(todayIso);
+
+    if (isRange) {
+      setPickingEnd(true);
+      setHoverIso(todayIso);
+      emitRange({ from: todayIso, to: "" }, false);
+      return;
+    }
+
+    props.onSelect(todayIso);
     onClose?.();
   }
 
+  function dayClassName(cell: Cell, disabled: boolean) {
+    const isToday = cell.iso === todayIso;
+    const classes = [styles.day, cell.outside ? styles.outside : "", isToday ? styles.today : ""];
+
+    if (!isRange) {
+      if (singleValue === cell.iso) classes.push(styles.selected);
+      return classes.filter(Boolean).join(" ");
+    }
+
+    if (!previewRange) {
+      return classes.filter(Boolean).join(" ");
+    }
+
+    const { from, to } = previewRange;
+    const isStart = cell.iso === from;
+    const isEnd = cell.iso === to;
+    const inRange = cell.iso > from && cell.iso < to;
+    const isPreview = Boolean(pickingEnd && hoverIso && (isStart || isEnd || inRange));
+
+    if (isStart && isEnd) {
+      classes.push(styles.selected, styles.rangeEndpoint);
+    } else if (isStart) {
+      classes.push(styles.selected, styles.rangeStart, styles.rangeEndpoint);
+    } else if (isEnd) {
+      classes.push(styles.selected, styles.rangeEnd, styles.rangeEndpoint);
+    } else if (inRange) {
+      classes.push(isPreview ? styles.rangePreview : styles.inRange);
+    }
+
+    if (disabled) {
+      // keep disabled look; classes already applied via disabled attr
+    }
+
+    return classes.filter(Boolean).join(" ");
+  }
+
   return (
-    <div className={styles.panel} role="dialog" aria-label="Choose date">
+    <div
+      className={styles.panel}
+      role="dialog"
+      aria-label={isRange ? "Choose date range" : "Choose date"}
+    >
       <div className={styles.toolbar}>
         <button
           aria-label="Previous month"
@@ -174,6 +304,14 @@ export function DatePickerPanel({ max, min, onClose, onSelect, value }: DatePick
         </button>
       </div>
 
+      {isRange ? (
+        <p className={styles.hint}>
+          {pickingEnd && rangeValue.from
+            ? "Select the end date"
+            : "Select the start date"}
+        </p>
+      ) : null}
+
       <div className={styles.weekdays} aria-hidden="true">
         {weekdayLabels.map((day) => (
           <div className={styles.weekday} key={day}>
@@ -182,31 +320,38 @@ export function DatePickerPanel({ max, min, onClose, onSelect, value }: DatePick
         ))}
       </div>
 
-      <div className={styles.grid}>
+      <div
+        className={[styles.grid, isRange ? styles.rangeGrid : ""].filter(Boolean).join(" ")}
+        onMouseLeave={() => setHoverIso(null)}
+      >
         {cells.map((cell) => {
           const disabled = isDisabled(cell.iso, min, max);
           const isToday = cell.iso === todayIso;
-          const isSelected = value === cell.iso;
+          const isSelected = isRange
+            ? Boolean(
+                previewRange &&
+                  (cell.iso === previewRange.from || cell.iso === previewRange.to),
+              )
+            : singleValue === cell.iso;
+
           return (
             <button
               aria-current={isToday ? "date" : undefined}
               aria-disabled={disabled || undefined}
               aria-label={cell.iso}
               aria-pressed={isSelected}
-              className={[
-                styles.day,
-                cell.outside ? styles.outside : "",
-                isToday ? styles.today : "",
-                isSelected ? styles.selected : "",
-              ]
-                .filter(Boolean)
-                .join(" ")}
+              className={dayClassName(cell, disabled)}
               disabled={disabled}
               key={cell.iso}
               type="button"
               onClick={() => handleSelect(cell.iso)}
+              onMouseEnter={() => {
+                if (isRange && pickingEnd && !disabled) {
+                  setHoverIso(cell.iso);
+                }
+              }}
             >
-              {cell.day}
+              <span className={styles.dayLabel}>{cell.day}</span>
             </button>
           );
         })}

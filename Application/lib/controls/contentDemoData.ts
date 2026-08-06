@@ -153,12 +153,78 @@ export const demoTreeViewNodes: TreeViewNode[] = [
 ];
 
 export const demoMasonryItems: MasonryGridItem[] = [
-  { title: "Badge tones", body: "Soft, solid, and outline chips for status labels.", height: 120 },
-  { title: "Avatar stacks", body: "Overflow-aware collaborator strips.", height: 160 },
-  { title: "List density", body: "Comfortable and compact list rows.", height: 140 },
-  { title: "Property grids", body: "Inspector-friendly key/value layouts.", height: 180 },
-  { title: "JSON trees", body: "Expand nested payloads without leaving the page.", height: 130 },
-  { title: "Timelines", body: "Activity history with status accents.", height: 150 },
+  {
+    id: "hero-notes",
+    title: "Release notes",
+    body: "Ship polished changelogs with tone chips, owners, and deep links into the component that changed.",
+    height: 220,
+  },
+  {
+    id: "avatar-stacks",
+    title: "Avatar stacks",
+    body: "Overflow-aware collaborator strips for dense toolbars.",
+    height: 140,
+  },
+  {
+    id: "metric-strip",
+    title: "Metric strip",
+    body: "Compact KPI cards that stay readable at dashboard density — trend, delta, and sparkline in one tile.",
+    height: 200,
+  },
+  {
+    id: "list-density",
+    title: "List density",
+    body: "Comfortable and compact rows for inboxes and queues.",
+    height: 128,
+  },
+  {
+    id: "inspector",
+    title: "Property inspector",
+    body: "Key/value grids with copy actions, nested groups, and muted secondary labels for configuration panels.",
+    height: 248,
+  },
+  {
+    id: "json-trees",
+    title: "JSON trees",
+    body: "Expand nested payloads without leaving the page.",
+    height: 156,
+  },
+  {
+    id: "timeline",
+    title: "Activity timeline",
+    body: "Status accents, relative times, and inline actions for support and CRM histories.",
+    height: 188,
+  },
+  {
+    id: "badge-tones",
+    title: "Badge tones",
+    body: "Soft, solid, and outline chips for status labels.",
+    height: 132,
+  },
+  {
+    id: "media-card",
+    title: "Media card",
+    body: "Tall preview tiles for galleries — caption, meta row, and hover affordances that stay out of the way until needed.",
+    height: 268,
+  },
+  {
+    id: "filters",
+    title: "Filter chips",
+    body: "Removable facets for search and catalogue views.",
+    height: 144,
+  },
+  {
+    id: "empty-state",
+    title: "Empty states",
+    body: "Friendly zero-data panels with a single clear next action and optional illustration slot.",
+    height: 196,
+  },
+  {
+    id: "shortcuts",
+    title: "Keyboard shortcuts",
+    body: "Compact reference cards for power users.",
+    height: 160,
+  },
 ];
 
 export const demoPropertyItems = (copyable: boolean): PropertyGridItem[] => [

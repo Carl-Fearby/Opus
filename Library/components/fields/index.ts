@@ -61,8 +61,20 @@ export type { ColorPickerPanelProps } from "./ColorPickerPanel";
 export { DateField } from "./DateField";
 export type { DateInputType } from "./DateField";
 export type { DateFieldProps } from "./DateField";
-export { DatePickerPanel, OpusDateInput } from "./DatePickerPanel";
-export type { DatePickerPanelProps, OpusDateInputProps } from "./DatePickerPanel";
+export {
+  DatePickerPanel,
+  OpusDateInput,
+  OpusDateRangeInput,
+  formatDateRangeDisplay,
+} from "./DatePickerPanel";
+export type {
+  DatePickerPanelProps,
+  DatePickerPanelRangeProps,
+  DatePickerPanelSingleProps,
+  DateRangeValue as DatePickerRangeValue,
+  OpusDateInputProps,
+  OpusDateRangeInputProps,
+} from "./DatePickerPanel";
 export { HiddenField } from "./HiddenField";
 export { FileField } from "./FileField";
 export { ImageCropUploadField } from "./ImageCropUploadField";

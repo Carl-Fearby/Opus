@@ -516,6 +516,14 @@ export const versionLog: VersionEntry[] = [
     commitShort: "103a6fb",
     summary: "Kanban board polish and collapsible component Settings pane.",
     changes: ["Expand Kanban demo data with a Backlog column and denser board contents.","Add sticky column headers, accent-tinted full-width headers, equal-height ellipsised cards, and a reliable auto-hiding card scrollbar.","Add a collapsible Settings sidebar control in the component docs shell.","Publish opus-react 0.6.5 and update Application to consume the release from npm."],
+  },
+  {
+    version: "0.6.6",
+    releasedAt: "2026-08-06",
+    commit: "overlay-0.6.6",
+    commitShort: "overlay",
+    summary: "Booking-style date range picker, masked input delete fix, and masonry demo polish.",
+    changes: ["Replace the dual From/To date fields with a single calendar range control: first click sets the start, second click sets the end, with accent range highlighting and hover preview.","Fix MaskedField so backspace and clear work through mask separators instead of re-inserting them.","Improve the MasonryGrid demo with varied card heights and clearer card chrome.","Publish opus-react 0.6.6 and update Application to consume the release from npm."],
   }
 ].reverse();
 
