@@ -616,4 +616,15 @@ export const releaseNotesOverlay = [
       "Publish opus-react 0.6.7 and update Application to consume the release from npm.",
     ],
   },
+  {
+    version: "0.6.8",
+    releasedAt: "2026-08-07",
+    summary: "Softer resize handles and playground ChatGPT bring-your-own key.",
+    changes: [
+      "Lengthen ResizeHandle accent lines with faded ends and a gentler hover treatment.",
+      "Require each visitor's OpenAI API key for playground ChatGPT instead of a shared server key.",
+      "Add a resizable split between playground Source and ChatGPT panes.",
+      "Publish opus-react 0.6.8 and update Application to consume the release from npm.",
+    ],
+  },
 ];

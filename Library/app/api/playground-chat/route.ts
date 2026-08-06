@@ -6,6 +6,7 @@ type PlaygroundChatMessage = {
 };
 
 type PlaygroundChatRequest = {
+  apiKey?: string;
   code?: string;
   componentCategory?: string | null;
   componentSlug?: string | null;
@@ -54,17 +55,32 @@ function outputTextFromResponse(payload: unknown) {
     .trim();
 }
 
+function looksLikeOpenAiApiKey(value: string) {
+  const key = value.trim();
+  return key.startsWith("sk-") && key.length >= 20;
+}
+
 export async function POST(request: Request) {
-  const apiKey = process.env.OPENAI_API_KEY;
+  const body = (await request.json()) as PlaygroundChatRequest;
+  const apiKey = typeof body.apiKey === "string" ? body.apiKey.trim() : "";
 
   if (!apiKey) {
     return NextResponse.json(
-      { error: "Set OPENAI_API_KEY on the server to enable playground chat." },
-      { status: 500 },
+      {
+        error:
+          "Add your OpenAI API key in the ChatGPT panel to continue. Your key stays on your device.",
+      },
+      { status: 401 },
     );
   }
 
-  const body = (await request.json()) as PlaygroundChatRequest;
+  if (!looksLikeOpenAiApiKey(apiKey)) {
+    return NextResponse.json(
+      { error: "That does not look like a valid OpenAI API key (expected a key starting with sk-)." },
+      { status: 400 },
+    );
+  }
+
   const messages = Array.isArray(body.messages) ? body.messages : [];
   const code = typeof body.code === "string" ? body.code : "";
   const previewError = typeof body.previewError === "string" ? body.previewError : "";

@@ -99,6 +99,16 @@ syncTextFile(
   { rewire: true },
 );
 syncTextFile(
+  join(libraryDir, "lib", "playground", "playgroundChatApiKey.ts"),
+  join(appDir, "lib", "playground", "playgroundChatApiKey.ts"),
+  { rewire: true },
+);
+syncTextFile(
+  join(libraryDir, "lib", "playground", "playgroundPanelSize.ts"),
+  join(appDir, "lib", "playground", "playgroundPanelSize.ts"),
+  { rewire: true },
+);
+syncTextFile(
   join(libraryDir, "lib", "playground", "playgroundScope.ts"),
   join(appDir, "lib", "playground", "playgroundScope.ts"),
   { rewire: true },
@@ -144,6 +154,11 @@ syncTextFile(
 syncTextFile(
   join(libraryDir, "app", "api", "playground-preview", "route.ts"),
   join(appDir, "app", "api", "playground-preview", "route.ts"),
+  { rewire: true },
+);
+syncTextFile(
+  join(libraryDir, "app", "api", "playground-chat", "route.ts"),
+  join(appDir, "app", "api", "playground-chat", "route.ts"),
   { rewire: true },
 );
 syncTextFile(

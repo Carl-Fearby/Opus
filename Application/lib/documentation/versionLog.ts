@@ -532,6 +532,14 @@ export const versionLog: VersionEntry[] = [
     commitShort: "a6af724",
     summary: "Accent colour picker menu stays on screen with viewport-aware placement.",
     changes: ["Portal the AccentColorPicker compact menu and flip or clamp it to the viewport so it no longer spills off the left of the preview.","Document accent colour picker relationships to colour picker, colour clouds, and portal.","Publish opus-react 0.6.7 and update Application to consume the release from npm."],
+  },
+  {
+    version: "0.6.8",
+    releasedAt: "2026-08-07",
+    commit: "overlay-0.6.8",
+    commitShort: "overlay",
+    summary: "Softer resize handles and playground ChatGPT bring-your-own key.",
+    changes: ["Lengthen ResizeHandle accent lines with faded ends and a gentler hover treatment.","Require each visitor's OpenAI API key for playground ChatGPT instead of a shared server key.","Add a resizable split between playground Source and ChatGPT panes.","Publish opus-react 0.6.8 and update Application to consume the release from npm."],
   }
 ].reverse();
 

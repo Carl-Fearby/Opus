@@ -15,7 +15,12 @@ import { getControl } from "@/lib/controls/registry";
 import type { AppSetupSettings, ControlSettings, ControlSlug } from "@/lib/controls/types";
 import { DEFAULT_PLAYGROUND_CODE } from "@/lib/playground/defaultPlaygroundCode";
 import { createExternalPreviewPayload } from "@/lib/playground/externalPreviewStorage";
-import { readPlaygroundPanelSize, storePlaygroundPanelSize } from "@/lib/playground/playgroundPanelSize";
+import {
+  looksLikeOpenAiApiKey,
+  readPlaygroundOpenAiApiKey,
+  storePlaygroundOpenAiApiKey,
+} from "@/lib/playground/playgroundChatApiKey";
+import { readPlaygroundPanelSize, storePlaygroundPanelSize, readPlaygroundChatSplitSize, storePlaygroundChatSplitSize } from "@/lib/playground/playgroundPanelSize";
 import { readPlaygroundSeed } from "@/lib/playground/playgroundNavigation";
 import { usePlaygroundTheme } from "@/lib/playground/playgroundTheme";
 import styles from "./CodePlayground.module.css";
@@ -148,6 +153,10 @@ export function CodePlayground({ initialCategory = null, initialSlug = null }: C
     slug: initialSlug,
   });
   const [previewError, setPreviewError] = useState<string | null>(null);
+  const [chatApiKey, setChatApiKey] = useState("");
+  const [chatApiKeyReady, setChatApiKeyReady] = useState(false);
+  const [chatSplitSize, setChatSplitSize] = useState(62);
+  const [chatSplitReady, setChatSplitReady] = useState(false);
   const [chatInput, setChatInput] = useState("");
   const [chatError, setChatError] = useState<string | null>(null);
   const [chatLoading, setChatLoading] = useState(false);
@@ -155,9 +164,25 @@ export function CodePlayground({ initialCategory = null, initialSlug = null }: C
     {
       id: "welcome",
       role: "assistant",
-      content: "Ask about the playground source, component props, layout, or how to reshape this example.",
+      content:
+        "Enter your key in the OpenAI API key field above, then ask about this source, props, layout, or how to reshape the example. Your key stays on this device.",
     },
   ]);
+
+  useEffect(() => {
+    const timeout = window.setTimeout(() => {
+      setChatApiKey(readPlaygroundOpenAiApiKey());
+      setChatApiKeyReady(true);
+      setChatSplitSize(readPlaygroundChatSplitSize(62));
+      setChatSplitReady(true);
+    }, 0);
+    return () => window.clearTimeout(timeout);
+  }, []);
+
+  const onChatSplitSizeChange = useCallback((next: number) => {
+    setChatSplitSize(next);
+    storePlaygroundChatSplitSize(next);
+  }, []);
 
   useEffect(() => {
     const timeout = window.setTimeout(() => {
@@ -193,8 +218,16 @@ export function CodePlayground({ initialCategory = null, initialSlug = null }: C
 
   const sendChatMessage = useCallback(async (promptOverride?: string) => {
     const prompt = (promptOverride ?? chatInput).trim();
+    const apiKey = chatApiKey.trim();
 
     if (!prompt || chatLoading) {
+      return;
+    }
+
+    if (!looksLikeOpenAiApiKey(apiKey)) {
+      setChatError(
+        "Enter your key in the OpenAI API key field above to continue. Your key stays on this device.",
+      );
       return;
     }
 
@@ -215,6 +248,7 @@ export function CodePlayground({ initialCategory = null, initialSlug = null }: C
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
+          apiKey,
           code,
           componentCategory: playgroundContext.category,
           componentSlug: playgroundContext.slug,
@@ -243,7 +277,18 @@ export function CodePlayground({ initialCategory = null, initialSlug = null }: C
     } finally {
       setChatLoading(false);
     }
-  }, [chatInput, chatLoading, chatMessages, code, playgroundContext.category, playgroundContext.slug, previewError, seedCode, playgroundTheme]);
+  }, [
+    chatApiKey,
+    chatInput,
+    chatLoading,
+    chatMessages,
+    code,
+    playgroundContext.category,
+    playgroundContext.slug,
+    previewError,
+    seedCode,
+    playgroundTheme,
+  ]);
 
   const resetSplitLayout = useCallback(() => {
     setLayout("split");
@@ -361,94 +406,154 @@ export function CodePlayground({ initialCategory = null, initialSlug = null }: C
         </div>
       </div>
       <div className={`${styles.paneBody} ${styles.sourcePaneBody}`}>
-        <div className={styles.sourceEditor}>
-          <UsageCodeEditor
-            editable
-            code={code}
-            fillHeight
-            onSelectAllReady={(selectAll) => {
-              selectSourceCodeRef.current = selectAll;
-            }}
-            onChange={updateCode}
-          />
-        </div>
-        <section className={styles.chatPanel} aria-label="ChatGPT playground assistant">
-          <div className={styles.chatHeader}>
-            <div>
-              <h2 className={styles.chatTitle}>ChatGPT</h2>
-              <p className={styles.chatHint}>Conversations use the current source as context.</p>
-            </div>
-            <button
-              className={styles.clearChatButton}
-              type="button"
-              onClick={() => {
-                setChatError(null);
-                setChatMessages([]);
+        <Splitter
+          className={styles.sourceChatSplitter}
+          flush
+          minSize={22}
+          onSizeChange={onChatSplitSizeChange}
+          orientation="vertical"
+          size={chatSplitSize}
+          style={{ visibility: chatSplitReady ? "visible" : "hidden" }}
+        >
+          <div className={styles.sourceEditor}>
+            <UsageCodeEditor
+              editable
+              code={code}
+              fillHeight
+              onSelectAllReady={(selectAll) => {
+                selectSourceCodeRef.current = selectAll;
               }}
-            >
-              Clear
-            </button>
-            {previewError ? (
+              onChange={updateCode}
+            />
+          </div>
+          <section className={styles.chatPanel} aria-label="ChatGPT playground assistant">
+            <div className={styles.chatHeader}>
+              <div>
+                <h2 className={styles.chatTitle}>ChatGPT</h2>
+                <p className={styles.chatHint}>
+                  Add your OpenAI API key to chat. Conversations use the current source as context.
+                </p>
+              </div>
               <button
-                className={styles.fixErrorButton}
-                disabled={chatLoading}
+                className={styles.clearChatButton}
                 type="button"
                 onClick={() => {
-                  void sendChatMessage(
-                    "The playground preview is failing. Diagnose the current preview error and provide the safest corrected complete playground source. Keep the fix scoped to the source code.",
-                  );
+                  setChatError(null);
+                  setChatMessages([]);
                 }}
               >
-                Fix preview error
+                Clear
               </button>
-            ) : null}
-          </div>
-          <div className={styles.chatMessages}>
-            {chatMessages.map((message) => (
-              <div
-                className={`${styles.chatMessage} ${
-                  message.role === "user" ? styles.chatMessageUser : styles.chatMessageAssistant
-                }`}
-                key={message.id}
-              >
-                <span className={styles.chatRole}>{message.role === "user" ? "You" : "ChatGPT"}</span>
-                <p>{message.content}</p>
+              {previewError ? (
+                <button
+                  className={styles.fixErrorButton}
+                  disabled={chatLoading || !looksLikeOpenAiApiKey(chatApiKey)}
+                  type="button"
+                  onClick={() => {
+                    void sendChatMessage(
+                      "The playground preview is failing. Diagnose the current preview error and provide the safest corrected complete playground source. Keep the fix scoped to the source code.",
+                    );
+                  }}
+                >
+                  Fix preview error
+                </button>
+              ) : null}
+            </div>
+            <div className={styles.chatApiKeyRow}>
+              <label className={styles.chatApiKeyLabel} htmlFor="playground-openai-api-key">
+                OpenAI API key
+              </label>
+              <div className={styles.chatApiKeyControls}>
+                <input
+                  autoComplete="off"
+                  className={styles.chatApiKeyInput}
+                  disabled={!chatApiKeyReady}
+                  id="playground-openai-api-key"
+                  placeholder="sk-..."
+                  spellCheck={false}
+                  type="password"
+                  value={chatApiKey}
+                  onChange={(event) => {
+                    const next = event.target.value;
+                    setChatApiKey(next);
+                    storePlaygroundOpenAiApiKey(next);
+                    if (chatError) {
+                      setChatError(null);
+                    }
+                  }}
+                />
+                {chatApiKey ? (
+                  <button
+                    className={styles.clearChatButton}
+                    type="button"
+                    onClick={() => {
+                      setChatApiKey("");
+                      storePlaygroundOpenAiApiKey("");
+                    }}
+                  >
+                    Remove
+                  </button>
+                ) : null}
               </div>
-            ))}
-            {chatLoading ? (
-              <div className={`${styles.chatMessage} ${styles.chatMessageAssistant}`}>
-                <span className={styles.chatRole}>ChatGPT</span>
-                <p>Thinking...</p>
-              </div>
-            ) : null}
-          </div>
-          {chatError ? <p className={styles.chatError}>{chatError}</p> : null}
-          <form
-            className={styles.chatComposer}
-            onSubmit={(event) => {
-              event.preventDefault();
-              void sendChatMessage();
-            }}
-          >
-            <textarea
-              aria-label="Message ChatGPT"
-              className={styles.chatInput}
-              placeholder="Ask ChatGPT about this source..."
-              rows={2}
-              value={chatInput}
-              onChange={(event) => setChatInput(event.target.value)}
-              onKeyDown={(event) => {
-                if (event.key === "Enter" && (event.metaKey || event.ctrlKey)) {
-                  event.preventDefault();
-                  void sendChatMessage();
-                }
+              <p className={styles.chatApiKeyHint}>
+                Your key stays on this device and is only used for your ChatGPT requests.
+              </p>
+            </div>
+            <div className={styles.chatMessages}>
+              {chatMessages.map((message) => (
+                <div
+                  className={`${styles.chatMessage} ${
+                    message.role === "user" ? styles.chatMessageUser : styles.chatMessageAssistant
+                  }`}
+                  key={message.id}
+                >
+                  <span className={styles.chatRole}>{message.role === "user" ? "You" : "ChatGPT"}</span>
+                  <p>{message.content}</p>
+                </div>
+              ))}
+              {chatLoading ? (
+                <div className={`${styles.chatMessage} ${styles.chatMessageAssistant}`}>
+                  <span className={styles.chatRole}>ChatGPT</span>
+                  <p>Thinking...</p>
+                </div>
+              ) : null}
+            </div>
+            {chatError ? <p className={styles.chatError}>{chatError}</p> : null}
+            <form
+              className={styles.chatComposer}
+              onSubmit={(event) => {
+                event.preventDefault();
+                void sendChatMessage();
               }}
-            />
-            <button className={styles.chatSendButton} disabled={chatLoading || !chatInput.trim()} type="submit">
-              Send
-            </button>
-          </form>
-        </section>
+            >
+              <textarea
+                aria-label="Message ChatGPT"
+                className={styles.chatInput}
+                placeholder={
+                  looksLikeOpenAiApiKey(chatApiKey)
+                    ? "Ask ChatGPT about this source..."
+                    : "Add an OpenAI API key above to chat..."
+                }
+                rows={2}
+                value={chatInput}
+                onChange={(event) => setChatInput(event.target.value)}
+                onKeyDown={(event) => {
+                  if (event.key === "Enter" && (event.metaKey || event.ctrlKey)) {
+                    event.preventDefault();
+                    void sendChatMessage();
+                  }
+                }}
+              />
+              <button
+                className={styles.chatSendButton}
+                disabled={chatLoading || !chatInput.trim() || !looksLikeOpenAiApiKey(chatApiKey)}
+                type="submit"
+              >
+                Send
+              </button>
+            </form>
+          </section>
+        </Splitter>
       </div>
     </section>
   );
