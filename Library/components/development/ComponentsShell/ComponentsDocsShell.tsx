@@ -13,16 +13,18 @@ import styles from "./ComponentsShell.module.css";
 
 function ComponentsShellBody({ children }: { children: ReactNode }) {
   const { accentStyle } = useComponentsTheme();
-  const { activeSlug, isResizing, settingsWidth } = useComponentSettingsContext();
+  const { activeSlug, isResizing, settingsCollapsed, settingsWidth } = useComponentSettingsContext();
 
   const hasSettings = Boolean(activeSlug && controlHasSettingsPanel(activeSlug));
+  const settingsColumnWidth = settingsCollapsed ? 44 : settingsWidth;
 
   return (
     <div
       className={styles.body}
       data-has-settings={hasSettings ? "true" : undefined}
       data-resizing={isResizing ? "true" : undefined}
-      style={{ "--settings-sidebar-width": `${settingsWidth}px` } as CSSProperties}
+      data-settings-collapsed={hasSettings && settingsCollapsed ? "true" : undefined}
+      style={{ "--settings-sidebar-width": `${settingsColumnWidth}px` } as CSSProperties}
     >
       <ComponentsSidebar />
       <main className={styles.content} id="main-content" style={accentStyle}>

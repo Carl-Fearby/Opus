@@ -14,11 +14,17 @@
   --dashboard-section-panel: color-mix(in srgb, #0f172a 90%, #1e293b 10%);
   --kanban-card-min-height: 72px;
   --kanban-card-gap: 8px;
-  display: grid;
-  align-content: start;
-  gap: 10px;
+  --kanban-cards-viewport: calc(
+    8 * var(--kanban-card-min-height) + 7 * var(--kanban-card-gap)
+  );
+  --kanban-header-accent: var(--opus-accent-secondary, #0284c7);
+  --kanban-header-bg: color-mix(in srgb, var(--kanban-header-accent) 18%, var(--dashboard-section-bg));
+  --kanban-header-border: color-mix(in srgb, var(--kanban-header-accent) 28%, transparent);
+  display: flex;
+  flex-direction: column;
+  gap: 0;
   min-height: 0;
-  padding: 10px 10px 10px;
+  padding: 0;
   border: 1px solid var(--dashboard-section-border);
   border-radius: 14px;
   background:
@@ -40,6 +46,8 @@
   --dashboard-section-text: #0f172a;
   --dashboard-section-muted: color-mix(in srgb, #0f172a 58%, transparent);
   --dashboard-section-panel: #ffffff;
+  --kanban-header-bg: color-mix(in srgb, var(--kanban-header-accent) 12%, #ffffff);
+  --kanban-header-border: color-mix(in srgb, var(--kanban-header-accent) 22%, transparent);
   box-shadow:
     inset 0 1px 0 color-mix(in srgb, #ffffff 90%, transparent),
     0 8px 20px color-mix(in srgb, var(--opus-accent-secondary, #0284c7) 10%, transparent);
@@ -58,10 +66,16 @@
 
 .columnHeader {
   display: flex;
+  flex: 0 0 auto;
   align-items: center;
   justify-content: space-between;
   gap: 8px;
-  min-height: 0;
+  width: 100%;
+  box-sizing: border-box;
+  min-height: 40px;
+  padding: 10px 12px;
+  border-bottom: 1px solid var(--kanban-header-border);
+  background: var(--kanban-header-bg);
 }
 
 .columnTitle {
@@ -77,12 +91,37 @@
   min-width: 1.5rem;
   padding: 2px 7px;
   border-radius: 999px;
-  background: color-mix(in srgb, var(--dashboard-section-muted) 18%, transparent);
-  color: var(--dashboard-section-muted);
+  background: color-mix(in srgb, var(--kanban-header-accent) 18%, transparent);
+  color: var(--dashboard-section-text);
   font-size: 0.72rem;
   font-weight: 700;
   text-align: center;
   line-height: 1.3;
+}
+
+.cardsScroll {
+  box-sizing: border-box;
+  flex: 0 0 auto;
+  width: 100%;
+  min-width: 0;
+  height: var(--kanban-cards-viewport);
+  overflow: hidden;
+}
+
+.cardsViewport {
+  box-sizing: border-box;
+  height: 100%;
+  overflow-x: hidden;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  padding: 10px;
+  scrollbar-width: none;
+}
+
+.cardsViewport::-webkit-scrollbar {
+  display: none;
+  width: 0;
+  height: 0;
 }
 
 .cards {
@@ -93,9 +132,7 @@
   flex-direction: column;
   align-content: start;
   gap: var(--kanban-card-gap, 8px);
-  min-height: calc(
-    8 * var(--kanban-card-min-height, 72px) + 7 * var(--kanban-card-gap, 8px)
-  );
+  min-height: min-content;
 }
 
 .cards > li {
@@ -170,9 +207,13 @@
   --card-accent: var(--opus-accent-secondary, #38bdf8);
   position: relative;
   display: grid;
+  grid-template-rows: auto auto;
+  align-content: center;
   gap: 8px;
   width: 100%;
+  height: var(--kanban-card-min-height, 72px);
   min-height: var(--kanban-card-min-height, 72px);
+  max-height: var(--kanban-card-min-height, 72px);
   padding: 14px 12px 14px 16px;
   border: 0;
   border-radius: 10px;
@@ -236,10 +277,14 @@ button.card {
 }
 
 .cardTitle {
+  min-width: 0;
+  overflow: hidden;
   color: var(--dashboard-section-text);
   font-size: 0.84rem;
   font-weight: 700;
   line-height: 1.3;
+  white-space: nowrap;
+  text-overflow: ellipsis;
 }
 
 .cardMeta {
@@ -247,10 +292,20 @@ button.card {
   align-items: center;
   gap: 6px;
   min-width: 0;
+  max-width: 100%;
+  overflow: hidden;
   color: var(--card-accent);
   font-size: 0.72rem;
   font-weight: 650;
   line-height: 1.3;
+  white-space: nowrap;
+}
+
+.cardMeta span {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .cardMetaIcon {

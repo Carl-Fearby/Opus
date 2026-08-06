@@ -508,6 +508,14 @@ export const versionLog: VersionEntry[] = [
     commitShort: "fbcafcb",
     summary: "Kanban drag polish, Opus colour/date pickers, and configurable card clicks.",
     changes: ["Rebuild KanbanBoard around pointer drag with gap shifting, dashed drop ghosts, origin ghosts, and commit-on-drop so neighbours stay put.","Add configurable card click actions (modal, callback, or none) with live JSON board state in the usage preview.","Replace native colour and month/year selects with Opus ColorPickerPanel and DatePickerSelect listboxes, and align select chevrons.","Publish opus-react 0.6.4 and update Application to consume the release from npm."],
+  },
+  {
+    version: "0.6.5",
+    releasedAt: "2026-08-06",
+    commit: "overlay-0.6.5",
+    commitShort: "overlay",
+    summary: "Kanban board polish and collapsible component Settings pane.",
+    changes: ["Expand Kanban demo data with a Backlog column and denser board contents.","Add sticky column headers, accent-tinted full-width headers, equal-height ellipsized cards, and a reliable auto-hiding card scrollbar.","Add a collapsible Settings sidebar control in the component docs shell.","Publish opus-react 0.6.5 and update Application to consume the release from npm."],
   }
 ].reverse();
 

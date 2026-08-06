@@ -13,9 +13,11 @@ import {
 import type { ControlSettings, ControlSlug } from "@/lib/controls/types";
 
 export const SETTINGS_WIDTH_KEY = "opus-settings-sidebar-width-v2";
+export const SETTINGS_COLLAPSED_KEY = "opus-settings-sidebar-collapsed-v1";
 export const DEFAULT_SETTINGS_WIDTH = 160;
 export const MIN_SETTINGS_WIDTH = 140;
 export const MAX_SETTINGS_WIDTH = 360;
+export const COLLAPSED_SETTINGS_WIDTH = 44;
 
 export function clampSettingsWidth(width: number) {
   return Math.min(MAX_SETTINGS_WIDTH, Math.max(MIN_SETTINGS_WIDTH, width));
@@ -27,8 +29,10 @@ type ComponentSettingsContextValue = {
   register: (slug: ControlSlug, settings: ControlSettings) => void;
   setIsResizing: (value: boolean) => void;
   setSettings: (next: ControlSettings) => void;
+  setSettingsCollapsed: (value: boolean) => void;
   setSettingsWidth: (width: number) => void;
   settings: ControlSettings | null;
+  settingsCollapsed: boolean;
   settingsWidth: number;
   unregister: () => void;
 };
@@ -68,17 +72,21 @@ export function ComponentSettingsProvider({ children }: { children: ReactNode })
   const [activeSlug, setActiveSlug] = useState<ControlSlug | null>(null);
   const [settings, setSettingsState] = useState<ControlSettings | null>(null);
   const [settingsWidth, setSettingsWidth] = useState(DEFAULT_SETTINGS_WIDTH);
+  const [settingsCollapsed, setSettingsCollapsedState] = useState(false);
   const [isResizing, setIsResizing] = useState(false);
 
   useEffect(() => {
-    const stored = window.localStorage.getItem(SETTINGS_WIDTH_KEY);
-    if (!stored) {
-      return;
+    const storedWidth = window.localStorage.getItem(SETTINGS_WIDTH_KEY);
+    if (storedWidth) {
+      const parsed = Number(storedWidth);
+      if (!Number.isNaN(parsed)) {
+        setSettingsWidth(clampSettingsWidth(parsed));
+      }
     }
 
-    const parsed = Number(stored);
-    if (!Number.isNaN(parsed)) {
-      setSettingsWidth(clampSettingsWidth(parsed));
+    const storedCollapsed = window.localStorage.getItem(SETTINGS_COLLAPSED_KEY);
+    if (storedCollapsed === "true" || storedCollapsed === "false") {
+      setSettingsCollapsedState(storedCollapsed === "true");
     }
   }, []);
 
@@ -94,6 +102,11 @@ export function ComponentSettingsProvider({ children }: { children: ReactNode })
 
   const setSettings = useCallback((next: ControlSettings) => {
     setSettingsState(next);
+  }, []);
+
+  const setSettingsCollapsed = useCallback((value: boolean) => {
+    setSettingsCollapsedState(value);
+    window.localStorage.setItem(SETTINGS_COLLAPSED_KEY, String(value));
   }, []);
 
   useEffect(() => {
@@ -117,12 +130,23 @@ export function ComponentSettingsProvider({ children }: { children: ReactNode })
       register,
       setIsResizing,
       setSettings,
+      setSettingsCollapsed,
       setSettingsWidth,
       settings,
+      settingsCollapsed,
       settingsWidth,
       unregister,
     }),
-    [activeSlug, isResizing, register, settings, settingsWidth, unregister],
+    [
+      activeSlug,
+      isResizing,
+      register,
+      settings,
+      settingsCollapsed,
+      settingsWidth,
+      setSettingsCollapsed,
+      unregister,
+    ],
   );
 
   return <ComponentSettingsContext.Provider value={value}>{children}</ComponentSettingsContext.Provider>;

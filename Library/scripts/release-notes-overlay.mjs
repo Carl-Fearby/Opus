@@ -584,4 +584,15 @@ export const releaseNotesOverlay = [
       "Publish opus-react 0.6.4 and update Application to consume the release from npm.",
     ],
   },
+  {
+    version: "0.6.5",
+    releasedAt: "2026-08-06",
+    summary: "Kanban board polish and collapsible component Settings pane.",
+    changes: [
+      "Expand Kanban demo data with a Backlog column and denser board contents.",
+      "Add sticky column headers, accent-tinted full-width headers, equal-height ellipsized cards, and a reliable auto-hiding card scrollbar.",
+      "Add a collapsible Settings sidebar control in the component docs shell.",
+      "Publish opus-react 0.6.5 and update Application to consume the release from npm.",
+    ],
+  },
 ];

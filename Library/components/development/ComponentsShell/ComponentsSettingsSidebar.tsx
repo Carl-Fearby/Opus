@@ -2,6 +2,8 @@
 
 import dynamic from "next/dynamic";
 import { useCallback, useEffect, useRef } from "react";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faChevronLeft, faChevronRight } from "@fortawesome/free-solid-svg-icons";
 import { OpusThemeProvider } from "@/components/OpusThemeProvider";
 import { CustomScrollbar } from "@/components/CustomScrollbar";
 import { useComponentsTheme } from "@/components/development/ComponentsThemeProvider";
@@ -30,8 +32,10 @@ export function ComponentsSettingsSidebar() {
     isResizing,
     setIsResizing,
     setSettings,
+    setSettingsCollapsed,
     setSettingsWidth,
     settings,
+    settingsCollapsed,
     settingsWidth,
   } = useComponentSettingsContext();
   const dragRef = useRef<{ startWidth: number; startX: number } | null>(null);
@@ -103,6 +107,30 @@ export function ComponentsSettingsSidebar() {
     return null;
   }
 
+  if (settingsCollapsed) {
+    return (
+      <div className={styles.settingsSidebarWrap} data-collapsed="true">
+        <aside
+          aria-label="Component settings"
+          className={styles.settingsSidebar}
+          data-collapsed="true"
+          style={accentStyle}
+        >
+          <button
+            aria-expanded={false}
+            aria-label="Expand settings"
+            className={styles.settingsCollapseButton}
+            type="button"
+            onClick={() => setSettingsCollapsed(false)}
+          >
+            <FontAwesomeIcon icon={faChevronLeft} />
+            <span className={styles.settingsCollapsedLabel}>Settings</span>
+          </button>
+        </aside>
+      </div>
+    );
+  }
+
   return (
     <div className={styles.settingsSidebarWrap}>
       <div
@@ -128,12 +156,21 @@ export function ComponentsSettingsSidebar() {
       >
         <div className={styles.settingsSidebarHeader}>
           <h2 className={styles.settingsSidebarTitle}>Settings</h2>
+          <button
+            aria-expanded={true}
+            aria-label="Collapse settings"
+            className={styles.settingsCollapseButton}
+            type="button"
+            onClick={() => setSettingsCollapsed(true)}
+          >
+            <FontAwesomeIcon icon={faChevronRight} />
+          </button>
         </div>
         <CustomScrollbar className={styles.settingsSidebarBody} label="Component settings" orientation="vertical">
           <div className={styles.settingsSidebarBodyInner}>
-          <OpusThemeProvider applyToDocument={false} theme={theme}>
-            <ControlSettingsPanel slug={activeSlug} settings={settings} onChange={setSettings} />
-          </OpusThemeProvider>
+            <OpusThemeProvider applyToDocument={false} theme={theme}>
+              <ControlSettingsPanel slug={activeSlug} settings={settings} onChange={setSettings} />
+            </OpusThemeProvider>
           </div>
         </CustomScrollbar>
       </aside>

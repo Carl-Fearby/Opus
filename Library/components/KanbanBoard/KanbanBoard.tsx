@@ -11,6 +11,7 @@ import {
 } from "react";
 import { createPortal } from "react-dom";
 import { CatalogIcon } from "@/components/CatalogIcon";
+import { CustomScrollbar } from "@/components/CustomScrollbar";
 import styles from "./KanbanBoard.module.css";
 
 export type KanbanCard = {
@@ -24,6 +25,8 @@ export type KanbanColumn = {
   id: string;
   title: string;
   cardIds: string[];
+  /** Optional header accent colour (CSS colour). */
+  accent?: string;
 };
 
 export type KanbanBoardProps = {
@@ -75,13 +78,19 @@ function metaIconName(meta?: string) {
 function CardContent({ card }: { card: KanbanCard }) {
   return (
     <>
-      <div className={styles.cardTitle}>{card.title}</div>
-      {card.meta ? (
-        <div className={styles.cardMeta}>
-          <CatalogIcon className={styles.cardMetaIcon} iconName={metaIconName(card.meta)} />
-          <span>{card.meta}</span>
-        </div>
-      ) : null}
+      <div className={styles.cardTitle} title={card.title}>
+        {card.title}
+      </div>
+      <div className={styles.cardMeta}>
+        {card.meta ? (
+          <>
+            <CatalogIcon className={styles.cardMetaIcon} iconName={metaIconName(card.meta)} />
+            <span title={card.meta}>{card.meta}</span>
+          </>
+        ) : (
+          <span aria-hidden="true">&nbsp;</span>
+        )}
+      </div>
     </>
   );
 }
@@ -552,13 +561,28 @@ export function KanbanBoard({ cards, columns, onCardClick, onChange }: KanbanBoa
             data-kanban-column="true"
             data-kanban-column-id={column.id}
             key={column.id}
+            style={
+              column.accent
+                ? ({ ["--kanban-header-accent" as string]: column.accent } as CSSProperties)
+                : undefined
+            }
           >
             <header className={styles.columnHeader}>
               <h3 className={styles.columnTitle}>{column.title}</h3>
               <span className={styles.count}>{column.cardIds.length}</span>
             </header>
-            <ul className={styles.cards} data-kanban-cards="true">
-              {column.cardIds.map((cardId) => {
+            <CustomScrollbar
+              autoHide
+              className={styles.cardsScroll}
+              label={`${column.title} cards`}
+              orientation="vertical"
+              thickness={8}
+              trackInset={4}
+              viewportSelector="[data-kanban-cards-viewport]"
+            >
+              <div className={styles.cardsViewport} data-kanban-cards-viewport="">
+                <ul className={styles.cards} data-kanban-cards="true">
+                  {column.cardIds.map((cardId) => {
                 const card = cardLookup[cardId];
                 if (!card) return null;
                 const isDragCard = drag?.cardId === card.id;
@@ -655,7 +679,9 @@ export function KanbanBoard({ cards, columns, onCardClick, onChange }: KanbanBoa
                   <div className={styles.dropGhost} />
                 </li>
               ) : null}
-            </ul>
+                </ul>
+              </div>
+            </CustomScrollbar>
           </section>
         );
       })}

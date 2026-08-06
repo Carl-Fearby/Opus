@@ -117,8 +117,12 @@ html[data-shell-theme="light"] .settingsSidebar {
 }
 
 .settingsSidebarHeader {
+  display: flex;
   flex-shrink: 0;
-  padding: 18px 14px 12px;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  padding: 18px 10px 12px 14px;
 }
 
 .settingsSidebarTitle {
@@ -128,6 +132,66 @@ html[data-shell-theme="light"] .settingsSidebar {
   font-weight: 700;
   letter-spacing: 0.12em;
   line-height: 1;
+  text-transform: uppercase;
+}
+
+.settingsCollapseButton {
+  display: inline-flex;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+  gap: 0;
+  width: 28px;
+  height: 28px;
+  margin: 0;
+  padding: 0;
+  border: 1px solid color-mix(in srgb, var(--opus-border) 88%, transparent);
+  border-radius: 8px;
+  background: color-mix(in srgb, var(--opus-panel) 88%, transparent);
+  color: var(--opus-muted);
+  font-size: 0.72rem;
+  cursor: pointer;
+  transition:
+    background 120ms ease,
+    border-color 120ms ease,
+    color 120ms ease;
+}
+
+.settingsCollapseButton:hover,
+.settingsCollapseButton:focus-visible {
+  border-color: color-mix(in srgb, var(--opus-accent) 36%, var(--opus-border));
+  background: color-mix(in srgb, var(--opus-accent) 12%, var(--opus-panel));
+  color: var(--opus-accent);
+  outline: none;
+}
+
+.settingsSidebar[data-collapsed="true"] {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  width: 100%;
+  padding: 12px 6px;
+}
+
+.settingsSidebar[data-collapsed="true"] .settingsCollapseButton {
+  flex-direction: column;
+  flex: 0 0 auto;
+  align-self: center;
+  gap: 10px;
+  width: 100%;
+  height: auto;
+  min-height: 28px;
+  padding: 10px 4px;
+}
+
+.settingsCollapsedLabel {
+  writing-mode: vertical-rl;
+  transform: rotate(180deg);
+  color: inherit;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
   text-transform: uppercase;
 }
 
@@ -819,6 +883,10 @@ html[data-shell-theme="light"] .shell .content {
   .body[data-has-settings="true"] .settingsSidebar {
     max-height: 42vh;
   }
+
+  .body[data-settings-collapsed="true"] .settingsSidebar {
+    max-height: none;
+  }
 }
 
 @media (max-width: 720px) {
@@ -843,6 +911,10 @@ html[data-shell-theme="light"] .shell .content {
 
   .body[data-has-settings="true"] .settingsSidebar {
     max-height: 42vh;
+  }
+
+  .body[data-settings-collapsed="true"] .settingsSidebar {
+    max-height: none;
   }
 
   .sidebar {

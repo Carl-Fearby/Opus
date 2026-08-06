@@ -99,17 +99,32 @@ export const demoSchedulerEvents: SchedulerEvent[] = [
 ];
 
 export const demoKanbanCards: Record<string, KanbanCard> = {
-  c1: { id: "c1", title: "Filter builder validation", meta: "Forms", tone: "accent" },
-  c2: { id: "c2", title: "Property inspector polish", meta: "Builders", tone: "default" },
-  c3: { id: "c3", title: "Kanban drag handle", meta: "Planning", tone: "default" },
-  c4: { id: "c4", title: "Calendar event popover", meta: "Planning", tone: "success" },
-  c5: { id: "c5", title: "Permissions matrix a11y", meta: "Security", tone: "danger" },
+  c1: { id: "c1", title: "Sidebar collapse animation", meta: "Navigation", tone: "default" },
+  c2: { id: "c2", title: "Toast stacking rules", meta: "Feedback", tone: "accent" },
+  c3: { id: "c3", title: "Empty state illustrations", meta: "Content", tone: "default" },
+  c4: { id: "c4", title: "Keyboard shortcuts panel", meta: "A11y", tone: "warning" },
+  c5: { id: "c5", title: "Export board as CSV", meta: "Planning", tone: "default" },
+  c6: { id: "c6", title: "Filter builder validation", meta: "Forms", tone: "accent" },
+  c7: { id: "c7", title: "Property inspector polish", meta: "Builders", tone: "default" },
+  c8: { id: "c8", title: "Colour picker contrast", meta: "Forms", tone: "warning" },
+  c9: { id: "c9", title: "Date range presets", meta: "Forms", tone: "default" },
+  c10: { id: "c10", title: "Kanban drag handle", meta: "Planning", tone: "accent" },
+  c11: { id: "c11", title: "Card click modal wiring", meta: "Planning", tone: "default" },
+  c12: { id: "c12", title: "Calendar event popover", meta: "Planning", tone: "success" },
+  c13: { id: "c13", title: "Permissions matrix a11y", meta: "Security", tone: "danger" },
+  c14: { id: "c14", title: "Select chevron alignment", meta: "Forms", tone: "success" },
+  c15: { id: "c15", title: "JsonViewer expand depth", meta: "Content", tone: "default" },
+  c16: { id: "c16", title: "Usage preview action status", meta: "Docs", tone: "success" },
+  c17: { id: "c17", title: "Column min-height for eight cards", meta: "Planning", tone: "success" },
+  c18: { id: "c18", title: "Drop ghost dashed outline", meta: "Planning", tone: "accent" },
+  c19: { id: "c19", title: "Origin ghost fade polish", meta: "Planning", tone: "default" },
 };
 
 export const demoKanbanColumns: KanbanColumn[] = [
-  { id: "todo", title: "To do", cardIds: ["c1", "c2"] },
-  { id: "doing", title: "In progress", cardIds: ["c3"] },
-  { id: "done", title: "Done", cardIds: ["c4", "c5"] },
+  { id: "backlog", title: "Backlog", cardIds: ["c1", "c2", "c3", "c4", "c5"], accent: "#64748b" },
+  { id: "todo", title: "To do", cardIds: ["c6", "c7", "c8", "c9"], accent: "#0284c7" },
+  { id: "doing", title: "In progress", cardIds: ["c10", "c11"], accent: "#f59e0b" },
+  { id: "done", title: "Done", cardIds: ["c12", "c13", "c14", "c15", "c16", "c17", "c18", "c19"], accent: "#22c55e" },
 ];
 
 export const demoCalendarEvents = (): CalendarEvent[] => {
