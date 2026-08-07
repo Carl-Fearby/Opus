@@ -548,6 +548,14 @@ export const versionLog: VersionEntry[] = [
     commitShort: "24a0e78",
     summary: "OTP input autofocuses the first empty digit on mount.",
     changes: ["Add autoFocus to OtpField (on by default) so verification screens are ready to type immediately.","Expose an Autofocus setting in the OTP input docs panel.","Publish opus-react 0.6.9 and update Application to consume the release from npm."],
+  },
+  {
+    version: "0.6.10",
+    releasedAt: "2026-08-07",
+    commit: "340985ee9d4bbd423e98b1bd635750e7d7bcd12d",
+    commitShort: "340985e",
+    summary: "Opus portaled pickers for combobox, date/time, month, and week.",
+    changes: ["Replace ComboboxField's native datalist with a filtered, viewport-aware portaled suggestion list.","Add Opus date/time, time, month, and week pickers so DateField no longer relies on browser-native overlays for those types.","Publish opus-react 0.6.10 and update Application to consume the release from npm."],
   }
 ].reverse();
 
