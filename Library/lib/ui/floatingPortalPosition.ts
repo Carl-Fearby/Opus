@@ -48,6 +48,41 @@ export function resolveEmojiPickerPortalStyle(
   return { left, top, width: panelWidth };
 }
 
+/** Anchors a field suggestion list to the control width and flips vertically in the viewport. */
+export function resolveFieldListPortalStyle(
+  anchorRect: DOMRect,
+  panelRect: DOMRect | null,
+): FloatingPortalStyle {
+  const gap = 6;
+  const viewportPadding = 8;
+  const panelWidth = Math.min(
+    Math.max(anchorRect.width, 120),
+    window.innerWidth - viewportPadding * 2,
+  );
+  const panelHeight = panelRect?.height ?? 0;
+
+  let top = anchorRect.bottom + gap;
+  if (
+    panelHeight > 0 &&
+    top + panelHeight > window.innerHeight - viewportPadding &&
+    anchorRect.top - gap - panelHeight >= viewportPadding
+  ) {
+    top = anchorRect.top - gap - panelHeight;
+  }
+
+  let left = anchorRect.left;
+  left = Math.min(
+    Math.max(left, viewportPadding),
+    window.innerWidth - panelWidth - viewportPadding,
+  );
+  top = Math.min(
+    Math.max(top, viewportPadding),
+    Math.max(viewportPadding, window.innerHeight - panelHeight - viewportPadding),
+  );
+
+  return { left, top, width: panelWidth };
+}
+
 export function resolveDropdownPortalStyle(
   anchorRect: DOMRect,
   menuRect: DOMRect | null,

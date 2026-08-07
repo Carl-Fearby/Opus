@@ -637,4 +637,14 @@ export const releaseNotesOverlay = [
       "Publish opus-react 0.6.9 and update Application to consume the release from npm.",
     ],
   },
+  {
+    version: "0.6.10",
+    releasedAt: "2026-08-07",
+    summary: "Opus portaled pickers for combobox, date/time, month, and week.",
+    changes: [
+      "Replace ComboboxField's native datalist with a filtered, viewport-aware portaled suggestion list.",
+      "Add Opus date/time, time, month, and week pickers so DateField no longer relies on browser-native overlays for those types.",
+      "Publish opus-react 0.6.10 and update Application to consume the release from npm.",
+    ],
+  },
 ];

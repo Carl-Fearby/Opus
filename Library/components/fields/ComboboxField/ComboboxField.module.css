@@ -1,0 +1,58 @@
+.root {
+  position: relative;
+  width: 100%;
+}
+
+.input {
+  width: 100%;
+  min-height: var(--opus-control-height);
+  padding: 0 12px;
+  border: 1px solid var(--opus-border);
+  border-radius: 10px;
+  background: var(--opus-input-bg);
+  color: var(--opus-text);
+  box-sizing: border-box;
+  font: inherit;
+}
+
+.input:focus {
+  border-color: var(--opus-accent);
+  outline: 2px solid color-mix(in srgb, var(--opus-accent) 30%, transparent);
+  outline-offset: 1px;
+}
+
+.inputError {
+  border-color: color-mix(in srgb, var(--opus-error, #dc2626) 75%, transparent);
+}
+
+.portal {
+  position: fixed;
+  z-index: 1000;
+  margin: 0;
+}
+
+.list {
+  max-height: min(280px, 50vh);
+  overflow: auto;
+  border: 1px solid var(--opus-border-strong);
+  border-radius: var(--opus-input-radius-large, 12px);
+  background: var(--opus-panel);
+  box-shadow: var(--opus-shadow);
+}
+
+.option {
+  display: block;
+  width: 100%;
+  padding: 10px 12px;
+  border: 0;
+  background: transparent;
+  color: var(--opus-text);
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+
+.option:hover,
+.optionActive {
+  background: color-mix(in srgb, var(--opus-accent) 14%, var(--opus-panel));
+}

@@ -24,15 +24,8 @@ export function DateRangeField({ error, help, id, label, labelPosition, max, min
   </FieldShell>;
 }
 
-export type ComboboxOption = { label: string; value: string };
-export type ComboboxFieldProps = ShellProps & { options: ComboboxOption[]; placeholder?: string; value: string; onChange: (value: string) => void };
-export function ComboboxField({ error, help, id, label, labelPosition, mode, options, placeholder, required, value, onChange }: ComboboxFieldProps) {
-  const listId = `${id}-options`;
-  return <FieldShell error={error} help={help} id={id} label={label} labelPosition={labelPosition} mode={mode} required={required}>
-    <input aria-autocomplete="list" aria-controls={listId} aria-expanded="false" aria-invalid={Boolean(error)} className={styles.input} id={id} list={listId} placeholder={placeholder} role="combobox" value={value} onChange={(event) => onChange(event.target.value)} />
-    <datalist id={listId}>{options.map((option) => <option key={option.value} value={option.value}>{option.label}</option>)}</datalist>
-  </FieldShell>;
-}
+export type { ComboboxFieldProps, ComboboxOption } from "../ComboboxField";
+export { ComboboxField } from "../ComboboxField";
 
 export type CurrencyFieldProps = ShellProps & { currency?: string; locale?: string; value: number | null; onChange: (value: number | null) => void };
 export function CurrencyField({ currency = "GBP", error, help, id, label, labelPosition, locale = "en-GB", mode, required, value, onChange }: CurrencyFieldProps) {

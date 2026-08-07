@@ -1,0 +1,86 @@
+.timeRow {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+
+.timeField {
+  display: grid;
+  gap: 5px;
+  color: var(--opus-text-muted);
+  font-size: 0.78rem;
+  font-weight: 650;
+}
+
+.timeSelect {
+  width: 100%;
+  min-height: 36px;
+  padding: 0 10px;
+  border: 1px solid var(--opus-border-strong);
+  border-radius: var(--opus-input-radius, 10px);
+  background: var(--opus-input-bg);
+  color: var(--opus-text);
+  font: inherit;
+}
+
+.timeSelect:focus {
+  outline: none;
+  border-color: var(--opus-accent);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--opus-accent) 22%, transparent);
+}
+
+.footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  padding-top: 2px;
+  border-top: 1px solid color-mix(in srgb, var(--opus-border) 70%, transparent);
+}
+
+.footerAction,
+.footerActionPrimary {
+  border: 0;
+  background: transparent;
+  color: var(--opus-accent);
+  font: inherit;
+  font-size: 0.8rem;
+  font-weight: 700;
+  cursor: pointer;
+  padding: 4px 2px;
+}
+
+.footerActionPrimary {
+  margin-left: auto;
+}
+
+.footerAction:hover,
+.footerActionPrimary:hover {
+  text-decoration: underline;
+}
+
+.footerAction:focus-visible,
+.footerActionPrimary:focus-visible {
+  outline: none;
+  border-radius: 4px;
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--opus-accent) 22%, transparent);
+}
+
+.timeOnlyShell {
+  display: grid;
+  gap: 12px;
+  width: min(240px, calc(100vw - 32px));
+  padding: 12px;
+  border: 1px solid var(--opus-border);
+  border-radius: var(--opus-input-radius-large);
+  background:
+    radial-gradient(circle at 12% 0%, color-mix(in srgb, var(--opus-accent) 12%, transparent), transparent 36%),
+    var(--opus-panel);
+  box-shadow:
+    0 18px 40px rgba(0, 0, 0, 0.36),
+    0 0 0 1px color-mix(in srgb, var(--opus-accent) 8%, transparent);
+}
+
+.timePanel {
+  min-width: 220px;
+}

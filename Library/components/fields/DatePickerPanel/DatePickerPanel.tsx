@@ -1,14 +1,17 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useMemo, useState, type ReactNode } from "react";
 import { DatePickerSelect } from "./DatePickerSelect";
 import type { DateRangeValue } from "./datePickerUtils";
 import styles from "./DatePickerPanel.module.css";
 
 type DatePickerPanelBaseProps = {
+  closeOnSelect?: boolean;
+  extra?: ReactNode;
   max?: string;
   min?: string;
   onClose?: () => void;
+  showFooter?: boolean;
 };
 
 export type DatePickerPanelSingleProps = DatePickerPanelBaseProps & {
@@ -71,7 +74,7 @@ type Cell = {
 };
 
 export function DatePickerPanel(props: DatePickerPanelProps) {
-  const { max, min, onClose } = props;
+  const { closeOnSelect = true, extra, max, min, onClose, showFooter = true } = props;
   const isRange = props.selectionMode === "range";
   const singleValue = !isRange ? props.value : undefined;
   const rangeValue = isRange ? (props.value ?? emptyRange()) : emptyRange();
@@ -174,7 +177,7 @@ export function DatePickerPanel(props: DatePickerPanelProps) {
 
     if (!isRange) {
       props.onSelect(iso);
-      onClose?.();
+      if (closeOnSelect) onClose?.();
       return;
     }
 
@@ -206,7 +209,7 @@ export function DatePickerPanel(props: DatePickerPanelProps) {
       return;
     }
     props.onSelect("");
-    onClose?.();
+    if (closeOnSelect) onClose?.();
   }
 
   function handleToday() {
@@ -221,7 +224,7 @@ export function DatePickerPanel(props: DatePickerPanelProps) {
     }
 
     props.onSelect(todayIso);
-    onClose?.();
+    if (closeOnSelect) onClose?.();
   }
 
   function dayClassName(cell: Cell, disabled: boolean) {
@@ -357,19 +360,23 @@ export function DatePickerPanel(props: DatePickerPanelProps) {
         })}
       </div>
 
-      <div className={styles.footer}>
-        <button className={styles.footerAction} type="button" onClick={handleClear}>
-          Clear
-        </button>
-        <button
-          className={styles.footerAction}
-          disabled={isDisabled(todayIso, min, max)}
-          type="button"
-          onClick={handleToday}
-        >
-          Today
-        </button>
-      </div>
+      {extra}
+
+      {showFooter ? (
+        <div className={styles.footer}>
+          <button className={styles.footerAction} type="button" onClick={handleClear}>
+            Clear
+          </button>
+          <button
+            className={styles.footerAction}
+            disabled={isDisabled(todayIso, min, max)}
+            type="button"
+            onClick={handleToday}
+          >
+            Today
+          </button>
+        </div>
+      ) : null}
     </div>
   );
 }

@@ -168,6 +168,8 @@ export { CrmWorkspaceLab } from "../CrmWorkspaceLab";
 export type { CrmWorkspaceLabVariant } from "../CrmWorkspaceLab";
 export { OtpField } from "./OtpField";
 export type { OtpFieldProps } from "./OtpField";
+export { ComboboxField } from "./ComboboxField";
+export type { ComboboxFieldProps, ComboboxOption } from "./ComboboxField";
 export * from "./AdvancedFields";
 export { Panel } from "../Panel";
 export { Section } from "../Section";
