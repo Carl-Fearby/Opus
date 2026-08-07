@@ -30,17 +30,36 @@ html[data-shell-theme="light"] .shell {
 
 .body {
   display: grid;
-  grid-template-columns: 240px minmax(0, 1fr);
+  grid-template-columns: auto minmax(0, 1fr);
   min-height: 0;
   overflow: hidden;
 }
 
 .body[data-has-settings="true"] {
-  grid-template-columns: 240px minmax(0, 1fr) var(--settings-sidebar-width, 160px);
+  grid-template-columns: auto minmax(0, 1fr) var(--settings-sidebar-width, 160px);
 }
 
 .body[data-resizing="true"] {
   cursor: col-resize;
+}
+
+.sidebarWrap {
+  position: relative;
+  display: flex;
+  width: var(--components-sidebar-width, 240px);
+  min-width: 0;
+  min-height: 0;
+}
+
+.sidebarResizeHandle {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  right: 0;
+  z-index: 2;
+  height: auto !important;
+  min-height: 100% !important;
+  transform: translateX(50%);
 }
 
 .settingsSidebarWrap {
@@ -249,7 +268,9 @@ html[data-shell-theme="light"] .settingsSidebar {
 
 .sidebar {
   display: flex;
+  flex: 1;
   flex-direction: column;
+  min-width: 0;
   min-height: 0;
   overflow: hidden;
   background: color-mix(in srgb, var(--opus-panel) 90%, transparent);
@@ -468,6 +489,7 @@ html[data-shell-theme="light"] .shell .content {
 
 .navScroll {
   flex: 1;
+  min-width: 0;
   min-height: 0;
 }
 
@@ -475,13 +497,19 @@ html[data-shell-theme="light"] .shell .content {
   display: grid;
   align-content: start;
   gap: 4px;
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
   min-height: 0;
   padding: 12px 14px 18px;
+  box-sizing: border-box;
 }
 
 .navGroup {
   display: grid;
   gap: 4px;
+  min-width: 0;
+  max-width: 100%;
 }
 
 .sidebarDivider {
@@ -495,12 +523,19 @@ html[data-shell-theme="light"] .shell .content {
   display: flex;
   align-items: center;
   gap: 4px;
+  min-width: 0;
+  max-width: 100%;
 }
 
 .navHeadingLink {
-  display: inline-flex;
+  display: flex;
   align-items: center;
   gap: 8px;
+  width: 100%;
+  min-width: 0;
+  max-width: 100%;
+  overflow: hidden;
+  box-sizing: border-box;
   padding: 8px 10px;
   border: 1px solid transparent;
   border-radius: var(--opus-input-radius);
@@ -517,8 +552,49 @@ html[data-shell-theme="light"] .shell .content {
 }
 
 .navHeadingLinkFlex {
-  flex: 1;
+  flex: 1 1 0;
+  width: auto;
   min-width: 0;
+}
+
+.navHeadingLabel {
+  flex: 1 1 0;
+  min-width: 0;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  overflow: hidden;
+}
+
+.navHeadingTitle {
+  flex: 1 1 0;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.navCount {
+  flex-shrink: 0;
+  margin-left: auto;
+  color: var(--opus-muted);
+  font-size: 0.78em;
+  font-weight: 650;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0;
+  line-height: 1;
+  text-transform: none;
+  white-space: nowrap;
+}
+
+.navHeadingLink .navCount,
+.navSubsectionHeadingLink .navCount {
+  color: color-mix(in srgb, var(--opus-muted) 82%, var(--opus-accent));
+}
+
+.navHeadingLinkActive .navCount,
+.navSubsectionHeadingLinkActive .navCount {
+  color: color-mix(in srgb, var(--opus-accent) 55%, var(--opus-muted));
 }
 
 .navHeadingLink:hover {
@@ -619,6 +695,8 @@ html[data-shell-theme="light"] .shell .content {
 .navSubsection {
   display: grid;
   gap: 2px;
+  min-width: 0;
+  max-width: 100%;
 }
 
 .navSubsectionHeader {
@@ -626,14 +704,19 @@ html[data-shell-theme="light"] .shell .content {
   align-items: center;
   gap: 4px;
   margin: 6px 0 2px;
+  min-width: 0;
+  max-width: 100%;
 }
 
 .navSubsectionHeadingLink {
-  display: inline-flex;
-  flex: 1;
+  display: flex;
+  flex: 1 1 0;
   min-width: 0;
+  max-width: 100%;
+  overflow: hidden;
   align-items: center;
   gap: 8px;
+  box-sizing: border-box;
   padding: 7px 10px;
   border: 1px solid transparent;
   border-radius: var(--opus-input-radius);
@@ -823,19 +906,18 @@ html[data-shell-theme="light"] .shell .content {
 .navLinkLabel {
   flex: 1;
   min-width: 0;
-  display: inline-flex;
-  align-items: baseline;
-  gap: 2px;
+  overflow: hidden;
+  text-overflow: ellipsis;
   white-space: nowrap;
 }
 
 @media (max-width: 960px) {
   .body {
-    grid-template-columns: 210px minmax(0, 1fr);
+    grid-template-columns: auto minmax(0, 1fr);
   }
 
   .body[data-has-settings="true"] {
-    grid-template-columns: 210px minmax(0, 1fr);
+    grid-template-columns: auto minmax(0, 1fr);
     grid-template-rows: minmax(0, 1fr) auto;
   }
 
@@ -849,6 +931,7 @@ html[data-shell-theme="light"] .shell .content {
     grid-row: 2;
   }
 
+  .sidebarResizeHandle,
   .body[data-has-settings="true"] .settingsResizeHandle {
     display: none;
   }
@@ -866,6 +949,14 @@ html[data-shell-theme="light"] .shell .content {
   .body {
     grid-template-columns: 1fr;
     grid-template-rows: auto minmax(0, 1fr);
+  }
+
+  .sidebarWrap {
+    width: 100%;
+  }
+
+  .sidebarResizeHandle {
+    display: none;
   }
 
   .body[data-has-settings="true"] {

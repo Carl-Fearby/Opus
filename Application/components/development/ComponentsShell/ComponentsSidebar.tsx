@@ -2,12 +2,20 @@
 
 import Link from "next/link";
 import { usePathname, useSearchParams } from "next/navigation";
-import { useCallback, useEffect, useMemo, useState } from "react";
+import {
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+  type CSSProperties,
+} from "react";
 import { faMagnifyingGlass } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import type { IconDefinition } from "@fortawesome/fontawesome-svg-core";
 import { ComponentIcon } from "@/components/development/ComponentIcon";
 import { CustomScrollbar } from "opus-react";
+import { ResizeHandle } from "opus-react";
 import { getCategoryIcon, getComponentIcon, getNavigationGroupIcon, getOverviewIcon } from "@/lib/controls/componentIcons";
 import type { ComponentCategory, ControlDefinition } from "@/lib/controls/types";
 import {
@@ -15,6 +23,7 @@ import {
   getControl,
   getControlSectionsByCategory,
   getNavigationGroupBySlug,
+  getAllSlugs,
 } from "@/lib/controls/registry";
 import {
   categoryPath,
@@ -25,11 +34,34 @@ import {
   getCategorySubgroupFromPath,
   navigationGroupToSlug,
 } from "@/lib/controls/routes";
+import { useComponentSettingsContext } from "./ComponentSettingsContext";
 import styles from "./ComponentsShell.module.css";
 
 const SIDEBAR_SEARCH_ID = "components-sidebar-search";
 const SIDEBAR_GROUPS_STORAGE_KEY = "opus-components-sidebar-groups";
+const SIDEBAR_WIDTH_KEY = "opus-components-sidebar-width-v1";
+const DEFAULT_SIDEBAR_WIDTH = 240;
+const MIN_SIDEBAR_WIDTH = 140;
+const MAX_SIDEBAR_WIDTH = 420;
 const RELATIONSHIPS_PATH = `${COMPONENTS_BASE_PATH}/relationships`;
+
+function clampSidebarWidth(width: number) {
+  return Math.min(MAX_SIDEBAR_WIDTH, Math.max(MIN_SIDEBAR_WIDTH, Math.round(width)));
+}
+
+function readSidebarWidth() {
+  if (typeof window === "undefined") {
+    return DEFAULT_SIDEBAR_WIDTH;
+  }
+
+  const stored = window.localStorage.getItem(SIDEBAR_WIDTH_KEY);
+  if (!stored) {
+    return DEFAULT_SIDEBAR_WIDTH;
+  }
+
+  const parsed = Number(stored);
+  return Number.isFinite(parsed) ? clampSidebarWidth(parsed) : DEFAULT_SIDEBAR_WIDTH;
+}
 
 function navGroupListId(category: ComponentCategory) {
   return `sidebar-group-${category}`;
@@ -132,6 +164,14 @@ function writeOpenGroups(groups: OpenSidebarGroups) {
   window.localStorage.setItem(SIDEBAR_GROUPS_STORAGE_KEY, JSON.stringify(groups));
 }
 
+function NavCount({ count, label }: { count: number; label: string }) {
+  return (
+    <span aria-label={`${count} ${label}`} className={styles.navCount}>
+      ({count})
+    </span>
+  );
+}
+
 function NavLink({
   href,
   icon,
@@ -187,6 +227,7 @@ function NavGroup({
   const pathname = usePathname();
   const listId = navGroupListId(category);
   const sections = filteredSections ?? getControlSectionsByCategory(category);
+  const count = sections.reduce((total, section) => total + section.controls.length, 0);
   const isOpen = forceOpen || open;
   const isCategoryOverview = pathname === categoryPath(category);
 
@@ -206,7 +247,10 @@ function NavGroup({
           onClick={onNavigate}
         >
           <ComponentIcon icon={getCategoryIcon(category)} />
-          <span>{label}</span>
+          <span className={styles.navHeadingLabel}>
+            <span className={styles.navHeadingTitle}>{label}</span>
+            <NavCount count={count} label="components" />
+          </span>
         </Link>
         <button
           aria-controls={listId}
@@ -297,7 +341,10 @@ function NavSubgroup({
           onClick={onNavigate}
         >
           <ComponentIcon compact icon={getNavigationGroupIcon(label)} />
-          <span>{label}</span>
+          <span className={styles.navHeadingLabel}>
+            <span className={styles.navHeadingTitle}>{label}</span>
+            <NavCount count={controls.length} label="components" />
+          </span>
         </Link>
         <button
           aria-controls={listId}
@@ -335,12 +382,17 @@ function NavSubgroup({
 export function ComponentsSidebar() {
   const pathname = usePathname();
   const searchParams = useSearchParams();
+  const { isResizing, setIsResizing } = useComponentSettingsContext();
   const isOverview = pathname === COMPONENTS_BASE_PATH;
   const isRelationships = pathname === RELATIONSHIPS_PATH;
   const [openGroups, setOpenGroups] = useState<OpenSidebarGroups>({});
   const [hydrated, setHydrated] = useState(false);
   const [query, setQuery] = useState("");
+  const [sidebarWidth, setSidebarWidth] = useState(DEFAULT_SIDEBAR_WIDTH);
   const categoryFromQuery = searchParams.get("category") as ComponentCategory | null;
+  const dragRef = useRef<{ startWidth: number; startX: number } | null>(null);
+  const widthRef = useRef(sidebarWidth);
+  const navResizingRef = useRef(false);
 
   const activeCategory = useMemo(() => {
     if (categoryFromQuery && componentCategories.some((category) => category.id === categoryFromQuery)) {
@@ -374,6 +426,9 @@ export function ComponentsSidebar() {
       })
       .filter((group) => group.sections.length > 0);
   }, [isSearching, normalisedQuery]);
+
+  const catalogueCount = useMemo(() => getAllSlugs().length, []);
+  const overviewCount = catalogueCount;
 
   const showOverviewInSearch = isSearching && matchesOverview(normalisedQuery);
   const showRelationshipsInSearch = isSearching && matchesRelationships(normalisedQuery);
@@ -457,7 +512,93 @@ export function ComponentsSidebar() {
 
   const clearSearch = useCallback(() => setQuery(""), []);
 
+  useEffect(() => {
+    widthRef.current = sidebarWidth;
+  }, [sidebarWidth]);
+
+  useEffect(() => {
+    const timeout = window.setTimeout(() => {
+      setSidebarWidth(readSidebarWidth());
+    }, 0);
+    return () => window.clearTimeout(timeout);
+  }, []);
+
+  const finishNavResize = useCallback(() => {
+    if (!navResizingRef.current) {
+      return;
+    }
+
+    dragRef.current = null;
+    navResizingRef.current = false;
+    setIsResizing(false);
+    window.localStorage.setItem(SIDEBAR_WIDTH_KEY, String(widthRef.current));
+  }, [setIsResizing]);
+
+  useEffect(() => {
+    if (!isResizing || !navResizingRef.current) {
+      return;
+    }
+
+    const handlePointerMove = (event: PointerEvent) => {
+      if (!dragRef.current) {
+        return;
+      }
+
+      const delta = event.clientX - dragRef.current.startX;
+      setSidebarWidth(clampSidebarWidth(dragRef.current.startWidth + delta));
+    };
+
+    const handlePointerUp = () => {
+      finishNavResize();
+    };
+
+    window.addEventListener("pointermove", handlePointerMove);
+    window.addEventListener("pointerup", handlePointerUp);
+    window.addEventListener("pointercancel", handlePointerUp);
+    return () => {
+      window.removeEventListener("pointermove", handlePointerMove);
+      window.removeEventListener("pointerup", handlePointerUp);
+      window.removeEventListener("pointercancel", handlePointerUp);
+    };
+  }, [finishNavResize, isResizing]);
+
+  const handleNavResizePointerDown = useCallback(
+    (event: React.PointerEvent<HTMLButtonElement>) => {
+      event.preventDefault();
+      dragRef.current = {
+        startWidth: widthRef.current,
+        startX: event.clientX,
+      };
+      navResizingRef.current = true;
+      setIsResizing(true);
+    },
+    [setIsResizing],
+  );
+
+  const handleNavResizeKeyDown = useCallback(
+    (event: React.KeyboardEvent<HTMLButtonElement>) => {
+      const step = event.shiftKey ? 48 : 16;
+
+      if (event.key === "ArrowRight") {
+        event.preventDefault();
+        const next = clampSidebarWidth(sidebarWidth + step);
+        setSidebarWidth(next);
+        window.localStorage.setItem(SIDEBAR_WIDTH_KEY, String(next));
+      } else if (event.key === "ArrowLeft") {
+        event.preventDefault();
+        const next = clampSidebarWidth(sidebarWidth - step);
+        setSidebarWidth(next);
+        window.localStorage.setItem(SIDEBAR_WIDTH_KEY, String(next));
+      }
+    },
+    [sidebarWidth],
+  );
+
   return (
+    <div
+      className={styles.sidebarWrap}
+      style={{ "--components-sidebar-width": `${sidebarWidth}px` } as CSSProperties}
+    >
     <aside className={styles.sidebar}>
       <div className={styles.sidebarSearch} role="search">
         <label className={styles.sidebarSearchWrap} htmlFor={SIDEBAR_SEARCH_ID}>
@@ -495,7 +636,10 @@ export function ComponentsSidebar() {
                 onClick={clearSearch}
               >
                 <ComponentIcon icon={getOverviewIcon()} />
-                <span>Overview</span>
+                <span className={styles.navHeadingLabel}>
+                  <span className={styles.navHeadingTitle}>Overview</span>
+                  <NavCount count={overviewCount} label="components" />
+                </span>
               </Link>
             ) : null}
             {showRelationshipsInSearch ? (
@@ -508,7 +652,7 @@ export function ComponentsSidebar() {
                 onClick={clearSearch}
               >
                 <ComponentIcon icon={getComponentIcon("tree-view")} />
-                <span>Relationships</span>
+                <span className={styles.navHeadingTitle}>Relationships</span>
               </Link>
             ) : null}
             {searchGroups.map((group) => (
@@ -541,7 +685,10 @@ export function ComponentsSidebar() {
               href={componentPath()}
             >
               <ComponentIcon icon={getOverviewIcon()} />
-              <span>Overview</span>
+              <span className={styles.navHeadingLabel}>
+                <span className={styles.navHeadingTitle}>Overview</span>
+                <NavCount count={overviewCount} label="components" />
+              </span>
             </Link>
             <NavLink
               href={RELATIONSHIPS_PATH}
@@ -577,5 +724,19 @@ export function ComponentsSidebar() {
       </nav>
       </CustomScrollbar>
     </aside>
+      <ResizeHandle
+        aria-label="Resize components sidebar"
+        aria-orientation="vertical"
+        aria-valuemax={MAX_SIDEBAR_WIDTH}
+        aria-valuemin={MIN_SIDEBAR_WIDTH}
+        aria-valuenow={sidebarWidth}
+        background="subtle"
+        className={styles.sidebarResizeHandle}
+        height="full"
+        orientation="vertical"
+        onKeyDown={handleNavResizeKeyDown}
+        onPointerDown={handleNavResizePointerDown}
+      />
+    </div>
   );
 }

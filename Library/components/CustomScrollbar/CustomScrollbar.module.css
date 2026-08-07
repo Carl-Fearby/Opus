@@ -26,6 +26,13 @@
   overflow-y: auto;
 }
 
+.root[data-orientation="vertical"] > .viewport > .content {
+  box-sizing: border-box;
+  width: 100%;
+  min-width: 0;
+  max-width: 100%;
+}
+
 .root[data-orientation="horizontal"] > .viewport {
   overflow-x: auto;
   overflow-y: hidden;
