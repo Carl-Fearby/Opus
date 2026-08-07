@@ -166,6 +166,27 @@ syncTextFile(
   join(appDir, "app", "documentation", "playground", "external", "page.tsx"),
   { rewire: true },
 );
+
+// Category overview + subgroup routes (sidebar links like /documentation/components/dashboard).
+for (const category of [
+  "content",
+  "dashboard",
+  "forms",
+  "graphs",
+  "labs",
+  "overlays",
+  "relationships",
+  "system",
+]) {
+  const source = join(libraryDir, "app", "documentation", "components", "(catalog)", category);
+  if (!existsSync(source)) {
+    continue;
+  }
+  syncDirectory(source, join(appDir, "app", "documentation", "components", "(catalog)", category), {
+    rewire: true,
+  });
+}
+
 for (const file of [
   "CodePlayground.module.css",
   "CodePlayground.tsx",
