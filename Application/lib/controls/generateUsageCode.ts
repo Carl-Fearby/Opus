@@ -3672,7 +3672,8 @@ const images = [
         ...(s.loopPlaylist ? [] : [formatBoolProp("loopPlaylist", false)]),
         ...(s.muted ? [formatBoolProp("muted", true)] : []),
       ];
-      return `${importLine(["VideoPlayer"])}
+      const componentName = s.persistOnNavigation ? "PersistentVideoPlayer" : "VideoPlayer";
+      return `${importLine([componentName])}
 
 const tracks = [
   {
@@ -3689,7 +3690,7 @@ const tracks = [
   },
 ];
 
-<VideoPlayer${formatSelfClosing(props)}`;
+<${componentName}${formatSelfClosing(props)}`;
     }
     case "audio-player": {
       const s = settings as ControlSettingsBySlug["audio-player"];

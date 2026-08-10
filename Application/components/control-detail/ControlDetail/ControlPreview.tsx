@@ -18,7 +18,7 @@ import { DesktopIcon } from "opus-react";
 import { DesktopWindow } from "opus-react";
 import { TreeMenu } from "opus-react";
 import { continueWithApple, continueWithGoogle } from "@/lib/auth/socialAuth";
-import { VideoPlayer } from "@/components/VideoPlayer";
+import { PersistentVideoPlayer, VideoPlayer } from "@/components/VideoPlayer";
 import { AudioPlayer } from "@/components/AudioPlayer";
 import { OtpField } from "opus-react";
 import {DiffPreview,MentionInputPreview,ProductTourPreview,RecurrencePreview,SignaturePreview,TimeRangePreview,VirtualListPreview} from "./NewComponentPreviews";
@@ -5200,8 +5200,9 @@ function ControlPreviewContent({
     }
     case "video-player": {
       const s = settings as ControlSettingsBySlug["video-player"];
+      const Player = s.persistOnNavigation ? PersistentVideoPlayer : VideoPlayer;
       return (
-        <VideoPlayer
+        <Player
           autoPlay={s.autoPlay}
           initialIndex={s.initialIndex}
           loop={s.loop}

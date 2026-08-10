@@ -560,10 +560,18 @@ export const versionLog: VersionEntry[] = [
   {
     version: "0.6.11",
     releasedAt: "2026-08-10",
-    commit: "633ce325abe931c0505b48b4e956bf89e7ea589a",
-    commitShort: "633ce32",
+    commit: "4555fab90341270648e13649456cf11981e5ee63",
+    commitShort: "4555fab",
     summary: "Workflow primitives, richer interactive previews, and seamless text marquee.",
     changes: ["Add Audit Log, Bulk Action Bar, Diff Viewer, Editable Data Table, File Manager, Product Tour, Recurrence Editor, Save-State Indicator, Signature Pad, Upload Queue, Virtual List, and Text Marquee components.","Add Async Select, Form Wizard, Mention Input, and Time Range field primitives with documented values and reusable callbacks.","Keep preview theme, font, colour, usage, Playground, and external rendering in sync while strengthening component composition and action audits.","Fix Show More expansion, map responsiveness, time selection, form state output, and a collection of interaction and accessibility details across the catalogue.","Publish opus-react 0.6.11 and update Application to consume the release from npm."],
+  },
+  {
+    version: "0.6.12",
+    releasedAt: "2026-08-10",
+    commit: "overlay-0.6.12",
+    commitShort: "overlay",
+    summary: "Persistent video playback and keyboard-accessible scroll regions.",
+    changes: ["Add PersistentVideoPlayerProvider and PersistentVideoPlayer so active playback can survive navigation and continue in a docked mini-player.","Document and preview persistent playback, including close, expand, and shrink actions and a configurable persistence setting.","Make Diff Viewer panes and Virtual List scroll regions keyboard focusable for reliable keyboard and assistive-technology access.","Publish opus-react 0.6.12 and update Application to consume the release from npm."],
   }
 ].reverse();
 
