@@ -200,8 +200,16 @@ export { Chart } from "../Chart";
 export type { ChartDatum, ChartSeries } from "../Chart";
 export { Skeleton } from "../Skeleton";
 export { Carousel } from "../Carousel";
-export { VideoPlayer } from "../VideoPlayer";
-export type { VideoPlayerProps } from "../VideoPlayer";
+export {
+  PersistentVideoPlayer,
+  PersistentVideoPlayerProvider,
+  VideoPlayer,
+} from "../VideoPlayer";
+export type {
+  PersistentVideoPlayerProps,
+  PersistentVideoPlayerProviderProps,
+  VideoPlayerProps,
+} from "../VideoPlayer";
 export { AudioPlayer } from "../AudioPlayer";
 export type { AudioPlayerProps, AudioTrack } from "../AudioPlayer";
 export { Lightbox } from "../Lightbox";

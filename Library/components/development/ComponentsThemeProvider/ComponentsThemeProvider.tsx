@@ -7,6 +7,7 @@ import type { Theme } from "@/components/fields";
 import { OpusThemeProvider } from "@/components/OpusThemeProvider";
 import { ToastProvider } from "@/components/ToastProvider";
 import { ContextMenuProvider } from "@/components/ContextMenu";
+import { PersistentVideoPlayerProvider } from "@/components/VideoPlayer";
 import {
   createAccentStyle,
   createTileAccentStyle,
@@ -404,7 +405,9 @@ export function ComponentsThemeProvider({ children }: { children: ReactNode }) {
         <DocsShellThemeIsolation />
         <div style={combinedStyle}>
           <ToastProvider>
-            <ContextMenuProvider>{children}</ContextMenuProvider>
+            <ContextMenuProvider>
+              <PersistentVideoPlayerProvider>{children}</PersistentVideoPlayerProvider>
+            </ContextMenuProvider>
           </ToastProvider>
         </div>
       </OpusThemeProvider>

@@ -1011,6 +1011,7 @@ export type VideoPlayerSettings = {
   loop: boolean;
   loopPlaylist: boolean;
   muted: boolean;
+  persistOnNavigation: boolean;
   showTitle: boolean;
 };
 

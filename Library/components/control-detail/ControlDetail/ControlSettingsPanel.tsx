@@ -5124,6 +5124,13 @@ export function ControlSettingsPanel({
             checked={s.muted}
             onChange={(muted) => onChange({ ...s, muted } as ControlSettings)}
           />
+          <SettingToggle
+            label="Persist on navigation"
+            checked={s.persistOnNavigation}
+            onChange={(persistOnNavigation) =>
+              onChange({ ...s, persistOnNavigation } as ControlSettings)
+            }
+          />
         </div>
       );
     }

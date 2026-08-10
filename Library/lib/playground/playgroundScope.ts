@@ -9,7 +9,11 @@ import { ForbiddenPage, ForbiddenPageContent } from "@/components/documentation/
 import { NotFoundPage, NotFoundPageContent } from "@/components/documentation/NotFoundPage";
 import { Map } from "@/components/Map";
 import { ContactDetails, ContactNotesActivity } from "@/components/ContactDetails";
-import { VideoPlayer } from "@/components/VideoPlayer";
+import {
+  PersistentVideoPlayer,
+  PersistentVideoPlayerProvider,
+  VideoPlayer,
+} from "@/components/VideoPlayer";
 import { AudioPlayer } from "@/components/AudioPlayer";
 import * as Fields from "opus-react";
 import { demoNotesActivity } from "@/lib/controls/notesActivityDemoData";
@@ -51,6 +55,8 @@ export function createPlaygroundScope() {
     ContactDetails,
     ContactNotesActivity,
     Map,
+    PersistentVideoPlayer,
+    PersistentVideoPlayerProvider,
     VideoPlayer,
     AudioPlayer,
   };

@@ -1,0 +1,73 @@
+.anchor {
+  width: 100%;
+  min-width: 0;
+  min-height: 180px;
+  aspect-ratio: 16 / 9;
+}
+
+.surface {
+  position: fixed;
+  z-index: 500;
+  overflow: hidden;
+  min-width: 0;
+  min-height: 0;
+  transition:
+    width 220ms ease,
+    height 220ms ease,
+    right 220ms ease,
+    bottom 220ms ease,
+    box-shadow 220ms ease;
+}
+
+.surface[data-mini="true"] {
+  border: 1px solid color-mix(in srgb, var(--opus-accent) 52%, var(--opus-border));
+  border-radius: 12px;
+  background: var(--opus-panel);
+  box-shadow:
+    0 18px 48px rgb(0 0 0 / 38%),
+    0 0 24px color-mix(in srgb, var(--opus-accent) 18%, transparent);
+}
+
+.miniActions {
+  position: absolute;
+  z-index: 8;
+  top: 8px;
+  right: 8px;
+  display: flex;
+  gap: 4px;
+  opacity: 0;
+  transition: opacity 160ms ease;
+}
+
+.surface[data-mini="true"]:hover .miniActions,
+.surface[data-mini="true"]:focus-within .miniActions {
+  opacity: 1;
+}
+
+.miniActions button {
+  display: grid;
+  place-items: center;
+  width: 30px;
+  height: 30px;
+  padding: 0;
+  border: 1px solid color-mix(in srgb, var(--opus-accent) 38%, var(--opus-border));
+  border-radius: 7px;
+  background: color-mix(in srgb, var(--opus-panel) 88%, transparent);
+  box-shadow: 0 4px 14px rgb(0 0 0 / 24%);
+  color: var(--opus-text);
+  cursor: pointer;
+}
+
+.miniActions button:hover,
+.miniActions button:focus-visible {
+  border-color: var(--opus-accent);
+  color: var(--opus-accent);
+  outline: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .surface,
+  .miniActions {
+    transition: none;
+  }
+}

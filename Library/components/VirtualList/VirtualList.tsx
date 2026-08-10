@@ -78,6 +78,7 @@ export function VirtualList<T>({
       data-custom-scrollbar={showScrollbar ? "true" : undefined}
       role="list"
       style={{ height }}
+      tabIndex={0}
       onScroll={(event: UIEvent<HTMLDivElement>) => setTop(event.currentTarget.scrollTop)}
     >
       <div style={{ height: virtualItemCount * itemHeight, position: "relative" }}>

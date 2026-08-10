@@ -43,6 +43,8 @@ export type VideoPlayerProps = {
   muted?: boolean;
   /** Reports every user-facing player action. */
   onAction?: (action: string) => void;
+  /** Reports whether the active media element is currently playing. */
+  onPlayingChange?: (playing: boolean) => void;
   shareUrl?: string;
   showShare?: boolean;
   showTitle?: boolean;
@@ -163,6 +165,7 @@ export function VideoPlayer({
   loopPlaylist = true,
   muted = false,
   onAction,
+  onPlayingChange,
   shareUrl,
   showShare = true,
   showTitle = true,
@@ -341,6 +344,7 @@ export function VideoPlayer({
     const onPlay = () => {
       playingRef.current = true;
       setPlaying(true);
+      onPlayingChange?.(true);
       if (backgroundVideo) {
         backgroundVideo.currentTime = video.currentTime;
         void backgroundVideo.play().catch(() => {});
@@ -349,6 +353,7 @@ export function VideoPlayer({
     const onPause = () => {
       playingRef.current = false;
       setPlaying(false);
+      onPlayingChange?.(false);
       backgroundVideo?.pause();
     };
     const onTime = () => {
@@ -450,6 +455,7 @@ export function VideoPlayer({
     loop,
     loopPlaylist,
     previewTime,
+    onPlayingChange,
     syncFromVideo,
     trackCount,
     trackIndex,

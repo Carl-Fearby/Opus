@@ -659,4 +659,15 @@ export const releaseNotesOverlay = [
       "Publish opus-react 0.6.11 and update Application to consume the release from npm.",
     ],
   },
+  {
+    version: "0.6.12",
+    releasedAt: "2026-08-10",
+    summary: "Persistent video playback and keyboard-accessible scroll regions.",
+    changes: [
+      "Add PersistentVideoPlayerProvider and PersistentVideoPlayer so active playback can survive navigation and continue in a docked mini-player.",
+      "Document and preview persistent playback, including close, expand, and shrink actions and a configurable persistence setting.",
+      "Make Diff Viewer panes and Virtual List scroll regions keyboard focusable for reliable keyboard and assistive-technology access.",
+      "Publish opus-react 0.6.12 and update Application to consume the release from npm.",
+    ],
+  },
 ];

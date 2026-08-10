@@ -946,9 +946,14 @@ const rawControls: ControlDefinition[] = [
     title: "Video Player",
     category: "content",
     componentName: "VideoPlayer",
-    description: "Custom-styled HTML video player with playlist previous/next, scrubbing, mute, volume, and fullscreen.",
+    description: "Custom-styled HTML video player with playlist controls and optional route-persistent mini-player playback.",
     navigationGroup: "Media",
-    sourceFiles: ["components/VideoPlayer/VideoPlayer.tsx", "components/VideoPlayer/VideoPlayer.module.css"],
+    sourceFiles: [
+      "components/VideoPlayer/VideoPlayer.tsx",
+      "components/VideoPlayer/VideoPlayer.module.css",
+      "components/VideoPlayer/PersistentVideoPlayer.tsx",
+      "components/VideoPlayer/PersistentVideoPlayer.module.css",
+    ],
     usesFieldShell: false,
   },
   {

@@ -30,6 +30,7 @@ describe("remaining component set", () => {
         renderItem={(index) => <span>Item {index}</span>}
       />,
     );
+    expect(screen.getByRole("list", { name: "Virtual list" })).toHaveAttribute("tabindex", "0");
     expect(screen.getByText("Item 0")).toBeInTheDocument();
     expect(screen.queryByText("Item 999")).not.toBeInTheDocument();
   });
@@ -189,7 +190,12 @@ describe("remaining component set", () => {
 
   it("shows additions and removals", () => {
     render(<DiffViewer before="draft" after="approved" />);
+    expect(screen.getByLabelText("Unified code differences")).toHaveAttribute("tabindex", "0");
     expect(screen.getByText("draft")).toBeInTheDocument();
     expect(screen.getByText("approved")).toBeInTheDocument();
+
+    fireEvent.click(screen.getByRole("button", { name: "Side-by-side diff" }));
+    expect(screen.getByLabelText("Original code")).toHaveAttribute("tabindex", "0");
+    expect(screen.getByLabelText("Changed code")).toHaveAttribute("tabindex", "0");
   });
 });

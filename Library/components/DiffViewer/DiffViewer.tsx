@@ -36,7 +36,8 @@ function diff(before: string, after: string): Line[] {
 
 function Lines({ lines, side }: { lines: Line[]; side?: "before" | "after" }) {
   const visible = lines.filter((line) => !side || line.kind === "same" || (side === "before" ? line.kind === "remove" : line.kind === "add"));
-  return <pre>{visible.map((line, index) => <span data-kind={line.kind} key={`${line.kind}-${index}`}><i>{side === "before" ? line.beforeLine ?? "" : side === "after" ? line.afterLine ?? "" : line.beforeLine ?? line.afterLine ?? ""}</i><b>{line.kind === "add" ? "+" : line.kind === "remove" ? "−" : " "}</b>{line.text || " "}</span>)}</pre>;
+  const label = side === "before" ? "Original code" : side === "after" ? "Changed code" : "Unified code differences";
+  return <pre aria-label={label} tabIndex={0}>{visible.map((line, index) => <span data-kind={line.kind} key={`${line.kind}-${index}`}><i>{side === "before" ? line.beforeLine ?? "" : side === "after" ? line.afterLine ?? "" : line.beforeLine ?? line.afterLine ?? ""}</i><b>{line.kind === "add" ? "+" : line.kind === "remove" ? "−" : " "}</b>{line.text || " "}</span>)}</pre>;
 }
 
 export function DiffViewer({

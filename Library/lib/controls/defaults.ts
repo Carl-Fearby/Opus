@@ -1258,6 +1258,7 @@ export const defaultSettings: ControlSettingsBySlug = {
     loop: false,
     loopPlaylist: true,
     muted: false,
+    persistOnNavigation: true,
     showTitle: true,
   },
   "audio-player": {
