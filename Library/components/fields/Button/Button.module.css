@@ -78,6 +78,17 @@
   color: #ffffff;
 }
 
+.ghost {
+  border-color: transparent;
+  background: transparent;
+  color: var(--opus-text);
+}
+
+.ghost:hover {
+  background: var(--opus-accent-soft);
+  color: var(--opus-accent);
+}
+
 .link {
   border-color: transparent;
   background: transparent;

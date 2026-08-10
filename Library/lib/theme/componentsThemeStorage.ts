@@ -80,7 +80,12 @@ export function writeStoredTheme(storageKey: string, theme: Theme) {
     return;
   }
 
-  window.localStorage.setItem(storageKey, theme);
+  try {
+    window.localStorage.setItem(storageKey, theme);
+  } catch {
+    // Cookies remain available as the persistence fallback when storage is
+    // blocked (for example in an isolated or privacy-restricted preview).
+  }
   writeThemeCookie(storageKey, theme);
 
   if (storageKey === THEME_STORAGE_KEY) {
@@ -108,4 +113,4 @@ export function applyDocumentTheme(theme: Theme) {
   root.style.colorScheme = theme;
 }
 
-export const COMPONENTS_THEME_BOOTSTRAP_SCRIPT = `(function(){try{var k="${THEME_STORAGE_KEY}";var pk="${PREVIEW_THEME_STORAGE_KEY}";var r=document.documentElement;var t=localStorage.getItem(k);t=t==="light"||t==="dark"?t:(r.getAttribute("data-shell-theme")==="light"?"light":"dark");var p=localStorage.getItem(pk);p=p==="light"||p==="dark"?p:(r.getAttribute("data-preview-theme")==="light"?"light":"dark");r.setAttribute("data-shell-theme",t);r.setAttribute("data-preview-theme",p);r.style.colorScheme=t;r.classList.add("opus-no-transitions");window.__OPUS_THEME__=t;window.__OPUS_PREVIEW_THEME__=p;document.cookie=k+"="+t+";path=/;max-age=31536000;SameSite=Lax";document.cookie=pk+"="+p+";path=/;max-age=31536000;SameSite=Lax";requestAnimationFrame(function(){requestAnimationFrame(function(){r.classList.remove("opus-no-transitions");});});}catch(e){}})();${COMPONENTS_ACCENT_BOOTSTRAP_SCRIPT}`;
+export const COMPONENTS_THEME_BOOTSTRAP_SCRIPT = `(function(){try{var k="${THEME_STORAGE_KEY}";var pk="${PREVIEW_THEME_STORAGE_KEY}";var r=document.documentElement;var c=function(n){var p=encodeURIComponent(n)+"=";var v=document.cookie.split("; ").find(function(x){return x.indexOf(p)===0;});return v?decodeURIComponent(v.slice(p.length)):null;};var s=function(n){try{return localStorage.getItem(n);}catch(e){return null;}};var t=s(k)||c(k);t=t==="light"||t==="dark"?t:(r.getAttribute("data-shell-theme")==="light"?"light":"dark");var p=s(pk)||c(pk);p=p==="light"||p==="dark"?p:(r.getAttribute("data-preview-theme")==="light"?"light":"dark");r.setAttribute("data-shell-theme",t);r.setAttribute("data-preview-theme",p);r.style.colorScheme=t;r.classList.add("opus-no-transitions");window.__OPUS_THEME__=t;window.__OPUS_PREVIEW_THEME__=p;document.cookie=k+"="+t+";path=/;max-age=31536000;SameSite=Lax";document.cookie=pk+"="+p+";path=/;max-age=31536000;SameSite=Lax";requestAnimationFrame(function(){requestAnimationFrame(function(){r.classList.remove("opus-no-transitions");});});}catch(e){}})();${COMPONENTS_ACCENT_BOOTSTRAP_SCRIPT}`;

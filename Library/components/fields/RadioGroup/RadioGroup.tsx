@@ -26,6 +26,7 @@ type RadioGroupProps = {
   mode?: FieldMode;
   name: string;
   onChange: (value: string) => void;
+  orientation?: "horizontal" | "vertical";
   shape?: ChoiceShape;
   size?: ChoiceControlSize;
   value: string | null;
@@ -41,6 +42,7 @@ export function RadioGroup({
   mode = "stacked",
   name,
   onChange,
+  orientation = "vertical",
   shape = "round",
   size = "md",
   value,
@@ -68,19 +70,28 @@ export function RadioGroup({
         labelTag="div"
         mode={mode}
       >
-        <RadioGroupOptions error={error}>{children}</RadioGroupOptions>
+        <RadioGroupOptions error={error} orientation={orientation}>{children}</RadioGroupOptions>
       </FieldShell>
     </RadioGroupContext.Provider>
   );
 }
 
-function RadioGroupOptions({ children, error }: { children: ReactNode; error?: string }) {
+function RadioGroupOptions({
+  children,
+  error,
+  orientation,
+}: {
+  children: ReactNode;
+  error?: string;
+  orientation: "horizontal" | "vertical";
+}) {
   const shellAria = useFieldShellAria();
 
   return (
     <div
       aria-invalid={error ? "true" : undefined}
-      className={styles.options}
+      aria-orientation={orientation}
+      className={`${styles.options} ${orientation === "horizontal" ? styles.horizontal : ""}`}
       role="radiogroup"
       {...fieldInputAriaProps(shellAria, { invalid: Boolean(error) })}
     >

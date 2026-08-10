@@ -18,8 +18,10 @@ type ChoiceChipsProps = {
   help?: string;
   id: string;
   label: string;
+  labelVisuallyHidden?: boolean;
   labelPosition?: LabelPosition;
   mode?: FieldMode;
+  name?: string;
   options: ChoiceOption[];
   required?: boolean;
   selectionMode?: ChoiceChipsSelectionMode;
@@ -39,8 +41,10 @@ export function ChoiceChips({
   help,
   id,
   label,
+  labelVisuallyHidden,
   labelPosition = "left",
   mode = "stacked",
+  name,
   options,
   required,
   selectionMode = "multiple",
@@ -77,6 +81,7 @@ export function ChoiceChips({
       help={help}
       id={id}
       label={label}
+      labelVisuallyHidden={labelVisuallyHidden}
       labelPosition={labelPosition}
       mode={mode}
       required={required}
@@ -90,6 +95,11 @@ export function ChoiceChips({
         role={isSingle ? "radiogroup" : "group"}
         {...fieldInputAriaProps(shellAria, { invalid: Boolean(error) })}
       >
+        {name
+          ? selectedValues.map((selectedValue) => (
+              <input key={selectedValue} name={name} type="hidden" value={selectedValue} />
+            ))
+          : null}
         {options.map((option) => {
           const selected = selectedValues.includes(option.value);
           const optionDisabled = disabled || option.disabled;

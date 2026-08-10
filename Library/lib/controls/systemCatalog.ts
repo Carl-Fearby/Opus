@@ -13,7 +13,7 @@ export const systemCatalog = [
     title: "App setup",
     componentName: "AppSetupGuide",
     description:
-      "Copy-paste Next.js root layout and client shell with Opus styles, theme provider, and portal host wiring.",
+      "Configure the global Next.js wrapper for Opus styles, Space Grotesk, theme inheritance, and portalled UI.",
     settingsType: "app-setup",
     sourceFiles: [
       "components/documentation/AppSetupGuide/AppSetupGuide.tsx",

@@ -279,6 +279,47 @@
   outline-offset: 2px;
 }
 
+.previewOpenButton {
+  box-sizing: border-box;
+  display: inline-flex;
+  align-items: center;
+  justify-content: space-between;
+  flex: 0 0 auto;
+  gap: 6px;
+  width: 118px;
+  height: var(--opus-control-height, 28px);
+  min-height: var(--opus-control-height, 28px);
+  max-height: var(--opus-control-height, 28px);
+  padding: 0 8px;
+  border: 1px solid var(--opus-border-strong);
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--opus-input-bg) 88%, transparent);
+  color: var(--opus-text);
+  font-family: inherit;
+  font-size: 0.72rem;
+  font-weight: 600;
+  line-height: 1;
+  cursor: pointer;
+}
+
+.previewOpenButton:hover,
+.previewOpenButton:focus-visible,
+.previewOpenButton[aria-expanded="true"] {
+  border-color: color-mix(in srgb, var(--opus-accent) 65%, var(--opus-border));
+  outline: none;
+  box-shadow: 0 0 0 2px color-mix(in srgb, var(--opus-accent) 14%, transparent);
+}
+
+.panelActionChevron {
+  flex: 0 0 auto;
+  width: 8px;
+  height: 8px;
+  border-right: 2px solid currentColor;
+  border-bottom: 2px solid currentColor;
+  opacity: 0.72;
+  transform: translateY(-1px) rotate(45deg);
+}
+
 .usageCopyButtonCopied {
   color: var(--opus-accent);
 }
@@ -1270,3 +1311,5 @@
 
 .globalActionPreview .dialogResult{display:none}
 .globalActionStatus{margin:12px 0 0;padding-top:10px;border-top:1px solid var(--opus-border);color:var(--opus-text-muted);font-size:.85rem;font-weight:700}
+.globalActionStatus>p{margin:0}
+.globalDataOutput{display:grid;gap:8px;margin-top:10px}

@@ -109,6 +109,7 @@ export function DateField({
           name={name}
           readOnly={readOnly}
           required={required}
+          step={typeof inputProps?.step === "number" ? inputProps.step : undefined}
           value={value}
           onChange={onChange}
         />

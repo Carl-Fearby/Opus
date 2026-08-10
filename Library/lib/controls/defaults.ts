@@ -72,6 +72,17 @@ const nativeInputDefaults = {
 };
 
 export const defaultSettings: ControlSettingsBySlug = {
+  "virtual-list": {
+    hasMore: true,
+    scrollbarSizing: "loaded",
+    virtualItemCount: 10000,
+  },
+  "product-tour": {},
+  "mention-input": {},
+  "recurrence-editor": {},
+  "time-range-picker": {},
+  "signature-pad": {},
+  "diff-viewer": {},
   desktop: {},
   "desktop-window": {},
   "desktop-dock": {
@@ -341,6 +352,25 @@ export const defaultSettings: ControlSettingsBySlug = {
     value: "Monthly",
     options: "Monthly, Quarterly, Yearly",
   },
+  "form-wizard": {
+    activeStep: 0,
+    allowStepNavigation: true,
+    orientation: "horizontal",
+    showCancel: true,
+    showDescriptions: true,
+  },
+  "async-select": {
+    ...baseFieldDefaults,
+    label: "Assignee",
+    debounceMs: 250,
+    minQueryLength: 1,
+  },
+  "save-state-indicator": { state: "saved", showLastSaved: true },
+  "editable-data-table": { selectable: true, rowCount: 4 },
+  "bulk-action-bar": { selectedCount: 3, destructiveAction: true },
+  "file-manager": { view: "grid", entryCount: 6 },
+  "audit-log": { entryCount: 6 },
+  "upload-queue": { itemCount: 4, maxVisible: 5 },
   "slider-range": {
     ...baseFieldDefaults,
     label: "Budget range",
@@ -753,7 +783,13 @@ export const defaultSettings: ControlSettingsBySlug = {
   "404-page": {},
   "403-page": {},
   "app-setup": {
+    accent: "#8f6cff",
+    accentSecondary: "#0284c7",
+    baseColor: "#64748b",
+    fontFamily: "Space Grotesk",
     theme: "dark",
+    tileAccent: "#ec4899",
+    tileAccentSecondary: "#0ea5e9",
   },
   "dashboard-list-columns": {
     layout: "row",
@@ -1577,6 +1613,15 @@ export const defaultSettings: ControlSettingsBySlug = {
     showSeconds: true,
     showFrames: false,
     size: "md",
+  },
+  "text-marquee": {
+    text: "Live pipeline updates  •  18 tasks due today  •  £2.48M pipeline value  •  23 deals won this month",
+    direction: "left",
+    speed: 56,
+    gap: 48,
+    pauseOnHover: true,
+    fadeEdges: true,
+    surface: true,
   },
   portal: {
     disabled: false,

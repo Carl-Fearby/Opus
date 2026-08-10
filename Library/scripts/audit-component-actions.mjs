@@ -104,7 +104,7 @@ if (failures.length) {
 }
 
 const previewSource = fs.readFileSync(
-  path.join(root, "control-detail", "ControlDetail", "ControlPreview.tsx"),
+  path.join(root, "control-detail", "ControlDetail", "UsagePreview.tsx"),
   "utf8",
 );
 const previewStyles = fs.readFileSync(
@@ -112,7 +112,7 @@ const previewStyles = fs.readFileSync(
   "utf8",
 );
 const componentWaitingSources = collectFiles(root).filter((file) => {
-  if (file.endsWith(path.join("control-detail", "ControlDetail", "ControlPreview.tsx"))) return false;
+  if (file.endsWith(path.join("control-detail", "ControlDetail", "UsagePreview.tsx"))) return false;
   return fs.readFileSync(file, "utf8").includes("Waiting for action");
 });
 
@@ -120,6 +120,7 @@ if (
   componentWaitingSources.length
   || !previewSource.includes("className={styles.globalActionPreview}")
   || !previewSource.includes("className={styles.globalActionStatus}")
+  || !previewSource.includes("data-testid=\"usage-preview-data\"")
   || !previewStyles.includes(".globalActionPreview .dialogResult{display:none}")
 ) {
   console.error("Action status contract failed: expected one outer preview status and no component-owned status.");

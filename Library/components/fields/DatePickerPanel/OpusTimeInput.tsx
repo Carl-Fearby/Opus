@@ -36,11 +36,11 @@ export type OpusTimeInputProps = {
   placeholder?: string;
   readOnly?: boolean;
   required?: boolean;
+  step?: number;
   value: string;
 };
 
 const hourOptions = Array.from({ length: 24 }, (_, hour) => String(hour).padStart(2, "0"));
-const minuteOptions = Array.from({ length: 60 }, (_, minute) => String(minute).padStart(2, "0"));
 
 function TimeColumn({
   label: columnLabel,
@@ -56,7 +56,9 @@ function TimeColumn({
   const selectedRef = useRef<HTMLButtonElement>(null);
 
   useEffect(() => {
-    selectedRef.current?.scrollIntoView({ block: "center" });
+    if (typeof selectedRef.current?.scrollIntoView === "function") {
+      selectedRef.current.scrollIntoView({ block: "center" });
+    }
   }, [value]);
 
   return (
@@ -98,6 +100,7 @@ export function OpusTimeInput({
   placeholder = "Select time",
   readOnly,
   required,
+  step = 60,
   value,
 }: OpusTimeInputProps) {
   const panelId = useId();
@@ -111,6 +114,11 @@ export function OpusTimeInput({
   const [draftMinutes, setDraftMinutes] = useState(parsed.minutes);
   const display = formatTimeDisplay(value);
   const canOpen = !disabled && !readOnly;
+  const minuteStep = Math.max(1, Math.min(60, Math.round(step / 60)));
+  const minuteOptions = Array.from(
+    { length: Math.ceil(60 / minuteStep) },
+    (_, index) => String(index * minuteStep).padStart(2, "0"),
+  ).filter((minute) => Number(minute) < 60);
 
   useEffect(() => {
     const timeout = window.setTimeout(() => setPortalReady(true), 0);

@@ -1,0 +1,50 @@
+.wizard{display:grid;grid-template-columns:1fr;overflow:hidden;border:1px solid var(--opus-border);border-radius:var(--opus-widget-radius,16px);background:var(--opus-panel);color:var(--opus-text)}
+.stepNavigation{padding:18px;border-bottom:1px solid var(--opus-border);background:color-mix(in srgb,var(--opus-panel) 88%,var(--opus-accent) 12%)}
+.steps{display:grid;grid-auto-flow:column;grid-auto-columns:minmax(0,1fr);gap:0;margin:0;padding:0;list-style:none;counter-reset:steps}
+.step{position:relative;min-width:0}
+.step:not(:last-child)::after{content:"";position:absolute;z-index:0;inset-block-start:18px;inset-inline-start:calc(50% + 22px);inset-inline-end:calc(-50% + 22px);block-size:2px;background:var(--opus-border)}
+.step[data-status=completed]:not(:last-child)::after{background:var(--opus-accent)}
+.stepButton{position:relative;z-index:1;display:grid;justify-items:center;gap:8px;width:100%;padding:0 8px;border:0;background:transparent;color:var(--opus-muted);font:inherit;text-align:center}
+.stepButton:not(:disabled){cursor:pointer}
+.stepButton:focus-visible{outline:2px solid var(--opus-accent);outline-offset:4px;border-radius:8px}
+.marker{display:grid;place-items:center;inline-size:36px;block-size:36px;border:2px solid var(--opus-border);border-radius:999px;background:var(--opus-panel);color:var(--opus-muted);font-size:.86rem;font-weight:800;box-sizing:border-box}
+.step[data-status=current] .marker,.step[data-status=completed] .marker{border-color:var(--opus-accent);background:var(--opus-accent);color:var(--opus-accent-contrast,#080b18);box-shadow:0 0 16px color-mix(in srgb,var(--opus-accent) 45%,transparent)}
+.step[data-status=error] .marker{border-color:var(--opus-danger,#ef4444);color:var(--opus-danger,#ef4444)}
+.stepCopy{display:grid;gap:3px;min-width:0}
+.stepLabel{display:flex;justify-content:center;align-items:center;flex-wrap:wrap;gap:6px;color:var(--opus-text);font-weight:700}
+.optional{color:var(--opus-muted);font-size:.68rem;font-weight:600;text-transform:uppercase;letter-spacing:.04em}
+.stepDescription,.stepError{overflow:hidden;text-overflow:ellipsis;font-size:.76rem;line-height:1.35}
+.stepError{color:var(--opus-danger,#ef4444)}
+.panel{display:grid;align-content:start;gap:16px;min-block-size:230px;padding:22px}
+.panelHeader{display:grid;gap:5px}
+.panelHeader h2,.panelHeader p{margin:0}
+.panelHeader h2{font-size:1.25rem}
+.panelHeader p:not(.progress){color:var(--opus-muted)}
+.progress{color:var(--opus-accent);font-size:.72rem;font-weight:800;text-transform:uppercase;letter-spacing:.08em}
+.content{display:grid;gap:14px;align-content:start}
+.actions{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:16px 22px;border-top:1px solid var(--opus-border);background:color-mix(in srgb,var(--opus-panel) 94%,var(--opus-accent) 6%)}
+.primaryActions{display:flex;align-items:center;gap:10px}
+.wizard[data-orientation=vertical]{grid-template-columns:minmax(190px,28%) minmax(0,1fr)}
+.wizard[data-orientation=vertical] .stepNavigation{grid-row:1/3;border-right:1px solid var(--opus-border);border-bottom:0}
+.wizard[data-orientation=vertical] .steps{grid-auto-flow:row;grid-auto-columns:auto;grid-template-columns:1fr;gap:8px}
+.wizard[data-orientation=vertical] .step:not(:last-child)::after{inset-block-start:38px;inset-block-end:-14px;inset-inline-start:17px;inset-inline-end:auto;inline-size:2px;block-size:auto}
+.wizard[data-orientation=vertical] .stepButton{grid-template-columns:36px minmax(0,1fr);justify-items:start;text-align:left;padding:6px 0}
+.wizard[data-orientation=vertical] .stepLabel{justify-content:flex-start}
+.wizard[data-orientation=vertical] .actions{grid-column:2}
+@media(max-width:720px){.stepNavigation{overflow-x:auto}.steps{grid-auto-columns:minmax(140px,1fr);min-width:620px}.stepDescription{display:none}.wizard[data-orientation=vertical]{grid-template-columns:1fr}.wizard[data-orientation=vertical] .stepNavigation{grid-row:auto;border-right:0;border-bottom:1px solid var(--opus-border)}.wizard[data-orientation=vertical] .steps{grid-auto-flow:column;grid-auto-columns:minmax(140px,1fr);grid-template-columns:none;min-width:620px}.wizard[data-orientation=vertical] .stepButton{grid-template-columns:1fr;justify-items:center;text-align:center}.wizard[data-orientation=vertical] .step:not(:last-child)::after{inset-block-start:24px;inset-inline-start:calc(50% + 22px);inset-inline-end:calc(-50% + 22px);inline-size:auto;block-size:2px}.wizard[data-orientation=vertical] .actions{grid-column:auto}}
+@media(max-width:520px){.panel{padding:18px}.actions{align-items:stretch;flex-direction:column-reverse;padding:14px 18px}.actions>div,.primaryActions{display:grid;grid-template-columns:1fr 1fr}.actions>div:first-child{grid-template-columns:1fr}.actions button{width:100%}}
+.wizard {
+  background:
+    radial-gradient(85% 65% at 14% 0%, color-mix(in srgb, var(--opus-accent) 16%, transparent), transparent 58%),
+    radial-gradient(72% 58% at 100% 100%, color-mix(in srgb, var(--opus-accent-secondary, #0284c7) 12%, transparent), transparent 62%),
+    linear-gradient(180deg, color-mix(in srgb, var(--dashboard-section-bg, #070d18) 94%, #ffffff 3%), var(--dashboard-section-bg, #070d18));
+  box-shadow: inset 0 1px 0 color-mix(in srgb, #ffffff 6%, transparent);
+}
+
+:global([data-preview-root][data-theme="light"]) .wizard,
+:global([data-theme="light"]) .wizard {
+  background:
+    radial-gradient(85% 65% at 14% 0%, color-mix(in srgb, var(--opus-accent) 10%, transparent), transparent 58%),
+    radial-gradient(72% 58% at 100% 100%, color-mix(in srgb, var(--opus-accent-secondary, #0284c7) 8%, transparent), transparent 62%),
+    linear-gradient(180deg, color-mix(in srgb, var(--dashboard-section-bg, #f8fbff) 94%, #ffffff 6%), var(--dashboard-section-bg, #f8fbff));
+}

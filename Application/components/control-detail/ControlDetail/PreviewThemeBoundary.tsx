@@ -1,6 +1,7 @@
 "use client";
 
-import type { ComponentPropsWithoutRef, ReactNode } from "react";
+import type { ComponentPropsWithoutRef, CSSProperties, ReactNode } from "react";
+import { fontStack } from "opus-react";
 import { OpusThemeProvider } from "opus-react";
 import type { Theme } from "opus-react";
 import { useComponentsTheme } from "@/components/development/ComponentsThemeProvider";
@@ -18,7 +19,12 @@ export function PreviewThemeBoundary({
   theme: controlledTheme,
   ...rest
 }: PreviewThemeBoundaryProps) {
-  const { previewTheme: contextTheme, previewAccentStyle } = useComponentsTheme();
+  const {
+    previewAppearanceReady,
+    previewTheme: contextTheme,
+    previewAccentStyle,
+    previewFontFamily,
+  } = useComponentsTheme();
   const previewTheme = controlledTheme ?? contextTheme;
 
   return (
@@ -31,9 +37,12 @@ export function PreviewThemeBoundary({
         style={{
           ...opusThemeTokens(previewTheme),
           ...previewAccentStyle,
+          "--opus-font-family": fontStack(previewFontFamily),
           colorScheme: previewTheme,
+          fontFamily: fontStack(previewFontFamily),
+          visibility: previewAppearanceReady ? undefined : "hidden",
           ...style,
-        }}
+        } as CSSProperties}
       >
         {children}
       </div>

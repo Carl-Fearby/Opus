@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { generateUsageCode } from "@/lib/controls/generateUsageCode";
 import { buildPlaygroundHref, storePlaygroundSeed } from "@/lib/playground/playgroundNavigation";
 import type { ComponentCategory, ControlSettings, ControlSlug } from "@/lib/controls/types";
 import styles from "./ControlDetail.module.css";
@@ -12,7 +13,12 @@ type OpenInPlaygroundLinkProps = {
 };
 
 export function OpenInPlaygroundLink({ category, settings, slug }: OpenInPlaygroundLinkProps) {
-  const seed = { category, settings, slug };
+  const seed = {
+    category,
+    code: generateUsageCode(slug, settings, category).full,
+    settings,
+    slug,
+  };
 
   return (
     <Link

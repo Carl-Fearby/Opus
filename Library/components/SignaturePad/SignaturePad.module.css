@@ -1,0 +1,1 @@
+.root{display:grid;gap:10px}.root canvas{display:block;width:100%;max-width:100%;touch-action:none;border:1px solid var(--opus-border);border-radius:12px;background:var(--opus-panel)}.root button{justify-self:start;padding:9px 13px;border:1px solid var(--opus-border);border-radius:8px;background:color-mix(in srgb,var(--opus-accent) 15%,var(--opus-panel));color:var(--opus-text)}

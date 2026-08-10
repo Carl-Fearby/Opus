@@ -12,6 +12,7 @@ export type ButtonVariant =
   | "info"
   | "light"
   | "dark"
+  | "ghost"
   | "link";
 
 type ButtonProps = ButtonHTMLAttributes<HTMLButtonElement> & {

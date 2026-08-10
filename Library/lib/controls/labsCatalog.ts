@@ -31,7 +31,6 @@ export const labsCatalog = [
     description:
       "Opus desktop shell with glowing shortcuts, dock applications, and draggable, resizable, minimizable and maximizable windows.",
     settingsType: "crm-workspace",
-    isNew: true,
     navigationGroup: "Desktop",
     compositionParts: ["desktop", "desktop-window", "desktop-dock", "desktop-icon", "video-player", "badge", "icon"],
     sourceFiles: [

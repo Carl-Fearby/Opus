@@ -15,10 +15,12 @@
 }
 
 .contentShell[data-measured="true"][data-expanded="true"] {
-  max-height: var(--show-more-full-height);
+  /* Leave room for sub-pixel line metrics so the final line is never clipped. */
+  max-height: calc(var(--show-more-full-height) + 2px);
 }
 
 .inner {
+  display: flow-root;
   color: var(--opus-text);
   font-size: 0.86rem;
   line-height: 1.55;

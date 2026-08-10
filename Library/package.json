@@ -15,6 +15,7 @@
     "lint": "eslint",
     "audit:a11y": "node scripts/audit-components-a11y.mjs",
     "audit:actions": "node scripts/audit-component-actions.mjs",
+    "audit:composition": "node scripts/audit-component-composition.mjs",
     "audit:usage": "node -r ./scripts/register-css.cjs -r tsx/cjs scripts/audit-usage-code.ts",
     "test": "vitest run",
     "test:watch": "vitest",

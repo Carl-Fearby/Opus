@@ -10,6 +10,7 @@ type HiddenFieldProps = {
   labelPosition?: LabelPosition;
   mode?: FieldMode;
   name?: string;
+  showPreview?: boolean;
   required?: boolean;
   size?: InputControlSize;
   value: string;
@@ -23,10 +24,15 @@ export function HiddenField({
   mode = "stacked",
   name,
   required,
+  showPreview = true,
   size = "md",
   value,
 }: HiddenFieldProps) {
   const fieldName = name ?? id;
+
+  if (!showPreview) {
+    return <input id={id} name={fieldName} type="hidden" value={value} />;
+  }
 
   return (
     <FieldShell

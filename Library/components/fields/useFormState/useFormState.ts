@@ -1,6 +1,15 @@
 "use client";
 
-import { useCallback, useMemo, useState, type ChangeEvent } from "react";
+import {
+  createContext,
+  createElement,
+  useCallback,
+  useContext,
+  useMemo,
+  useState,
+  type ChangeEvent,
+  type ReactNode,
+} from "react";
 
 export type FormFieldValue = string | number | boolean;
 
@@ -61,6 +70,43 @@ export type UseFormStateResult<TValues extends FormValues> = {
     onChange: (event: ChangeEvent<HTMLInputElement>) => void;
   };
 };
+
+const FormStateContext = createContext<UseFormStateResult<FormValues> | null>(null);
+
+export type FormStateProviderProps<TValues extends FormValues> =
+  UseFormStateOptions<TValues> & {
+    children: ReactNode;
+  };
+
+/**
+ * Owns a form state instance and makes it available to any descendant field,
+ * action bar, validation summary, or debug panel.
+ */
+export function FormStateProvider<TValues extends FormValues>({
+  children,
+  defaults,
+  validate,
+}: FormStateProviderProps<TValues>) {
+  const form = useFormState({ defaults, validate });
+
+  return createElement(
+    FormStateContext.Provider,
+    { value: form as unknown as UseFormStateResult<FormValues> },
+    children,
+  );
+}
+
+/** Read the nearest `FormStateProvider` with the caller's form value type. */
+export function useFormStateContext<
+  TValues extends FormValues = FormValues,
+>(): UseFormStateResult<TValues> {
+  const form = useContext(FormStateContext);
+  if (!form) {
+    throw new Error("useFormStateContext must be used within a FormStateProvider");
+  }
+
+  return form as unknown as UseFormStateResult<TValues>;
+}
 
 export function useFormState<TValues extends FormValues>({
   defaults,

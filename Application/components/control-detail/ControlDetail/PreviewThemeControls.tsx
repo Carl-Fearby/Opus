@@ -1,6 +1,7 @@
 "use client";
 
 import { ThemeToggleField } from "opus-react";
+import { FontPicker } from "opus-react";
 import type { Theme } from "opus-react";
 import { useComponentsTheme } from "@/components/development/ComponentsThemeProvider";
 import { ThemeSettingsButton } from "@/components/documentation/ThemeSettingsButton";
@@ -20,19 +21,19 @@ export function PreviewThemeControls({
   variant = "panel",
 }: PreviewThemeControlsProps) {
   const {
-    fontFamily,
     previewAccent,
     previewAccentSecondary,
     previewBaseColor,
+    previewFontFamily,
     previewTheme,
     previewTileAccent,
     previewTileAccentSecondary,
     resetPreviewAccent,
     resetPreviewTileAccent,
-    setFontFamily,
     setPreviewAccent,
     setPreviewAccentSecondary,
     setPreviewBaseColor,
+    setPreviewFontFamily,
     setPreviewTheme,
     setPreviewTileAccent,
     setPreviewTileAccentSecondary,
@@ -47,13 +48,14 @@ export function PreviewThemeControls({
           ? `${styles.previewThemeControls} ${styles.previewThemeControlsToolbar}`
           : styles.previewThemeControls
       }
+      data-opus-tour="preview-appearance"
     >
       <ThemeSettingsButton
         base={previewBaseColor}
         accent={previewAccent}
         accentSecondary={previewAccentSecondary}
         compact
-        fontFamily={fontFamily}
+        fontFamily={previewFontFamily}
         idPrefix={`${id}-preview`}
         theme={theme}
         themeLabel="Preview theme"
@@ -62,12 +64,17 @@ export function PreviewThemeControls({
         onAccentChange={setPreviewAccent}
         onAccentSecondaryChange={setPreviewAccentSecondary}
         onBaseChange={setPreviewBaseColor}
-        onFontFamilyChange={setFontFamily}
         onResetAccent={resetPreviewAccent}
         onResetTileAccent={resetPreviewTileAccent}
         onThemeChange={handleThemeChange}
         onTileAccentChange={setPreviewTileAccent}
         onTileAccentSecondaryChange={setPreviewTileAccentSecondary}
+      />
+      <FontPicker
+        compact
+        id={`${id}-font`}
+        value={previewFontFamily}
+        onChange={setPreviewFontFamily}
       />
       <span className={styles.previewThemeLabel} id={`${id}-label`}>
         Preview theme

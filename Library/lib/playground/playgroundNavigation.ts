@@ -13,7 +13,18 @@ const CATEGORY_OVERVIEW_PATHS = new Set([
 ]);
 
 export type PlaygroundSeed = {
+  appearance?: {
+    accent: string;
+    accentSecondary: string;
+    baseColor: string;
+    fontFamily: string;
+    theme: "dark" | "light";
+    tileAccent: string;
+    tileAccentSecondary: string;
+  };
   category?: ComponentCategory;
+  /** Exact source displayed in Usage when the Playground was opened. */
+  code?: string;
   settings: ControlSettings;
   slug: ControlSlug;
 };

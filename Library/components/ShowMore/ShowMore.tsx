@@ -46,6 +46,7 @@ export function ShowMore({
   showMoreLabel = "Show more",
 }: ShowMoreProps) {
   const contentId = useId();
+  const shellRef = useRef<HTMLDivElement>(null);
   const innerRef = useRef<HTMLDivElement>(null);
   const [internalExpanded, setInternalExpanded] = useState(defaultExpanded);
   const [canExpand, setCanExpand] = useState(false);
@@ -60,7 +61,12 @@ export function ShowMore({
     }
 
     const lineHeight = Number.parseFloat(getComputedStyle(inner).lineHeight);
-    const full = inner.scrollHeight;
+    const innerRect = inner.getBoundingClientRect();
+    const range = document.createRange();
+    range.selectNodeContents(inner);
+    const contentRect = range.getBoundingClientRect();
+    const rangeHeight = Math.max(0, contentRect.bottom - innerRect.top);
+    const full = Math.ceil(Math.max(inner.scrollHeight, innerRect.height, rangeHeight));
     const collapsed = Number.isFinite(lineHeight) ? Math.ceil(lineHeight * clampLines) : full;
 
     setHeights({ collapsed, full });
@@ -73,7 +79,8 @@ export function ShowMore({
 
   useLayoutEffect(() => {
     const inner = innerRef.current;
-    if (!inner || typeof ResizeObserver === "undefined") {
+    const shell = shellRef.current;
+    if (!inner || !shell || typeof ResizeObserver === "undefined") {
       return;
     }
 
@@ -82,7 +89,35 @@ export function ShowMore({
     });
 
     observer.observe(inner);
+    observer.observe(shell);
     return () => observer.disconnect();
+  }, [measureHeights]);
+
+  useLayoutEffect(() => {
+    if (!isExpanded) {
+      return;
+    }
+
+    const frame = requestAnimationFrame(measureHeights);
+    return () => cancelAnimationFrame(frame);
+  }, [isExpanded, measureHeights]);
+
+  useLayoutEffect(() => {
+    const fonts = document.fonts;
+    if (!fonts) {
+      return;
+    }
+
+    let cancelled = false;
+    void fonts.ready.then(() => {
+      if (!cancelled) {
+        measureHeights();
+      }
+    });
+
+    return () => {
+      cancelled = true;
+    };
   }, [measureHeights]);
 
   const handleToggle = () => {
@@ -107,6 +142,7 @@ export function ShowMore({
   return (
     <div className={styles.root}>
       <div
+        ref={shellRef}
         className={styles.contentShell}
         data-expanded={isExpanded ? "true" : "false"}
         data-measured={heights ? "true" : "false"}

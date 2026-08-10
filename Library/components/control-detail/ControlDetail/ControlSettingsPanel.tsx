@@ -434,6 +434,42 @@ export function ControlSettingsPanel({
   }
 
   switch (slug) {
+    case "virtual-list": {
+      const s = settings as ControlSettingsBySlug["virtual-list"];
+      return (
+        <div className={shellStyles.settingsGrid}>
+          <SettingToggle
+            checked={s.hasMore}
+            label="Has more"
+            onChange={(hasMore) => onChange({ ...s, hasMore } as ControlSettings)}
+          />
+          <SettingSelect
+            label="Scrollbar sizing"
+            value={s.scrollbarSizing}
+            options={[
+              { label: "Loaded items", value: "loaded" },
+              { label: "Virtual total", value: "virtual" },
+            ]}
+            onChange={(scrollbarSizing) =>
+              onChange({ ...s, scrollbarSizing } as ControlSettings)
+            }
+          />
+          {s.scrollbarSizing === "virtual" ? (
+            <SettingInput
+              label="Virtual item count"
+              type="number"
+              value={String(s.virtualItemCount)}
+              onChange={(virtualItemCount) =>
+                onChange({
+                  ...s,
+                  virtualItemCount: Math.max(1, Number(virtualItemCount) || 1),
+                } as ControlSettings)
+              }
+            />
+          ) : null}
+        </div>
+      );
+    }
     case "text-input": {
       const s = settings as ControlSettingsBySlug["text-input"];
       return (
@@ -793,6 +829,69 @@ export function ControlSettingsPanel({
               }
             />
           </div>
+        </div>
+      );
+    }
+    case "async-select": {
+      const s = settings as ControlSettingsBySlug["async-select"];
+      return <div className={shellStyles.settingsGrid}><CommonFieldSettings settings={s} onChange={(next) => onChange({ ...s, ...next })} /><SettingInput label="Debounce (ms)" type="number" value={String(s.debounceMs)} onChange={(debounceMs) => onChange({ ...s, debounceMs: Math.max(0, Number(debounceMs)) } as ControlSettings)} /><SettingInput label="Minimum query" type="number" value={String(s.minQueryLength)} onChange={(minQueryLength) => onChange({ ...s, minQueryLength: Math.max(0, Number(minQueryLength)) } as ControlSettings)} /></div>;
+    }
+    case "save-state-indicator": {
+      const s = settings as ControlSettingsBySlug["save-state-indicator"];
+      return <div className={shellStyles.settingsGrid}><SettingSelect label="State" value={s.state} options={["idle", "saving", "saved", "error"].map((value) => ({ label: value, value }))} onChange={(state) => onChange({ ...s, state } as ControlSettings)} /><SettingToggle checked={s.showLastSaved} label="Show last saved" onChange={(showLastSaved) => onChange({ ...s, showLastSaved } as ControlSettings)} /></div>;
+    }
+    case "editable-data-table": { const s = settings as ControlSettingsBySlug["editable-data-table"]; return <div className={shellStyles.settingsGrid}><SettingToggle checked={s.selectable} label="Selectable rows" onChange={(selectable) => onChange({ ...s, selectable } as ControlSettings)} /><SettingInput label="Rows" type="number" value={String(s.rowCount)} onChange={(rowCount) => onChange({ ...s, rowCount: Math.max(1, Math.min(4, Number(rowCount))) } as ControlSettings)} /></div>; }
+    case "bulk-action-bar": { const s = settings as ControlSettingsBySlug["bulk-action-bar"]; return <div className={shellStyles.settingsGrid}><SettingInput label="Selected count" type="number" value={String(s.selectedCount)} onChange={(selectedCount) => onChange({ ...s, selectedCount: Math.max(0, Number(selectedCount)) } as ControlSettings)} /><SettingToggle checked={s.destructiveAction} label="Destructive action" onChange={(destructiveAction) => onChange({ ...s, destructiveAction } as ControlSettings)} /></div>; }
+    case "file-manager": { const s = settings as ControlSettingsBySlug["file-manager"]; return <div className={shellStyles.settingsGrid}><SettingSelect label="View" value={s.view} options={[{ label: "Grid", value: "grid" }, { label: "List", value: "list" }]} onChange={(view) => onChange({ ...s, view } as ControlSettings)} /><SettingInput label="Entries" type="number" value={String(s.entryCount)} onChange={(entryCount) => onChange({ ...s, entryCount: Math.max(1, Math.min(6, Number(entryCount))) } as ControlSettings)} /></div>; }
+    case "audit-log": { const s = settings as ControlSettingsBySlug["audit-log"]; return <div className={shellStyles.settingsGrid}><SettingInput label="Entries" type="number" value={String(s.entryCount)} onChange={(entryCount) => onChange({ ...s, entryCount: Math.max(1, Math.min(6, Number(entryCount))) } as ControlSettings)} /></div>; }
+    case "upload-queue": { const s = settings as ControlSettingsBySlug["upload-queue"]; return <div className={shellStyles.settingsGrid}><SettingInput label="Items" type="number" value={String(s.itemCount)} onChange={(itemCount) => onChange({ ...s, itemCount: Math.max(0, Math.min(4, Number(itemCount))) } as ControlSettings)} /><SettingInput label="Maximum visible" type="number" value={String(s.maxVisible)} onChange={(maxVisible) => onChange({ ...s, maxVisible: Math.max(1, Number(maxVisible)) } as ControlSettings)} /></div>; }
+    case "form-wizard": {
+      const s = settings as ControlSettingsBySlug["form-wizard"];
+      return (
+        <div className={shellStyles.settingsGrid}>
+          <SettingSelect
+            label="Active step"
+            value={String(s.activeStep)}
+            options={[0, 1, 2, 3].map((value) => ({
+              label: `Step ${value + 1}`,
+              value: String(value),
+            }))}
+            onChange={(activeStep) =>
+              onChange({ ...s, activeStep: Number(activeStep) } as ControlSettings)
+            }
+          />
+          <SettingSelect
+            label="Orientation"
+            value={s.orientation}
+            options={[
+              { label: "Horizontal", value: "horizontal" },
+              { label: "Vertical", value: "vertical" },
+            ]}
+            onChange={(orientation) =>
+              onChange({ ...s, orientation } as ControlSettings)
+            }
+          />
+          <SettingToggle
+            checked={s.allowStepNavigation}
+            label="Clickable steps"
+            onChange={(allowStepNavigation) =>
+              onChange({ ...s, allowStepNavigation } as ControlSettings)
+            }
+          />
+          <SettingToggle
+            checked={s.showDescriptions}
+            label="Step descriptions"
+            onChange={(showDescriptions) =>
+              onChange({ ...s, showDescriptions } as ControlSettings)
+            }
+          />
+          <SettingToggle
+            checked={s.showCancel}
+            label="Cancel action"
+            onChange={(showCancel) =>
+              onChange({ ...s, showCancel } as ControlSettings)
+            }
+          />
         </div>
       );
     }
@@ -7635,6 +7734,56 @@ export function ControlSettingsPanel({
             onChange={(showDate) =>
               onChange({ ...s, showDate } as ControlSettings)
             }
+          />
+        </div>
+      );
+    }
+    case "text-marquee": {
+      const s = settings as ControlSettingsBySlug["text-marquee"];
+      return (
+        <div className={shellStyles.settingsGrid}>
+          <SettingTextarea
+            label="Text"
+            value={s.text}
+            onChange={(text) => onChange({ ...s, text } as ControlSettings)}
+          />
+          <SettingSelect
+            label="Direction"
+            value={s.direction}
+            onChange={(direction) =>
+              onChange({ ...s, direction: direction as typeof s.direction } as ControlSettings)
+            }
+            options={[
+              { label: "Scroll left", value: "left" },
+              { label: "Scroll right", value: "right" },
+            ]}
+          />
+          <SettingInput
+            label="Speed (px/s)"
+            type="number"
+            value={String(s.speed)}
+            onChange={(speed) => onChange({ ...s, speed: Number(speed) } as ControlSettings)}
+          />
+          <SettingInput
+            label="Repeat gap (px)"
+            type="number"
+            value={String(s.gap)}
+            onChange={(gap) => onChange({ ...s, gap: Number(gap) } as ControlSettings)}
+          />
+          <SettingToggle
+            label="Pause on hover"
+            checked={s.pauseOnHover}
+            onChange={(pauseOnHover) => onChange({ ...s, pauseOnHover } as ControlSettings)}
+          />
+          <SettingToggle
+            label="Fade edges"
+            checked={s.fadeEdges}
+            onChange={(fadeEdges) => onChange({ ...s, fadeEdges } as ControlSettings)}
+          />
+          <SettingToggle
+            label="Widget background"
+            checked={s.surface}
+            onChange={(surface) => onChange({ ...s, surface } as ControlSettings)}
           />
         </div>
       );

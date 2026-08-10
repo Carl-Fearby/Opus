@@ -9,7 +9,7 @@ export function ComponentsPageHeader() {
   const currentLabel = pageHeader.title || undefined;
 
   return (
-    <div className={styles.pageHeader}>
+    <div className={styles.pageHeader} data-opus-tour="component-heading">
       <DocumentationBreadcrumbs currentLabel={currentLabel} />
       {pageHeader.title ? <h1>{pageHeader.title}</h1> : <h1 className={styles.visuallyHidden}>Components</h1>}
       {pageHeader.description ? <p>{pageHeader.description}</p> : null}

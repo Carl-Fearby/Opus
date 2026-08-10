@@ -1,0 +1,1 @@
+.root{width:100%}.content{display:grid;gap:14px;color:var(--dashboard-section-text,var(--opus-text))}.line{display:flex;align-items:center;gap:8px}.intervalField{width:132px}.frequencyField{width:min(100%,180px)}.dateRange{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}@media(max-width:640px){.dateRange{grid-template-columns:1fr}}

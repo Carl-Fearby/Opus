@@ -1,0 +1,22 @@
+.root{display:grid;gap:12px;padding:16px;border:1px solid var(--opus-border);border-radius:16px;background:var(--opus-panel);color:var(--opus-text)}.header,.tools{display:flex;align-items:center;justify-content:space-between;gap:12px}.header nav{display:flex;gap:7px}.header nav span{display:flex;gap:7px}.header nav button{padding:0;border:0;background:transparent;color:var(--opus-accent);font:inherit;font-weight:700;cursor:pointer}.header nav i{color:var(--opus-muted)}.headerActions,.tools>div{display:flex;gap:7px}.tools input{min-width:180px;flex:1;padding:9px 11px;border:1px solid var(--opus-border);border-radius:9px;background:var(--opus-input-bg,var(--opus-panel));color:var(--opus-text);font:inherit}.entries{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:10px}.entries[data-view=list]{grid-template-columns:1fr}.entry{display:flex;align-items:center;gap:11px;padding:13px;border:1px solid var(--opus-border);border-radius:12px;background:color-mix(in srgb,var(--opus-panel) 94%,var(--opus-accent) 6%);color:var(--opus-text);font:inherit;text-align:left;cursor:pointer}.entry:hover,.entry:focus-visible{border-color:var(--opus-accent);background:var(--opus-accent-soft)}.entryIcon{color:var(--opus-accent);font-size:1.45rem}.entryCopy{display:grid;gap:3px;min-width:0}.entryCopy strong,.entryCopy small{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.entryCopy small,.empty{color:var(--opus-muted)}.empty{margin:12px;text-align:center}@media(max-width:560px){.header,.tools{align-items:stretch;flex-direction:column}.headerActions{flex-wrap:wrap}}
+
+.root {
+  background:
+    radial-gradient(85% 65% at 14% 0%, color-mix(in srgb, var(--opus-accent) 16%, transparent), transparent 58%),
+    radial-gradient(72% 58% at 100% 100%, color-mix(in srgb, var(--opus-accent-secondary, #0284c7) 12%, transparent), transparent 62%),
+    linear-gradient(180deg, color-mix(in srgb, var(--dashboard-section-bg, #070d18) 94%, #ffffff 3%), var(--dashboard-section-bg, #070d18));
+  box-shadow:
+    inset 0 1px 0 color-mix(in srgb, #ffffff 6%, transparent),
+    0 12px 28px color-mix(in srgb, #020617 42%, transparent);
+}
+
+:global([data-preview-root][data-theme="light"]) .root,
+:global([data-theme="light"]) .root {
+  background:
+    radial-gradient(85% 65% at 14% 0%, color-mix(in srgb, var(--opus-accent) 10%, transparent), transparent 58%),
+    radial-gradient(72% 58% at 100% 100%, color-mix(in srgb, var(--opus-accent-secondary, #0284c7) 8%, transparent), transparent 62%),
+    linear-gradient(180deg, color-mix(in srgb, var(--dashboard-section-bg, #f8fbff) 94%, #ffffff 6%), var(--dashboard-section-bg, #f8fbff));
+  box-shadow:
+    inset 0 1px 0 color-mix(in srgb, #ffffff 90%, transparent),
+    0 8px 20px color-mix(in srgb, var(--opus-accent-secondary, #0284c7) 10%, transparent);
+}

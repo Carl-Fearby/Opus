@@ -39,6 +39,7 @@ import styles from "./ComponentsShell.module.css";
 
 const SIDEBAR_SEARCH_ID = "components-sidebar-search";
 const SIDEBAR_GROUPS_STORAGE_KEY = "opus-components-sidebar-groups";
+const SIDEBAR_SEARCH_STORAGE_KEY = "opus-components-sidebar-search";
 const SIDEBAR_WIDTH_KEY = "opus-components-sidebar-width-v1";
 const DEFAULT_SIDEBAR_WIDTH = 240;
 const MIN_SIDEBAR_WIDTH = 140;
@@ -61,6 +62,18 @@ function readSidebarWidth() {
 
   const parsed = Number(stored);
   return Number.isFinite(parsed) ? clampSidebarWidth(parsed) : DEFAULT_SIDEBAR_WIDTH;
+}
+
+function readSidebarSearch() {
+  if (typeof window === "undefined") {
+    return "";
+  }
+
+  try {
+    return window.sessionStorage.getItem(SIDEBAR_SEARCH_STORAGE_KEY) ?? "";
+  } catch {
+    return "";
+  }
 }
 
 function navGroupListId(category: ComponentCategory) {
@@ -176,12 +189,14 @@ function NavLink({
   href,
   icon,
   label,
+  isNew,
   nested,
   onNavigate,
 }: {
   href: string;
   icon: IconDefinition;
   label: string;
+  isNew?: boolean;
   nested?: boolean;
   onNavigate?: () => void;
 }) {
@@ -199,6 +214,11 @@ function NavLink({
     >
       <ComponentIcon compact={nested} icon={icon} />
       <span className={styles.navLinkLabel}>{label}</span>
+      {isNew ? (
+        <span aria-label="New component" className={styles.navNewMarker} title="New component">
+          *
+        </span>
+      ) : null}
     </Link>
   );
 }
@@ -289,6 +309,7 @@ function NavGroup({
                       href={controlDetailPath(control)}
                       icon={getComponentIcon(control.slug)}
                       label={control.title}
+                      isNew={control.isNew}
                       nested
                       onNavigate={onNavigate}
                     />
@@ -325,7 +346,6 @@ function NavSubgroup({
   const subgroupPath = categorySubgroupPath(category, label);
   const isOpen = forceOpen || open;
   const isSubgroupOverview = pathname === subgroupPath;
-
   return (
     <>
       <div className={styles.navSubsectionHeader}>
@@ -369,6 +389,7 @@ function NavSubgroup({
               href={controlDetailPath(control)}
               icon={getComponentIcon(control.slug)}
               label={control.title}
+              isNew={control.isNew}
               nested
               onNavigate={onNavigate}
             />
@@ -436,6 +457,7 @@ export function ComponentsSidebar() {
   useEffect(() => {
     const timeout = window.setTimeout(() => {
       setOpenGroups(readOpenGroups());
+      setQuery(readSidebarSearch());
       setHydrated(true);
     }, 0);
 
@@ -510,7 +532,20 @@ export function ComponentsSidebar() {
     });
   }, []);
 
-  const clearSearch = useCallback(() => setQuery(""), []);
+  const updateSearch = useCallback((value: string) => {
+    setQuery(value);
+    try {
+      if (value) {
+        window.sessionStorage.setItem(SIDEBAR_SEARCH_STORAGE_KEY, value);
+      } else {
+        window.sessionStorage.removeItem(SIDEBAR_SEARCH_STORAGE_KEY);
+      }
+    } catch {
+      // Keep the in-memory search when storage is unavailable.
+    }
+  }, []);
+
+  const clearSearch = useCallback(() => updateSearch(""), [updateSearch]);
 
   useEffect(() => {
     widthRef.current = sidebarWidth;
@@ -599,7 +634,7 @@ export function ComponentsSidebar() {
       className={styles.sidebarWrap}
       style={{ "--components-sidebar-width": `${sidebarWidth}px` } as CSSProperties}
     >
-    <aside className={styles.sidebar}>
+    <aside className={styles.sidebar} data-opus-tour="component-navigation">
       <div className={styles.sidebarSearch} role="search">
         <label className={styles.sidebarSearchWrap} htmlFor={SIDEBAR_SEARCH_ID}>
           <span aria-hidden="true" className={styles.sidebarSearchIcon}>
@@ -609,7 +644,7 @@ export function ComponentsSidebar() {
             aria-controls={isSearching ? "components-sidebar-search-results" : undefined}
             className={styles.sidebarSearchInput}
             id={SIDEBAR_SEARCH_ID}
-            onChange={(event) => setQuery(event.target.value)}
+            onChange={(event) => updateSearch(event.target.value)}
             onKeyDown={(event) => {
               if (event.key === "Escape") {
                 event.preventDefault();
@@ -633,7 +668,6 @@ export function ComponentsSidebar() {
                   .filter(Boolean)
                   .join(" ")}
                 href={componentPath()}
-                onClick={clearSearch}
               >
                 <ComponentIcon icon={getOverviewIcon()} />
                 <span className={styles.navHeadingLabel}>
@@ -649,7 +683,6 @@ export function ComponentsSidebar() {
                   .filter(Boolean)
                   .join(" ")}
                 href={RELATIONSHIPS_PATH}
-                onClick={clearSearch}
               >
                 <ComponentIcon icon={getComponentIcon("tree-view")} />
                 <span className={styles.navHeadingTitle}>Relationships</span>
@@ -664,7 +697,6 @@ export function ComponentsSidebar() {
                 open
                 openGroups={openGroups}
                 sections={group.sections}
-                onNavigate={clearSearch}
                 onToggleSubgroup={toggleSubgroup}
                 onToggle={() => toggleGroup(group.category)}
               />
@@ -732,6 +764,7 @@ export function ComponentsSidebar() {
         aria-valuenow={sidebarWidth}
         background="subtle"
         className={styles.sidebarResizeHandle}
+        data-opus-tour="navigation-resize"
         height="full"
         orientation="vertical"
         onKeyDown={handleNavResizeKeyDown}

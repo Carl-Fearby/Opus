@@ -33,6 +33,10 @@ import {
   formatPipelineTotalValue,
 } from "./pipelineDemoData";
 import { getDealsOverTimeDemoData } from "./dealsOverTimeDemoData";
+import {
+  brokenReactCode,
+  correctedReactCode,
+} from "@/components/control-detail/ControlDetail/DiffViewerDemoCode";
 import { demoRecentActivity } from "./recentActivityDemoData";
 import { demoNotesActivity } from "./notesActivityDemoData";
 import { testLayoutMenu } from "./testLayoutDemoData";
@@ -182,6 +186,13 @@ function toSetter(state: string): string {
 
 function quote(value: string): string {
   return JSON.stringify(value);
+}
+
+function codeLines(value: string): string {
+  return `[\n${value
+    .split("\n")
+    .map((line) => `  '${line.replaceAll("\\", "\\\\").replaceAll("'", "\\'")}',`)
+    .join("\n")}\n].join("\\n")`;
 }
 
 function formatStringProp(name: string, value: string): string {
@@ -519,6 +530,187 @@ ${
   }
 
   switch (slug) {
+    case "virtual-list": {
+      const s = settings as ControlSettingsBySlug["virtual-list"];
+      const initialCount = s.hasMore ? 20 : s.virtualItemCount;
+      const infiniteProps = s.hasMore
+        ? `\n    hasMore={items.length < ${s.virtualItemCount}}\n    onLoadMore={() =>\n      setItems((current) => createItems(Math.min(20, ${s.virtualItemCount} - current.length), current.length, current))\n    }`
+        : "";
+      const totalProp = s.hasMore && s.scrollbarSizing === "virtual"
+        ? `\n    totalItemCount={${s.virtualItemCount}}`
+        : "";
+
+      return `${usageClientPrefix(true)}
+${importLine(["VirtualList"])}
+
+const people = ["Emma Davis", "Michael Brown", "Olivia Wilson", "Noah Patel", "Sophia Carter", "James Smith"];
+const companies = ["Acme Ltd", "Initech", "Global Corp", "Northstar", "Vertex Labs", "Summit Group"];
+const activities = ["Opened the enterprise proposal", "Moved a deal to negotiation", "Scheduled a discovery call", "Added notes to the account", "Uploaded a signed agreement", "Requested a pricing review"];
+
+function createItems(count, start = 0, existing = []) {
+  return [
+    ...existing,
+    ...Array.from({ length: count }, (_, offset) => {
+      const index = start + offset;
+      return {
+        id: index,
+        name: people[index % people.length],
+        company: companies[(index * 3) % companies.length],
+        activity: activities[(index * 5) % activities.length],
+        time: index < 2 ? "Just now" : \`\${(index % 58) + 2}m ago\`,
+      };
+    }),
+  ];
+}
+
+const [items, setItems] = useState(() => createItems(${initialCount}));
+
+return (
+  <VirtualList
+    items={items}
+    height={400}
+    itemHeight={80}${infiniteProps}${totalProp}
+    getKey={(item) => item.id}
+    renderItem={(item) => (
+      <article style={{ display: "grid", gap: 4 }}>
+        <strong>{item.name}</strong>
+        <span>{item.activity}</span>
+        <small style={{ color: "var(--opus-muted)" }}>
+          {item.company} · {item.time}
+        </small>
+      </article>
+    )}
+    onItemClick={(item) => console.log(item)}
+  />
+);`;
+    }
+    case "product-tour": return `${usageClientPrefix()}
+${importLine(["Button", "ProductTour"])}
+
+const [open, setOpen] = useState(false);
+const steps = [
+  {
+    id: "navigation",
+    target: '[data-opus-tour="top-navigation"]',
+    fallbackTarget: "#create-tour",
+    title: "Navigate the documentation",
+    description: "Move between the guide, component catalogue, playground, and release history.",
+    placement: "bottom",
+  },
+  {
+    id: "ui-font",
+    target: '[data-opus-tour="ui-font"]',
+    fallbackTarget: "#create-tour",
+    title: "Choose the UI font",
+    description: "Select the typeface used by the catalogue shell and its documentation.",
+    placement: "bottom",
+  },
+  {
+    id: "ui-theme",
+    target: '[data-opus-tour="ui-theme"]',
+    fallbackTarget: "#create-tour",
+    title: "Switch the UI theme",
+    description: "Toggle the catalogue shell between light and dark mode independently of the component preview.",
+    placement: "bottom",
+  },
+  {
+    id: "ui-colours",
+    target: '[data-opus-tour="ui-colours"]',
+    fallbackTarget: "#create-tour",
+    title: "Customise the catalogue colours",
+    description: "Set the Base, Accent, and Secondary Accent colours used throughout the documentation UI.",
+    placement: "bottom",
+  },
+  {
+    id: "navigation-resize",
+    target: '[data-opus-tour="navigation-resize"]',
+    fallbackTarget: "#create-tour",
+    title: "Resize the catalogue navigation",
+    description: "Drag this bar, or focus it and use the arrow keys, to change the navigation width.",
+    placement: "right",
+  },
+  {
+    id: "catalogue",
+    target: '[data-opus-tour="component-navigation"]',
+    fallbackTarget: "#create-tour",
+    title: "Browse the component catalogue",
+    description: "Search or expand a category to find every Opus primitive, pattern, and lab.",
+    placement: "right",
+  },
+  {
+    id: "heading",
+    target: '[data-opus-tour="component-heading"]',
+    fallbackTarget: "#create-tour",
+    title: "Understand the component",
+    description: "The page heading identifies the component and summarises its intended role.",
+    placement: "bottom",
+  },
+  {
+    id: "preview",
+    target: '[data-opus-tour="component-preview"]',
+    fallbackTarget: "#create-tour",
+    title: "Try the live preview",
+    description: "Interact with the rendered component and open the same example in Playground or External view.",
+    placement: "bottom",
+  },
+  {
+    id: "preview-appearance",
+    target: '[data-opus-tour="preview-appearance"]',
+    fallbackTarget: "#create-tour",
+    title: "Style only the component preview",
+    description: "These Base, Accent, Secondary Accent, font, and theme controls are isolated from the catalogue UI.",
+    placement: "bottom",
+  },
+  {
+    id: "settings-resize",
+    target: '[data-opus-tour="settings-resize"]',
+    fallbackTarget: "#create-tour",
+    title: "Resize the settings panel",
+    description: "Drag this bar, or use it from the keyboard, to give component settings more or less room.",
+    placement: "left",
+  },
+  {
+    id: "settings",
+    target: '[data-opus-tour="component-settings"]',
+    fallbackTarget: "#create-tour",
+    title: "Adjust component settings",
+    description: "Change supported props here and see the preview and generated usage update together.",
+    placement: "left",
+  },
+  {
+    id: "documentation",
+    target: '[data-opus-tour="component-documentation"]',
+    fallbackTarget: "#create-tour",
+    title: "Read the documentation",
+    description: "Review usage guidance, props, accessibility behaviour, and composition relationships.",
+    placement: "top",
+  },
+  {
+    id: "usage",
+    target: '[data-opus-tour="component-usage"]',
+    fallbackTarget: "#create-tour",
+    title: "Copy production-ready usage",
+    description: "Copy the complete example or send it to Playground to adapt it for your application.",
+    placement: "top",
+  },
+];
+
+return (
+  <>
+    <Button id="create-tour" onClick={() => setOpen(true)}>Create a tour</Button>
+    <ProductTour
+      open={open}
+      steps={steps}
+      onDismiss={() => setOpen(false)}
+      onComplete={() => setOpen(false)}
+    />
+  </>
+);`;
+    case "mention-input": return `${usageClientPrefix()}\n${importLine(["MentionInputField"])}\n\nconst [value, setValue] = useState("");\nconst people = [{ id: "1", label: "Emma Davis", description: "Procurement" }];\n\nreturn <MentionInputField id="comment" label="Comment" value={value} options={people} onChange={setValue} onMention={(person) => console.log(person)} />;`;
+    case "recurrence-editor": return `${usageClientPrefix()}\n${importLine(["RecurrenceEditor"])}\n\nconst [value, setValue] = useState({ frequency: "weekly", interval: 1, weekdays: [1, 3, 5], ends: "never" });\n\nreturn <RecurrenceEditor value={value} onChange={setValue} />;`;
+    case "time-range-picker": return `${usageClientPrefix()}\n${importLine(["TimeRangeField"])}\n\nconst [value, setValue] = useState({ start: "09:00", end: "17:30" });\n\nreturn <TimeRangeField id="hours" label="Working hours" value={value} onChange={setValue} />;`;
+    case "signature-pad": return `${usageClientPrefix(false)}\n${importLine(["SignaturePad"])}\n\nreturn <SignaturePad onChange={(dataUrl) => console.log(dataUrl)} onClear={() => console.log("Cleared")} />;`;
+    case "diff-viewer": return `${usageClientPrefix(false)}\n${importLine(["DiffViewer"])}\n\nconst originalCode = ${codeLines(brokenReactCode)};\n\nconst correctedCode = ${codeLines(correctedReactCode)};\n\nreturn (\n  <DiffViewer\n    before={originalCode}\n    after={correctedCode}\n    beforeLabel="Original code"\n    afterLabel="Corrected code"\n    defaultView="unified"\n  />\n);`;
     case "text-input": {
       const s = settings as ControlSettingsBySlug["text-input"];
       const state = toStateName(s.label);
@@ -1136,6 +1328,63 @@ const options = ${formatSegmentedControlOptionsForUsage(s.options)};
 const [${state}, ${toSetter(state)}] = useState(${quote(s.value)});
 
 <SegmentedControlField${formatSelfClosing(props)}`;
+    }
+    case "async-select": {
+      const s = settings as ControlSettingsBySlug["async-select"];
+      return interactiveUsage({ components: ["AsyncSelectField"], preamble: [`const people = [\n  { label: "Emma Davis", value: "emma" },\n  { label: "Michael Brown", value: "michael" },\n  { label: "Olivia Wilson", value: "olivia" },\n];`], state: [`const [person, setPerson] = useState(null);`], jsx: `<AsyncSelectField id="assignee" label="Assignee" value={person} defaultOptions={people} debounceMs={${s.debounceMs}} minQueryLength={${s.minQueryLength}} loadOptions={async (query) => people.filter((item) => item.label.toLowerCase().includes(query.toLowerCase()))} onChange={setPerson} />` });
+    }
+    case "save-state-indicator": {
+      const s = settings as ControlSettingsBySlug["save-state-indicator"];
+      return interactiveUsage({ components: ["SaveStateIndicator"], state: [`const [state, setState] = useState(${quote(s.state)});`], jsx: `<SaveStateIndicator state={state} showLastSaved={${s.showLastSaved}} lastSaved="a few seconds ago" onRetry={() => setState("saving")} />` });
+    }
+    case "editable-data-table": {
+      const s = settings as ControlSettingsBySlug["editable-data-table"];
+      return interactiveUsage({ components: ["EditableDataTable"], preamble: [`const columns = [{ key: "name", label: "Name", editable: true }, { key: "role", label: "Role", editable: true }, { key: "status", label: "Status" }];\nconst initialRows = [{ id: "1", values: { name: "Emma Davis", role: "Procurement", status: "Active" } }, { id: "2", values: { name: "Michael Brown", role: "Sales", status: "Active" } }];`], state: [`const [rows, setRows] = useState(initialRows);`], jsx: `<EditableDataTable caption="Team members" columns={columns} rows={rows} selectable={${s.selectable}} onRowsChange={setRows} onRowSave={(row) => console.log("Saved", row)} onRowDelete={(row) => console.log("Deleted", row)} onBulkAction={(action, selectedRows) => console.log(action, selectedRows)} />` });
+    }
+    case "bulk-action-bar": {
+      const s = settings as ControlSettingsBySlug["bulk-action-bar"];
+      return interactiveUsage({ components: ["BulkActionBar"], state: [`const [selectedCount, setSelectedCount] = useState(${s.selectedCount});`], jsx: `<BulkActionBar selectedCount={selectedCount} actions={[{ id: "archive", label: "Archive" }, ${s.destructiveAction ? `{ id: "delete", label: "Delete", destructive: true }` : ""}].filter(Boolean)} onAction={(action) => console.log("Bulk action", action)} onClear={() => setSelectedCount(0)} />` });
+    }
+    case "file-manager": {
+      const s = settings as ControlSettingsBySlug["file-manager"];
+      return interactiveUsage({ components: ["FileManager"], preamble: [`const entries = [{ id: "contracts", name: "Contracts", type: "folder" }, { id: "brief", name: "CRM brief.pdf", type: "file", size: "2.4 MB" }, { id: "forecast", name: "Forecast.xlsx", type: "file", size: "680 KB" }];`], state: [], jsx: `<FileManager entries={entries} path={["Documents"]} initialView=${quote(s.view)} onOpen={(entry) => console.log("Opened", entry)} onUpload={() => console.log("Upload")} onCreateFolder={() => console.log("Create folder")} />` });
+    }
+    case "audit-log": {
+      return interactiveUsage({ components: ["AuditLog"], preamble: [`const entries = [{ id: "1", action: "Contact updated", actor: "Emma Davis", target: "Acme Ltd", timestamp: "2 minutes ago", category: "Contacts" }, { id: "2", action: "Export failed", actor: "System", target: "Monthly report", timestamp: "42 minutes ago", category: "System", status: "error" }];`], state: [], jsx: `<AuditLog entries={entries} onEntryClick={(entry) => console.log("Audit event", entry)} />` });
+    }
+    case "upload-queue": {
+      const s = settings as ControlSettingsBySlug["upload-queue"];
+      return interactiveUsage({ components: ["UploadQueue"], preamble: [`const uploads = [{ id: "1", name: "CRM brief.pdf", size: "2.4 MB", progress: 100, status: "complete" }, { id: "2", name: "Brand assets.zip", size: "18 MB", progress: 68, status: "uploading" }, { id: "3", name: "Contacts.csv", size: "1.1 MB", progress: 12, status: "error", error: "Network connection lost" }];`], state: [], jsx: `<UploadQueue items={uploads} maxVisible={${s.maxVisible}} onPause={(item) => console.log("Pause", item)} onResume={(item) => console.log("Resume", item)} onRetry={(item) => console.log("Retry", item)} onRemove={(item) => console.log("Remove", item)} onClearComplete={() => console.log("Clear complete")} />` });
+    }
+    case "form-wizard": {
+      const s = settings as ControlSettingsBySlug["form-wizard"];
+      return interactiveUsage({
+        components: ["FormWizard"],
+        preamble: [`const steps = [
+  { id: "account", label: "Account", description: "Your sign-in details", content: <p>Enter the account holder and sign-in information.</p> },
+  { id: "profile", label: "Profile", description: "Personal information", content: <p>Add the profile information colleagues will see.</p> },
+  { id: "preferences", label: "Preferences", description: "Notifications and defaults", optional: true, content: <p>Choose notification preferences and workspace defaults.</p> },
+  { id: "review", label: "Review", description: "Confirm and submit", content: <p>Review the supplied information before completing the form.</p> },
+];`],
+        state: [
+          `const [activeStep, setActiveStep] = useState(${s.activeStep});`,
+        ],
+        jsx: `<FormWizard
+    activeStep={activeStep}
+    allowStepNavigation={${s.allowStepNavigation}}
+    orientation=${quote(s.orientation)}
+    showCancel={${s.showCancel}}
+    showDescriptions={${s.showDescriptions}}
+    steps={steps}
+    onCancel={() => console.log("Cancelled form")}
+    onComplete={(step, index) => console.log("Completed form", step, index)}
+    onStepChange={(step, index) => {
+      setActiveStep(index);
+      console.log("Opened step", step);
+    }}
+    onValidationError={(step, index) => console.log("Validation blocked", step, index)}
+  />`,
+      });
     }
     case "slider-range": {
       const s = settings as ControlSettingsBySlug["slider-range"];
@@ -1787,7 +2036,7 @@ ${children}
         ...(s.dismissible ? [] : ["dismissible: false"]),
       ];
       return interactiveUsage({
-        components: ["ToastProvider", "useToast"],
+        components: ["Button", "ToastProvider", "useToast"],
         preamble: [
           "",
           "// In your app layout:",
@@ -1796,15 +2045,15 @@ ${children}
           "// </ToastProvider>",
         ],
         state: ["const toast = useToast();"],
-        jsx: `<button
-  type="button"
+        jsx: `<Button
+  variant="primary"
   onClick={() => {
     console.log("show toast");
     toast.show({${showProps.length === 1 ? ` ${showProps[0]}` : `\n      ${showProps.join(",\n      ")},\n    `}});
   }}
 >
   Show toast
-</button>`,
+</Button>`,
       });
     }
     case "card": {
@@ -4808,6 +5057,19 @@ const value = ${formatJsonValueForUsage()};
         ...(s.showDate ? [] : [formatBoolProp("showDate", false)]),
       ];
       return `${importLine(["FlipClock"])}\n\n<FlipClock${formatSelfClosing(props)}`;
+    }
+    case "text-marquee": {
+      const s = settings as ControlSettingsBySlug["text-marquee"];
+      const props = [
+        ...(s.direction !== "left" ? [formatStringProp("direction", s.direction)] : []),
+        ...(s.speed !== 56 ? [formatExpressionProp("speed", String(s.speed))] : []),
+        ...(s.gap !== 48 ? [formatExpressionProp("gap", String(s.gap))] : []),
+        ...(s.pauseOnHover ? [] : [formatBoolProp("pauseOnHover", false)]),
+        ...(s.fadeEdges ? [] : [formatBoolProp("fadeEdges", false)]),
+        ...(s.surface ? [] : [formatBoolProp("surface", false)]),
+      ];
+      const openingProps = props.length ? `\n  ${props.join("\n  ")}\n` : "";
+      return `${importLine(["TextMarquee"])}\n\n<TextMarquee${openingProps}>\n  ${s.text}\n</TextMarquee>`;
     }
     case "portal": {
       const s = settings as ControlSettingsBySlug["portal"];

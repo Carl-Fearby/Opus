@@ -57,6 +57,7 @@ export function UsageCodeViewer({ category, slug, settings }: UsageCodeViewerPro
       }
       className={styles.sourcePanel}
       title="Usage"
+      tourTarget="component-usage"
     >
       <p className={styles.usageHint}>
         Copy this complete component into a page file. Edit and run it in the Playground.

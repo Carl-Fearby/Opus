@@ -128,6 +128,7 @@ export function ComponentsSettingsSidebar() {
         <aside
           aria-label="Component settings"
           className={styles.settingsSidebar}
+          data-opus-tour="component-settings"
           data-collapsed="true"
           style={accentStyle}
         >
@@ -156,6 +157,7 @@ export function ComponentsSettingsSidebar() {
         aria-valuenow={settingsWidth}
         background="subtle"
         className={styles.settingsResizeHandle}
+        data-opus-tour="settings-resize"
         height="full"
         orientation="vertical"
         onKeyDown={handleResizeKeyDown}
@@ -164,6 +166,7 @@ export function ComponentsSettingsSidebar() {
       <aside
         aria-label="Component settings"
         className={styles.settingsSidebar}
+        data-opus-tour="component-settings"
         data-resizing={isResizing ? "true" : undefined}
         style={accentStyle}
       >

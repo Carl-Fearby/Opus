@@ -19,6 +19,7 @@ type SelectFieldProps = {
   help?: string;
   id: string;
   label: string;
+  labelVisuallyHidden?: boolean;
   labelPosition?: LabelPosition;
   mode?: FieldMode;
   name?: string;
@@ -50,6 +51,7 @@ export function SelectField({
   help,
   id,
   label,
+  labelVisuallyHidden,
   labelPosition = "left",
   mode = "stacked",
   name,
@@ -99,6 +101,7 @@ export function SelectField({
       help={help}
       id={id}
       label={label}
+      labelVisuallyHidden={labelVisuallyHidden}
       labelPosition={labelPosition}
       labelTag="div"
       mode={mode}
@@ -106,6 +109,7 @@ export function SelectField({
     >
       <div className={styles.root} ref={rootRef}>
         <button
+          aria-label={label}
           aria-controls={open ? listboxId : undefined}
           aria-expanded={open}
           aria-haspopup="listbox"

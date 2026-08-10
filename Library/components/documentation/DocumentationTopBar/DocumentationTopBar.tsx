@@ -118,7 +118,7 @@ type DocumentationTopBarProps = {
 
 export function DocumentationTopBar({ current, trailing }: DocumentationTopBarProps) {
   return (
-    <header className={styles.topBar} data-shell-theme="dark">
+    <header className={styles.topBar} data-opus-tour="top-navigation" data-shell-theme="dark">
       <div className={styles.topBarRow}>
         <div className={styles.topBarStart}>
           <Link className={styles.logoLink} href="/">

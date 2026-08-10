@@ -148,6 +148,7 @@ export function CustomScrollbar({
     if (!root) return;
     let viewport: HTMLElement | null = null;
     let frame: number | null = null;
+    const resizeObserver = new ResizeObserver(measure);
 
     const attach = () => {
       const next = root.querySelector<HTMLElement>(viewportSelector);
@@ -159,6 +160,11 @@ export function CustomScrollbar({
       next.setAttribute("aria-label", label);
       if (!next.hasAttribute("role")) next.setAttribute("role", "region");
       next.addEventListener("scroll", handleScroll, { passive: true });
+      resizeObserver.disconnect();
+      resizeObserver.observe(next);
+      if (next.firstElementChild instanceof HTMLElement) {
+        resizeObserver.observe(next.firstElementChild);
+      }
       if (frame !== null) window.cancelAnimationFrame(frame);
       frame = window.requestAnimationFrame(measure);
     };
@@ -172,6 +178,7 @@ export function CustomScrollbar({
 
     return () => {
       observer.disconnect();
+      resizeObserver.disconnect();
       if (frame !== null) window.cancelAnimationFrame(frame);
       viewport?.removeEventListener("scroll", handleScroll);
       if (viewportRef.current === viewport) viewportRef.current = null;

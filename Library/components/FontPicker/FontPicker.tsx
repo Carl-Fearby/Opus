@@ -23,7 +23,7 @@ function isGoogleFont(value: string | null): value is GoogleFontFamily {
   return Boolean(value && fontSet.has(value));
 }
 
-function fontStack(family: string) {
+export function fontStack(family: string) {
   return `'${family.replaceAll("'", "\\'")}', ui-sans-serif, system-ui, sans-serif`;
 }
 

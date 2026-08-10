@@ -1,6 +1,7 @@
 .shell {
   position: relative;
   display: grid;
+  grid-template-columns: minmax(0, 1fr);
   grid-template-rows: minmax(0, 1fr);
   min-height: 240px;
   overflow: hidden;
@@ -11,6 +12,8 @@
     inset 0 1px 0 color-mix(in srgb, #fff 7%, transparent),
     0 18px 50px color-mix(in srgb, #02030a 42%, transparent);
   isolation: isolate;
+  container-name: opus-map;
+  container-type: inline-size;
 }
 
 .shell[data-show-coordinates="true"] {
@@ -85,6 +88,7 @@
 .coordinates {
   z-index: 3;
   display: flex;
+  min-width: 0;
   gap: 22px;
   margin: 0;
   padding: 10px 14px;
@@ -249,7 +253,7 @@
   background: color-mix(in srgb, #fff 94%, var(--opus-accent, #8b5cf6));
 }
 
-@media (max-width: 640px) {
+@container opus-map (max-width: 640px) {
   .content[data-has-hotspots="true"] { grid-template-columns: minmax(0, 1fr); grid-template-rows: minmax(220px, 1fr) auto; }
   .hotspots { max-height: 150px; border-top: 1px solid color-mix(in srgb, var(--opus-accent, #8b5cf6) 22%, var(--opus-border, #25304c)); border-left: 0; }
 }

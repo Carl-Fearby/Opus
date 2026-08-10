@@ -372,6 +372,11 @@ html[data-shell-theme="light"] .settingsSidebar {
   flex: 0 0 auto;
 }
 
+.tourControl {
+  display: inline-flex;
+  align-items: center;
+}
+
 .visuallyHidden {
   position: absolute;
   width: 1px;
@@ -572,6 +577,15 @@ html[data-shell-theme="light"] .shell .content {
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+}
+
+.navNewMarker {
+  flex: 0 0 auto;
+  color: #f59e0b;
+  font-size: 1.05em;
+  font-weight: 900;
+  line-height: 1;
+  text-shadow: 0 0 8px color-mix(in srgb, #f59e0b 55%, transparent);
 }
 
 .navCount {

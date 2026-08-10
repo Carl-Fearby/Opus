@@ -1,0 +1,16 @@
+.root{display:grid;gap:10px}.scroller{overflow:auto;border:1px solid var(--opus-border);border-radius:14px;background:var(--opus-panel)}.root table{width:100%;border-collapse:collapse;color:var(--opus-text)}.root caption{padding:14px;text-align:left;font-weight:800}.root th,.root td{padding:10px 12px;border-top:1px solid var(--opus-border);text-align:left;white-space:nowrap}.root th{color:var(--opus-muted);font-size:.78rem;text-transform:uppercase;letter-spacing:.04em}.root td input:not([type=checkbox]){min-width:140px;padding:8px 9px;border:1px solid var(--opus-border);border-radius:8px;background:var(--opus-input-bg,var(--opus-panel));color:var(--opus-text);font:inherit}.rowActions{display:flex;gap:6px}.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
+.scroller {
+  background:
+    radial-gradient(85% 65% at 14% 0%, color-mix(in srgb, var(--opus-accent) 16%, transparent), transparent 58%),
+    radial-gradient(72% 58% at 100% 100%, color-mix(in srgb, var(--opus-accent-secondary, #0284c7) 12%, transparent), transparent 62%),
+    linear-gradient(180deg, color-mix(in srgb, var(--dashboard-section-bg, #070d18) 94%, #ffffff 3%), var(--dashboard-section-bg, #070d18));
+  box-shadow: inset 0 1px 0 color-mix(in srgb, #ffffff 6%, transparent);
+}
+
+:global([data-preview-root][data-theme="light"]) .scroller,
+:global([data-theme="light"]) .scroller {
+  background:
+    radial-gradient(85% 65% at 14% 0%, color-mix(in srgb, var(--opus-accent) 10%, transparent), transparent 58%),
+    radial-gradient(72% 58% at 100% 100%, color-mix(in srgb, var(--opus-accent-secondary, #0284c7) 8%, transparent), transparent 62%),
+    linear-gradient(180deg, color-mix(in srgb, var(--dashboard-section-bg, #f8fbff) 94%, #ffffff 6%), var(--dashboard-section-bg, #f8fbff));
+}

@@ -21,6 +21,8 @@ import { continueWithApple, continueWithGoogle } from "@/lib/auth/socialAuth";
 import { VideoPlayer } from "@/components/VideoPlayer";
 import { AudioPlayer } from "@/components/AudioPlayer";
 import { OtpField } from "@/components/fields/OtpField";
+import {DiffPreview,MentionInputPreview,ProductTourPreview,RecurrencePreview,SignaturePreview,TimeRangePreview,VirtualListPreview} from "./NewComponentPreviews";
+import { FormWizard } from "@/components/fields/FormWizard";
 import { CheckboxGroupField, ComboboxField, CurrencyField, DateRangeField, Form, FormActions, FormHeader, FormSection, FormValidationSummary, MaskedField, MultiFileField } from "@/components/fields/AdvancedFields";
 import {
   Button,
@@ -128,6 +130,7 @@ import {
   Spinner,
   Clock,
   FlipClock,
+  TextMarquee,
   Portal,
   PortalHost,
   VisuallyHidden,
@@ -170,8 +173,17 @@ import {
   StatusIndicator,
   TopNavigation,
   TrendBadge,
-  useFormState,
+  FormStateProvider,
+  useFormStateContext,
   useToast,
+  AsyncSelectField,
+  SaveStateIndicator,
+  EditableDataTable,
+  BulkActionBar,
+  FileManager,
+  AuditLog,
+  UploadQueue,
+  type EditableDataTableRow,
 } from "opus-react";
 import { Tabs } from "@/components/Tabs";
 import { MoreActionsMenu } from "@/components/MoreActionsMenu";
@@ -2937,16 +2949,23 @@ function validateFormSubmission(values: typeof formSubmissionDefaults) {
 }
 
 function FormSubmissionDemo({
+  ...settings
+}: ControlSettingsBySlug["lab-form-submission"]) {
+  return (
+    <FormStateProvider defaults={formSubmissionDefaults} validate={validateFormSubmission}>
+      <FormSubmissionDemoContent {...settings} />
+    </FormStateProvider>
+  );
+}
+
+function FormSubmissionDemoContent({
   collapsedDepth,
   showFieldStatus,
   submitLabel,
   subtitle,
   title,
 }: ControlSettingsBySlug["lab-form-submission"]) {
-  const form = useFormState({
-    defaults: formSubmissionDefaults,
-    validate: validateFormSubmission,
-  });
+  const form = useFormStateContext<typeof formSubmissionDefaults>();
   const [submitted, setSubmitted] = useState<Record<string, unknown>>({
     status: "Waiting for submission",
   });
@@ -3076,6 +3095,23 @@ function FormSubmissionDemo({
   );
 }
 
+const asyncPeople = [
+  { label: "Emma Davis", value: "emma" },
+  { label: "Michael Brown", value: "michael" },
+  { label: "Olivia Wilson", value: "olivia" },
+  { label: "Noah Patel", value: "noah" },
+];
+
+function EditableTablePreview({ selectable, rowCount }: { selectable: boolean; rowCount: number }) {
+  const [rows, setRows] = useState<EditableDataTableRow[]>([
+    { id: "1", values: { name: "Emma Davis", role: "Procurement", status: "Active" } },
+    { id: "2", values: { name: "Michael Brown", role: "Sales", status: "Active" } },
+    { id: "3", values: { name: "Olivia Wilson", role: "Operations", status: "Away" } },
+    { id: "4", values: { name: "Noah Patel", role: "Finance", status: "Active" } },
+  ]);
+  return <EditableDataTable caption="Team members" selectable={selectable} columns={[{ key: "name", label: "Name", editable: true }, { key: "role", label: "Role", editable: true }, { key: "status", label: "Status" }]} rows={rows.slice(0, rowCount)} onRowsChange={setRows} onRowSave={() => undefined} onRowDelete={() => undefined} onBulkAction={() => undefined} />;
+}
+
 function ControlPreviewContent({
   category,
   slug,
@@ -3128,6 +3164,26 @@ function ControlPreviewContent({
   }
 
   switch (slug) {
+    case "virtual-list": {
+      const s = settings as ControlSettingsBySlug["virtual-list"];
+      return (
+        <VirtualListPreview
+          key={`${s.hasMore}-${s.scrollbarSizing}-${s.virtualItemCount}`}
+          hasMore={s.hasMore}
+          totalItemCount={
+            s.hasMore && s.scrollbarSizing === "virtual"
+              ? s.virtualItemCount
+              : undefined
+          }
+        />
+      );
+    }
+    case "product-tour": return <ProductTourPreview />;
+    case "mention-input": return <MentionInputPreview />;
+    case "recurrence-editor": return <RecurrencePreview />;
+    case "time-range-picker": return <TimeRangePreview />;
+    case "signature-pad": return <SignaturePreview />;
+    case "diff-viewer": return <DiffPreview />;
     case "text-input": {
       const s = settings as ControlSettingsBySlug["text-input"];
       return (
@@ -3309,6 +3365,82 @@ function ControlPreviewContent({
           }
         />
       );
+    }
+    case "form-wizard": {
+      const s = settings as ControlSettingsBySlug["form-wizard"];
+      const steps = [
+        {
+          id: "account",
+          label: "Account",
+          description: "Your sign-in details",
+          content: <p>Enter the account holder and sign-in information for this application.</p>,
+        },
+        {
+          id: "profile",
+          label: "Profile",
+          description: "Personal information",
+          content: <p>Add the profile information that colleagues will see.</p>,
+        },
+        {
+          id: "preferences",
+          label: "Preferences",
+          description: "Notifications and defaults",
+          optional: true,
+          content: <p>Choose notification preferences and workspace defaults.</p>,
+        },
+        {
+          id: "review",
+          label: "Review",
+          description: "Confirm and submit",
+          content: <p>Review the supplied information before completing the form.</p>,
+        },
+      ];
+      return (
+        <FormWizard
+          activeStep={s.activeStep}
+          allowStepNavigation={s.allowStepNavigation}
+          orientation={s.orientation}
+          showCancel={s.showCancel}
+          showDescriptions={s.showDescriptions}
+          steps={steps}
+          onCancel={() => undefined}
+          onComplete={() => undefined}
+          onStepChange={(_, activeStep) =>
+            onSettingsChange({ ...s, activeStep } as ControlSettings)
+          }
+        />
+      );
+    }
+    case "async-select": {
+      const s = settings as ControlSettingsBySlug["async-select"];
+      return <AsyncSelectField {...fieldProps(s)} id="preview-async-select" debounceMs={s.debounceMs} minQueryLength={s.minQueryLength} defaultOptions={asyncPeople} loadOptions={async (query) => asyncPeople.filter((person) => person.label.toLowerCase().includes(query.toLowerCase()))} onChange={() => undefined} />;
+    }
+    case "save-state-indicator": {
+      const s = settings as ControlSettingsBySlug["save-state-indicator"];
+      return <SaveStateIndicator state={s.state} showLastSaved={s.showLastSaved} lastSaved="a few seconds ago" onRetry={() => undefined} />;
+    }
+    case "editable-data-table": {
+      const s = settings as ControlSettingsBySlug["editable-data-table"];
+      return <EditableTablePreview selectable={s.selectable} rowCount={s.rowCount} />;
+    }
+    case "bulk-action-bar": {
+      const s = settings as ControlSettingsBySlug["bulk-action-bar"];
+      return <BulkActionBar selectedCount={s.selectedCount} actions={[{ id: "archive", label: "Archive" }, ...(s.destructiveAction ? [{ id: "delete", label: "Delete", destructive: true }] : [])]} onAction={() => undefined} onClear={() => undefined} />;
+    }
+    case "file-manager": {
+      const s = settings as ControlSettingsBySlug["file-manager"];
+      const entries = [{ id: "contracts", name: "Contracts", type: "folder" as const }, { id: "design", name: "Design", type: "folder" as const }, { id: "brief", name: "CRM brief.pdf", type: "file" as const, size: "2.4 MB" }, { id: "forecast", name: "Forecast.xlsx", type: "file" as const, size: "680 KB" }, { id: "brand", name: "Brand assets.zip", type: "file" as const, size: "18 MB" }, { id: "notes", name: "Meeting notes.docx", type: "file" as const, size: "92 KB" }];
+      return <FileManager key={s.view} entries={entries.slice(0, s.entryCount)} path={["Documents"]} initialView={s.view} onOpen={() => undefined} onUpload={() => undefined} onCreateFolder={() => undefined} />;
+    }
+    case "audit-log": {
+      const s = settings as ControlSettingsBySlug["audit-log"];
+      const entries = [{ id: "1", action: "Contact updated", actor: "Emma Davis", target: "Acme Ltd", timestamp: "2 minutes ago", category: "Contacts" }, { id: "2", action: "Quote approved", actor: "Carl Fearby", target: "Q-1042", timestamp: "18 minutes ago", category: "Sales" }, { id: "3", action: "Export failed", actor: "System", target: "Monthly report", timestamp: "42 minutes ago", category: "System", status: "error" as const }, { id: "4", action: "Permission changed", actor: "Olivia Wilson", target: "Finance team", timestamp: "1 hour ago", category: "Security", status: "warning" as const }, { id: "5", action: "Document uploaded", actor: "Noah Patel", target: "Contract.pdf", timestamp: "Today at 14:20", category: "Documents" }, { id: "6", action: "User signed in", actor: "Michael Brown", target: "London office", timestamp: "Today at 13:04", category: "Security" }];
+      return <AuditLog entries={entries.slice(0, s.entryCount)} onEntryClick={() => undefined} />;
+    }
+    case "upload-queue": {
+      const s = settings as ControlSettingsBySlug["upload-queue"];
+      const items = [{ id: "1", name: "CRM brief.pdf", size: "2.4 MB", progress: 100, status: "complete" as const }, { id: "2", name: "Brand assets.zip", size: "18 MB", progress: 68, status: "uploading" as const }, { id: "3", name: "Forecast.xlsx", size: "680 KB", progress: 34, status: "paused" as const }, { id: "4", name: "Contacts.csv", size: "1.1 MB", progress: 12, status: "error" as const, error: "Network connection lost" }];
+      return <UploadQueue items={items.slice(0, s.itemCount)} maxVisible={s.maxVisible} onPause={() => undefined} onResume={() => undefined} onRetry={() => undefined} onRemove={() => undefined} onClearComplete={() => undefined} />;
     }
     case "slider-range": {
       const s = settings as ControlSettingsBySlug["slider-range"];
@@ -6045,6 +6177,24 @@ function ControlPreviewContent({
           showSeconds={s.showSeconds}
           size={s.size}
         />
+      );
+    }
+    case "text-marquee": {
+      const s = settings as ControlSettingsBySlug["text-marquee"];
+      return (
+        <div style={{ width: "100%" }}>
+          <TextMarquee
+            ariaLabel={s.text}
+            direction={s.direction}
+            fadeEdges={s.fadeEdges}
+            gap={s.gap}
+            pauseOnHover={s.pauseOnHover}
+            speed={s.speed}
+            surface={s.surface}
+          >
+            {s.text}
+          </TextMarquee>
+        </div>
       );
     }
     case "portal": {

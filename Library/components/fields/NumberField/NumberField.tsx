@@ -12,10 +12,12 @@ type NumberFieldProps = {
   help?: string;
   id: string;
   label: string;
+  labelVisuallyHidden?: boolean;
   labelPosition?: LabelPosition;
   max?: number;
   min?: number;
   mode?: FieldMode;
+  name?: string;
   onChange: ChangeEventHandler<HTMLInputElement>;
   size?: InputControlSize;
   step?: number;
@@ -62,10 +64,12 @@ export function NumberField({
   help,
   id,
   label,
+  labelVisuallyHidden,
   labelPosition = "left",
   max,
   min,
   mode = "stacked",
+  name,
   onChange,
   size = "md",
   step = 1,
@@ -128,6 +132,7 @@ export function NumberField({
       help={help}
       id={id}
       label={label}
+      labelVisuallyHidden={labelVisuallyHidden}
       labelPosition={labelPosition}
       mode={mode}
     >
@@ -155,6 +160,7 @@ export function NumberField({
           className={styles.input}
           id={id}
           inputMode={allowDecimal ? "decimal" : "numeric"}
+          name={name}
           onBlur={handleBlur}
           onChange={handleChange}
           type="text"

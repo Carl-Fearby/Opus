@@ -97,6 +97,21 @@ export type ControlSlug =
   | "password-strength-field"
   | "rating-input"
   | "segmented-control"
+  | "form-wizard"
+  | "async-select"
+  | "save-state-indicator"
+  | "editable-data-table"
+  | "bulk-action-bar"
+  | "file-manager"
+  | "audit-log"
+  | "upload-queue"
+  | "virtual-list"
+  | "product-tour"
+  | "mention-input"
+  | "recurrence-editor"
+  | "time-range-picker"
+  | "signature-pad"
+  | "diff-viewer"
   | "slider-range"
   | "otp-input"
   | "date-range-picker"
@@ -169,6 +184,7 @@ export type ControlSlug =
   | "spinner"
   | "clock"
   | "flip-clock"
+  | "text-marquee"
   | "portal"
   | "portal-host"
   | "visually-hidden"
@@ -351,6 +367,30 @@ export type SegmentedControlSettings = BaseFieldSettings & {
   value: string;
   options: string;
 };
+
+export type FormWizardSettings = {
+  activeStep: number;
+  allowStepNavigation: boolean;
+  orientation: "horizontal" | "vertical";
+  showCancel: boolean;
+  showDescriptions: boolean;
+};
+
+export type AsyncSelectSettings = BaseFieldSettings & {
+  debounceMs: number;
+  minQueryLength: number;
+};
+
+export type SaveStateIndicatorSettings = {
+  state: "idle" | "saving" | "saved" | "error";
+  showLastSaved: boolean;
+};
+
+export type EditableDataTableSettings = { selectable: boolean; rowCount: number };
+export type BulkActionBarSettings = { selectedCount: number; destructiveAction: boolean };
+export type FileManagerSettings = { view: "grid" | "list"; entryCount: number };
+export type AuditLogSettings = { entryCount: number };
+export type UploadQueueSettings = { itemCount: number; maxVisible: number };
 
 export type PhoneNumberInputSettings = BaseFieldSettings & {
   value: string;
@@ -825,7 +865,13 @@ export type DashboardListColumnsLayout = "row" | "stacked";
 export type ErrorPageSettings = Record<string, unknown>;
 
 export type AppSetupSettings = {
+  accent: string;
+  accentSecondary: string;
+  baseColor: string;
+  fontFamily: string;
   theme: "dark" | "light";
+  tileAccent: string;
+  tileAccentSecondary: string;
 };
 
 export type DashboardListColumnsSettings = {
@@ -1458,6 +1504,16 @@ export type FlipClockSettings = {
   size: "sm" | "md" | "lg";
 };
 
+export type TextMarqueeSettings = {
+  text: string;
+  direction: "left" | "right";
+  speed: number;
+  gap: number;
+  pauseOnHover: boolean;
+  fadeEdges: boolean;
+  surface: boolean;
+};
+
 export type PortalSettings = {
   disabled: boolean;
   message: string;
@@ -1566,6 +1622,17 @@ export type MegaMenuSettings = {
 };
 
 export type ControlSettingsBySlug = {
+  "virtual-list": {
+    hasMore: boolean;
+    scrollbarSizing: "loaded" | "virtual";
+    virtualItemCount: number;
+  };
+  "product-tour": Record<string, never>;
+  "mention-input": Record<string, never>;
+  "recurrence-editor": Record<string, never>;
+  "time-range-picker": Record<string, never>;
+  "signature-pad": Record<string, never>;
+  "diff-viewer": Record<string, never>;
   button: ButtonSettings;
   "submit-button": ButtonSettings;
   "reset-button": ButtonSettings;
@@ -1600,6 +1667,14 @@ export type ControlSettingsBySlug = {
   "password-strength-field": PasswordStrengthSettings;
   "rating-input": RatingInputSettings;
   "segmented-control": SegmentedControlSettings;
+  "form-wizard": FormWizardSettings;
+  "async-select": AsyncSelectSettings;
+  "save-state-indicator": SaveStateIndicatorSettings;
+  "editable-data-table": EditableDataTableSettings;
+  "bulk-action-bar": BulkActionBarSettings;
+  "file-manager": FileManagerSettings;
+  "audit-log": AuditLogSettings;
+  "upload-queue": UploadQueueSettings;
   "slider-range": SliderRangeSettings;
   "otp-input": OtpInputSettings;
   "date-range-picker": DateRangeSettings;
@@ -1704,6 +1779,7 @@ export type ControlSettingsBySlug = {
   spinner: SpinnerSettings;
   clock: ClockSettings;
   "flip-clock": FlipClockSettings;
+  "text-marquee": TextMarqueeSettings;
   portal: PortalSettings;
   "portal-host": PortalHostSettings;
   "visually-hidden": VisuallyHiddenSettings;
@@ -1841,6 +1917,8 @@ export const formsControlOrder = [
   "password-strength-field",
   "rating-input",
   "segmented-control",
+  "form-wizard",
+  "async-select",
   "slider-range",
   "otp-input",
   "date-range-picker",

@@ -37,7 +37,7 @@ export function useOpusTheme(): Theme {
   return resolveDocumentTheme();
 }
 
-type OpusThemeProviderProps = {
+export type OpusThemeProviderProps = {
   children: ReactNode;
   theme: Theme;
   /**
@@ -47,12 +47,21 @@ type OpusThemeProviderProps = {
    * Set to false if you want to manage the `data-theme` attribute yourself.
    */
   applyToDocument?: boolean;
+  /** Global font family or complete CSS font stack exposed through the Opus font token. */
+  fontFamily?: string;
 };
+
+function resolveFontStack(fontFamily: string) {
+  return fontFamily.includes(",") || fontFamily.includes("var(")
+    ? fontFamily
+    : `'${fontFamily.replaceAll("'", "\\'")}', ui-sans-serif, system-ui, sans-serif`;
+}
 
 export function OpusThemeProvider({
   children,
   theme,
   applyToDocument = true,
+  fontFamily,
 }: OpusThemeProviderProps) {
   useEffect(() => {
     if (!applyToDocument || typeof document === "undefined") {
@@ -61,7 +70,11 @@ export function OpusThemeProvider({
 
     const root = document.documentElement;
     const previous = root.getAttribute("data-theme");
+    const previousFont = root.style.getPropertyValue("--opus-font-family");
     root.setAttribute("data-theme", theme);
+    if (fontFamily) {
+      root.style.setProperty("--opus-font-family", resolveFontStack(fontFamily));
+    }
 
     return () => {
       if (previous === null) {
@@ -69,8 +82,15 @@ export function OpusThemeProvider({
       } else {
         root.setAttribute("data-theme", previous);
       }
+      if (fontFamily) {
+        if (previousFont) {
+          root.style.setProperty("--opus-font-family", previousFont);
+        } else {
+          root.style.removeProperty("--opus-font-family");
+        }
+      }
     };
-  }, [applyToDocument, theme]);
+  }, [applyToDocument, fontFamily, theme]);
 
   return <OpusThemeContext.Provider value={theme}>{children}</OpusThemeContext.Provider>;
 }

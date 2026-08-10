@@ -7,6 +7,21 @@
   gap: 8px;
 }
 
+.horizontal {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  justify-content: flex-start;
+  gap: 8px 18px;
+}
+
+@media (max-width: 560px) {
+  .horizontal {
+    display: grid;
+    grid-template-columns: 1fr;
+  }
+}
+
 .option {
   display: grid;
   gap: 4px;

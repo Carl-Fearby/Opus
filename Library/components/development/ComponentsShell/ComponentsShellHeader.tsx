@@ -34,37 +34,43 @@ export function ComponentsShellHeader() {
       current="components"
       trailing={
         <div className={styles.themeControl}>
-          <FontPicker compact id="global-font-picker" value={fontFamily} onChange={setFontFamily} />
-          <ThemeToggleField
-            id="global-theme-toggle"
-            label="Theme"
-            labelPosition="left"
-            labelVisuallyHidden
-            mode="flagged"
-            value={theme}
-            onChange={setTheme}
-          />
-          <ThemeSettingsButton
-            base={baseColor}
-            accent={accent}
-            accentSecondary={accentSecondary}
-            compact
-            fontFamily={fontFamily}
-            idPrefix="global"
-            theme={previewTheme}
-            themeLabel="Preview theme"
-            tileAccent={tileAccent}
-            tileAccentSecondary={tileAccentSecondary}
-            onAccentChange={setAccent}
-            onAccentSecondaryChange={setAccentSecondary}
-            onBaseChange={setBaseColor}
-            onFontFamilyChange={setFontFamily}
-            onResetAccent={resetAccent}
-            onResetTileAccent={resetTileAccent}
-            onThemeChange={setPreviewTheme}
-            onTileAccentChange={setTileAccent}
-            onTileAccentSecondaryChange={setTileAccentSecondary}
-          />
+          <span className={styles.tourControl} data-opus-tour="ui-font">
+            <FontPicker compact id="global-font-picker" value={fontFamily} onChange={setFontFamily} />
+          </span>
+          <span className={styles.tourControl} data-opus-tour="ui-theme">
+            <ThemeToggleField
+              id="global-theme-toggle"
+              label="Theme"
+              labelPosition="left"
+              labelVisuallyHidden
+              mode="flagged"
+              value={theme}
+              onChange={setTheme}
+            />
+          </span>
+          <span className={styles.tourControl} data-opus-tour="ui-colours">
+            <ThemeSettingsButton
+              base={baseColor}
+              accent={accent}
+              accentSecondary={accentSecondary}
+              compact
+              fontFamily={fontFamily}
+              idPrefix="global"
+              theme={previewTheme}
+              themeLabel="Preview theme"
+              tileAccent={tileAccent}
+              tileAccentSecondary={tileAccentSecondary}
+              onAccentChange={setAccent}
+              onAccentSecondaryChange={setAccentSecondary}
+              onBaseChange={setBaseColor}
+              onFontFamilyChange={setFontFamily}
+              onResetAccent={resetAccent}
+              onResetTileAccent={resetTileAccent}
+              onThemeChange={setPreviewTheme}
+              onTileAccentChange={setTileAccent}
+              onTileAccentSecondaryChange={setTileAccentSecondary}
+            />
+          </span>
         </div>
       }
     />

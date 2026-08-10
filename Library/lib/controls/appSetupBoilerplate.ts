@@ -6,11 +6,34 @@ export function patchAppSetupPlaygroundTheme(code: string, theme: AppTheme): str
   return code.replace(/(<OpusAppShell theme=)(["'])(?:dark|light)\2/, `$1$2${theme}$2`);
 }
 
-export function generateAppSetupPlaygroundCode({ theme }: AppSetupSettings): string {
+export function generateAppSetupPlaygroundCode({
+  accent,
+  accentSecondary,
+  baseColor,
+  fontFamily,
+  theme,
+  tileAccent,
+  tileAccentSecondary,
+}: AppSetupSettings): string {
   return `"use client";
 
-import { useState, type ReactNode } from "react";
-import { Button, Drawer, PortalHost, ThemeProvider } from "opus-react";
+import type { CSSProperties, ReactNode } from "react";
+import {
+  createAccentStyle,
+  createTileAccentStyle,
+  DescriptionList,
+  Panel,
+  PortalHost,
+  ThemeProvider,
+} from "opus-react";
+
+const appFont = ${JSON.stringify(fontFamily)};
+const appAppearance = {
+  ...createAccentStyle(${JSON.stringify(accent)}, ${JSON.stringify(accentSecondary)}),
+  ...createTileAccentStyle(${JSON.stringify(tileAccent)}, ${JSON.stringify(tileAccentSecondary)}),
+  "--opus-base": ${JSON.stringify(baseColor)},
+  fontFamily: appFont,
+} as CSSProperties;
 
 function OpusAppShell({
   children,
@@ -20,25 +43,35 @@ function OpusAppShell({
   theme: "dark" | "light";
 }) {
   return (
-    <ThemeProvider theme={theme}>
-      <PortalHost id="opus-portal-host">{children}</PortalHost>
+    <ThemeProvider applyToDocument={false} fontFamily={appFont} theme={theme}>
+      <div data-theme={theme} style={appAppearance}>
+        <PortalHost id="opus-portal-host">{children}</PortalHost>
+      </div>
     </ThemeProvider>
   );
 }
 
 export default function Example() {
-  const [drawerOpen, setDrawerOpen] = useState(false);
-
   return (
     <OpusAppShell theme=${JSON.stringify(theme)}>
-      <Button onClick={() => setDrawerOpen(true)}>Open drawer</Button>
-      <Drawer
-        open={drawerOpen}
-        title="Filters"
-        onClose={() => setDrawerOpen(false)}
+      <Panel
+        title="Opus application wrapper"
+        description="One root boundary applies the design system consistently across the app."
       >
-        <p>Drawer, dialog, modal, and other overlays portal automatically.</p>
-      </Drawer>
+        <DescriptionList
+          items={[
+            { term: "Theme", details: ${JSON.stringify(theme)} },
+            { term: "Font", details: ${JSON.stringify(fontFamily)} },
+            { term: "Base colour", details: ${JSON.stringify(baseColor)} },
+            { term: "Accent", details: ${JSON.stringify(accent)} },
+            { term: "Secondary accent", details: ${JSON.stringify(accentSecondary)} },
+            { term: "Tile accent", details: ${JSON.stringify(tileAccent)} },
+            { term: "Tile secondary accent", details: ${JSON.stringify(tileAccentSecondary)} },
+            { term: "Font token", details: "--opus-font-family" },
+            { term: "Portal host", details: "#opus-portal-host" },
+          ]}
+        />
+      </Panel>
     </OpusAppShell>
   );
 }`;
@@ -100,32 +133,29 @@ type OpusAppShellProps = {
 
 export function OpusAppShell({ children, theme }: OpusAppShellProps) {
   return (
-    <ThemeProvider theme={theme}>
+    <ThemeProvider
+      fontFamily="var(--font-space-grotesk), ui-sans-serif, system-ui, sans-serif"
+      theme={theme}
+    >
       <PortalHost id="opus-portal-host">{children}</PortalHost>
     </ThemeProvider>
   );
 }
 
 // app/page.tsx
-"use client";
-
-import { Button, Drawer } from "opus-react";
-import { useState } from "react";
+import { DescriptionList, Panel } from "opus-react";
 
 export default function HomePage() {
-  const [drawerOpen, setDrawerOpen] = useState(false);
-
   return (
-    <>
-      <Button onClick={() => setDrawerOpen(true)}>Open drawer</Button>
-      <Drawer
-        open={drawerOpen}
-        title="Filters"
-        onClose={() => setDrawerOpen(false)}
-      >
-        <p>Drawer, dialog, modal, and other overlays portal automatically.</p>
-      </Drawer>
-    </>
+    <Panel title="My Opus app" description="The global wrapper is active.">
+      <DescriptionList
+        items={[
+          { term: "Theme", details: ${JSON.stringify(theme)} },
+          { term: "Font", details: "Space Grotesk" },
+          { term: "Portal host", details: "Ready" },
+        ]}
+      />
+    </Panel>
   );
 }`;
 }

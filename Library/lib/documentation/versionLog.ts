@@ -556,6 +556,14 @@ export const versionLog: VersionEntry[] = [
     commitShort: "340985e",
     summary: "Opus portaled pickers for combobox, date/time, month, and week.",
     changes: ["Replace ComboboxField's native datalist with a filtered, viewport-aware portaled suggestion list.","Add Opus date/time, time, month, and week pickers so DateField no longer relies on browser-native overlays for those types.","Publish opus-react 0.6.10 and update Application to consume the release from npm."],
+  },
+  {
+    version: "0.6.11",
+    releasedAt: "2026-08-10",
+    commit: "633ce325abe931c0505b48b4e956bf89e7ea589a",
+    commitShort: "633ce32",
+    summary: "Workflow primitives, richer interactive previews, and seamless text marquee.",
+    changes: ["Add Audit Log, Bulk Action Bar, Diff Viewer, Editable Data Table, File Manager, Product Tour, Recurrence Editor, Save-State Indicator, Signature Pad, Upload Queue, Virtual List, and Text Marquee components.","Add Async Select, Form Wizard, Mention Input, and Time Range field primitives with documented values and reusable callbacks.","Keep preview theme, font, colour, usage, Playground, and external rendering in sync while strengthening component composition and action audits.","Fix Show More expansion, map responsiveness, time selection, form state output, and a collection of interaction and accessibility details across the catalogue.","Publish opus-react 0.6.11 and update Application to consume the release from npm."],
   }
 ].reverse();
 

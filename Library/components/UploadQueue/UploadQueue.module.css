@@ -1,0 +1,22 @@
+.root{display:grid;gap:12px;padding:16px;border:1px solid var(--opus-border);border-radius:16px;background:var(--opus-panel);color:var(--opus-text)}.root header{display:flex;align-items:center;justify-content:space-between;gap:12px}.root h2,.root p{margin:0}.root header p,.copy small,.more{color:var(--opus-muted)}.root ul{display:grid;gap:8px;margin:0;padding:0;list-style:none}.root li{display:grid;grid-template-columns:auto minmax(0,1fr) auto;align-items:center;gap:11px;padding:11px;border:1px solid var(--opus-border);border-radius:11px;background:color-mix(in srgb,var(--opus-panel) 96%,var(--opus-accent) 4%)}.icon{display:grid;place-items:center;width:30px;height:30px;border-radius:9px;background:var(--opus-accent-soft);color:var(--opus-accent);font-weight:900}.copy{display:grid;gap:4px;min-width:0}.copy strong,.copy small{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.track{height:5px;overflow:hidden;border-radius:99px;background:color-mix(in srgb,var(--opus-muted) 20%,transparent)}.track i{display:block;height:100%;border-radius:inherit;background:var(--opus-accent);transition:width .2s ease}.actions{display:flex;gap:5px}.root li[data-status=error] .icon{color:var(--opus-danger,#ef4444)}.more{text-align:center;font-size:.8rem}@media(max-width:600px){.root li{grid-template-columns:auto 1fr}.actions{grid-column:2;flex-wrap:wrap}}
+
+.root {
+  background:
+    radial-gradient(85% 65% at 14% 0%, color-mix(in srgb, var(--opus-accent) 16%, transparent), transparent 58%),
+    radial-gradient(72% 58% at 100% 100%, color-mix(in srgb, var(--opus-accent-secondary, #0284c7) 12%, transparent), transparent 62%),
+    linear-gradient(180deg, color-mix(in srgb, var(--dashboard-section-bg, #070d18) 94%, #ffffff 3%), var(--dashboard-section-bg, #070d18));
+  box-shadow:
+    inset 0 1px 0 color-mix(in srgb, #ffffff 6%, transparent),
+    0 12px 28px color-mix(in srgb, #020617 42%, transparent);
+}
+
+:global([data-preview-root][data-theme="light"]) .root,
+:global([data-theme="light"]) .root {
+  background:
+    radial-gradient(85% 65% at 14% 0%, color-mix(in srgb, var(--opus-accent) 10%, transparent), transparent 58%),
+    radial-gradient(72% 58% at 100% 100%, color-mix(in srgb, var(--opus-accent-secondary, #0284c7) 8%, transparent), transparent 62%),
+    linear-gradient(180deg, color-mix(in srgb, var(--dashboard-section-bg, #f8fbff) 94%, #ffffff 6%), var(--dashboard-section-bg, #f8fbff));
+  box-shadow:
+    inset 0 1px 0 color-mix(in srgb, #ffffff 90%, transparent),
+    0 8px 20px color-mix(in srgb, var(--opus-accent-secondary, #0284c7) 10%, transparent);
+}

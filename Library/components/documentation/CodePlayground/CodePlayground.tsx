@@ -6,6 +6,7 @@ import { Splitter, type SplitterOrientation } from "opus-react";
 import type { Theme } from "opus-react";
 import { DocumentationTopBar } from "@/components/documentation/DocumentationTopBar";
 import { CatalogIcon } from "@/components/CatalogIcon";
+import { useComponentsTheme } from "@/components/development/ComponentsThemeProvider";
 import { SwitchField, ThemeToggleField } from "@/components/fields";
 import { patchAppSetupPlaygroundTheme } from "@/lib/controls/appSetupBoilerplate";
 import { getDefaultSettings } from "@/lib/controls/defaults";
@@ -111,8 +112,12 @@ function resolveInitialCode(
   initialSlug?: string | null,
   initialCategory?: string | null,
   seedSettings?: ControlSettings,
-  playgroundTheme?: Theme,
+  exactUsageCode?: string,
 ) {
+  if (exactUsageCode?.trim()) {
+    return exactUsageCode;
+  }
+
   if (!initialSlug) {
     return DEFAULT_PLAYGROUND_CODE;
   }
@@ -124,15 +129,19 @@ function resolveInitialCode(
   }
 
   const settings = seedSettings ?? getDefaultSettings(initialSlug as ControlSlug);
-  const resolvedSettings =
-    initialSlug === "app-setup"
-      ? ({ ...settings, theme: playgroundTheme ?? (settings as AppSetupSettings).theme } as AppSetupSettings)
-      : settings;
-
-  return generateUsageCode(initialSlug as ControlSlug, resolvedSettings, control.category).full;
+  return generateUsageCode(initialSlug as ControlSlug, settings, control.category).full;
 }
 
 export function CodePlayground({ initialCategory = null, initialSlug = null }: CodePlaygroundProps) {
+  const {
+    setPreviewAccent,
+    setPreviewAccentSecondary,
+    setPreviewBaseColor,
+    setPreviewFontFamily,
+    setPreviewTheme,
+    setPreviewTileAccent,
+    setPreviewTileAccentSecondary,
+  } = useComponentsTheme();
   const orientation = useSplitterOrientation();
   const { onSizeChange, ready: panelSizeReady, size } = usePlaygroundPanelSize(orientation);
   const selectSourceCodeRef = useRef<() => void>(() => undefined);
@@ -142,12 +151,13 @@ export function CodePlayground({ initialCategory = null, initialSlug = null }: C
   const [previewPadding, setPreviewPadding] = useState(() => !isFullBleedPreview(initialSlug));
   const [previewResetKey, setPreviewResetKey] = useState(0);
   const [previewMenuOpen, setPreviewMenuOpen] = useState(false);
+  const [seedReady, setSeedReady] = useState(false);
   const previewMenuRef = useRef<HTMLDivElement | null>(null);
   const layoutBeforeFullWidthRef = useRef<PlaygroundLayout>("split");
   const [seedCode, setSeedCode] = useState(() =>
-    resolveInitialCode(initialSlug, initialCategory, undefined, playgroundTheme),
+    resolveInitialCode(initialSlug, initialCategory),
   );
-  const [code, setCode] = useState(() => resolveInitialCode(initialSlug, initialCategory, undefined, playgroundTheme));
+  const [code, setCode] = useState(() => resolveInitialCode(initialSlug, initialCategory));
   const [playgroundContext, setPlaygroundContext] = useState<PlaygroundSourceContext>({
     category: initialCategory,
     slug: initialSlug,
@@ -191,25 +201,56 @@ export function CodePlayground({ initialCategory = null, initialSlug = null }: C
       const category = initialCategory ?? seed?.category ?? null;
       const seedSettings =
         seed && seed.slug === slug && (!category || seed.category === category) ? seed.settings : undefined;
-      const nextCode = resolveInitialCode(slug, category, seedSettings, playgroundTheme);
+      const exactUsageCode =
+        seed && seed.slug === slug && (!category || seed.category === category) ? seed.code : undefined;
+      const appearance =
+        seed && seed.slug === slug && (!category || seed.category === category) ? seed.appearance : undefined;
+      const nextCode = resolveInitialCode(slug, category, seedSettings, exactUsageCode);
+      const importedTheme = slug === "app-setup"
+        ? (seedSettings as AppSetupSettings | undefined)?.theme
+        : undefined;
 
       setPlaygroundContext({ category, slug });
       setPreviewPadding(!isFullBleedPreview(slug));
       setPreviewError(null);
       setSeedCode(nextCode);
-
-      if (slug === "app-setup") {
-        setCode((current) =>
-          current.includes("OpusAppShell") ? patchAppSetupPlaygroundTheme(current, playgroundTheme) : nextCode,
-        );
-        return;
-      }
-
       setCode(nextCode);
+      if (appearance) {
+        setPreviewAccent(appearance.accent);
+        setPreviewAccentSecondary(appearance.accentSecondary);
+        setPreviewBaseColor(appearance.baseColor);
+        setPreviewFontFamily(appearance.fontFamily as Parameters<typeof setPreviewFontFamily>[0]);
+        setPreviewTheme(appearance.theme);
+        setPreviewTileAccent(appearance.tileAccent);
+        setPreviewTileAccentSecondary(appearance.tileAccentSecondary);
+        setPlaygroundTheme(appearance.theme);
+      }
+      if (importedTheme) {
+        setPlaygroundTheme(importedTheme);
+      }
+      setSeedReady(true);
     }, 0);
 
     return () => window.clearTimeout(timeout);
-  }, [initialCategory, initialSlug, playgroundTheme]);
+  }, [
+    initialCategory,
+    initialSlug,
+    setPlaygroundTheme,
+    setPreviewAccent,
+    setPreviewAccentSecondary,
+    setPreviewBaseColor,
+    setPreviewFontFamily,
+    setPreviewTheme,
+    setPreviewTileAccent,
+    setPreviewTileAccentSecondary,
+  ]);
+
+  useEffect(() => {
+    if (playgroundContext.slug !== "app-setup") return;
+    setCode((current) => current.includes("OpusAppShell")
+      ? patchAppSetupPlaygroundTheme(current, playgroundTheme)
+      : current);
+  }, [playgroundContext.slug, playgroundTheme]);
 
   const updateCode = useCallback((nextCode: string) => {
     setPreviewError(null);
@@ -654,7 +695,7 @@ export function CodePlayground({ initialCategory = null, initialSlug = null }: C
           ) : null}
         </div>
       </div>
-      <div className={styles.paneBody}>
+      <div className={styles.paneBody} style={{ visibility: seedReady ? "visible" : "hidden" }}>
         <PlaygroundPreview
           key={previewResetKey}
           code={code}

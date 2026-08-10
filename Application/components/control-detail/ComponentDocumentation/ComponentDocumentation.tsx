@@ -15,7 +15,11 @@ export function ComponentDocumentation({ content }: ComponentDocumentationProps)
   }
 
   return (
-    <section aria-labelledby="component-docs-heading" className={`${styles.panel} ${styles.docsPanel}`}>
+    <section
+      aria-labelledby="component-docs-heading"
+      className={`${styles.panel} ${styles.docsPanel}`}
+      data-opus-tour="component-documentation"
+    >
       <div className="opus-panel-heading">
         <h2 className="opus-panel-title" id="component-docs-heading">
           Documentation
