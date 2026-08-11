@@ -5,9 +5,7 @@ import styles from "./SiteHeader.module.css";
 
 const navLinks = [
   { href: "/#features", label: "Features" },
-  { href: "/#playground", label: "Playground" },
-  { href: "/#components", label: "Components" },
-  { href: docsComponentsUrl, label: "Component catalogue" },
+  { href: docsPlaygroundUrl, label: "Playground" },
   { href: "/code-of-conduct", label: "Code of Conduct" },
 ];
 
@@ -35,11 +33,8 @@ export function SiteHeader() {
         </nav>
 
         <div className={styles.actions}>
-          <Link className={styles.ghost} href={docsPlaygroundUrl}>
-            Open Playground
-          </Link>
           <Link className={styles.primary} href={docsComponentsUrl}>
-            Explore components
+            Components
           </Link>
         </div>
       </div>
