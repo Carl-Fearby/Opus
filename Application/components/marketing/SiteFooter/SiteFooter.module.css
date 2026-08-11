@@ -55,6 +55,18 @@
   font-size: 0.82rem;
 }
 
+.netlifyLink {
+  color: inherit;
+  text-decoration: underline;
+  text-decoration-color: color-mix(in srgb, var(--opus-accent) 62%, transparent);
+  text-underline-offset: 0.2em;
+  transition: color 160ms ease;
+}
+
+.netlifyLink:hover {
+  color: var(--opus-text);
+}
+
 @media (max-width: 720px) {
   .inner {
     flex-direction: column;

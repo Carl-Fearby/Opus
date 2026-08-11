@@ -15,8 +15,8 @@ export function CtaBand() {
           </p>
         </div>
         <div className={styles.actions}>
-          <Link className={styles.primary} href="/pricing">
-            View plans
+          <Link className={styles.primary} href={docsComponentsUrl}>
+            Explore components
           </Link>
           <Link className={styles.secondary} href={docsPlaygroundUrl}>
             Open Playground

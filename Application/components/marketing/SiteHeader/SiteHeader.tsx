@@ -8,7 +8,6 @@ const navLinks = [
   { href: "/#playground", label: "Playground" },
   { href: "/#components", label: "Components" },
   { href: docsComponentsUrl, label: "Component catalogue" },
-  { href: "/pricing", label: "Pricing" },
   { href: "/code-of-conduct", label: "Code of Conduct" },
 ];
 
@@ -39,8 +38,8 @@ export function SiteHeader() {
           <Link className={styles.ghost} href={docsPlaygroundUrl}>
             Open Playground
           </Link>
-          <Link className={styles.primary} href="/pricing">
-            Get started
+          <Link className={styles.primary} href={docsComponentsUrl}>
+            Explore components
           </Link>
         </div>
       </div>

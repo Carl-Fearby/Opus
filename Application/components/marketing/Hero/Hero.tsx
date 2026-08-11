@@ -17,8 +17,8 @@ export function Hero() {
             documentation, editable previews, and usage examples verified against the real package.
           </p>
           <div className={styles.actions}>
-            <Link className={styles.primary} href="/pricing">
-              Start building
+            <Link className={styles.primary} href={docsComponentsUrl}>
+              Explore components
             </Link>
             <Link className={styles.secondary} href={docsPlaygroundUrl}>
               Try the Playground

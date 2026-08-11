@@ -10,8 +10,8 @@ const footerLinks = [
   { href: "/#contributors", label: "Contribute", external: false },
   { href: docsComponentsUrl, label: "Component catalogue", external: false },
   { href: docsPlaygroundUrl, label: "Code Playground", external: false },
-  { href: "/pricing", label: "Pricing", external: false },
   { href: "/code-of-conduct", label: "Code of Conduct", external: false },
+  { href: "/license", label: "MIT License", external: false },
   { href: npmPackageUrl, label: "npm", external: true },
   { href: "https://github.com/Carl-Fearby/Opus", label: "GitHub", external: true },
 ];
@@ -28,7 +28,10 @@ export function SiteFooter() {
             src="/opus-logo.png"
             width={130}
           />
-          <p>Design system and React component library for modern business applications.</p>
+          <p>
+            Open-source design system and React component library for modern business
+            applications. No paid plans, commercial support, or hosted service.
+          </p>
         </div>
 
         <div className={styles.links}>
@@ -48,6 +51,9 @@ export function SiteFooter() {
 
       <div className={styles.legal}>
         <span>© {new Date().getFullYear()} Opus</span>
+        <a className={styles.netlifyLink} href="https://www.netlify.com/" rel="noreferrer" target="_blank">
+          This site is powered by Netlify
+        </a>
       </div>
     </footer>
   );

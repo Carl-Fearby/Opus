@@ -30,7 +30,6 @@ npm run dev
 Routes:
 
 - `/` — marketing home
-- `/pricing`
 - `/documentation` — component catalog, guide, playground, version log
 
 ## Netlify
@@ -60,6 +59,14 @@ npm publish -w opus-react --access public
 ```
 
 The npm package contains components only. The public website, playground, and marketing pages live in Application and are not published to npm.
+
+## Open-source status
+
+Opus is an open-source community project released under the OSI-approved
+[MIT License](./LICENSE). It does not offer paid plans, commercial support, or a hosted service.
+
+The public site is deployed at [project-opus.netlify.app](https://project-opus.netlify.app) and is
+[powered by Netlify](https://www.netlify.com/).
 
 ## Contribute to Opus
 

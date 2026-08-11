@@ -5,8 +5,10 @@ Public Opus website and documentation app. This is the deploy target for the pro
 It consumes the published [`opus-react`](https://www.npmjs.com/package/opus-react) package from npm and serves:
 
 - `/` — marketing home
-- `/pricing` — pricing
 - `/documentation/*` — component catalog, guide, playground, and version history
+
+Opus is an open-source community project under the repository's
+[MIT License](../LICENSE). It does not provide paid plans, commercial support, or a hosted service.
 
 ## Structure
 
