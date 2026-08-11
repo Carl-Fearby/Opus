@@ -9,6 +9,7 @@ const navLinks = [
   { href: "/#components", label: "Components" },
   { href: docsComponentsUrl, label: "Component catalogue" },
   { href: "/pricing", label: "Pricing" },
+  { href: "/code-of-conduct", label: "Code of Conduct" },
 ];
 
 export function SiteHeader() {

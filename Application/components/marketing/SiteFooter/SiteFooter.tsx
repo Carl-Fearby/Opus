@@ -11,6 +11,7 @@ const footerLinks = [
   { href: docsComponentsUrl, label: "Component catalogue", external: false },
   { href: docsPlaygroundUrl, label: "Code Playground", external: false },
   { href: "/pricing", label: "Pricing", external: false },
+  { href: "/code-of-conduct", label: "Code of Conduct", external: false },
   { href: npmPackageUrl, label: "npm", external: true },
   { href: "https://github.com/Carl-Fearby/Opus", label: "GitHub", external: true },
 ];
