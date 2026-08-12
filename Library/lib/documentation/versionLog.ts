@@ -568,10 +568,18 @@ export const versionLog: VersionEntry[] = [
   {
     version: "0.6.12",
     releasedAt: "2026-08-10",
-    commit: "overlay-0.6.12",
-    commitShort: "overlay",
+    commit: "fdb071a915ba0b7832e274e9479708e39605be96",
+    commitShort: "fdb071a",
     summary: "Persistent video playback and keyboard-accessible scroll regions.",
     changes: ["Add PersistentVideoPlayerProvider and PersistentVideoPlayer so active playback can survive navigation and continue in a docked mini-player.","Document and preview persistent playback, including close, expand, and shrink actions and a configurable persistence setting.","Make Diff Viewer panes and Virtual List scroll regions keyboard focusable for reliable keyboard and assistive-technology access.","Publish opus-react 0.6.12 and update Application to consume the release from npm."],
+  },
+  {
+    version: "0.6.13",
+    releasedAt: "2026-08-12",
+    commit: "overlay-0.6.13",
+    commitShort: "overlay",
+    summary: "Reliable details tabs and navigable component overview previews.",
+    changes: ["Fix company and contact detail workspaces so Notes, Activities, Documents, and detail tabs remain interactive in their full lab compositions.","Add semantic linked component headings to category overview previews so every embedded example clearly identifies its catalogue destination.","Expand Playwright coverage across category and subgroup overview routes, including representative nested tab interactions.","Publish opus-react 0.6.13 and update Application to consume the release from npm."],
   }
 ].reverse();
 

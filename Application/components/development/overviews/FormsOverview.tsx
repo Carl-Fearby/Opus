@@ -639,14 +639,22 @@ export function FormsOverview() {
           }
 
           return (
-            <article key={control.slug} className={styles.demoCard}>
+            <article
+              key={control.slug}
+              className={styles.demoCard}
+              data-overview-component={control.slug}
+            >
               <div className="opus-panel-heading">
-                <span className="opus-panel-title">{control.title}</span>
+                <h3 className={styles.demoCardHeading} data-testid="overview-component-heading">
+                  <Link href={componentPath(control.slug)}>{control.title}</Link>
+                </h3>
                 <Link className={styles.moreLink} href={componentPath(control.slug)}>
                   More
                 </Link>
               </div>
-              <div className={styles.demoCardBody}>{demo}</div>
+              <div className={styles.demoCardBody} data-testid="overview-component-preview">
+                {demo}
+              </div>
             </article>
           );
         })}

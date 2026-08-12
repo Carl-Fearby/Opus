@@ -670,4 +670,15 @@ export const releaseNotesOverlay = [
       "Publish opus-react 0.6.12 and update Application to consume the release from npm.",
     ],
   },
+  {
+    version: "0.6.13",
+    releasedAt: "2026-08-12",
+    summary: "Reliable details tabs and navigable component overview previews.",
+    changes: [
+      "Fix company and contact detail workspaces so Notes, Activities, Documents, and detail tabs remain interactive in their full lab compositions.",
+      "Add semantic linked component headings to category overview previews so every embedded example clearly identifies its catalogue destination.",
+      "Expand Playwright coverage across category and subgroup overview routes, including representative nested tab interactions.",
+      "Publish opus-react 0.6.13 and update Application to consume the release from npm.",
+    ],
+  },
 ];

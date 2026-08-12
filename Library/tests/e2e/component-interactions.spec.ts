@@ -1,5 +1,9 @@
 import { expect, test, type Locator, type Page } from "@playwright/test";
-import { getAllSlugs } from "../../lib/controls/registry";
+import {
+  getAllSlugs,
+  getControlSectionsByCategory,
+} from "../../lib/controls/registry";
+import type { ComponentCategory } from "../../lib/controls/types";
 
 const ACTIONABLE_SELECTOR = [
   "button:not([disabled])",
@@ -24,6 +28,32 @@ const DRAG_SLUGS = new Set([
   "splitter",
   "three-pane-layout",
 ]);
+
+const OVERVIEW_CATEGORIES: ComponentCategory[] = [
+  "content",
+  "dashboard",
+  "forms",
+  "graphs",
+  "labs",
+  "overlays",
+  "system",
+];
+
+const OVERVIEW_ROUTES = OVERVIEW_CATEGORIES.flatMap((category) => {
+  const categoryRoute = `/documentation/components/${category}`;
+  const subgroupRoutes = category === "forms" || category === "overlays" || category === "system"
+    ? []
+    : getControlSectionsByCategory(category).flatMap((section) => {
+      if (!section.label) return [];
+      const groupSlug = section.label
+        .toLowerCase()
+        .replace(/\//g, " ")
+        .replace(/[^a-z0-9]+/g, "-")
+        .replace(/^-|-$/g, "");
+      return [`${categoryRoute}/${groupSlug}`];
+    });
+  return [categoryRoute, ...subgroupRoutes];
+});
 
 function collectBrowserErrors(page: Page) {
   const errors: string[] = [];
@@ -372,5 +402,59 @@ test.describe("canonical control behaviour", () => {
       "href",
       "/documentation/components/lab-company-details",
     );
+  });
+
+  for (const route of OVERVIEW_ROUTES) {
+    test(`${route} exposes labelled component previews`, async ({ page }) => {
+      test.setTimeout(180_000);
+      const response = await page.goto(route);
+      expect(response?.ok()).toBe(true);
+
+      const cards = page.locator("[data-overview-component]");
+      await expect(cards.first()).toBeVisible();
+      const cardCount = await cards.count();
+      expect(cardCount, `${route} should contain at least one component card`).toBeGreaterThan(0);
+
+      for (let index = 0; index < cardCount; index += 1) {
+        const card = cards.nth(index);
+        const slug = await card.getAttribute("data-overview-component");
+        const headingLink = card.getByTestId("overview-component-heading").getByRole("link");
+        await expect(headingLink).toBeVisible();
+        await expect(headingLink).not.toHaveText("");
+        await expect(headingLink).toHaveAttribute(
+          "href",
+          `/documentation/components/${slug}`,
+        );
+        await expect(card.getByTestId("overview-component-preview")).toBeVisible();
+      }
+    });
+  }
+
+  test("labs overview changes nested contact and company workspace panels", async ({ page }) => {
+    await page.goto("/documentation/components/labs");
+
+    for (const details of [
+      {
+        slug: "lab-contact-details",
+        workspace: "contact-notes-activity",
+        tab: "Documents",
+        panelText: "Search documents",
+      },
+      {
+        slug: "lab-company-details",
+        workspace: "company-notes-activity",
+        tab: "Company Contacts",
+        panelText: "Emma Winterhold-Smith",
+      },
+    ]) {
+      const card = page.locator(`[data-overview-component="${details.slug}"]`);
+      const workspace = card.locator(`[data-component="${details.workspace}"]`);
+      const target = workspace.getByRole("tab", { name: details.tab, exact: true });
+
+      await target.click();
+
+      await expect(target).toHaveAttribute("aria-selected", "true");
+      await expect(workspace.getByText(details.panelText, { exact: true })).toBeVisible();
+    }
   });
 });

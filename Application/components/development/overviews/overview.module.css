@@ -77,6 +77,25 @@
   box-shadow: 0 8px 24px color-mix(in srgb, var(--opus-accent) 10%, transparent);
 }
 
+.demoCardHeading {
+  min-width: 0;
+  margin: 0;
+  font: inherit;
+}
+
+.demoCardHeading a {
+  color: var(--opus-text);
+  font-size: 0.86rem;
+  font-weight: 800;
+  text-decoration: none;
+}
+
+.demoCardHeading a:hover,
+.demoCardHeading a:focus-visible {
+  color: var(--opus-accent);
+  outline: none;
+}
+
 .moreLink {
   color: var(--opus-muted);
   font-size: 0.72rem;

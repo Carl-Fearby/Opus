@@ -31,9 +31,11 @@ export function OverviewDemoCard({ children, slug, title }: OverviewDemoCardProp
   }
 
   return (
-    <article className={styles.demoCard}>
+    <article className={styles.demoCard} data-overview-component={slug}>
       <div className="opus-panel-heading">
-        <span className="opus-panel-title">{title ?? control.title}</span>
+        <h3 className={styles.demoCardHeading} data-testid="overview-component-heading">
+          <Link href={componentPath(slug)}>{title ?? control.title}</Link>
+        </h3>
         <div className={previewStyles.previewToolbar}>
           <PreviewThemeControls id={`preview-theme-toggle-${slug}`} />
           <OpenInPlaygroundLink category={control.category} settings={settings} slug={slug} />
@@ -42,7 +44,7 @@ export function OverviewDemoCard({ children, slug, title }: OverviewDemoCardProp
           </Link>
         </div>
       </div>
-      <div className={styles.demoCardBody}>
+      <div className={styles.demoCardBody} data-testid="overview-component-preview">
         <PreviewStage>
           {children ?? (
             <UsagePreview
