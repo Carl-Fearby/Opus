@@ -53,6 +53,11 @@ export function OverviewDemoCard({ children, slug, title }: OverviewDemoCardProp
           )}
         </PreviewStage>
       </div>
+      <div className={styles.demoCardFooter}>
+        <Link className={styles.demoCardComponentLink} href={componentPath(slug)}>
+          View {control.title} component
+        </Link>
+      </div>
     </article>
   );
 }

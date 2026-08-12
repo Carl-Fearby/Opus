@@ -108,6 +108,35 @@
   max-width: 100%;
 }
 
+.demoCardFooter {
+  display: flex;
+  justify-content: flex-end;
+  padding-top: 8px;
+  border-top: 1px solid var(--opus-border);
+}
+
+.demoCardComponentLink {
+  display: inline-flex;
+  align-items: center;
+  min-height: 2rem;
+  padding: 0 12px;
+  border: 1px solid color-mix(in srgb, var(--opus-accent) 42%, var(--opus-border));
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--opus-accent-soft) 48%, transparent);
+  color: var(--opus-accent);
+  font-size: 0.74rem;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  text-decoration: none;
+}
+
+.demoCardComponentLink:hover,
+.demoCardComponentLink:focus-visible {
+  border-color: var(--opus-accent);
+  color: var(--opus-text);
+  outline: none;
+}
+
 .hubPage {
   display: grid;
   gap: 24px;

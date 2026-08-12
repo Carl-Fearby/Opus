@@ -2402,7 +2402,7 @@ ${wrapDashboardWidget(
       const notesBlock = s.showNotes
         ? `
   <CompanyNotesActivity
-    activeTab="${s.notesActiveTab ?? "notes"}"
+    defaultTab="${s.notesActiveTab ?? "notes"}"
     onAction={(action) => console.log(action)}
     onAddNote={(note) => console.log(note)}${s.notesTabsVariant !== "card" ? `\n    tabsVariant="${s.notesTabsVariant}"` : ""}
   />`
@@ -2462,7 +2462,7 @@ ${wrapDashboardWidget(
       const tabsVariantProp =
         (s.tabsVariant ?? "card") !== "card" ? `\n  tabsVariant="${s.tabsVariant}"` : "";
       const activeTabProp =
-        (s.activeTab ?? "notes") !== "notes" ? `\n  activeTab="${s.activeTab}"` : "";
+        (s.activeTab ?? "notes") !== "notes" ? `\n  defaultTab="${s.activeTab}"` : "";
       const widget = `<CompanyNotesActivity
   onAction={(action) => console.log(action)}
   onAddNote={(note) => console.log(note)}${activeTabProp}${tabsVariantProp}
@@ -2481,7 +2481,7 @@ ${wrapDashboardWidget(
       const notesBlock = s.showNotes
         ? `
   <ContactNotesActivity
-    activeTab="${s.notesActiveTab ?? "notes"}"
+    defaultTab="${s.notesActiveTab ?? "notes"}"
     onAction={(action) => console.log(action)}
     onAddNote={(note) => console.log(note)}${s.notesTabsVariant !== "card" ? `\n    tabsVariant="${s.notesTabsVariant}"` : ""}
   />`
@@ -2551,7 +2551,7 @@ ${wrapDashboardWidget(
       const tabsVariantProp =
         (s.tabsVariant ?? "card") !== "card" ? `\n  tabsVariant="${s.tabsVariant}"` : "";
       const activeTabProp =
-        (s.activeTab ?? "notes") !== "notes" ? `\n  activeTab="${s.activeTab}"` : "";
+        (s.activeTab ?? "notes") !== "notes" ? `\n  defaultTab="${s.activeTab}"` : "";
       const widget = `<ContactNotesActivity
   onAction={(action) => console.log(action)}
   onAddNote={(note) => console.log(note)}${activeTabProp}${tabsVariantProp}

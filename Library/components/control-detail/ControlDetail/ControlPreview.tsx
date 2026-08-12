@@ -4422,7 +4422,7 @@ function ControlPreviewContent({
           />
           {s.showNotes ? (
             <CompanyNotesActivity
-              activeTab={s.notesActiveTab ?? "notes"}
+              defaultTab={s.notesActiveTab ?? "notes"}
               onAction={(action) => console.log(action)}
               onAddNote={(note) => console.log(note)}
               onTabChange={(notesActiveTab) =>
@@ -4489,7 +4489,7 @@ function ControlPreviewContent({
           />
           {s.showNotes ? (
             <ContactNotesActivity
-              activeTab={s.notesActiveTab ?? "notes"}
+              defaultTab={s.notesActiveTab ?? "notes"}
               onAction={(action) => console.log(action)}
               onAddNote={(note) => console.log(note)}
               onTabChange={(notesActiveTab) =>
