@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { controls } from "@/lib/controls/registry";
 import { docsComponentsUrl, docsPlaygroundUrl } from "@/lib/siteLinks";
 import styles from "./Hero.module.css";
 
@@ -7,27 +8,29 @@ export function Hero() {
     <section className={styles.hero}>
       <div className={styles.inner}>
         <div className={styles.copy}>
-          <p className={styles.eyebrow}>Design system · React 19 · npm · browser verified</p>
+          <p className={styles.eyebrow}>Design system · React 19 · AI-assisted Playground · browser verified</p>
           <h1 className={styles.title}>
             Ship polished business apps with a component library built for real workflows.
           </h1>
           <p className={styles.lead}>
             Opus brings together forms, overlays, navigation, charts, application shells, desktop
-            primitives, and production-ready compositions in one themeable system — with live
-            documentation, editable previews, and usage examples verified against the real package.
+            primitives, and production-ready compositions in one themeable system. Its AI-assisted
+            Playground gives ChatGPT the live component source, preview context, and runtime errors
+            so it can help you move from catalogue example to a better production result.
           </p>
           <div className={styles.actions}>
             <Link className={styles.primary} href={docsComponentsUrl}>
               Explore components
             </Link>
             <Link className={styles.secondary} href={docsPlaygroundUrl}>
-              Try the Playground
+              Try the AI Playground
             </Link>
           </div>
           <div className={styles.meta}>
             <span>npm install opus-react</span>
-            <span>267 live component examples</span>
+            <span>{controls.length.toLocaleString("en-GB")} live catalogue entries</span>
             <span>270 browser interaction checks</span>
+            <span>AI-assisted Playground</span>
             <span>Accessible foundations</span>
           </div>
         </div>
@@ -43,7 +46,7 @@ export function Hero() {
                 Component catalogue
               </Link>
               <span className={styles.previewTab} data-active="true">
-                Playground
+                AI Playground
               </span>
             </div>
             <div className={styles.previewBody}>
@@ -69,7 +72,7 @@ export function Hero() {
               </div>
             </div>
             <Link className={styles.previewLink} href={docsComponentsUrl} tabIndex={-1}>
-              Open in Playground from any component page
+              Open any component with source and context ready for ChatGPT
             </Link>
           </div>
         </div>

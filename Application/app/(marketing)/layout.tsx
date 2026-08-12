@@ -9,7 +9,7 @@ export const metadata: Metadata = {
     template: "%s · Opus",
   },
   description:
-    "Opus is a browser-verified, themeable React component library for forms, dashboards, application shells, desktop experiences, and data-rich interfaces — with live documentation and an editable Code Playground.",
+    "Build production React interfaces with 267 documented Opus catalogue entries and an AI-assisted Playground that gives ChatGPT live component source, preview context, and runtime errors.",
 };
 
 export default function MarketingLayout({

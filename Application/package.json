@@ -5,7 +5,8 @@
   "scripts": {
     "dev": "next dev --webpack",
     "dev:turbo": "next dev --turbo",
-    "build": "next build --webpack",
+    "build": "npm run generate:repository-stats && next build --webpack",
+    "generate:repository-stats": "node scripts/generate-repository-stats.mjs",
     "start": "next start",
     "lint": "eslint",
     "sync-versions": "npm run sync-versions --prefix ../Library && cp ../Library/lib/documentation/versionLog.ts lib/documentation/versionLog.ts",

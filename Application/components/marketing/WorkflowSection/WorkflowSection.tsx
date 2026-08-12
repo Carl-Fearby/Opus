@@ -20,7 +20,7 @@ const steps = [
     step: "04",
     title: "Experiment in the Playground",
     description:
-      "Open any component page, tune settings, then click Open in Playground to edit the generated JSX and preview it live before you paste it into your app.",
+      "Open any component page, tune its settings, and edit the generated JSX live. Optionally add your own OpenAI API key and ask ChatGPT to diagnose, explain, or reshape the current example before you paste it into your app.",
   },
 ];
 

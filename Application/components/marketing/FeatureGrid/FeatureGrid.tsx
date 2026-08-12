@@ -17,6 +17,11 @@ const features = [
       "Live previews, settings panels, generated usage code, and Open in Playground links make it easy to explore components before you commit them to a screen.",
   },
   {
+    title: "ChatGPT with real UI context",
+    description:
+      "Bring your own OpenAI API key. ChatGPT receives the current component source, generated example, theme, and preview errors so it can diagnose and reshape the UI without a lengthy setup prompt.",
+  },
+  {
     title: "Verified beyond a screenshot",
     description:
       "Interactive examples are exercised in a real browser for callbacks, navigation, value changes, visible state, and drag gestures. Presentational components receive explicit render coverage.",

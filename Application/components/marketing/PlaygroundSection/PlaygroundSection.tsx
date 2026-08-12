@@ -3,11 +3,11 @@ import { docsComponentsUrl, docsPlaygroundUrl } from "@/lib/siteLinks";
 import styles from "./PlaygroundSection.module.css";
 
 const highlights = [
-  "Edit complete component examples with syntax highlighting",
-  "Live preview updates as you type",
-  "Open in Playground from any component page with your current settings",
-  "Preview, Playground, and external windows use the same generated source",
-  "Resizable source and preview panes powered by Splitter",
+  "Open any catalogue component with its generated JSX and current settings already loaded",
+  "Give ChatGPT the current source, component context, selected theme, and live preview error",
+  "Ask AI to explain, diagnose, adapt, or return corrected production-ready source",
+  "Edit the answer and see the preview update immediately in the same workspace",
+  "Use your own OpenAI API key instead of relying on a shared AI account",
 ];
 
 export function PlaygroundSection() {
@@ -15,13 +15,18 @@ export function PlaygroundSection() {
     <section className={styles.section} id="playground">
       <div className={styles.inner}>
         <div className={styles.copy}>
-          <p className={styles.eyebrow}>Code Playground</p>
-          <h2>Explore components in a live editor, not just a static catalogue.</h2>
+          <p className={styles.eyebrow}>AI-assisted Code Playground</p>
+          <h2>Give ChatGPT the working component—not an empty prompt.</h2>
           <p>
-            Jump from any component page into the Playground with generated JSX for your current
-            settings, then tweak imports, state, and render logic before you paste it into your app.
-            The same source is compiled for the catalogue preview, Playground, and external view, so
-            the example you inspect is the example you run.
+            Most AI coding chats begin by making you explain the component, paste its source, and
+            describe what went wrong. Opus already has that context. Open a catalogue example and
+            ChatGPT can work from the generated JSX, your edits, the active component and theme, and
+            any runtime preview error—all beside the live result.
+          </p>
+
+          <p className={styles.keyNote}>
+            Bring your own OpenAI API key. It is saved in your browser for your Playground sessions,
+            giving you control of the account and usage behind every request.
           </p>
 
           <ul className={styles.list}>
@@ -32,7 +37,7 @@ export function PlaygroundSection() {
 
           <div className={styles.actions}>
             <Link className={styles.primary} href={docsPlaygroundUrl}>
-              Open Playground
+              Try the AI Playground
             </Link>
             <Link className={styles.secondary} href={docsComponentsUrl}>
               Component catalogue
@@ -46,7 +51,7 @@ export function PlaygroundSection() {
             <span />
             <span />
             <span className={styles.mockTab} data-active="true">
-              Playground
+              AI Playground
             </span>
           </div>
           <div className={styles.mockBody}>
@@ -58,6 +63,17 @@ export function PlaygroundSection() {
                 <span data-accent="true" />
                 <span />
                 <span />
+              </div>
+            </div>
+            <div className={styles.mockHandle} />
+            <div className={`${styles.mockPane} ${styles.mockChatPane}`}>
+              <div className={styles.mockPaneLabel}>ChatGPT</div>
+              <div className={styles.mockChat}>
+                <div className={styles.mockUserMessage}>Adapt this contact card for account owners.</div>
+                <div className={styles.mockAssistantMessage}>
+                  I’ll preserve the Opus components and update the data, actions, and responsive layout.
+                </div>
+                <div className={styles.mockPrompt}>Ask about this source…</div>
               </div>
             </div>
             <div className={styles.mockHandle} />
