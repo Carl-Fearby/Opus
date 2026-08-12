@@ -331,4 +331,46 @@ test.describe("canonical control behaviour", () => {
     await expect(target).toHaveAttribute("aria-selected", "true");
     await expect(page.getByTestId("usage-preview-action")).toContainText("Last action:");
   });
+
+  for (const details of [
+    {
+      slug: "lab-contact-details",
+      workspace: "contact-notes-activity",
+      tab: "Documents",
+      panelText: "Search documents",
+    },
+    {
+      slug: "lab-company-details",
+      workspace: "company-notes-activity",
+      tab: "Company Contacts",
+      panelText: "Emma Winterhold-Smith",
+    },
+  ]) {
+    test(`${details.slug} changes its nested workspace panel`, async ({ page }) => {
+      await page.goto(`/documentation/components/${details.slug}`);
+      const preview = page.getByTestId("usage-preview");
+      await expect(preview).toHaveAttribute("data-hydrated", "true");
+
+      const workspace = preview.locator(`[data-component="${details.workspace}"]`);
+      const target = workspace.getByRole("tab", { name: details.tab, exact: true });
+
+      await target.click();
+
+      await expect(target).toHaveAttribute("aria-selected", "true");
+      await expect(workspace.getByText(details.panelText, { exact: true })).toBeVisible();
+    });
+  }
+
+  test("labs overview identifies full-detail demos with component links", async ({ page }) => {
+    await page.goto("/documentation/components/labs");
+
+    await expect(page.getByRole("link", { name: "View Contact Details component" })).toHaveAttribute(
+      "href",
+      "/documentation/components/lab-contact-details",
+    );
+    await expect(page.getByRole("link", { name: "View Company Details component" })).toHaveAttribute(
+      "href",
+      "/documentation/components/lab-company-details",
+    );
+  });
 });
