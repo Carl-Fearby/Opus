@@ -11,6 +11,7 @@ import {
 import {
   DOCUMENTATION_BASE_PATH,
   GUIDE_BASE_PATH,
+  SECURITY_BASE_PATH,
   VERSION_BASE_PATH,
   guidePath,
 } from "@/lib/documentation/routes";
@@ -69,6 +70,11 @@ export function buildDocumentationBreadcrumbs(
 
   if (pathname === VERSION_BASE_PATH) {
     items.push(crumb("current", options.currentLabel ?? "Version"));
+    return items;
+  }
+
+  if (pathname === SECURITY_BASE_PATH) {
+    items.push(crumb("current", options.currentLabel ?? "Security"));
     return items;
   }
 

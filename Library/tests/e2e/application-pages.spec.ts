@@ -38,6 +38,7 @@ const applicationRoutes = [
   "/documentation/components",
   "/documentation/components/relationships",
   ...catalogueRoutes,
+  "/documentation/security",
   "/documentation/version",
 ];
 
@@ -77,6 +78,18 @@ test("playground loads seeded component usage", async ({ page }) => {
   expect(response?.ok()).toBe(true);
   await expect(page.getByText("Live render of your edited component.")).toBeVisible();
   await expect(page.getByText("Add component code to preview it here.")).toHaveCount(0);
+  assertNoErrors();
+});
+
+test("security disclosure is linked from the documentation navigation", async ({ page }) => {
+  const assertNoErrors = collectBrowserErrors(page);
+  await page.goto("/documentation");
+
+  await page.getByRole("link", { name: "Security", exact: true }).click();
+
+  await expect(page).toHaveURL(/\/documentation\/security$/);
+  await expect(page.getByRole("heading", { name: "Security", level: 1 })).toBeVisible();
+  await expect(page.getByRole("heading", { name: "Current repository snapshot" })).toBeVisible();
   assertNoErrors();
 });
 

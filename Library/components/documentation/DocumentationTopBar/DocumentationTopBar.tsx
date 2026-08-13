@@ -14,8 +14,16 @@ import {
 import { libraryVersion } from "@/lib/documentation/libraryVersion";
 import styles from "./TopBar.module.css";
 
+type DocumentationSection =
+  | "home"
+  | "components"
+  | "guide"
+  | "playground"
+  | "security"
+  | "version";
+
 type DocumentationNavProps = {
-  current?: "home" | "components" | "guide" | "playground" | "version";
+  current?: DocumentationSection;
 };
 
 function ComponentsNavLink({ isActive }: { isActive: boolean }) {
@@ -76,6 +84,8 @@ export function DocumentationNav({ current }: DocumentationNavProps) {
         ? "guide"
         : pathname.startsWith(PLAYGROUND_BASE_PATH)
           ? "playground"
+          : pathname.startsWith("/documentation/security")
+            ? "security"
           : pathname.startsWith("/documentation/version")
           ? "version"
           : pathname === DOCUMENTATION_BASE_PATH
@@ -101,6 +111,13 @@ export function DocumentationNav({ current }: DocumentationNavProps) {
       <ComponentsNavLink isActive={active === "components"} />
       <PlaygroundNavLink isActive={active === "playground"} />
       <Link
+        aria-current={active === "security" ? "page" : undefined}
+        className={active === "security" ? styles.navLinkActive : styles.navLink}
+        href="/documentation/security"
+      >
+        Security
+      </Link>
+      <Link
         aria-current={active === "version" ? "page" : undefined}
         className={active === "version" ? styles.navLinkActive : styles.navLink}
         href="/documentation/version"
@@ -112,7 +129,7 @@ export function DocumentationNav({ current }: DocumentationNavProps) {
 }
 
 type DocumentationTopBarProps = {
-  current: "home" | "components" | "guide" | "playground" | "version";
+  current: DocumentationSection;
   trailing?: ReactNode;
 };
 

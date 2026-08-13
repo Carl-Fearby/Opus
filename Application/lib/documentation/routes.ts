@@ -1,6 +1,7 @@
 export const DOCUMENTATION_BASE_PATH = "/documentation";
 export const COMPONENTS_BASE_PATH = `${DOCUMENTATION_BASE_PATH}/components`;
 export const GUIDE_BASE_PATH = `${DOCUMENTATION_BASE_PATH}/guide`;
+export const SECURITY_BASE_PATH = `${DOCUMENTATION_BASE_PATH}/security`;
 export const VERSION_BASE_PATH = `${DOCUMENTATION_BASE_PATH}/version`;
 export const PLAYGROUND_BASE_PATH = `${DOCUMENTATION_BASE_PATH}/playground`;
 

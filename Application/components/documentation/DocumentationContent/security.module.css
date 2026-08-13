@@ -1,0 +1,277 @@
+.page {
+  display: grid;
+  gap: 18px;
+  width: min(1180px, 100%);
+  margin: 0 auto;
+  padding: 24px;
+  align-content: start;
+}
+
+.hero,
+.panel {
+  border: 1px solid var(--opus-border);
+  border-radius: var(--opus-container-radius);
+  background: var(--opus-panel);
+  box-shadow: var(--opus-shadow);
+}
+
+.hero {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 24px;
+  padding: 28px;
+}
+
+.hero h1,
+.panel h2,
+.panel h3,
+.hero p,
+.panel p,
+.panel dl {
+  margin: 0;
+}
+
+.hero h1 {
+  color: var(--opus-text);
+  font-size: clamp(2rem, 5vw, 3.4rem);
+  line-height: 1;
+}
+
+.hero > div:first-child {
+  display: grid;
+  gap: 10px;
+  max-width: 70ch;
+}
+
+.hero > div:first-child > p:last-child,
+.note,
+.finding > p,
+.choiceGrid p,
+.resolvedList p {
+  color: var(--opus-muted);
+  line-height: 1.55;
+}
+
+.eyebrow {
+  color: var(--opus-accent);
+  font-size: 0.76rem;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.auditSummary {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: 8px;
+}
+
+.auditSummary span,
+.severity {
+  display: inline-flex;
+  align-items: center;
+  min-height: 30px;
+  padding: 4px 10px;
+  border: 1px solid var(--opus-border);
+  border-radius: 999px;
+  background: var(--opus-input-bg);
+  color: var(--opus-muted);
+  font-size: 0.78rem;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.auditSummary .highCount,
+.severity {
+  border-color: color-mix(in srgb, #f59e0b 48%, var(--opus-border));
+  background: color-mix(in srgb, #f59e0b 12%, var(--opus-panel));
+  color: color-mix(in srgb, #f59e0b 78%, var(--opus-text));
+}
+
+.panel {
+  display: grid;
+  gap: 18px;
+  padding: 22px;
+}
+
+.panelHeading {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+  padding-bottom: 14px;
+  border-bottom: 1px solid var(--opus-border);
+}
+
+.panelHeading > div {
+  display: grid;
+  gap: 5px;
+}
+
+.panelHeading h2 {
+  color: var(--opus-text);
+  font-size: 1.25rem;
+}
+
+.panelHeading time {
+  color: var(--opus-muted);
+  font-size: 0.8rem;
+  white-space: nowrap;
+}
+
+.findings,
+.choiceGrid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 14px;
+}
+
+.finding,
+.choiceGrid article,
+.resolvedList article {
+  border: 1px solid var(--opus-border);
+  border-radius: var(--opus-input-radius-large);
+  background: var(--opus-input-fill);
+}
+
+.finding,
+.choiceGrid article {
+  display: grid;
+  gap: 14px;
+  padding: 18px;
+  align-content: start;
+}
+
+.findingTitle,
+.resolvedList article > div {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.finding h3,
+.choiceGrid h3,
+.resolvedList h3 {
+  color: var(--opus-text);
+  font-size: 1rem;
+}
+
+.finding dl {
+  display: grid;
+  gap: 8px;
+}
+
+.finding dl div {
+  display: grid;
+  grid-template-columns: 92px minmax(0, 1fr);
+  gap: 10px;
+}
+
+.finding dt {
+  color: var(--opus-muted);
+  font-size: 0.78rem;
+  font-weight: 700;
+}
+
+.finding dd {
+  color: var(--opus-text);
+  font-size: 0.84rem;
+}
+
+.finding a,
+.resolvedList a {
+  color: var(--opus-accent);
+}
+
+.finding .resolution {
+  padding-top: 12px;
+  border-top: 1px solid var(--opus-border);
+  color: var(--opus-text);
+  font-weight: 700;
+}
+
+.choiceGrid article:nth-child(3) {
+  grid-column: 1 / -1;
+}
+
+.commandRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  min-width: 0;
+  padding: 10px;
+  border: 1px solid var(--opus-border);
+  border-radius: var(--opus-input-radius);
+  background: var(--opus-input-bg);
+}
+
+.commandRow code {
+  min-width: 0;
+  color: var(--opus-text);
+  font-size: 0.78rem;
+  overflow-wrap: anywhere;
+}
+
+.resolvedList {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.resolvedList article {
+  display: grid;
+  gap: 10px;
+  padding: 16px;
+}
+
+.resolvedList code {
+  color: var(--opus-accent);
+  font-size: 0.76rem;
+}
+
+.commands {
+  display: grid;
+  gap: 10px;
+}
+
+@media (max-width: 780px) {
+  .page {
+    padding: 16px;
+  }
+
+  .hero,
+  .panelHeading {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .auditSummary {
+    justify-content: flex-start;
+  }
+
+  .findings,
+  .choiceGrid,
+  .resolvedList {
+    grid-template-columns: 1fr;
+  }
+
+  .choiceGrid article:nth-child(3) {
+    grid-column: auto;
+  }
+}
+
+@media (max-width: 520px) {
+  .commandRow {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .finding dl div {
+    grid-template-columns: 1fr;
+    gap: 2px;
+  }
+}
