@@ -195,7 +195,15 @@ async function tagActionCandidates(preview: Locator) {
   const candidates = preview.locator(ACTIONABLE_SELECTOR);
   return candidates.evaluateAll((elements) => {
     const representatives = new Map<string, Element>();
+    // Re-tag from scratch. Model/media controls can swap their visible and
+    // inert layers after hydration, so a previous marker must not survive on
+    // a now-hidden element.
+    elements.forEach((element) => element.removeAttribute("data-opus-e2e-action"));
     elements.forEach((element) => {
+      if (element.closest("[aria-hidden='true'], [inert]")) return;
+      const box = element.getBoundingClientRect();
+      const style = window.getComputedStyle(element);
+      if (box.width <= 0 || box.height <= 0 || style.display === "none" || style.visibility === "hidden") return;
       const input = element as HTMLInputElement;
       const classSignature = [...element.classList].sort().join(".");
       const fallbackLabel =
@@ -412,21 +420,37 @@ test.describe("canonical control behaviour", () => {
 
       const cards = page.locator("[data-overview-component]");
       await expect(cards.first()).toBeVisible();
-      const cardCount = await cards.count();
-      expect(cardCount, `${route} should contain at least one component card`).toBeGreaterThan(0);
+      // Validate the complete overview in one browser round trip. The Content
+      // route contains more than 100 previews; running several auto-waiting
+      // locators per card makes this otherwise-static assertion exceed the CI
+      // timeout on slower GitHub runners.
+      const cardStates = await cards.evaluateAll((elements) =>
+        elements.map((card) => {
+          const slug = card.getAttribute("data-overview-component");
+          const heading = card.querySelector<HTMLElement>("[data-testid='overview-component-heading'] a");
+          const preview = card.querySelector<HTMLElement>("[data-testid='overview-component-preview']");
 
-      for (let index = 0; index < cardCount; index += 1) {
-        const card = cards.nth(index);
-        const slug = await card.getAttribute("data-overview-component");
-        const headingLink = card.getByTestId("overview-component-heading").getByRole("link");
-        await expect(headingLink).toBeVisible();
-        await expect(headingLink).not.toHaveText("");
-        await expect(headingLink).toHaveAttribute(
-          "href",
-          `/documentation/components/${slug}`,
-        );
-        await expect(card.getByTestId("overview-component-preview")).toBeVisible();
-      }
+          return {
+            slug,
+            headingText: heading?.textContent?.trim() ?? "",
+            headingHref: heading?.getAttribute("href") ?? "",
+            headingPresent: Boolean(heading),
+            previewPresent: Boolean(preview),
+          };
+        }),
+      );
+
+      expect(cardStates.length, `${route} should contain at least one component card`).toBeGreaterThan(0);
+      expect(
+        cardStates.filter((card) =>
+          !card.slug
+          || !card.headingText
+          || !card.headingPresent
+          || !card.previewPresent
+          || card.headingHref !== `/documentation/components/${card.slug}`
+        ),
+        `${route} contains incorrectly labelled component previews`,
+      ).toEqual([]);
     });
   }
 

@@ -15,7 +15,10 @@ for (const slug of getAllSlugs()) {
     const preview = page.locator("#main-content [data-preview-root]");
     await expect(preview).toHaveCount(1);
     await expect(preview).toBeVisible();
-    await expect(page.getByTestId("usage-preview")).toHaveAttribute("data-hydrated", "true");
+    // The usage section also mounts a compiled preview further down the page.
+    // Scope hydration to the catalogue preview we are about to audit so React
+    // streaming cannot make this assertion ambiguous under parallel load.
+    await expect(preview.getByTestId("usage-preview")).toHaveAttribute("data-hydrated", "true");
 
     const results = await new AxeBuilder({ page })
       .include("#main-content [data-preview-root]")
