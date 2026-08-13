@@ -576,8 +576,8 @@ export const versionLog: VersionEntry[] = [
   {
     version: "0.6.13",
     releasedAt: "2026-08-12",
-    commit: "overlay-0.6.13",
-    commitShort: "overlay",
+    commit: "11962fffd266c504e3f4738cb84c06f0541785bd",
+    commitShort: "11962ff",
     summary: "Reliable details tabs and navigable component overview previews.",
     changes: ["Fix company and contact detail workspaces so Notes, Activities, Documents, and detail tabs remain interactive in their full lab compositions.","Add semantic linked component headings to category overview previews so every embedded example clearly identifies its catalogue destination.","Expand Playwright coverage across category and subgroup overview routes, including representative nested tab interactions.","Publish opus-react 0.6.13 and update Application to consume the release from npm."],
   }
