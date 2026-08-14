@@ -72,6 +72,11 @@ const nativeInputDefaults = {
 };
 
 export const defaultSettings: ControlSettingsBySlug = {
+  "infinite-selectable-list": {
+    hasMore: true,
+    selectionIndicator: "none",
+    virtualItemCount: 5000,
+  },
   "virtual-list": {
     hasMore: true,
     scrollbarSizing: "loaded",

@@ -530,6 +530,79 @@ ${
   }
 
   switch (slug) {
+    case "infinite-selectable-list": {
+      const s = settings as ControlSettingsBySlug["infinite-selectable-list"];
+      return `${usageClientPrefix(true)}
+${importLine(["InfiniteSelectableList"])}
+
+const senders = ["Emma Davis", "Michael Brown", "Olivia Wilson", "Noah Patel", "Sophia Carter", "James Smith"];
+const subjects = ["Quarterly pipeline review", "Signed agreement ready", "Tomorrow's customer workshop", "Updated implementation plan", "Pricing approval required", "Notes from our discovery call"];
+const previews = ["I've added the latest figures and comments for the team…", "The completed document is attached for your records…", "Here is the agenda and the final list of attendees…", "We've incorporated the dependencies discussed yesterday…", "Could you review the revised commercial terms today?", "Thanks for the conversation — these are the agreed actions…"];
+
+function createMessages(count, start = 0) {
+  return Array.from({ length: count }, (_, offset) => {
+    const index = start + offset;
+    return {
+      id: \`mail-\${index}\`,
+      sender: senders[index % senders.length],
+      subject: subjects[(index * 3) % subjects.length],
+      preview: previews[(index * 5) % previews.length],
+      time: index < 2 ? "Just now" : \`\${(index % 58) + 2}m\`,
+      unread: index % 4 === 0,
+    };
+  });
+}
+
+const [items, setItems] = useState(() => createMessages(30));
+const [selectedIds, setSelectedIds] = useState<string[]>([]);
+
+return (
+  <InfiniteSelectableList
+    ariaLabel="Inbox messages"
+    items={items}
+    height={440}
+    itemHeight={76}
+    getItemId={(item) => item.id}
+    selectedIds={selectedIds}
+    selectionIndicator="${s.selectionIndicator}"
+    hasMore={${s.hasMore} && items.length < ${s.virtualItemCount}}
+    totalItemCount={${s.hasMore ? s.virtualItemCount : 30}}
+    onLoadMore={() =>
+      setItems((current) => [
+        ...current,
+        ...createMessages(Math.min(20, ${s.virtualItemCount} - current.length), current.length),
+      ])
+    }
+    onSelectionChange={(ids, context) => {
+      setSelectedIds(ids);
+      console.log("Selection changed", { ids, ...context });
+    }}
+    onFocusedItemChange={(id, item) => console.log("Focused message", { id, item })}
+    onItemActivate={(item) => console.log("Open message", item)}
+    renderItem={(item) => (
+      <article
+        style={{
+          display: "grid",
+          gridTemplateColumns: "minmax(0, 1fr) auto",
+          alignItems: "center",
+          gap: 10,
+          height: "100%",
+          minWidth: 0,
+        }}
+      >
+        <span style={{ display: "grid", minWidth: 0 }}>
+          <strong>{item.sender}</strong>
+          <span>{item.subject}</span>
+          <small style={{ color: "var(--opus-muted)", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
+            {item.preview}
+          </small>
+        </span>
+        <time style={{ color: "var(--opus-muted)" }}>{item.time}</time>
+      </article>
+    )}
+  />
+);`;
+    }
     case "virtual-list": {
       const s = settings as ControlSettingsBySlug["virtual-list"];
       const initialCount = s.hasMore ? 20 : s.virtualItemCount;

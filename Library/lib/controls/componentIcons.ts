@@ -104,6 +104,7 @@ import {
 import type { ComponentCategory, ControlSlug } from "./types";
 
 const componentIcons: Record<string, IconDefinition> = {
+  "infinite-selectable-list": faEnvelope,
   "virtual-list": faList,
   "product-tour": faBullseye,
   "mention-input": faHashtag,

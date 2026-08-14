@@ -26,7 +26,7 @@ const CompiledPreview = memo(function CompiledPreview({
 function getActionLabel(event: Event) {
   const target = event.target as HTMLElement;
   const action = target.closest<HTMLElement>(
-    "button, a[href], [role='button'], input, select, textarea",
+    "button, a[href], [role='button'], [role='option'], [role='listbox'], input, select, textarea",
   );
 
   if (!action || action.hasAttribute("disabled")) return null;
@@ -43,8 +43,6 @@ function collectPreviewOutput(root: HTMLElement): Record<string, unknown> | null
   const controls = [...root.querySelectorAll<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>(
     "input:not([type='button']):not([type='submit']):not([type='reset']), select, textarea",
   )];
-  if (!controls.length) return null;
-
   const flatOutput: Record<string, unknown> = {};
   for (const control of controls) {
     if (control.disabled || !control.id && !control.name) continue;
@@ -75,7 +73,6 @@ function collectPreviewOutput(root: HTMLElement): Record<string, unknown> | null
       flatOutput[key] = value;
     }
   }
-  if (!Object.keys(flatOutput).length) return null;
 
   const output: Record<string, unknown> = {};
   for (const [path, value] of Object.entries(flatOutput)) {
@@ -90,6 +87,30 @@ function collectPreviewOutput(root: HTMLElement): Record<string, unknown> | null
     }
     target[segments.at(-1) ?? path] = value;
   }
+
+  const listboxes = [...root.querySelectorAll<HTMLElement>(
+    "[role='listbox'][aria-multiselectable='true']",
+  )];
+  listboxes.forEach((listbox, index) => {
+    const selectedOptions = [...listbox.querySelectorAll<HTMLElement>(
+      "[role='option'][aria-selected='true']",
+    )];
+    const focusedOptionId = listbox.getAttribute("aria-activedescendant");
+    const focusedOption = focusedOptionId
+      ? root.ownerDocument.getElementById(focusedOptionId)
+      : null;
+    const key = listboxes.length === 1
+      ? "selection"
+      : `selection${index + 1}`;
+    output[key] = {
+      focusedId: focusedOption?.dataset.itemId ?? null,
+      selectedIds: selectedOptions
+        .map((option) => option.dataset.itemId)
+        .filter((id): id is string => Boolean(id)),
+    };
+  });
+
+  if (!Object.keys(output).length) return null;
   return output;
 }
 
@@ -154,7 +175,7 @@ export function UsagePreview({
 
     const reportAction = (event: Event) => {
       const label = getActionLabel(event);
-      queueMicrotask(() => {
+      requestAnimationFrame(() => {
         if (label) setLastAction(`Last action: ${label}`);
         const formOutput = collectPreviewOutput(previewElement);
         setDataOutput(formOutput ?? (label ? { action: label } : null));
@@ -163,6 +184,7 @@ export function UsagePreview({
 
     previewElement.addEventListener("change", reportAction, true);
     previewElement.addEventListener("click", reportAction, true);
+    previewElement.addEventListener("keydown", reportAction, true);
     previewElement.dataset.hydrated = "true";
     const frame = requestAnimationFrame(() => {
       setDataOutput(collectPreviewOutput(previewElement));
@@ -172,6 +194,7 @@ export function UsagePreview({
       delete previewElement.dataset.hydrated;
       previewElement.removeEventListener("change", reportAction, true);
       previewElement.removeEventListener("click", reportAction, true);
+      previewElement.removeEventListener("keydown", reportAction, true);
     };
   }, [showActionStatus]);
 

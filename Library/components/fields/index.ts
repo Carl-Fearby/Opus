@@ -477,6 +477,7 @@ export type { AsyncSelectFieldProps, AsyncSelectOption } from "./AsyncSelectFiel
 export * from "./MentionInputField";
 export * from "./TimeRangeField";
 export * from "../VirtualList";
+export * from "../InfiniteSelectableList";
 export * from "../ProductTour";
 export * from "../RecurrenceEditor";
 export * from "../SignaturePad";

@@ -106,6 +106,7 @@ export type ControlSlug =
   | "audit-log"
   | "upload-queue"
   | "virtual-list"
+  | "infinite-selectable-list"
   | "product-tour"
   | "mention-input"
   | "recurrence-editor"
@@ -1623,6 +1624,11 @@ export type MegaMenuSettings = {
 };
 
 export type ControlSettingsBySlug = {
+  "infinite-selectable-list": {
+    hasMore: boolean;
+    selectionIndicator: "none" | "checkbox" | "radio";
+    virtualItemCount: number;
+  };
   "virtual-list": {
     hasMore: boolean;
     scrollbarSizing: "loaded" | "virtual";

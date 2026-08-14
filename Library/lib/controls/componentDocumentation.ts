@@ -2,6 +2,31 @@ import type { ControlSlug } from "./types";
 import { getControl } from "./registry";
 
 const componentDocumentation: Partial<Record<ControlSlug, string>> = {
+  "infinite-selectable-list": `## Overview
+
+A virtualised, infinitely loading collection for mailboxes, file browsers, record queues, and other high-volume selectable data. It follows familiar desktop selection conventions without coupling the primitive to email.
+
+## Selection behaviour
+
+- With no selection indicator, click selects one row.
+- In checkbox or radio display mode, clicking anywhere on a row toggles it without clearing the other selected rows.
+- Ctrl/Cmd+click always adds a row to the existing selection; repeating it never removes an already selected row.
+- Shift+click selects the range from the selection anchor.
+- Drag across rows selects a contiguous range; hold Ctrl/Cmd to add that range.
+- Arrow keys move and select, Shift+Arrow extends, Ctrl/Cmd+Arrow moves focus only, Ctrl/Cmd+Space always adds the focused row, and Ctrl/Cmd+A selects every loaded row.
+- Enter and double-click call \`onItemActivate\`.
+
+## Selection controls
+
+Set \`selectionIndicator\` to \`"none"\`, \`"checkbox"\`, or \`"radio"\`. Checkbox and radio are visual treatments for multiple selection; both retain the full desktop multi-selection model. The complete row is the toggle target, so releasing slightly beside the glyph cannot clear earlier selections. The indicator is rendered by the component, so row renderers do not need to recreate ticks or choice controls. \`onSelectionChange\` returns every selected ID and every corresponding loaded item.
+
+## Data and loading
+
+The host owns \`items\` and appends the next page in \`onLoadMore\`. Pass \`totalItemCount\` when the server knows the total so the scrollbar represents the complete result set. Selection callbacks return both stable IDs and the corresponding loaded items.
+
+## Accessibility
+
+Uses a labelled multi-select \`listbox\`, \`option\` rows, \`aria-selected\`, \`aria-activedescendant\`, roving visual focus, keyboard selection, and a polite loading status. Disabled IDs are exposed with \`aria-disabled\` and excluded from ranges and select-all.`,
   "save-state-indicator": `## Overview\n\nCompact persistence feedback for idle, saving, saved, and error states. Use it beside editors and autosaving forms.\n\n## Behaviour\n\nSupply the current state from your persistence layer. Error state exposes an optional retry callback; saved state can show the most recent save time.\n\n## Accessibility\n\nStatus updates use a polite live region. Errors use an alert and the retry action is a native button.`,
   "async-select": `## Overview\n\nSearch-backed combobox for remote or expensive option sets. It supports debouncing, minimum query length, default options, loading, empty, and error states.\n\n## Behaviour\n\nReturn options from \`loadOptions(query)\`. Requests are sequenced so stale responses cannot replace newer results.\n\n## Accessibility\n\nUses combobox and listbox semantics with keyboard navigation, active-descendant tracking, and announced loading or error feedback.`,
   "editable-data-table": `## Overview\n\nControlled inline-editable table with optional row selection, save/delete actions, and a composed Bulk Action Bar.\n\n## Behaviour\n\nThe host owns \`rows\` and applies changes from \`onRowsChange\`. Row and bulk callbacks keep persistence outside the component.\n\n## Accessibility\n\nUses a native table, caption, column headings, labelled edit controls, and labelled selection checkboxes.`,

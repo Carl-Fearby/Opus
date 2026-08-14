@@ -21,7 +21,7 @@ import { continueWithApple, continueWithGoogle } from "@/lib/auth/socialAuth";
 import { PersistentVideoPlayer, VideoPlayer } from "@/components/VideoPlayer";
 import { AudioPlayer } from "@/components/AudioPlayer";
 import { OtpField } from "@/components/fields/OtpField";
-import {DiffPreview,MentionInputPreview,ProductTourPreview,RecurrencePreview,SignaturePreview,TimeRangePreview,VirtualListPreview} from "./NewComponentPreviews";
+import {DiffPreview,InfiniteSelectableListPreview,MentionInputPreview,ProductTourPreview,RecurrencePreview,SignaturePreview,TimeRangePreview,VirtualListPreview} from "./NewComponentPreviews";
 import { FormWizard } from "@/components/fields/FormWizard";
 import { CheckboxGroupField, ComboboxField, CurrencyField, DateRangeField, Form, FormActions, FormHeader, FormSection, FormValidationSummary, MaskedField, MultiFileField } from "@/components/fields/AdvancedFields";
 import {
@@ -568,6 +568,10 @@ type ControlPreviewProps = {
   slug: ControlSlug;
   settings: ControlSettings;
   onSettingsChange: (next: ControlSettings) => void;
+};
+
+type ControlPreviewContentProps = ControlPreviewProps & {
+  onPreviewAction?: (label: string, data?: Record<string, unknown>) => void;
 };
 
 function fieldProps(settings: BaseFieldSettings) {
@@ -3117,7 +3121,8 @@ function ControlPreviewContent({
   slug,
   settings,
   onSettingsChange,
-}: ControlPreviewProps) {
+  onPreviewAction,
+}: ControlPreviewContentProps) {
   if (isChartSlug(slug)) {
     const s = settings as ControlSettingsBySlug[typeof slug];
     const canMaximise = maximisableChartVariants.includes(
@@ -3164,6 +3169,17 @@ function ControlPreviewContent({
   }
 
   switch (slug) {
+    case "infinite-selectable-list": {
+      const s = settings as ControlSettingsBySlug["infinite-selectable-list"];
+      return (
+        <InfiniteSelectableListPreview
+          hasMore={s.hasMore}
+          selectionIndicator={s.selectionIndicator}
+          totalItemCount={s.virtualItemCount}
+          onAction={onPreviewAction}
+        />
+      );
+    }
     case "virtual-list": {
       const s = settings as ControlSettingsBySlug["virtual-list"];
       return (
@@ -6460,6 +6476,7 @@ function ControlPreviewContent({
 
 export function ControlPreview(props: ControlPreviewProps) {
   const [lastAction, setLastAction] = useState("Waiting for action");
+  const [dataOutput, setDataOutput] = useState<Record<string, unknown> | null>(null);
 
   const reportCapturedAction = (event: React.SyntheticEvent<HTMLElement>) => {
     const target = event.target as HTMLElement;
@@ -6470,6 +6487,12 @@ export function ControlPreview(props: ControlPreviewProps) {
       ?? (action instanceof HTMLInputElement ? action.name || action.type : action.textContent?.trim())
       ?? action.tagName.toLowerCase();
     setLastAction(`Last action: ${label || "Control updated"}`);
+    setDataOutput({ action: label || "Control updated" });
+  };
+
+  const reportPreviewAction = (label: string, data?: Record<string, unknown>) => {
+    setLastAction(`Last action: ${label}`);
+    setDataOutput(data ?? { action: label });
   };
 
   return (
@@ -6478,8 +6501,16 @@ export function ControlPreview(props: ControlPreviewProps) {
       onClickCapture={reportCapturedAction}
       onChangeCapture={reportCapturedAction}
     >
-      <ControlPreviewContent {...props} />
-      <p className={styles.globalActionStatus} aria-live="polite">{lastAction}</p>
+      <ControlPreviewContent {...props} onPreviewAction={reportPreviewAction} />
+      <div className={styles.globalActionStatus} aria-live="polite">
+        <p>{lastAction}</p>
+        {dataOutput ? (
+          <div className={styles.globalDataOutput} data-testid="control-preview-data">
+            <strong>Data output</strong>
+            <JsonViewer collapsedDepth={2} value={dataOutput} />
+          </div>
+        ) : null}
+      </div>
     </div>
   );
 }
