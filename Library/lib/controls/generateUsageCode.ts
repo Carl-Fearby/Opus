@@ -566,7 +566,7 @@ return (
     selectedIds={selectedIds}
     selectionIndicator="${s.selectionIndicator}"
     hasMore={${s.hasMore} && items.length < ${s.virtualItemCount}}
-    totalItemCount={${s.hasMore ? s.virtualItemCount : 30}}
+    ${s.hasMore && s.scrollbarSizing === "virtual" ? `totalItemCount={${s.virtualItemCount}}` : ""}
     onLoadMore={() =>
       setItems((current) => [
         ...current,
@@ -2450,6 +2450,15 @@ ${wrapDashboardWidget(
         s as unknown as ControlSettings,
         category,
       );
+    }
+    case "pac-man": {
+      return `<PacMan title=${quote("Arcade game")} />`;
+    }
+    case "asteroids": {
+      return `<Asteroids title=${quote("Asteroids arcade game")} />`;
+    }
+    case "jet-set-willy": {
+      return `<JetSetWilly title=${quote("Jet Set Willy")} />`;
     }
     case "lab-contact-directory":
     case "lab-company-directory":

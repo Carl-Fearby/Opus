@@ -12,6 +12,9 @@ import { ContactDetails, ContactNotesActivity } from "@/components/ContactDetail
 import { CompanyDetails, CompanyNotesActivity } from "@/components/CompanyDetails";
 import { CrmWorkspaceLab, type CrmWorkspaceLabVariant } from "@/components/CrmWorkspaceLab";
 import { DesktopLab } from "@/components/DesktopLab";
+import { PacMan } from "@/components/PacMan";
+import { Asteroids } from "@/components/Asteroids";
+import { JetSetWilly } from "@/components/JetSetWilly";
 import { Desktop } from "@/components/Desktop";
 import { DesktopDock } from "@/components/DesktopDock";
 import { DesktopIcon } from "@/components/DesktopIcon";
@@ -3173,9 +3176,14 @@ function ControlPreviewContent({
       const s = settings as ControlSettingsBySlug["infinite-selectable-list"];
       return (
         <InfiniteSelectableListPreview
+          key={`${s.hasMore}-${s.scrollbarSizing}-${s.virtualItemCount}`}
           hasMore={s.hasMore}
           selectionIndicator={s.selectionIndicator}
-          totalItemCount={s.virtualItemCount}
+          totalItemCount={
+            s.hasMore && s.scrollbarSizing === "virtual"
+              ? s.virtualItemCount
+              : undefined
+          }
           onAction={onPreviewAction}
         />
       );
@@ -4355,6 +4363,19 @@ function ControlPreviewContent({
           onAction={(action) => console.log(action)}
         />
       );
+    }
+    case "pac-man": {
+      return (
+        <div style={{ minHeight: 600, width: "100%" }}>
+          <PacMan title="Pac-Man component preview" />
+        </div>
+      );
+    }
+    case "asteroids": {
+      return <Asteroids title="Asteroids component preview" />;
+    }
+    case "jet-set-willy": {
+      return <JetSetWilly title="Jet Set Willy" />;
     }
     case "desktop": {
       return (

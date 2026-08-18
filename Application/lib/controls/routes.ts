@@ -8,6 +8,7 @@ export const CATEGORY_PATHS: Record<ComponentCategory, string> = {
   content: `${COMPONENTS_BASE_PATH}/content`,
   dashboard: `${COMPONENTS_BASE_PATH}/dashboard`,
   forms: `${COMPONENTS_BASE_PATH}/forms`,
+  games: `${COMPONENTS_BASE_PATH}/games`,
   graphs: `${COMPONENTS_BASE_PATH}/graphs`,
   labs: `${COMPONENTS_BASE_PATH}/labs`,
   overlays: `${COMPONENTS_BASE_PATH}/overlays`,
@@ -68,6 +69,10 @@ export function getCategoryFromPath(pathname: string): ComponentCategory | null 
 
   if (pathname === CATEGORY_PATHS.forms) {
     return "forms";
+  }
+
+  if (pathname === CATEGORY_PATHS.games) {
+    return "games";
   }
 
   if (pathname === CATEGORY_PATHS.graphs) {

@@ -33,6 +33,7 @@ export type {
 } from "../../../components/ApplicationHeader";
 
 export * from "../../../components/AudioPlayer";
+export * from "../../../components/Asteroids";
 export * from "../../../components/Carousel";
 export * from "../../../components/CompactDocuments";
 export * from "../../../components/CompanyDetails";
@@ -44,10 +45,12 @@ export * from "../../../components/DesktopIcon";
 export * from "../../../components/DesktopLab";
 export * from "../../../components/DesktopWindow";
 export * from "../../../components/JsonViewer";
+export * from "../../../components/JetSetWilly";
 export * from "../../../components/MegaMenu";
 export * from "../../../components/PropertyGrid";
 export * from "../../../components/TreeMenu";
 export * from "../../../components/VideoPlayer";
+export * from "../../../components/PacMan";
 
 export * from "../../../components/FontPicker";
 

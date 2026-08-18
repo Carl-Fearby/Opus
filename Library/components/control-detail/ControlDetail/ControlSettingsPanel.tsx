@@ -455,17 +455,30 @@ export function ControlSettingsPanel({
             label="Has more"
             onChange={(hasMore) => onChange({ ...s, hasMore } as ControlSettings)}
           />
-          <SettingInput
-            label="Virtual item count"
-            type="number"
-            value={String(s.virtualItemCount)}
-            onChange={(virtualItemCount) =>
-              onChange({
-                ...s,
-                virtualItemCount: Math.max(20, Number(virtualItemCount) || 20),
-              } as ControlSettings)
+          <SettingSelect
+            label="Scrollbar sizing"
+            value={s.scrollbarSizing}
+            options={[
+              { label: "Loaded items", value: "loaded" },
+              { label: "Known total", value: "virtual" },
+            ]}
+            onChange={(scrollbarSizing) =>
+              onChange({ ...s, scrollbarSizing } as ControlSettings)
             }
           />
+          {s.scrollbarSizing === "virtual" ? (
+            <SettingInput
+              label="Known item count"
+              type="number"
+              value={String(s.virtualItemCount)}
+              onChange={(virtualItemCount) =>
+                onChange({
+                  ...s,
+                  virtualItemCount: Math.max(20, Number(virtualItemCount) || 20),
+                } as ControlSettings)
+              }
+            />
+          ) : null}
         </div>
       );
     }

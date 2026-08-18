@@ -434,6 +434,54 @@ export function ControlSettingsPanel({
   }
 
   switch (slug) {
+    case "infinite-selectable-list": {
+      const s = settings as ControlSettingsBySlug["infinite-selectable-list"];
+      return (
+        <div className={shellStyles.settingsGrid}>
+          <SettingSelect
+            label="Selection control"
+            value={s.selectionIndicator}
+            onChange={(selectionIndicator) =>
+              onChange({ ...s, selectionIndicator } as ControlSettings)
+            }
+            options={[
+              { label: "None", value: "none" },
+              { label: "Checkbox", value: "checkbox" },
+              { label: "Radio", value: "radio" },
+            ]}
+          />
+          <SettingToggle
+            checked={s.hasMore}
+            label="Has more"
+            onChange={(hasMore) => onChange({ ...s, hasMore } as ControlSettings)}
+          />
+          <SettingSelect
+            label="Scrollbar sizing"
+            value={s.scrollbarSizing}
+            options={[
+              { label: "Loaded items", value: "loaded" },
+              { label: "Known total", value: "virtual" },
+            ]}
+            onChange={(scrollbarSizing) =>
+              onChange({ ...s, scrollbarSizing } as ControlSettings)
+            }
+          />
+          {s.scrollbarSizing === "virtual" ? (
+            <SettingInput
+              label="Known item count"
+              type="number"
+              value={String(s.virtualItemCount)}
+              onChange={(virtualItemCount) =>
+                onChange({
+                  ...s,
+                  virtualItemCount: Math.max(20, Number(virtualItemCount) || 20),
+                } as ControlSettings)
+              }
+            />
+          ) : null}
+        </div>
+      );
+    }
     case "virtual-list": {
       const s = settings as ControlSettingsBySlug["virtual-list"];
       return (

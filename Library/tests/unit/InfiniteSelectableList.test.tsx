@@ -28,6 +28,47 @@ function renderList(onSelectionChange = vi.fn()) {
 }
 
 describe("InfiniteSelectableList", () => {
+  it("defaults the catalogue to loaded-page scrollbar sizing", () => {
+    const settings = defaultSettings["infinite-selectable-list"];
+    expect(settings.scrollbarSizing).toBe("loaded");
+
+    const usage = generateUsageCode(
+      "infinite-selectable-list",
+      settings,
+      "content",
+    ).full;
+    expect(usage).not.toContain("totalItemCount=");
+
+    const knownTotalUsage = generateUsageCode(
+      "infinite-selectable-list",
+      { ...settings, scrollbarSizing: "virtual", virtualItemCount: 5000 },
+      "content",
+    ).full;
+    expect(knownTotalUsage).toContain("totalItemCount={5000}");
+  });
+
+  it("mounts only the visible window even when the server reports a large total", () => {
+    const manyItems = Array.from({ length: 100 }, (_, index) => ({
+      id: `large-mail-${index}`,
+      subject: `Large message ${index + 1}`,
+    }));
+    render(
+      <InfiniteSelectableList
+        ariaLabel="Large inbox"
+        getItemId={(item) => item.id}
+        height={240}
+        itemHeight={48}
+        items={manyItems}
+        totalItemCount={5000}
+        renderItem={(item) => <span>{item.subject}</span>}
+        showScrollbar={false}
+      />,
+    );
+
+    expect(screen.getAllByRole("option")).toHaveLength(9);
+    expect(screen.queryByText("Large message 100")).not.toBeInTheDocument();
+  });
+
   it("keeps the catalogue usage example executable", () => {
     const usage = generateUsageCode(
       "infinite-selectable-list",

@@ -1,0 +1,139 @@
+.joystickContainer {
+    position: fixed;
+    width: 160px;
+    height: 160px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    touch-action: none;
+    user-select: none;
+    pointer-events: none;
+    z-index: 1000;
+}
+
+.joystickBase {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.joystickRing {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    border: 2px dashed rgba(255, 255, 255, 0.5);
+    border-radius: 50%;
+    background: rgba(0, 0, 0, 0.2);
+    backdrop-filter: blur(4px);
+}
+
+:global(body:not(.dark-mode)) .joystickRing {
+    border-color: rgba(30, 58, 138, 0.6);
+    background: rgba(255, 255, 255, 0.3);
+}
+
+.joystickArc {
+    position: absolute;
+    width: 140px;
+    height: 140px;
+    border: 1.5px dashed rgba(255, 255, 255, 0.4);
+    border-radius: 50%;
+    background: transparent;
+    border-top: none;
+    border-bottom: none;
+    border-left: none;
+    border-right: none;
+    /* Create arc segments on opposite sides */
+    clip-path: polygon(25% 0, 75% 0, 75% 50%, 25% 50%);
+}
+
+:global(body:not(.dark-mode)) .joystickArc {
+    border-color: rgba(30, 58, 138, 0.5);
+}
+
+.joystickArc:nth-child(3) {
+    transform: rotate(180deg);
+    /* Keep the same clip-path for opposite side */
+    clip-path: polygon(25% 0, 75% 0, 75% 50%, 25% 50%);
+}
+
+.joystickKnob {
+    position: absolute;
+    width: 56px;
+    height: 56px;
+    border-radius: 50%;
+    background: radial-gradient(circle at 30% 30%, rgba(240, 240, 240, 1), rgba(180, 180, 180, 1));
+    box-shadow:
+        0 4px 12px rgba(0, 0, 0, 0.4),
+        inset 0 2px 4px rgba(255, 255, 255, 0.6),
+        inset 0 -2px 4px rgba(0, 0, 0, 0.2);
+    pointer-events: none;
+    z-index: 10;
+    left: 50%;
+    top: 50%;
+    margin-left: -28px;
+    margin-top: -28px;
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.knobInner {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background: radial-gradient(circle at 35% 35%, rgba(220, 220, 220, 0.9), rgba(160, 160, 160, 0.7));
+    box-shadow:
+        inset 0 2px 4px rgba(255, 255, 255, 0.5),
+        inset 0 -1px 2px rgba(0, 0, 0, 0.3);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.knobHighlight {
+    position: absolute;
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    background: radial-gradient(circle at 30% 30%, rgba(255, 255, 255, 0.8), rgba(255, 255, 255, 0));
+    top: 20%;
+    left: 25%;
+    pointer-events: none;
+}
+
+@media (max-width: 520px) {
+    .joystickContainer {
+        width: 140px;
+        height: 140px;
+    }
+
+    .joystickArc {
+        width: 120px;
+        height: 120px;
+    }
+
+    .joystickRing {
+        border-width: 1.5px;
+    }
+
+    .joystickKnob {
+        width: 52px;
+        height: 52px;
+        margin-left: -26px;
+        margin-top: -26px;
+    }
+
+    .knobInner {
+        width: 30px;
+        height: 30px;
+    }
+
+    .knobHighlight {
+        width: 14px;
+        height: 14px;
+    }
+}
+

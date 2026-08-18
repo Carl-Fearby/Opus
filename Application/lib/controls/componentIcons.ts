@@ -97,6 +97,7 @@ import {
   faUserShield,
   faUsers,
   faVideo,
+  faGamepad,
   faWindowMaximize,
   faWindowRestore,
   faWrench,
@@ -104,6 +105,7 @@ import {
 import type { ComponentCategory, ControlSlug } from "./types";
 
 const componentIcons: Record<string, IconDefinition> = {
+  "infinite-selectable-list": faEnvelope,
   "virtual-list": faList,
   "product-tour": faBullseye,
   "mention-input": faHashtag,
@@ -365,6 +367,7 @@ const categoryIcons: Record<ComponentCategory, IconDefinition> = {
   content: faLayerGroup,
   dashboard: faGrip,
   forms: faClipboardList,
+  games: faGamepad,
   graphs: faChartLine,
   labs: faFlask,
   overlays: faClone,

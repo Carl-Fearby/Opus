@@ -55,6 +55,7 @@ import type {
   DashboardSectionWidth,
 } from "./dashboardPreview";
 import type { LabsControlSlug } from "./labsCatalog";
+import type { GamesControlSlug } from "./gamesCatalog";
 import type { SystemControlSlug } from "./systemCatalog";
 import type { LayoutControlSlug } from "./layoutCatalog";
 import type { NavigationExtrasControlSlug } from "./navigationExtrasCatalog";
@@ -106,6 +107,7 @@ export type ControlSlug =
   | "audit-log"
   | "upload-queue"
   | "virtual-list"
+  | "infinite-selectable-list"
   | "product-tour"
   | "mention-input"
   | "recurrence-editor"
@@ -202,11 +204,12 @@ export type ControlSlug =
   | "top-navigation"
   | ChartControlSlug
   | DashboardControlSlug
+  | GamesControlSlug
   | LabsControlSlug
   | SystemControlSlug;
 
 export type ComponentCategory =
-  "content" | "dashboard" | "forms" | "graphs" | "labs" | "overlays" | "system";
+  "content" | "dashboard" | "forms" | "games" | "graphs" | "labs" | "overlays" | "system";
 
 export type BaseFieldSettings = {
   mode: FieldMode;
@@ -1623,6 +1626,14 @@ export type MegaMenuSettings = {
 };
 
 export type ControlSettingsBySlug = {
+  "jet-set-willy": Record<string, never>;
+  asteroids: Record<string, never>;
+  "infinite-selectable-list": {
+    hasMore: boolean;
+    scrollbarSizing: "loaded" | "virtual";
+    selectionIndicator: "none" | "checkbox" | "radio";
+    virtualItemCount: number;
+  };
   "virtual-list": {
     hasMore: boolean;
     scrollbarSizing: "loaded" | "virtual";
@@ -1823,6 +1834,7 @@ export type ControlSettingsBySlug = {
     "lab-dashboard-list-columns": DashboardListColumnsSettings;
     "lab-dashboard-welcome": DashboardWelcomeSettings;
     "lab-desktop-environment": DesktopEnvironmentSettings;
+    "pac-man": Record<string, never>;
     "lab-contact-directory": CrmWorkspaceSettings;
     "lab-company-directory": CrmWorkspaceSettings;
     "lab-sales-pipeline": CrmWorkspaceSettings;

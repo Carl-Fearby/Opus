@@ -4,6 +4,7 @@ import { buildersCatalog } from "./buildersCatalog";
 import { chartCatalog } from "./chartCatalog";
 import { dashboardCatalog } from "./dashboardCatalog";
 import { labsCatalog } from "./labsCatalog";
+import { gamesCatalog } from "./gamesCatalog";
 import { systemCatalog } from "./systemCatalog";
 import { layoutCatalog } from "./layoutCatalog";
 import { navigationExtrasCatalog } from "./navigationExtrasCatalog";
@@ -13,6 +14,7 @@ export const componentCategories: { id: ComponentCategory; label: string }[] = [
   { id: "content", label: "Content" },
   { id: "dashboard", label: "Dashboard" },
   { id: "forms", label: "Forms" },
+  { id: "games", label: "Games" },
   { id: "graphs", label: "Graphs" },
   { id: "labs", label: "Labs" },
   { id: "overlays", label: "Overlays" },
@@ -24,6 +26,7 @@ export const categoryDescriptions: Record<ComponentCategory, string> = {
     "Expandable sections, grouped accordions, alerts, navigation menus, empty states, sidebars, and show more / show less controls.",
   dashboard: "Dashboard widgets, metric cards, progress components, profile panels, and data-rich summary blocks.",
   forms: "Inputs, selectors, toggles, buttons, and every field pattern used across Opus forms.",
+  games: "Playable components, interactive experiments, and reusable game mechanics built for the browser.",
   graphs: "Charts and visualisations for comparing, trending, segmenting, and exploring metric data.",
   labs: "Experimental compositions that combine multiple library components into ready-made patterns — including CRM workspaces and a full authentication happy path.",
   overlays: "Tooltips, command palettes, modals, drawers, and toast notifications for contextual help and feedback.",
@@ -168,6 +171,17 @@ const labControls: ControlDefinition[] = labsCatalog.map((entry) => ({
   isNew: "isNew" in entry ? entry.isNew === true : undefined,
   navigationGroup: entry.navigationGroup,
   compositionParts: [...entry.compositionParts],
+  sourceFiles: entry.sourceFiles,
+  usesFieldShell: false,
+}));
+
+const gameControls: ControlDefinition[] = gamesCatalog.map((entry) => ({
+  slug: entry.slug,
+  title: entry.title,
+  category: "games",
+  componentName: entry.componentName,
+  description: entry.description,
+  navigationGroup: entry.navigationGroup,
   sourceFiles: entry.sourceFiles,
   usesFieldShell: false,
 }));
@@ -875,6 +889,7 @@ const rawControls: ControlDefinition[] = [
     usesFieldShell: false,
   },
   ...dashboardControls,
+  ...gameControls,
   ...labControls,
   ...systemControls,
   ...buildersControls,

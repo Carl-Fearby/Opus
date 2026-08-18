@@ -72,6 +72,14 @@ const nativeInputDefaults = {
 };
 
 export const defaultSettings: ControlSettingsBySlug = {
+  "jet-set-willy": {},
+  asteroids: {},
+  "infinite-selectable-list": {
+    hasMore: true,
+    scrollbarSizing: "loaded",
+    selectionIndicator: "none",
+    virtualItemCount: 5000,
+  },
   "virtual-list": {
     hasMore: true,
     scrollbarSizing: "loaded",
@@ -846,6 +854,7 @@ export const defaultSettings: ControlSettingsBySlug = {
     dockAutoHide: false,
     dockSize: 40,
   },
+  "pac-man": {},
   "lab-company-directory": {},
   "lab-sales-pipeline": {},
   "lab-task-workspace": {},

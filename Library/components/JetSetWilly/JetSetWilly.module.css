@@ -1,0 +1,154 @@
+.component {
+  width: 100%;
+  max-width: 900px;
+  margin: auto;
+  overflow: hidden;
+  color: #f8fafc;
+  background: #080808;
+  border: 1px solid #3f3f46;
+  border-radius: 18px;
+  box-shadow: 0 25px 80px rgba(0, 0, 0, 0.5);
+}
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  padding: 16px 20px;
+  background: linear-gradient(90deg, #18181b, #09090b);
+  border-bottom: 1px solid #3f3f46;
+}
+.header h2 {
+  margin: 3px 0 0;
+  font:
+    700 22px/1.1 ui-monospace,
+    SFMono-Regular,
+    Menlo,
+    monospace;
+}
+.kicker {
+  color: #facc15;
+  font:
+    700 10px/1 ui-monospace,
+    SFMono-Regular,
+    Menlo,
+    monospace;
+  letter-spacing: 0.17em;
+  text-transform: uppercase;
+}
+.actions {
+  display: flex;
+  gap: 8px;
+}
+.header button {
+  padding: 9px 13px;
+  border: 1px solid #71717a;
+  border-radius: 8px;
+  color: #fafafa;
+  background: #27272a;
+  cursor: pointer;
+}
+.screenShell {
+  position: relative;
+  display: grid;
+  min-height: 480px;
+  place-items: center;
+  padding: 24px;
+  background: radial-gradient(circle, #20202a, #030303 70%);
+}
+.canvas {
+  display: block;
+  width: 512px;
+  max-width: 100%;
+  height: auto;
+  outline: 0;
+  image-rendering: pixelated;
+  box-shadow:
+    0 0 0 2px #111,
+    0 0 32px rgba(0, 0, 0, 0.8);
+}
+.canvas:focus {
+  box-shadow:
+    0 0 0 2px #facc15,
+    0 0 32px rgba(250, 204, 21, 0.18);
+}
+.focusHint {
+  position: absolute;
+  bottom: 8px;
+  color: #71717a;
+  font:
+    10px/1 ui-monospace,
+    SFMono-Regular,
+    Menlo,
+    monospace;
+}
+.instructions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 10px 22px;
+  padding: 13px 18px;
+  border-top: 1px solid #27272a;
+  color: #a1a1aa;
+  font:
+    12px/1.3 ui-monospace,
+    SFMono-Regular,
+    Menlo,
+    monospace;
+}
+.instructions strong {
+  color: #f8fafc;
+}
+.notice {
+  margin: 0;
+  padding: 0 18px 14px;
+  text-align: center;
+  color: #52525b;
+  font-size: 11px;
+}
+.component:fullscreen {
+  display: flex;
+  width: 100vw;
+  max-width: none;
+  height: 100vh;
+  margin: 0;
+  border: 0;
+  border-radius: 0;
+  flex-direction: column;
+  background: #000;
+}
+.component:fullscreen .screenShell {
+  min-height: 0;
+  flex: 1;
+  padding: 0;
+}
+.component:fullscreen .canvas {
+  width: min(100vw, calc((100vh - 142px) * 4 / 3));
+  max-width: none;
+  height: auto;
+  max-height: none;
+  aspect-ratio: 4 / 3;
+}
+.component:fullscreen .focusHint,
+.component:fullscreen .notice {
+  display: none;
+}
+@media (max-width: 600px) {
+  .screenShell {
+    min-height: 300px;
+    padding: 10px;
+  }
+  .header {
+    align-items: flex-start;
+    padding: 12px;
+  }
+  .header h2 {
+    font-size: 18px;
+  }
+  .actions {
+    flex-direction: column;
+  }
+  .instructions {
+    gap: 8px 14px;
+  }
+}

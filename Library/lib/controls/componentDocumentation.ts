@@ -22,7 +22,7 @@ Set \`selectionIndicator\` to \`"none"\`, \`"checkbox"\`, or \`"radio"\`. Checkb
 
 ## Data and loading
 
-The host owns \`items\` and appends the next page in \`onLoadMore\`. Pass \`totalItemCount\` when the server knows the total so the scrollbar represents the complete result set. Selection callbacks return both stable IDs and the corresponding loaded items.
+The host owns \`items\` and appends the next page in \`onLoadMore\`. By default the scrollbar represents the rows loaded so far. Pass \`totalItemCount\` only when the server knows the total and the scrollbar should represent the complete result set. Selection callbacks return both stable IDs and the corresponding loaded items.
 
 ## Accessibility
 
