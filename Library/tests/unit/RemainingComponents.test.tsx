@@ -9,6 +9,7 @@ import {
   DiffViewer,
   MentionInputField,
   RecurrenceEditor,
+  ScrollArea,
   TimeRangeField,
   TextMarquee,
   VirtualList,
@@ -33,6 +34,16 @@ describe("remaining component set", () => {
     expect(screen.getByRole("list", { name: "Virtual list" })).toHaveAttribute("tabindex", "0");
     expect(screen.getByText("Item 0")).toBeInTheDocument();
     expect(screen.queryByText("Item 999")).not.toBeInTheDocument();
+  });
+
+  it("names and makes a scroll area keyboard reachable", () => {
+    render(
+      <ScrollArea label="Recent activity" maxHeight={80}>
+        <div>Scrollable activity</div>
+      </ScrollArea>,
+    );
+
+    expect(screen.getByRole("region", { name: "Recent activity" })).toHaveAttribute("tabindex", "0");
   });
 
   it("selects mentions with the keyboard", () => {

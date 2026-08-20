@@ -16,9 +16,11 @@ export default defineConfig({
   },
   sourcemap: true,
   clean: true,
+  // Keep the package consumable from both ESM and CommonJS while removing
+  // unreachable component code from each published entry point.
   splitting: false,
-  treeshake: false,
-  minify: false,
+  treeshake: true,
+  minify: true,
   external: [
     "react",
     "react-dom",

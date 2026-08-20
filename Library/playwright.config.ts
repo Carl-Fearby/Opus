@@ -25,6 +25,8 @@ export default defineConfig({
   projects: [
     {
       name: "chromium",
+      // Use Playwright's managed Chromium so local and CI runs share the same
+      // browser contract without requiring a separately installed Chrome channel.
       use: { ...devices["Desktop Chrome"] },
     },
   ],

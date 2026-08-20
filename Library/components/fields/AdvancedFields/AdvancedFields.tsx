@@ -35,6 +35,48 @@ export function CurrencyField({ currency = "GBP", error, help, id, label, labelP
   </FieldShell>;
 }
 
+export type PercentageFieldProps = ShellProps & {
+  max?: number;
+  min?: number;
+  step?: number;
+  value: number | null;
+  onChange: (value: number | null) => void;
+};
+
+/** Values are expressed as 0–100, rather than a fractional 0–1 value. */
+export function PercentageField({
+  error,
+  help,
+  id,
+  label,
+  labelPosition,
+  max = 100,
+  min = 0,
+  mode,
+  required,
+  step = 0.01,
+  value,
+  onChange,
+}: PercentageFieldProps) {
+  return <FieldShell error={error} help={help} id={id} label={label} labelPosition={labelPosition} mode={mode} required={required}>
+    <div className={styles.affixed}>
+      <input
+        aria-invalid={Boolean(error)}
+        className={styles.bareInput}
+        id={id}
+        inputMode="decimal"
+        max={max}
+        min={min}
+        step={step}
+        type="number"
+        value={value ?? ""}
+        onChange={(event) => onChange(event.target.value === "" ? null : Number(event.target.value))}
+      />
+      <span aria-hidden="true">%</span>
+    </div>
+  </FieldShell>;
+}
+
 export type MaskedFieldProps = ShellProps & { mask: string; placeholder?: string; value: string; onChange: (value: string) => void };
 
 function significantMaskChars(value: string) {

@@ -34,6 +34,10 @@ Opus is a production-ready, themeable React design system for dashboards, CRM pr
 - React DOM `^18.2.0` or `^19.0.0`
 - `three` `^0.185.0` — optional, only needed for 3D model components
 
+## API stability and upgrades
+
+Published APIs are labelled **Stable**, **Beta**, or **Experimental**. Most current primitives are Beta while their final cross-browser and accessibility reviews complete; Labs, games, and provider-specific integrations are Experimental. See [the API stability policy](./API_STABILITY.md) for compatibility guarantees, deprecation handling, and the supported-browser matrix. All user-facing changes and migrations are recorded in [the changelog](./CHANGELOG.md).
+
 ## Install
 
 ```bash

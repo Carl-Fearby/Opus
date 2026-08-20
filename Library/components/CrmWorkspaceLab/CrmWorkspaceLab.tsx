@@ -425,11 +425,11 @@ function DirectoryLayout({
       />
       <div className={styles.table} role="table" aria-label={title}>
         <div className={`${styles.row} ${styles.tableHead}`} role="row">
-          <span />
+          <span aria-label="Selection" role="columnheader" />
           <span role="columnheader">{columns[0]}</span>
           <span role="columnheader">{columns[1]}</span>
           <span role="columnheader">{columns[2]}</span>
-          <span />
+          <span aria-label="Actions" role="columnheader" />
         </div>
         {filtered.map((row) => {
           const checked = selected.includes(row.id);

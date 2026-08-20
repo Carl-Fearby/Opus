@@ -10,22 +10,23 @@ on:
       - "Library/**"
       - ".github/workflows/library-quality.yml"
 
+permissions:
+  contents: read
+
 jobs:
-  test:
+  quality:
+    name: Type, lint, unit, audits and build
     runs-on: ubuntu-latest
     defaults:
       run:
         working-directory: Library
-
     steps:
       - uses: actions/checkout@v7
-
       - uses: actions/setup-node@v7
         with:
           node-version: 22
           cache: npm
           cache-dependency-path: Library/package-lock.json
-
       - name: Restore Next.js build cache
         uses: actions/cache@v6
         with:
@@ -33,15 +34,31 @@ jobs:
           key: ${{ runner.os }}-next-${{ hashFiles('Library/package-lock.json') }}-${{ hashFiles('Library/**/*.js', 'Library/**/*.jsx', 'Library/**/*.ts', 'Library/**/*.tsx', 'Library/**/*.css') }}
           restore-keys: |
             ${{ runner.os }}-next-${{ hashFiles('Library/package-lock.json') }}-
-
       - run: npm ci
+      - run: npx tsc --noEmit
+      - run: npm run lint
       - run: npm test
       - run: npm run audit:actions
+      - run: npm run audit:composition
+      - run: npm run audit:usage
       - run: npm run build
 
+  browser:
+    name: Browser and accessibility regression
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: Library
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: Library/package-lock.json
+      - run: npm ci
       - run: npx playwright install --with-deps chromium
       - run: npm run test:e2e
-
       - name: Upload Playwright report
         if: failure()
         uses: actions/upload-artifact@v7

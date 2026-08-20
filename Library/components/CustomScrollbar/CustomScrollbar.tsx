@@ -159,6 +159,9 @@ export function CustomScrollbar({
       next.id ||= viewportId;
       next.setAttribute("aria-label", label);
       if (!next.hasAttribute("role")) next.setAttribute("role", "region");
+      // A consumer-supplied viewport is commonly just a scrolling <div>. Make it
+      // reachable by keyboard users without overriding an intentional tab order.
+      if (!next.hasAttribute("tabindex")) next.tabIndex = 0;
       next.addEventListener("scroll", handleScroll, { passive: true });
       resizeObserver.disconnect();
       resizeObserver.observe(next);
