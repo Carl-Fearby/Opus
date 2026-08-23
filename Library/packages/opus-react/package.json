@@ -1,6 +1,6 @@
 {
   "name": "opus-react",
-  "version": "0.6.18",
+  "version": "0.6.19",
   "description": "A production-ready React design system for modern business applications, dashboards and data-rich workflows.",
   "homepage": "https://project-opus.netlify.app/documentation/components",
   "repository": {
@@ -42,6 +42,8 @@
     "./styles.css": "./dist/styles.css",
     "./index.css": "./dist/index.css",
     "./flags.css": "./dist/flags.css",
+    "./assets/opus-logo.png": "./dist/assets/opus-logo.png",
+    "./assets/logo-small.png": "./dist/assets/logo-small.png",
     "./package.json": "./package.json"
   },
   "files": [

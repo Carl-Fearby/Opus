@@ -4,6 +4,17 @@ All notable public-package changes are recorded here. Opus follows [Semantic Ver
 
 ## Unreleased
 
+## 0.6.19
+
+### Added
+
+- `OpusBrand`, the package-safe canonical Opus icon, wordmark, and full-lockup component.
+- Direct asset exports for `opus-react/assets/opus-logo.png` and `opus-react/assets/logo-small.png`.
+
+### Changed
+
+- `ApplicationHeader` and `ApplicationFooter` now use `OpusBrand` by default rather than assuming consumers serve `/opus-logo.png`.
+
 ## 0.6.18
 
 ### Fixed

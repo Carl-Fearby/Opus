@@ -6,6 +6,7 @@ import { Divider } from "@/components/Divider";
 import { DropdownMenu, type DropdownMenuItemData } from "@/components/DropdownMenu";
 import { IconBadge, type IconBadgeUrgency } from "@/components/IconBadge";
 import { KeyboardShortcut } from "@/components/KeyboardShortcut";
+import { OpusBrand } from "@/components/OpusBrand";
 import { Tooltip } from "@/components/Tooltip";
 import { UserProfileWidget, type UserProfileMenuItem } from "@/components/UserProfileWidget";
 import { TextField } from "@/components/fields/TextField";
@@ -59,7 +60,7 @@ export function ApplicationHeader({
   actions = [],
   brandAlt = "Opus",
   brandHref = "/",
-  brandSrc = "/opus-logo.png",
+  brandSrc,
   className,
   connected = false,
   createLabel = "Create new",
@@ -121,8 +122,7 @@ export function ApplicationHeader({
       data-connected={connected ? "true" : "false"}
     >
       <a aria-label={brandAlt} className={styles.brand} href={brandHref}>
-        {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img alt={brandAlt} className={styles.logo} src={brandSrc} />
+        <OpusBrand alt={brandAlt} className={styles.logo} src={brandSrc} />
       </a>
 
       <div className={styles.content}>

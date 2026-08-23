@@ -15,6 +15,8 @@ export {
 export type { AccentColor, AccentPair } from "../../../components/AccentColorPicker";
 
 export { CatalogIcon } from "../../../components/CatalogIcon";
+export { OpusBrand } from "../../../components/OpusBrand";
+export type { OpusBrandProps, OpusBrandVariant } from "../../../components/OpusBrand";
 export { IconPicker } from "../../../components/IconPicker";
 export { IconBadge } from "../../../components/IconBadge";
 export type { IconBadgeProps, IconBadgeUrgency } from "../../../components/IconBadge";

@@ -171,6 +171,7 @@ import { AccentColorPicker } from "opus-react";
 
 ### Content and data
 
+- `OpusBrand` — canonical `icon`, `wordmark`, and `full` logo variants
 - `Card`, `Panel`, `Section`, `Table`, `DataGrid`
 - `Tabs`, `Accordion`, `AccordionGroup`, `ShowMore`
 - `Badge`, `Avatar`, `AvatarGroup`, `List`, `DescriptionList`

@@ -1,0 +1,41 @@
+.root,
+.image {
+  display: inline-block;
+  max-width: 100%;
+  object-fit: contain;
+  object-position: center;
+  vertical-align: middle;
+}
+
+.root {
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: contain;
+}
+
+.full {
+  width: 11rem;
+  aspect-ratio: 1666 / 739;
+  background-image: url("../../public/opus-logo.png");
+}
+
+.icon {
+  width: 2.25rem;
+  aspect-ratio: 1;
+  background-image: url("../../public/logo-small.png");
+}
+
+/* The supplied artwork contains the full lockup. This variant retains the
+   wordmark silhouette while keeping the same package-safe asset contract. */
+.wordmark {
+  width: 8.25rem;
+  aspect-ratio: 1.72;
+  background-image: url("../../public/opus-logo.png");
+  background-position: right center;
+  background-size: 160% auto;
+}
+
+.image {
+  width: 11rem;
+  height: auto;
+}

@@ -5,6 +5,7 @@ import { fileURLToPath } from "node:url";
 const packageDir = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const distDir = path.join(packageDir, "dist");
 const flagsDistDir = path.join(distDir, "flags");
+const brandAssetsDir = path.join(distDir, "assets");
 const indexCssPath = path.join(distDir, "index.css");
 const flagsCssPath = path.join(distDir, "flags.css");
 
@@ -40,6 +41,9 @@ const flagCss = buildFlagCss(flagIconsDir);
 
 fs.mkdirSync(distDir, { recursive: true });
 copyDirectory(path.join(flagIconsDir, "flags"), flagsDistDir);
+fs.mkdirSync(brandAssetsDir, { recursive: true });
+fs.copyFileSync(path.join(packageDir, "..", "..", "public", "opus-logo.png"), path.join(brandAssetsDir, "opus-logo.png"));
+fs.copyFileSync(path.join(packageDir, "..", "..", "public", "logo-small.png"), path.join(brandAssetsDir, "logo-small.png"));
 fs.writeFileSync(flagsCssPath, flagCss);
 
 const indexCss = fs.existsSync(indexCssPath) ? fs.readFileSync(indexCssPath, "utf8") : "";
@@ -48,6 +52,9 @@ const withoutExistingFlags = indexCss.replace(
   /\n\/\* flag-icons \(bundled for PhoneNumberField\) \*\/[\s\S]*$/,
   "",
 );
-fs.writeFileSync(indexCssPath, `${withoutExistingFlags.trimEnd()}${flagSection}`);
+const packagedCss = `${withoutExistingFlags.trimEnd()}${flagSection}`
+  .replaceAll("../../public/opus-logo.png", "./assets/opus-logo.png")
+  .replaceAll("../../public/logo-small.png", "./assets/logo-small.png");
+fs.writeFileSync(indexCssPath, packagedCss);
 
 console.log("Bundled flag-icons CSS and copied SVG assets into dist/flags.");
