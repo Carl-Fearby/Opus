@@ -4,6 +4,12 @@ All notable public-package changes are recorded here. Opus follows [Semantic Ver
 
 ## Unreleased
 
+## 0.6.20
+
+### Added
+
+- `NoteComposer.submitOnEnter` and `onSubmit`, enabling chat-style Enter-to-send while retaining Shift+Enter for a newline and the existing `onSave` callback.
+
 ## 0.6.19
 
 ### Added

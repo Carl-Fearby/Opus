@@ -1,6 +1,6 @@
 "use client";
 
-import { useLayoutEffect, useRef, useState, type ChangeEvent } from "react";
+import { useLayoutEffect, useRef, useState, type ChangeEvent, type KeyboardEvent } from "react";
 import { CatalogIcon } from "@/components/CatalogIcon";
 import { EmojiPicker } from "@/components/EmojiPicker";
 import {
@@ -20,6 +20,8 @@ export type NoteComposerProps = {
   onEmojiSelect?: (emoji: string) => void;
   onMentionClick?: () => void;
   onSave?: (value: string, tags: NoteTagOption[]) => void;
+  /** Called for either the save button or keyboard submission. */
+  onSubmit?: (value: string, tags: NoteTagOption[]) => void;
   onTagsChange?: (tags: NoteTagOption[]) => void;
   placeholder?: string;
   saveButtonLabel?: string;
@@ -27,6 +29,8 @@ export type NoteComposerProps = {
   showEmoji?: boolean;
   showMention?: boolean;
   showTags?: boolean;
+  /** Submit on Enter. Shift+Enter always inserts a newline. */
+  submitOnEnter?: boolean;
   selectedTags?: NoteTagOption[];
   tagOptions?: NoteTagOption[];
   value?: string;
@@ -41,6 +45,7 @@ export function NoteComposer({
   onEmojiSelect,
   onMentionClick,
   onSave,
+  onSubmit,
   onTagsChange,
   placeholder = "Add a note...",
   saveButtonLabel = "Save Note",
@@ -48,6 +53,7 @@ export function NoteComposer({
   showEmoji = true,
   showMention = true,
   showTags = false,
+  submitOnEnter = false,
   selectedTags,
   tagOptions = DEFAULT_NOTE_TAG_OPTIONS,
   value,
@@ -108,6 +114,7 @@ export function NoteComposer({
     }
 
     onSave?.(trimmed, currentTags);
+    onSubmit?.(trimmed, currentTags);
 
     if (value === undefined) {
       setInternalValue("");
@@ -116,6 +123,15 @@ export function NoteComposer({
     if (selectedTags === undefined) {
       setInternalTags([]);
     }
+  };
+
+  const handleKeyDown = (event: KeyboardEvent<HTMLTextAreaElement>) => {
+    if (!submitOnEnter || event.key !== "Enter" || event.shiftKey || event.nativeEvent.isComposing) {
+      return;
+    }
+
+    event.preventDefault();
+    handleSave();
   };
 
   const handleEmojiSelect = (emoji: string) => {
@@ -154,6 +170,7 @@ export function NoteComposer({
         onChange={handleChange}
         onClick={syncSelection}
         onFocus={syncSelection}
+        onKeyDown={handleKeyDown}
         onKeyUp={syncSelection}
         onSelect={syncSelection}
         placeholder={placeholder}
