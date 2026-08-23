@@ -16,11 +16,13 @@ export default defineConfig({
   },
   sourcemap: true,
   clean: true,
-  // Keep the package consumable from both ESM and CommonJS while removing
-  // unreachable component code from each published entry point.
+  // The CSS-module mapper runs after tsup and reads esbuild's module boundary
+  // comments from the JS output. Do not minify this entry before that mapper:
+  // minification removes the boundaries and leaves consumers with empty class
+  // maps even though index.css is present.
   splitting: false,
   treeshake: true,
-  minify: true,
+  minify: false,
   external: [
     "react",
     "react-dom",

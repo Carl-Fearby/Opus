@@ -4,6 +4,15 @@ All notable public-package changes are recorded here. Opus follows [Semantic Ver
 
 ## Unreleased
 
+## 0.6.18
+
+### Fixed
+
+- Restore CSS-module class-map generation in the published ESM and CommonJS bundles. This corrects the 0.6.17 regression where component controls could render with native browser styling despite importing `opus-react/index.css`.
+- Fail the package build if CSS-module mappings are absent, preventing this class of broken publish.
+
+## 0.6.17
+
 ### Changed
 
 - Public bundles are minified and tree-shaken.

@@ -94,6 +94,15 @@ for (const bundleFile of jsBundles) {
   totalPatched += patchJsBundle(bundleFile);
 }
 
+// A package that exports component CSS must have at least one module map in
+// each JavaScript format. Treat an empty result as a packaging failure rather
+// than publishing controls that render as unstyled native elements.
+if (totalPatched === 0 || orderedRelPaths.length === 0) {
+  throw new Error(
+    "No CSS module exports were patched. Ensure tsup preserves CSS module boundaries before publishing.",
+  );
+}
+
 // Rebuild dist/index.css from the scoped per-file output so that every class
 // name in the stylesheet matches the JS class map and is unique per component.
 if (orderedRelPaths.length > 0) {
