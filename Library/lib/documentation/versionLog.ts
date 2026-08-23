@@ -580,6 +580,22 @@ export const versionLog: VersionEntry[] = [
     commitShort: "11962ff",
     summary: "Reliable details tabs and navigable component overview previews.",
     changes: ["Fix company and contact detail workspaces so Notes, Activities, Documents, and detail tabs remain interactive in their full lab compositions.","Add semantic linked component headings to category overview previews so every embedded example clearly identifies its catalogue destination.","Expand Playwright coverage across category and subgroup overview routes, including representative nested tab interactions.","Publish opus-react 0.6.13 and update Application to consume the release from npm."],
+  },
+  {
+    version: "0.6.17",
+    releasedAt: "2026-08-21",
+    commit: "overlay-0.6.17",
+    commitShort: "overlay",
+    summary: "Library quality baseline, accessibility hardening, and public API policy.",
+    changes: ["Add accessibility regression coverage for CRM table semantics, tree-menu leaves, lightbox triggers, and named scroll regions.","Add PercentageField plus public API stability, support, deprecation, and changelog policies.","Add library CI quality gates and publish tree-shaken package bundles.","Publish opus-react 0.6.17."],
+  },
+  {
+    version: "0.6.18",
+    releasedAt: "2026-08-23",
+    commit: "overlay-0.6.18",
+    commitShort: "overlay",
+    summary: "Correct published CSS-module mappings for consumer applications.",
+    changes: ["Restore CSS-module class-map generation in the published ESM and CommonJS bundles.","Make package builds fail when no CSS-module mappings are generated, preventing unstyled control releases.","Publish opus-react 0.6.18 and update Application to consume the corrected package."],
   }
 ].reverse();
 

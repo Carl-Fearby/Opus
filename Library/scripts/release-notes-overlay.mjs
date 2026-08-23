@@ -681,4 +681,25 @@ export const releaseNotesOverlay = [
       "Publish opus-react 0.6.13 and update Application to consume the release from npm.",
     ],
   },
+  {
+    version: "0.6.17",
+    releasedAt: "2026-08-21",
+    summary: "Library quality baseline, accessibility hardening, and public API policy.",
+    changes: [
+      "Add accessibility regression coverage for CRM table semantics, tree-menu leaves, lightbox triggers, and named scroll regions.",
+      "Add PercentageField plus public API stability, support, deprecation, and changelog policies.",
+      "Add library CI quality gates and publish tree-shaken package bundles.",
+      "Publish opus-react 0.6.17.",
+    ],
+  },
+  {
+    version: "0.6.18",
+    releasedAt: "2026-08-23",
+    summary: "Correct published CSS-module mappings for consumer applications.",
+    changes: [
+      "Restore CSS-module class-map generation in the published ESM and CommonJS bundles.",
+      "Make package builds fail when no CSS-module mappings are generated, preventing unstyled control releases.",
+      "Publish opus-react 0.6.18 and update Application to consume the corrected package.",
+    ],
+  },
 ];
