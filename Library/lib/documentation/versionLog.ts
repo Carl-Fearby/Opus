@@ -592,10 +592,18 @@ export const versionLog: VersionEntry[] = [
   {
     version: "0.6.18",
     releasedAt: "2026-08-23",
-    commit: "overlay-0.6.18",
-    commitShort: "overlay",
+    commit: "324b9cfd7da14ec3b37d2e146f19ef00cf2c65e4",
+    commitShort: "324b9cf",
     summary: "Correct published CSS-module mappings for consumer applications.",
     changes: ["Restore CSS-module class-map generation in the published ESM and CommonJS bundles.","Make package builds fail when no CSS-module mappings are generated, preventing unstyled control releases.","Publish opus-react 0.6.18 and update Application to consume the corrected package."],
+  },
+  {
+    version: "0.6.19",
+    releasedAt: "2026-08-23",
+    commit: "overlay-0.6.19",
+    commitShort: "overlay",
+    summary: "Package-safe canonical Opus brand component and logo assets.",
+    changes: ["Add OpusBrand with icon, wordmark, and full-lockup variants backed by package-owned assets.","Expose direct logo asset imports and migrate shared application headers and footers away from a consumer /public dependency.","Publish opus-react 0.6.19 and update Application to consume it."],
   }
 ].reverse();
 

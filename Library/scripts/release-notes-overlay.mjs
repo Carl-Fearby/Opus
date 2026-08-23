@@ -702,4 +702,14 @@ export const releaseNotesOverlay = [
       "Publish opus-react 0.6.18 and update Application to consume the corrected package.",
     ],
   },
+  {
+    version: "0.6.19",
+    releasedAt: "2026-08-23",
+    summary: "Package-safe canonical Opus brand component and logo assets.",
+    changes: [
+      "Add OpusBrand with icon, wordmark, and full-lockup variants backed by package-owned assets.",
+      "Expose direct logo asset imports and migrate shared application headers and footers away from a consumer /public dependency.",
+      "Publish opus-react 0.6.19 and update Application to consume it.",
+    ],
+  },
 ];
