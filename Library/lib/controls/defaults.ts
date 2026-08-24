@@ -47,6 +47,33 @@ const currentDateTimeValue = toDateTimeValue(now);
 const currentMonthValue = toMonthValue(now);
 const currentWeekValue = toWeekValue(now);
 
+const lunarDistanceMarkdown = `The distance between the Earth and the Moon varies due to the elliptical shape of the Moon's orbit around our planet. This variation is known as the "lunar distance" or "lunar mean distance." Here's how to calculate it:
+
+**The Moon's Orbital Distance:**
+
+The Moon's average distance from Earth is about 384,400 kilometers (238,855 miles). However, its orbit is not a perfect circle, which means the distance between the two bodies varies throughout the month.
+
+**The Lunar Cycle:**
+
+The Moon orbits the Earth in approximately 27.3 days, which is the time it takes to complete one cycle of phases. During this time, the Moon's distance from Earth varies by about 53,000 kilometers (33,000 miles).
+
+**Calculating the Lunar Distance:**
+
+To calculate the lunar distance, you can use the following formula:
+
+d = a + e \\* (1 - cos(θ))
+
+where:
+
+- d is the lunar distance (in kilometers or miles)
+- a is the semi-major axis of the Moon's orbit (approximately 384,400 km or 238,855 miles)
+- e is the eccentricity of the Moon's orbit (approximately 0.0549)
+- θ is the mean anomaly of the Moon's position (in radians)
+
+**Time of Year:**
+
+θ = (360° \\* (n - m) / T)`;
+
 const baseFieldDefaults = {
   mode: "stacked" as const,
   labelPosition: "left" as const,
@@ -1380,7 +1407,7 @@ export const defaultSettings: ControlSettingsBySlug = {
     leftAvatarName: "Opus",
     leftBackground: "#2B2452",
     leftFirstMessage: "I’ve prepared the release notes and included the implementation details.",
-    leftReplyMessage: "The final section includes a longer reply so you can test the shared Show More behaviour in a real conversation.",
+    leftReplyMessage: lunarDistanceMarkdown,
     leftTime: "10:46",
     rightAvatarImage: "/user-profile-carl.png",
     rightAvatarName: "You",

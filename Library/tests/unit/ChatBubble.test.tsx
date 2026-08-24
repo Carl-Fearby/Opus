@@ -39,11 +39,12 @@ describe("ChatBubble", () => {
 
   it("uses Text, Heading, and Spacer for markdown prose blocks", () => {
     const { container } = render(
-      <ChatBubble messages={[{ content: "**Release notes**\n\nA **bold** paragraph." }]} />,
+      <ChatBubble messages={[{ content: "**Release notes**\n\nA **bold** paragraph with 2 \\* 3." }]} />,
     );
 
     expect(screen.getByRole("heading", { level: 3, name: "Release notes" })).toBeInTheDocument();
     expect(screen.getByText("bold").tagName).toBe("STRONG");
+    expect(screen.getByText(/2 \* 3/)).toBeInTheDocument();
     expect(container.querySelectorAll('[aria-hidden="true"]')).toHaveLength(1);
   });
 

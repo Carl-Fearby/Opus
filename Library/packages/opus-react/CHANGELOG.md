@@ -4,6 +4,16 @@ All notable public-package changes are recorded here. Opus follows [Semantic Ver
 
 ## Unreleased
 
+## 0.6.29
+
+### Fixed
+
+- Chat Bubble preserves escaped asterisks in markdown prose while rendering `**bold**` syntax as strong text.
+
+### Changed
+
+- The Chat Conversation Lab now includes an editable lunar-distance markdown example for testing headings, bold text, paragraphs, formulae, and Show More.
+
 ## 0.6.28
 
 ### Changed

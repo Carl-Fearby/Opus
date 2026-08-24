@@ -86,7 +86,7 @@ function InlineText({ content }: { content: string }) {
 
   return <>{parts.map((part, index) => {
     const bold = part.match(/^\*\*(.+)\*\*$/);
-    return bold ? <strong key={index}>{bold[1]}</strong> : part;
+    return bold ? <strong key={index}>{bold[1].replace(/\\\*/g, "*")}</strong> : part.replace(/\\\*/g, "*");
   })}</>;
 }
 
