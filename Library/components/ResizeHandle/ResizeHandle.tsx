@@ -11,6 +11,8 @@ export type ResizeHandleProps = Omit<ComponentPropsWithoutRef<"button">, "type">
   background?: ResizeHandleBackground;
   height?: ResizeHandleHeight;
   orientation: ResizeHandleOrientation;
+  /** Keeps the resize track transparent, including on hover and focus. */
+  transparent?: boolean;
 };
 
 export function ResizeHandle({
@@ -18,6 +20,7 @@ export function ResizeHandle({
   className,
   height = "medium",
   orientation,
+  transparent = false,
   ...props
 }: ResizeHandleProps) {
   return (
@@ -25,7 +28,7 @@ export function ResizeHandle({
       {...props}
       aria-orientation={orientation}
       className={[styles.handle, className].filter(Boolean).join(" ")}
-      data-background={background}
+      data-background={transparent ? "none" : background}
       data-height={height}
       data-orientation={orientation}
       role="separator"

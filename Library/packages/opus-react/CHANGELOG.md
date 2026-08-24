@@ -4,6 +4,10 @@ All notable public-package changes are recorded here. Opus follows [Semantic Ver
 
 ## Unreleased
 
+### Added
+
+- `ResizeHandle.transparent`, a boolean prop that keeps the resize track transparent, including on hover and focus.
+
 ## 0.6.20
 
 ### Added
