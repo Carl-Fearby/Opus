@@ -28,6 +28,13 @@ export { ApplicationFooter } from "../../../components/ApplicationFooter";
 export type { ApplicationFooterAction, ApplicationFooterProps } from "../../../components/ApplicationFooter";
 export { WelcomeMessage, getWelcomeGreeting } from "../../../components/WelcomeMessage";
 export type { WelcomeGreeting, WelcomeMessageProps } from "../../../components/WelcomeMessage";
+export { ChatBubble } from "../../../components/ChatBubble";
+export type {
+  ChatBubbleAlignment,
+  ChatBubbleAvatar,
+  ChatBubbleMessage,
+  ChatBubbleProps,
+} from "../../../components/ChatBubble";
 export type {
   ApplicationHeaderAction,
   ApplicationHeaderProfile,

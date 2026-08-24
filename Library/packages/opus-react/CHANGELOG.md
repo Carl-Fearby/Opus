@@ -4,6 +4,14 @@ All notable public-package changes are recorded here. Opus follows [Semantic Ver
 
 ## Unreleased
 
+## 0.6.22
+
+### Added
+
+- `ChatBubble`, a grouped left/right chat message primitive with avatars, timestamps, configurable backgrounds, optional Show More handling, and fenced-code rendering.
+
+## 0.6.21
+
 ### Added
 
 - `ResizeHandle.transparent`, a boolean prop that keeps the resize track transparent, including on hover and focus.

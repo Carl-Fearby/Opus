@@ -1,0 +1,22 @@
+.group { display:flex; align-items:flex-end; gap:10px; width:100%; color:var(--opus-text); }
+.group[data-alignment="right"] { flex-direction:row-reverse; }
+.messages { display:grid; min-width:0; max-width:min(78%, 46rem); gap:2px; }
+.message { display:grid; gap:4px; }
+.group[data-alignment="right"] .message { justify-items:end; }
+.bubble { min-width:0; padding:10px 12px; border:1px solid color-mix(in srgb, var(--opus-border) 78%, transparent); border-radius:16px; background:var(--chat-bubble-background, color-mix(in srgb, var(--opus-panel) 88%, var(--opus-accent) 12%)); color:var(--opus-text); font-size:.92rem; line-height:1.5; overflow-wrap:anywhere; }
+.group[data-alignment="right"] .bubble { background:var(--chat-bubble-background, var(--opus-accent)); color:var(--opus-accent-contrast, #fff); border-color:color-mix(in srgb, var(--opus-accent) 70%, var(--opus-border)); }
+.message[data-position="first"] .bubble { border-bottom-left-radius:5px; }
+.message[data-position="middle"] .bubble { border-top-left-radius:5px; border-bottom-left-radius:5px; }
+.message[data-position="last"] .bubble { border-top-left-radius:5px; }
+.group[data-alignment="right"] .message[data-position="first"] .bubble { border-bottom-left-radius:16px; border-bottom-right-radius:5px; }
+.group[data-alignment="right"] .message[data-position="middle"] .bubble { border-top-left-radius:16px; border-bottom-left-radius:16px; border-top-right-radius:5px; border-bottom-right-radius:5px; }
+.group[data-alignment="right"] .message[data-position="last"] .bubble { border-top-left-radius:16px; border-top-right-radius:5px; }
+.time { color:var(--opus-muted); font-size:.72rem; line-height:1.2; }
+.group[data-alignment="right"] .time { text-align:right; }
+.text { white-space:pre-wrap; }
+.codeBlock { position:relative; margin:8px 0 0; padding:28px 12px 12px; overflow:auto; border-radius:9px; background:color-mix(in srgb, #090b12 94%, var(--opus-accent) 6%); color:#e8ebf3; font:500 .8rem/1.55 ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; white-space:pre; tab-size:2; }
+.text + .codeBlock { margin-top:8px; }
+.codeLanguage { position:absolute; top:7px; right:9px; color:#aab3c4; font:600 .64rem/1 ui-monospace, monospace; text-transform:uppercase; letter-spacing:.06em; }
+.tokenComment { color:#8b96a9; }.tokenKeyword { color:#bd93f9; }.tokenNumber { color:#f8c56b; }.tokenString { color:#a8dc87; }
+.group[data-alignment="right"] :global(.ShowMore_toggle), .group[data-alignment="right"] :global(button) { color:inherit; }
+@media (max-width:480px) { .messages { max-width:calc(100% - 38px); } .group { gap:8px; } }
