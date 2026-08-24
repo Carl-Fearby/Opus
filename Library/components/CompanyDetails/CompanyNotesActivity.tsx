@@ -4,6 +4,7 @@ import { useState } from "react";
 import { Avatar } from "@/components/Avatar";
 import { Badge } from "@/components/Badge";
 import { CatalogIcon } from "@/components/CatalogIcon";
+import { Text } from "@/components/Text";
 import {
   CompactDocuments,
   type CompactDocumentNode,
@@ -107,7 +108,7 @@ export function CompanyNotesActivity({
                 {person.primary ? <Badge label="Primary" size="sm" tone="accent" /> : null}
                 {person.role ? <Badge label={person.role} size="sm" tone="info" /> : null}
               </div>
-              {person.jobTitle ? <p>{person.jobTitle}</p> : null}
+              {person.jobTitle ? <Text size={200}>{person.jobTitle}</Text> : null}
               <div className={styles.contactMeta}>
                 {person.email ? <span>{person.email}</span> : null}
                 {person.phone ? <span>{person.phone}</span> : null}

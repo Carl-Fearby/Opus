@@ -1536,7 +1536,7 @@ export const defaultSettings: ControlSettingsBySlug = {
   },
   spacer: {
     axis: "y",
-    size: 24,
+    size: "medium",
     flex: false,
   },
   breadcrumb: {

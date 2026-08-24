@@ -5,6 +5,8 @@ import { Avatar } from "@/components/Avatar";
 import { Badge } from "@/components/Badge";
 import { CatalogIcon } from "@/components/CatalogIcon";
 import { DashboardContentContainer } from "@/components/DashboardContentContainer";
+import { Heading } from "@/components/Heading";
+import { Text } from "@/components/Text";
 import { ProfilePhotoUploadModal } from "@/components/UserProfileWidget";
 import type { ContactCompany } from "./types";
 import { getPrimaryCompany } from "./types";
@@ -62,8 +64,8 @@ export function ContactIdentityCard({
         </div>
 
         <div className={styles.headline}>
-          <h3>{name}</h3>
-          {primary?.jobTitle ? <p>{primary.jobTitle}</p> : null}
+          <Heading level={3} size={200}>{name}</Heading>
+          {primary?.jobTitle ? <Text size={200}>{primary.jobTitle}</Text> : null}
         </div>
 
         {companies.length ? (

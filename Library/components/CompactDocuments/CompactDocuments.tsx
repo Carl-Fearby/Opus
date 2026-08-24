@@ -3,6 +3,7 @@
 import { useMemo, useState } from "react";
 import { Badge } from "@/components/Badge";
 import { CatalogIcon } from "@/components/CatalogIcon";
+import { Text } from "@/components/Text";
 import { TextField } from "@/components/fields/TextField";
 import styles from "./CompactDocuments.module.css";
 
@@ -212,7 +213,7 @@ export function CompactDocuments({
             ))}
           </div>
         ) : null}
-        {!visible.length ? <p className={styles.empty}>This folder is empty.</p> : null}
+        {!visible.length ? <Text className={styles.empty}>This folder is empty.</Text> : null}
       </div>
     </section>
   );

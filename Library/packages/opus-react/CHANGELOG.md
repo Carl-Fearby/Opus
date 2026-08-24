@@ -4,6 +4,16 @@ All notable public-package changes are recorded here. Opus follows [Semantic Ver
 
 ## Unreleased
 
+## 0.6.27
+
+### Added
+
+- Spacer now supports `small` (8px), `medium` (16px), and `large` (24px) size presets alongside existing numeric and CSS-length values.
+
+### Changed
+
+- Shared Text and Heading primitives are used by Lab workspace, desktop, and record identity surfaces; their composition metadata now reflects that relationship.
+
 ## 0.6.26
 
 ### Added

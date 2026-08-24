@@ -37,6 +37,14 @@ describe("ChatBubble", () => {
     expect(screen.getByText("42", { exact: true })).toBeInTheDocument();
   });
 
+  it("formats bold headings and gives paragraphs native text spacing", () => {
+    render(<ChatBubble messages={[{ content: "**Physical characteristics:**\n\nJupiter is a gas giant.\n\nIts storms are immense." }]} />);
+
+    expect(screen.getByRole("heading", { name: "Physical characteristics" })).toBeInTheDocument();
+    expect(screen.getByText("Jupiter is a gas giant.").tagName).toBe("SPAN");
+    expect(screen.getByText("Its storms are immense.").tagName).toBe("SPAN");
+  });
+
   it("uses a contrasting foreground for a custom background", () => {
     render(<ChatBubble background="#f7e8a4" messages={[{ content: "Readable" }]} />);
 

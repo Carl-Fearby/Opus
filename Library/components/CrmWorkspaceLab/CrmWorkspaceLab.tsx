@@ -3,6 +3,8 @@
 import { useMemo, useState, type ReactNode } from "react";
 import { Badge } from "@/components/Badge";
 import { CatalogIcon } from "@/components/CatalogIcon";
+import { Heading } from "@/components/Heading";
+import { Text } from "@/components/Text";
 import { DashboardContentContainer } from "@/components/DashboardContentContainer";
 import { Button } from "@/components/fields/Button";
 import { TextField } from "@/components/fields/TextField";
@@ -338,8 +340,8 @@ function WorkspaceHeader({
           <CatalogIcon iconName={icon} />
         </span>
         <div>
-          <h2>{title}</h2>
-          <p>{description}</p>
+          <Heading level={2} size={300}>{title}</Heading>
+          <Text>{description}</Text>
         </div>
       </div>
       <Button className={styles.headerAction} size="sm" type="button" onClick={onAction}>
@@ -493,10 +495,10 @@ function TimelineLayout({ rows, onAction }: { rows: Row[]; onAction: (action: st
             </span>
             <div className={styles.timelineBody}>
               <div className={styles.timelineTitleRow}>
-                <h3>{row.primary}</h3>
+                <Heading level={3} size={100}>{row.primary}</Heading>
                 <Badge label={row.status} size="sm" tone={statusTone(row.status)} />
               </div>
-              <p>{row.secondary}</p>
+              <Text size={200}>{row.secondary}</Text>
               <small>{row.meta}</small>
             </div>
             <RowChevron />
@@ -522,8 +524,8 @@ function FeedLayout({ rows, onAction }: { rows: Row[]; onAction: (action: string
             <CatalogIcon iconName={row.icon ?? "bell"} />
           </span>
           <div className={styles.feedBody}>
-            <h3>{row.primary}</h3>
-            <p>{row.secondary}</p>
+            <Heading level={3} size={100}>{row.primary}</Heading>
+            <Text size={200}>{row.secondary}</Text>
             <small>{row.meta}</small>
           </div>
           <span className={styles.feedBadge}>
@@ -545,7 +547,7 @@ function BoardLayout({ rows, onAction }: { rows: Row[]; onAction: (action: strin
         return (
           <section className={styles.boardColumn} key={column}>
             <header>
-              <h3>{column}</h3>
+              <Heading level={3} size={100}>{column}</Heading>
               <span>{cards.length}</span>
             </header>
             <div className={styles.boardCards}>
@@ -590,8 +592,8 @@ function CatalogueLayout({ rows, onAction }: { rows: Row[]; onAction: (action: s
             <RowChevron />
           </div>
           <div className={styles.catalogueBody}>
-            <h3>{row.primary}</h3>
-            <p>{row.secondary}</p>
+            <Heading level={3} size={100}>{row.primary}</Heading>
+            <Text size={200}>{row.secondary}</Text>
             <strong className={styles.price}>{row.meta}</strong>
           </div>
         </button>

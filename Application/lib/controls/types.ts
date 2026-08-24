@@ -1244,7 +1244,7 @@ export type DesktopDockSettings = {
   autoHide: boolean;
   position: "bottom" | "left" | "right";
   resizable: boolean;
-  size: number;
+  size: "small" | "medium" | "large";
 };
 
 export type DesktopEnvironmentSettings = {

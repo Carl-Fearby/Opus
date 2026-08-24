@@ -2,8 +2,10 @@
 
 import { useLayoutEffect, useRef, useState, type CSSProperties, type ReactNode } from "react";
 import { Avatar } from "@/components/Avatar";
+import { Heading } from "@/components/Heading";
 import { ShowMore } from "@/components/ShowMore";
 import { SyntaxHighlighter } from "@/components/SyntaxHighlighter";
+import { Text } from "@/components/Text";
 import styles from "./ChatBubble.module.css";
 
 export type ChatBubbleAlignment = "left" | "right";
@@ -78,13 +80,37 @@ function contrastingBorderColour(background?: string, foreground?: string) {
   return `#${channels.map((channel) => channel.toString(16).padStart(2, "0")).join("")}`;
 }
 
+function InlineText({ content }: { content: string }) {
+  const parts = content.split(/(\*\*[^*]+\*\*)/g);
+
+  return <>{parts.map((part, index) => {
+    const bold = part.match(/^\*\*(.+)\*\*$/);
+    return bold ? <strong key={index}>{bold[1]}</strong> : part;
+  })}</>;
+}
+
+function ProseContent({ content }: { content: string }) {
+  return <>
+    {content.split(/\n\s*\n/).filter(Boolean).map((block, index) => {
+      const trimmed = block.trim();
+      const markdownHeading = trimmed.match(/^#{1,6}\s+(.+)$/);
+      const boldHeading = trimmed.match(/^\*\*(.+?)\*\*:?[\s]*$/);
+      const heading = markdownHeading?.[1] ?? boldHeading?.[1]?.replace(/:$/, "");
+      if (heading) return <Heading key={index} level={3} padding="compact" size={100}><InlineText content={heading} /></Heading>;
+
+      const lines = block.split("\n");
+      return <Text as="p" key={index} padding="compact" size={200}>{lines.map((line, lineIndex) => <span key={lineIndex}><InlineText content={line} />{lineIndex < lines.length - 1 ? <br /> : null}</span>)}</Text>;
+    })}
+  </>;
+}
+
 function MessageContent({ content }: { content: string }) {
   const blocks = content.split(/```([^\n`]*)\n?([\s\S]*?)```/g);
 
   return (
     <>
       {blocks.map((block, index) => {
-        if (index % 3 === 0) return block ? <span className={styles.text} key={index}>{block}</span> : null;
+        if (index % 3 === 0) return block ? <div className={styles.text} key={index}><ProseContent content={block} /></div> : null;
         if (index % 3 === 1) return null;
         const language = blocks[index - 1]?.trim();
         return <SyntaxHighlighter className={styles.codeBlock} code={block} key={index} language={language} />;

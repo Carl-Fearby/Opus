@@ -34,7 +34,7 @@ export const labsCatalog = [
       "Opus desktop shell with glowing shortcuts, dock applications, and draggable, resizable, minimizable and maximizable windows.",
     settingsType: "crm-workspace",
     navigationGroup: "Desktop",
-    compositionParts: ["desktop", "desktop-window", "desktop-dock", "desktop-icon", "video-player", "badge", "icon"],
+    compositionParts: ["desktop", "desktop-window", "desktop-dock", "desktop-icon", "video-player", "badge", "icon", "heading", "text"],
     sourceFiles: [
       "components/DesktopLab/DesktopLab.tsx",
       "components/DesktopLab/DesktopLab.module.css",
@@ -76,6 +76,8 @@ export const labsCatalog = [
       "icon",
       "search-input",
       "text-input",
+      "heading",
+      "text",
       ...(slug === "lab-document-manager" ? ["tree-menu" as const] : []),
     ] as const,
     sourceFiles: [
@@ -100,6 +102,8 @@ export const labsCatalog = [
       "lab-company-notes",
       "modal",
       "tabs",
+      "heading",
+      "text",
     ],
     sourceFiles: [
       "components/CompanyDetails/CompanyDetails.tsx",
@@ -132,6 +136,8 @@ export const labsCatalog = [
       "image-crop-upload",
       "modal",
       "tabs",
+      "heading",
+      "text",
     ],
     sourceFiles: [
       "components/CompanyDetails/CompanyDetails.tsx",

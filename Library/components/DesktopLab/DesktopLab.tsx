@@ -4,6 +4,8 @@ import { Desktop, type DesktopWindowItem } from "@/components/Desktop";
 import { Badge } from "@/components/Badge";
 import { CatalogIcon } from "@/components/CatalogIcon";
 import { VideoPlayer } from "@/components/VideoPlayer";
+import { Heading } from "@/components/Heading";
+import { Text } from "@/components/Text";
 import { demoVideoTracks } from "@/lib/controls/videoDemoData";
 import styles from "./DesktopLab.module.css";
 
@@ -23,7 +25,7 @@ function ExplorerContent({ onAction }: { onAction?: (action: string) => void }) 
         ))}
       </aside>
       <main>
-        <h2>Recent documents</h2>
+        <Heading level={2} size={200}>Recent documents</Heading>
         <div className={styles.files}>
           {["CRM brief.pdf", "Q3 forecast.xlsx", "Brand assets", "Customer notes.docx"].map((name, index) => (
             <button key={name} onClick={() => onAction?.(`Open ${name}`)} type="button">
@@ -40,7 +42,7 @@ function ExplorerContent({ onAction }: { onAction?: (action: string) => void }) 
 function ActivityContent({ onAction }: { onAction?: (action: string) => void }) {
   return (
     <div className={styles.activity}>
-      <h2>Activity</h2>
+      <Heading level={2} size={200}>Activity</Heading>
       {[
         ["Emma Davis", "Proposal approved", "success"],
         ["Michael Brown", "New task assigned", "accent"],
@@ -66,8 +68,8 @@ function SettingsContent({ onAction }: { onAction?: (action: string) => void }) 
 
   return (
     <div className={styles.settings}>
-      <h2>Settings</h2>
-      <p>Choose an area to configure your workspace.</p>
+      <Heading level={2} size={200}>Settings</Heading>
+      <Text>Choose an area to configure your workspace.</Text>
       <div className={styles.settingsList}>
         {settings.map((setting) => (
           <button
@@ -100,8 +102,8 @@ function ContactsContent({ onAction }: { onAction?: (action: string) => void }) 
     <div className={styles.contacts}>
       <header>
         <div>
-          <h2>Contacts</h2>
-          <p>Your recent CRM contacts.</p>
+          <Heading level={2} size={200}>Contacts</Heading>
+          <Text>Your recent CRM contacts.</Text>
         </div>
         <button onClick={() => onAction?.("Add contact")} type="button">
           <CatalogIcon iconName="plus" />

@@ -268,7 +268,7 @@ export type { AspectRatioProps } from "../AspectRatio";
 export { Container } from "../Container";
 export type { ContainerProps, ContainerSize } from "../Container";
 export { Spacer } from "../Spacer";
-export type { SpacerProps } from "../Spacer";
+export type { SpacerProps, SpacerSize } from "../Spacer";
 export { Breadcrumb } from "../Breadcrumb";
 export type { BreadcrumbItem, BreadcrumbProps } from "../Breadcrumb";
 export { Pagination } from "../Pagination";

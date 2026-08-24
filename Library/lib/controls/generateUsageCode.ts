@@ -4775,7 +4775,7 @@ ${formatScrollAreaContent()}
 
 <div>
   <div>Above</div>
-  <Spacer axis="${s.axis}" size={${s.size}}${s.flex ? " flex" : ""} />
+  <Spacer axis="${s.axis}" size="${s.size}"${s.flex ? " flex" : ""} />
   <div>Below</div>
 </div>`;
     }

@@ -5,6 +5,8 @@ import { Avatar } from "@/components/Avatar";
 import { Badge } from "@/components/Badge";
 import { CatalogIcon } from "@/components/CatalogIcon";
 import { DashboardContentContainer } from "@/components/DashboardContentContainer";
+import { Heading } from "@/components/Heading";
+import { Text } from "@/components/Text";
 import { CompanyLogoUploadModal } from "./CompanyLogoUploadModal";
 import styles from "./CompanyIdentityCard.module.css";
 
@@ -65,8 +67,8 @@ export function CompanyIdentityCard({
         </div>
 
         <div className={styles.headline}>
-          <h3>{name}</h3>
-          {industry ? <p>{industry}</p> : null}
+          <Heading level={3} size={200}>{name}</Heading>
+          {industry ? <Text size={200}>{industry}</Text> : null}
         </div>
 
         <ul className={styles.companyList} aria-label="Company summary">
