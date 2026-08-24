@@ -4085,6 +4085,19 @@ ${formatJsxRichContent(s.itemThreeContent, "    ")}
 ${formatJsxParagraphContent(s.content)}
 </ShowMore>`;
     }
+    case "chat-bubble": {
+      return `${importLine(["ChatBubble"])}
+
+<ChatBubble
+  alignment="left"
+  avatar={{ name: "Opus assistant" }}
+  showMore
+  messages={[
+    { content: "Here is a grouped chat message.", time: "10:42" },
+    { content: "\`\`\`ts\\nconst answer = 42;\\n\`\`\`", time: "10:43" },
+  ]}
+/>`;
+    }
     case "empty-state": {
       const s = settings as ControlSettingsBySlug["empty-state"];
       const actionParts: string[] = [];

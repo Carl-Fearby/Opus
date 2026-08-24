@@ -292,6 +292,7 @@ const componentIcons: Record<string, IconDefinition> = {
   "search-input": faMagnifyingGlass,
   select: faCaretDown,
   "show-more": faEllipsis,
+  "chat-bubble": faMessage,
   sidebar: faBars,
   skeleton: faGripLines,
   "alert": faTriangleExclamation,

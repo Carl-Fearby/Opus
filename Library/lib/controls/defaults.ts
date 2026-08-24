@@ -1343,6 +1343,11 @@ export const defaultSettings: ControlSettingsBySlug = {
     showLessLabel: "Show less",
     defaultExpanded: false,
   },
+  "chat-bubble": {
+    alignment: "left",
+    background: "",
+    showMore: true,
+  },
   "empty-state": {
     title: "No components yet",
     description:

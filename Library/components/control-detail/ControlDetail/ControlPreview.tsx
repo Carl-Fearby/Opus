@@ -155,6 +155,7 @@ import {
   Accordion,
   AccordionGroup,
   ShowMore,
+  ChatBubble,
   Sidebar,
   SidebarHeader,
   Table,
@@ -5396,6 +5397,21 @@ function ControlPreviewContent({
         >
           {s.content}
         </ShowMore>
+      );
+    }
+    case "chat-bubble": {
+      const s = settings as ControlSettingsBySlug["chat-bubble"];
+      return (
+        <ChatBubble
+          alignment={s.alignment}
+          avatar={{ name: s.alignment === "left" ? "Opus assistant" : "You" }}
+          background={s.background || undefined}
+          showMore={s.showMore}
+          messages={[
+            { content: "Here is a grouped chat message with a timestamp.", time: "10:42" },
+            { content: "```ts\nconst answer = 42;\n```", time: "10:43" },
+          ]}
+        />
       );
     }
     case "empty-state": {

@@ -1110,6 +1110,15 @@ const rawControls: ControlDefinition[] = [
     usesFieldShell: false,
   },
   {
+    slug: "chat-bubble",
+    title: "Chat Bubble",
+    category: "content",
+    componentName: "ChatBubble",
+    description: "Grouped left- or right-aligned chat messages with an avatar, timestamps, optional Show More, and fenced-code blocks.",
+    sourceFiles: ["components/ChatBubble/ChatBubble.tsx", "components/ChatBubble/ChatBubble.module.css"],
+    usesFieldShell: false,
+  },
+  {
     slug: "empty-state",
     title: "Empty state",
     category: "content",

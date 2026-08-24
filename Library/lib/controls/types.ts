@@ -162,6 +162,7 @@ export type ControlSlug =
   | "accordion"
   | "accordion-group"
   | "show-more"
+  | "chat-bubble"
   | "empty-state"
   | "badge"
   | "avatar"
@@ -1090,6 +1091,12 @@ export type ShowMoreSettings = {
   defaultExpanded: boolean;
 };
 
+export type ChatBubbleSettings = {
+  alignment: "left" | "right";
+  background: string;
+  showMore: boolean;
+};
+
 export type EmptyStateSettings = {
   title: string;
   description: string;
@@ -1735,6 +1742,7 @@ export type ControlSettingsBySlug = {
   accordion: AccordionSettings;
   "accordion-group": AccordionGroupSettings;
   "show-more": ShowMoreSettings;
+  "chat-bubble": ChatBubbleSettings;
   "empty-state": EmptyStateSettings;
   badge: BadgeSettings;
   avatar: AvatarSettings;
