@@ -104,7 +104,7 @@ function ProseContent({ content }: { content: string }) {
         : <Text as="p" padding="snug" size={200}>{block.split("\n").map((line, lineIndex) => <span key={lineIndex}><InlineText content={line} />{lineIndex < block.split("\n").length - 1 ? <br /> : null}</span>)}</Text>;
 
       return <div className={styles.proseBlock} key={index}>
-        {index > 0 ? <Spacer size="small" /> : null}
+        {index > 0 ? <Spacer size="large" /> : null}
         {prose}
       </div>;
     })}

@@ -4,6 +4,12 @@ All notable public-package changes are recorded here. Opus follows [Semantic Ver
 
 ## Unreleased
 
+## 0.6.30
+
+### Changed
+
+- Chat Conversation Lab uses the lunar-distance markdown fixture and starts with Show More disabled.
+
 ## 0.6.29
 
 ### Fixed

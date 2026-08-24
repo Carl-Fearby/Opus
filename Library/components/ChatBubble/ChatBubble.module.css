@@ -27,6 +27,7 @@
 .prose { display:grid; }
 .proseBlock { display:grid; }
 .codeBlock { margin:0; }
-.text + .codeBlock { margin-top:8px; }
+.text + .codeBlock,
+.codeBlock + .text { margin-top:24px; }
 .group[data-alignment="right"] :global(.ShowMore_toggle), .group[data-alignment="right"] :global(button) { color:inherit; }
 @media (max-width:480px) { .messages { max-width:calc(100% - 38px); } .group { gap:8px; } }
