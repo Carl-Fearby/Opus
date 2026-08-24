@@ -134,6 +134,8 @@ import {
   Clock,
   FlipClock,
   TextMarquee,
+  Text,
+  Heading,
   Portal,
   PortalHost,
   VisuallyHidden,
@@ -6263,6 +6265,14 @@ function ControlPreviewContent({
           </TextMarquee>
         </div>
       );
+    }
+    case "text": {
+      const s = settings as ControlSettingsBySlug["text"];
+      return <Text padding={s.padding} size={s.size} weight={s.weight}>{s.content}</Text>;
+    }
+    case "heading": {
+      const s = settings as ControlSettingsBySlug["heading"];
+      return <Heading level={s.level} padding={s.padding} size={s.size} weight={s.weight}>{s.content}</Heading>;
     }
     case "portal": {
       const s = settings as ControlSettingsBySlug["portal"];

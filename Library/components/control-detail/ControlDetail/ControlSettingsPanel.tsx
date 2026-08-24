@@ -7986,6 +7986,33 @@ export function ControlSettingsPanel({
         </div>
       );
     }
+    case "text": {
+      const s = settings as ControlSettingsBySlug["text"];
+      return (
+        <div className={shellStyles.settingsGrid}>
+          <SettingSelect label="Size" value={String(s.size)} onChange={(size) => onChange({ ...s, size: Number(size) as typeof s.size } as ControlSettings)} options={[100, 200, 300, 400, 500].map((value) => ({ label: String(value), value: String(value) }))} />
+          <SettingSelect label="Weight" value={String(s.weight)} onChange={(weight) => onChange({ ...s, weight: Number(weight) as typeof s.weight } as ControlSettings)} options={[300, 400, 500, 600, 700].map((value) => ({ label: String(value), value: String(value) }))} />
+          <SettingSelect label="Vertical padding" value={s.padding} onChange={(padding) => onChange({ ...s, padding: padding as typeof s.padding } as ControlSettings)} options={[{ label: "Snug (0)", value: "snug" }, { label: "Compact", value: "compact" }, { label: "Comfortable", value: "comfortable" }, { label: "Relaxed", value: "relaxed" }, { label: "Cozy", value: "cozy" }]} />
+          <div className={shellStyles.settingsFullWidth}>
+            <SettingTextarea label="Text" value={s.content} onChange={(content) => onChange({ ...s, content } as ControlSettings)} />
+          </div>
+        </div>
+      );
+    }
+    case "heading": {
+      const s = settings as ControlSettingsBySlug["heading"];
+      return (
+        <div className={shellStyles.settingsGrid}>
+          <SettingSelect label="Heading level" value={String(s.level)} onChange={(level) => onChange({ ...s, level: Number(level) as typeof s.level } as ControlSettings)} options={[1, 2, 3, 4, 5, 6].map((value) => ({ label: `H${value}`, value: String(value) }))} />
+          <SettingSelect label="Size" value={String(s.size)} onChange={(size) => onChange({ ...s, size: Number(size) as typeof s.size } as ControlSettings)} options={[100, 200, 300, 400, 500].map((value) => ({ label: String(value), value: String(value) }))} />
+          <SettingSelect label="Weight" value={String(s.weight)} onChange={(weight) => onChange({ ...s, weight: Number(weight) as typeof s.weight } as ControlSettings)} options={[300, 400, 500, 600, 700].map((value) => ({ label: String(value), value: String(value) }))} />
+          <SettingSelect label="Vertical padding" value={s.padding} onChange={(padding) => onChange({ ...s, padding: padding as typeof s.padding } as ControlSettings)} options={[{ label: "Snug (0)", value: "snug" }, { label: "Compact", value: "compact" }, { label: "Comfortable", value: "comfortable" }, { label: "Relaxed", value: "relaxed" }, { label: "Cozy", value: "cozy" }]} />
+          <div className={shellStyles.settingsFullWidth}>
+            <SettingTextarea label="Heading text" value={s.content} onChange={(content) => onChange({ ...s, content } as ControlSettings)} />
+          </div>
+        </div>
+      );
+    }
     case "portal": {
       const s = settings as ControlSettingsBySlug["portal"];
       return (

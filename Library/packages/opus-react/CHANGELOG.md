@@ -4,6 +4,17 @@ All notable public-package changes are recorded here. Opus follows [Semantic Ver
 
 ## Unreleased
 
+## 0.6.26
+
+### Added
+
+- `Text`, a semantic body-copy primitive with 100–500 scale tokens and five vertical padding presets.
+- `Heading`, a semantic `h1`–`h6` primitive with independent 100–500 scale tokens and five vertical padding presets.
+
+### Changed
+
+- Both typography components are catalogued under Content → Typography with live settings, generated usage, and public Props documentation.
+
 ## 0.6.25
 
 ### Added

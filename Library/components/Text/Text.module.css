@@ -1,0 +1,16 @@
+.text { margin: 0; color: var(--opus-text); font: inherit; line-height: 1.55; }
+.text[data-size="100"] { font-size: 0.75rem; }
+.text[data-size="200"] { font-size: 0.875rem; }
+.text[data-size="300"] { font-size: 1rem; }
+.text[data-size="400"] { font-size: 1.125rem; }
+.text[data-size="500"] { font-size: 1.25rem; }
+.text[data-weight="300"] { font-weight: 300; }
+.text[data-weight="400"] { font-weight: 400; }
+.text[data-weight="500"] { font-weight: 500; }
+.text[data-weight="600"] { font-weight: 600; }
+.text[data-weight="700"] { font-weight: 700; }
+.text[data-padding="snug"] { padding-block: 0; }
+.text[data-padding="compact"] { padding-block: 0.25rem; }
+.text[data-padding="comfortable"] { padding-block: 0.5rem; }
+.text[data-padding="relaxed"] { padding-block: 1rem; }
+.text[data-padding="cozy"] { padding-block: 1.5rem; }

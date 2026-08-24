@@ -29,6 +29,10 @@ export type { ApplicationFooterAction, ApplicationFooterProps } from "../../../c
 export { WelcomeMessage, getWelcomeGreeting } from "../../../components/WelcomeMessage";
 export type { WelcomeGreeting, WelcomeMessageProps } from "../../../components/WelcomeMessage";
 export { ChatBubble } from "../../../components/ChatBubble";
+export { Heading } from "../../../components/Heading";
+export type { HeadingLevel, HeadingPadding, HeadingProps, HeadingSize, HeadingWeight } from "../../../components/Heading";
+export { Text } from "../../../components/Text";
+export type { TextElement, TextPadding, TextProps, TextSize, TextWeight } from "../../../components/Text";
 export type {
   ChatBubbleAlignment,
   ChatBubbleAvatar,

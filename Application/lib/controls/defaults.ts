@@ -1362,6 +1362,19 @@ export const defaultSettings: ControlSettingsBySlug = {
     showMoreLabel: "Show more",
     time: "10:44",
   },
+  text: {
+    content: "Use Text for readable body copy, captions, and supporting content.",
+    padding: "snug",
+    size: 300,
+    weight: 400,
+  },
+  heading: {
+    content: "A clear, meaningful heading",
+    level: 2,
+    padding: "snug",
+    size: 300,
+    weight: 700,
+  },
   "lab-chat-conversation": { leftAvatarImage: "/user-profile-carl.png", leftAvatarName: "Opus", leftBackground: "#2B2452", leftFirstMessage: "I’ve prepared the release notes and included the implementation details.", leftReplyMessage: "The final section includes a longer reply so you can test the shared Show More behaviour in a real conversation.", leftTime: "10:46", rightAvatarImage: "/user-profile-carl.png", rightAvatarName: "You", rightBackground: "#3A2B68", rightCodeMessage: "```ts\nconst release = await publish(\"opus-react\");\n```", rightFirstMessage: "Perfect — could you also include the new chat components?", rightTime: "10:45", showAvatarImages: true, showMore: true, showMoreMaxLines: 3 },
   "empty-state": {
     title: "No components yet",

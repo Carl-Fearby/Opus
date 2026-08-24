@@ -5195,6 +5195,25 @@ const value = ${formatJsonValueForUsage()};
       const openingProps = props.length ? `\n  ${props.join("\n  ")}\n` : "";
       return `${importLine(["TextMarquee"])}\n\n<TextMarquee${openingProps}>\n  ${s.text}\n</TextMarquee>`;
     }
+    case "text": {
+      const s = settings as ControlSettingsBySlug["text"];
+      const props = [
+        ...(s.size !== 300 ? [formatExpressionProp("size", String(s.size))] : []),
+        ...(s.weight !== 400 ? [formatExpressionProp("weight", String(s.weight))] : []),
+        ...(s.padding !== "snug" ? [formatStringProp("padding", s.padding)] : []),
+      ];
+      return `${importLine(["Text"])}\n\n<Text${formatOpeningProps(props)}>\n  ${s.content}\n</Text>`;
+    }
+    case "heading": {
+      const s = settings as ControlSettingsBySlug["heading"];
+      const props = [
+        ...(s.level !== 2 ? [formatExpressionProp("level", String(s.level))] : []),
+        ...(s.size !== 300 ? [formatExpressionProp("size", String(s.size))] : []),
+        ...(s.weight !== 700 ? [formatExpressionProp("weight", String(s.weight))] : []),
+        ...(s.padding !== "snug" ? [formatStringProp("padding", s.padding)] : []),
+      ];
+      return `${importLine(["Heading"])}\n\n<Heading${formatOpeningProps(props)}>\n  ${s.content}\n</Heading>`;
+    }
     case "portal": {
       const s = settings as ControlSettingsBySlug["portal"];
       return `${importLine(["Portal"])}\n\n<Portal${s.disabled ? " disabled" : ""}>\n  <div>{${JSON.stringify(s.message)}}</div>\n</Portal>`;

@@ -2,6 +2,44 @@ import type { ControlSlug } from "./types";
 import { getControl } from "./registry";
 
 const componentDocumentation: Partial<Record<ControlSlug, string>> = {
+  text: `## Overview
+
+Semantic body copy with an explicit type scale and vertical rhythm. Text has no default browser margin, so spacing stays predictable inside cards, panels, and layouts.
+
+## Props
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| \`children\` | \`ReactNode\` | required | Text content. |
+| \`size\` | \`100 \| 200 \| 300 \| 400 \| 500\` | \`300\` | Text scale token. |
+| \`weight\` | \`300 \| 400 \| 500 \| 600 \| 700\` | \`400\` | Font weight token. |
+| \`padding\` | \`"snug" \| "compact" \| "comfortable" \| "relaxed" \| "cozy"\` | \`"snug"\` | Top and bottom spacing; snug is \`0\`. |
+| \`as\` | \`"p" \| "span" \| "div"\` | \`"p"\` | Semantic element to render. |
+| \`className\` | \`string\` | — | Optional class name. |
+
+## Accessibility
+
+- Defaults to a semantic paragraph.
+- Choose \`span\` only when the text belongs inside an existing sentence or label.`,
+  heading: `## Overview
+
+Semantic headings with an independent visual 100–500 scale. The heading level preserves document outline while size controls its presentation.
+
+## Props
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| \`children\` | \`ReactNode\` | required | Heading content. |
+| \`level\` | \`1 \| 2 \| 3 \| 4 \| 5 \| 6\` | \`2\` | Semantic heading level. |
+| \`size\` | \`100 \| 200 \| 300 \| 400 \| 500\` | \`300\` | Visual heading scale token. |
+| \`weight\` | \`300 \| 400 \| 500 \| 600 \| 700\` | \`700\` | Font weight token. |
+| \`padding\` | \`"snug" \| "compact" \| "comfortable" \| "relaxed" \| "cozy"\` | \`"snug"\` | Top and bottom spacing; snug is \`0\`. |
+| \`className\` | \`string\` | — | Optional class name. |
+
+## Accessibility
+
+- Use a logical heading order; do not choose a level for its appearance.
+- Adjust \`size\` instead of skipping a document-outline level.`,
   "chat-bubble": `## Overview
 
 Grouped messages for a single participant. Place multiple Chat Bubbles together to form a conversation; use a different alignment, avatar, and theme-aware background for each participant.

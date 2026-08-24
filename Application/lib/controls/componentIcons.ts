@@ -294,6 +294,8 @@ const componentIcons: Record<string, IconDefinition> = {
   select: faCaretDown,
   "show-more": faEllipsis,
   "chat-bubble": faMessage,
+  text: faFont,
+  heading: faHeading,
   sidebar: faBars,
   skeleton: faGripLines,
   "alert": faTriangleExclamation,

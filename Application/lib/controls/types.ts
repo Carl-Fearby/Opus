@@ -163,6 +163,8 @@ export type ControlSlug =
   | "accordion-group"
   | "show-more"
   | "chat-bubble"
+  | "text"
+  | "heading"
   | "empty-state"
   | "badge"
   | "avatar"
@@ -1542,6 +1544,17 @@ export type TextMarqueeSettings = {
   surface: boolean;
 };
 
+export type TextSettings = {
+  content: string;
+  padding: "snug" | "compact" | "comfortable" | "relaxed" | "cozy";
+  size: 100 | 200 | 300 | 400 | 500;
+  weight: 300 | 400 | 500 | 600 | 700;
+};
+
+export type HeadingSettings = TextSettings & {
+  level: 1 | 2 | 3 | 4 | 5 | 6;
+};
+
 export type PortalSettings = {
   disabled: boolean;
   message: string;
@@ -1760,6 +1773,8 @@ export type ControlSettingsBySlug = {
   "accordion-group": AccordionGroupSettings;
   "show-more": ShowMoreSettings;
   "chat-bubble": ChatBubbleSettings;
+  text: TextSettings;
+  heading: HeadingSettings;
   "lab-chat-conversation": ChatConversationSettings;
   "empty-state": EmptyStateSettings;
   badge: BadgeSettings;

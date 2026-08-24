@@ -1362,6 +1362,19 @@ export const defaultSettings: ControlSettingsBySlug = {
     showMoreLabel: "Show more",
     time: "10:44",
   },
+  text: {
+    content: "Use Text for readable body copy, captions, and supporting content.",
+    padding: "snug",
+    size: 300,
+    weight: 400,
+  },
+  heading: {
+    content: "A clear, meaningful heading",
+    level: 2,
+    padding: "snug",
+    size: 300,
+    weight: 700,
+  },
   "lab-chat-conversation": {
     leftAvatarImage: "/user-profile-carl.png",
     leftAvatarName: "Opus",

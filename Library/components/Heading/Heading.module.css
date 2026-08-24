@@ -1,0 +1,16 @@
+.heading { margin: 0; color: var(--opus-text); font: inherit; letter-spacing: -0.025em; line-height: 1.16; }
+.heading[data-size="100"] { font-size: 1.125rem; }
+.heading[data-size="200"] { font-size: 1.375rem; }
+.heading[data-size="300"] { font-size: 1.75rem; }
+.heading[data-size="400"] { font-size: 2.25rem; }
+.heading[data-size="500"] { font-size: 3rem; }
+.heading[data-weight="300"] { font-weight: 300; }
+.heading[data-weight="400"] { font-weight: 400; }
+.heading[data-weight="500"] { font-weight: 500; }
+.heading[data-weight="600"] { font-weight: 600; }
+.heading[data-weight="700"] { font-weight: 700; }
+.heading[data-padding="snug"] { padding-block: 0; }
+.heading[data-padding="compact"] { padding-block: 0.25rem; }
+.heading[data-padding="comfortable"] { padding-block: 0.5rem; }
+.heading[data-padding="relaxed"] { padding-block: 1rem; }
+.heading[data-padding="cozy"] { padding-block: 1.5rem; }
