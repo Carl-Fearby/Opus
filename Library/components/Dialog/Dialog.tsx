@@ -10,13 +10,14 @@ import { Portal } from "@/components/Portal";
 import { useOverlayAccessibility } from "@/lib/a11y/useOverlayAccessibility";
 import styles from "./Dialog.module.css";
 
-export type DialogResult = "confirm" | "cancel" | "dismiss";
+export type DialogResult = "confirm" | "cancel" | "dismiss" | "branch";
 type DialogPhase = "opening" | "closing";
 
 const EXIT_ANIMATION_MS = 180;
 
-type DialogProps = {
+export type DialogProps = {
   actionSet?: DialogActionSet;
+  actions?: DialogAction[];
   children?: ReactNode;
   description: string;
   dismissOnBackdrop?: boolean;
@@ -27,7 +28,7 @@ type DialogProps = {
   title: string;
 };
 
-type DialogAction = {
+export type DialogAction = {
   label: string;
   result: DialogResult;
   variant: ButtonVariant;
@@ -70,6 +71,7 @@ function getActions(actionSet: DialogActionSet, status: AlertStatus): DialogActi
 
 export function Dialog({
   actionSet = "ok-cancel",
+  actions: customActions,
   children,
   description,
   dismissOnBackdrop = true,
@@ -127,7 +129,7 @@ export function Dialog({
     return null;
   }
 
-  const actions = getActions(actionSet, status);
+  const actions = customActions ?? getActions(actionSet, status);
 
   return (
     <Portal>

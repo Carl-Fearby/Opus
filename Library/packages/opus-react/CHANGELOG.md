@@ -4,6 +4,13 @@ All notable public-package changes are recorded here. Opus follows [Semantic Ver
 
 ## Unreleased
 
+## 0.6.32
+
+### Added
+
+- Dialog accepts custom `actions`, enabling workflows such as Yes / No / Branch.
+- `DialogAction`, `DialogProps`, and the `branch` dialog result are exported for typed consumer integrations.
+
 ## 0.6.31
 
 ### Added

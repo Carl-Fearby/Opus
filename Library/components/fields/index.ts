@@ -120,7 +120,7 @@ export type { CascaderOption } from "./CascaderField";
 export { Tooltip } from "../Tooltip";
 export { Alert } from "../Alert";
 export { Dialog } from "../Dialog";
-export type { DialogResult } from "../Dialog";
+export type { DialogAction, DialogProps, DialogResult } from "../Dialog";
 export { Modal } from "../Modal";
 export { ModalDefaultActions } from "../Modal";
 export { Drawer } from "../Drawer";
