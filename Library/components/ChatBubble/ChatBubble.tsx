@@ -108,11 +108,11 @@ export function ChatBubble({
         {messages.map((message, index) => {
           const content = <MessageContent content={message.content} />;
           return (
-            <article className={styles.message} data-position={index === 0 ? "first" : index === messages.length - 1 ? "last" : "middle"} key={message.id ?? index}>
+            <article className={styles.message} data-position={messages.length === 1 ? "only" : index === 0 ? "first" : index === messages.length - 1 ? "last" : "middle"} key={message.id ?? index}>
               <div className={styles.bubble}>
                 {showMore ? <ShowMore maxLines={showMoreMaxLines} showLessLabel={showLessLabel} showMoreLabel={showMoreLabel}>{content}</ShowMore> : content}
               </div>
-              {message.time ? <time className={styles.time}>{message.time}</time> : null}
+              {index === messages.length - 1 && message.time ? <time className={styles.time}>{message.time}</time> : null}
             </article>
           );
         })}

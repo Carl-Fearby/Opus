@@ -5715,6 +5715,24 @@ export function ControlSettingsPanel({
         </div>
       );
     }
+    case "chat-bubble": {
+      const s = settings as ControlSettingsBySlug["chat-bubble"];
+      return (
+        <div className={shellStyles.settingsGrid}>
+          <SettingToggle
+            label="Enable Show More"
+            checked={s.showMore}
+            onChange={(showMore) => onChange({ ...s, showMore } as ControlSettings)}
+          />
+          <SettingInput
+            label="Right bubble background"
+            type="color"
+            value={s.background || "#4f46e5"}
+            onChange={(background) => onChange({ ...s, background } as ControlSettings)}
+          />
+        </div>
+      );
+    }
     case "empty-state": {
       const s = settings as ControlSettingsBySlug["empty-state"];
       return (

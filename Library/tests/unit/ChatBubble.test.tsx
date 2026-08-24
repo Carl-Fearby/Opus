@@ -20,7 +20,8 @@ describe("ChatBubble", () => {
       "right",
     );
     expect(screen.getByRole("img", { name: "Ada Lovelace" })).toBeInTheDocument();
-    expect(screen.getByText("10:42")).toBeInTheDocument();
+    expect(screen.queryByText("10:42")).not.toBeInTheDocument();
+    expect(screen.getByText("10:43")).toBeInTheDocument();
     expect(container.querySelectorAll("article")).toHaveLength(2);
   });
 

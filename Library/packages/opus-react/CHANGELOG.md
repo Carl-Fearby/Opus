@@ -4,6 +4,12 @@ All notable public-package changes are recorded here. Opus follows [Semantic Ver
 
 ## Unreleased
 
+## 0.6.23
+
+### Changed
+
+- Chat Bubble groups now show one timestamp below the final message, use explicit right-side group corners, and the catalog preview demonstrates both alignments.
+
 ## 0.6.22
 
 ### Added

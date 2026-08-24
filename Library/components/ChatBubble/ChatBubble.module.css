@@ -8,9 +8,9 @@
 .message[data-position="first"] .bubble { border-bottom-left-radius:5px; }
 .message[data-position="middle"] .bubble { border-top-left-radius:5px; border-bottom-left-radius:5px; }
 .message[data-position="last"] .bubble { border-top-left-radius:5px; }
-.group[data-alignment="right"] .message[data-position="first"] .bubble { border-bottom-left-radius:16px; border-bottom-right-radius:5px; }
-.group[data-alignment="right"] .message[data-position="middle"] .bubble { border-top-left-radius:16px; border-bottom-left-radius:16px; border-top-right-radius:5px; border-bottom-right-radius:5px; }
-.group[data-alignment="right"] .message[data-position="last"] .bubble { border-top-left-radius:16px; border-top-right-radius:5px; }
+.group[data-alignment="right"] .message[data-position="first"] .bubble { border-radius:16px 16px 5px 16px; }
+.group[data-alignment="right"] .message[data-position="middle"] .bubble { border-radius:16px 5px 5px 16px; }
+.group[data-alignment="right"] .message[data-position="last"] .bubble { border-radius:16px 5px 16px 16px; }
 .time { color:var(--opus-muted); font-size:.72rem; line-height:1.2; }
 .group[data-alignment="right"] .time { text-align:right; }
 .text { white-space:pre-wrap; }
