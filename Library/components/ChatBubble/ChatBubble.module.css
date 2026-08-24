@@ -24,6 +24,8 @@
 .time { color:var(--opus-muted); font-size:.72rem; line-height:1.2; }
 .group[data-alignment="right"] .time { text-align:right; }
 .text { white-space:pre-wrap; }
+.prose { display:grid; }
+.proseBlock { display:grid; }
 .codeBlock { margin:0; }
 .text + .codeBlock { margin-top:8px; }
 .group[data-alignment="right"] :global(.ShowMore_toggle), .group[data-alignment="right"] :global(button) { color:inherit; }

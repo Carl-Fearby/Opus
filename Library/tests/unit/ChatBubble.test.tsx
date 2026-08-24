@@ -37,6 +37,16 @@ describe("ChatBubble", () => {
     expect(screen.getByText("42", { exact: true })).toBeInTheDocument();
   });
 
+  it("uses Text, Heading, and Spacer for markdown prose blocks", () => {
+    const { container } = render(
+      <ChatBubble messages={[{ content: "**Release notes**\n\nA **bold** paragraph." }]} />,
+    );
+
+    expect(screen.getByRole("heading", { level: 3, name: "Release notes" })).toBeInTheDocument();
+    expect(screen.getByText("bold").tagName).toBe("STRONG");
+    expect(container.querySelectorAll('[aria-hidden="true"]')).toHaveLength(1);
+  });
+
   it("formats bold headings and gives paragraphs native text spacing", () => {
     render(<ChatBubble messages={[{ content: "**Physical characteristics:**\n\nJupiter is a gas giant.\n\nIts storms are immense." }]} />);
 

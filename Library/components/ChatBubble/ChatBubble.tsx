@@ -4,6 +4,7 @@ import { useLayoutEffect, useRef, useState, type CSSProperties, type ReactNode }
 import { Avatar } from "@/components/Avatar";
 import { Heading } from "@/components/Heading";
 import { ShowMore } from "@/components/ShowMore";
+import { Spacer } from "@/components/Spacer";
 import { SyntaxHighlighter } from "@/components/SyntaxHighlighter";
 import { Text } from "@/components/Text";
 import styles from "./ChatBubble.module.css";
@@ -90,18 +91,24 @@ function InlineText({ content }: { content: string }) {
 }
 
 function ProseContent({ content }: { content: string }) {
-  return <>
-    {content.split(/\n\s*\n/).filter(Boolean).map((block, index) => {
+  const blocks = content.split(/\n\s*\n/).filter(Boolean);
+
+  return <div className={styles.prose}>
+    {blocks.map((block, index) => {
       const trimmed = block.trim();
       const markdownHeading = trimmed.match(/^#{1,6}\s+(.+)$/);
       const boldHeading = trimmed.match(/^\*\*(.+?)\*\*:?[\s]*$/);
       const heading = markdownHeading?.[1] ?? boldHeading?.[1]?.replace(/:$/, "");
-      if (heading) return <Heading key={index} level={3} padding="compact" size={100}><InlineText content={heading} /></Heading>;
+      const prose = heading
+        ? <Heading level={3} padding="snug" size={100}><InlineText content={heading} /></Heading>
+        : <Text as="p" padding="snug" size={200}>{block.split("\n").map((line, lineIndex) => <span key={lineIndex}><InlineText content={line} />{lineIndex < block.split("\n").length - 1 ? <br /> : null}</span>)}</Text>;
 
-      const lines = block.split("\n");
-      return <Text as="p" key={index} padding="compact" size={200}>{lines.map((line, lineIndex) => <span key={lineIndex}><InlineText content={line} />{lineIndex < lines.length - 1 ? <br /> : null}</span>)}</Text>;
+      return <div className={styles.proseBlock} key={index}>
+        {index > 0 ? <Spacer size="small" /> : null}
+        {prose}
+      </div>;
     })}
-  </>;
+  </div>;
 }
 
 function MessageContent({ content }: { content: string }) {

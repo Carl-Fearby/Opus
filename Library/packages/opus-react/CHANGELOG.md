@@ -4,6 +4,12 @@ All notable public-package changes are recorded here. Opus follows [Semantic Ver
 
 ## Unreleased
 
+## 0.6.28
+
+### Changed
+
+- Chat Bubble markdown prose now uses the shared Text, Heading, and Spacer primitives; blank-line paragraph breaks use the small spacing preset and `**bold**` syntax renders as strong text.
+
 ## 0.6.27
 
 ### Added

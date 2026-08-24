@@ -65,7 +65,7 @@ Grouped messages for a single participant. Place multiple Chat Bubbles together 
 | Field | Type | Description |
 | --- | --- | --- |
 | \`id\` | \`string \| number\` | Optional stable message key. |
-| \`content\` | \`string\` | Message text. Triple-backtick fenced blocks render through Syntax Highlighter. |
+| \`content\` | \`string\` | Message text. Triple-backtick fenced blocks render through Syntax Highlighter; \`**bold text**\` is rendered as strong text. |
 | \`time\` | \`ReactNode\` | Optional timestamp displayed below the group only for its final message. |
 
 ## Accessibility
