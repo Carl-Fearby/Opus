@@ -5731,12 +5731,13 @@ export function ControlSettingsPanel({
             value={s.avatarName}
             onChange={(avatarName) => onChange({ ...s, avatarName } as ControlSettings)}
           />
+          <SettingToggle label="Show avatar" checked={s.showAvatar} onChange={(showAvatar) => onChange({ ...s, showAvatar } as ControlSettings)} />
           <SettingToggle
             label="Use profile image"
             checked={s.showAvatarImage}
             onChange={(showAvatarImage) => onChange({ ...s, showAvatarImage } as ControlSettings)}
           />
-          <div style={{ visibility: s.showAvatarImage ? "visible" : "hidden" }}>
+          <div style={{ visibility: s.showAvatar && s.showAvatarImage ? "visible" : "hidden" }}>
             <SettingInput
               label="Avatar image URL"
               placeholder="https://example.com/avatar.jpg"
@@ -5755,19 +5756,22 @@ export function ControlSettingsPanel({
             value={String(s.maxLines)}
             onChange={(maxLines) => onChange({ ...s, maxLines: Math.max(1, Number(maxLines) || 1) } as ControlSettings)}
           />
+          <div style={{ visibility: s.showMore ? "visible" : "hidden" }}><SettingInput label="Show More label" value={s.showMoreLabel} onChange={(showMoreLabel) => onChange({ ...s, showMoreLabel } as ControlSettings)} /></div>
+          <div style={{ visibility: s.showMore ? "visible" : "hidden" }}><SettingInput label="Show less label" value={s.showLessLabel} onChange={(showLessLabel) => onChange({ ...s, showLessLabel } as ControlSettings)} /></div>
           <SettingToggle
             label="Custom bubble colour"
-            checked={Boolean(s.background)}
-            onChange={(enabled) => onChange({ ...s, background: enabled ? "#3A2B68" : "" } as ControlSettings)}
+            checked={Boolean(s.lightBackground || s.darkBackground || s.background)}
+            onChange={(enabled) => onChange({ ...s, background: "", lightBackground: enabled ? "#C4B3FB" : "", darkBackground: enabled ? "#3A2B68" : "" } as ControlSettings)}
           />
-          <div style={{ visibility: s.background ? "visible" : "hidden" }}>
+          <div style={{ visibility: s.lightBackground || s.darkBackground || s.background ? "visible" : "hidden" }}>
             <SettingInput
-              label="Bubble background"
+              label="Light bubble background"
               type="color"
-              value={s.background}
-              onChange={(background) => onChange({ ...s, background } as ControlSettings)}
+              value={s.lightBackground || s.background || "#C4B3FB"}
+              onChange={(lightBackground) => onChange({ ...s, background: "", lightBackground } as ControlSettings)}
             />
           </div>
+          <div style={{ visibility: s.lightBackground || s.darkBackground || s.background ? "visible" : "hidden" }}><SettingInput label="Dark bubble background" type="color" value={s.darkBackground || s.background || "#3A2B68"} onChange={(darkBackground) => onChange({ ...s, background: "", darkBackground } as ControlSettings)} /></div>
           <SettingInput
             label="Final message time"
             value={s.time}
@@ -5803,6 +5807,26 @@ export function ControlSettingsPanel({
           </div>
         </div>
       );
+    }
+    case "lab-chat-conversation": {
+      const s = settings as ControlSettingsBySlug["lab-chat-conversation"];
+      return <div className={shellStyles.settingsGrid}>
+        <SettingToggle label="Use profile images" checked={s.showAvatarImages} onChange={(showAvatarImages) => onChange({ ...s, showAvatarImages } as ControlSettings)} />
+        <SettingToggle label="Enable Show More" checked={s.showMore} onChange={(showMore) => onChange({ ...s, showMore } as ControlSettings)} />
+        <SettingInput label="Show More lines" type="number" value={String(s.showMoreMaxLines)} onChange={(value) => onChange({ ...s, showMoreMaxLines: Math.max(1, Number(value) || 1) } as ControlSettings)} />
+        <SettingInput label="Opus name" value={s.leftAvatarName} onChange={(leftAvatarName) => onChange({ ...s, leftAvatarName } as ControlSettings)} />
+        <SettingInput label="Your name" value={s.rightAvatarName} onChange={(rightAvatarName) => onChange({ ...s, rightAvatarName } as ControlSettings)} />
+        <SettingInput label="Opus background" type="color" value={s.leftBackground} onChange={(leftBackground) => onChange({ ...s, leftBackground } as ControlSettings)} />
+        <SettingInput label="Your background" type="color" value={s.rightBackground} onChange={(rightBackground) => onChange({ ...s, rightBackground } as ControlSettings)} />
+        <SettingInput label="Opus final time" value={s.leftTime} onChange={(leftTime) => onChange({ ...s, leftTime } as ControlSettings)} />
+        <SettingInput label="Your final time" value={s.rightTime} onChange={(rightTime) => onChange({ ...s, rightTime } as ControlSettings)} />
+        <div style={{ visibility: s.showAvatarImages ? "visible" : "hidden" }}><SettingInput label="Opus image URL" value={s.leftAvatarImage} onChange={(leftAvatarImage) => onChange({ ...s, leftAvatarImage } as ControlSettings)} /></div>
+        <div style={{ visibility: s.showAvatarImages ? "visible" : "hidden" }}><SettingInput label="Your image URL" value={s.rightAvatarImage} onChange={(rightAvatarImage) => onChange({ ...s, rightAvatarImage } as ControlSettings)} /></div>
+        <div className={shellStyles.settingsFullWidth}><SettingTextarea label="Opus first message" value={s.leftFirstMessage} onChange={(leftFirstMessage) => onChange({ ...s, leftFirstMessage } as ControlSettings)} /></div>
+        <div className={shellStyles.settingsFullWidth}><SettingTextarea label="Opus reply" value={s.leftReplyMessage} onChange={(leftReplyMessage) => onChange({ ...s, leftReplyMessage } as ControlSettings)} /></div>
+        <div className={shellStyles.settingsFullWidth}><SettingTextarea label="Your first message" value={s.rightFirstMessage} onChange={(rightFirstMessage) => onChange({ ...s, rightFirstMessage } as ControlSettings)} /></div>
+        <div className={shellStyles.settingsFullWidth}><SettingTextarea label="Your code message" value={s.rightCodeMessage} onChange={(rightCodeMessage) => onChange({ ...s, rightCodeMessage } as ControlSettings)} /></div>
+      </div>;
     }
     case "empty-state": {
       const s = settings as ControlSettingsBySlug["empty-state"];
@@ -6447,6 +6471,11 @@ export function ControlSettingsPanel({
             onChange={(background) =>
               onChange({ ...s, background } as ControlSettings)
             }
+          />
+          <SettingToggle
+            label="Transparent background"
+            checked={s.transparent}
+            onChange={(transparent) => onChange({ ...s, transparent } as ControlSettings)}
           />
           <SettingSelect
             label="Grip height"

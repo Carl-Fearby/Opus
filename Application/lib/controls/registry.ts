@@ -58,6 +58,7 @@ const compositionPartsBySlug: Partial<Record<ControlSlug, ControlSlug[]>> = {
   "avatar-group": ["avatar"],
   calendar: ["modal", "button", "date-picker", "select", "text-input"],
   carousel: ["lightbox"],
+  "chat-bubble": ["avatar", "show-more"],
   "command-palette": ["portal"],
   "content-timeline": ["avatar"],
   "context-menu": ["dropdown-menu"],

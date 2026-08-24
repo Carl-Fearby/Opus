@@ -143,6 +143,7 @@ const componentIcons: Record<string, IconDefinition> = {
   "notes-activity": faComments,
   "lab-dashboard-list-columns": faTableColumns,
   "lab-dashboard-welcome": faSun,
+  "lab-chat-conversation": faComments,
   "lab-contact-directory": faUsers,
   "lab-company-directory": faBriefcase,
   "lab-sales-pipeline": faFilter,

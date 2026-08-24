@@ -19,6 +19,8 @@ type ShowMoreProps = {
   onExpandedChange?: (expanded: boolean) => void;
   showLessLabel?: string;
   showMoreLabel?: string;
+  /** Uses a fixed CSS clamp and keeps the toggle mounted, avoiding layout measurement. */
+  staticLayout?: boolean;
 };
 
 function ChevronIcon() {
@@ -44,9 +46,9 @@ export function ShowMore({
   onExpandedChange,
   showLessLabel = "Show less",
   showMoreLabel = "Show more",
+  staticLayout = false,
 }: ShowMoreProps) {
   const contentId = useId();
-  const shellRef = useRef<HTMLDivElement>(null);
   const innerRef = useRef<HTMLDivElement>(null);
   const [internalExpanded, setInternalExpanded] = useState(defaultExpanded);
   const [canExpand, setCanExpand] = useState(false);
@@ -55,6 +57,10 @@ export function ShowMore({
   const clampLines = Math.max(1, maxLines);
 
   const measureHeights = useCallback(() => {
+    if (staticLayout) {
+      return;
+    }
+
     const inner = innerRef.current;
     if (!inner) {
       return;
@@ -69,18 +75,26 @@ export function ShowMore({
     const full = Math.ceil(Math.max(inner.scrollHeight, innerRect.height, rangeHeight));
     const collapsed = Number.isFinite(lineHeight) ? Math.ceil(lineHeight * clampLines) : full;
 
-    setHeights({ collapsed, full });
-    setCanExpand(full > collapsed + 1);
-  }, [clampLines]);
+    setHeights((current) =>
+      current?.collapsed === collapsed && current.full === full
+        ? current
+        : { collapsed, full },
+    );
+    setCanExpand((current) => {
+      const next = full > collapsed + 1;
+      // Keep the label mounted after overflow is first established. During a
+      // parent repaint a transient zero-size measurement must not remove it.
+      return current || next;
+    });
+  }, [clampLines, staticLayout]);
 
   useLayoutEffect(() => {
     measureHeights();
-  }, [children, measureHeights]);
+  }, [measureHeights, clampLines]);
 
   useLayoutEffect(() => {
     const inner = innerRef.current;
-    const shell = shellRef.current;
-    if (!inner || !shell || typeof ResizeObserver === "undefined") {
+    if (!inner || typeof ResizeObserver === "undefined") {
       return;
     }
 
@@ -89,7 +103,6 @@ export function ShowMore({
     });
 
     observer.observe(inner);
-    observer.observe(shell);
     return () => observer.disconnect();
   }, [measureHeights]);
 
@@ -128,7 +141,7 @@ export function ShowMore({
     onExpandedChange?.(next);
   };
 
-  const showToggle = isExpanded || canExpand;
+  const showToggle = staticLayout || isExpanded || canExpand;
   const shellStyle = {
     "--show-more-lines": clampLines,
     ...(heights
@@ -142,7 +155,6 @@ export function ShowMore({
   return (
     <div className={styles.root}>
       <div
-        ref={shellRef}
         className={styles.contentShell}
         data-expanded={isExpanded ? "true" : "false"}
         data-measured={heights ? "true" : "false"}
@@ -163,7 +175,7 @@ export function ShowMore({
           onClick={handleToggle}
           type="button"
         >
-          <span key={isExpanded ? "less" : "more"} className={styles.toggleLabel}>
+          <span className={styles.toggleLabel}>
             {isExpanded ? showLessLabel : showMoreLabel}
           </span>
           <ChevronIcon />

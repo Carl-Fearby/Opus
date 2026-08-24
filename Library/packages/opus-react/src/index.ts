@@ -35,6 +35,8 @@ export type {
   ChatBubbleMessage,
   ChatBubbleProps,
 } from "../../../components/ChatBubble";
+export { SyntaxHighlighter } from "../../../components/SyntaxHighlighter";
+export type { SyntaxHighlighterProps } from "../../../components/SyntaxHighlighter";
 export type {
   ApplicationHeaderAction,
   ApplicationHeaderProfile,

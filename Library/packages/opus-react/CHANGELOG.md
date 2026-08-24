@@ -4,6 +4,22 @@ All notable public-package changes are recorded here. Opus follows [Semantic Ver
 
 ## Unreleased
 
+## 0.6.25
+
+### Added
+
+- `SyntaxHighlighter`, a reusable, compact, theme-aware read-only code renderer.
+- Chat Bubble now supports independent `lightBackground` and `darkBackground` colours.
+
+### Changed
+
+- Chat Bubble component pages now expose avatar visibility, Show More labels, theme-specific colours, composition metadata, and generated usage for the complete public API.
+- Code blocks use the shared SyntaxHighlighter and adapt to the active light or dark theme.
+
+### Fixed
+
+- Stabilise Chat Bubble Show More rendering during colour and settings changes.
+
 ## 0.6.24
 
 ### Fixed

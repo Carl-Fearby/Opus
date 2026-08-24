@@ -847,6 +847,7 @@ function ResizeHandlePreviewDemo({
         background={settings.background}
         height={settings.height}
         orientation={settings.orientation}
+        transparent={settings.transparent}
         onKeyDown={handleKeyDown}
         onPointerDown={startResize}
       />
@@ -5404,9 +5405,13 @@ function ControlPreviewContent({
       return (
         <ChatBubble
           alignment={s.alignment}
-          avatar={{ name: s.avatarName || "You", src: s.showAvatarImage ? s.avatarImage || undefined : undefined }}
+          avatar={s.showAvatar ? { name: s.avatarName || "You", src: s.showAvatarImage ? s.avatarImage || undefined : undefined } : undefined}
           background={s.background || undefined}
+          darkBackground={s.darkBackground || undefined}
+          lightBackground={s.lightBackground || undefined}
           showMore={s.showMore}
+          showLessLabel={s.showLessLabel}
+          showMoreLabel={s.showMoreLabel}
           showMoreMaxLines={s.maxLines}
           messages={[
             { content: s.firstMessage },
@@ -5415,6 +5420,36 @@ function ControlPreviewContent({
             { content: s.content, time: s.time },
           ]}
         />
+      );
+    }
+    case "lab-chat-conversation": {
+      const s = settings as ControlSettingsBySlug["lab-chat-conversation"];
+      const avatarSource = (src: string) => s.showAvatarImages ? src || undefined : undefined;
+      return (
+        <div style={{ display: "grid", gap: 20, width: "100%" }}>
+          <ChatBubble
+            alignment="left"
+            avatar={{ name: s.leftAvatarName || "Opus", src: avatarSource(s.leftAvatarImage) }}
+            background={s.leftBackground || undefined}
+            showMore={s.showMore}
+            showMoreMaxLines={s.showMoreMaxLines}
+            messages={[
+              { content: s.leftFirstMessage },
+              { content: s.leftReplyMessage, time: s.leftTime },
+            ]}
+          />
+          <ChatBubble
+            alignment="right"
+            avatar={{ name: s.rightAvatarName || "You", src: avatarSource(s.rightAvatarImage) }}
+            background={s.rightBackground || undefined}
+            showMore={s.showMore}
+            showMoreMaxLines={s.showMoreMaxLines}
+            messages={[
+              { content: s.rightFirstMessage },
+              { content: s.rightCodeMessage, time: s.rightTime },
+            ]}
+          />
+        </div>
       );
     }
     case "empty-state": {

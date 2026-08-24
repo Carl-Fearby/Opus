@@ -3,6 +3,7 @@
 import { useLayoutEffect, useRef, useState, type CSSProperties, type ReactNode } from "react";
 import { Avatar } from "@/components/Avatar";
 import { ShowMore } from "@/components/ShowMore";
+import { SyntaxHighlighter } from "@/components/SyntaxHighlighter";
 import styles from "./ChatBubble.module.css";
 
 export type ChatBubbleAlignment = "left" | "right";
@@ -26,6 +27,10 @@ export type ChatBubbleProps = {
   avatar?: ChatBubbleAvatar;
   /** CSS colour used for all bubbles in the group. */
   background?: string;
+  /** Custom background used when the nearest Opus theme is light. */
+  lightBackground?: string;
+  /** Custom background used when the nearest Opus theme is dark. */
+  darkBackground?: string;
   className?: string;
   messages: readonly ChatBubbleMessage[];
   /** Collapses long message content using the shared ShowMore control. */
@@ -34,14 +39,6 @@ export type ChatBubbleProps = {
   showMoreLabel?: string;
   showLessLabel?: string;
 };
-
-type CodeTokenKind = "comment" | "keyword" | "number" | "string";
-
-const KEYWORDS = new Set([
-  "as", "async", "await", "break", "case", "catch", "class", "const", "continue", "default", "else",
-  "export", "false", "for", "from", "function", "if", "import", "in", "interface", "let", "new", "null",
-  "return", "throw", "true", "try", "type", "undefined", "while",
-]);
 
 function contrastingTextColour(background?: string) {
   const hex = background?.trim().replace(/^#/, "");
@@ -57,26 +54,28 @@ function contrastingTextColour(background?: string) {
   return luminance > 0.179 ? "#070912" : "#ffffff";
 }
 
-function tokenKind(value: string): CodeTokenKind | undefined {
-  if (value.startsWith("//") || value.startsWith("#")) return "comment";
-  if (value.startsWith("\"") || value.startsWith("'") || value.startsWith("`")) return "string";
-  if (/^\d/.test(value)) return "number";
-  if (KEYWORDS.has(value)) return "keyword";
-  return undefined;
-}
+function contrastingBorderColour(background?: string, foreground?: string) {
+  const hex = background?.trim().replace(/^#/, "");
+  if (!hex || !foreground || !/^(?:[\da-f]{3}|[\da-f]{6})$/i.test(hex)) return undefined;
 
-function HighlightedCode({ code }: { code: string }) {
-  const matcher = /(\/\/[^\n]*|#[^\n]*|"(?:\\.|[^"\\])*"|'(?:\\.|[^'\\])*'|`(?:\\.|[^`\\])*`|\b\d+(?:\.\d+)?\b|\b[A-Za-z_$][\w$]*\b)/g;
-  const parts = code.split(matcher);
+  const normalized = hex.length === 3 ? hex.split("").map((part) => `${part}${part}`).join("") : hex;
+  const [red, green, blue] = [0, 2, 4].map((start) => Number.parseInt(normalized.slice(start, start + 2), 16) / 255);
+  const maximum = Math.max(red, green, blue);
+  const minimum = Math.min(red, green, blue);
+  const lightness = (maximum + minimum) / 2;
+  const delta = maximum - minimum;
+  const saturation = delta === 0 ? 0 : delta / (1 - Math.abs(2 * lightness - 1));
+  const hue = delta === 0 ? 0 : (60 * (maximum === red ? (green - blue) / delta : maximum === green ? (blue - red) / delta + 2 : (red - green) / delta + 4) + 360) % 360;
+  const borderLightness = Math.max(0, Math.min(1, lightness + (foreground === "#ffffff" ? 0.2 : -0.2)));
+  const borderSaturation = Math.min(1, saturation + 0.08);
+  const chroma = (1 - Math.abs(2 * borderLightness - 1)) * borderSaturation;
+  const secondary = chroma * (1 - Math.abs((hue / 60) % 2 - 1));
+  const match = chroma * 0;
+  const [baseRed, baseGreen, baseBlue] = hue < 60 ? [chroma, secondary, match] : hue < 120 ? [secondary, chroma, match] : hue < 180 ? [match, chroma, secondary] : hue < 240 ? [match, secondary, chroma] : hue < 300 ? [secondary, match, chroma] : [chroma, match, secondary];
+  const offset = borderLightness - chroma / 2;
+  const channels = [baseRed, baseGreen, baseBlue].map((channel) => Math.round((channel + offset) * 255));
 
-  return (
-    <code>
-      {parts.map((part, index) => {
-        const kind = tokenKind(part);
-        return kind ? <span className={styles[`token${kind[0].toUpperCase()}${kind.slice(1)}`]} key={index}>{part}</span> : part;
-      })}
-    </code>
-  );
+  return `#${channels.map((channel) => channel.toString(16).padStart(2, "0")).join("")}`;
 }
 
 function MessageContent({ content }: { content: string }) {
@@ -88,12 +87,7 @@ function MessageContent({ content }: { content: string }) {
         if (index % 3 === 0) return block ? <span className={styles.text} key={index}>{block}</span> : null;
         if (index % 3 === 1) return null;
         const language = blocks[index - 1]?.trim();
-        return (
-          <pre className={styles.codeBlock} data-language={language || undefined} key={index}>
-            {language ? <span className={styles.codeLanguage}>{language}</span> : null}
-            <HighlightedCode code={block} />
-          </pre>
-        );
+        return <SyntaxHighlighter className={styles.codeBlock} code={block} key={index} language={language} />;
       })}
     </>
   );
@@ -104,6 +98,8 @@ export function ChatBubble({
   avatar,
   background,
   className,
+  darkBackground,
+  lightBackground,
   messages,
   showLessLabel,
   showMore = false,
@@ -112,16 +108,20 @@ export function ChatBubble({
 }: ChatBubbleProps) {
   const bubbleRefs = useRef(new Map<number, HTMLDivElement>());
   const [bubbleWidths, setBubbleWidths] = useState<number[]>([]);
-  const foreground = contrastingTextColour(background);
-  const groupStyle = background
+  const lightColour = lightBackground || background;
+  const darkColour = darkBackground || background;
+  const lightForeground = contrastingTextColour(lightColour);
+  const darkForeground = contrastingTextColour(darkColour);
+  const lightBorder = contrastingBorderColour(lightColour, lightForeground);
+  const darkBorder = contrastingBorderColour(darkColour, darkForeground);
+  const groupStyle = lightColour || darkColour
     ? ({
-        "--chat-bubble-background": background,
-        ...(foreground
-          ? {
-              "--chat-bubble-foreground": foreground,
-              "--opus-text": foreground,
-            }
-          : {}),
+        "--chat-bubble-background-light": lightColour,
+        "--chat-bubble-background-dark": darkColour,
+        "--chat-bubble-foreground-light": lightForeground,
+        "--chat-bubble-foreground-dark": darkForeground,
+        "--chat-bubble-border-light": lightBorder,
+        "--chat-bubble-border-dark": darkBorder,
       } as CSSProperties)
     : undefined;
 
@@ -165,8 +165,11 @@ export function ChatBubble({
               key={message.id ?? index}
               style={cornerStyle}
             >
-              <div ref={(element) => { if (element) bubbleRefs.current.set(index, element); else bubbleRefs.current.delete(index); }} className={styles.bubble}>
-                {showMore ? <ShowMore maxLines={showMoreMaxLines} showLessLabel={showLessLabel} showMoreLabel={showMoreLabel}>{content}</ShowMore> : content}
+              <div
+                ref={(element) => { if (element) bubbleRefs.current.set(index, element); else bubbleRefs.current.delete(index); }}
+                className={styles.bubble}
+              >
+                {showMore ? <ShowMore maxLines={showMoreMaxLines} showLessLabel={showLessLabel} showMoreLabel={showMoreLabel} staticLayout>{content}</ShowMore> : content}
               </div>
               {index === messages.length - 1 && message.time ? <time className={styles.time}>{message.time}</time> : null}
             </article>

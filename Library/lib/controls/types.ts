@@ -1096,14 +1096,37 @@ export type ChatBubbleSettings = {
   avatarImage: string;
   avatarName: string;
   background: string;
+  darkBackground: string;
   betweenMessage: string;
   codeMessage: string;
   content: string;
   firstMessage: string;
   maxLines: number;
+  lightBackground: string;
   showAvatarImage: boolean;
+  showAvatar: boolean;
   showMore: boolean;
+  showLessLabel: string;
+  showMoreLabel: string;
   time: string;
+};
+
+export type ChatConversationSettings = {
+  leftAvatarImage: string;
+  leftAvatarName: string;
+  leftBackground: string;
+  leftFirstMessage: string;
+  leftReplyMessage: string;
+  leftTime: string;
+  rightAvatarImage: string;
+  rightAvatarName: string;
+  rightBackground: string;
+  rightCodeMessage: string;
+  rightFirstMessage: string;
+  rightTime: string;
+  showAvatarImages: boolean;
+  showMore: boolean;
+  showMoreMaxLines: number;
 };
 
 export type EmptyStateSettings = {
@@ -1216,6 +1239,7 @@ export type ResizeHandleSettings = {
   background: "accent" | "contrast" | "none" | "subtle";
   height: "full" | "medium" | "short" | "tall";
   orientation: "horizontal" | "vertical";
+  transparent: boolean;
 };
 
 export type ResizablePanelSettings = {
@@ -1752,6 +1776,7 @@ export type ControlSettingsBySlug = {
   "accordion-group": AccordionGroupSettings;
   "show-more": ShowMoreSettings;
   "chat-bubble": ChatBubbleSettings;
+  "lab-chat-conversation": ChatConversationSettings;
   "empty-state": EmptyStateSettings;
   badge: BadgeSettings;
   avatar: AvatarSettings;

@@ -15,6 +15,7 @@ const specializedNativeControls = new Set([
   "components/EmojiPicker/EmojiPicker.tsx",
   "components/FontPicker/FontPicker.tsx",
   "components/IconPicker/IconPicker.tsx",
+  "components/InfiniteSelectableList/InfiniteSelectableList.tsx",
   "components/VideoPlayer/VideoPlayer.tsx",
   "components/documentation/CodePlayground/CodePlayground.tsx",
 ]);

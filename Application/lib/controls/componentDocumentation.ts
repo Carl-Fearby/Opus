@@ -2,6 +2,39 @@ import type { ControlSlug } from "./types";
 import { getControl } from "./registry";
 
 const componentDocumentation: Partial<Record<ControlSlug, string>> = {
+  "chat-bubble": `## Overview
+
+Grouped messages for a single participant. Place multiple Chat Bubbles together to form a conversation; use a different alignment, avatar, and theme-aware background for each participant.
+
+## Props
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| \`alignment\` | \`"left" \| "right"\` | \`"left"\` | Positions the participant and applies grouped corner treatment. |
+| \`avatar\` | \`{ name: string; src?: string }\` | — | Optional participant identity. Omit it for an avatar-free group. |
+| \`messages\` | \`ChatBubbleMessage[]\` | required | Ordered messages. Only the final message time is displayed. |
+| \`background\` | \`string\` | — | Backwards-compatible custom colour used in both themes. |
+| \`lightBackground\` | \`string\` | — | Custom bubble colour used in light mode. |
+| \`darkBackground\` | \`string\` | — | Custom bubble colour used in dark mode. |
+| \`showMore\` | \`boolean\` | \`false\` | Enables a fixed-layout expandable message clamp. |
+| \`showMoreMaxLines\` | \`number\` | \`5\` | Lines visible before Show More expands the message. |
+| \`showMoreLabel\` | \`string\` | \`"Show more"\` | Expand action label. |
+| \`showLessLabel\` | \`string\` | \`"Show less"\` | Collapse action label. |
+| \`className\` | \`string\` | — | Optional class on the participant group. |
+
+## Message shape
+
+| Field | Type | Description |
+| --- | --- | --- |
+| \`id\` | \`string \| number\` | Optional stable message key. |
+| \`content\` | \`string\` | Message text. Triple-backtick fenced blocks render through Syntax Highlighter. |
+| \`time\` | \`ReactNode\` | Optional timestamp displayed below the group only for its final message. |
+
+## Accessibility
+
+- Each group is a labelled message region; its label uses the avatar name when present.
+- Show More is a native button with \`aria-expanded\` and \`aria-controls\`.
+- Code is exposed as semantic \`pre > code\` content.`,
   "infinite-selectable-list": `## Overview
 
 A virtualised, infinitely loading collection for mailboxes, file browsers, record queues, and other high-volume selectable data. It follows familiar desktop selection conventions without coupling the primitive to email.

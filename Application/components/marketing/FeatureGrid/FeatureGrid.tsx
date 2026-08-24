@@ -17,6 +17,16 @@ const features = [
       "Live previews, settings panels, generated usage code, and Open in Playground links make it easy to explore components before you commit them to a screen.",
   },
   {
+    title: "Mapped component relationships",
+    description:
+      "The catalogue shows which public components are composed from others, making it easier to choose primitives, reuse patterns, and review dependency impact.",
+  },
+  {
+    title: "Preview at real widths",
+    description:
+      "Raw previews include full width, desktop, tablet, mobile, and fixed canvas sizes so layout decisions can be checked before a component reaches an app.",
+  },
+  {
     title: "ChatGPT with real UI context",
     description:
       "Bring your own OpenAI API key. ChatGPT receives the current component source, generated example, theme, and preview errors so it can diagnose and reshape the UI without a lengthy setup prompt.",

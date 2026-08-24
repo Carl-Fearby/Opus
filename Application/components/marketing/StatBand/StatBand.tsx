@@ -1,10 +1,18 @@
 import type { CSSProperties } from "react";
+import { getCompositionTree } from "@/lib/controls/compositionGraph";
 import { controls } from "@/lib/controls/registry";
+import { RAW_PREVIEW_WIDTH_OPTIONS } from "@/components/control-detail/ControlRaw/rawPreviewWidths";
 import { repositoryStats } from "@/lib/generated/repositoryStats";
 import styles from "./StatBand.module.css";
 
+const compositionNodes = getCompositionTree();
+const relationshipCount = compositionNodes.reduce((total, node) => total + node.children.length, 0);
+const fixedPreviewWidthCount = RAW_PREVIEW_WIDTH_OPTIONS.filter((option) => option.px !== null).length;
+
 const stats = [
   { value: controls.length.toLocaleString("en-GB"), label: "Documented components" },
+  { value: relationshipCount.toLocaleString("en-GB"), label: "Mapped relationships" },
+  { value: fixedPreviewWidthCount.toLocaleString("en-GB"), label: "Preview widths" },
   { value: repositoryStats.totalLines.toLocaleString("en-GB"), label: "Source lines" },
   { value: "270", label: "Browser interaction checks" },
   { value: "npm", label: "Published as opus-react" },
@@ -18,7 +26,7 @@ const languageColours: Record<(typeof repositoryStats.languages)[number]["label"
 };
 
 function percentage(lines: number) {
-  return repositoryStats.totalLines === 0 ? 0 : (lines / repositoryStats.totalLines) * 100;
+  return (lines / repositoryStats.totalLines) * 100;
 }
 
 export function StatBand() {
