@@ -5402,26 +5402,19 @@ function ControlPreviewContent({
     case "chat-bubble": {
       const s = settings as ControlSettingsBySlug["chat-bubble"];
       return (
-        <div style={{ display: "grid", gap: 18, width: "100%" }}>
-          <ChatBubble
-            alignment="left"
-            avatar={{ name: "Opus assistant" }}
-            showMore={s.showMore}
-            messages={[
-              { content: "Here is a grouped chat message.", time: "10:42" },
-              { content: "```ts\nconst answer = 42;\n```", time: "10:43" },
-            ]}
-          />
-          <ChatBubble
-            alignment="right"
-            avatar={{ name: "You" }}
-            background={s.background || undefined}
-            messages={[
-              { content: "The grouped corners align on this side too." },
-              { content: "Only this final message shows the time.", time: "10:44" },
-            ]}
-          />
-        </div>
+        <ChatBubble
+          alignment={s.alignment}
+          avatar={{ name: s.avatarName || "You", src: s.showAvatarImage ? s.avatarImage || undefined : undefined }}
+          background={s.background || undefined}
+          showMore={s.showMore}
+          showMoreMaxLines={s.maxLines}
+          messages={[
+            { content: s.firstMessage },
+            { content: s.betweenMessage },
+            { content: s.codeMessage },
+            { content: s.content, time: s.time },
+          ]}
+        />
       );
     }
     case "empty-state": {

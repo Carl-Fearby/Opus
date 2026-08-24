@@ -1,16 +1,22 @@
 .group { display:flex; align-items:flex-end; gap:10px; width:100%; color:var(--opus-text); }
 .group[data-alignment="right"] { flex-direction:row-reverse; }
-.messages { display:grid; min-width:0; max-width:min(78%, 46rem); gap:2px; }
-.message { display:grid; gap:4px; }
+.messages { display:grid; width:min(78%, 46rem); min-width:0; gap:2px; }
+.message { display:grid; gap:4px; min-width:0; }
 .group[data-alignment="right"] .message { justify-items:end; }
-.bubble { min-width:0; padding:10px 12px; border:1px solid color-mix(in srgb, var(--opus-border) 78%, transparent); border-radius:16px; background:var(--chat-bubble-background, color-mix(in srgb, var(--opus-panel) 88%, var(--opus-accent) 12%)); color:var(--opus-text); font-size:.92rem; line-height:1.5; overflow-wrap:anywhere; }
-.group[data-alignment="right"] .bubble { background:var(--chat-bubble-background, var(--opus-accent)); color:var(--opus-accent-contrast, #fff); border-color:color-mix(in srgb, var(--opus-accent) 70%, var(--opus-border)); }
-.message[data-position="first"] .bubble { border-bottom-left-radius:5px; }
-.message[data-position="middle"] .bubble { border-top-left-radius:5px; border-bottom-left-radius:5px; }
-.message[data-position="last"] .bubble { border-top-left-radius:5px; }
-.group[data-alignment="right"] .message[data-position="first"] .bubble { border-radius:16px 16px 5px 16px; }
-.group[data-alignment="right"] .message[data-position="middle"] .bubble { border-radius:16px 5px 5px 16px; }
-.group[data-alignment="right"] .message[data-position="last"] .bubble { border-radius:16px 5px 16px 16px; }
+.bubble { width:fit-content; max-width:100%; min-width:0; padding:10px 12px; border:1px solid color-mix(in srgb, var(--opus-border) 78%, transparent); border-radius:16px; background:var(--chat-bubble-background, color-mix(in srgb, var(--opus-panel) 78%, var(--opus-accent) 22%)); color:var(--chat-bubble-foreground, var(--opus-text)); font-size:.92rem; line-height:1.5; overflow-wrap:anywhere; }
+.group[data-alignment="left"] .bubble { justify-self:start; }
+.group[data-alignment="right"] .bubble { justify-self:end; }
+.group[data-alignment="right"] .bubble { border-color:color-mix(in srgb, var(--opus-accent) 70%, var(--opus-border)); }
+.message[data-position="first"] .bubble { border-bottom-left-radius:0; }
+.message[data-position="middle"] .bubble { border-top-left-radius:0; border-bottom-left-radius:0; }
+.message[data-position="last"] .bubble { border-top-left-radius:0; }
+.group[data-alignment="left"] .message[data-adjacent-above="true"] .bubble { border-top-right-radius:var(--chat-bubble-corner-above); }
+.group[data-alignment="left"] .message[data-adjacent-below="true"] .bubble { border-bottom-right-radius:var(--chat-bubble-corner-below); }
+.group[data-alignment="right"] .message[data-position="first"] .bubble { border-radius:16px 16px 0 16px; }
+.group[data-alignment="right"] .message[data-position="middle"] .bubble { border-radius:16px 0 0 16px; }
+.group[data-alignment="right"] .message[data-position="last"] .bubble { border-radius:16px 0 16px 16px; }
+.group[data-alignment="right"] .message[data-adjacent-above="true"] .bubble { border-top-left-radius:var(--chat-bubble-corner-above); }
+.group[data-alignment="right"] .message[data-adjacent-below="true"] .bubble { border-bottom-left-radius:var(--chat-bubble-corner-below); }
 .time { color:var(--opus-muted); font-size:.72rem; line-height:1.2; }
 .group[data-alignment="right"] .time { text-align:right; }
 .text { white-space:pre-wrap; }

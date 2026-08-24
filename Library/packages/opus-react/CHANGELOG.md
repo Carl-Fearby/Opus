@@ -4,6 +4,16 @@ All notable public-package changes are recorded here. Opus follows [Semantic Ver
 
 ## Unreleased
 
+## 0.6.24
+
+### Fixed
+
+- Chat Bubble now chooses a readable dark or light foreground automatically for custom hex background colours.
+
+### Changed
+
+- Chat Bubble message groups now use consistent intrinsic bubble widths on both alignments and theme-derived default bubble colours.
+
 ## 0.6.23
 
 ### Changed

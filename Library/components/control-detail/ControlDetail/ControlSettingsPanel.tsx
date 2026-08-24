@@ -23,6 +23,7 @@ import {
   DashboardPreviewLayoutSetting,
   DashboardWidthSetting,
   SettingInput,
+  SettingSegmented,
   SettingSelect,
   SettingTextarea,
   SettingToggle,
@@ -5719,17 +5720,87 @@ export function ControlSettingsPanel({
       const s = settings as ControlSettingsBySlug["chat-bubble"];
       return (
         <div className={shellStyles.settingsGrid}>
+          <SettingSegmented
+            label="Alignment"
+            value={s.alignment}
+            onChange={(alignment) => onChange({ ...s, alignment: alignment as typeof s.alignment } as ControlSettings)}
+            options={[{ label: "Left", value: "left" }, { label: "Right", value: "right" }]}
+          />
+          <SettingInput
+            label="Avatar name"
+            value={s.avatarName}
+            onChange={(avatarName) => onChange({ ...s, avatarName } as ControlSettings)}
+          />
+          <SettingToggle
+            label="Use profile image"
+            checked={s.showAvatarImage}
+            onChange={(showAvatarImage) => onChange({ ...s, showAvatarImage } as ControlSettings)}
+          />
+          <div style={{ visibility: s.showAvatarImage ? "visible" : "hidden" }}>
+            <SettingInput
+              label="Avatar image URL"
+              placeholder="https://example.com/avatar.jpg"
+              value={s.avatarImage}
+              onChange={(avatarImage) => onChange({ ...s, avatarImage } as ControlSettings)}
+            />
+          </div>
           <SettingToggle
             label="Enable Show More"
             checked={s.showMore}
             onChange={(showMore) => onChange({ ...s, showMore } as ControlSettings)}
           />
           <SettingInput
-            label="Right bubble background"
-            type="color"
-            value={s.background || "#4f46e5"}
-            onChange={(background) => onChange({ ...s, background } as ControlSettings)}
+            label="Show More lines"
+            type="number"
+            value={String(s.maxLines)}
+            onChange={(maxLines) => onChange({ ...s, maxLines: Math.max(1, Number(maxLines) || 1) } as ControlSettings)}
           />
+          <SettingToggle
+            label="Custom bubble colour"
+            checked={Boolean(s.background)}
+            onChange={(enabled) => onChange({ ...s, background: enabled ? "#3A2B68" : "" } as ControlSettings)}
+          />
+          <div style={{ visibility: s.background ? "visible" : "hidden" }}>
+            <SettingInput
+              label="Bubble background"
+              type="color"
+              value={s.background}
+              onChange={(background) => onChange({ ...s, background } as ControlSettings)}
+            />
+          </div>
+          <SettingInput
+            label="Final message time"
+            value={s.time}
+            onChange={(time) => onChange({ ...s, time } as ControlSettings)}
+          />
+          <div className={shellStyles.settingsFullWidth}>
+            <SettingTextarea
+              label="First message"
+              value={s.firstMessage}
+              onChange={(firstMessage) => onChange({ ...s, firstMessage } as ControlSettings)}
+            />
+          </div>
+          <div className={shellStyles.settingsFullWidth}>
+            <SettingTextarea
+              label="Between message"
+              value={s.betweenMessage}
+              onChange={(betweenMessage) => onChange({ ...s, betweenMessage } as ControlSettings)}
+            />
+          </div>
+          <div className={shellStyles.settingsFullWidth}>
+            <SettingTextarea
+              label="Code message"
+              value={s.codeMessage}
+              onChange={(codeMessage) => onChange({ ...s, codeMessage } as ControlSettings)}
+            />
+          </div>
+          <div className={shellStyles.settingsFullWidth}>
+            <SettingTextarea
+              label="Final message"
+              value={s.content}
+              onChange={(content) => onChange({ ...s, content } as ControlSettings)}
+            />
+          </div>
         </div>
       );
     }

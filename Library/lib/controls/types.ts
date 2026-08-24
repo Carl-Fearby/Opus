@@ -1093,8 +1093,17 @@ export type ShowMoreSettings = {
 
 export type ChatBubbleSettings = {
   alignment: "left" | "right";
+  avatarImage: string;
+  avatarName: string;
   background: string;
+  betweenMessage: string;
+  codeMessage: string;
+  content: string;
+  firstMessage: string;
+  maxLines: number;
+  showAvatarImage: boolean;
   showMore: boolean;
+  time: string;
 };
 
 export type EmptyStateSettings = {

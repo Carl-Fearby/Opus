@@ -22,8 +22,8 @@
 .inner {
   display: flow-root;
   color: var(--opus-text);
-  font-size: 0.86rem;
-  line-height: 1.55;
+  font-size: inherit;
+  line-height: inherit;
   white-space: pre-wrap;
 }
 

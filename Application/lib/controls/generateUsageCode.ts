@@ -4086,15 +4086,29 @@ ${formatJsxParagraphContent(s.content)}
 </ShowMore>`;
     }
     case "chat-bubble": {
+      const s = settings as ControlSettingsBySlug["chat-bubble"];
+      const alignment = s.alignment ?? "right";
+      const avatarName = s.avatarName || "You";
+      const avatarImage = s.showAvatarImage ? s.avatarImage?.trim() : undefined;
+      const content = s.content || "Write an editable reply here.";
+      const firstMessage = s.firstMessage || "Here is a grouped chat message.";
+      const betweenMessage = s.betweenMessage || "This editable middle message lets you test adjacent bubble widths.";
+      const codeMessage = s.codeMessage || "```ts\\nconst answer = 42;\\n```";
+      const time = s.time || "10:44";
+      const replyProps = [
+        formatStringProp("alignment", alignment),
+        formatExpressionProp("avatar", `{ name: ${quote(avatarName)}${avatarImage ? `, src: ${quote(avatarImage)}` : ""} }`),
+        ...(s.background ? [formatStringProp("background", s.background)] : []),
+        ...(s.showMore ? [formatBoolProp("showMore", true), formatNumberProp("showMoreMaxLines", s.maxLines || 3)] : []),
+      ];
       return `${importLine(["ChatBubble"])}
 
-<ChatBubble
-  alignment="left"
-  avatar={{ name: "Opus assistant" }}
-  showMore
+<ChatBubble${formatOpeningProps(replyProps)}
   messages={[
-    { content: "Here is a grouped chat message.", time: "10:42" },
-    { content: "\`\`\`ts\\nconst answer = 42;\\n\`\`\`", time: "10:43" },
+    { content: ${quote(firstMessage)} },
+    { content: ${quote(betweenMessage)} },
+    { content: ${quote(codeMessage)} },
+    { content: ${quote(content)}, time: ${quote(time)} },
   ]}
 />`;
     }

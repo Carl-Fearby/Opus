@@ -36,4 +36,11 @@ describe("ChatBubble", () => {
     expect(screen.getByText("const", { exact: true }).tagName).toBe("SPAN");
     expect(screen.getByText("42", { exact: true })).toBeInTheDocument();
   });
+
+  it("uses a contrasting foreground for a custom background", () => {
+    render(<ChatBubble background="#f7e8a4" messages={[{ content: "Readable" }]} />);
+
+    expect(screen.getByRole("region")).toHaveStyle("--chat-bubble-foreground: #070912");
+    expect(screen.getByRole("region")).toHaveStyle("--opus-text: #070912");
+  });
 });

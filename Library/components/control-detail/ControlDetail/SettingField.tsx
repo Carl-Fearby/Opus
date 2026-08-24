@@ -4,6 +4,7 @@ import {
   ColorField,
   NumberField,
   SelectField,
+  SegmentedControlField,
   SwitchField,
   TextAreaField,
   TextField,
@@ -128,6 +129,24 @@ export function SettingSelect({ label, value, onChange, options }: SettingSelect
         const match = options.find((option) => option.label === event.target.value);
         onChange(match?.value ?? event.target.value);
       }}
+    />
+  );
+}
+
+export function SettingSegmented({
+  label,
+  value,
+  onChange,
+  options,
+}: SettingSelectProps) {
+  return (
+    <SegmentedControlField
+      {...panelFieldProps}
+      id={settingFieldId(label)}
+      label={label}
+      options={options.map((option) => option.label)}
+      value={options.find((option) => option.value === value)?.label ?? options[0]?.label ?? ""}
+      onChange={(labelValue) => onChange(options.find((option) => option.label === labelValue)?.value ?? labelValue)}
     />
   );
 }

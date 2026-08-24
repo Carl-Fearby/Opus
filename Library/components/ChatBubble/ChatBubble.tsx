@@ -1,6 +1,6 @@
 "use client";
 
-import type { CSSProperties, ReactNode } from "react";
+import { useLayoutEffect, useRef, useState, type CSSProperties, type ReactNode } from "react";
 import { Avatar } from "@/components/Avatar";
 import { ShowMore } from "@/components/ShowMore";
 import styles from "./ChatBubble.module.css";
@@ -42,6 +42,20 @@ const KEYWORDS = new Set([
   "export", "false", "for", "from", "function", "if", "import", "in", "interface", "let", "new", "null",
   "return", "throw", "true", "try", "type", "undefined", "while",
 ]);
+
+function contrastingTextColour(background?: string) {
+  const hex = background?.trim().replace(/^#/, "");
+  if (!hex || !/^(?:[\da-f]{3}|[\da-f]{6})$/i.test(hex)) return undefined;
+
+  const normalized = hex.length === 3 ? hex.split("").map((part) => `${part}${part}`).join("") : hex;
+  const channels = [0, 2, 4].map((start) => Number.parseInt(normalized.slice(start, start + 2), 16) / 255);
+  const luminance = channels.reduce(
+    (total, channel, index) => total + [0.2126, 0.7152, 0.0722][index] * (channel <= 0.04045 ? channel / 12.92 : ((channel + 0.055) / 1.055) ** 2),
+    0,
+  );
+
+  return luminance > 0.179 ? "#070912" : "#ffffff";
+}
 
 function tokenKind(value: string): CodeTokenKind | undefined {
   if (value.startsWith("//") || value.startsWith("#")) return "comment";
@@ -96,20 +110,62 @@ export function ChatBubble({
   showMoreLabel,
   showMoreMaxLines = 5,
 }: ChatBubbleProps) {
+  const bubbleRefs = useRef(new Map<number, HTMLDivElement>());
+  const [bubbleWidths, setBubbleWidths] = useState<number[]>([]);
+  const foreground = contrastingTextColour(background);
+  const groupStyle = background
+    ? ({
+        "--chat-bubble-background": background,
+        ...(foreground
+          ? {
+              "--chat-bubble-foreground": foreground,
+              "--opus-text": foreground,
+            }
+          : {}),
+      } as CSSProperties)
+    : undefined;
+
+  useLayoutEffect(() => {
+    const measure = () => {
+      const widths = messages.map((_, index) => Math.round(bubbleRefs.current.get(index)?.getBoundingClientRect().width ?? 0));
+      setBubbleWidths((current) => current.length === widths.length && current.every((width, index) => width === widths[index]) ? current : widths);
+    };
+
+    measure();
+    if (typeof ResizeObserver === "undefined") return;
+    const observer = new ResizeObserver(measure);
+    bubbleRefs.current.forEach((bubble) => observer.observe(bubble));
+    return () => observer.disconnect();
+  }, [messages]);
+
   return (
     <section
       aria-label={avatar ? `Messages from ${avatar.name}` : "Chat messages"}
       className={[styles.group, className].filter(Boolean).join(" ")}
       data-alignment={alignment}
-      style={background ? ({ "--chat-bubble-background": background } as CSSProperties) : undefined}
+      style={groupStyle}
     >
       {avatar ? <Avatar name={avatar.name} size="md" src={avatar.src} /> : null}
       <div className={styles.messages}>
         {messages.map((message, index) => {
           const content = <MessageContent content={message.content} />;
+          const currentWidth = bubbleWidths[index] ?? 0;
+          const widerAbove = Math.max(0, currentWidth - (bubbleWidths[index - 1] ?? 0));
+          const widerBelow = Math.max(0, currentWidth - (bubbleWidths[index + 1] ?? 0));
+          const cornerStyle = {
+            "--chat-bubble-corner-above": `${index > 0 ? Math.min(16, 6 + widerAbove / 2) : 0}px`,
+            "--chat-bubble-corner-below": `${index < messages.length - 1 ? Math.min(16, 6 + widerBelow / 2) : 0}px`,
+          } as CSSProperties;
           return (
-            <article className={styles.message} data-position={messages.length === 1 ? "only" : index === 0 ? "first" : index === messages.length - 1 ? "last" : "middle"} key={message.id ?? index}>
-              <div className={styles.bubble}>
+            <article
+              className={styles.message}
+              data-position={messages.length === 1 ? "only" : index === 0 ? "first" : index === messages.length - 1 ? "last" : "middle"}
+              data-adjacent-above={index > 0 || undefined}
+              data-adjacent-below={index < messages.length - 1 || undefined}
+              key={message.id ?? index}
+              style={cornerStyle}
+            >
+              <div ref={(element) => { if (element) bubbleRefs.current.set(index, element); else bubbleRefs.current.delete(index); }} className={styles.bubble}>
                 {showMore ? <ShowMore maxLines={showMoreMaxLines} showLessLabel={showLessLabel} showMoreLabel={showMoreLabel}>{content}</ShowMore> : content}
               </div>
               {index === messages.length - 1 && message.time ? <time className={styles.time}>{message.time}</time> : null}
