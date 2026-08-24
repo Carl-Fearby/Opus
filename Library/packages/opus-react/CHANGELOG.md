@@ -4,6 +4,16 @@ All notable public-package changes are recorded here. Opus follows [Semantic Ver
 
 ## Unreleased
 
+## 0.6.31
+
+### Added
+
+- Syntax Highlighter now includes a compact copy-code action.
+
+### Changed
+
+- Copy Button accepts `className` and `size` for composed integrations.
+
 ## 0.6.30
 
 ### Changed

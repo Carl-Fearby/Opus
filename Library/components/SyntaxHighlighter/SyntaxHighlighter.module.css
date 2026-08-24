@@ -1,5 +1,6 @@
-.root { position:relative; margin:0; padding:23px 12px 11px; overflow:auto; border:1px solid color-mix(in srgb, #ffffff 12%, transparent); border-radius:9px; background:color-mix(in srgb, #090b12 94%, var(--opus-accent) 6%); color:#e8ebf3; font:500 .8rem/1.55 ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; white-space:pre; tab-size:2; }
-.language { position:absolute; top:7px; right:9px; color:#aab3c4; font:600 .64rem/1 ui-monospace, monospace; text-transform:uppercase; letter-spacing:.06em; }
+.root { position:relative; margin:0; padding:40px 12px 11px; overflow:auto; border:1px solid color-mix(in srgb, #ffffff 12%, transparent); border-radius:9px; background:color-mix(in srgb, #090b12 94%, var(--opus-accent) 6%); color:#e8ebf3; font:500 .8rem/1.55 ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; white-space:pre; tab-size:2; }
+.language { position:absolute; top:12px; right:36px; color:#aab3c4; font:600 .64rem/1 ui-monospace, monospace; text-transform:uppercase; letter-spacing:.06em; }
+.copy { position:absolute; top:4px; right:4px; }
 .comment { color:#8b96a9; }.keyword { color:#bd93f9; }.number { color:#f8c56b; }.string { color:#a8dc87; }
 :global([data-preview-root][data-theme="light"]) .root,
 :global([data-theme="light"]) .root { border-color:color-mix(in srgb, var(--opus-border) 82%, var(--opus-accent)); background:color-mix(in srgb, var(--opus-panel) 88%, var(--opus-accent) 12%); color:#1c2131; }

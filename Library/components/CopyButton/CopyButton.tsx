@@ -3,13 +3,16 @@
 import { useCallback, useEffect, useState, type ReactNode } from "react";
 import { Button } from "@/components/fields/Button";
 import type { ButtonVariant } from "@/components/fields/Button";
+import type { InputControlSize } from "@/components/fields/types";
 import styles from "./CopyButton.module.css";
 
 type CopyButtonProps = {
   children?: ReactNode;
+  className?: string;
   copiedLabel?: string;
   label?: string;
   resetMs?: number;
+  size?: InputControlSize;
   value: string;
   variant?: ButtonVariant;
   onCopied?: () => void;
@@ -37,9 +40,11 @@ async function writeClipboard(value: string) {
 
 export function CopyButton({
   children,
+  className,
   copiedLabel = "Copied",
   label = "Copy",
   resetMs = 1600,
+  size,
   value,
   variant = "secondary",
   onCopied,
@@ -65,8 +70,8 @@ export function CopyButton({
   }, [onCopied, value]);
 
   return (
-    <span className={styles.wrap}>
-      <Button onClick={handleCopy} type="button" variant={variant}>
+    <span className={[styles.wrap, className].filter(Boolean).join(" ")}>
+      <Button aria-label={copied ? copiedLabel : label} onClick={handleCopy} size={size} type="button" variant={variant}>
         {children ?? (copied ? copiedLabel : label)}
       </Button>
     </span>

@@ -1,4 +1,6 @@
 import type { ReactNode } from "react";
+import { CopyButton } from "@/components/CopyButton";
+import { Icon } from "@/components/Icon";
 import styles from "./SyntaxHighlighter.module.css";
 
 export type SyntaxHighlighterProps = {
@@ -34,6 +36,9 @@ export function SyntaxHighlighter({ className, code, language }: SyntaxHighlight
   return (
     <pre className={[styles.root, className].filter(Boolean).join(" ")} data-language={language || undefined}>
       {language ? <span className={styles.language}>{language}</span> : null}
+      <CopyButton className={styles.copy} label="Copy code" copiedLabel="Copied" size="sm" value={code} variant="ghost">
+        <Icon name="copy" size="sm" />
+      </CopyButton>
       <HighlightedCode code={code} />
     </pre>
   );
