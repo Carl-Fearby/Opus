@@ -42,6 +42,18 @@
   color: #ffffff;
 }
 
+.tertiary {
+  border-color: color-mix(in srgb, var(--opus-border) 84%, var(--opus-accent));
+  background: color-mix(in srgb, var(--opus-panel) 88%, var(--opus-accent) 12%);
+  color: var(--opus-text);
+}
+
+.tertiary:hover {
+  border-color: var(--opus-accent);
+  background: var(--opus-accent-soft);
+  color: var(--opus-accent);
+}
+
 .success {
   border-color: #198754;
   background: #198754;

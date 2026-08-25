@@ -175,16 +175,14 @@ export function UsagePreview({
 
     const reportAction = (event: Event) => {
       const label = getActionLabel(event);
-      requestAnimationFrame(() => {
-        if (label) setLastAction(`Last action: ${label}`);
-        const formOutput = collectPreviewOutput(previewElement);
-        setDataOutput(formOutput ?? (label ? { action: label } : null));
-      });
+      if (label) setLastAction(`Last action: ${label}`);
+      const formOutput = collectPreviewOutput(previewElement);
+      setDataOutput(formOutput ?? (label ? { action: label } : null));
     };
 
-    previewElement.addEventListener("change", reportAction, true);
-    previewElement.addEventListener("click", reportAction, true);
-    previewElement.addEventListener("keydown", reportAction, true);
+    previewElement.addEventListener("change", reportAction);
+    previewElement.addEventListener("click", reportAction);
+    previewElement.addEventListener("keydown", reportAction);
     previewElement.dataset.hydrated = "true";
     const frame = requestAnimationFrame(() => {
       setDataOutput(collectPreviewOutput(previewElement));
@@ -192,9 +190,9 @@ export function UsagePreview({
     return () => {
       cancelAnimationFrame(frame);
       delete previewElement.dataset.hydrated;
-      previewElement.removeEventListener("change", reportAction, true);
-      previewElement.removeEventListener("click", reportAction, true);
-      previewElement.removeEventListener("keydown", reportAction, true);
+      previewElement.removeEventListener("change", reportAction);
+      previewElement.removeEventListener("click", reportAction);
+      previewElement.removeEventListener("keydown", reportAction);
     };
   }, [showActionStatus]);
 

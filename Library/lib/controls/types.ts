@@ -1260,7 +1260,7 @@ export type DesktopDockSettings = {
   autoHide: boolean;
   position: "bottom" | "left" | "right";
   resizable: boolean;
-  size: "small" | "medium" | "large";
+  size: number;
 };
 
 export type DesktopEnvironmentSettings = {
@@ -1335,7 +1335,7 @@ export type ContainerSettings = {
 
 export type SpacerSettings = {
   axis: "x" | "y" | "both";
-  size: number;
+  size: number | "small" | "medium" | "large";
   flex: boolean;
 };
 

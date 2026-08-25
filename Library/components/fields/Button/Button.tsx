@@ -6,6 +6,7 @@ import styles from "./Button.module.css";
 export type ButtonVariant =
   | "primary"
   | "secondary"
+  | "tertiary"
   | "success"
   | "danger"
   | "warning"

@@ -73,7 +73,7 @@ export function computeInteriorFlameLayout(
 
   const bottomY = floorY + VIDEO_FLOOR_LIFT;
   const topY = rimY + 0.03;
-  let height = (topY - bottomY) * heightScale;
+  const height = (topY - bottomY) * heightScale;
   let width = height * (540 / 304) * widthScale;
 
   if (width > maxWidth) {

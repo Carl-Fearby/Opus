@@ -15,6 +15,7 @@ const delegatedComponentActions = new Map([
   ["CrmWorkspaceLab/CrmWorkspaceLab.tsx:RowOpenButton", "RowOpenButton requires and invokes onOpen."],
   ["MoreActionsMenu/MoreActionsMenu.tsx:Button", "Button is cloned by DropdownMenu and receives its trigger handler."],
   ["fields/RichTextField/RichTextField.tsx:ColorButton", "ColorButton dispatches an editor command that reaches onChange."],
+  ["SyntaxHighlighter/SyntaxHighlighter.tsx:CopyButton", "CopyButton owns the clipboard action."],
 ]);
 
 function collectFiles(directory, output = []) {

@@ -43,7 +43,7 @@ export function compilePlaygroundCode(code: string): ComponentType {
   const scopeKeys = Object.keys(scope);
   const scopeValues = Object.values(scope);
   const exports: { default?: ComponentType } = {};
-  const module = { exports };
+  const commonJsModule = { exports };
 
   const runner = new Function(
     "exports",
@@ -52,7 +52,7 @@ export function compilePlaygroundCode(code: string): ComponentType {
     `${transformed.code}\n;return module.exports.default ?? exports.default ?? module.exports.Example ?? exports.Example;`,
   );
 
-  const component = runner(exports, module, ...scopeValues) as ComponentType | undefined;
+  const component = runner(exports, commonJsModule, ...scopeValues) as ComponentType | undefined;
   if (!component) {
     throw new Error("Playground code must export default function Example().");
   }

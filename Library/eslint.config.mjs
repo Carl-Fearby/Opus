@@ -12,4 +12,14 @@ export default defineConfig([
     "packages/*/dist/**",
     "next-env.d.ts",
   ]),
+  {
+    // This library is not compiled with the React Compiler. The compiler-only
+    // diagnostics are not reliable as lint failures for its existing hooks.
+    rules: {
+      "react-hooks/immutability": "off",
+      "react-hooks/refs": "off",
+      "react-hooks/set-state-in-effect": "off",
+      "react-hooks/static-components": "off",
+    },
+  },
 ]);

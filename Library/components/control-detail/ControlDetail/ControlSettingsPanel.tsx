@@ -7020,7 +7020,7 @@ export function ControlSettingsPanel({
             ]}
             onChange={(axis) => onChange({ ...s, axis } as ControlSettings)}
           />
-          <SettingSelect label="Size" value={s.size} options={[{ label: "Small (8px)", value: "small" }, { label: "Medium (16px)", value: "medium" }, { label: "Large (24px)", value: "large" }]} onChange={(size) => onChange({ ...s, size: size as typeof s.size } as ControlSettings)} />
+          <SettingSelect label="Size" value={typeof s.size === "string" ? s.size : "medium"} options={[{ label: "Small (8px)", value: "small" }, { label: "Medium (16px)", value: "medium" }, { label: "Large (24px)", value: "large" }]} onChange={(size) => onChange({ ...s, size: size as typeof s.size } as ControlSettings)} />
           <SettingToggle
             label="Flex grow"
             checked={s.flex}
