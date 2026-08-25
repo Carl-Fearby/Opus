@@ -33,6 +33,7 @@ const OVERVIEW_CATEGORIES: ComponentCategory[] = [
   "content",
   "dashboard",
   "forms",
+  "games",
   "graphs",
   "labs",
   "overlays",
