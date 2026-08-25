@@ -42,7 +42,6 @@ export function Avatar({
       title={name}
     >
       {showImage ? (
-        // eslint-disable-next-line @next/next/no-img-element
         <img
           alt=""
           className={styles.image}

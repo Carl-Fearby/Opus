@@ -768,7 +768,7 @@ export function DataGrid({
     );
   };
 
-  const renderDisplayRow = (entry: DataGridDisplayRow, index: number) => {
+  const renderDisplayRow = (entry: DataGridDisplayRow) => {
     if (entry.kind === "group") {
       return (
         <tr className={styles.groupRow} key={entry.id}>
@@ -885,7 +885,7 @@ export function DataGrid({
                   <td colSpan={colSpan} style={{ height: virtualWindow.paddingTop, padding: 0 }} />
                 </tr>
               ) : null}
-              {virtualWindow.items.map((entry, index) => renderDisplayRow(entry, virtualWindow.offset + index))}
+              {virtualWindow.items.map((entry) => renderDisplayRow(entry))}
               {virtualized && virtualWindow.paddingBottom > 0 ? (
                 <tr aria-hidden="true" className={styles.spacerRow}>
                   <td colSpan={colSpan} style={{ height: virtualWindow.paddingBottom, padding: 0 }} />

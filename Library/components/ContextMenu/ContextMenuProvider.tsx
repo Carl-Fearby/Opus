@@ -372,7 +372,7 @@ export function ContextMenuTarget({
 }: ContextMenuTargetProps) {
   const targetId = useId();
   const targetRef = useRef<HTMLDivElement>(null);
-  const { activeTargetId, isOpen, menuId, openFromTarget, registerTarget } = useContextMenu();
+  const { openFromTarget, registerTarget } = useContextMenu();
 
   useEffect(
     () =>
@@ -400,8 +400,6 @@ export function ContextMenuTarget({
       }
     }
   };
-
-  const targetOpen = isOpen && activeTargetId === targetId;
 
   return (
     <div

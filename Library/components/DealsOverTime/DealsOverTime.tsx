@@ -210,7 +210,7 @@ function DealsOverTimeChart({
       const y = plotBottom - (datum.value / maxValue) * plotHeight;
       return { datum, x, y };
     });
-  }, [chartWidth, data, maxValue, plotBottom, plotHeight, plotRight]);
+  }, [data, maxValue, plotBottom, plotHeight, plotRight]);
 
   const renderPoints = useMemo(() => {
     if (!points.length) {

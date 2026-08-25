@@ -247,16 +247,6 @@ export function xForEdgeBarIndex(plot: PlotArea, index: number, count: number, b
   return left + index * ((right - left) / (count - 1));
 }
 
-function xForCategoryIndex(plot: PlotArea, index: number, count: number) {
-  const left = plotDataLeft(plot);
-  const right = plotDataRight(plot);
-  if (count <= 1) {
-    return (left + right) / 2;
-  }
-
-  return left + index * ((right - left) / (count - 1));
-}
-
 function xForSeriesIndex(plot: PlotArea, index: number, count: number) {
   const { left, right } = getSeriesPlotBounds(plot);
   if (count <= 1) {
@@ -1201,7 +1191,7 @@ function Sankey({ plot, styles }: Pick<SpecializedChartProps, "plot" | "styles">
   );
 }
 
-function StreamGraph({ plot, series, showValues, styles, yMax, yMin }: SpecializedChartProps) {
+function StreamGraph({ plot, series, showValues, styles, yMin }: SpecializedChartProps) {
   const labels = series[0]?.values.length ?? 0;
   const totals = Array.from({ length: labels }, (_, index) =>
     series.reduce((sum, item) => sum + item.values[index], 0),

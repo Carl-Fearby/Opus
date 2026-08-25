@@ -37,11 +37,6 @@ function parseCommitLine(line) {
   };
 }
 
-function parseVersion(version) {
-  const [major, minor, patch] = version.split(".").map(Number);
-  return { major, minor, patch };
-}
-
 function nextVersion(current, summary) {
   let { major, minor, patch } = current;
   const lower = summary.toLowerCase();

@@ -120,7 +120,7 @@ export class JetSetWillyEngine {
     this.player = { x: 160, y: 104, tile: 436, align: 4, frame: 0, direction: 0, moving: false, airborne: 0, jump: 0 };
     this.enterRoom(0x21, 160, 104, 436);
     this.screen = "game";
-    this.restartMusic(JSW_GAME_SCORE);
+    this.restartMusic();
   }
 
   setMuted(muted: boolean) {
@@ -286,10 +286,10 @@ export class JetSetWillyEngine {
     this.player = { x: 160, y: 104, tile: 436, align: 4, frame: 0, direction: 0, moving: false, airborne: 0, jump: 0 };
     this.enterRoom(0x21, 160, 104, 436);
     this.screen = "game";
-    this.restartMusic(JSW_GAME_SCORE);
+    this.restartMusic();
   }
 
-  private restartMusic(_score: readonly number[]) {
+  private restartMusic() {
     this.musicPosition = 0;
     this.musicClock = 0;
     this.musicDelta = 0;

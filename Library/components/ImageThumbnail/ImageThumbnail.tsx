@@ -1,6 +1,5 @@
 "use client";
 
-/* eslint-disable @next/next/no-img-element */
 
 import type { GalleryImage } from "@/components/fields/types";
 import { Lightbox } from "@/components/Lightbox";

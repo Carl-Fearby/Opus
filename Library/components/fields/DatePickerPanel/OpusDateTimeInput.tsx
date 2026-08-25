@@ -47,7 +47,6 @@ const minuteOptions = Array.from({ length: 60 }, (_, minute) => String(minute).p
 
 export function OpusDateTimeInput({
   "aria-describedby": ariaDescribedBy,
-  "aria-invalid": ariaInvalid,
   className,
   disabled,
   id,
@@ -271,7 +270,6 @@ export function OpusDateTimeInput({
         aria-describedby={ariaDescribedBy}
         aria-expanded={open}
         aria-haspopup="dialog"
-        aria-invalid={ariaInvalid}
         aria-label={label}
         className={[triggerStyles.control, className].filter(Boolean).join(" ")}
         disabled={disabled}

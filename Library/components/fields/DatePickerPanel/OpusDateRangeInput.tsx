@@ -40,7 +40,6 @@ export type OpusDateRangeInputProps = {
 
 export function OpusDateRangeInput({
   "aria-describedby": ariaDescribedBy,
-  "aria-invalid": ariaInvalid,
   className,
   disabled,
   id,
@@ -159,7 +158,6 @@ export function OpusDateRangeInput({
         aria-describedby={ariaDescribedBy}
         aria-expanded={open}
         aria-haspopup="dialog"
-        aria-invalid={ariaInvalid}
         aria-label={label}
         className={[styles.control, className].filter(Boolean).join(" ")}
         disabled={disabled}

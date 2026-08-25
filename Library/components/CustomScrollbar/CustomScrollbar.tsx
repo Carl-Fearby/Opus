@@ -1,7 +1,5 @@
 "use client";
 
-/* eslint-disable react-hooks/refs -- viewport refs are read exclusively inside event callbacks and layout effects. */
-
 import {
   useCallback,
   useEffect,
@@ -137,10 +135,10 @@ export function CustomScrollbar({
     activityTimer.current = window.setTimeout(() => setActive(false), 850);
   }, []);
 
-  const handleScroll = () => {
+  const handleScroll = useCallback(() => {
     measure();
     showTemporarily();
-  };
+  }, [measure, showTemporarily]);
 
   useLayoutEffect(() => {
     if (!viewportSelector) return;
@@ -186,7 +184,7 @@ export function CustomScrollbar({
       viewport?.removeEventListener("scroll", handleScroll);
       if (viewportRef.current === viewport) viewportRef.current = null;
     };
-  }, [label, measure, viewportId, viewportSelector]);
+  }, [handleScroll, label, measure, viewportId, viewportSelector]);
 
   useLayoutEffect(() => () => {
     if (activityTimer.current !== null) window.clearTimeout(activityTimer.current);

@@ -633,7 +633,10 @@ function DocumentsLayout({ tree, onAction }: { tree: DocNode[]; onAction: (actio
   const [query, setQuery] = useState("");
   const [view, setView] = useState<DocumentView>("grid");
 
-  const breadcrumb = folderId ? buildBreadcrumb(tree, folderId) ?? [] : [];
+  const breadcrumb = useMemo(
+    () => (folderId ? buildBreadcrumb(tree, folderId) ?? [] : []),
+    [folderId, tree],
+  );
   const current = folderId ? findNode(tree, folderId) : null;
   const visible = useMemo(() => {
     const children = current?.kind === "folder" ? current.children ?? [] : tree;

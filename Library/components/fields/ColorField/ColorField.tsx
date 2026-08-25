@@ -159,7 +159,6 @@ export function ColorField({
           aria-describedby={ariaProps["aria-describedby"]}
           aria-expanded={open}
           aria-haspopup="dialog"
-          aria-invalid={error ? "true" : undefined}
           aria-label={label}
           className={[
             styles.picker,

@@ -3,6 +3,7 @@
 import {
   cloneElement,
   isValidElement,
+  useCallback,
   useEffect,
   useId,
   useLayoutEffect,
@@ -139,7 +140,7 @@ export function EmojiPicker({
     [hasRecentEmojis],
   );
 
-  const setVisible = (nextOpen: boolean) => {
+  const setVisible = useCallback((nextOpen: boolean) => {
     if (!controlled) {
       setInternalOpen(nextOpen);
     }
@@ -149,7 +150,7 @@ export function EmojiPicker({
     if (!nextOpen) {
       setQuery("");
     }
-  };
+  }, [controlled, onOpenChange]);
 
   const openPicker = () => {
     const nextRecentEmojis = readRecentEmojis();
@@ -252,7 +253,7 @@ export function EmojiPicker({
       document.removeEventListener("pointerdown", handlePointerDown);
       document.removeEventListener("keydown", handleKeyDown);
     };
-  }, [closeOnEscape, closeOnOutside, visible]);
+  }, [closeOnEscape, closeOnOutside, setVisible, visible]);
 
   const panelStyle: CSSProperties = portalStyle
     ? {

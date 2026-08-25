@@ -114,6 +114,7 @@ const changedCode=originalCode
   .replace('      <TextField', '      {error ? <Alert status="error">{error}</Alert> : null}\n      {isSaving ? <Spinner label="Saving customer changes" /> : null}\n\n      <TextField')
   .replace('      <div aria-live="polite">', '      <p role="status">\n        Showing {filteredCustomers.length} of {customers.length} customers\n      </p>\n\n      <div aria-busy={isSaving} aria-live="polite">')
   .replace('            <Button onClick={() => archiveCustomer(customer.id)}>', '            <Button\n              disabled={isSaving}\n              variant="danger"\n              onClick={() => archiveCustomer(customer.id)}\n            >');
+void changedCode;
 export function DiffPreview() {
   return <DiffViewer before={brokenReactCode} after={correctedReactCode} beforeLabel="Original code" afterLabel="Corrected code" />;
 }

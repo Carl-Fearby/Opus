@@ -50,7 +50,6 @@ export function CompanyIdentityCard({
         <div className={styles.avatarWrap} data-has-logo={photoSrc ? "true" : "false"}>
           {photoSrc ? (
             <div className={styles.logoFrame}>
-              {/* eslint-disable-next-line @next/next/no-img-element */}
               <img alt={`${name} logo`} className={styles.logo} src={photoSrc} />
             </div>
           ) : (

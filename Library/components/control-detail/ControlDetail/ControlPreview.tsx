@@ -268,7 +268,6 @@ import { demoVideoTracks } from "@/lib/controls/videoDemoData";
 import { testLayoutMenu } from "@/lib/controls/testLayoutDemoData";
 import { demoTopPerformingUsers } from "@/lib/controls/topPerformingUsersDemoData";
 import {
-  defaultUserProfilePhotoSrc,
   parseUserProfileMenuItems,
 } from "@/lib/controls/userProfileDemoData";
 import { demoUpcomingTasks } from "@/lib/controls/upcomingTasksDemoData";

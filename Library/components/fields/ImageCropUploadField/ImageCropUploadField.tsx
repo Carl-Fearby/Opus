@@ -8,6 +8,7 @@ import {
   useCallback,
   useEffect,
   useId,
+  useMemo,
   useRef,
   useState,
   type ChangeEventHandler,
@@ -152,14 +153,14 @@ export function ImageCropUploadField({
   });
   const isRect = shape === "rect";
   const resolvedFit: ImageCropFit = fit ?? (isRect ? "contain" : "cover");
-  const viewport = {
-    width: viewportWidth ?? viewportSize,
-    height: viewportHeight ?? viewportSize,
-  };
-  const output = {
-    width: outputWidth ?? outputSize,
-    height: outputHeight ?? outputSize,
-  };
+  const viewport = useMemo(
+    () => ({ width: viewportWidth ?? viewportSize, height: viewportHeight ?? viewportSize }),
+    [viewportHeight, viewportSize, viewportWidth],
+  );
+  const output = useMemo(
+    () => ({ width: outputWidth ?? outputSize, height: outputHeight ?? outputSize }),
+    [outputHeight, outputSize, outputWidth],
+  );
   const [isDraggingFile, setIsDraggingFile] = useState(false);
   const [isPointerDragging, setIsPointerDragging] = useState(false);
   const [isCropping, setIsCropping] = useState(false);

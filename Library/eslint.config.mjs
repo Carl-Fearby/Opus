@@ -22,4 +22,12 @@ export default defineConfig([
       "react-hooks/static-components": "off",
     },
   },
+  {
+    // These reusable UI components accept arbitrary, including blob and data,
+    // image URLs. Next Image cannot safely optimize those sources.
+    files: ["components/**/*.tsx"],
+    rules: {
+      "@next/next/no-img-element": "off",
+    },
+  },
 ]);

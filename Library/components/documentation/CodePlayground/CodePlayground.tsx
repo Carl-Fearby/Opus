@@ -3,7 +3,6 @@
 import dynamic from "next/dynamic";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { Splitter, type SplitterOrientation } from "opus-react";
-import type { Theme } from "opus-react";
 import { DocumentationTopBar } from "@/components/documentation/DocumentationTopBar";
 import { CatalogIcon } from "@/components/CatalogIcon";
 import { useComponentsTheme } from "@/components/development/ComponentsThemeProvider";

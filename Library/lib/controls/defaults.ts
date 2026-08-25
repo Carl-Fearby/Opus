@@ -90,6 +90,7 @@ You can also use the \`typescript\` compiler to get type checking and auto-compl
 tsc lunar_distance.ts
 \`\`\`
 This will compile the \`lunar_distance.ts\` file and produce a \`lunar_distance.js\` file that you can run in your browser or Node.js environment.`;
+void lunarDistanceMarkdown;
 
 const lunarDistancePythonMarkdown = `The distance between the Earth and the Moon varies due to the elliptical shape of the Moon's orbit around our planet. This variation is known as the "lunar distance" or "lunar mean distance." Here's how to calculate it:
 

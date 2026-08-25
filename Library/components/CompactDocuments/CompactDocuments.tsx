@@ -74,7 +74,10 @@ export function CompactDocuments({
   const [folderId, setFolderId] = useState<string | null>(null);
   const [query, setQuery] = useState("");
   const [view, setView] = useState<CompactDocumentView>(defaultView);
-  const breadcrumb = folderId ? buildBreadcrumb(documents, folderId) ?? [] : [];
+  const breadcrumb = useMemo(
+    () => (folderId ? buildBreadcrumb(documents, folderId) ?? [] : []),
+    [documents, folderId],
+  );
   const current = folderId ? findNode(documents, folderId) : null;
   const visible = useMemo(() => {
     const nodes = current?.kind === "folder" ? current.children ?? [] : documents;

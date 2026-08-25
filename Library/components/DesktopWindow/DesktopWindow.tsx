@@ -149,7 +149,7 @@ export function DesktopWindow({
     return () => {
       if (timer) clearTimeout(timer);
     };
-  }, [open]);
+  }, [open, present]);
 
   useEffect(() => {
     let timer: ReturnType<typeof setTimeout> | undefined;
@@ -166,7 +166,7 @@ export function DesktopWindow({
     return () => {
       if (timer) clearTimeout(timer);
     };
-  }, [minimized, open]);
+  }, [minimized, open, present]);
 
   useEffect(() => {
     const move = (event: PointerEvent) => {

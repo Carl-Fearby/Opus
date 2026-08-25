@@ -279,7 +279,7 @@ export function Map({
 
   useEffect(() => {
     setViewCenter([center[0], center[1]]);
-  }, [center[0], center[1]]);
+  }, [center]);
 
   useEffect(() => {
     if (theme !== "auto") {
@@ -324,7 +324,7 @@ export function Map({
       window.clearTimeout(timeout);
       controller.abort();
     };
-  }, [reverseGeocode, showAddress, showCoordinates, viewCenter[0], viewCenter[1]]);
+  }, [reverseGeocode, showAddress, showCoordinates, viewCenter]);
 
   const resolvedStyleUrl =
     typeof styleUrl === "string" && styleUrl.includes("your-map-provider.example")
@@ -335,6 +335,7 @@ export function Map({
   useEffect(() => {
     const container = containerRef.current;
     if (!container) return;
+    const markerInstances = markerInstancesRef.current;
 
     let disposed = false;
     let resizeObserver: ResizeObserver | undefined;
@@ -453,9 +454,9 @@ export function Map({
       resizeObserver?.disconnect();
       mapRef.current?.remove();
       mapRef.current = null;
-      markerInstancesRef.current.clear();
+      markerInstances.clear();
     };
-  }, [activeStyle, center[0], center[1], interactive, markers, showAttribution, showGeolocate, showNavigation, zoom]);
+  }, [activeStyle, center, interactive, markers, resolvedStyleUrl, showAttribution, showGeolocate, showNavigation, zoom]);
 
   return (
     <div
