@@ -172,12 +172,23 @@ export function UsagePreview({
   useEffect(() => {
     const previewElement = previewRef.current;
     if (!previewElement || !showActionStatus) return;
+    let actionFrame: number | undefined;
 
-    const reportAction = (event: Event) => {
-      const label = getActionLabel(event);
+    const updateOutput = (label: string | null) => {
       if (label) setLastAction(`Last action: ${label}`);
       const formOutput = collectPreviewOutput(previewElement);
       setDataOutput(formOutput ?? (label ? { action: label } : null));
+    };
+
+    const reportAction = (event: Event) => {
+      const label = getActionLabel(event);
+      const target = event.target;
+      if (target instanceof HTMLInputElement || target instanceof HTMLSelectElement || target instanceof HTMLTextAreaElement) {
+        updateOutput(label);
+        return;
+      }
+      if (actionFrame) cancelAnimationFrame(actionFrame);
+      actionFrame = requestAnimationFrame(() => updateOutput(label));
     };
 
     previewElement.addEventListener("change", reportAction);
@@ -189,6 +200,7 @@ export function UsagePreview({
     });
     return () => {
       cancelAnimationFrame(frame);
+      if (actionFrame) cancelAnimationFrame(actionFrame);
       delete previewElement.dataset.hydrated;
       previewElement.removeEventListener("change", reportAction);
       previewElement.removeEventListener("click", reportAction);
