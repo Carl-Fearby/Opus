@@ -16,6 +16,14 @@ export const OIL_BARREL_FIRE_OVERLAY = {
 
 export const vx27ModelAssets: ModelAsset[] = [
   {
+    id: "opus-logo",
+    name: "Opus mark",
+    src: "/models/opus/opus-logo.glb",
+    alt: "Three-dimensional Opus cube logo.",
+    description: "Interactive 3D version of the Opus brand mark.",
+    cameraOrbit: "35deg 70deg auto",
+  },
+  {
     id: "control-panel",
     name: "Control panel",
     src: "/models/vx27/control-panel.glb",

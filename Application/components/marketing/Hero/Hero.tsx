@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { controls } from "@/lib/controls/registry";
 import { docsComponentsUrl, docsPlaygroundUrl } from "@/lib/siteLinks";
+import { OpusModelShowcase } from "../OpusModelShowcase";
 import styles from "./Hero.module.css";
 
 export function Hero() {
@@ -35,46 +36,8 @@ export function Hero() {
           </div>
         </div>
 
-        <div className={styles.preview} aria-hidden="true">
-          <div className={styles.previewGlow} />
-          <div className={styles.previewCard}>
-            <div className={styles.previewTop}>
-              <span />
-              <span />
-              <span />
-              <Link className={styles.previewTab} href={docsComponentsUrl} tabIndex={-1}>
-                Component catalogue
-              </Link>
-              <span className={styles.previewTab} data-active="true">
-                AI Playground
-              </span>
-            </div>
-            <div className={styles.previewBody}>
-              <div className={styles.previewPane}>
-                <div className={styles.previewPaneLabel}>Source</div>
-                <div className={styles.previewCode}>
-                  <span />
-                  <span />
-                  <span data-accent="true" />
-                  <span />
-                </div>
-              </div>
-              <div className={styles.previewHandle} />
-              <div className={styles.previewPane}>
-                <div className={styles.previewPaneLabel}>Preview</div>
-                <div className={styles.previewWidget}>
-                  <div className={styles.previewAvatar} />
-                  <div className={styles.previewProfile}>
-                    <span />
-                    <span />
-                  </div>
-                </div>
-              </div>
-            </div>
-            <Link className={styles.previewLink} href={docsComponentsUrl} tabIndex={-1}>
-              Open any component with source and context ready for ChatGPT
-            </Link>
-          </div>
+        <div className={styles.preview}>
+          <OpusModelShowcase />
         </div>
       </div>
     </section>
