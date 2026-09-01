@@ -5,6 +5,7 @@ import { DesktopShowcase } from "@/components/marketing/DesktopShowcase";
 import { FeatureGrid } from "@/components/marketing/FeatureGrid";
 import { Hero } from "@/components/marketing/Hero";
 import { PlaygroundSection } from "@/components/marketing/PlaygroundSection";
+import { ProductDepth } from "@/components/marketing/ProductDepth";
 import { RealWorldShowcase } from "@/components/marketing/RealWorldShowcase";
 import { StatBand } from "@/components/marketing/StatBand";
 import { WorkflowSection } from "@/components/marketing/WorkflowSection";
@@ -15,6 +16,7 @@ export default function HomePage() {
       <Hero />
       <StatBand />
       <FeatureGrid />
+      <ProductDepth />
       <DesktopShowcase />
       <PlaygroundSection />
       <RealWorldShowcase />

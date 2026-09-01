@@ -1,0 +1,98 @@
+.section {
+  border-top: 1px solid color-mix(in srgb, var(--opus-border) 78%, transparent);
+  padding: clamp(4rem, 9vw, 8rem) clamp(1.25rem, 5vw, 5rem);
+}
+
+.inner {
+  margin: 0 auto;
+  max-width: 1240px;
+}
+
+.intro {
+  display: grid;
+  gap: 1rem;
+  max-width: 760px;
+}
+
+.eyebrow,
+.cardEyebrow {
+  color: var(--opus-cyan);
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  margin: 0;
+  text-transform: uppercase;
+}
+
+.intro h2 {
+  color: var(--opus-text);
+  font-size: clamp(2rem, 4vw, 3.5rem);
+  letter-spacing: -0.045em;
+  line-height: 1.02;
+  margin: 0;
+}
+
+.intro > p:last-child {
+  color: var(--opus-muted);
+  font-size: 1.05rem;
+  line-height: 1.7;
+  margin: 0;
+}
+
+.grid {
+  display: grid;
+  gap: 1rem;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  margin-top: clamp(2rem, 5vw, 4rem);
+}
+
+.card {
+  background: color-mix(in srgb, var(--opus-panel) 86%, transparent);
+  border: 1px solid color-mix(in srgb, var(--opus-border) 84%, transparent);
+  border-radius: 1.25rem;
+  display: flex;
+  flex-direction: column;
+  min-height: 260px;
+  padding: clamp(1.5rem, 3vw, 2.25rem);
+}
+
+.card h3 {
+  color: var(--opus-text);
+  font-size: clamp(1.35rem, 2.2vw, 1.85rem);
+  letter-spacing: -0.03em;
+  line-height: 1.15;
+  margin: 0.8rem 0;
+}
+
+.card > p:not(.cardEyebrow) {
+  color: var(--opus-muted);
+  line-height: 1.65;
+  margin: 0;
+}
+
+.link {
+  align-items: center;
+  color: var(--opus-cyan);
+  display: inline-flex;
+  font-weight: 700;
+  gap: 0.4rem;
+  margin-top: auto;
+  padding-top: 1.5rem;
+  text-decoration: none;
+}
+
+.link:hover,
+.link:focus-visible {
+  text-decoration: underline;
+  text-underline-offset: 0.25em;
+}
+
+@media (max-width: 720px) {
+  .grid {
+    grid-template-columns: 1fr;
+  }
+
+  .card {
+    min-height: 0;
+  }
+}
