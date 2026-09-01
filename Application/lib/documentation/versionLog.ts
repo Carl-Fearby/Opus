@@ -600,8 +600,8 @@ export const versionLog: VersionEntry[] = [
   {
     version: "0.6.19",
     releasedAt: "2026-08-23",
-    commit: "overlay-0.6.19",
-    commitShort: "overlay",
+    commit: "fbf860aa4efd17cfa3f612491aab91ebb185a39f",
+    commitShort: "fbf860a",
     summary: "Package-safe canonical Opus brand component and logo assets.",
     changes: ["Add OpusBrand with icon, wordmark, and full-lockup variants backed by package-owned assets.","Expose direct logo asset imports and migrate shared application headers and footers away from a consumer /public dependency.","Publish opus-react 0.6.19 and update Application to consume it."],
   }

@@ -144,6 +144,7 @@ export function ComponentSettingsProvider({ children }: { children: ReactNode })
       settings,
       settingsCollapsed,
       settingsWidth,
+      setSettings,
       setSettingsCollapsed,
       unregister,
     ],

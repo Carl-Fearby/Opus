@@ -4117,12 +4117,27 @@ ${formatJsxParagraphContent(s.content)}
     case "lab-chat-conversation": {
       const s = settings as ControlSettingsBySlug["lab-chat-conversation"];
       const avatar = (name: string, src: string) => `{ name: ${quote(name)}${s.showAvatarImages && src ? `, src: ${quote(src)}` : ""} }`;
-      const props = (alignment: "left" | "right", name: string, src: string, background: string) => [formatStringProp("alignment", alignment), formatExpressionProp("avatar", avatar(name, src)), ...(background ? [formatStringProp("background", background)] : []), ...(s.showMore ? [formatBoolProp("showMore", true), formatNumberProp("showMoreMaxLines", s.showMoreMaxLines)] : [])];
+      const props = (alignment: "left" | "right", name: string, src: string, background: string) => [
+        formatStringProp("alignment", alignment),
+        formatExpressionProp("avatar", avatar(name, src)),
+        ...(background ? [formatStringProp("background", background)] : []),
+        ...(s.showMore ? [formatBoolProp("showMore", true), formatNumberProp("showMoreMaxLines", s.showMoreMaxLines)] : []),
+      ];
       return `${importLine(["ChatBubble"])}
 
 <div style={{ display: "grid", gap: 20 }}>
-  <ChatBubble${formatOpeningProps(props("left", s.leftAvatarName, s.leftAvatarImage, s.leftBackground))} messages={[{ content: ${quote(s.leftFirstMessage)} }, { content: ${quote(s.leftReplyMessage)}, time: ${quote(s.leftTime)} }]} />
-  <ChatBubble${formatOpeningProps(props("right", s.rightAvatarName, s.rightAvatarImage, s.rightBackground))} messages={[{ content: ${quote(s.rightFirstMessage)} }, { content: ${quote(s.rightCodeMessage)}, time: ${quote(s.rightTime)} }]} />
+  <ChatBubble${formatOpeningProps(props("left", s.leftAvatarName, s.leftAvatarImage, s.leftBackground))}
+    messages={[
+      { content: ${quote(s.leftFirstMessage)} },
+      { content: ${quote(s.leftReplyMessage)}, time: ${quote(s.leftTime)} },
+    ]}
+  />
+  <ChatBubble${formatOpeningProps(props("right", s.rightAvatarName, s.rightAvatarImage, s.rightBackground))}
+    messages={[
+      { content: ${quote(s.rightFirstMessage)} },
+      { content: ${quote(s.rightCodeMessage)}, time: ${quote(s.rightTime)} },
+    ]}
+  />
 </div>`;
     }
     case "empty-state": {

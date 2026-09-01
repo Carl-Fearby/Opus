@@ -1105,15 +1105,31 @@ export type ChatBubbleSettings = {
   firstMessage: string;
   maxLines: number;
   lightBackground: string;
-  showAvatar: boolean;
   showAvatarImage: boolean;
+  showAvatar: boolean;
   showMore: boolean;
   showLessLabel: string;
   showMoreLabel: string;
   time: string;
 };
 
-export type ChatConversationSettings = { leftAvatarImage: string; leftAvatarName: string; leftBackground: string; leftFirstMessage: string; leftReplyMessage: string; leftTime: string; rightAvatarImage: string; rightAvatarName: string; rightBackground: string; rightCodeMessage: string; rightFirstMessage: string; rightTime: string; showAvatarImages: boolean; showMore: boolean; showMoreMaxLines: number; };
+export type ChatConversationSettings = {
+  leftAvatarImage: string;
+  leftAvatarName: string;
+  leftBackground: string;
+  leftFirstMessage: string;
+  leftReplyMessage: string;
+  leftTime: string;
+  rightAvatarImage: string;
+  rightAvatarName: string;
+  rightBackground: string;
+  rightCodeMessage: string;
+  rightFirstMessage: string;
+  rightTime: string;
+  showAvatarImages: boolean;
+  showMore: boolean;
+  showMoreMaxLines: number;
+};
 
 export type EmptyStateSettings = {
   title: string;
@@ -1244,7 +1260,7 @@ export type DesktopDockSettings = {
   autoHide: boolean;
   position: "bottom" | "left" | "right";
   resizable: boolean;
-  size: "small" | "medium" | "large";
+  size: number;
 };
 
 export type DesktopEnvironmentSettings = {
@@ -1319,7 +1335,7 @@ export type ContainerSettings = {
 
 export type SpacerSettings = {
   axis: "x" | "y" | "both";
-  size: number;
+  size: number | "small" | "medium" | "large";
   flex: boolean;
 };
 

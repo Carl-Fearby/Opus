@@ -47,6 +47,95 @@ const currentDateTimeValue = toDateTimeValue(now);
 const currentMonthValue = toMonthValue(now);
 const currentWeekValue = toWeekValue(now);
 
+const lunarDistanceMarkdown = `Here's a TypeScript example that calculates the lunar distance based on the time of year:
+\`\`\`typescript
+interface LunarDistance {
+  distance: number; // in kilometers
+  eccentricity: number;
+  semiMajorAxis: number; // in kilometers
+}
+
+interface CalculateLunarDistanceOptions {
+  n: number; // number of days since the last new moon (0-based)
+  m: number; // current day (0-based)
+}
+
+function calculateMeanAnomaly(n: number, m: number, T: number): number {
+  const theta = (360 * (n - m) / T);
+  return theta;
+}
+
+function calculateLunarDistance(options: CalculateLunarDistanceOptions, lunarDistance: LunarDistance): number {
+  const { n, m, T } = options;
+  const { eccentricity, semiMajorAxis } = lunarDistance;
+  const theta = calculateMeanAnomaly(n, m, T);
+  const distance = semiMajorAxis + eccentricity * (1 - Math.cos(theta));
+  return distance;
+}
+
+const lunarDistance: LunarDistance = { distance: 384400, eccentricity: 0.0549, semiMajorAxis: 384400 };
+const calculateLunarDistanceOptions: CalculateLunarDistanceOptions = { n: 1, m: 10, T: 365.25 };
+const result = calculateLunarDistance(calculateLunarDistanceOptions, lunarDistance);
+console.log(\`Lunar distance: \${result.toFixed(2)} km\`);
+\`\`\`
+
+This code defines two interfaces, \`LunarDistance\` and \`CalculateLunarDistanceOptions\`, to represent the data structures used in the calculation. The \`calculateMeanAnomaly\` function calculates the mean anomaly (θ) based on the number of days since the last new moon and the current day. The \`calculateLunarDistance\` function calculates the lunar distance based on the mean anomaly and the lunar distance object.
+
+In the example usage, we define a \`lunarDistance\` object with the semi-major axis, eccentricity, and semi-major axis, and a \`calculateLunarDistanceOptions\` object with the number of days since the last new moon, the current day, and the time of year. We then call the \`calculateLunarDistance\` function with these options and log the result to the console.
+
+Note that this is a simplified example and does not take into account other factors that can affect the lunar distance, such as the Moon's elliptical orbit and the Earth's slightly ellipsoidal shape.
+
+You can also use the \`typescript\` compiler to get type checking and auto-completion:
+\`\`\`bash
+tsc lunar_distance.ts
+\`\`\`
+This will compile the \`lunar_distance.ts\` file and produce a \`lunar_distance.js\` file that you can run in your browser or Node.js environment.`;
+void lunarDistanceMarkdown;
+
+const lunarDistancePythonMarkdown = `The distance between the Earth and the Moon varies due to the elliptical shape of the Moon's orbit around our planet. This variation is known as the "lunar distance" or "lunar mean distance." Here's how to calculate it:
+
+**The Moon's Orbital Distance:**
+
+The Moon's average distance from Earth is about 384,400 kilometers (238,855 miles). However, its orbit is not a perfect circle, which means the distance between the two bodies varies throughout the month.
+
+**The Lunar Cycle:**
+
+The Moon orbits the Earth in approximately 27.3 days. During this time, the Moon's distance from Earth varies by about 53,000 kilometers (33,000 miles).
+
+**Calculating the Lunar Distance:**
+
+d = a + e \\* (1 - cos(θ))
+
+- d is the lunar distance (in kilometers or miles)
+- a is the semi-major axis of the Moon's orbit
+- e is the eccentricity of the Moon's orbit
+- θ is the mean anomaly of the Moon's position
+
+**Code Example (Python):**
+
+Here's a simple Python code example that calculates the lunar distance based on the time of year:
+\`\`\`python
+import math
+
+a = 384400
+e = 0.0549
+T = 365.25
+
+def calculate_mean_anomaly(n, m):
+    return (360 * (n - m) / T)
+
+def calculate_lunar_distance(n, m):
+    theta = calculate_mean_anomaly(n, m)
+    return a + e * (1 - math.cos(theta))
+
+n = 1
+m = 10
+d = calculate_lunar_distance(n, m)
+print(f"Lunar distance: {d:.2f} km")
+\`\`\`
+
+Note that this is a simplified example and does not take into account other factors that can affect the lunar distance, such as the Moon's elliptical orbit and the Earth's slightly ellipsoidal shape.`;
+
 const baseFieldDefaults = {
   mode: "stacked" as const,
   labelPosition: "left" as const,
@@ -1375,7 +1464,23 @@ export const defaultSettings: ControlSettingsBySlug = {
     size: 300,
     weight: 700,
   },
-  "lab-chat-conversation": { leftAvatarImage: "/user-profile-carl.png", leftAvatarName: "Opus", leftBackground: "#2B2452", leftFirstMessage: "I’ve prepared a markdown example with headings, bold text, formulae, and bullets.", leftReplyMessage: "The distance between the Earth and the Moon varies due to the elliptical shape of the Moon's orbit around our planet.\n\n**The Moon's Orbital Distance:**\n\nThe Moon's average distance from Earth is about 384,400 kilometers (238,855 miles).\n\n**Calculating the Lunar Distance:**\n\nd = a + e \\* (1 - cos(θ))\n\n- d is the lunar distance\n- a is the semi-major axis\n- e is the eccentricity", leftTime: "10:46", rightAvatarImage: "/user-profile-carl.png", rightAvatarName: "You", rightBackground: "#3A2B68", rightCodeMessage: "```ts\nconst release = await publish(\"opus-react\");\n```", rightFirstMessage: "Perfect — could you also include the new chat components?", rightTime: "10:45", showAvatarImages: true, showMore: false, showMoreMaxLines: 3 },
+  "lab-chat-conversation": {
+    leftAvatarImage: "/user-profile-carl.png",
+    leftAvatarName: "Opus",
+    leftBackground: "#2B2452",
+    leftFirstMessage: "I’ve prepared the release notes and included the implementation details.",
+    leftReplyMessage: lunarDistancePythonMarkdown,
+    leftTime: "10:46",
+    rightAvatarImage: "/user-profile-carl.png",
+    rightAvatarName: "You",
+    rightBackground: "#3A2B68",
+    rightCodeMessage: "```ts\nconst release = await publish(\"opus-react\");\n```",
+    rightFirstMessage: "Perfect — could you also include the new chat components?",
+    rightTime: "10:45",
+    showAvatarImages: true,
+    showMore: false,
+    showMoreMaxLines: 3,
+  },
   "empty-state": {
     title: "No components yet",
     description:

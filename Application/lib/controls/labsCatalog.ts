@@ -25,7 +25,21 @@ export type LabsCatalogEntry = {
 };
 
 export const labsCatalog = [
-  { slug: "lab-chat-conversation", title: "Chat Conversation", componentName: "ChatBubble", description: "Two-way conversation pattern with independently styled participants, avatars, timestamps, Show More, and fenced-code messages.", settingsType: "chat-conversation", navigationGroup: "Application", compositionParts: ["chat-bubble", "avatar", "show-more"], sourceFiles: ["components/ChatBubble/ChatBubble.tsx", "components/ChatBubble/ChatBubble.module.css", "components/Avatar/Avatar.tsx", "components/ShowMore/ShowMore.tsx"] },
+  {
+    slug: "lab-chat-conversation",
+    title: "Chat Conversation",
+    componentName: "ChatBubble",
+    description: "Two-way conversation pattern with independently styled participants, avatars, timestamps, Show More, and fenced-code messages.",
+    settingsType: "chat-conversation",
+    navigationGroup: "Application",
+    compositionParts: ["chat-bubble", "avatar", "show-more"],
+    sourceFiles: [
+      "components/ChatBubble/ChatBubble.tsx",
+      "components/ChatBubble/ChatBubble.module.css",
+      "components/Avatar/Avatar.tsx",
+      "components/ShowMore/ShowMore.tsx",
+    ],
+  },
   {
     slug: "lab-desktop-environment",
     title: "Desktop Environment",

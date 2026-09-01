@@ -172,29 +172,39 @@ export function UsagePreview({
   useEffect(() => {
     const previewElement = previewRef.current;
     if (!previewElement || !showActionStatus) return;
+    let actionFrame: number | undefined;
+
+    const updateOutput = (label: string | null) => {
+      if (label) setLastAction(`Last action: ${label}`);
+      const formOutput = collectPreviewOutput(previewElement);
+      setDataOutput(formOutput ?? (label ? { action: label } : null));
+    };
 
     const reportAction = (event: Event) => {
       const label = getActionLabel(event);
-      requestAnimationFrame(() => {
-        if (label) setLastAction(`Last action: ${label}`);
-        const formOutput = collectPreviewOutput(previewElement);
-        setDataOutput(formOutput ?? (label ? { action: label } : null));
-      });
+      const target = event.target;
+      if (target instanceof HTMLInputElement || target instanceof HTMLSelectElement || target instanceof HTMLTextAreaElement) {
+        updateOutput(label);
+        return;
+      }
+      if (actionFrame) cancelAnimationFrame(actionFrame);
+      actionFrame = requestAnimationFrame(() => updateOutput(label));
     };
 
-    previewElement.addEventListener("change", reportAction, true);
-    previewElement.addEventListener("click", reportAction, true);
-    previewElement.addEventListener("keydown", reportAction, true);
+    previewElement.addEventListener("change", reportAction);
+    previewElement.addEventListener("click", reportAction);
+    previewElement.addEventListener("keydown", reportAction);
     previewElement.dataset.hydrated = "true";
     const frame = requestAnimationFrame(() => {
       setDataOutput(collectPreviewOutput(previewElement));
     });
     return () => {
       cancelAnimationFrame(frame);
+      if (actionFrame) cancelAnimationFrame(actionFrame);
       delete previewElement.dataset.hydrated;
-      previewElement.removeEventListener("change", reportAction, true);
-      previewElement.removeEventListener("click", reportAction, true);
-      previewElement.removeEventListener("keydown", reportAction, true);
+      previewElement.removeEventListener("change", reportAction);
+      previewElement.removeEventListener("click", reportAction);
+      previewElement.removeEventListener("keydown", reportAction);
     };
   }, [showActionStatus]);
 
