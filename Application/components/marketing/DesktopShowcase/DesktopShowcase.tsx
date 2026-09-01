@@ -1,7 +1,9 @@
 import Image from "next/image";
 import Link from "next/link";
-import { docsComponentsUrl } from "@/lib/siteLinks";
+import { componentPath } from "@/lib/controls/routes";
 import styles from "./DesktopShowcase.module.css";
+
+const desktopEnvironmentPath = componentPath("lab-desktop-environment");
 
 const capabilities = [
   "Draggable, resizable, focus-aware application windows",
@@ -27,7 +29,7 @@ export function DesktopShowcase() {
               <li key={capability}>{capability}</li>
             ))}
           </ul>
-          <Link className={styles.cta} href={docsComponentsUrl}>
+          <Link className={styles.cta} href={desktopEnvironmentPath}>
             Explore desktop components
             <span aria-hidden="true">→</span>
           </Link>
@@ -36,7 +38,7 @@ export function DesktopShowcase() {
         <Link
           aria-label="Explore desktop components in the component catalogue"
           className={styles.preview}
-          href={docsComponentsUrl}
+          href={desktopEnvironmentPath}
         >
           <Image
             alt="Opus browser desktop with draggable application windows, shortcuts, and dock"
