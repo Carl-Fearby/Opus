@@ -9,7 +9,11 @@ const opusModel: ModelAsset = {
   name: "Opus mark",
   src: "/models/opus/opus-logo.glb",
   alt: "Three-dimensional Opus cube logo.",
-  cameraOrbit: "35deg 70deg auto",
+  cameraOrbit: "35deg 70deg 55%",
+};
+
+type ModelViewerElement = HTMLElement & {
+  loaded?: boolean;
 };
 
 export function OpusModelShowcase() {
@@ -20,11 +24,12 @@ export function OpusModelShowcase() {
     const host = hostRef.current;
     if (!host) return;
 
-    let viewer: HTMLElement | null = null;
+    let viewer: ModelViewerElement | null = null;
     const onLoad = () => setIsLoading(false);
     const attach = () => {
-      viewer = host.querySelector("model-viewer");
+      viewer = host.querySelector<ModelViewerElement>("model-viewer");
       viewer?.addEventListener("load", onLoad, { once: true });
+      if (viewer?.loaded) onLoad();
     };
 
     attach();
@@ -40,7 +45,7 @@ export function OpusModelShowcase() {
   return (
     <div className={styles.showcase} ref={hostRef}>
       <p className={styles.label}>Interactive 3D asset</p>
-      <ModelViewer asset={opusModel} autoRotate showCaption={false} height="large" />
+      <ModelViewer asset={opusModel} autoRotate showCaption={false} height="compact" />
       {isLoading ? (
         <div className={styles.loading} role="status" aria-live="polite">
           <span className={styles.spinner} aria-hidden="true" />

@@ -46,7 +46,18 @@
 }
 
 .showcase :global([class*="stage"]) {
-  min-height: 420px;
+  aspect-ratio: 3 / 1;
+  height: auto !important;
+  min-height: 0 !important;
+  background: #000000;
+}
+
+.showcase :global(model-viewer) {
+  filter:
+    drop-shadow(0 0 5px rgba(34, 211, 238, 0.58))
+    drop-shadow(0 0 12px rgba(37, 99, 235, 0.42))
+    drop-shadow(0 0 18px rgba(139, 92, 246, 0.32))
+    drop-shadow(0 0 24px rgba(236, 72, 153, 0.18));
 }
 
 .label,
@@ -69,6 +80,7 @@
 
 @media (max-width: 560px) {
   .showcase :global([class*="stage"]) {
-    min-height: 300px;
+    aspect-ratio: 3 / 2;
   }
+
 }

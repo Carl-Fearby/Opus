@@ -16,10 +16,7 @@
   overflow: hidden;
   border: 1px solid color-mix(in srgb, var(--opus-border) 78%, transparent);
   border-radius: var(--opus-input-radius-large);
-  background:
-    radial-gradient(circle at 28% 18%, color-mix(in srgb, var(--opus-accent) 22%, transparent), transparent 34%),
-    linear-gradient(135deg, color-mix(in srgb, #2563eb 18%, transparent), transparent 52%),
-    color-mix(in srgb, var(--opus-input-bg) 86%, var(--opus-panel));
+  background: #000000;
   box-shadow: var(--opus-shadow);
 }
 
