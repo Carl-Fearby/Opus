@@ -7,6 +7,7 @@ import { Hero } from "@/components/marketing/Hero";
 import { PlaygroundSection } from "@/components/marketing/PlaygroundSection";
 import { ProductDepth } from "@/components/marketing/ProductDepth";
 import { RealWorldShowcase } from "@/components/marketing/RealWorldShowcase";
+import { SeoFAQ } from "@/components/marketing/SeoFAQ";
 import { StatBand } from "@/components/marketing/StatBand";
 import { WorkflowSection } from "@/components/marketing/WorkflowSection";
 
@@ -21,6 +22,7 @@ export default function HomePage() {
       <PlaygroundSection />
       <RealWorldShowcase />
       <ComponentCategories />
+      <SeoFAQ />
       <WorkflowSection />
       <ContributorsCallout />
       <CtaBand />

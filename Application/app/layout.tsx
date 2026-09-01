@@ -20,8 +20,23 @@ const ibmPlexMono = IBM_Plex_Mono({
 });
 
 export const metadata: Metadata = {
+  metadataBase: new URL("https://project-opus.netlify.app"),
   title: "Opus",
-  description: "Opus form component library demo",
+  description: "A React component library and documented design system for modern business applications.",
+  applicationName: "Opus",
+  keywords: ["React component library", "design system", "business UI", "accessible components", "Opus"],
+  openGraph: {
+    type: "website",
+    siteName: "Opus",
+    title: "Opus — Design system for modern business apps",
+    description: "A React component library, documented design system, and live component Playground.",
+    url: "/",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Opus — Design system for modern business apps",
+    description: "A React component library, documented design system, and live component Playground.",
+  },
   manifest: "/site.webmanifest",
   icons: {
     icon: [

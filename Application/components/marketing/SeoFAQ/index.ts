@@ -1,0 +1,1 @@
+export { SeoFAQ } from "./SeoFAQ";
