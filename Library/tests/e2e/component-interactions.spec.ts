@@ -263,6 +263,18 @@ for (const slug of getAllSlugs()) {
       return;
     }
 
+    // Error-page actions intentionally navigate away from the component
+    // catalogue. Check their destinations directly instead of allowing the
+    // generic DOM fingerprint to race page teardown after navigation.
+    if (slug === "403-page" || slug === "404-page") {
+      const actions = preview.locator("a[href]");
+      await expect(actions).toHaveCount(2);
+      await expect(actions.nth(0)).toHaveAttribute("href", "/documentation");
+      await expect(actions.nth(1)).toHaveAttribute("href", "/documentation/components");
+      browser.assertNoErrors();
+      return;
+    }
+
     const componentContent = preview.locator(
       ":scope > *:not([data-testid='usage-preview-action'])",
     );
