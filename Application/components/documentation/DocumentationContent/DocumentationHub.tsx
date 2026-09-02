@@ -11,7 +11,11 @@ import { ThemeSettingsButton } from "@/components/documentation/ThemeSettingsBut
 import { useStoredTheme } from "@/lib/theme/useStoredTheme";
 import styles from "./documentation.module.css";
 
-export function DocumentationHub() {
+type DocumentationHubProps = {
+  catalogueCount: number;
+};
+
+export function DocumentationHub({ catalogueCount }: DocumentationHubProps) {
   const [theme, setTheme] = useStoredTheme();
   const { accent, accentSecondary, accentStyle, resetAccent, setAccent, setAccentSecondary } =
     useAccentPreference();
@@ -64,7 +68,7 @@ export function DocumentationHub() {
             <Link className={styles.hubCard} href={COMPONENTS_BASE_PATH}>
               <h3 className={styles.hubCardTitle}>Components</h3>
               <p className={styles.hubCardDescription}>
-                Browse all 47 controls with live previews, settings, and generated usage code.
+                Browse all {catalogueCount} controls with live previews, settings, and generated usage code.
               </p>
             </Link>
             <Link className={styles.hubCard} href={VERSION_BASE_PATH}>

@@ -1,4 +1,3 @@
-import Image from "next/image";
 import Link from "next/link";
 import { docsComponentsUrl, docsPlaygroundUrl, npmPackageUrl } from "@/lib/siteLinks";
 import styles from "./SiteFooter.module.css";
@@ -21,13 +20,7 @@ export function SiteFooter() {
     <footer className={styles.footer}>
       <div className={styles.inner}>
         <div className={styles.brandBlock}>
-          <Image
-            alt="Opus"
-            className={styles.logo}
-            height={36}
-            src="/opus-logo.png"
-            width={130}
-          />
+          <img alt="Opus" className={styles.logo} src="/opus-logo.png" />
           <p>
             Open-source design system and React component library for modern business
             applications. No paid plans, commercial support, or hosted service.

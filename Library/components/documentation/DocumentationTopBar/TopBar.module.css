@@ -141,6 +141,7 @@
 
   .logo {
     height: 36px;
+    width: auto;
     max-width: 168px;
   }
 

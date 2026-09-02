@@ -1,4 +1,3 @@
-import Image from "next/image";
 import Link from "next/link";
 import { docsComponentsUrl, docsPlaygroundUrl } from "@/lib/siteLinks";
 import styles from "./SiteHeader.module.css";
@@ -14,14 +13,7 @@ export function SiteHeader() {
     <header className={styles.header}>
       <div className={styles.inner}>
         <Link className={styles.brand} href="/">
-          <Image
-            alt="Opus"
-            className={styles.logo}
-            height={56}
-            priority
-            src="/opus-logo.png"
-            width={200}
-          />
+          <img alt="Opus" className={styles.logo} src="/opus-logo.png" />
         </Link>
 
         <nav aria-label="Primary" className={styles.nav}>

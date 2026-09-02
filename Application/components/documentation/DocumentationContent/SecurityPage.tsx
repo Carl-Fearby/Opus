@@ -9,37 +9,26 @@ import { useStoredTheme } from "@/lib/theme/useStoredTheme";
 import shellStyles from "./documentation.module.css";
 import styles from "./security.module.css";
 
-const remediationCommand = "npm install next@16.3.0 eslint-config-next@16.3.0";
-const imageCommand = "npm install next@16.3.0 eslint-config-next@16.3.0 sharp@^0.35.3";
+const baselineCommand = "npm install next@16.3.4 eslint-config-next@16.3.4";
+const imageCommand = "npm install next@16.3.4 eslint-config-next@16.3.4 sharp@^0.35.4";
 const auditCommand = "npm audit --omit=dev";
 const requiredOnlyCommand = "npm audit --omit=dev --omit=optional";
 
-const activeFindings = [
+const resolvedFindings = [
   {
     dependency: "next",
-    installed: "16.2.12",
-    relationship: "Direct production dependency",
-    severity: "High",
-    advisory: "Inherited from optional Sharp",
-    advisoryHref: "https://github.com/advisories/GHSA-f88m-g3jw-g9cj",
-    detail:
-      "The current Next.js range permits Sharp 0.34.5. npm therefore reports Next as affected through that optional image-processing path.",
-    resolution: "Upgrade Next.js to 16.3.0 or newer.",
+    version: "16.3.4",
+    advisory: "GHSA-f88m-g3jw-g9cj",
+    href: "https://github.com/advisories/GHSA-f88m-g3jw-g9cj",
+    note: "Upgraded from 16.2.12. Optional Sharp range now permits 0.35.4.",
   },
   {
     dependency: "sharp",
-    installed: "0.34.5",
-    relationship: "Optional transitive dependency",
-    severity: "High",
+    version: "0.35.4",
     advisory: "GHSA-f88m-g3jw-g9cj",
-    advisoryHref: "https://github.com/advisories/GHSA-f88m-g3jw-g9cj",
-    detail:
-      "Sharp versions below 0.35.0 inherit libvips CVE-2026-33327, CVE-2026-33328, CVE-2026-35590, and CVE-2026-35591.",
-    resolution: "Next.js 16.3.0 permits Sharp 0.35.3 or newer.",
+    href: "https://github.com/advisories/GHSA-f88m-g3jw-g9cj",
+    note: "Patched optional image-processing dependency shipped with Next.js 16.3.4.",
   },
-] as const;
-
-const resolvedFindings = [
   {
     dependency: "nanoid",
     version: "3.3.18",
@@ -122,7 +111,7 @@ export function SecurityPage() {
               </p>
             </div>
             <div className={styles.auditSummary} aria-label="Current audit summary">
-              <span className={styles.highCount}>2 high</span>
+              <span>0 high</span>
               <span>0 critical</span>
               <span>0 development</span>
             </div>
@@ -134,63 +123,36 @@ export function SecurityPage() {
                 <p className={styles.eyebrow}>Application/package-lock.json</p>
                 <h2 id="snapshot-title">Current repository snapshot</h2>
               </div>
-              <time dateTime="2026-08-13">Reviewed 13 August 2026</time>
+              <time dateTime="2026-09-02">Reviewed 2 September 2026</time>
             </div>
             <p className={styles.note}>
-              npm reports two entries, but they describe one dependency chain: Next.js includes
-              Sharp as an optional image-processing dependency. Optional means it may be absent;
-              when it is installed and used, the advisory still matters.
+              npm reports no production vulnerabilities in this lockfile. Next.js 16.3.4 permits
+              Sharp 0.35.4, which patches the optional image-processing advisories previously
+              reported through 16.2.12.
             </p>
-            <div className={styles.findings}>
-              {activeFindings.map((finding) => (
-                <article className={styles.finding} key={finding.dependency}>
-                  <div className={styles.findingTitle}>
-                    <h3>{finding.dependency}</h3>
-                    <span className={styles.severity}>{finding.severity}</span>
-                  </div>
-                  <dl>
-                    <div>
-                      <dt>Installed</dt>
-                      <dd>{finding.installed}</dd>
-                    </div>
-                    <div>
-                      <dt>Relationship</dt>
-                      <dd>{finding.relationship}</dd>
-                    </div>
-                    <div>
-                      <dt>Advisory</dt>
-                      <dd>
-                        <a href={finding.advisoryHref} rel="noreferrer" target="_blank">
-                          {finding.advisory}
-                        </a>
-                      </dd>
-                    </div>
-                  </dl>
-                  <p>{finding.detail}</p>
-                  <p className={styles.resolution}>{finding.resolution}</p>
-                </article>
-              ))}
-            </div>
           </section>
 
           <section className={styles.panel} aria-labelledby="choices-title">
             <div className={styles.panelHeading}>
               <div>
                 <p className={styles.eyebrow}>Consumer choices</p>
-                <h2 id="choices-title">Remediation and optional installs</h2>
+                <h2 id="choices-title">Current baseline and optional installs</h2>
               </div>
             </div>
             <div className={styles.choiceGrid}>
               <article>
-                <h3>Recommended upgrade</h3>
-                <p>Upgrade Next and its lint configuration together. Its optional Sharp range is patched.</p>
-                <Command command={remediationCommand} label="upgrade command" />
+                <h3>Current baseline</h3>
+                <p>
+                  Stay on Next 16.3.4 and its matching lint configuration. This is the version in
+                  Application/package-lock.json.
+                </p>
+                <Command command={baselineCommand} label="baseline command" />
               </article>
               <article>
                 <h3>Image optimisation runtime</h3>
                 <p>
-                  If your deployment explicitly installs Sharp, upgrade Next first and pin a patched
-                  Sharp version. Installing Sharp 0.35 alone does not repair Next 16.2&apos;s dependency range.
+                  If your deployment explicitly installs Sharp, pin a patched 0.35 release alongside
+                  Next 16.3.4. Next&apos;s optional range already permits Sharp 0.35.4.
                 </p>
                 <Command command={imageCommand} label="image runtime command" />
               </article>

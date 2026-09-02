@@ -30,9 +30,10 @@ export default defineConfig({
       use: { ...devices["Desktop Chrome"] },
     },
   ],
+  globalTeardown: "./tests/e2e/restore-next-env.teardown.ts",
   webServer: {
     command:
-      "OPUS_NEXT_DIST_DIR=.next-e2e npm run build && OPUS_NEXT_DIST_DIR=.next-e2e npm run start -- --hostname 127.0.0.1 --port 3100",
+      "OPUS_NEXT_DIST_DIR=.next-e2e npm run build && node scripts/clean-e2e-build.mjs --next-env-only && OPUS_NEXT_DIST_DIR=.next-e2e npm run start -- --hostname 127.0.0.1 --port 3100",
     url: "http://127.0.0.1:3100/documentation/components",
     reuseExistingServer: !process.env.CI,
     timeout: 120_000,

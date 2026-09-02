@@ -1,6 +1,5 @@
 "use client";
 
-import Image from "next/image";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { useMemo, type ReactNode } from "react";
@@ -139,14 +138,7 @@ export function DocumentationTopBar({ current, trailing }: DocumentationTopBarPr
       <div className={styles.topBarRow}>
         <div className={styles.topBarStart}>
           <Link className={styles.logoLink} href="/">
-            <Image
-              alt="Opus"
-              className={styles.logo}
-              height={56}
-              priority
-              src="/opus-logo.png"
-              width={200}
-            />
+            <img alt="Opus" className={styles.logo} fetchPriority="high" src="/opus-logo.png" />
           </Link>
           <DocumentationNav current={current} />
         </div>
