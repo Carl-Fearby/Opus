@@ -6,6 +6,14 @@ const auditedImpacts = new Set(["critical", "serious"]);
 
 for (const slug of getAllSlugs()) {
   test(`${slug} preview has no serious accessibility violations`, async ({ page }) => {
+    // A gallery mounts five independent WebGL viewers. Under the five-worker
+    // CI run, their initial browser work can exceed the default per-test
+    // budget even though the accessible trigger markup is ready shortly
+    // afterwards.
+    if (slug === "model-gallery") {
+      test.setTimeout(180_000);
+    }
+
     const response = await page.goto(`/documentation/components/${slug}`);
 
     expect(response?.ok()).toBe(true);
