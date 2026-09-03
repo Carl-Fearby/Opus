@@ -185,7 +185,7 @@ async function interactionFingerprint(preview: Locator, action: Locator | null, 
       const element = document.activeElement;
       if (!element) return null;
       return [element.tagName, element.id, element.getAttribute("role"), element.getAttribute("aria-label")].join("|");
-    }),
+    }).catch(() => "page-closed"),
     actionState,
     dialogs: await page.getByRole("dialog").count().catch(() => -1),
     componentMarkup,
@@ -326,6 +326,10 @@ for (const slug of getAllSlugs()) {
       const logCount = browser.logs.length;
       await exercise(action, slug);
       await page.waitForTimeout(150);
+      if (page.isClosed()) {
+        exercised += 1;
+        break;
+      }
       const navigated = page.url() !== beforeUrl;
       const callbackLogged = browser.logs.length > logCount;
       // Some actions replace the preview or change route. Do not let a status
