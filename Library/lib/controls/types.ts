@@ -1580,6 +1580,7 @@ export type BackgroundBlobsSettings = {
 export type BackgroundBlobsLabSettings = {
   controlRadius: ControlRadius;
   transparency: "none" | "standard" | "glass";
+  gradient: boolean;
   containerSize: "sm" | "md" | "lg" | "xl" | "full";
   containerPadded: boolean;
 };

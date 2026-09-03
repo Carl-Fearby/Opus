@@ -3840,6 +3840,11 @@ export function ControlSettingsPanel({
               { label: "Glass", value: "glass" },
             ]}
           />
+          <SettingToggle
+            label="Gradient surfaces"
+            checked={s.gradient ?? false}
+            onChange={(gradient) => onChange({ ...s, gradient } as ControlSettings)}
+          />
           <SettingSelect
             label="Lab container size"
             value={s.containerSize ?? "xl"}

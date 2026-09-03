@@ -132,6 +132,7 @@ type FieldUsageSettings = {
   mode: string;
   radius: string;
   transparency?: string;
+  gradient?: boolean;
   required?: boolean;
   size?: string;
 };

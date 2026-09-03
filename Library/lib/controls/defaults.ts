@@ -1487,6 +1487,7 @@ export const defaultSettings: ControlSettingsBySlug = {
   "lab-background-blobs": {
     controlRadius: "standard",
     transparency: "standard",
+    gradient: false,
     containerSize: "xl",
     containerPadded: true,
   },
