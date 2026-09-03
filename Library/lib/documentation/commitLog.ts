@@ -1129,5 +1129,47 @@ export const commitLog: CommitEntry[] = [
     shortHash: "321bca9",
     committedAt: "2026-09-03",
     summary: "chore: sync application to opus-react 0.6.34",
+  },
+  {
+    hash: "e257808557585dd5b981ce98d68b02fda609e19a",
+    shortHash: "e257808",
+    committedAt: "2026-09-03",
+    summary: "docs: detail 0.6.34 release changes",
+  },
+  {
+    hash: "09dbcb4a245c9136aac21faaade8f3ff50148002",
+    shortHash: "09dbcb4",
+    committedAt: "2026-09-03",
+    summary: "feat: add marketing release notes page",
+  },
+  {
+    hash: "d46cf7fac0485d5f71823a82856f52b50139ae4f",
+    shortHash: "d46cf7f",
+    committedAt: "2026-09-03",
+    summary: "feat: showcase light and dark component themes",
+  },
+  {
+    hash: "74c7394d04319d584e47bfaa8272d32b4b66cbbb",
+    shortHash: "74c7394",
+    committedAt: "2026-09-03",
+    summary: "fix: complete gradient setting types",
+  },
+  {
+    hash: "0651452e9f37cc487fa66eb1308380787687c614",
+    shortHash: "0651452",
+    committedAt: "2026-09-03",
+    summary: "fix: stabilize background blobs quality checks",
+  },
+  {
+    hash: "b7dd7aee7c6bf4e7317ba5b96a8f8aa2b550943b",
+    shortHash: "b7dd7ae",
+    committedAt: "2026-09-03",
+    summary: "fix: clear library lint warnings",
+  },
+  {
+    hash: "fabd814356ff9c0c8c201068f8ab2bd6da7e912a",
+    shortHash: "fabd814",
+    committedAt: "2026-09-03",
+    summary: "fix: stabilize preview interaction regressions",
   }
 ].reverse();

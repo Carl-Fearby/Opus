@@ -731,4 +731,16 @@ export const releaseNotesOverlay = [
       "Publish opus-react 0.6.34 with all changes above.",
     ],
   },
+  {
+    version: "0.6.35",
+    releasedAt: "2026-09-03",
+    summary: "Stabilise the new preview surfaces and automated browser coverage.",
+    changes: [
+      "Complete gradient support in the BackgroundBlobs and field-usage setting types.",
+      "Remove lint warnings in the BackgroundBlobs animation path and optimise the Library landing-page image.",
+      "Make preview hydration and action-status hooks reliable for background treatments and browser interaction tests.",
+      "Harden carousel interaction fingerprints when Playwright has already closed the page context.",
+      "Publish opus-react 0.6.35 with these quality and regression fixes.",
+    ],
+  },
 ];
