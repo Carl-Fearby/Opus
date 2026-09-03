@@ -1,0 +1,181 @@
+.page {
+  width: min(1120px, 100%);
+  margin: 0 auto;
+  padding: 72px 24px 96px;
+}
+
+.hero {
+  max-width: 800px;
+  margin-bottom: 56px;
+}
+
+.eyebrow {
+  margin: 0 0 12px;
+  color: var(--opus-cyan);
+  font-family: var(--font-ibm-plex-mono), monospace;
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.hero h1,
+.sectionHeading h2 {
+  margin: 0;
+  letter-spacing: -0.045em;
+}
+
+.hero h1 {
+  font-size: clamp(2.5rem, 5vw, 4.5rem);
+  line-height: 1.02;
+}
+
+.hero > p:last-child,
+.sectionHeading > p {
+  color: var(--opus-muted);
+  line-height: 1.7;
+}
+
+.hero > p:last-child {
+  margin: 18px 0 0;
+  font-size: 1.08rem;
+}
+
+.section {
+  margin-top: 44px;
+}
+
+.sectionHeading {
+  display: flex;
+  align-items: end;
+  justify-content: space-between;
+  gap: 24px;
+  margin-bottom: 18px;
+}
+
+.sectionHeading h2 {
+  font-size: 1.7rem;
+}
+
+.sectionHeading > p {
+  max-width: 450px;
+  margin: 0;
+  font-size: 0.94rem;
+}
+
+.releaseList,
+.commitList {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.releaseList {
+  display: grid;
+  gap: 14px;
+}
+
+.release {
+  padding: 24px;
+  border: 1px solid var(--opus-border);
+  border-radius: var(--opus-radius);
+  background: color-mix(in srgb, var(--opus-panel) 88%, transparent);
+  box-shadow: var(--opus-shadow);
+}
+
+.releaseMeta {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  color: var(--opus-muted);
+  font-size: 0.82rem;
+}
+
+.releaseMeta span {
+  padding: 4px 8px;
+  border-radius: 999px;
+  background: rgba(143, 108, 255, 0.16);
+  color: #c4b3fb;
+  font-family: var(--font-ibm-plex-mono), monospace;
+  font-weight: 700;
+}
+
+.release h3 {
+  margin: 14px 0 10px;
+  font-size: 1.08rem;
+  line-height: 1.4;
+}
+
+.release ul {
+  display: grid;
+  gap: 8px;
+  margin: 0;
+  padding-left: 20px;
+  color: var(--opus-muted);
+  font-size: 0.92rem;
+  line-height: 1.55;
+}
+
+.commitDetails {
+  overflow: hidden;
+  border: 1px solid var(--opus-border);
+  border-radius: var(--opus-radius);
+  background: color-mix(in srgb, var(--opus-panel) 88%, transparent);
+}
+
+.commitDetails summary {
+  padding: 18px 22px;
+  color: var(--opus-cyan);
+  cursor: pointer;
+  font-weight: 700;
+}
+
+.commitList {
+  border-top: 1px solid var(--opus-border);
+}
+
+.commitList li {
+  display: grid;
+  grid-template-columns: 5.8rem 6.2rem minmax(0, 1fr);
+  gap: 10px;
+  padding: 10px 14px;
+  color: var(--opus-muted);
+  font-family: var(--font-ibm-plex-mono), monospace;
+  font-size: 0.78rem;
+  line-height: 1.4;
+}
+
+.commitList li + li {
+  border-top: 1px solid var(--opus-border);
+}
+
+.commitList a {
+  color: var(--opus-cyan);
+  font-weight: 700;
+}
+
+@media (max-width: 720px) {
+  .sectionHeading {
+    align-items: start;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .commitList li {
+    grid-template-columns: 1fr auto;
+  }
+
+  .commitList li span {
+    grid-column: 1 / -1;
+  }
+}
+
+@media (max-width: 560px) {
+  .page {
+    padding-inline: 18px;
+  }
+
+  .release {
+    padding: 20px;
+  }
+}

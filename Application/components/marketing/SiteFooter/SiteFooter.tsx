@@ -9,6 +9,7 @@ const footerLinks = [
   { href: "/#contributors", label: "Contribute", external: false },
   { href: docsComponentsUrl, label: "Component catalogue", external: false },
   { href: docsPlaygroundUrl, label: "Code Playground", external: false },
+  { href: "/version", label: "Release notes", external: false },
   { href: "/code-of-conduct", label: "Code of Conduct", external: false },
   { href: "/license", label: "MIT License", external: false },
   { href: npmPackageUrl, label: "npm", external: true },
