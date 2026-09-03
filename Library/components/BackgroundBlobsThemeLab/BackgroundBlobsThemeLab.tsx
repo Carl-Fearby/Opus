@@ -165,7 +165,13 @@ export function BackgroundBlobsThemeLab({
                 <LabWidget title="Full-width container" radius={controlRadius}>
                   <div className={styles.widgetContent}>
                     <Badge label="full · 100%" tone="warning" />
-                    <Button radius={controlRadius} variant="primary">Open full-width workflow</Button>
+                    <Button
+                      radius={controlRadius}
+                      variant="primary"
+                      onClick={() => setEnabled(true)}
+                    >
+                      Open full-width workflow
+                    </Button>
                   </div>
                 </LabWidget>
               </Container>
@@ -273,7 +279,14 @@ export function BackgroundBlobsThemeLab({
                   <div style={{ display: "grid", gap: "16px" }}>
                     <div style={{ display: "flex", flexWrap: "wrap", gap: "12px" }}>
                       {buttonVariants.map((variant) => (
-                        <Button key={variant} radius={controlRadius} variant={variant}>{variant}</Button>
+                        <Button
+                          key={variant}
+                          radius={controlRadius}
+                          variant={variant}
+                          onClick={() => setEnabled((current) => !current)}
+                        >
+                          {variant}
+                        </Button>
                       ))}
                     </div>
                     <div style={{ display: "flex", flexWrap: "wrap", gap: "10px" }}>

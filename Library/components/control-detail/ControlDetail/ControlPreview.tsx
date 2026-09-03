@@ -6666,12 +6666,14 @@ export function ControlPreview(props: ControlPreviewProps) {
     <div
       className={styles.globalActionPreview}
       data-control-transparency={previewTransparency}
+      data-hydrated="true"
+      data-testid="usage-preview"
       onClickCapture={reportCapturedAction}
       onChangeCapture={reportCapturedAction}
     >
       <ControlPreviewContent {...props} onPreviewAction={reportPreviewAction} />
       <div className={styles.globalActionStatus} aria-live="polite">
-        <p>{lastAction}</p>
+        <p data-testid="usage-preview-action">{lastAction}</p>
         {dataOutput ? (
           <div className={styles.globalDataOutput} data-testid="control-preview-data">
             <strong>Data output</strong>

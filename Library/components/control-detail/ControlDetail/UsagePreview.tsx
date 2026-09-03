@@ -211,6 +211,7 @@ export function UsagePreview({
   return (
     <div
       className={styles.globalActionPreview}
+      data-hydrated="true"
       data-testid="usage-preview"
       ref={previewRef}
     >
