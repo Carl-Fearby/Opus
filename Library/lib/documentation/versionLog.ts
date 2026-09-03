@@ -608,10 +608,10 @@ export const versionLog: VersionEntry[] = [
   {
     version: "0.6.34",
     releasedAt: "2026-09-03",
-    commit: "overlay-0.6.34",
-    commitShort: "overlay",
-    summary: "Complete commit timeline alongside detailed package release notes.",
-    changes: ["Add a generated, linked timeline for every repository commit to the documentation version page.","Keep the curated release history as the explanation of each published semantic version, with its grouped product changes.","Publish opus-react 0.6.34 with the BackgroundBlobs visual primitive and the current catalogue refinements."],
+    commit: "321bca9ed7002eb5d5a790a03f7be6a7f24dc93b",
+    commitShort: "321bca9",
+    summary: "Background atmospheres, universal control surface settings, richer previews, and complete release traceability.",
+    changes: ["Add BackgroundBlobs: an accessible, decorative animated colour field with fixed or parent-fill placement, configurable blob count, colours, size, blur, brightness, and reduced-motion support.","Add a Background Blobs theme lab that exercises real components over dark and light animated surfaces, including container width and padding controls.","Add universal field radius settings (none, standard, medium, large, and full) to the documentation controls and component APIs.","Add universal field background treatments: opaque, standard, and glass transparency, plus an optional gradient surface treatment.","Propagate radius, transparency, and gradient options across the field catalogue, shared FieldShell, generated usage examples, raw previews, and component settings panels.","Add control-preview body portals so full-viewport background treatments render above the documentation canvas without being clipped by local stacking contexts.","Improve combobox menus, colour-picker panels, icon picker, model viewer, panels, preview layouts, and component-shell settings to work consistently with the new surface system.","Expand the exported opus-react public API and CSS to include BackgroundBlobs and its related types and styles.","Refresh the marketing site with a new installation command, animated atmosphere, refined 3D model showcase, hero, statistics, playground, navigation, and calls to action.","Add a generated, linked timeline for every repository commit to the documentation version page, while retaining a complete curated explanation for each published semantic version.","Harden documentation and browser coverage for model galleries and error-page interactions, and upgrade Next.js to 16.3.4.","Publish opus-react 0.6.34 with all changes above."],
   }
 ].reverse();
 
