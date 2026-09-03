@@ -616,10 +616,18 @@ export const versionLog: VersionEntry[] = [
   {
     version: "0.6.35",
     releasedAt: "2026-09-03",
-    commit: "overlay-0.6.35",
-    commitShort: "overlay",
+    commit: "7849d64b1e3a2bf565b2c643548d4306d6fc8878",
+    commitShort: "7849d64",
     summary: "Stabilise the new preview surfaces and automated browser coverage.",
     changes: ["Complete gradient support in the BackgroundBlobs and field-usage setting types.","Remove lint warnings in the BackgroundBlobs animation path and optimise the Library landing-page image.","Make preview hydration and action-status hooks reliable for background treatments and browser interaction tests.","Harden carousel interaction fingerprints when Playwright has already closed the page context.","Publish opus-react 0.6.35 with these quality and regression fixes."],
+  },
+  {
+    version: "0.6.36",
+    releasedAt: "2026-09-03",
+    commit: "overlay-0.6.36",
+    commitShort: "overlay",
+    summary: "Publish the preview and browser-regression fixes as an installable patch release.",
+    changes: ["Release the verified preview-surface, lint, type, and browser-interaction corrections to npm after the reserved 0.6.35 upload did not become publicly available.","Publish opus-react 0.6.36 for application and external consumer installation."],
   }
 ].reverse();
 

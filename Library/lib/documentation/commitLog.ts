@@ -1171,5 +1171,11 @@ export const commitLog: CommitEntry[] = [
     shortHash: "fabd814",
     committedAt: "2026-09-03",
     summary: "fix: stabilize preview interaction regressions",
+  },
+  {
+    hash: "7849d64b1e3a2bf565b2c643548d4306d6fc8878",
+    shortHash: "7849d64",
+    committedAt: "2026-09-03",
+    summary: "chore: release opus-react@0.6.35",
   }
 ].reverse();
