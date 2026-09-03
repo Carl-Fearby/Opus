@@ -12,7 +12,7 @@ import {
 } from "react";
 import { createPortal } from "react-dom";
 import { FieldShell } from "@/components/fields/FieldShell";
-import type { FieldMode, LabelPosition } from "@/components/fields/types";
+import type { ControlRadius, FieldMode, LabelPosition } from "@/components/fields/types";
 import {
   resolveFieldListPortalStyle,
   type FloatingPortalStyle,
@@ -22,6 +22,9 @@ import styles from "./ComboboxField.module.css";
 export type ComboboxOption = { label: string; value: string };
 
 export type ComboboxFieldProps = {
+  radius?: ControlRadius;
+  transparency?: import("../types").ControlTransparency;
+  gradient?: boolean;
   error?: string;
   help?: string;
   id: string;
@@ -47,6 +50,9 @@ export function ComboboxField({
   required,
   value,
   onChange,
+  radius,
+  transparency,
+  gradient,
 }: ComboboxFieldProps) {
   const listId = useId();
   const rootRef = useRef<HTMLDivElement>(null);
@@ -173,6 +179,7 @@ export function ComboboxField({
     ? createPortal(
         <div
           className={styles.portal}
+          data-control-radius={radius}
           data-portaled="true"
           ref={panelRef}
           style={
@@ -221,9 +228,12 @@ export function ComboboxField({
       help={help}
       id={id}
       label={label}
+      radius={radius}
       labelPosition={labelPosition}
       mode={mode}
       required={required}
+      transparency={transparency}
+      gradient={gradient}
     >
       <div className={styles.root} ref={rootRef}>
         <input

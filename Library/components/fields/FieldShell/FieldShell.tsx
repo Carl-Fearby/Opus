@@ -3,7 +3,7 @@
 import { createContext, useContext, useMemo, type ReactNode } from "react";
 import { Tooltip } from "@/components/Tooltip";
 import styles from "./FieldShell.module.css";
-import type { FieldMode, LabelPosition } from "@/components/fields/types";
+import type { ControlRadius, ControlTransparency, FieldMode, LabelPosition } from "@/components/fields/types";
 
 export type FieldShellAriaContextValue = {
   describedBy?: string;
@@ -38,6 +38,9 @@ type FieldShellProps = {
   children: ReactNode;
   className?: string;
   compactControl?: boolean;
+  radius?: ControlRadius;
+  transparency?: ControlTransparency;
+  gradient?: boolean;
   error?: string;
   fitContent?: boolean;
   flaggedAlign?: "center" | "start";
@@ -108,6 +111,9 @@ export function FieldShell({
   children,
   className,
   compactControl,
+  radius,
+  transparency,
+  gradient,
   error,
   fitContent,
   flaggedAlign = "start",
@@ -178,6 +184,9 @@ export function FieldShell({
     <FieldShellAriaContext.Provider value={ariaContext}>
       <div
         data-fit-content={fitContent ? "true" : undefined}
+        data-control-radius={radius}
+        data-control-transparency={transparency}
+        data-control-gradient={gradient ? "true" : undefined}
         className={[
           styles.root,
           flagged ? styles.flagged : styles.stacked,

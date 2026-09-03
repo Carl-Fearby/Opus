@@ -3,10 +3,13 @@ import { inputControlSizeClassName } from "../shared/inputControlSizes";
 import { Tooltip } from "@/components/Tooltip";
 import { FieldShell, fieldInputAriaProps, useFieldShellAria } from "@/components/fields/FieldShell";
 import { formatByStep } from "@/components/fields/numericUtils";
-import type { FieldMode, InputControlSize, LabelPosition } from "@/components/fields/types";
+import type { ControlRadius, FieldMode, InputControlSize, LabelPosition } from "@/components/fields/types";
 import type { ChangeEventHandler, CSSProperties } from "react";
 
 type RangeFieldProps = {
+  radius?: ControlRadius;
+  transparency?: import("../types").ControlTransparency;
+  gradient?: boolean;
   error?: string;
   help?: string;
   id: string;
@@ -31,6 +34,9 @@ export function RangeField({
   max = 100,
   min = 0,
   mode = "stacked",
+  radius,
+  transparency,
+  gradient,
   size = "md",
   step = 1,
   value,
@@ -54,6 +60,9 @@ export function RangeField({
       labelTag="div"
       labelVisuallyHidden
       mode={mode}
+      radius={radius}
+      transparency={transparency}
+      gradient={gradient}
     >
       <div className={`${styles.wrap} ${inputControlSizeClassName[size]}`} style={rangeStyle}>
         <div className={styles.topRow}>

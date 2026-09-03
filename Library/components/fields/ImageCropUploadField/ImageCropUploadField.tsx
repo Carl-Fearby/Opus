@@ -23,6 +23,7 @@ import {
   type ImageCropState,
 } from "./cropCircularImage";
 import styles from "./ImageCropUploadField.module.css";
+import type { ControlRadius } from "../types";
 import { inputControlSizeClassName } from "../shared/inputControlSizes";
 
 export type ImageCropUploadResult = {
@@ -33,6 +34,9 @@ export type ImageCropUploadResult = {
 export type ImageCropShape = "circle" | "rect";
 
 export type ImageCropUploadFieldProps = {
+  radius?: ControlRadius;
+  transparency?: import("../types").ControlTransparency;
+  gradient?: boolean;
   accept?: string;
   changeButtonLabel?: string;
   cropButtonLabel?: string;
@@ -139,6 +143,9 @@ export function ImageCropUploadField({
   viewportWidth,
   zoomLabel = "Zoom",
   zoomStep = 0.05,
+  radius,
+  transparency,
+  gradient,
 }: ImageCropUploadFieldProps) {
   const shellAria = useFieldShellAria();
   const inputId = useId();
@@ -380,6 +387,9 @@ export function ImageCropUploadField({
       labelTag="div"
       labelVisuallyHidden={labelVisuallyHidden}
       mode={mode}
+      radius={radius}
+      transparency={transparency}
+      gradient={gradient}
     >
       <div
         className={`${styles.root} ${inputControlSizeClassName[size]}`}

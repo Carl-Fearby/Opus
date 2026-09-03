@@ -42,6 +42,9 @@ export function DateField({
   inputProps,
   name,
   readOnly,
+  radius,
+  transparency,
+  gradient,
   required,
   size = "md",
   type = "date",
@@ -65,6 +68,9 @@ export function DateField({
       labelPosition={labelPosition}
       mode={mode}
       required={required}
+      radius={radius}
+      transparency={transparency}
+      gradient={gradient}
     >
       {type === "date" ? (
         <OpusDateInput

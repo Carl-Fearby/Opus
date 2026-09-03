@@ -70,6 +70,18 @@ export * from "../../../components/PacMan";
 export * from "../../../components/FontPicker";
 
 export {
+  BackgroundBlobs,
+  defaultBackgroundBlobs,
+} from "../../../components/BackgroundBlobs";
+export type {
+  BackgroundBlob,
+  BackgroundBlobDrift,
+  BackgroundBlobPlacement,
+  BackgroundBlobSize,
+  BackgroundBlobsProps,
+} from "../../../components/BackgroundBlobs";
+
+export {
   COLOUR_CLOUDS_MAX,
   ColourClouds,
   ColourCloudsMenu,

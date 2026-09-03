@@ -4,6 +4,7 @@
     color-mix(in srgb, var(--opus-base, #64748b) 11%, #07090f) 0%,
     color-mix(in srgb, var(--opus-base, #64748b) 8%, #0a1118) 100%
   );
+  --opus-pane-fill: color-mix(in srgb, var(--opus-accent) 8%, rgba(10, 12, 22, 0.36));
   --opus-topbar-height: auto;
   position: relative;
   display: grid;
@@ -11,7 +12,7 @@
   height: 100vh;
   width: 100%;
   overflow: hidden;
-  background: var(--opus-page-bg);
+  background: transparent;
   color: #f5f7ff;
   transition:
     background 220ms ease,
@@ -25,10 +26,21 @@ html[data-shell-theme="light"] .shell {
     color-mix(in srgb, var(--opus-base, #64748b) 5%, #fbfcff) 0%,
     color-mix(in srgb, var(--opus-base, #64748b) 4%, #edf2f7) 100%
   );
+  --opus-pane-fill: color-mix(in srgb, var(--opus-accent) 6%, rgba(250, 251, 255, 0.36));
   color: #17132f;
 }
 
+.viewportAtmosphere {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+
 .body {
+  position: relative;
+  z-index: 1;
   display: grid;
   grid-template-columns: auto minmax(0, 1fr);
   min-height: 0;
@@ -67,6 +79,7 @@ html[data-shell-theme="light"] .shell {
   display: flex;
   min-height: 0;
   min-width: 0;
+  background: transparent;
 }
 
 .settingsResizeHandle {
@@ -81,38 +94,17 @@ html[data-shell-theme="light"] .shell {
 }
 
 .settingsSidebar {
-  --opus-panel: color-mix(in srgb, var(--opus-base, #64748b) 8%, rgba(10, 10, 16, 0.95));
-  --opus-border: color-mix(in srgb, var(--opus-accent) 18%, transparent);
-  --opus-border-strong: color-mix(in srgb, var(--opus-accent) 32%, transparent);
-  --opus-text: #f5f7ff;
-  --opus-muted: rgba(223, 226, 255, 0.72);
-  --opus-input-bg: color-mix(in srgb, var(--opus-base, #64748b) 10%, rgba(14, 14, 20, 0.92));
-  --opus-input-fill: color-mix(in srgb, var(--opus-base, #64748b) 9%, rgba(12, 12, 18, 0.94));
-  --opus-shadow: 0 28px 110px rgba(4, 5, 14, 0.48);
-  container-type: inline-size;
-  container-name: settings-sidebar;
-  display: flex;
-  flex: 1;
-  flex-direction: column;
   min-width: 0;
-  min-height: 0;
-  overflow: hidden;
-  background: color-mix(in srgb, var(--opus-panel) 90%, transparent);
-  color: #f5f7ff;
-  transition: background 220ms ease;
+  background: transparent;
+  --opus-input-bg: color-mix(in srgb, var(--opus-accent) 12%, #3a3d5c);
+  --opus-input-fill: color-mix(in srgb, var(--opus-accent) 10%, #35385a);
 }
 
-.settingsSidebar[data-shell-theme="light"],
+.shell[data-shell-theme="light"] .settingsSidebar,
 html[data-shell-theme="light"] .settingsSidebar {
-  --opus-panel: color-mix(in srgb, var(--opus-base, #64748b) 4%, rgba(252, 252, 255, 0.98));
-  --opus-border: color-mix(in srgb, var(--opus-accent) 16%, transparent);
-  --opus-border-strong: color-mix(in srgb, var(--opus-accent) 28%, transparent);
-  --opus-text: #17132f;
-  --opus-muted: rgba(38, 32, 72, 0.68);
-  --opus-input-bg: color-mix(in srgb, var(--opus-base, #64748b) 5%, rgba(255, 255, 255, 0.92));
-  --opus-input-fill: color-mix(in srgb, var(--opus-base, #64748b) 3%, rgba(255, 255, 255, 0.98));
-  --opus-shadow: 0 28px 110px rgba(38, 32, 72, 0.12);
-  color: var(--opus-text);
+  background: transparent;
+  --opus-input-bg: color-mix(in srgb, var(--opus-accent) 6%, #ffffff);
+  --opus-input-fill: color-mix(in srgb, var(--opus-accent) 4%, #ffffff);
 }
 
 .settingsSidebarHeader {
@@ -146,7 +138,7 @@ html[data-shell-theme="light"] .settingsSidebar {
   padding: 0;
   border: 1px solid color-mix(in srgb, var(--opus-border) 88%, transparent);
   border-radius: 8px;
-  background: color-mix(in srgb, var(--opus-panel) 88%, transparent);
+  background: color-mix(in srgb, var(--opus-pane-fill) 80%, transparent);
   color: var(--opus-muted);
   font-size: 0.72rem;
   cursor: pointer;
@@ -159,7 +151,7 @@ html[data-shell-theme="light"] .settingsSidebar {
 .settingsCollapseButton:hover,
 .settingsCollapseButton:focus-visible {
   border-color: color-mix(in srgb, var(--opus-accent) 36%, var(--opus-border));
-  background: color-mix(in srgb, var(--opus-accent) 12%, var(--opus-panel));
+  background: color-mix(in srgb, var(--opus-accent) 12%, var(--opus-pane-fill));
   color: var(--opus-accent);
   outline: none;
 }
@@ -197,9 +189,12 @@ html[data-shell-theme="light"] .settingsSidebar {
 .settingsSidebarBody {
   flex: 1;
   min-height: 0;
+  background: transparent;
 }
 
 .settingsSidebarBodyInner {
+  container-type: inline-size;
+  container-name: settings-sidebar;
   padding: 12px 14px 18px;
 }
 
@@ -251,7 +246,7 @@ html[data-shell-theme="light"] .settingsSidebar {
   padding: 0 12px;
   border: 1px solid var(--opus-border);
   border-radius: var(--opus-input-radius);
-  background: color-mix(in srgb, var(--opus-panel) 88%, transparent);
+  background: color-mix(in srgb, var(--opus-pane-fill) 80%, transparent);
   color: var(--opus-text);
   font: inherit;
   font-size: 0.76rem;
@@ -262,7 +257,7 @@ html[data-shell-theme="light"] .settingsSidebar {
 .settingsActionButton:hover,
 .settingsActionButton:focus-visible {
   border-color: color-mix(in srgb, var(--opus-accent) 55%, var(--opus-border));
-  background: color-mix(in srgb, var(--opus-accent) 12%, var(--opus-panel));
+  background: color-mix(in srgb, var(--opus-accent) 12%, var(--opus-pane-fill));
   outline: none;
 }
 
@@ -273,18 +268,22 @@ html[data-shell-theme="light"] .settingsSidebar {
   min-width: 0;
   min-height: 0;
   overflow: hidden;
-  background: color-mix(in srgb, var(--opus-panel) 90%, transparent);
+  background: var(--opus-pane-fill);
   color: var(--opus-text);
   transition:
     background 220ms ease,
     color 220ms ease;
 }
 
+.sidebar.settingsSidebar {
+  background: transparent;
+}
+
 .sidebarSearch {
   flex-shrink: 0;
   z-index: 1;
   padding: 18px 14px 12px;
-  background: color-mix(in srgb, var(--opus-panel) 90%, transparent);
+  background: transparent;
 }
 
 .sidebarSearchWrap {
@@ -295,7 +294,7 @@ html[data-shell-theme="light"] .settingsSidebar {
   padding: 8px 10px;
   border: 1px solid var(--opus-border);
   border-radius: var(--opus-input-radius);
-  background: color-mix(in srgb, var(--opus-input-bg) 72%, transparent);
+  background: color-mix(in srgb, var(--opus-pane-fill) 80%, transparent);
   cursor: text;
   transition:
     background 160ms ease,
@@ -304,7 +303,7 @@ html[data-shell-theme="light"] .settingsSidebar {
 
 .sidebarSearchWrap:focus-within {
   border-color: color-mix(in srgb, var(--opus-accent) 45%, var(--opus-border));
-  background: color-mix(in srgb, var(--opus-input-bg) 88%, transparent);
+  background: color-mix(in srgb, var(--opus-pane-fill) 92%, transparent);
 }
 
 .sidebarSearchIcon {
@@ -400,7 +399,7 @@ html[data-shell-theme="light"] .settingsSidebar {
   min-width: 0;
   padding: 20px 24px 18px;
   border-bottom: 1px solid var(--opus-border);
-  background: color-mix(in srgb, var(--opus-base, #64748b) 7%, rgba(9, 11, 18, 0.95));
+  background: var(--opus-pane-fill);
   color: var(--opus-text);
 }
 
@@ -409,7 +408,7 @@ html[data-shell-theme="light"] .pageHeader {
   --opus-border: color-mix(in srgb, var(--opus-accent) 16%, transparent);
   --opus-text: #17132f;
   --opus-muted: rgba(38, 32, 72, 0.68);
-  background: color-mix(in srgb, var(--opus-base, #64748b) 4%, rgba(250, 251, 255, 0.95));
+  background: var(--opus-pane-fill);
 }
 
 .pageHeader h1 {
@@ -441,7 +440,7 @@ html[data-shell-theme="light"] .pageHeader {
   overflow: hidden;
   border: 1px solid var(--opus-border, rgba(168, 131, 255, 0.18));
   border-radius: 14px;
-  background: var(--opus-page-bg);
+  background: var(--opus-pane-fill);
   color: var(--opus-text);
   transition:
     background 220ms ease,

@@ -2,6 +2,7 @@ import type {
   InputHTMLAttributes,
   TextareaHTMLAttributes,
 } from "react";
+import type { ControlRadius, ControlTransparency } from "../types";
 
 export type NativeInputProps = Omit<
   InputHTMLAttributes<HTMLInputElement>,
@@ -34,6 +35,9 @@ export type NativeTextAreaProps = Omit<
 >;
 
 export type TextEntryBehaviourProps = {
+  radius?: ControlRadius;
+  transparency?: ControlTransparency;
+  gradient?: boolean;
   autoCapitalize?: InputHTMLAttributes<HTMLInputElement>["autoCapitalize"];
   autoComplete?: InputHTMLAttributes<HTMLInputElement>["autoComplete"];
   autoCorrect?: InputHTMLAttributes<HTMLInputElement>["autoCorrect"];

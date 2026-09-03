@@ -54,6 +54,9 @@ export function TextField({
   name,
   pattern,
   readOnly,
+  radius,
+  transparency,
+  gradient,
   required,
   size = "md",
   type,
@@ -114,6 +117,9 @@ export function TextField({
       labelPosition={labelPosition}
       mode={mode}
       required={required}
+      radius={radius}
+      transparency={transparency}
+      gradient={gradient}
     >
       {isSearch ? (
         <div

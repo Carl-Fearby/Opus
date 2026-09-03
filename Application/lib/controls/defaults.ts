@@ -139,6 +139,9 @@ Note that this is a simplified example and does not take into account other fact
 const baseFieldDefaults = {
   mode: "stacked" as const,
   labelPosition: "left" as const,
+  radius: "standard" as const,
+  transparency: "standard" as const,
+  gradient: false,
   errorEnabled: false,
   error: "This field is required",
   helpEnabled: false,

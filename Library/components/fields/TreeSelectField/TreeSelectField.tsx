@@ -6,6 +6,7 @@ import type { FieldMode, InputControlSize, LabelPosition } from "@/components/fi
 import shared from "../shared/fieldControl.module.css";
 import { inputControlSizeClassName } from "../shared/inputControlSizes";
 import styles from "./TreeSelectField.module.css";
+import type { ControlRadius } from "../types";
 
 export type TreeSelectNode = {
   children?: TreeSelectNode[];
@@ -14,6 +15,9 @@ export type TreeSelectNode = {
 };
 
 type TreeSelectFieldProps = {
+  radius?: ControlRadius;
+  transparency?: import("../types").ControlTransparency;
+  gradient?: boolean;
   error?: string;
   help?: string;
   id: string;
@@ -86,6 +90,9 @@ export function TreeSelectField({
   size = "md",
   value,
   onChange,
+  radius,
+  transparency,
+  gradient,
 }: TreeSelectFieldProps) {
   const shellAria = useFieldShellAria();
   const rootRef = useRef<HTMLDivElement>(null);
@@ -125,6 +132,9 @@ export function TreeSelectField({
       label={label}
       labelPosition={labelPosition}
       mode={mode}
+      radius={radius}
+      transparency={transparency}
+      gradient={gradient}
       required={required}
     >
       <div className={styles.root} ref={rootRef}>

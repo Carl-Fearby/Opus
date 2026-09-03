@@ -3,15 +3,15 @@
 import { useId, useRef, type ComponentPropsWithoutRef, type ReactNode } from "react";
 import { FieldShell } from "../FieldShell";
 import { OpusDateRangeInput, type DateRangeValue } from "../DatePickerPanel";
-import type { FieldMode, LabelPosition } from "../types";
+import type { ControlRadius, FieldMode, LabelPosition } from "../types";
 import styles from "./AdvancedFields.module.css";
 
-type ShellProps = { error?: string; help?: string; id: string; label: string; labelPosition?: LabelPosition; mode?: FieldMode; required?: boolean };
+type ShellProps = { error?: string; help?: string; id: string; label: string; labelPosition?: LabelPosition; mode?: FieldMode; radius?: ControlRadius; transparency?: import("../types").ControlTransparency; gradient?: boolean; required?: boolean };
 
 export type { DateRangeValue };
 export type DateRangeFieldProps = ShellProps & { value: DateRangeValue; min?: string; max?: string; onChange: (value: DateRangeValue) => void };
-export function DateRangeField({ error, help, id, label, labelPosition, max, min, mode, required, value, onChange }: DateRangeFieldProps) {
-  return <FieldShell error={error} help={help} id={id} label={label} labelPosition={labelPosition} labelTag="div" mode={mode} required={required}>
+export function DateRangeField({ error, help, id, label, labelPosition, max, min, mode, radius, transparency, gradient, required, value, onChange }: DateRangeFieldProps) {
+  return <FieldShell error={error} help={help} id={id} label={label} labelPosition={labelPosition} labelTag="div" mode={mode} radius={radius} transparency={transparency} gradient={gradient} required={required}>
     <OpusDateRangeInput
       aria-invalid={Boolean(error)}
       id={id}
@@ -28,9 +28,9 @@ export type { ComboboxFieldProps, ComboboxOption } from "../ComboboxField";
 export { ComboboxField } from "../ComboboxField";
 
 export type CurrencyFieldProps = ShellProps & { currency?: string; locale?: string; value: number | null; onChange: (value: number | null) => void };
-export function CurrencyField({ currency = "GBP", error, help, id, label, labelPosition, locale = "en-GB", mode, required, value, onChange }: CurrencyFieldProps) {
+export function CurrencyField({ currency = "GBP", error, help, id, label, labelPosition, locale = "en-GB", mode, radius, transparency, gradient, required, value, onChange }: CurrencyFieldProps) {
   const symbol = new Intl.NumberFormat(locale, { currency, style: "currency" }).formatToParts(0).find((part) => part.type === "currency")?.value ?? currency;
-  return <FieldShell error={error} help={help} id={id} label={label} labelPosition={labelPosition} mode={mode} required={required}>
+  return <FieldShell error={error} help={help} id={id} label={label} labelPosition={labelPosition} mode={mode} radius={radius} transparency={transparency} gradient={gradient} required={required}>
     <div className={styles.affixed}><span aria-hidden="true">{symbol}</span><input aria-invalid={Boolean(error)} className={styles.bareInput} id={id} inputMode="decimal" type="number" value={value ?? ""} onChange={(event) => onChange(event.target.value === "" ? null : Number(event.target.value))} /></div>
   </FieldShell>;
 }
@@ -53,12 +53,15 @@ export function PercentageField({
   max = 100,
   min = 0,
   mode,
+  radius,
+  transparency,
+  gradient,
   required,
   step = 0.01,
   value,
   onChange,
 }: PercentageFieldProps) {
-  return <FieldShell error={error} help={help} id={id} label={label} labelPosition={labelPosition} mode={mode} required={required}>
+  return <FieldShell error={error} help={help} id={id} label={label} labelPosition={labelPosition} mode={mode} radius={radius} transparency={transparency} gradient={gradient} required={required}>
     <div className={styles.affixed}>
       <input
         aria-invalid={Boolean(error)}
@@ -129,8 +132,8 @@ function applyMask(raw: string, mask: string, previous = "") {
   return result;
 }
 
-export function MaskedField({ error, help, id, label, labelPosition, mask, mode, placeholder, required, value, onChange }: MaskedFieldProps) {
-  return <FieldShell error={error} help={help} id={id} label={label} labelPosition={labelPosition} mode={mode} required={required}>
+export function MaskedField({ error, help, id, label, labelPosition, mask, mode, placeholder, radius, transparency, gradient, required, value, onChange }: MaskedFieldProps) {
+  return <FieldShell error={error} help={help} id={id} label={label} labelPosition={labelPosition} mode={mode} radius={radius} transparency={transparency} gradient={gradient} required={required}>
     <input
       aria-invalid={Boolean(error)}
       className={styles.input}
@@ -144,10 +147,10 @@ export function MaskedField({ error, help, id, label, labelPosition, mask, mode,
 
 export type MultiFileItem = File | { name: string; size: number };
 export type MultiFileFieldProps = ShellProps & { accept?: string; files: MultiFileItem[]; maxFiles?: number; onChange: (files: MultiFileItem[]) => void };
-export function MultiFileField({ accept, error, files, help, id, label, labelPosition, maxFiles = 5, mode, required, onChange }: MultiFileFieldProps) {
+export function MultiFileField({ accept, error, files, help, id, label, labelPosition, maxFiles = 5, mode, radius, transparency, gradient, required, onChange }: MultiFileFieldProps) {
   const inputRef = useRef<HTMLInputElement>(null);
   const add = (next: FileList | null) => next && onChange([...files, ...Array.from(next)].slice(0, maxFiles));
-  return <FieldShell error={error} help={help} id={id} label={label} labelPosition={labelPosition} labelTag="div" mode={mode} required={required}>
+  return <FieldShell error={error} help={help} id={id} label={label} labelPosition={labelPosition} labelTag="div" mode={mode} radius={radius} transparency={transparency} gradient={gradient} required={required}>
     <label className={styles.drop} htmlFor={id}><strong>Choose files</strong><span>{files.length ? `${files.length} of ${maxFiles} selected` : `Up to ${maxFiles} files`}</span><input accept={accept} className={styles.hidden} id={id} multiple ref={inputRef} type="file" onChange={(event) => add(event.target.files)} /></label>
     {files.length ? <ul className={styles.fileList}>{files.map((file, index) => <li key={`${file.name}-${file.size}-${index}`}><span>{file.name}</span><button aria-label={`Remove ${file.name}`} type="button" onClick={() => onChange(files.filter((_, itemIndex) => itemIndex !== index))}>×</button></li>)}</ul> : null}
   </FieldShell>;
@@ -155,8 +158,8 @@ export function MultiFileField({ accept, error, files, help, id, label, labelPos
 
 export type CheckboxGroupOption = { disabled?: boolean; label: string; value: string };
 export type CheckboxGroupFieldProps = ShellProps & { options: CheckboxGroupOption[]; value: string[]; onChange: (value: string[]) => void };
-export function CheckboxGroupField({ error, help, id, label, labelPosition, mode, options, required, value, onChange }: CheckboxGroupFieldProps) {
-  return <FieldShell error={error} help={help} id={id} label={label} labelPosition={labelPosition} labelTag="div" mode={mode} required={required}>
+export function CheckboxGroupField({ error, help, id, label, labelPosition, mode, options, radius, transparency, gradient, required, value, onChange }: CheckboxGroupFieldProps) {
+  return <FieldShell error={error} help={help} id={id} label={label} labelPosition={labelPosition} labelTag="div" mode={mode} radius={radius} transparency={transparency} gradient={gradient} required={required}>
     <div className={styles.checkGroup} role="group">{options.map((option, index) => <label key={option.value}><input checked={value.includes(option.value)} disabled={option.disabled} id={index === 0 ? id : undefined} type="checkbox" onChange={(event) => onChange(event.target.checked ? [...value, option.value] : value.filter((item) => item !== option.value))} /><span>{option.label}</span></label>)}</div>
   </FieldShell>;
 }

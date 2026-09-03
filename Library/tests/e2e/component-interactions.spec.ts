@@ -15,6 +15,7 @@ const ACTIONABLE_SELECTOR = [
 ].join(",");
 
 const PRESENTATIONAL_SLUGS = new Set([
+  "background-blobs",
   "focus-trap",
   "hidden-input",
   "model-viewer",

@@ -31,6 +31,11 @@
   font-weight: 650;
 }
 
+.optionHighlighted {
+  outline: none;
+  background: color-mix(in srgb, var(--opus-accent) 14%, transparent);
+}
+
 .hiddenSelect {
   position: absolute;
   width: 1px;

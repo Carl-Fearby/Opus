@@ -9,9 +9,17 @@
   padding: 28px 24px;
 }
 
+.audience {
+  max-width: 62ch;
+  margin: 0 0 22px;
+  color: var(--opus-muted);
+  font-size: 1.05rem;
+  line-height: 1.5;
+}
+
 .stats {
   display: grid;
-  grid-template-columns: repeat(4, minmax(0, 1fr));
+  grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 18px;
 }
 
@@ -30,97 +38,14 @@
   font-size: 0.92rem;
 }
 
-.breakdown {
-  display: grid;
-  gap: 14px;
-  margin-top: 26px;
-  padding-top: 24px;
-  border-top: 1px solid var(--opus-border);
-}
-
-.breakdownHeading {
-  display: flex;
-  align-items: baseline;
-  justify-content: space-between;
-  gap: 16px;
-}
-
-.breakdownHeading strong {
-  font-size: 0.98rem;
-}
-
-.breakdownHeading span {
-  color: var(--opus-muted);
-  font-size: 0.82rem;
-}
-
-.languageBar {
-  display: flex;
-  width: 100%;
-  height: 12px;
-  overflow: hidden;
-  border: 1px solid color-mix(in srgb, var(--opus-border) 78%, transparent);
-  border-radius: 999px;
-  background: color-mix(in srgb, var(--opus-panel) 82%, transparent);
-  box-shadow: inset 0 1px 4px rgba(0, 0, 0, 0.28);
-}
-
-.languageSegment {
-  width: var(--language-width);
-  min-width: 1px;
-  background: var(--language-colour);
-}
-
-.legend {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 10px 22px;
-}
-
-.legendItem {
-  display: grid;
-  grid-template-columns: auto auto auto auto;
-  align-items: center;
-  gap: 7px;
-  color: var(--opus-muted);
-  font-size: 0.82rem;
-}
-
-.legendItem strong {
-  color: var(--opus-text);
-  font-weight: 600;
-}
-
-.legendDot {
-  width: 9px;
-  height: 9px;
-  border-radius: 50%;
-  background: var(--language-colour);
-  box-shadow: 0 0 10px color-mix(in srgb, var(--language-colour) 55%, transparent);
-}
-
 @media (max-width: 860px) {
   .stats {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
+    grid-template-columns: 1fr;
   }
 }
 
 @media (max-width: 520px) {
   .inner {
     padding-inline: 18px;
-  }
-
-  .stats {
-    grid-template-columns: 1fr;
-  }
-
-  .breakdownHeading {
-    align-items: flex-start;
-    flex-direction: column;
-    gap: 5px;
-  }
-
-  .legend {
-    display: grid;
   }
 }

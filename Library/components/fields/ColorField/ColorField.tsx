@@ -14,7 +14,7 @@ import { createPortal } from "react-dom";
 import styles from "./ColorField.module.css";
 import { inputControlSizeClassName } from "../shared/inputControlSizes";
 import { FieldShell, fieldInputAriaProps, useFieldShellAria } from "@/components/fields/FieldShell";
-import type { FieldMode, InputControlSize, LabelPosition } from "@/components/fields/types";
+import type { ControlRadius, ControlTransparency, FieldMode, InputControlSize, LabelPosition } from "@/components/fields/types";
 import {
   resolveEmojiPickerPortalStyle,
   type FloatingPortalStyle,
@@ -23,6 +23,9 @@ import { ColorPickerPanel } from "../ColorPickerPanel";
 import { normalizeHex } from "../ColorPickerPanel/colorPickerUtils";
 
 type ColorFieldProps = {
+  radius?: ControlRadius;
+  transparency?: ControlTransparency;
+  gradient?: boolean;
   error?: string;
   help?: string;
   id: string;
@@ -57,6 +60,9 @@ export function ColorField({
   labelPosition = "left",
   mode = "stacked",
   onChange,
+  radius,
+  transparency,
+  gradient,
   size = "md",
   value,
 }: ColorFieldProps) {
@@ -152,6 +158,9 @@ export function ColorField({
       labelPosition={labelPosition}
       labelTag="div"
       mode={mode}
+      radius={radius}
+      transparency={transparency}
+      gradient={gradient}
     >
       <div className={styles.root} ref={rootRef}>
         <button

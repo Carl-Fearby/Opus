@@ -5,9 +5,12 @@ import styles from "./NumberField.module.css";
 import { inputControlSizeClassName } from "../shared/inputControlSizes";
 import { FieldShell, fieldInputAriaProps, useFieldShellAria } from "@/components/fields/FieldShell";
 import { formatByStep, roundToStep } from "@/components/fields/numericUtils";
-import type { FieldMode, InputControlSize, LabelPosition } from "@/components/fields/types";
+import type { ControlRadius, FieldMode, InputControlSize, LabelPosition } from "@/components/fields/types";
 
 type NumberFieldProps = {
+  radius?: ControlRadius;
+  transparency?: import("../types").ControlTransparency;
+  gradient?: boolean;
   error?: string;
   help?: string;
   id: string;
@@ -67,6 +70,9 @@ export function NumberField({
   labelVisuallyHidden,
   labelPosition = "left",
   max,
+  radius,
+  transparency,
+  gradient,
   min,
   mode = "stacked",
   name,
@@ -135,6 +141,9 @@ export function NumberField({
       labelVisuallyHidden={labelVisuallyHidden}
       labelPosition={labelPosition}
       mode={mode}
+      radius={radius}
+      transparency={transparency}
+      gradient={gradient}
     >
       <div
         className={[

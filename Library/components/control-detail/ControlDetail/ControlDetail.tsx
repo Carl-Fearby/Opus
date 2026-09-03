@@ -174,6 +174,7 @@ export function ControlDetail({ control, defaultSettings, documentation }: Contr
           <PreviewStage borderless={isFullBleedPreview(control.slug)}>
             <UsagePreview
               category={control.category}
+              showActionStatus={control.slug !== "background-blobs"}
               slug={control.slug}
               settings={previewSettings}
             />

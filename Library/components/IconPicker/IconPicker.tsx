@@ -12,6 +12,9 @@ import {
 import styles from "./IconPicker.module.css";
 
 type IconPickerProps = {
+  radius?: import("../fields/types").ControlRadius;
+  transparency?: import("../fields/types").ControlTransparency;
+  gradient?: boolean;
   help?: string;
   id: string;
   label?: string;
@@ -31,6 +34,9 @@ export function IconPicker({
   onChange,
   searchPlaceholder = "Search icons",
   value,
+  radius,
+  transparency,
+  gradient,
 }: IconPickerProps) {
   const [open, setOpen] = useState(false);
   const [query, setQuery] = useState("");
@@ -70,7 +76,16 @@ export function IconPicker({
   }, [open]);
 
   return (
-    <FieldShell help={help} id={id} label={label} labelPosition={labelPosition} mode={mode}>
+    <FieldShell
+      help={help}
+      id={id}
+      label={label}
+      labelPosition={labelPosition}
+      mode={mode}
+      radius={radius}
+      transparency={transparency}
+      gradient={gradient}
+    >
       <div className={styles.root} ref={rootRef}>
         <button
           aria-controls={open ? listboxId : undefined}

@@ -3,6 +3,7 @@
 import { useAccentPreference, useTileAccentPreference } from "@/components/AccentColorPicker";
 import { OpusThemeProvider } from "opus-react";
 import type { VersionEntry } from "@/lib/documentation/versionLog";
+import { commitLog } from "@/lib/documentation/commitLog";
 import { libraryVersion } from "@/lib/documentation/libraryVersion";
 import { versionLog } from "@/lib/documentation/versionLog";
 import { roadmapMilestones } from "@/lib/documentation/roadmap";
@@ -49,6 +50,39 @@ function VersionEntryBody({ entry }: { entry: VersionEntry }) {
         <p className={styles.versionAlsoPublished}>{formatAlsoPublished(entry.alsoPublished)}</p>
       ) : null}
     </>
+  );
+}
+
+function CommitHistory() {
+  return (
+    <section className={styles.commitHistory} aria-labelledby="commit-history-title">
+      <div className={styles.commitHistoryHeading}>
+        <div>
+          <p className={styles.versionEyebrow}>Source history</p>
+          <h2 id="commit-history-title">Every commit</h2>
+        </div>
+        <p>
+          Each entry is the exact Git commit behind the release narrative above. Commit subjects
+          record the individual implementation, fix, test, or maintenance change.
+        </p>
+      </div>
+      <ol className={styles.commitList}>
+        {commitLog.map((commit) => (
+          <li className={styles.commitItem} key={commit.hash}>
+            <a
+              className={styles.commitHash}
+              href={`https://github.com/Carl-Fearby/Opus/commit/${commit.hash}`}
+              rel="noreferrer"
+              target="_blank"
+            >
+              {commit.shortHash}
+            </a>
+            <time dateTime={commit.committedAt}>{formatReleasedDate(commit.committedAt)}</time>
+            <span>{commit.summary}</span>
+          </li>
+        ))}
+      </ol>
+    </section>
   );
 }
 
@@ -171,6 +205,7 @@ export function VersionPage() {
               ))}
             </ol>
           </section>
+          <CommitHistory />
         </div>
       </div>
     </OpusThemeProvider>

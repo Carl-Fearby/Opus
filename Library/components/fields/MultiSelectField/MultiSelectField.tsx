@@ -2,12 +2,15 @@
 
 import { useEffect, useMemo, useRef, useState } from "react";
 import { FieldShell, fieldInputAriaProps, useFieldShellAria } from "@/components/fields/FieldShell";
-import type { FieldMode, InputControlSize, LabelPosition } from "@/components/fields/types";
+import type { ControlRadius, FieldMode, InputControlSize, LabelPosition } from "@/components/fields/types";
 import shared from "../shared/fieldControl.module.css";
 import { inputControlSizeClassName } from "../shared/inputControlSizes";
 import styles from "./MultiSelectField.module.css";
 
 type MultiSelectFieldProps = {
+  radius?: ControlRadius;
+  transparency?: import("../types").ControlTransparency;
+  gradient?: boolean;
   error?: string;
   help?: string;
   id: string;
@@ -32,6 +35,9 @@ export function MultiSelectField({
   options,
   placeholder = "Select options…",
   required,
+  radius,
+  transparency,
+  gradient,
   size = "md",
   value,
   onChange,
@@ -88,6 +94,9 @@ export function MultiSelectField({
       labelPosition={labelPosition}
       mode={mode}
       required={required}
+      radius={radius}
+      transparency={transparency}
+      gradient={gradient}
     >
       <div className={styles.root} ref={rootRef}>
         <button

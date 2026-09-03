@@ -1,10 +1,13 @@
 import styles from "./SwitchField.module.css";
 import { inputControlSizeClassName } from "../shared/inputControlSizes";
 import { FieldShell, fieldInputAriaProps, useFieldShellAria } from "@/components/fields/FieldShell";
-import type { FieldMode, InputControlSize, LabelPosition } from "@/components/fields/types";
+import type { ControlRadius, FieldMode, InputControlSize, LabelPosition } from "@/components/fields/types";
 import type { ChangeEventHandler } from "react";
 
 type SwitchFieldProps = {
+  radius?: ControlRadius;
+  transparency?: import("../types").ControlTransparency;
+  gradient?: boolean;
   checked: boolean;
   error?: string;
   help?: string;
@@ -27,6 +30,9 @@ export function SwitchField({
   labelPosition = "left",
   mode = "flagged",
   size = "md",
+  radius,
+  transparency,
+  gradient,
   onChange,
 }: SwitchFieldProps) {
   const shellAria = useFieldShellAria();
@@ -44,6 +50,9 @@ export function SwitchField({
       labelTag="label"
       labelVisuallyHidden={labelVisuallyHidden}
       mode={mode}
+      radius={radius}
+      transparency={transparency}
+      gradient={gradient}
     >
       <div className={`${styles.toggle} ${inputControlSizeClassName[size]}`}>
         <input

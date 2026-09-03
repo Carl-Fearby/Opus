@@ -1,11 +1,11 @@
 import Link from "next/link";
-import { docsComponentsUrl, docsPlaygroundUrl } from "@/lib/siteLinks";
+import { docsComponentsUrl, docsPlaygroundUrl, docsUrl } from "@/lib/siteLinks";
 import styles from "./SiteHeader.module.css";
 
 const navLinks = [
   { href: "/#features", label: "Features" },
+  { href: docsUrl, label: "Docs" },
   { href: docsPlaygroundUrl, label: "Playground" },
-  { href: "/code-of-conduct", label: "Code of Conduct" },
 ];
 
 export function SiteHeader() {
@@ -13,7 +13,7 @@ export function SiteHeader() {
     <header className={styles.header}>
       <div className={styles.inner}>
         <Link className={styles.brand} href="/">
-          <img alt="Opus" className={styles.logo} src="/opus-logo.png" />
+          <img alt="Opus" className={styles.logo} fetchPriority="high" src="/opus-logo.png" />
         </Link>
 
         <nav aria-label="Primary" className={styles.nav}>
@@ -26,7 +26,7 @@ export function SiteHeader() {
 
         <div className={styles.actions}>
           <Link className={styles.primary} href={docsComponentsUrl}>
-            Components
+            Get started
           </Link>
         </div>
       </div>

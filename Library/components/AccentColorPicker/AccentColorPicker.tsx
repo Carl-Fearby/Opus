@@ -14,7 +14,12 @@ import { createPortal } from "react-dom";
 import { faRotateLeft } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { FieldShell } from "@/components/fields/FieldShell";
-import type { FieldMode, LabelPosition } from "@/components/fields/types";
+import type {
+  ControlRadius,
+  ControlTransparency,
+  FieldMode,
+  LabelPosition,
+} from "@/components/fields/types";
 import {
   resolveEmojiPickerPortalStyle,
   type FloatingPortalStyle,
@@ -350,6 +355,9 @@ export function useTileAccentPreference() {
 }
 
 type AccentColorPickerProps = {
+  radius?: ControlRadius;
+  transparency?: ControlTransparency;
+  gradient?: boolean;
   help?: string;
   id: string;
   label?: string;
@@ -435,6 +443,9 @@ export function AccentColorPicker({
   showSecondary = true,
   variant = "compact",
   value,
+  radius,
+  transparency,
+  gradient,
 }: AccentColorPickerProps) {
   const resolvedSecondary = secondaryValue ?? companionForPrimary(value);
   const [open, setOpen] = useState(false);
@@ -571,6 +582,9 @@ export function AccentColorPicker({
       labelPosition={labelPosition}
       labelTag="div"
       mode={mode}
+      radius={radius}
+      transparency={transparency}
+      gradient={gradient}
     >
       <div className={styles.picker} ref={rootRef}>
         {showQuickSwatches ? (

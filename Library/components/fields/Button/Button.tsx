@@ -1,6 +1,6 @@
 import type { ButtonHTMLAttributes, ReactNode } from "react";
 import { inputControlSizeClassName } from "../shared/inputControlSizes";
-import type { InputControlSize } from "@/components/fields/types";
+import type { ControlRadius, InputControlSize } from "@/components/fields/types";
 import styles from "./Button.module.css";
 
 export type ButtonVariant =
@@ -19,6 +19,7 @@ export type ButtonVariant =
 type ButtonProps = ButtonHTMLAttributes<HTMLButtonElement> & {
   children: ReactNode;
   size?: InputControlSize;
+  radius?: ControlRadius;
   variant?: ButtonVariant;
 };
 
@@ -27,6 +28,7 @@ export function Button({
   className,
   size = "md",
   variant = "primary",
+  radius,
   type = "button",
   ...props
 }: ButtonProps) {
@@ -41,6 +43,7 @@ export function Button({
         .filter(Boolean)
         .join(" ")}
       type={type}
+      data-control-radius={radius}
       {...props}
     >
       {children}

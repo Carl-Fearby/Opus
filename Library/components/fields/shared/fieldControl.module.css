@@ -201,15 +201,23 @@
 }
 
 .panel {
+  --opus-menu-radius: 14px;
+  --opus-menu-surface: var(--opus-menu-surface-token, var(--opus-panel));
   position: absolute;
   top: calc(100% + 6px);
   left: 0;
   right: 0;
   z-index: 20;
   border: 1px solid var(--opus-border-strong);
-  border-radius: var(--opus-input-radius-large);
-  background: var(--opus-panel);
-  box-shadow: var(--opus-shadow);
+  border-radius: var(--opus-menu-radius);
+  background:
+    radial-gradient(circle at 10% 0%, color-mix(in srgb, var(--opus-accent) 14%, transparent), transparent 34%),
+    var(--opus-menu-surface, var(--opus-menu-glass-surface, var(--opus-panel)));
+  box-shadow:
+    0 28px 80px color-mix(in srgb, #020617 34%, transparent),
+    0 0 0 1px color-mix(in srgb, var(--opus-accent) 10%, transparent);
+  -webkit-backdrop-filter: blur(20px) saturate(1.35);
+  backdrop-filter: blur(20px) saturate(1.35);
   overflow: hidden;
 }
 
@@ -269,13 +277,14 @@
   align-items: center;
   gap: 8px;
   padding: 8px 10px;
+  border-radius: var(--opus-menu-item-radius, var(--opus-input-radius));
   color: var(--opus-text);
   font-size: 0.82rem;
   cursor: pointer;
 }
 
 .option:hover {
-  background: color-mix(in srgb, var(--opus-accent-soft) 65%, transparent);
+  background: color-mix(in srgb, var(--opus-accent) 14%, transparent);
 }
 
 .option input {

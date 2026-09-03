@@ -4,10 +4,14 @@ import { FieldShell, fieldInputAriaProps, useFieldShellAria } from "@/components
 import type { FieldMode, InputControlSize, LabelPosition } from "@/components/fields/types";
 import { inputControlSizeClassName } from "../shared/inputControlSizes";
 import styles from "./RatingField.module.css";
+import type { ControlRadius } from "../types";
 
 export type RatingVariant = "stars" | "hearts" | "numeric";
 
 type RatingFieldProps = {
+  radius?: ControlRadius;
+  transparency?: import("../types").ControlTransparency;
+  gradient?: boolean;
   error?: string;
   help?: string;
   id: string;
@@ -45,6 +49,9 @@ export function RatingField({
   value,
   variant = "stars",
   onChange,
+  radius,
+  transparency,
+  gradient,
 }: RatingFieldProps) {
   const shellAria = useFieldShellAria();
   const items = Array.from({ length: max }, (_, index) => index + 1);
@@ -57,6 +64,9 @@ export function RatingField({
       label={label}
       labelPosition={labelPosition}
       mode={mode}
+      radius={radius}
+      transparency={transparency}
+      gradient={gradient}
       required={required}
     >
       <div

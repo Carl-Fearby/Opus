@@ -1334,6 +1334,18 @@ const rawControls: ControlDefinition[] = [
     usesFieldShell: false,
   },
   {
+    slug: "background-blobs",
+    title: "Background blobs",
+    category: "content",
+    componentName: "BackgroundBlobs",
+    description: "Animated colour field for page atmospheres with an internal content layer. Fill a parent or cover the viewport.",
+    sourceFiles: [
+      "components/BackgroundBlobs/BackgroundBlobs.tsx",
+      "components/BackgroundBlobs/BackgroundBlobs.module.css",
+    ],
+    usesFieldShell: false,
+  },
+  {
     slug: "portal",
     title: "Portal",
     category: "content",

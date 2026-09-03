@@ -4,8 +4,12 @@ import { useRef, type ClipboardEvent, type KeyboardEvent } from "react";
 import { FieldShell } from "../FieldShell";
 import type { FieldMode, LabelPosition } from "../types";
 import styles from "./OtpField.module.css";
+import type { ControlRadius } from "../types";
 
 export type OtpFieldProps = {
+  radius?: ControlRadius;
+  transparency?: import("../types").ControlTransparency;
+  gradient?: boolean;
   autoFocus?: boolean;
   error?: string;
   help?: string;
@@ -32,6 +36,9 @@ export function OtpField({
   required,
   value,
   onChange,
+  radius,
+  transparency,
+  gradient,
   onComplete,
 }: OtpFieldProps) {
   const refs = useRef<Array<HTMLInputElement | null>>([]);
@@ -52,7 +59,19 @@ export function OtpField({
   };
 
   return (
-    <FieldShell error={error} help={help} id={id} label={label} labelPosition={labelPosition} labelTag="div" mode={mode} required={required}>
+    <FieldShell
+      error={error}
+      help={help}
+      id={id}
+      label={label}
+      labelPosition={labelPosition}
+      labelTag="div"
+      mode={mode}
+      required={required}
+      radius={radius}
+      transparency={transparency}
+      gradient={gradient}
+    >
       <div
         aria-label={label}
         className={styles.inputs}

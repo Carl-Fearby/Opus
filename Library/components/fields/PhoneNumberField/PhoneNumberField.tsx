@@ -49,6 +49,9 @@ export function PhoneNumberField({
   inputProps,
   name,
   readOnly,
+  radius,
+  transparency,
+  gradient,
   required,
   size = "md",
   value,
@@ -117,6 +120,9 @@ export function PhoneNumberField({
       labelPosition={labelPosition}
       mode={mode}
       required={required}
+      radius={radius}
+      transparency={transparency}
+      gradient={gradient}
     >
       <div className={`${styles.root} ${inputControlSizeClassName[size]}`} ref={rootRef}>
         <div className={styles.countryWrap}>

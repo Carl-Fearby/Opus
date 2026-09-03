@@ -19,6 +19,22 @@
     color 160ms ease;
 }
 
+.button[data-control-radius="medium"] {
+  --opus-input-radius: 12px;
+}
+
+.button[data-control-radius="large"] {
+  --opus-input-radius: 18px;
+}
+
+.button[data-control-radius="none"] {
+  --opus-input-radius: 0;
+}
+
+.button[data-control-radius="full"] {
+  --opus-input-radius: 999px;
+}
+
 .button :global(svg) {
   width: 0.92em;
   height: 0.92em;

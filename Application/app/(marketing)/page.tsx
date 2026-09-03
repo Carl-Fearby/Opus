@@ -16,11 +16,11 @@ export default function HomePage() {
     <>
       <Hero />
       <StatBand />
+      <RealWorldShowcase />
       <FeatureGrid />
       <ProductDepth />
       <DesktopShowcase />
       <PlaygroundSection />
-      <RealWorldShowcase />
       <ComponentCategories />
       <SeoFAQ />
       <WorkflowSection />

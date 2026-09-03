@@ -6,6 +6,7 @@ import type { FieldMode, InputControlSize, LabelPosition } from "@/components/fi
 import shared from "../shared/fieldControl.module.css";
 import { inputControlSizeClassName } from "../shared/inputControlSizes";
 import styles from "./CountryPickerField.module.css";
+import type { ControlRadius } from "../types";
 import { countries as allCountries, type PhoneCountry } from "../PhoneNumberField/countries";
 
 function flagClassName(code: string) {
@@ -13,6 +14,9 @@ function flagClassName(code: string) {
 }
 
 type CountryPickerFieldProps = {
+  radius?: ControlRadius;
+  transparency?: import("../types").ControlTransparency;
+  gradient?: boolean;
   countries?: PhoneCountry[];
   error?: string;
   help?: string;
@@ -42,6 +46,9 @@ export function CountryPickerField({
   size = "md",
   value,
   onChange,
+  radius,
+  transparency,
+  gradient,
 }: CountryPickerFieldProps) {
   const shellAria = useFieldShellAria();
   const rootRef = useRef<HTMLDivElement>(null);
@@ -103,6 +110,9 @@ export function CountryPickerField({
       label={label}
       labelPosition={labelPosition}
       mode={mode}
+      radius={radius}
+      transparency={transparency}
+      gradient={gradient}
       required={required}
     >
       <div className={styles.root} ref={rootRef}>

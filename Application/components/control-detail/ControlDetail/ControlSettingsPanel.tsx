@@ -136,6 +136,37 @@ function CommonFieldSettings({
           { label: "Right", value: "right" },
         ]}
       />
+      <SettingSelect
+        label="Radius"
+        value={settings.radius ?? "standard"}
+        onChange={(radius) =>
+          onChange({ ...settings, radius: radius as typeof settings.radius })
+        }
+        options={[
+          { label: "None", value: "none" },
+          { label: "Standard", value: "standard" },
+          { label: "Medium", value: "medium" },
+          { label: "Large", value: "large" },
+          { label: "Full", value: "full" },
+        ]}
+      />
+      <SettingSelect
+        label="Transparency"
+        value={settings.transparency ?? "standard"}
+        onChange={(transparency) =>
+          onChange({ ...settings, transparency: transparency as typeof settings.transparency })
+        }
+        options={[
+          { label: "None", value: "none" },
+          { label: "Standard", value: "standard" },
+          { label: "Glass", value: "glass" },
+        ]}
+      />
+      <SettingToggle
+        label="Gradient"
+        checked={settings.gradient ?? false}
+        onChange={(gradient) => onChange({ ...settings, gradient })}
+      />
       {showDensity ? (
         <SettingSelect
           label="Density"

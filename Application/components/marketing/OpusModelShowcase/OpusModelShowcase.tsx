@@ -1,55 +1,121 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
-import { ModelViewer, type ModelAsset } from "opus-react";
+import { createElement, useCallback, useEffect, useRef, useState } from "react";
 import styles from "./OpusModelShowcase.module.css";
 
-const opusModel: ModelAsset = {
-  id: "opus-logo",
-  name: "Opus mark",
-  src: "/models/opus/opus-logo.glb",
-  alt: "Three-dimensional Opus cube logo.",
-  cameraOrbit: "35deg 70deg 55%",
-};
+const MODEL_SRC = "/models/opus/opus-logo.glb";
+const MODEL_VIEWER_SRC = "https://ajax.googleapis.com/ajax/libs/model-viewer/4.0.0/model-viewer.min.js";
 
 type ModelViewerElement = HTMLElement & {
   loaded?: boolean;
 };
 
+function ensureModelViewer() {
+  if (customElements.get("model-viewer")) {
+    return Promise.resolve();
+  }
+
+  if (!document.querySelector(`script[src="${MODEL_VIEWER_SRC}"]`)) {
+    const script = document.createElement("script");
+    script.type = "module";
+    script.src = MODEL_VIEWER_SRC;
+    document.head.appendChild(script);
+  }
+
+  return customElements.whenDefined("model-viewer");
+}
+
 export function OpusModelShowcase() {
-  const hostRef = useRef<HTMLDivElement>(null);
-  const [isLoading, setIsLoading] = useState(true);
+  const viewerRef = useRef<ModelViewerElement | null>(null);
+  const [ready, setReady] = useState(false);
+  const [failed, setFailed] = useState(false);
+  const [modelLoaded, setModelLoaded] = useState(false);
 
   useEffect(() => {
-    const host = hostRef.current;
-    if (!host) return;
+    let cancelled = false;
 
-    let viewer: ModelViewerElement | null = null;
-    const onLoad = () => setIsLoading(false);
-    const attach = () => {
-      viewer = host.querySelector<ModelViewerElement>("model-viewer");
-      viewer?.addEventListener("load", onLoad, { once: true });
-      if (viewer?.loaded) onLoad();
-    };
+    ensureModelViewer()
+      .then(() => {
+        if (!cancelled) {
+          setReady(true);
+        }
+      })
+      .catch(() => {
+        if (!cancelled) {
+          setFailed(true);
+        }
+      });
 
-    attach();
-    const observer = new MutationObserver(attach);
-    observer.observe(host, { childList: true, subtree: true });
+    const timeout = window.setTimeout(() => {
+      if (!cancelled && !customElements.get("model-viewer")) {
+        setFailed(true);
+      }
+    }, 20_000);
 
     return () => {
-      observer.disconnect();
-      viewer?.removeEventListener("load", onLoad);
+      cancelled = true;
+      window.clearTimeout(timeout);
     };
   }, []);
 
+  const setViewerNode = useCallback((node: ModelViewerElement | null) => {
+    viewerRef.current = node;
+    if (!node) {
+      return;
+    }
+
+    const onLoad = () => setModelLoaded(true);
+    const onError = () => setFailed(true);
+    node.addEventListener("load", onLoad);
+    node.addEventListener("error", onError);
+    if (node.loaded) {
+      onLoad();
+    }
+  }, []);
+
+  useEffect(() => {
+    if (!ready || failed) {
+      return;
+    }
+
+    const viewer = viewerRef.current;
+    if (viewer?.loaded) {
+      setModelLoaded(true);
+    }
+  }, [ready, failed]);
+
+  const showOverlay = !failed && !modelLoaded;
+
   return (
-    <div className={styles.showcase} ref={hostRef}>
+    <div className={styles.showcase}>
       <p className={styles.label}>Interactive 3D asset</p>
-      <ModelViewer asset={opusModel} autoRotate showCaption={false} height="compact" />
-      {isLoading ? (
+      <div className={styles.stage}>
+        {ready
+          ? createElement("model-viewer", {
+              key: MODEL_SRC,
+              ref: setViewerNode,
+              alt: "Three-dimensional Opus cube logo.",
+              "auto-rotate": "",
+              "camera-controls": "",
+              "camera-orbit": "35deg 70deg 55%",
+              "environment-image": "neutral",
+              exposure: "0.95",
+              "interaction-prompt": "auto",
+              "shadow-intensity": "0.72",
+              src: MODEL_SRC,
+              className: styles.model,
+            })
+          : null}
+      </div>
+      {showOverlay ? (
         <div className={styles.loading} role="status" aria-live="polite">
           <span className={styles.spinner} aria-hidden="true" />
           <span>Loading Opus 3D mark…</span>
+        </div>
+      ) : null}
+      {failed ? (
+        <div className={styles.loading} role="alert">
+          3D preview unavailable.
         </div>
       ) : null}
       <p className={styles.hint}>Drag to explore the Opus mark.</p>

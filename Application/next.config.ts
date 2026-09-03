@@ -34,6 +34,7 @@ function resolveBuildVersion() {
 const buildVersion = resolveBuildVersion();
 
 const nextConfig: NextConfig = {
+  allowedDevOrigins: ["127.0.0.1", "localhost"],
   env: {
     NEXT_PUBLIC_BUILD_VERSION: buildVersion,
   },

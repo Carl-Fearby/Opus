@@ -5,7 +5,7 @@ import { createContext, useContext, useId } from "react";
 import styles from "./RadioGroup.module.css";
 import { FieldShell, fieldInputAriaProps, useFieldShellAria } from "@/components/fields/FieldShell";
 import { choiceControlSizeClassName } from "@/components/fields/shared/choiceControlSizes";
-import type { ChoiceControlSize, ChoiceShape, FieldMode, LabelPosition } from "@/components/fields/types";
+import type { ChoiceControlSize, ChoiceShape, ControlRadius, FieldMode, LabelPosition } from "@/components/fields/types";
 
 type RadioGroupContextValue = {
   name: string;
@@ -17,6 +17,9 @@ type RadioGroupContextValue = {
 const RadioGroupContext = createContext<RadioGroupContextValue | null>(null);
 
 type RadioGroupProps = {
+  radius?: ControlRadius;
+  transparency?: import("../types").ControlTransparency;
+  gradient?: boolean;
   children: ReactNode;
   error?: string;
   help?: string;
@@ -42,6 +45,9 @@ export function RadioGroup({
   mode = "stacked",
   name,
   onChange,
+  radius,
+  transparency,
+  gradient,
   orientation = "vertical",
   shape = "round",
   size = "md",
@@ -69,6 +75,9 @@ export function RadioGroup({
         labelPosition={labelPosition}
         labelTag="div"
         mode={mode}
+        radius={radius}
+        transparency={transparency}
+        gradient={gradient}
       >
         <RadioGroupOptions error={error} orientation={orientation}>{children}</RadioGroupOptions>
       </FieldShell>
@@ -101,6 +110,8 @@ function RadioGroupOptions({
 }
 
 type RadioProps = {
+  radius?: ControlRadius;
+  transparency?: import("../types").ControlTransparency;
   children?: ReactNode;
   error?: string;
   name?: string;

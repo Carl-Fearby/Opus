@@ -65,6 +65,9 @@ export function PasswordStrengthField({
   inputProps,
   name,
   readOnly,
+  radius,
+  transparency,
+  gradient,
   required,
   requirements = defaultRequirements,
   showRequirements = true,
@@ -91,6 +94,9 @@ export function PasswordStrengthField({
       labelPosition={labelPosition}
       mode={mode}
       required={required}
+      radius={radius}
+      transparency={transparency}
+      gradient={gradient}
     >
       <div className={styles.root}>
         <div className={`${shared.passwordWrap} ${inputControlSizeClassName[size]}`}>

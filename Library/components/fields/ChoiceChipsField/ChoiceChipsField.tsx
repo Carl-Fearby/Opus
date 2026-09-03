@@ -4,6 +4,7 @@ import { FieldShell, fieldInputAriaProps, useFieldShellAria } from "@/components
 import type {
   ChoiceChipsSelectionMode,
   ChoiceChipsVariant,
+  ControlRadius,
   ChoiceOption,
   FieldMode,
   InputControlSize,
@@ -13,6 +14,9 @@ import { inputControlSizeClassName } from "../shared/inputControlSizes";
 import styles from "./ChoiceChipsField.module.css";
 
 type ChoiceChipsProps = {
+  radius?: ControlRadius;
+  transparency?: import("../types").ControlTransparency;
+  gradient?: boolean;
   disabled?: boolean;
   error?: string;
   help?: string;
@@ -47,6 +51,9 @@ export function ChoiceChips({
   name,
   options,
   required,
+  radius,
+  transparency,
+  gradient,
   selectionMode = "multiple",
   size = "md",
   value,
@@ -85,6 +92,9 @@ export function ChoiceChips({
       labelPosition={labelPosition}
       mode={mode}
       required={required}
+      radius={radius}
+      transparency={transparency}
+      gradient={gradient}
     >
       <div
         aria-disabled={disabled ? "true" : undefined}

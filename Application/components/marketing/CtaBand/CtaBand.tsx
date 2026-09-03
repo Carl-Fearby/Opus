@@ -9,10 +9,7 @@ export function CtaBand() {
         <div>
           <p className={styles.eyebrow}>Ready when you are</p>
           <h2>Start with Opus today.</h2>
-          <p>
-            Install the library, browse the documentation, and experiment in the Playground before
-            you bring a cohesive design system to your next product surface.
-          </p>
+          <p>Install the package, browse the catalogue, then try a component in the Playground.</p>
         </div>
         <div className={styles.actions}>
           <Link className={styles.primary} href={docsComponentsUrl}>
@@ -20,9 +17,6 @@ export function CtaBand() {
           </Link>
           <Link className={styles.secondary} href={docsPlaygroundUrl}>
             Open Playground
-          </Link>
-          <Link className={styles.secondary} href={docsComponentsUrl}>
-            Component catalogue
           </Link>
           <a className={styles.secondary} href={npmPackageUrl} rel="noreferrer" target="_blank">
             npm package

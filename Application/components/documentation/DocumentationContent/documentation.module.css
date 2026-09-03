@@ -546,6 +546,73 @@ html[data-shell-theme="light"] .shell {
   line-height: 1.4;
 }
 
+.commitHistory {
+  display: grid;
+  gap: 14px;
+  padding-top: 28px;
+  border-top: 1px solid var(--opus-border);
+}
+
+.commitHistoryHeading {
+  display: grid;
+  gap: 8px;
+}
+
+.commitHistoryHeading h2 {
+  margin: 0;
+  font-size: 1.1rem;
+}
+
+.commitHistoryHeading > p {
+  margin: 0;
+  color: var(--opus-muted);
+  font-size: 0.88rem;
+  line-height: 1.5;
+}
+
+.commitList {
+  display: grid;
+  gap: 1px;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+  border: 1px solid var(--opus-border);
+  border-radius: var(--opus-input-radius-large);
+  list-style: none;
+}
+
+.commitItem {
+  display: grid;
+  grid-template-columns: 5.8rem 6.2rem minmax(0, 1fr);
+  gap: 10px;
+  align-items: baseline;
+  padding: 10px 12px;
+  background: color-mix(in srgb, var(--opus-panel) 88%, transparent);
+  color: var(--opus-text);
+  font-size: 0.82rem;
+  line-height: 1.4;
+}
+
+.commitItem + .commitItem {
+  border-top: 1px solid var(--opus-border);
+}
+
+.commitItem time {
+  color: var(--opus-muted);
+  white-space: nowrap;
+}
+
+.commitHash {
+  color: var(--opus-accent);
+  font-family: var(--font-ibm-plex-mono), monospace;
+  font-weight: 700;
+  text-decoration: none;
+}
+
+.commitHash:hover {
+  text-decoration: underline;
+}
+
 @media (max-width: 720px) {
   .body {
     grid-template-columns: 1fr;
@@ -570,6 +637,14 @@ html[data-shell-theme="light"] .shell {
 
   .roadmapWork {
     grid-template-columns: 1fr;
+  }
+
+  .commitItem {
+    grid-template-columns: 1fr auto;
+  }
+
+  .commitItem > span {
+    grid-column: 1 / -1;
   }
 
   .roadmapItem {

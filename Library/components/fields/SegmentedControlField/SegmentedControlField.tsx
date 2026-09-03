@@ -4,8 +4,12 @@ import { FieldShell, fieldInputAriaProps, useFieldShellAria } from "@/components
 import type { FieldMode, InputControlSize, LabelPosition } from "@/components/fields/types";
 import { inputControlSizeClassName } from "../shared/inputControlSizes";
 import styles from "./SegmentedControlField.module.css";
+import type { ControlRadius } from "../types";
 
 type SegmentedControlFieldProps = {
+  radius?: ControlRadius;
+  transparency?: import("../types").ControlTransparency;
+  gradient?: boolean;
   error?: string;
   help?: string;
   id: string;
@@ -31,6 +35,9 @@ export function SegmentedControlField({
   size = "md",
   value,
   onChange,
+  radius,
+  transparency,
+  gradient,
 }: SegmentedControlFieldProps) {
   const shellAria = useFieldShellAria();
 
@@ -42,6 +49,9 @@ export function SegmentedControlField({
       label={label}
       labelPosition={labelPosition}
       mode={mode}
+      radius={radius}
+      transparency={transparency}
+      gradient={gradient}
       required={required}
     >
       <div

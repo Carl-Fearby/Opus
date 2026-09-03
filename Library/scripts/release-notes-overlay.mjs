@@ -712,4 +712,14 @@ export const releaseNotesOverlay = [
       "Publish opus-react 0.6.19 and update Application to consume it.",
     ],
   },
+  {
+    version: "0.6.34",
+    releasedAt: "2026-09-03",
+    summary: "Complete commit timeline alongside detailed package release notes.",
+    changes: [
+      "Add a generated, linked timeline for every repository commit to the documentation version page.",
+      "Keep the curated release history as the explanation of each published semantic version, with its grouped product changes.",
+      "Publish opus-react 0.6.34 with the BackgroundBlobs visual primitive and the current catalogue refinements.",
+    ],
+  },
 ];

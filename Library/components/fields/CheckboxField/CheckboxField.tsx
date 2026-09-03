@@ -2,9 +2,12 @@ import styles from "./CheckboxField.module.css";
 import { FieldShell, fieldInputAriaProps, useFieldShellAria } from "@/components/fields/FieldShell";
 import { choiceControlSizeClassName } from "@/components/fields/shared/choiceControlSizes";
 import type { ChangeEventHandler } from "react";
-import type { ChoiceControlSize, ChoiceShape, FieldMode, LabelPosition } from "@/components/fields/types";
+import type { ChoiceControlSize, ChoiceShape, ControlRadius, ControlTransparency, FieldMode, LabelPosition } from "@/components/fields/types";
 
 type CheckboxFieldProps = {
+  radius?: ControlRadius;
+  transparency?: ControlTransparency;
+  gradient?: boolean;
   checked: boolean;
   className?: string;
   error?: string;
@@ -35,6 +38,9 @@ export function CheckboxField({
   mode = "flagged",
   name,
   onChange,
+  radius,
+  transparency,
+  gradient,
   shape = "square",
   size = "md",
   value,
@@ -54,6 +60,9 @@ export function CheckboxField({
       labelTag="label"
       labelVisuallyHidden={labelVisuallyHidden}
       mode={mode}
+      radius={radius}
+      transparency={transparency}
+      gradient={gradient}
     >
       <div className={styles.toggle}>
         <label className={styles.toggleLabel} htmlFor={id}>

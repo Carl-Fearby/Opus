@@ -35,24 +35,32 @@ function loadModelViewer() {
 
   if (!modelViewerScriptLoading) {
     modelViewerScriptLoading = new Promise((resolve, reject) => {
-      const existing = document.querySelector<HTMLScriptElement>(
-        `script[src="${MODEL_VIEWER_SRC}"]`,
-      );
+      let settled = false;
+      const finish = () => {
+        if (settled) {
+          return;
+        }
+        settled = true;
+        resolve();
+      };
+      const fail = () => {
+        if (settled) {
+          return;
+        }
+        settled = true;
+        reject(new Error("Could not load model-viewer."));
+      };
 
-      if (existing) {
-        existing.addEventListener("load", () => resolve(), { once: true });
-        existing.addEventListener("error", () => reject(new Error("Could not load model-viewer.")), {
-          once: true,
-        });
-        return;
+      if (!document.querySelector(`script[src="${MODEL_VIEWER_SRC}"]`)) {
+        const script = document.createElement("script");
+        script.type = "module";
+        script.src = MODEL_VIEWER_SRC;
+        script.onerror = fail;
+        document.head.appendChild(script);
       }
 
-      const script = document.createElement("script");
-      script.type = "module";
-      script.src = MODEL_VIEWER_SRC;
-      script.onload = () => resolve();
-      script.onerror = () => reject(new Error("Could not load model-viewer."));
-      document.head.appendChild(script);
+      void customElements.whenDefined("model-viewer").then(finish);
+      window.setTimeout(fail, 20_000);
     });
   }
 

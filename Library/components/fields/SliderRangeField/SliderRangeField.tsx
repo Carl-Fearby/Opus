@@ -5,8 +5,12 @@ import { FieldShell, fieldInputAriaProps, useFieldShellAria } from "@/components
 import type { FieldMode, InputControlSize, LabelPosition } from "@/components/fields/types";
 import { inputControlSizeClassName } from "../shared/inputControlSizes";
 import styles from "./SliderRangeField.module.css";
+import type { ControlRadius } from "../types";
 
 type SliderRangeFieldProps = {
+  radius?: ControlRadius;
+  transparency?: import("../types").ControlTransparency;
+  gradient?: boolean;
   error?: string;
   help?: string;
   id: string;
@@ -40,6 +44,9 @@ export function SliderRangeField({
   step = 1,
   value,
   onChange,
+  radius,
+  transparency,
+  gradient,
 }: SliderRangeFieldProps) {
   const shellAria = useFieldShellAria();
   const [start, end] = value;
@@ -72,6 +79,9 @@ export function SliderRangeField({
       label={label}
       labelPosition={labelPosition}
       mode={mode}
+      radius={radius}
+      transparency={transparency}
+      gradient={gradient}
       required={required}
     >
       <div className={`${styles.root} ${inputControlSizeClassName[size]}`} {...fieldInputAriaProps(shellAria, { invalid: Boolean(error) })}>

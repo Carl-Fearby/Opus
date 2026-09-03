@@ -2,9 +2,12 @@
 
 import { DateField } from "../DateField";
 import styles from "./TimeRangeField.module.css";
+import type { ControlRadius } from "../types";
 
 export type TimeRangeValue = { start: string; end: string };
 export type TimeRangeFieldProps = {
+  radius?: ControlRadius;
+  transparency?: import("../types").ControlTransparency;
   id: string;
   label: string;
   name?: string;
@@ -22,6 +25,7 @@ export function TimeRangeField({
   step = 60,
   required,
   onChange,
+  radius,
 }: TimeRangeFieldProps) {
   const invalid = Boolean(value.start && value.end && value.end <= value.start);
 
@@ -35,6 +39,7 @@ export function TimeRangeField({
           id={`${id}-start`}
           inputProps={{ step }}
           label="Start time"
+          radius={radius}
           name={`${name}.start`}
           required={required}
           type="time"
@@ -46,6 +51,7 @@ export function TimeRangeField({
           id={`${id}-end`}
           inputProps={{ step }}
           label="End time"
+          radius={radius}
           name={`${name}.end`}
           required={required}
           type="time"

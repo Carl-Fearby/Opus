@@ -604,6 +604,14 @@ export const versionLog: VersionEntry[] = [
     commitShort: "fbf860a",
     summary: "Package-safe canonical Opus brand component and logo assets.",
     changes: ["Add OpusBrand with icon, wordmark, and full-lockup variants backed by package-owned assets.","Expose direct logo asset imports and migrate shared application headers and footers away from a consumer /public dependency.","Publish opus-react 0.6.19 and update Application to consume it."],
+  },
+  {
+    version: "0.6.34",
+    releasedAt: "2026-09-03",
+    commit: "overlay-0.6.34",
+    commitShort: "overlay",
+    summary: "Complete commit timeline alongside detailed package release notes.",
+    changes: ["Add a generated, linked timeline for every repository commit to the documentation version page.","Keep the curated release history as the explanation of each published semantic version, with its grouped product changes.","Publish opus-react 0.6.34 with the BackgroundBlobs visual primitive and the current catalogue refinements."],
   }
 ].reverse();
 

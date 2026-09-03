@@ -190,6 +190,7 @@ export type ControlSlug =
   | "clock"
   | "flip-clock"
   | "text-marquee"
+  | "background-blobs"
   | "portal"
   | "portal-host"
   | "visually-hidden"
@@ -217,6 +218,9 @@ export type ComponentCategory =
 export type BaseFieldSettings = {
   mode: FieldMode;
   labelPosition: LabelPosition;
+  radius: ControlRadius;
+  transparency: "none" | "standard" | "glass";
+  gradient: boolean;
   label: string;
   errorEnabled: boolean;
   error: string;
@@ -225,6 +229,8 @@ export type BaseFieldSettings = {
   required: boolean;
   size: InputControlSize;
 };
+
+export type ControlRadius = "none" | "standard" | "medium" | "large" | "full";
 
 export type NativeInputSettings = {
   autoCapitalize: "none" | "off" | "on" | "sentences" | "words" | "characters";
@@ -1560,6 +1566,24 @@ export type TextMarqueeSettings = {
   surface: boolean;
 };
 
+export type BackgroundBlobsSettings = {
+  animated: boolean;
+  brightness: number;
+  blur: number;
+  colors: string[];
+  count: number;
+  padParent: boolean;
+  placement: "absolute" | "fixed";
+  size: "too-large" | "large" | "medium" | "small";
+};
+
+export type BackgroundBlobsLabSettings = {
+  controlRadius: ControlRadius;
+  transparency: "none" | "standard" | "glass";
+  containerSize: "sm" | "md" | "lg" | "xl" | "full";
+  containerPadded: boolean;
+};
+
 export type TextSettings = {
   content: string;
   padding: "snug" | "compact" | "comfortable" | "relaxed" | "cozy";
@@ -1792,6 +1816,7 @@ export type ControlSettingsBySlug = {
   text: TextSettings;
   heading: HeadingSettings;
   "lab-chat-conversation": ChatConversationSettings;
+  "lab-background-blobs": BackgroundBlobsLabSettings;
   "empty-state": EmptyStateSettings;
   badge: BadgeSettings;
   avatar: AvatarSettings;
@@ -1849,6 +1874,7 @@ export type ControlSettingsBySlug = {
   clock: ClockSettings;
   "flip-clock": FlipClockSettings;
   "text-marquee": TextMarqueeSettings;
+  "background-blobs": BackgroundBlobsSettings;
   portal: PortalSettings;
   "portal-host": PortalHostSettings;
   "visually-hidden": VisuallyHiddenSettings;

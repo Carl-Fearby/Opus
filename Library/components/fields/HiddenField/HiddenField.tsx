@@ -1,9 +1,13 @@
 import styles from "./HiddenField.module.css";
+import type { ControlRadius } from "../types";
 import { inputControlSizeClassName } from "../shared/inputControlSizes";
 import { FieldShell } from "@/components/fields/FieldShell";
 import type { FieldMode, InputControlSize, LabelPosition } from "@/components/fields/types";
 
 type HiddenFieldProps = {
+  radius?: ControlRadius;
+  transparency?: import("../types").ControlTransparency;
+  gradient?: boolean;
   help?: string;
   id: string;
   label: string;
@@ -27,6 +31,9 @@ export function HiddenField({
   showPreview = true,
   size = "md",
   value,
+  radius,
+  transparency,
+  gradient,
 }: HiddenFieldProps) {
   const fieldName = name ?? id;
 
@@ -39,6 +46,9 @@ export function HiddenField({
       help={help ?? "Hidden fields are not visible to users but submit with the form."}
       id={id}
       label={label}
+      radius={radius}
+      transparency={transparency}
+      gradient={gradient}
       labelPosition={labelPosition}
       mode={mode}
       required={required}

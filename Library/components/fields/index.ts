@@ -15,6 +15,8 @@ export type {
   ChoiceControlSize,
   ChoiceOption,
   ChoiceShape,
+  ControlRadius,
+  ControlTransparency,
   ContentTimelineStatus,
   DescriptionListLayout,
   DialogActionSet,

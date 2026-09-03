@@ -36,6 +36,7 @@ import type { FieldMode, InputControlSize, LabelPosition } from "@/components/fi
 import { inputControlSizeClassName } from "../shared/inputControlSizes";
 import { Tooltip } from "@/components/Tooltip";
 import styles from "./RichTextField.module.css";
+import type { ControlRadius } from "../types";
 
 type InlineAction = {
   id: string;
@@ -100,6 +101,9 @@ const stateCommands = [
 ] as const;
 
 type RichTextFieldProps = {
+  radius?: ControlRadius;
+  transparency?: import("../types").ControlTransparency;
+  gradient?: boolean;
   error?: string;
   help?: string;
   id: string;
@@ -146,6 +150,9 @@ export function RichTextField({
   size = "md",
   value,
   onChange,
+  radius,
+  transparency,
+  gradient,
 }: RichTextFieldProps) {
   const shellAria = useFieldShellAria();
   const editorRef = useRef<HTMLDivElement>(null);
@@ -461,6 +468,9 @@ export function RichTextField({
       label={label}
       labelPosition={labelPosition}
       mode={mode}
+      radius={radius}
+      transparency={transparency}
+      gradient={gradient}
       required={required}
     >
       <div className={styles.field}>

@@ -11,9 +11,15 @@
   grid-auto-flow: column;
   gap: 0;
   border: 1px solid var(--opus-border-strong);
-  border-radius: var(--opus-input-radius-large);
-  background: var(--opus-panel);
-  box-shadow: var(--opus-shadow);
+  border-radius: 14px;
+  background:
+    radial-gradient(circle at 10% 0%, color-mix(in srgb, var(--opus-accent) 14%, transparent), transparent 34%),
+    var(--opus-menu-surface-token, var(--opus-panel));
+  box-shadow:
+    0 28px 80px color-mix(in srgb, #020617 34%, transparent),
+    0 0 0 1px color-mix(in srgb, var(--opus-accent) 10%, transparent);
+  -webkit-backdrop-filter: blur(20px) saturate(1.35);
+  backdrop-filter: blur(20px) saturate(1.35);
   overflow: hidden;
 }
 
@@ -35,6 +41,7 @@
   gap: 8px;
   width: 100%;
   padding: 8px 10px;
+  border-radius: 8px;
   border: 0;
   background: transparent;
   color: var(--opus-text);

@@ -2,6 +2,7 @@ import Link from "next/link";
 import { controls } from "@/lib/controls/registry";
 import { docsComponentsUrl, docsPlaygroundUrl } from "@/lib/siteLinks";
 import { OpusModelShowcase } from "../OpusModelShowcase";
+import { InstallCommand } from "./InstallCommand";
 import styles from "./Hero.module.css";
 
 export function Hero() {
@@ -9,30 +10,25 @@ export function Hero() {
     <section className={styles.hero}>
       <div className={styles.inner}>
         <div className={styles.copy}>
-          <p className={styles.eyebrow}>Design system · React 19 · AI-assisted Playground · browser verified</p>
-          <h1 className={styles.title}>
-            Ship polished business apps with a component library built for real workflows.
-          </h1>
+          <p className={styles.eyebrow}>React 19 design system for business apps</p>
+          <h1 className={styles.title}>Ship polished internal tools without rebuilding the foundations.</h1>
           <p className={styles.lead}>
-            Opus brings together forms, overlays, navigation, charts, application shells, desktop
-            primitives, and production-ready compositions in one themeable system. Its AI-assisted
-            Playground gives ChatGPT the live component source, preview context, and runtime errors
-            so it can help you move from catalogue example to a better production result.
+            Opus is a themeable component library for CRM, operations, and admin products—forms,
+            dashboards, overlays, and application shells that already work together.
           </p>
           <div className={styles.actions}>
             <Link className={styles.primary} href={docsComponentsUrl}>
               Explore components
             </Link>
             <Link className={styles.secondary} href={docsPlaygroundUrl}>
-              Try the AI Playground
+              Try the Playground
             </Link>
           </div>
+          <InstallCommand />
           <div className={styles.meta}>
-            <span>npm install opus-react</span>
-            <span>{controls.length.toLocaleString("en-GB")} live catalogue entries</span>
-            <span>270 browser interaction checks</span>
-            <span>AI-assisted Playground</span>
-            <span>Accessible foundations</span>
+            <span>{controls.length.toLocaleString("en-GB")} catalogue entries</span>
+            <span>MIT licensed</span>
+            <span>Install from npm</span>
           </div>
         </div>
 

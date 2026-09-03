@@ -5,8 +5,12 @@ import { FieldShell, fieldInputAriaProps, useFieldShellAria } from "@/components
 import type { FieldMode, InputControlSize, LabelPosition } from "@/components/fields/types";
 import { inputControlSizeClassName } from "../shared/inputControlSizes";
 import styles from "./TransferListField.module.css";
+import type { ControlRadius } from "../types";
 
 type TransferListFieldProps = {
+  radius?: ControlRadius;
+  transparency?: import("../types").ControlTransparency;
+  gradient?: boolean;
   available: string[];
   error?: string;
   help?: string;
@@ -32,6 +36,9 @@ export function TransferListField({
   size = "md",
   selected,
   onChange,
+  radius,
+  transparency,
+  gradient,
 }: TransferListFieldProps) {
   const shellAria = useFieldShellAria();
   const [activeAvailable, setActiveAvailable] = useState<string[]>([]);
@@ -80,6 +87,9 @@ export function TransferListField({
       label={label}
       labelPosition={labelPosition}
       mode={mode}
+      radius={radius}
+      transparency={transparency}
+      gradient={gradient}
       required={required}
     >
       <div

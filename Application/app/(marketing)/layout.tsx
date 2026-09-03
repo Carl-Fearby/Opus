@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { MarketingAtmosphere } from "@/components/marketing/MarketingAtmosphere";
 import { SiteFooter } from "@/components/marketing/SiteFooter";
 import { SiteHeader } from "@/components/marketing/SiteHeader";
 import "./marketing.css";
@@ -9,7 +10,7 @@ export const metadata: Metadata = {
     template: "%s · Opus",
   },
   description:
-    "Build production React interfaces with 267 documented Opus catalogue entries and an AI-assisted Playground that gives ChatGPT live component source, preview context, and runtime errors.",
+    "Build production React interfaces for internal tools, CRM, and operations apps. Install opus-react, browse the catalogue, and try components in the AI-assisted Playground.",
 };
 
 export default function MarketingLayout({
@@ -19,6 +20,7 @@ export default function MarketingLayout({
 }>) {
   return (
     <div className="marketingSite">
+      <MarketingAtmosphere />
       <SiteHeader />
       <main>{children}</main>
       <SiteFooter />

@@ -1,3 +1,27 @@
+.panel[data-control-radius="medium"] {
+  --opus-input-radius: 12px;
+  --opus-input-radius-large: 12px;
+  --opus-input-radius-small: 12px;
+}
+
+.panel[data-control-radius="large"] {
+  --opus-input-radius: 18px;
+  --opus-input-radius-large: 18px;
+  --opus-input-radius-small: 18px;
+}
+
+.panel[data-control-radius="none"] {
+  --opus-input-radius: 0;
+  --opus-input-radius-large: 0;
+  --opus-input-radius-small: 0;
+}
+
+.panel[data-control-radius="full"] {
+  --opus-input-radius: 999px;
+  --opus-input-radius-large: 999px;
+  --opus-input-radius-small: 999px;
+}
+
 .panel {
   display: grid;
   gap: 12px;

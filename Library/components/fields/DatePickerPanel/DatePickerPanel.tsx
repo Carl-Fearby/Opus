@@ -4,6 +4,7 @@ import { useMemo, useState, type ReactNode } from "react";
 import { DatePickerSelect } from "./DatePickerSelect";
 import type { DateRangeValue } from "./datePickerUtils";
 import styles from "./DatePickerPanel.module.css";
+import type { ControlTransparency } from "../types";
 
 type DatePickerPanelBaseProps = {
   closeOnSelect?: boolean;
@@ -12,6 +13,7 @@ type DatePickerPanelBaseProps = {
   min?: string;
   onClose?: () => void;
   showFooter?: boolean;
+  transparency?: ControlTransparency;
 };
 
 export type DatePickerPanelSingleProps = DatePickerPanelBaseProps & {
@@ -74,7 +76,7 @@ type Cell = {
 };
 
 export function DatePickerPanel(props: DatePickerPanelProps) {
-  const { closeOnSelect = true, extra, max, min, onClose, showFooter = true } = props;
+  const { closeOnSelect = true, extra, max, min, onClose, showFooter = true, transparency } = props;
   const isRange = props.selectionMode === "range";
   const singleValue = !isRange ? props.value : undefined;
   const rangeValue = isRange ? (props.value ?? emptyRange()) : emptyRange();
@@ -266,6 +268,7 @@ export function DatePickerPanel(props: DatePickerPanelProps) {
   return (
     <div
       className={styles.panel}
+      data-control-transparency={transparency}
       role="dialog"
       aria-label={isRange ? "Choose date range" : "Choose date"}
     >

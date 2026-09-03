@@ -139,6 +139,9 @@ Note that this is a simplified example and does not take into account other fact
 const baseFieldDefaults = {
   mode: "stacked" as const,
   labelPosition: "left" as const,
+  radius: "standard" as const,
+  transparency: "standard" as const,
+  gradient: false,
   errorEnabled: false,
   error: "This field is required",
   helpEnabled: false,
@@ -1481,6 +1484,12 @@ export const defaultSettings: ControlSettingsBySlug = {
     showMore: false,
     showMoreMaxLines: 3,
   },
+  "lab-background-blobs": {
+    controlRadius: "standard",
+    transparency: "standard",
+    containerSize: "xl",
+    containerPadded: true,
+  },
   "empty-state": {
     title: "No components yet",
     description:
@@ -1771,6 +1780,16 @@ export const defaultSettings: ControlSettingsBySlug = {
     pauseOnHover: true,
     fadeEdges: true,
     surface: true,
+  },
+  "background-blobs": {
+    animated: true,
+    brightness: 1,
+    blur: 80,
+    colors: ["#8f6cff", "#22d3ee", "#fb7185", "#f59e0b"],
+    count: 4,
+    padParent: false,
+    placement: "fixed",
+    size: "large",
   },
   portal: {
     disabled: false,

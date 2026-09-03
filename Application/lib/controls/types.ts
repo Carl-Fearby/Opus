@@ -217,6 +217,9 @@ export type ComponentCategory =
 export type BaseFieldSettings = {
   mode: FieldMode;
   labelPosition: LabelPosition;
+  radius: ControlRadius;
+  transparency: "none" | "standard" | "glass";
+  gradient: boolean;
   label: string;
   errorEnabled: boolean;
   error: string;

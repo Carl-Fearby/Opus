@@ -1,4 +1,4 @@
-import type { ReactNode } from "react";
+import type { CSSProperties, ReactNode } from "react";
 import type { SurfaceDensity, SurfaceTone } from "@/components/fields/types";
 import styles from "./Panel.module.css";
 
@@ -10,6 +10,7 @@ type PanelProps = {
   description?: string;
   divided?: boolean;
   footer?: ReactNode;
+  style?: CSSProperties;
   title: string;
   tone?: SurfaceTone;
 };
@@ -22,6 +23,7 @@ export function Panel({
   description,
   divided = true,
   footer,
+  style,
   title,
   tone = "default",
 }: PanelProps) {
@@ -32,6 +34,7 @@ export function Panel({
       data-density={density}
       data-divided={divided}
       data-tone={tone}
+      style={style}
     >
       <header className={styles.header}>
         <div className={styles.heading}>

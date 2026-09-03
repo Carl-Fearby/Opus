@@ -3,7 +3,7 @@
 import styles from "./FileField.module.css";
 import { inputControlSizeClassName } from "../shared/inputControlSizes";
 import { FieldShell, fieldInputAriaProps, useFieldShellAria } from "@/components/fields/FieldShell";
-import type { FieldMode, InputControlSize, LabelPosition } from "@/components/fields/types";
+import type { ControlRadius, FieldMode, InputControlSize, LabelPosition } from "@/components/fields/types";
 import {
   useRef,
   useState,
@@ -13,6 +13,9 @@ import {
 } from "react";
 
 type FileFieldProps = {
+  radius?: ControlRadius;
+  transparency?: import("../types").ControlTransparency;
+  gradient?: boolean;
   error?: string;
   footnote?: string;
   help?: string;
@@ -57,6 +60,9 @@ export function FileField({
   labelPosition = "left",
   mode = "stacked",
   onChange,
+  radius,
+  transparency,
+  gradient,
   size = "md",
 }: FileFieldProps) {
   const shellAria = useFieldShellAria();
@@ -115,6 +121,9 @@ export function FileField({
       labelPosition={labelPosition}
       labelTag="div"
       mode={mode}
+      radius={radius}
+      transparency={transparency}
+      gradient={gradient}
     >
       <div className={`${styles.wrapper} ${inputControlSizeClassName[size]}`}>
         <label

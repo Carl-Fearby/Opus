@@ -39,6 +39,8 @@ body,
 }
 
 body {
+  position: relative;
+  z-index: 0;
   font-family: var(--opus-font-family, var(--font-space-grotesk), system-ui, sans-serif);
 }
 
@@ -99,10 +101,10 @@ textarea {
 [data-theme="light"] {
   --opus-control-font-size: 0.86rem;
   --opus-control-height: 28px;
-  --opus-input-radius: 4px;
-  --opus-input-radius-large: 6px;
-  --opus-input-radius-small: 2px;
-  --opus-input-radius-mark: 1px;
+  --opus-input-radius: 10px;
+  --opus-input-radius-large: 14px;
+  --opus-input-radius-small: 8px;
+  --opus-input-radius-mark: 6px;
   --opus-panel: color-mix(in srgb, var(--opus-accent) 4%, rgba(252, 252, 255, 0.96));
   --opus-border: color-mix(in srgb, var(--opus-accent) 22%, transparent);
   --opus-border-strong: color-mix(in srgb, var(--opus-accent) 34%, transparent);
@@ -144,10 +146,10 @@ textarea {
 [data-theme="dark"] {
   --opus-control-font-size: 0.86rem;
   --opus-control-height: 28px;
-  --opus-input-radius: 4px;
-  --opus-input-radius-large: 6px;
-  --opus-input-radius-small: 2px;
-  --opus-input-radius-mark: 1px;
+  --opus-input-radius: 10px;
+  --opus-input-radius-large: 14px;
+  --opus-input-radius-small: 8px;
+  --opus-input-radius-mark: 6px;
   --opus-panel: color-mix(in srgb, var(--opus-accent) 8%, rgba(10, 10, 16, 0.95));
   --opus-border: color-mix(in srgb, var(--opus-accent) 18%, transparent);
   --opus-border-strong: color-mix(in srgb, var(--opus-accent) 32%, transparent);
@@ -182,7 +184,35 @@ textarea {
   --opus-glass-surface: rgba(14, 16, 36, 0.52);
   --opus-glass-border: color-mix(in srgb, var(--opus-accent) 22%, transparent);
   --opus-menu-glass-surface: rgba(14, 16, 36, 0.82);
+  --opus-menu-surface-token: var(--opus-menu-glass-surface);
   --opus-menu-glass-border: color-mix(in srgb, var(--opus-accent) 28%, transparent);
+}
+
+[data-control-transparency="none"] {
+  --opus-input-bg: transparent;
+  --opus-input-fill: transparent;
+  --opus-panel: transparent;
+}
+
+[data-control-transparency="standard"] {
+  --opus-control-surface: var(--opus-input-bg);
+  --opus-control-panel: var(--opus-panel);
+}
+
+[data-control-transparency="glass"] {
+  --opus-input-bg: var(--opus-glass-surface);
+  --opus-input-fill: color-mix(in srgb, var(--opus-glass-surface) 82%, transparent);
+  --opus-panel: var(--opus-menu-glass-surface);
+  --opus-control-surface: var(--opus-glass-surface);
+  --opus-control-panel: var(--opus-menu-glass-surface);
+}
+
+[data-control-transparency="glass"] input,
+[data-control-transparency="glass"] select,
+[data-control-transparency="glass"] textarea,
+[data-control-transparency="glass"] [role="listbox"],
+[data-control-transparency="glass"] [role="dialog"] {
+  backdrop-filter: blur(12px) saturate(1.12);
 }
 
 .opus-panel-title {

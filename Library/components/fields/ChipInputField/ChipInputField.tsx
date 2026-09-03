@@ -4,11 +4,14 @@ import { useId, useRef, useState, type KeyboardEvent } from "react";
 import styles from "./ChipInputField.module.css";
 import { inputControlSizeClassName } from "../shared/inputControlSizes";
 import { FieldShell, fieldInputAriaProps, useFieldShellAria } from "@/components/fields/FieldShell";
-import type { ChipInputVariant, FieldMode, InputControlSize, LabelPosition } from "@/components/fields/types";
+import type { ChipInputVariant, ControlRadius, FieldMode, InputControlSize, LabelPosition } from "@/components/fields/types";
 
 const CHIP_COMMIT_KEYS = new Set(["Enter", "Tab", ","]);
 
 type ChipInputProps = {
+  radius?: ControlRadius;
+  transparency?: import("../types").ControlTransparency;
+  gradient?: boolean;
   disabled?: boolean;
   error?: string;
   help?: string;
@@ -37,6 +40,9 @@ export function ChipInput({
   placeholder = "Add item…",
   readOnly = false,
   required,
+  radius,
+  transparency,
+  gradient,
   size = "md",
   value,
   variant = "soft",
@@ -105,6 +111,9 @@ export function ChipInput({
       labelPosition={labelPosition}
       mode={mode}
       required={required}
+      radius={radius}
+      transparency={transparency}
+      gradient={gradient}
     >
       <div
         aria-disabled={disabled ? "true" : undefined}

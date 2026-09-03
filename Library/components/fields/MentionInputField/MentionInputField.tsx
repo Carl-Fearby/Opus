@@ -10,9 +10,13 @@ import {
 } from "react";
 import { FieldShell } from "../FieldShell";
 import styles from "./MentionInputField.module.css";
+import type { ControlRadius } from "../types";
 
 export type MentionOption = { id: string; label: string; description?: string };
 export type MentionInputFieldProps = {
+  radius?: ControlRadius;
+  transparency?: import("../types").ControlTransparency;
+  gradient?: boolean;
   autoCapitalize?: string;
   autoComplete?: string;
   autoCorrect?: "off" | "on";
@@ -41,6 +45,9 @@ export function MentionInputField({
   placeholder,
   spellCheck = false,
   onChange,
+  radius,
+  transparency,
+  gradient,
   onMention,
 }: MentionInputFieldProps) {
   const [active, setActive] = useState(0);
@@ -96,7 +103,7 @@ export function MentionInputField({
   };
 
   return (
-    <FieldShell id={id} label={label}>
+    <FieldShell id={id} label={label} radius={radius} transparency={transparency} gradient={gradient}>
       <div className={styles.root}>
         <input
           aria-autocomplete="list"

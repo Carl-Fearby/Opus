@@ -1,3 +1,45 @@
+.root[data-control-radius="medium"] {
+  --opus-input-radius: 12px;
+}
+
+.root[data-control-radius="large"] {
+  --opus-input-radius: 15px;
+  --opus-input-radius-large: 15px;
+  --opus-input-radius-small: 15px;
+}
+
+.root[data-control-radius="none"] {
+  --opus-input-radius: 0;
+  --opus-input-radius-large: 0;
+  --opus-input-radius-small: 0;
+}
+
+.root[data-control-radius="full"] {
+  --opus-input-radius: 999px;
+  --opus-input-radius-large: 20px;
+  --opus-input-radius-small: 999px;
+}
+
+.root[data-control-radius="full"] :global(textarea),
+.root[data-control-radius="full"] :global([contenteditable="true"]) {
+  border-radius: 20px;
+}
+
+.root[data-control-transparency="none"] {
+  --opus-input-bg: transparent;
+  --opus-input-fill: transparent;
+}
+
+.root[data-control-transparency="glass"] {
+  --opus-input-bg: var(--opus-glass-surface, color-mix(in srgb, var(--opus-panel) 42%, transparent));
+  --opus-input-fill: var(--opus-glass-surface, color-mix(in srgb, var(--opus-panel) 32%, transparent));
+}
+
+.root[data-control-gradient="true"] {
+  --opus-input-bg: linear-gradient(135deg, color-mix(in srgb, var(--opus-accent) 12%, var(--opus-panel)), var(--opus-panel));
+  --opus-input-fill: linear-gradient(135deg, color-mix(in srgb, var(--opus-accent) 8%, var(--opus-panel)), var(--opus-panel));
+}
+
 .root {
   width: 100%;
   display: grid;

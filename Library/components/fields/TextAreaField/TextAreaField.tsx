@@ -43,6 +43,9 @@ export function TextAreaField({
   required,
   name,
   readOnly,
+  radius,
+  transparency,
+  gradient,
   size = "md",
   value,
   spellCheck,
@@ -66,6 +69,9 @@ export function TextAreaField({
       labelPosition={labelPosition}
       mode={mode}
       required={required}
+      radius={radius}
+      transparency={transparency}
+      gradient={gradient}
       suppressErrorDisplay={showCharCount}
     >
       <div className={styles.field}>

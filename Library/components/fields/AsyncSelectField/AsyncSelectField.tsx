@@ -2,10 +2,14 @@
 
 import { useEffect, useId, useRef, useState, type ChangeEvent, type KeyboardEvent } from "react";
 import { FieldShell } from "../FieldShell";
+import type { ControlRadius } from "../types";
 import styles from "./AsyncSelectField.module.css";
 
 export type AsyncSelectOption = { label: string; value: string; description?: string };
 export type AsyncSelectFieldProps = {
+  radius?: ControlRadius;
+  transparency?: import("../types").ControlTransparency;
+  gradient?: boolean;
   id: string;
   label: string;
   value?: AsyncSelectOption | null;
@@ -23,7 +27,7 @@ export type AsyncSelectFieldProps = {
   onChange: (option: AsyncSelectOption | null) => void;
 };
 
-export function AsyncSelectField({ id, label, value, defaultOptions = [], loadOptions, debounceMs = 250, minQueryLength = 0, placeholder = "Search…", loadingMessage = "Loading options…", emptyMessage = "No options found", disabled, required, error, help, onChange }: AsyncSelectFieldProps) {
+export function AsyncSelectField({ id, label, value, defaultOptions = [], loadOptions, debounceMs = 250, minQueryLength = 0, placeholder = "Search…", loadingMessage = "Loading options…", emptyMessage = "No options found", disabled, required, error, help, radius, transparency, gradient, onChange }: AsyncSelectFieldProps) {
   const listId = useId();
   const requestRef = useRef(0);
   const [query, setQuery] = useState(value?.label ?? "");
@@ -66,7 +70,7 @@ export function AsyncSelectField({ id, label, value, defaultOptions = [], loadOp
     if (event.key === "Escape") { event.preventDefault(); setOpen(false); }
   };
 
-  return <FieldShell id={id} label={label} required={required} error={error} help={help}>
+  return <FieldShell id={id} label={label} required={required} error={error} help={help} radius={radius} transparency={transparency} gradient={gradient}>
     <div className={styles.root}>
       <input id={id} role="combobox" aria-autocomplete="list" aria-expanded={open} aria-controls={listId} aria-activedescendant={open && options[highlight] ? `${listId}-${highlight}` : undefined} className={styles.input} disabled={disabled} placeholder={placeholder} value={query} onChange={handleChange} onFocus={() => setOpen(true)} onKeyDown={handleKeyDown} />
       {open ? <div className={styles.list} id={listId} role="listbox">

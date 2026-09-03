@@ -197,6 +197,12 @@
   overflow: hidden;
 }
 
+.previewStage:has([data-cover-viewport="true"]) {
+  background: transparent;
+  isolation: auto;
+  overflow: visible;
+}
+
 .testLayoutPreviewPanel .previewStage:has([data-full-bleed="true"]) {
   height: 60rem;
 }

@@ -2,7 +2,7 @@
 
 import { useEffect, useMemo, useRef, useState } from "react";
 import { FieldShell, fieldInputAriaProps, useFieldShellAria } from "@/components/fields/FieldShell";
-import type { FieldMode, InputControlSize, LabelPosition } from "@/components/fields/types";
+import type { ControlRadius, FieldMode, InputControlSize, LabelPosition } from "@/components/fields/types";
 import shared from "../shared/fieldControl.module.css";
 import { inputControlSizeClassName } from "../shared/inputControlSizes";
 import styles from "./FilterSelectField.module.css";
@@ -13,6 +13,9 @@ export type FilterSelectGroup = {
 };
 
 type FilterSelectFieldProps = {
+  radius?: ControlRadius;
+  transparency?: import("../types").ControlTransparency;
+  gradient?: boolean;
   error?: string;
   groups: FilterSelectGroup[];
   help?: string;
@@ -38,6 +41,9 @@ export function FilterSelectField({
   mode = "stacked",
   placeholder = "Select filters…",
   required,
+  radius,
+  transparency,
+  gradient,
   searchPlaceholder = "Search…",
   size = "md",
   value,
@@ -113,6 +119,9 @@ export function FilterSelectField({
       labelPosition={labelPosition}
       mode={mode}
       required={required}
+      radius={radius}
+      transparency={transparency}
+      gradient={gradient}
     >
       <div className={styles.root} ref={rootRef}>
         <button

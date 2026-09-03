@@ -2,10 +2,14 @@ import "@/lib/fontawesome";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faMoon, faSun } from "@fortawesome/free-solid-svg-icons";
 import styles from "./ThemeToggleField.module.css";
+import type { ControlRadius } from "../types";
 import { FieldShell } from "@/components/fields/FieldShell";
 import type { FieldMode, LabelPosition, Theme } from "@/components/fields/types";
 
 type ThemeToggleFieldProps = {
+  radius?: ControlRadius;
+  transparency?: import("../types").ControlTransparency;
+  gradient?: boolean;
   className?: string;
   help?: string;
   id: string;
@@ -27,6 +31,9 @@ export function ThemeToggleField({
   mode = "flagged",
   value,
   onChange,
+  radius,
+  transparency,
+  gradient,
 }: ThemeToggleFieldProps) {
   const nextTheme: Theme = value === "light" ? "dark" : "light";
 
@@ -42,6 +49,9 @@ export function ThemeToggleField({
       labelTag="div"
       labelVisuallyHidden={labelVisuallyHidden}
       mode={mode}
+      radius={radius}
+      transparency={transparency}
+      gradient={gradient}
     >
       <button
         aria-label={`Switch to ${nextTheme} theme`}

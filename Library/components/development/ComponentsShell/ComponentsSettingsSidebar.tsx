@@ -27,7 +27,7 @@ const ControlSettingsPanel = dynamic(
 );
 
 export function ComponentsSettingsSidebar() {
-  const { accentStyle, theme } = useComponentsTheme();
+  const { theme } = useComponentsTheme();
   const {
     activeSlug,
     isResizing,
@@ -127,10 +127,9 @@ export function ComponentsSettingsSidebar() {
       <div className={styles.settingsSidebarWrap} data-collapsed="true">
         <aside
           aria-label="Component settings"
-          className={styles.settingsSidebar}
+          className={`${styles.sidebar} ${styles.settingsSidebar}`}
           data-opus-tour="component-settings"
           data-collapsed="true"
-          style={accentStyle}
         >
           <button
             aria-expanded={false}
@@ -165,10 +164,9 @@ export function ComponentsSettingsSidebar() {
       />
       <aside
         aria-label="Component settings"
-        className={styles.settingsSidebar}
+        className={`${styles.sidebar} ${styles.settingsSidebar}`}
         data-opus-tour="component-settings"
         data-resizing={isResizing ? "true" : undefined}
-        style={accentStyle}
       >
         <div className={styles.settingsSidebarHeader}>
           <h2 className={styles.settingsSidebarTitle}>Settings</h2>

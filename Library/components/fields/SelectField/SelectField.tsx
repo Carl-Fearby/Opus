@@ -9,7 +9,7 @@ import {
   type ChangeEventHandler,
 } from "react";
 import { FieldShell, fieldInputAriaProps, useFieldShellAria } from "@/components/fields/FieldShell";
-import type { FieldMode, InputControlSize, LabelPosition } from "@/components/fields/types";
+import type { ControlRadius, ControlTransparency, FieldMode, InputControlSize, LabelPosition } from "@/components/fields/types";
 import shared from "../shared/fieldControl.module.css";
 import { inputControlSizeClassName } from "../shared/inputControlSizes";
 import styles from "./SelectField.module.css";
@@ -25,6 +25,9 @@ type SelectFieldProps = {
   name?: string;
   options: string[];
   required?: boolean;
+  radius?: ControlRadius;
+  transparency?: ControlTransparency;
+  gradient?: boolean;
   size?: InputControlSize;
   value: string;
   onChange: ChangeEventHandler<HTMLSelectElement>;
@@ -57,6 +60,9 @@ export function SelectField({
   name,
   options,
   required,
+  radius,
+  transparency,
+  gradient,
   size = "md",
   value,
   onChange,
@@ -65,6 +71,7 @@ export function SelectField({
   const listboxId = useId();
   const rootRef = useRef<HTMLDivElement>(null);
   const [open, setOpen] = useState(false);
+  const [highlight, setHighlight] = useState(Math.max(options.indexOf(value), 0));
   const display = value || options[0] || "";
 
   useEffect(() => {
@@ -95,6 +102,40 @@ export function SelectField({
     setOpen(false);
   }
 
+  function handleKeyDown(event: React.KeyboardEvent<HTMLButtonElement>) {
+    if (event.key === "Escape") {
+      event.preventDefault();
+      setOpen(false);
+      return;
+    }
+    if (event.key === "ArrowDown" || event.key === "ArrowUp") {
+      event.preventDefault();
+      setOpen(true);
+      setHighlight((current) =>
+        event.key === "ArrowDown"
+          ? Math.min(current + 1, options.length - 1)
+          : Math.max(current - 1, 0),
+      );
+      return;
+    }
+    if (event.key === "Home" || event.key === "End") {
+      event.preventDefault();
+      setOpen(true);
+      setHighlight(event.key === "Home" ? 0 : Math.max(options.length - 1, 0));
+      return;
+    }
+    if ((event.key === "Enter" || event.key === " ") && open) {
+      event.preventDefault();
+      if (options[highlight]) selectOption(options[highlight]);
+      return;
+    }
+    if (event.key === "Enter" || event.key === " ") {
+      event.preventDefault();
+      setHighlight(Math.max(options.indexOf(value), 0));
+      setOpen(true);
+    }
+  }
+
   return (
     <FieldShell
       error={error}
@@ -106,6 +147,9 @@ export function SelectField({
       labelTag="div"
       mode={mode}
       required={required}
+      radius={radius}
+      transparency={transparency}
+      gradient={gradient}
     >
       <div className={styles.root} ref={rootRef}>
         <button
@@ -124,12 +168,7 @@ export function SelectField({
           id={id}
           type="button"
           onClick={() => setOpen((current) => !current)}
-          onKeyDown={(event) => {
-            if (event.key === "ArrowDown" || event.key === "Enter" || event.key === " ") {
-              event.preventDefault();
-              setOpen(true);
-            }
-          }}
+          onKeyDown={handleKeyDown}
           {...fieldInputAriaProps(shellAria, { invalid: Boolean(error) })}
         >
           <span className={display ? undefined : shared.placeholder}>
@@ -165,11 +204,17 @@ export function SelectField({
                 return (
                   <button
                     aria-selected={selected}
-                    className={[styles.option, selected ? styles.optionActive : ""]
+                    className={[
+                      styles.option,
+                      selected ? styles.optionActive : "",
+                      highlight === options.indexOf(option) ? styles.optionHighlighted : "",
+                    ]
                       .filter(Boolean)
                       .join(" ")}
-                    key={option}
+                  id={`${listboxId}-option-${options.indexOf(option)}`}
+                  key={option}
                     role="option"
+                  tabIndex={-1}
                     type="button"
                     onClick={() => selectOption(option)}
                   >

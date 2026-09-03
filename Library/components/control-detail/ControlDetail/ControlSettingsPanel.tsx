@@ -136,6 +136,37 @@ function CommonFieldSettings({
           { label: "Right", value: "right" },
         ]}
       />
+      <SettingSelect
+        label="Radius"
+        value={settings.radius ?? "standard"}
+        onChange={(radius) =>
+          onChange({ ...settings, radius: radius as typeof settings.radius })
+        }
+        options={[
+          { label: "None", value: "none" },
+          { label: "Standard", value: "standard" },
+          { label: "Medium", value: "medium" },
+          { label: "Large", value: "large" },
+          { label: "Full", value: "full" },
+        ]}
+      />
+      <SettingSelect
+        label="Transparency"
+        value={settings.transparency ?? "standard"}
+        onChange={(transparency) =>
+          onChange({ ...settings, transparency: transparency as typeof settings.transparency })
+        }
+        options={[
+          { label: "None", value: "none" },
+          { label: "Standard", value: "standard" },
+          { label: "Glass", value: "glass" },
+        ]}
+      />
+      <SettingToggle
+        label="Gradient"
+        checked={settings.gradient ?? false}
+        onChange={(gradient) => onChange({ ...settings, gradient })}
+      />
       {showDensity ? (
         <SettingSelect
           label="Density"
@@ -3775,6 +3806,58 @@ export function ControlSettingsPanel({
                 dockSize: Math.max(24, Math.min(76, Number(value) || 24)),
               } as ControlSettings)
             }
+          />
+        </div>
+      );
+    }
+    case "lab-background-blobs": {
+      const s = settings as ControlSettingsBySlug["lab-background-blobs"];
+      return (
+        <div className={shellStyles.settingsGrid}>
+          <SettingSelect
+            label="All sample control radius"
+            value={s.controlRadius ?? "standard"}
+            onChange={(controlRadius) =>
+              onChange({ ...s, controlRadius: controlRadius as typeof s.controlRadius } as ControlSettings)
+            }
+            options={[
+              { label: "None", value: "none" },
+              { label: "Standard", value: "standard" },
+              { label: "Medium", value: "medium" },
+              { label: "Large", value: "large" },
+              { label: "Full", value: "full" },
+            ]}
+          />
+          <SettingSelect
+            label="All sample transparency"
+            value={s.transparency ?? "standard"}
+            onChange={(transparency) =>
+              onChange({ ...s, transparency: transparency as typeof s.transparency } as ControlSettings)
+            }
+            options={[
+              { label: "None", value: "none" },
+              { label: "Standard", value: "standard" },
+              { label: "Glass", value: "glass" },
+            ]}
+          />
+          <SettingSelect
+            label="Lab container size"
+            value={s.containerSize ?? "xl"}
+            onChange={(containerSize) =>
+              onChange({ ...s, containerSize: containerSize as typeof s.containerSize } as ControlSettings)
+            }
+            options={[
+              { label: "Small", value: "sm" },
+              { label: "Medium", value: "md" },
+              { label: "Large", value: "lg" },
+              { label: "Extra large", value: "xl" },
+              { label: "Full width", value: "full" },
+            ]}
+          />
+          <SettingToggle
+            label="Pad lab container"
+            checked={s.containerPadded ?? true}
+            onChange={(containerPadded) => onChange({ ...s, containerPadded } as ControlSettings)}
           />
         </div>
       );
@@ -7972,6 +8055,91 @@ export function ControlSettingsPanel({
             label="Widget background"
             checked={s.surface}
             onChange={(surface) => onChange({ ...s, surface } as ControlSettings)}
+          />
+        </div>
+      );
+    }
+    case "background-blobs": {
+      const s = settings as ControlSettingsBySlug["background-blobs"];
+      return (
+        <div className={shellStyles.settingsGrid}>
+          <SettingSelect
+            label="Placement"
+            value={s.placement}
+            onChange={(placement) =>
+              onChange({
+                ...s,
+                padParent: placement === "absolute",
+                placement: placement as typeof s.placement,
+              } as ControlSettings)
+            }
+            options={[
+              { label: "Fill parent", value: "absolute" },
+              { label: "Cover viewport", value: "fixed" },
+            ]}
+          />
+          {s.placement === "absolute" ? (
+            <SettingToggle
+              label="Pad parent"
+              checked={s.padParent}
+              onChange={(padParent) => onChange({ ...s, padParent } as ControlSettings)}
+            />
+          ) : null}
+          <SettingSelect
+            label="Blob size"
+            value={s.size}
+            onChange={(size) =>
+              onChange({ ...s, size: size as typeof s.size } as ControlSettings)
+            }
+            options={[
+              { label: "Too large", value: "too-large" },
+              { label: "Large", value: "large" },
+              { label: "Medium", value: "medium" },
+              { label: "Small", value: "small" },
+            ]}
+          />
+          <SettingInput
+            label="Blur (px)"
+            type="number"
+            numberStep={5}
+            value={String(s.blur)}
+            onChange={(blur) => onChange({ ...s, blur: Number(blur) } as ControlSettings)}
+          />
+          <SettingInput
+            label="Brightness"
+            type="number"
+            numberStep={0.1}
+            value={String(s.brightness)}
+            onChange={(brightness) =>
+              onChange({ ...s, brightness: Number(brightness) } as ControlSettings)
+            }
+          />
+          <SettingSelect
+            label="Blob count"
+            value={String(s.count)}
+            onChange={(count) => onChange({ ...s, count: Number(count) } as ControlSettings)}
+            options={["1", "2", "3", "4", "5", "6", "7", "8"].map((count) => ({
+              label: count,
+              value: count,
+            }))}
+          />
+          {Array.from({ length: Math.max(1, Math.min(8, s.count)) }, (_, index) => (
+            <SettingInput
+              key={`blob-colour-${index + 1}`}
+              label={`Blob ${index + 1} colour`}
+              type="color"
+              value={s.colors[index] ?? s.colors[index % s.colors.length] ?? "#8f6cff"}
+              onChange={(nextColor) => {
+                const colors = [...s.colors];
+                colors[index] = nextColor;
+                onChange({ ...s, colors } as ControlSettings);
+              }}
+            />
+          ))}
+          <SettingToggle
+            label="Animate"
+            checked={s.animated}
+            onChange={(animated) => onChange({ ...s, animated } as ControlSettings)}
           />
         </div>
       );
