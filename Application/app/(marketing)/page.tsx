@@ -9,6 +9,7 @@ import { ProductDepth } from "@/components/marketing/ProductDepth";
 import { RealWorldShowcase } from "@/components/marketing/RealWorldShowcase";
 import { SeoFAQ } from "@/components/marketing/SeoFAQ";
 import { StatBand } from "@/components/marketing/StatBand";
+import { ThemeShowcase } from "@/components/marketing/ThemeShowcase";
 import { WorkflowSection } from "@/components/marketing/WorkflowSection";
 
 export default function HomePage() {
@@ -18,6 +19,7 @@ export default function HomePage() {
       <StatBand />
       <RealWorldShowcase />
       <FeatureGrid />
+      <ThemeShowcase />
       <ProductDepth />
       <DesktopShowcase />
       <PlaygroundSection />

@@ -1,5 +1,5 @@
-import { VersionPage } from "@/components/documentation/DocumentationContent/VersionPage";
+import { redirect } from "next/navigation";
 
 export default function DocumentationVersionPage() {
-  return <VersionPage />;
+  redirect("/version");
 }
