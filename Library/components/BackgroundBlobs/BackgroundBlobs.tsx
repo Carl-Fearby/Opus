@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState, type CSSProperties, type ReactNode } from "react";
+import { useEffect, useMemo, useRef, useState, type CSSProperties, type ReactNode } from "react";
 import styles from "./BackgroundBlobs.module.css";
 
 export type BackgroundBlobPlacement = "absolute" | "fixed";
@@ -203,16 +203,20 @@ export function BackgroundBlobs({
   size = "large",
 }: BackgroundBlobsProps) {
   const scale = BLOB_SIZE_SCALE[size];
-  const generatedBlobs = Array.from({ length: Math.max(1, Math.min(8, count)) }, (_, index) => {
-    const template = defaultBackgroundBlobs[index % defaultBackgroundBlobs.length];
-    const color = colors[index % colors.length] ?? defaultBackgroundBlobColors[index % 4];
-    return {
-      ...template,
-      from: `color-mix(in srgb, ${color} 45%, white)`,
-      to: color,
-    };
-  });
-  const activeBlobs = blobs ?? generatedBlobs;
+  const generatedBlobs = useMemo(
+    () =>
+      Array.from({ length: Math.max(1, Math.min(8, count)) }, (_, index) => {
+        const template = defaultBackgroundBlobs[index % defaultBackgroundBlobs.length];
+        const color = colors[index % colors.length] ?? defaultBackgroundBlobColors[index % 4];
+        return {
+          ...template,
+          from: `color-mix(in srgb, ${color} 45%, white)`,
+          to: color,
+        };
+      }),
+    [colors, count],
+  );
+  const activeBlobs = useMemo(() => blobs ?? generatedBlobs, [blobs, generatedBlobs]);
   const rootRef = useRef<HTMLDivElement>(null);
   const blobRefs = useRef<Array<HTMLSpanElement | null>>([]);
   const positionsRef = useRef<OrganicPosition[]>([]);
@@ -318,7 +322,7 @@ export function BackgroundBlobs({
       window.cancelAnimationFrame(frame);
       simulationCache.set(cacheKey, positions);
     };
-  }, [activeBlobs.length, animated, placement]);
+  }, [activeBlobs, animated, placement]);
 
   return (
     <div
