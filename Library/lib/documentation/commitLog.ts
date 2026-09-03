@@ -1117,5 +1117,11 @@ export const commitLog: CommitEntry[] = [
     shortHash: "3ecd10a",
     committedAt: "2026-09-02",
     summary: "chore: upgrade Next.js to 16.3.4",
+  },
+  {
+    hash: "b25ea16f377a7a5d00cbcecdc4317f17a6efb22c",
+    shortHash: "b25ea16",
+    committedAt: "2026-09-03",
+    summary: "feat: add complete version and commit history",
   }
 ].reverse();
