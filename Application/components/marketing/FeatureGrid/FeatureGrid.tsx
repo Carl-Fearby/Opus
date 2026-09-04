@@ -9,7 +9,7 @@ const features = [
   {
     title: "Design themes visually",
     description:
-      "Use the Theme Designer to set light or dark mode, fonts, radius, surface treatments, primary/secondary/tertiary accents, and tile gradients—then copy provider-ready code into your app.",
+      "Use the Theme Designer to set light or dark mode, fonts, radius, surface treatments, primary/secondary/tertiary accents, and tile gradients. Switch every live preview between desktop and mobile, then copy provider-ready code into your app.",
   },
   {
     title: "Built for product teams",

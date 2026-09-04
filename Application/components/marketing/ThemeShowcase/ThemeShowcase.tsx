@@ -13,7 +13,7 @@ export function ThemeShowcase() {
     <section className={styles.section} aria-labelledby="theme-showcase-title">
       <div className={styles.inner}>
         <div className={styles.intro}>
-          <p className={styles.eyebrow}>Visual theme designer</p>
+          <p className={styles.eyebrow}>New in Opus 0.7 · Visual theme designer</p>
           <h2 id="theme-showcase-title">Build a complete theme visually. Use it everywhere.</h2>
           <p>
             Set colours, tile gradients, typography, radius, surface treatment, and light or dark mode in one live workspace.
@@ -22,7 +22,7 @@ export function ThemeShowcase() {
           <ul className={styles.featureList}>
             <li>Live component canvas with controls, tiles, widgets, forms, and actions.</li>
             <li>Primary, secondary, tertiary, and tile accent tokens with light and dark previews.</li>
-            <li>Copy-ready provider code for your parent application.</li>
+            <li>Desktop and mobile preview modes, plus copy-ready provider code for your parent application.</li>
           </ul>
         </div>
 

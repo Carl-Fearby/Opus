@@ -1,6 +1,20 @@
 /** Curated opus-react release notes for npm publishes that only left chore commits in git. */
 export const releaseNotesOverlay = [
   {
+    version: "0.7.0",
+    releasedAt: "2026-09-04",
+    summary: "A visual theming milestone for application-ready Opus interfaces.",
+    changes: [
+      "Introduce the top-level visual Theme Designer: build global light or dark themes through a live canvas of tiles, search, dashboard widgets, forms, and actions.",
+      "Provide copy-ready OpusThemeProvider code for base, primary, secondary, tertiary, tile, and tile-secondary colour tokens, alongside shared typography, radius, transparency, and gradient defaults.",
+      "Add provider-scoped theme styles and createBaseStyle so parent applications can apply complete theme tokens without an extra wrapper element.",
+      "Add persistent Desktop/Mobile preview controls across component previews and the Theme Designer, with a true constrained mobile canvas for responsive verification.",
+      "Make Search Box work reliably in narrow canvases: a compact stacked mobile layout retains query, category, and action controls, while long category lists stay within the preview and scroll internally.",
+      "Expand the Theme Designer’s component canvas to eight application tiles and refresh marketing content to present the feature as the Opus 0.7 milestone.",
+      "Publish opus-react 0.7.0.",
+    ],
+  },
+  {
     version: "0.6.40",
     releasedAt: "2026-09-04",
     summary: "Responsive preview platforms and a mobile-safe Search Box.",
