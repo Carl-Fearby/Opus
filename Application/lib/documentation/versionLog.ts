@@ -680,8 +680,8 @@ export const versionLog: VersionEntry[] = [
   {
     version: "0.7.2",
     releasedAt: "2026-09-05",
-    commit: "ea93f85bdee0052d70f1b43fc543e3a2a24b653e",
-    commitShort: "ea93f85",
+    commit: "229e1ddb3eab1461fb35d650842856443dc41cf8",
+    commitShort: "229e1dd",
     summary: "International currency workflows and a dedicated currency selector.",
     changes: ["Add CurrencySelectField: a searchable ISO 4217 selector with currency name, country or region, flag, and display sign in every row.","Ensure CurrencySelectField returns a compact ISO currency code while its rich selected row remains readable.","Upgrade CurrencyField with territory-aware locale formatting, correct decimal precision, grouping, sign placement, and blur-safe editing.","Publish opus-react 0.7.2."],
   }

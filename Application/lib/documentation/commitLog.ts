@@ -1321,5 +1321,17 @@ export const commitLog: CommitEntry[] = [
     shortHash: "ea93f85",
     committedAt: "2026-09-05",
     summary: "feat: release opus-react@0.7.2 — international currency controls",
+  },
+  {
+    hash: "57eb0a7d9adbb866ad04d93d9478f16d7e155ae5",
+    shortHash: "57eb0a7",
+    committedAt: "2026-09-05",
+    summary: "chore: sync version history for opus-react@0.7.2",
+  },
+  {
+    hash: "229e1ddb3eab1461fb35d650842856443dc41cf8",
+    shortHash: "229e1dd",
+    committedAt: "2026-09-05",
+    summary: "chore: update Application to opus-react@0.7.2",
   }
 ].reverse();
