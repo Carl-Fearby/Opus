@@ -1,6 +1,15 @@
 /** Curated opus-react release notes for npm publishes that only left chore commits in git. */
 export const releaseNotesOverlay = [
   {
+    version: "0.7.1",
+    releasedAt: "2026-09-04",
+    summary: "Precision alignment for the visual preview toolbar.",
+    changes: [
+      "Make each Desktop and Mobile platform segment the same control height as the Colours, font, theme, and Open controls.",
+      "Publish opus-react 0.7.1.",
+    ],
+  },
+  {
     version: "0.7.0",
     releasedAt: "2026-09-04",
     summary: "A visual theming milestone for application-ready Opus interfaces.",

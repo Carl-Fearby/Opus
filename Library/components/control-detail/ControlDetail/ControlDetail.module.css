@@ -59,10 +59,6 @@
   display: inline-flex;
   box-sizing: border-box;
   height: var(--opus-control-height, 28px);
-  overflow: hidden;
-  border: 1px solid var(--opus-border);
-  border-radius: var(--opus-input-radius-large);
-  background: var(--opus-input-bg, var(--opus-panel));
 }
 
 .previewPlatformSelector button {
@@ -70,9 +66,9 @@
   height: 100%;
   min-height: 100%;
   max-height: 100%;
-  border: 0;
+  border: 1px solid var(--opus-border);
   padding: 0 8px;
-  background: transparent;
+  background: var(--opus-input-bg, var(--opus-panel));
   color: var(--opus-muted);
   font: inherit;
   font-size: .72rem;
@@ -81,7 +77,12 @@
 }
 
 .previewPlatformSelector button + button {
-  border-left: 1px solid var(--opus-border);
+  margin-left: -1px;
+  border-radius: 0 var(--opus-input-radius-large) var(--opus-input-radius-large) 0;
+}
+
+.previewPlatformSelector button:first-child {
+  border-radius: var(--opus-input-radius-large) 0 0 var(--opus-input-radius-large);
 }
 
 .previewPlatformSelector button[aria-pressed="true"] {
