@@ -11,6 +11,22 @@ export type NewsStory = {
 
 export const newsStories: NewsStory[] = [
   {
+    slug: "the-atmosphere-is-a-component",
+    date: "2026-09-05",
+    edition: "Background Blobs",
+    title: "The atmosphere is part of the system too.",
+    standfirst: "The colour field behind the Opus home page is now the same Background Blobs component available to every application that installs opus-react.",
+    summary: "A piece of visual character should be portable, configurable, and considerate of the people using the product — not a one-off marketing trick.",
+    components: [
+      { name: "Background Blobs", href: "/documentation/components/background-blobs", code: `<BackgroundBlobs\n  placement="fixed"\n  colors={["#8f6cff", "#22d3ee", "#fb7185", "#f59e0b"]}\n  blur={80}\n/>` },
+    ],
+    chapters: [
+      { heading: "The same layer, everywhere", body: "The four-colour atmosphere behind the Opus home page now renders through BackgroundBlobs. It is not a separate visual effect reserved for marketing; it is the published component working in a real product surface." },
+      { heading: "Character without hard-coding", body: "Applications can choose their own palette, count, size, blur, brightness, placement, and animation. The component works as a viewport layer or as an atmosphere inside a parent container." },
+      { heading: "Motion with an off switch", body: "BackgroundBlobs respects reduced-motion preferences and can be rendered without animation, keeping decorative movement from getting in the way of the interface." },
+    ],
+  },
+  {
     slug: "currency-that-travels",
     date: "2026-09-05",
     edition: "Currency workflows",
