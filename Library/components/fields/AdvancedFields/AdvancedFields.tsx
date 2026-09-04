@@ -1,6 +1,6 @@
 "use client";
 
-import { useId, useRef, type ComponentPropsWithoutRef, type ReactNode } from "react";
+import { useCallback, useEffect, useId, useMemo, useRef, useState, type ComponentPropsWithoutRef, type ReactNode } from "react";
 import { FieldShell } from "../FieldShell";
 import { OpusDateRangeInput, type DateRangeValue } from "../DatePickerPanel";
 import type { ControlRadius, FieldMode, LabelPosition } from "../types";
@@ -27,11 +27,110 @@ export function DateRangeField({ error, help, id, label, labelPosition, max, min
 export type { ComboboxFieldProps, ComboboxOption } from "../ComboboxField";
 export { ComboboxField } from "../ComboboxField";
 
+const fallbackCurrencyCodes = ["AED", "ARS", "AUD", "BRL", "CAD", "CHF", "CLP", "CNY", "COP", "CZK", "DKK", "EGP", "EUR", "GBP", "HKD", "HUF", "IDR", "ILS", "INR", "JPY", "KRW", "MAD", "MXN", "MYR", "NOK", "NZD", "PHP", "PLN", "RON", "SAR", "SEK", "SGD", "THB", "TRY", "TWD", "UAH", "USD", "VND", "ZAR"];
+const supportedCurrencyCodes = typeof Intl.supportedValuesOf === "function" ? Intl.supportedValuesOf("currency") : fallbackCurrencyCodes;
+const currencyNames = typeof Intl.DisplayNames === "function" ? new Intl.DisplayNames(["en"], { type: "currency" }) : undefined;
+/** ISO 4217 currency-to-territory mapping. Shared currencies use a representative territory or region. */
+const currencyRegions: Record<string, string> = {
+  AED: "AE", AFN: "AF", ALL: "AL", AMD: "AM", ANG: "CW", AOA: "AO", ARS: "AR", AUD: "AU", AWG: "AW", AZN: "AZ",
+  BAM: "BA", BBD: "BB", BDT: "BD", BGN: "BG", BHD: "BH", BIF: "BI", BMD: "BM", BND: "BN", BOB: "BO", BRL: "BR", BSD: "BS", BTN: "BT", BWP: "BW", BYN: "BY", BZD: "BZ",
+  CAD: "CA", CDF: "CD", CHF: "CH", CLP: "CL", CNY: "CN", COP: "CO", CRC: "CR", CUC: "CU", CUP: "CU", CVE: "CV", CZK: "CZ",
+  DJF: "DJ", DKK: "DK", DOP: "DO", DZD: "DZ",
+  EGP: "EG", ERN: "ER", ETB: "ET", EUR: "EU",
+  FJD: "FJ", FKP: "FK",
+  GBP: "GB", GEL: "GE", GHS: "GH", GIP: "GI", GMD: "GM", GNF: "GN", GTQ: "GT", GYD: "GY",
+  HKD: "HK", HNL: "HN", HRK: "HR", HTG: "HT", HUF: "HU",
+  IDR: "ID", ILS: "IL", INR: "IN", IQD: "IQ", IRR: "IR", ISK: "IS",
+  JMD: "JM", JOD: "JO", JPY: "JP",
+  KES: "KE", KGS: "KG", KHR: "KH", KMF: "KM", KPW: "KP", KRW: "KR", KWD: "KW", KYD: "KY", KZT: "KZ",
+  LAK: "LA", LBP: "LB", LKR: "LK", LRD: "LR", LSL: "LS", LYD: "LY",
+  MAD: "MA", MDL: "MD", MGA: "MG", MKD: "MK", MMK: "MM", MNT: "MN", MOP: "MO", MRU: "MR", MUR: "MU", MVR: "MV", MWK: "MW", MXN: "MX", MYR: "MY", MZN: "MZ",
+  NAD: "NA", NGN: "NG", NIO: "NI", NOK: "NO", NPR: "NP", NZD: "NZ",
+  OMR: "OM",
+  PAB: "PA", PEN: "PE", PGK: "PG", PHP: "PH", PKR: "PK", PLN: "PL", PYG: "PY",
+  QAR: "QA",
+  RON: "RO", RSD: "RS", RUB: "RU", RWF: "RW",
+  SAR: "SA", SBD: "SB", SCR: "SC", SDG: "SD", SEK: "SE", SGD: "SG", SHP: "SH", SLE: "SL", SLL: "SL", SOS: "SO", SRD: "SR", SSP: "SS", STN: "ST", SVC: "SV", SYP: "SY", SZL: "SZ",
+  THB: "TH", TJS: "TJ", TMT: "TM", TND: "TN", TOP: "TO", TRY: "TR", TTD: "TT", TWD: "TW", TZS: "TZ",
+  UAH: "UA", UGX: "UG", USD: "US", UYU: "UY", UZS: "UZ",
+  VES: "VE", VND: "VN", VUV: "VU",
+  WST: "WS",
+  XAF: "CM", XCD: "AG", XCG: "CW", XOF: "SN", XPF: "PF",
+  YER: "YE",
+  ZAR: "ZA", ZMW: "ZM", ZWG: "ZW", ZWL: "ZW",
+};
+
+function flagForCurrency(currency: string) {
+  const region = currencyRegions[currency];
+  if (!/^[A-Z]{2}$/.test(region)) return "🌐";
+  return String.fromCodePoint(...[...region].map((letter) => 0x1f1e6 + letter.charCodeAt(0) - 65));
+}
+
+const currencyLocales: Record<string, string> = {
+  AED: "ar-AE", AUD: "en-AU", BRL: "pt-BR", CAD: "en-CA", CHF: "de-CH", CNY: "zh-CN",
+  CZK: "cs-CZ", DKK: "da-DK", EUR: "de-DE", GBP: "en-GB", HKD: "zh-HK", HUF: "hu-HU",
+  IDR: "id-ID", ILS: "he-IL", INR: "en-IN", JPY: "ja-JP", KRW: "ko-KR", MXN: "es-MX",
+  MYR: "ms-MY", NOK: "nb-NO", NZD: "en-NZ", PHP: "en-PH", PLN: "pl-PL", RON: "ro-RO",
+  SAR: "ar-SA", SEK: "sv-SE", SGD: "en-SG", THB: "th-TH", TRY: "tr-TR", TWD: "zh-TW",
+  UAH: "uk-UA", USD: "en-US", VND: "vi-VN", ZAR: "en-ZA",
+};
+
+function currencyLocale(currency: string) {
+  if (currencyLocales[currency]) return currencyLocales[currency];
+  const region = currencyRegions[currency];
+  // `und` deliberately lets Intl select the territory's currency presentation
+  // without assuming English when we do not have a language-specific locale.
+  return /^[A-Z]{2}$/.test(region) ? `und-${region}` : "en-US";
+}
+
+const regionNames = typeof Intl.DisplayNames === "function" ? new Intl.DisplayNames(["en"], { type: "region" }) : undefined;
+
+function currencySymbol(currency: string) {
+  return new Intl.NumberFormat(currencyLocale(currency), { currency, style: "currency" })
+    .formatToParts(0)
+    .find((part) => part.type === "currency")?.value ?? currency;
+}
+
+/** Every ISO 4217 currency exposed by the runtime, with its testable territory and display sign. */
+export const currencyOptions = supportedCurrencyCodes.map((currency) => {
+  const region = currencyRegions[currency];
+  const territory = region && regionNames?.of(region);
+  return {
+    label: `${flagForCurrency(currency)} ${currency} — ${currencyNames?.of(currency) ?? currency}${territory ? ` · ${territory}` : ""} · ${currencySymbol(currency)}`,
+    value: currency,
+  };
+});
+
 export type CurrencyFieldProps = ShellProps & { currency?: string; locale?: string; value: number | null; onChange: (value: number | null) => void };
-export function CurrencyField({ currency = "GBP", error, help, id, label, labelPosition, locale = "en-GB", mode, radius, transparency, gradient, required, value, onChange }: CurrencyFieldProps) {
-  const symbol = new Intl.NumberFormat(locale, { currency, style: "currency" }).formatToParts(0).find((part) => part.type === "currency")?.value ?? currency;
+export function CurrencyField({ currency = "GBP", error, help, id, label, labelPosition, locale, mode, radius, transparency, gradient, required, value, onChange }: CurrencyFieldProps) {
+  const resolvedLocale = locale ?? currencyLocale(currency);
+  const currencyFormatter = useMemo(() => new Intl.NumberFormat(resolvedLocale, { currency, style: "currency" }), [currency, resolvedLocale]);
+  const currencyParts = currencyFormatter.formatToParts(0);
+  const symbol = currencyParts.find((part) => part.type === "currency")?.value ?? currency;
+  const symbolIsPrefix = currencyParts.findIndex((part) => part.type === "currency") < currencyParts.findIndex((part) => part.type === "integer");
+  const fractionDigits = currencyFormatter.resolvedOptions().maximumFractionDigits;
+  const formatValue = useCallback((amount: number) => new Intl.NumberFormat(resolvedLocale, { minimumFractionDigits: fractionDigits, maximumFractionDigits: fractionDigits }).format(amount), [fractionDigits, resolvedLocale]);
+  const [text, setText] = useState(value === null ? "" : formatValue(value));
+
+  useEffect(() => {
+    setText(value === null ? "" : formatValue(value));
+  }, [formatValue, value]);
+
+  const numericText = (raw: string) => {
+    let next = "";
+    let hasDecimal = false;
+    for (const character of raw) {
+      if (character >= "0" && character <= "9") next += character;
+      if ((character === "." || character === ",") && !hasDecimal) {
+        next += character;
+        hasDecimal = true;
+      }
+    }
+    return next;
+  };
+
   return <FieldShell error={error} help={help} id={id} label={label} labelPosition={labelPosition} mode={mode} radius={radius} transparency={transparency} gradient={gradient} required={required}>
-    <div className={styles.affixed}><span aria-hidden="true">{symbol}</span><input aria-invalid={Boolean(error)} className={styles.bareInput} id={id} inputMode="decimal" type="number" value={value ?? ""} onChange={(event) => onChange(event.target.value === "" ? null : Number(event.target.value))} /></div>
+    <div className={styles.affixed} data-currency-position={symbolIsPrefix ? "prefix" : "suffix"}><span aria-hidden="true">{symbol}</span><input aria-invalid={Boolean(error)} className={styles.bareInput} id={id} inputMode="decimal" type="text" value={text} onFocus={() => setText(value === null ? "" : String(value))} onChange={(event) => setText(numericText(event.target.value))} onBlur={() => { if (text === "" || text === ".") { onChange(null); return; } const next = Number(text.replace(",", ".")); if (!Number.isFinite(next)) return; onChange(next); setText(formatValue(next)); }} /></div>
   </FieldShell>;
 }
 

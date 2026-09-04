@@ -322,6 +322,7 @@ const componentIcons: Record<string, IconDefinition> = {
   "date-range-picker": faCalendarDays,
   combobox: faList,
   "currency-input": faHashtag,
+  "currency-select": faGlobe,
   "masked-input": faKeyboard,
   "multi-file-upload": faCloudArrowUp,
   "checkbox-group": faListCheck,

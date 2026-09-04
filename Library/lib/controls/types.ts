@@ -120,6 +120,7 @@ export type ControlSlug =
   | "date-range-picker"
   | "combobox"
   | "currency-input"
+  | "currency-select"
   | "masked-input"
   | "multi-file-upload"
   | "checkbox-group"
@@ -348,6 +349,7 @@ export type OtpInputSettings = BaseFieldSettings & {
 export type DateRangeSettings = BaseFieldSettings & { from: string; to: string };
 export type ComboboxSettings = BaseFieldSettings & { options: string; placeholder: string; value: string };
 export type CurrencyInputSettings = BaseFieldSettings & { currency: string; value: number };
+export type CurrencySelectSettings = BaseFieldSettings & { value: string; placeholder: string; placeholderEnabled: boolean; searchPlaceholder: string };
 export type MaskedInputSettings = BaseFieldSettings & { mask: string; placeholder: string; value: string };
 export type MultiFileUploadSettings = BaseFieldSettings & { fileNames: string; maxFiles: number };
 export type CheckboxGroupSettings = BaseFieldSettings & { options: string; value: string[] };
@@ -1774,6 +1776,7 @@ export type ControlSettingsBySlug = {
   "date-range-picker": DateRangeSettings;
   combobox: ComboboxSettings;
   "currency-input": CurrencyInputSettings;
+  "currency-select": CurrencySelectSettings;
   "masked-input": MaskedInputSettings;
   "multi-file-upload": MultiFileUploadSettings;
   "checkbox-group": CheckboxGroupSettings;
@@ -2026,6 +2029,7 @@ export const formsControlOrder = [
   "date-range-picker",
   "combobox",
   "currency-input",
+  "currency-select",
   "masked-input",
   "multi-file-upload",
   "checkbox-group",

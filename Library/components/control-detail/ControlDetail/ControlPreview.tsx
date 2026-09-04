@@ -71,6 +71,7 @@ import {
   SliderRangeField,
   PhoneNumberField,
   CountryPickerField,
+  CurrencySelectField,
   TreeSelectField,
   CascaderField,
   Skeleton,
@@ -3524,6 +3525,10 @@ function ControlPreviewContent({
     case "currency-input": {
       const s = settings as ControlSettingsBySlug["currency-input"];
       return <CurrencyField {...fieldProps(s)} currency={s.currency} id="preview-currency" value={s.value} onChange={(value) => onSettingsChange({ ...s, value: value ?? 0 } as ControlSettings)} />;
+    }
+    case "currency-select": {
+      const s = settings as ControlSettingsBySlug["currency-select"];
+      return <CurrencySelectField {...fieldProps(s)} id="preview-currency-select" placeholder={s.placeholderEnabled ? s.placeholder : undefined} searchPlaceholder={s.searchPlaceholder} value={s.value} onChange={(value) => onSettingsChange({ ...s, value } as ControlSettings)} />;
     }
     case "masked-input": {
       const s = settings as ControlSettingsBySlug["masked-input"];

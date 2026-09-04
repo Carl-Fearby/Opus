@@ -117,6 +117,8 @@ export {
   countryCodeToFlag,
 } from "./PhoneNumberField/countries";
 export { CountryPickerField } from "./CountryPickerField";
+export { CurrencySelectField } from "./CurrencySelectField";
+export type { CurrencySelectFieldProps, CurrencySelectOption } from "./CurrencySelectField";
 export { TreeSelectField } from "./TreeSelectField";
 export type { TreeSelectNode } from "./TreeSelectField";
 export { CascaderField } from "./CascaderField";

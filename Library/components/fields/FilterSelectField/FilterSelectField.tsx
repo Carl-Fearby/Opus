@@ -26,6 +26,7 @@ type FilterSelectFieldProps = {
   placeholder?: string;
   required?: boolean;
   searchPlaceholder?: string;
+  selectionMode?: "multiple" | "single";
   size?: InputControlSize;
   value: string[];
   onChange: (value: string[]) => void;
@@ -45,6 +46,7 @@ export function FilterSelectField({
   transparency,
   gradient,
   searchPlaceholder = "Search…",
+  selectionMode = "multiple",
   size = "md",
   value,
   onChange,
@@ -52,6 +54,7 @@ export function FilterSelectField({
   const shellAria = useFieldShellAria();
   const rootRef = useRef<HTMLDivElement>(null);
   const [open, setOpen] = useState(false);
+  const [openUpward, setOpenUpward] = useState(false);
   const [query, setQuery] = useState("");
   const [draft, setDraft] = useState(value);
 
@@ -105,9 +108,36 @@ export function FilterSelectField({
     value.length === 0 ? placeholder : value.length === 1 ? value[0] : `${value.length} selected`;
 
   function toggleOption(option: string) {
+    if (selectionMode === "single") {
+      setDraft([option]);
+      return;
+    }
     setDraft((current) =>
       current.includes(option) ? current.filter((item) => item !== option) : [...current, option],
     );
+  }
+
+  function toggleMenu() {
+    if (open) {
+      setOpen(false);
+      return;
+    }
+
+    const triggerBounds = rootRef.current?.getBoundingClientRect();
+    let scrollParent = rootRef.current?.parentElement ?? null;
+    while (scrollParent && scrollParent !== document.body) {
+      const overflowY = window.getComputedStyle(scrollParent).overflowY;
+      if (overflowY === "auto" || overflowY === "scroll") break;
+      scrollParent = scrollParent.parentElement;
+    }
+    const boundary = scrollParent?.getBoundingClientRect();
+    const top = boundary?.top ?? 0;
+    const bottom = boundary?.bottom ?? window.innerHeight;
+    const spaceBelow = (bottom ?? window.innerHeight) - (triggerBounds?.bottom ?? 0);
+    const spaceAbove = (triggerBounds?.top ?? 0) - (top ?? 0);
+
+    setOpenUpward(spaceBelow < 280 && spaceAbove > spaceBelow);
+    setOpen(true);
   }
 
   return (
@@ -137,14 +167,14 @@ export function FilterSelectField({
             .join(" ")}
           id={id}
           type="button"
-          onClick={() => setOpen((current) => !current)}
+          onClick={toggleMenu}
           {...fieldInputAriaProps(shellAria, { invalid: Boolean(error) })}
         >
           <span className={value.length ? "" : shared.placeholder}>{summary}</span>
           <span aria-hidden="true" className={shared.chevron} />
         </button>
         {open ? (
-          <div className={shared.panel}>
+          <div className={[shared.panel, openUpward ? styles.panelUpward : ""].filter(Boolean).join(" ")}>
             <input
               aria-label="Search filters"
               className={shared.search}
@@ -158,19 +188,35 @@ export function FilterSelectField({
                 <div key={group.label}>
                   <div className={shared.groupLabel}>{group.label}</div>
                   {group.options.map((option) => (
-                    <label className={shared.option} key={option}>
-                      <input
-                        checked={draft.includes(option)}
-                        type="checkbox"
-                        onChange={() => toggleOption(option)}
-                      />
-                      <span>{option}</span>
-                    </label>
+                    selectionMode === "single" ? (
+                      <button
+                        aria-selected={value.includes(option)}
+                        className={shared.option}
+                        key={option}
+                        role="option"
+                        type="button"
+                        onClick={() => {
+                          onChange([option]);
+                          setOpen(false);
+                        }}
+                      >
+                        <span>{option}</span>
+                      </button>
+                    ) : (
+                      <label className={shared.option} key={option}>
+                        <input
+                          checked={draft.includes(option)}
+                          type="checkbox"
+                          onChange={() => toggleOption(option)}
+                        />
+                        <span>{option}</span>
+                      </label>
+                    )
                   ))}
                 </div>
               ))}
             </div>
-            <div className={shared.panelFooter}>
+            {selectionMode === "multiple" ? <div className={shared.panelFooter}>
               <button
                 className={shared.actionButton}
                 type="button"
@@ -192,7 +238,7 @@ export function FilterSelectField({
               >
                 Apply
               </button>
-            </div>
+            </div> : null}
           </div>
         ) : null}
       </div>

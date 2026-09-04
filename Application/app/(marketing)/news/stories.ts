@@ -10,6 +10,19 @@ export type NewsStory = {
 
 export const newsStories: NewsStory[] = [
   {
+    slug: "currency-that-travels",
+    date: "2026-09-05",
+    edition: "Currency workflows",
+    title: "Money controls should speak the local language.",
+    standfirst: "Opus 0.7.2 brings international currency formatting and a dedicated selector that makes the right choice clear before data leaves the form.",
+    summary: "A small family of controls built around the practical details of entering, recognising, and storing money correctly.",
+    chapters: [
+      { heading: "A selector with context", body: "CurrencySelectField makes the full ISO 4217 catalogue searchable by country, currency name, code, or sign. Every row pairs the code with a flag, territory, and display sign, so a choice is understandable at a glance." },
+      { heading: "A compact value, not a display string", body: "The richer row is for people; the value is for applications. Selecting a currency returns the compact ISO code such as GBP or JPY, ready to store, validate, and pass between systems." },
+      { heading: "Formatting that respects the currency", body: "CurrencyField now follows each selected currency’s locale-aware grouping, decimal precision, and sign placement. It leaves a value alone while a person is typing, then formats it cleanly on blur." },
+    ],
+  },
+  {
     slug: "opus-0-7",
     date: "2026-09-04",
     edition: "Opus 0.7",

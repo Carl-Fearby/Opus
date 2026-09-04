@@ -968,6 +968,12 @@ return (
         },
       );
     }
+    case "currency-select": {
+      const s = settings as ControlSettingsBySlug["currency-select"];
+      const state = toStateName(s.label);
+      const props = [formatStringProp("id", id), ...fieldProps(s), ...(s.placeholderEnabled ? [formatStringProp("placeholder", s.placeholder)] : []), formatStringProp("searchPlaceholder", s.searchPlaceholder), formatExpressionProp("value", state), formatExpressionProp("onChange", `(currency) => ${toSetter(state)}(currency)`)];
+      return controlledFieldUsage(["CurrencySelectField"], "CurrencySelectField", state, props, { initial: quote(s.value) });
+    }
     case "date-picker":
     case "datetime-picker":
     case "month-picker":

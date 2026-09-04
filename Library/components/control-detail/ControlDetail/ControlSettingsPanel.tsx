@@ -56,6 +56,7 @@ const pipelineValueOptions = [
 ].map((value) => ({ label: value, value }));
 
 import { IconPicker } from "opus-react";
+import { CurrencySelectField } from "@/components/fields/CurrencySelectField";
 import shellStyles from "@/components/development/ComponentsShell/ComponentsShell.module.css";
 
 const buttonVariants = [
@@ -1084,7 +1085,11 @@ export function ControlSettingsPanel({
     }
     case "currency-input": {
       const s = settings as ControlSettingsBySlug["currency-input"];
-      return <div className={shellStyles.settingsGrid}><CommonFieldSettings includeValue={false} settings={s} onChange={(next) => onChange({ ...s, ...next })} /><SettingInput label="Value" type="number" value={String(s.value)} onChange={(value) => onChange({ ...s, value: Number(value) || 0 } as ControlSettings)} /><SettingSelect label="Currency" value={s.currency} onChange={(currency) => onChange({ ...s, currency } as ControlSettings)} options={[{ label: "GBP", value: "GBP" }, { label: "EUR", value: "EUR" }, { label: "USD", value: "USD" }]} /></div>;
+      return <div className={shellStyles.settingsGrid}><CommonFieldSettings includeValue={false} settings={s} onChange={(next) => onChange({ ...s, ...next })} /><SettingInput label="Value" type="number" value={String(s.value)} onChange={(value) => onChange({ ...s, value: Number(value) || 0 } as ControlSettings)} /><CurrencySelectField id="opus-setting-currency" label="Currency" value={s.currency} onChange={(currency) => onChange({ ...s, currency } as ControlSettings)} /></div>;
+    }
+    case "currency-select": {
+      const s = settings as ControlSettingsBySlug["currency-select"];
+      return <div className={shellStyles.settingsGrid}><CommonFieldSettings includeValue={false} settings={s} onChange={(next) => onChange({ ...s, ...next })} /><SettingInput label="Placeholder" value={s.placeholder} onChange={(placeholder) => onChange({ ...s, placeholder } as ControlSettings)} /><SettingInput label="Search placeholder" value={s.searchPlaceholder} onChange={(searchPlaceholder) => onChange({ ...s, searchPlaceholder } as ControlSettings)} /></div>;
     }
     case "masked-input": {
       const s = settings as ControlSettingsBySlug["masked-input"];

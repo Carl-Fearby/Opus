@@ -172,6 +172,14 @@
   text-align: left;
 }
 
+.trigger > span:first-child,
+.option > span {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
 .trigger:hover {
   border-color: color-mix(in srgb, var(--opus-accent) 45%, var(--opus-border-strong));
 }
@@ -275,10 +283,14 @@
 .option {
   display: flex;
   align-items: center;
+  width: 100%;
   gap: 8px;
   padding: 8px 10px;
+  border: 0;
   border-radius: var(--opus-menu-item-radius, var(--opus-input-radius));
+  background: transparent;
   color: var(--opus-text);
+  text-align: left;
   font-size: 0.82rem;
   cursor: pointer;
 }

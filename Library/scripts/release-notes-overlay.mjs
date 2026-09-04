@@ -1,6 +1,17 @@
 /** Curated opus-react release notes for npm publishes that only left chore commits in git. */
 export const releaseNotesOverlay = [
   {
+    version: "0.7.2",
+    releasedAt: "2026-09-05",
+    summary: "International currency workflows and a dedicated currency selector.",
+    changes: [
+      "Add CurrencySelectField: a searchable ISO 4217 selector with currency name, country or region, flag, and display sign in every row.",
+      "Ensure CurrencySelectField returns a compact ISO currency code while its rich selected row remains readable.",
+      "Upgrade CurrencyField with territory-aware locale formatting, correct decimal precision, grouping, sign placement, and blur-safe editing.",
+      "Publish opus-react 0.7.2.",
+    ],
+  },
+  {
     version: "0.7.1",
     releasedAt: "2026-09-04",
     summary: "Precision alignment for the visual preview toolbar.",
