@@ -1,0 +1,14 @@
+.page { width: min(1120px, 100%); margin: 0 auto; padding: 80px 24px 104px; }
+.hero { max-width: 790px; margin-bottom: 56px; }
+.eyebrow, .meta span, .number { color: var(--opus-cyan); font-family: var(--font-ibm-plex-mono), monospace; font-size: .78rem; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; }
+.hero h1 { margin: 12px 0 0; font-size: clamp(3rem, 6vw, 5.8rem); letter-spacing: -.065em; line-height: .94; }
+.hero > p:last-child { max-width: 660px; margin: 22px 0 0; color: var(--opus-muted); font-size: 1.13rem; line-height: 1.7; }
+.list { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; }
+.card { display: flex; flex-direction: column; min-height: 350px; padding: 30px; border: 1px solid var(--opus-border); border-radius: calc(var(--opus-radius) + 4px); background: color-mix(in srgb, var(--opus-panel) 88%, transparent); }
+.meta { display: flex; justify-content: space-between; gap: 16px; color: var(--opus-muted); font-size: .8rem; }
+.number { margin: 48px 0 12px; color: #b8a8ff; }
+.card h2 { max-width: 500px; margin: 0; font-size: clamp(1.65rem, 3vw, 2.3rem); letter-spacing: -.05em; line-height: 1.04; }
+.card > p { max-width: 490px; margin: 14px 0 24px; color: var(--opus-muted); line-height: 1.6; }
+.card a { margin-top: auto; color: var(--opus-text); font-weight: 700; }
+.card a span { margin-left: 6px; color: var(--opus-cyan); font-size: 1.2rem; }
+@media (max-width: 680px) { .page { padding: 60px 18px 80px; } .list { grid-template-columns: 1fr; } .card { min-height: 0; } }
