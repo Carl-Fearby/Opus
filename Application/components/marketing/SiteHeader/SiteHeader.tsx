@@ -4,6 +4,7 @@ import styles from "./SiteHeader.module.css";
 
 const navLinks = [
   { href: "/#features", label: "Features" },
+  { href: "/news/opus-0-7", label: "News" },
   { href: docsUrl, label: "Docs" },
   { href: "/version", label: "Versions" },
   { href: docsPlaygroundUrl, label: "Playground" },
