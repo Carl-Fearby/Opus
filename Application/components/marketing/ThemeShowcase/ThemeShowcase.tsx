@@ -8,7 +8,11 @@ const themes = [
   { name: "Dark", theme: "dark" as const, status: "Ready for review" },
 ];
 
-export function ThemeShowcase() {
+type ThemeShowcaseProps = {
+  componentCount: number;
+};
+
+export function ThemeShowcase({ componentCount }: ThemeShowcaseProps) {
   return (
     <section className={styles.section} aria-labelledby="theme-showcase-title">
       <div className={styles.inner}>
@@ -48,7 +52,7 @@ export function ThemeShowcase() {
                   </div>
                   <div className={styles.metrics}>
                     <div><span>Coverage</span><strong>94%</strong></div>
-                    <div><span>Components</span><strong>180+</strong></div>
+                    <div><span>Components</span><strong>{componentCount}</strong></div>
                   </div>
                   <TextField
                     id={`theme-preview-${theme}`}

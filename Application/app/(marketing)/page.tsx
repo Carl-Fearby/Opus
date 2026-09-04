@@ -12,6 +12,7 @@ import { SeoFAQ } from "@/components/marketing/SeoFAQ";
 import { StatBand } from "@/components/marketing/StatBand";
 import { ThemeShowcase } from "@/components/marketing/ThemeShowcase";
 import { WorkflowSection } from "@/components/marketing/WorkflowSection";
+import { getAllSlugs } from "@/lib/controls/registry";
 
 export const metadata: Metadata = {
   title: "Free, open-source React component library",
@@ -27,13 +28,15 @@ export const metadata: Metadata = {
 };
 
 export default function HomePage() {
+  const catalogueCount = getAllSlugs().length;
+
   return (
     <>
       <Hero />
       <StatBand />
       <RealWorldShowcase />
       <FeatureGrid />
-      <ThemeShowcase />
+      <ThemeShowcase componentCount={catalogueCount} />
       <ProductDepth />
       <DesktopShowcase />
       <PlaygroundSection />
