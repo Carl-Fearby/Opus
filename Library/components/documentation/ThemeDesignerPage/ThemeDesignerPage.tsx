@@ -265,6 +265,10 @@ export function App({ children }) {
                 { id: "components", icon: "building", label: "Components", tone: "blue" },
                 { id: "themes", icon: "bell", label: "Themes", tone: "purple" },
                 { id: "team", icon: "users", label: "Team", tone: "blue" },
+                { id: "activity", icon: "chart-line", label: "Activity", tone: "purple" },
+                { id: "automations", icon: "gears", label: "Automations", tone: "blue" },
+                { id: "assets", icon: "cube", label: "Assets", tone: "purple" },
+                { id: "security", icon: "shield-halved", label: "Security", tone: "blue" },
               ]}
             />
             <div className={styles.grid}>
