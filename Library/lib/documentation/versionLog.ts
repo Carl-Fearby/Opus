@@ -62,6 +62,14 @@ export const versionLog: VersionEntry[] = [
     changes: ["Restructure into Library and Application monorepo."],
   },
   {
+    version: "0.6.39",
+    releasedAt: "2026-09-04",
+    commit: "0a3d68793e749c3cd707c4cca30567c00a41db00",
+    commitShort: "0a3d687",
+    summary: "Visual Theme Designer, provider-scoped theme tokens, and marketing launch.",
+    changes: ["Add a top-level visual Theme Designer with independently scrolling controls and live component canvas, card tabs, resizeable panes, resettable theme state, and responsive light/dark previewing.","Expose base, primary, secondary, tertiary, tile, and tile-secondary colour tokens alongside global font, radius, background transparency, and gradient defaults.","Add provider-ready generated code with createAccentStyle, createTileAccentStyle, createBaseStyle, and a reusable themeDefaults object.","Extend OpusThemeProvider with a scoped style boundary so consumer applications no longer need an extra wrapper element to apply a complete theme.","Add createBaseStyle to the public opus-react API and align application boilerplate and preview token generation around the three style helpers.","Keep long Search Box category menus inside the available viewport, scrolling their options and opening upward when needed; expand the live preview categories for realistic testing.","Refresh the marketing site with a dedicated Visual Theme Designer story and clearer real-world light/dark theme examples.","Publish opus-react 0.6.39."],
+  },
+  {
     version: "0.2.5",
     releasedAt: "2026-07-07",
     commit: "overlay-0.2.5",
@@ -640,8 +648,8 @@ export const versionLog: VersionEntry[] = [
   {
     version: "0.6.38",
     releasedAt: "2026-09-04",
-    commit: "570179aa8a1282e79c4ee0a177bab077c5b2e56a",
-    commitShort: "570179a",
+    commit: "44edcacb43354310f39f21f73ddfb17a919de03a",
+    commitShort: "44edcac",
     summary: "Global tertiary accent and clearer preview colour settings.",
     changes: ["Add a first-class tertiary accent token to OpusThemeProvider, shared theme styles, preview tokens, and the public stylesheet for use across any component.","Add a global tertiary accent picker and swatch to the preview Colours dialog, and include it in exported opus-theme.json files.","Update SearchBox to use the global tertiary accent for its search action while retaining an optional per-instance override for external applications.","Rework the Colours dialog into clear, divided palette groups with matched swatches and selected colour names and hex values.","Publish opus-react 0.6.38."],
   }
