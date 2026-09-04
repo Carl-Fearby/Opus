@@ -16,14 +16,15 @@ export const newsStories: NewsStory[] = [
     edition: "Background Blobs",
     title: "The atmosphere is part of the system too.",
     standfirst: "The colour field behind the Opus home page is now the same fully configurable Background Blobs component available to every application that installs opus-react.",
-    summary: "A piece of visual character should be portable, configurable down to every colour and blob, and considerate of the people using the product — not a one-off marketing trick.",
+    summary: "A piece of visual character should be portable, configurable down to every colour, size, position, blur, brightness, and motion path, and considerate of the people using the product — not a one-off marketing trick.",
     components: [
       { name: "Background Blobs", href: "/documentation/components/background-blobs", code: `<BackgroundBlobs\n  placement="fixed"\n  count={8}\n  colors={["#8f6cff", "#22d3ee", "#fb7185", "#f59e0b", "#34d399", "#60a5fa", "#f472b6", "#a78bfa"]}\n  size="too-large"\n  blur={96}\n  brightness={1.15}\n/>` },
     ],
     chapters: [
       { heading: "The same layer, everywhere", body: "The four-colour atmosphere behind the Opus home page now renders through BackgroundBlobs. It is not a separate visual effect reserved for marketing; it is the published component working in a real product surface." },
-      { heading: "Every blob, every colour", body: "Applications can build a field from one to eight blobs and assign any colour to each one. Palette, count, blob size, blur radius, brightness, placement, and animation are all configurable, whether the component covers a viewport or creates atmosphere inside a parent container." },
-      { heading: "Motion with an off switch", body: "BackgroundBlobs respects reduced-motion preferences and can be rendered without animation, keeping decorative movement from getting in the way of the interface." },
+      { heading: "Every blob, every colour", body: "Applications can build a field from one to eight generated blobs and assign any valid CSS colour to each one. For an art-directed composition, pass individual blobs with their own start and end colours, opacity, position, size, and drift direction." },
+      { heading: "Tune the atmosphere", body: "The overall blob scale has small, medium, large, and too-large presets; individual blobs can use their own CSS size. Blur is a pixel value, brightness is a numeric multiplier, and both can be tuned precisely rather than selected from a fixed theme. Placement can cover the viewport or fill a positioned parent, with optional padding around the content rendered above it." },
+      { heading: "Motion with an off switch", body: "Choose whether the field animates, then let BackgroundBlobs respect each person’s reduced-motion preference automatically. The decorative layer stays out of the accessibility tree and never intercepts pointer input, so content placed over it remains usable." },
     ],
   },
   {
