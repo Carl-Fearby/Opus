@@ -19,6 +19,9 @@ const highlights = [
 export default function OpusZeroSevenNewsPage() {
   return (
     <article className={styles.page}>
+      <nav aria-label="Breadcrumb" className={styles.breadcrumbs}>
+        <Link href="/">Home</Link><span>/</span><Link href="/news">News</Link><span>/</span><span aria-current="page">Opus 0.7</span>
+      </nav>
       <header className={styles.hero}>
         <p className={styles.eyebrow}>Product news · 4 September 2026</p>
         <p className={styles.kicker}>Opus 0.7</p>

@@ -22,13 +22,13 @@ export default function NewsPage() {
       </header>
       <section aria-label="News stories" className={styles.list}>
         {newsStories.map((story, index) => (
-          <article className={styles.card} key={story.slug}>
+          <Link className={styles.card} href={`/news/${story.slug}`} key={story.slug}>
             <div className={styles.meta}><span>{story.edition}</span><time dateTime={story.date}>{dateLabel(story.date)}</time></div>
             <p className={styles.number}>0{index + 1}</p>
             <h2>{story.title}</h2>
             <p>{story.standfirst}</p>
-            <Link href={`/news/${story.slug}`}>Read story <span>→</span></Link>
-          </article>
+            <span className={styles.read}>Read story <span>→</span></span>
+          </Link>
         ))}
       </section>
     </div>

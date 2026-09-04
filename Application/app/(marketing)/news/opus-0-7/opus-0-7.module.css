@@ -4,6 +4,18 @@
   padding: 88px 24px 108px;
 }
 
+.breadcrumbs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 42px;
+  color: var(--opus-muted);
+  font-family: var(--font-ibm-plex-mono), monospace;
+  font-size: 0.78rem;
+}
+
+.breadcrumbs a { color: var(--opus-cyan); }
+
 .hero {
   max-width: 880px;
 }
@@ -132,6 +144,7 @@
 
 @media (max-width: 720px) {
   .page { padding: 64px 18px 80px; }
+  .breadcrumbs { margin-bottom: 30px; }
   .statement, .highlights, .detail, .links { grid-template-columns: 1fr; }
   .statement { margin-top: 72px; padding: 26px; }
   .highlight:nth-child(odd) { border-right: 0; }

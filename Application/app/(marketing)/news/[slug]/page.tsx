@@ -18,6 +18,9 @@ export default async function StoryPage({ params }: Props) {
   if (!story || story.slug === "opus-0-7") notFound();
   return (
     <article className={styles.page}>
+      <nav aria-label="Breadcrumb" className={styles.breadcrumbs}>
+        <Link href="/">Home</Link><span>/</span><Link href="/news">News</Link><span>/</span><span aria-current="page">{story.edition}</span>
+      </nav>
       <header className={styles.hero}>
         <p className={styles.eyebrow}>{story.edition} · {story.date}</p>
         <h1>{story.title}</h1>
