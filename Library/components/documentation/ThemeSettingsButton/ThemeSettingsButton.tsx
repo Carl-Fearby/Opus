@@ -17,9 +17,10 @@ import {
   DEFAULT_TILE_ACCENT_SECONDARY,
 } from "@/components/AccentColorPicker";
 import { ColourClouds, type ColourCloudsDesignation } from "@/components/ColourClouds";
-import { Button } from "@/components/fields/Button";
+import { Button, SelectField } from "@/components/fields";
 import type { Theme } from "@/components/fields/types";
 import type { GoogleFontFamily } from "@/components/FontPicker";
+import type { OpusThemeDefaults } from "@/components/OpusThemeProvider";
 import styles from "./ThemeSettingsButton.module.css";
 
 export type OpusThemeExport = {
@@ -30,12 +31,14 @@ export type OpusThemeExport = {
   accent: string;
   accentSecondary: string;
   tertiaryAccent: string;
+  defaults?: OpusThemeDefaults;
   tileAccent: string;
   tileAccentSecondary: string;
 };
 
 type ThemeSettingsButtonProps = {
   base?: string;
+  defaults?: OpusThemeDefaults;
   accent: string;
   accentSecondary: string;
   compact?: boolean;
@@ -45,6 +48,7 @@ type ThemeSettingsButtonProps = {
   onAccentChange: (value: string) => void;
   onAccentSecondaryChange: (value: string) => void;
   onTertiaryAccentChange?: (value: string) => void;
+  onDefaultsChange?: (defaults: OpusThemeDefaults) => void;
   onFontFamilyChange?: (value: string) => void;
   onResetAccent: () => void;
   onResetTileAccent: () => void;
@@ -155,6 +159,7 @@ function persistRect(rect: WindowRect) {
 
 function buildThemeExport({
   base,
+  defaults,
   accent,
   accentSecondary,
   tertiaryAccent,
@@ -168,6 +173,7 @@ function buildThemeExport({
   | "accentSecondary"
   | "tertiaryAccent"
   | "base"
+  | "defaults"
   | "fontFamily"
   | "theme"
   | "tileAccent"
@@ -178,6 +184,7 @@ function buildThemeExport({
     theme: theme ?? "dark",
     ...(fontFamily ? { fontFamily } : {}),
     base: base ?? "#64748b",
+    ...(defaults ? { defaults } : {}),
     accent,
     accentSecondary,
     tertiaryAccent: tertiaryAccent ?? "#0ea5e9",
@@ -198,6 +205,8 @@ export function ThemeSettingsButton({
   onAccentChange,
   onAccentSecondaryChange,
   onTertiaryAccentChange,
+  onDefaultsChange,
+  defaults = {},
   onResetAccent,
   onResetTileAccent,
   onTileAccentChange,
@@ -221,6 +230,7 @@ export function ThemeSettingsButton({
       JSON.stringify(
         buildThemeExport({
           base,
+          defaults,
           accent,
           accentSecondary,
           tertiaryAccent,
@@ -232,7 +242,7 @@ export function ThemeSettingsButton({
         null,
         2,
       ),
-    [accent, accentSecondary, base, fontFamily, tertiaryAccent, theme, tileAccent, tileAccentSecondary],
+    [accent, accentSecondary, base, defaults, fontFamily, tertiaryAccent, theme, tileAccent, tileAccentSecondary],
   );
 
   useEffect(() => {
@@ -541,6 +551,16 @@ export function ThemeSettingsButton({
                     />
                   ) : null}
                 </section>
+
+                {onDefaultsChange ? (
+                  <section className={styles.section}>
+                    <h3 className={styles.sectionTitle}>Control defaults</h3>
+                    <p className={styles.sectionHint}>Applied across the preview; individual component settings override these defaults.</p>
+                    <SelectField id={`${idPrefix}-theme-radius`} label="Default radius" options={["None", "Standard", "Medium", "Large", "Full"]} value={{ none: "None", standard: "Standard", medium: "Medium", large: "Large", full: "Full" }[defaults.radius ?? "standard"]!} onChange={(event) => onDefaultsChange({ ...defaults, radius: event.target.value.toLowerCase() as OpusThemeDefaults["radius"] })} />
+                    <SelectField id={`${idPrefix}-theme-background`} label="Default background" options={["Transparent", "Solid", "Glass"]} value={{ none: "Transparent", standard: "Solid", glass: "Glass" }[defaults.transparency ?? "standard"]!} onChange={(event) => onDefaultsChange({ ...defaults, transparency: ({ Transparent: "none", Solid: "standard", Glass: "glass" } as const)[event.target.value as "Transparent" | "Solid" | "Glass"] })} />
+                    <SelectField id={`${idPrefix}-theme-gradient`} label="Default gradient" options={["Off", "On"]} value={defaults.gradient ? "On" : "Off"} onChange={(event) => onDefaultsChange({ ...defaults, gradient: event.target.value === "On" })} />
+                  </section>
+                ) : null}
 
                 <section className={styles.section}>
                   <h3 className={styles.sectionTitle}>Tiles</h3>

@@ -2,7 +2,7 @@
 
 import type { ComponentPropsWithoutRef, CSSProperties, ReactNode } from "react";
 import { fontStack } from "@/components/FontPicker";
-import { OpusThemeProvider } from "@/components/OpusThemeProvider";
+import { createOpusThemeDefaultsStyle, OpusThemeProvider } from "@/components/OpusThemeProvider";
 import type { Theme } from "@/components/fields/types";
 import { useComponentsTheme } from "@/components/development/ComponentsThemeProvider";
 import { opusThemeTokens } from "@/lib/theme/opusThemeTokens";
@@ -23,12 +23,13 @@ export function PreviewThemeBoundary({
     previewAppearanceReady,
     previewTheme: contextTheme,
     previewAccentStyle,
+    previewDefaults,
     previewFontFamily,
   } = useComponentsTheme();
   const previewTheme = controlledTheme ?? contextTheme;
 
   return (
-    <OpusThemeProvider applyToDocument={false} theme={previewTheme}>
+    <OpusThemeProvider applyToDocument={false} defaults={previewDefaults} theme={previewTheme}>
       <div
         {...rest}
         className={className}
@@ -37,6 +38,7 @@ export function PreviewThemeBoundary({
         style={{
           ...opusThemeTokens(previewTheme),
           ...previewAccentStyle,
+          ...createOpusThemeDefaultsStyle(previewDefaults),
           "--opus-font-family": fontStack(previewFontFamily),
           colorScheme: previewTheme,
           fontFamily: fontStack(previewFontFamily),

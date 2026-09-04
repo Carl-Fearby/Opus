@@ -8,6 +8,7 @@ export {
   accentPrimaryColors,
   accentSecondaryColors,
   createAccentStyle,
+  createBaseStyle,
   createTileAccentStyle,
   useAccentPreference,
   useTileAccentPreference,

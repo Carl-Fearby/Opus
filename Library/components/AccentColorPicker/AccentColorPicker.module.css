@@ -132,6 +132,21 @@
   min-width: 0;
 }
 
+.paletteHeader {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 28px;
+}
+
+.paletteHeader p {
+  flex: 1 1 auto;
+  margin: 0;
+  color: var(--opus-text);
+  font-size: 0.82rem;
+  font-weight: 800;
+}
+
 .selectedValue {
   display: flex;
   align-items: center;

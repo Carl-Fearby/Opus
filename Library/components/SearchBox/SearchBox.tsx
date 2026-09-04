@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useId, useRef, useState, type CSSProperties, type FormEvent } from "react";
+import { useEffect, useId, useLayoutEffect, useRef, useState, type CSSProperties, type FormEvent } from "react";
 import { FieldShell } from "../fields/FieldShell";
 import { inputControlSizeClassName } from "../fields/shared/inputControlSizes";
 import type { ControlRadius, ControlTransparency, FieldMode, InputControlSize, LabelPosition } from "../fields/types";
@@ -78,6 +78,7 @@ export function SearchBox({
     defaultCategory ?? categories[0]?.value ?? "",
   );
   const [categoryOpen, setCategoryOpen] = useState(false);
+  const [categoryPanelStyle, setCategoryPanelStyle] = useState<CSSProperties>();
   const categoryRef = useRef<HTMLSpanElement>(null);
   const query = value ?? internalValue;
   const selectedCategory = category ?? internalCategory;
@@ -95,6 +96,38 @@ export function SearchBox({
     };
     document.addEventListener("pointerdown", close);
     return () => document.removeEventListener("pointerdown", close);
+  }, [categoryOpen]);
+
+  useLayoutEffect(() => {
+    if (!categoryOpen || !categoryRef.current) {
+      return;
+    }
+
+    const positionPanel = () => {
+      const bounds = categoryRef.current?.getBoundingClientRect();
+      if (!bounds) return;
+
+      const gutter = 12;
+      const gap = 8;
+      const spaceBelow = window.innerHeight - bounds.bottom - gap - gutter;
+      const spaceAbove = bounds.top - gap - gutter;
+      const openUpward = spaceAbove > spaceBelow;
+      const availableHeight = Math.max(96, Math.floor(openUpward ? spaceAbove : spaceBelow));
+
+      setCategoryPanelStyle({
+        "--search-box-category-max-height": `${availableHeight}px`,
+        bottom: openUpward ? `calc(100% + ${gap}px)` : undefined,
+        top: openUpward ? "auto" : `calc(100% + ${gap}px)`,
+      } as CSSProperties);
+    };
+
+    positionPanel();
+    window.addEventListener("resize", positionPanel);
+    window.addEventListener("scroll", positionPanel, true);
+    return () => {
+      window.removeEventListener("resize", positionPanel);
+      window.removeEventListener("scroll", positionPanel, true);
+    };
   }, [categoryOpen]);
 
   return <FieldShell error={error} help={help} id={inputId} label={label} labelVisuallyHidden={labelVisuallyHidden} labelPosition={labelPosition} mode={mode} radius={radius} transparency={transparency} gradient={gradient} required={required}>
@@ -126,7 +159,7 @@ export function SearchBox({
       {hasCategories ? <span className={styles.categoryWrap} ref={categoryRef}>
         <button aria-controls={categoryId} aria-expanded={categoryOpen} aria-haspopup="listbox" className={styles.categoryTrigger} disabled={disabled} onClick={() => setCategoryOpen((open) => !open)} type="button">{categories.find((item) => item.value === selectedCategory)?.label}<span aria-hidden="true" className={styles.chevron} /></button>
         <input name="category" type="hidden" value={selectedCategory} />
-        {categoryOpen ? <div className={styles.categoryPanel} id={categoryId} role="listbox">{categories.map((item) => <button aria-selected={item.value === selectedCategory} key={item.value} onClick={() => { setInternalCategory(item.value); onCategoryChange?.(item.value); setCategoryOpen(false); }} role="option" type="button">{item.label}</button>)}</div> : null}
+        {categoryOpen ? <div className={styles.categoryPanel} id={categoryId} role="listbox" style={categoryPanelStyle}>{categories.map((item) => <button aria-selected={item.value === selectedCategory} key={item.value} onClick={() => { setInternalCategory(item.value); onCategoryChange?.(item.value); setCategoryOpen(false); }} role="option" type="button">{item.label}</button>)}</div> : null}
       </span> : null}
       <button type="submit" disabled={disabled}>{searchLabel}</button>
     </form>

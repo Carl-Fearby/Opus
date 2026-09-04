@@ -24,6 +24,7 @@ export function PreviewThemeControls({
     previewAccent,
     previewAccentSecondary,
     previewTertiaryAccent,
+    previewDefaults,
     previewBaseColor,
     previewFontFamily,
     previewTheme,
@@ -34,6 +35,7 @@ export function PreviewThemeControls({
     setPreviewAccent,
     setPreviewAccentSecondary,
     setPreviewTertiaryAccent,
+    setPreviewDefaults,
     setPreviewBaseColor,
     setPreviewFontFamily,
     setPreviewTheme,
@@ -57,6 +59,7 @@ export function PreviewThemeControls({
         accent={previewAccent}
         accentSecondary={previewAccentSecondary}
         tertiaryAccent={previewTertiaryAccent}
+        defaults={previewDefaults}
         compact
         fontFamily={previewFontFamily}
         idPrefix={`${id}-preview`}
@@ -67,6 +70,7 @@ export function PreviewThemeControls({
         onAccentChange={setPreviewAccent}
         onAccentSecondaryChange={setPreviewAccentSecondary}
         onTertiaryAccentChange={setPreviewTertiaryAccent}
+        onDefaultsChange={setPreviewDefaults}
         onBaseChange={setPreviewBaseColor}
         onResetAccent={resetPreviewAccent}
         onResetTileAccent={resetPreviewTileAccent}

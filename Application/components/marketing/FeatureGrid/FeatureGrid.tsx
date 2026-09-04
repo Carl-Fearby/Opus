@@ -7,9 +7,9 @@ const features = [
       "Text inputs, pickers, multi-selects, cascaders, rich text, password strength, and more — all wrapped in a consistent field shell with labels, help, and errors.",
   },
   {
-    title: "Themeable from day one",
+    title: "Design themes visually",
     description:
-      "Light and dark modes ship out of the box. Accent colours can be changed at runtime without rebuilding your theme tokens.",
+      "Use the Theme Designer to set light or dark mode, fonts, radius, surface treatments, primary/secondary/tertiary accents, and tile gradients—then copy provider-ready code into your app.",
   },
   {
     title: "Built for product teams",

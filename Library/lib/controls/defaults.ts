@@ -322,7 +322,7 @@ export const defaultSettings: ControlSettingsBySlug = {
     placeholder: "Search contacts, companies, deals…",
     placeholderEnabled: true,
   },
-  "search-box": { ...baseFieldDefaults, label: "Search", showLabel: true, value: "", categories: "All categories, Components, Documentation", category: "All categories", placeholder: "Search for anything", searchLabel: "Search" },
+  "search-box": { ...baseFieldDefaults, label: "Search", showLabel: true, value: "", categories: "All categories, Components, Documentation, Accessibility, Analytics, Authentication, Automation, Billing, Content, Dashboards, Data visualisation, Developer tools, Integrations, Marketing, Navigation, Notifications, Onboarding, Overlays, Reporting, Security, Settings, Workflows", category: "All categories", placeholder: "Search for anything", searchLabel: "Search" },
   "file-upload": {
     ...baseFieldDefaults,
     label: "Upload a file",

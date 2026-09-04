@@ -36,6 +36,7 @@ import {
   applyDocumentAccent,
   applyDocumentTileAccent,
   createAccentStyle,
+  createBaseStyle,
   createTileAccentStyle,
   persistAccentState,
   persistTileAccentState,
@@ -54,6 +55,7 @@ export {
   DEFAULT_TILE_ACCENT,
   DEFAULT_TILE_ACCENT_SECONDARY,
   createAccentStyle,
+  createBaseStyle,
   createTileAccentStyle,
 };
 
@@ -394,18 +396,46 @@ type AccentColorPickerProps = {
 function AccentSwatchGrid({
   label,
   onSelect,
+  onReset,
+  resetDisabled = false,
   selectedValue,
   showSelectedValue = false,
   hideLabel = false,
+  panelTitle,
 }: {
   hideLabel?: boolean;
   label: string;
   onSelect: (value: string) => void;
+  onReset?: () => void;
+  panelTitle?: string;
+  resetDisabled?: boolean;
   selectedValue: string;
   showSelectedValue?: boolean;
 }) {
   return (
     <div className={styles.section}>
+      {panelTitle ? (
+        <div className={styles.paletteHeader}>
+          <span
+            aria-hidden="true"
+            className={styles.selectedValueSwatch}
+            style={{ "--accent-option": selectedValue } as CSSProperties}
+          />
+          <p>{panelTitle}</p>
+          {onReset ? (
+            <button
+              aria-label={`Reset ${panelTitle.toLowerCase()}`}
+              className={styles.reset}
+              disabled={resetDisabled}
+              title={`Reset ${panelTitle.toLowerCase()}`}
+              type="button"
+              onClick={onReset}
+            >
+              <FontAwesomeIcon icon={faRotateLeft} />
+            </button>
+          ) : null}
+        </div>
+      ) : null}
       {!hideLabel ? <p className={styles.sectionLabel}>{label}</p> : null}
       <div aria-label={label} className={styles.swatches} role="radiogroup">
         {accentPalette.map((option) => {
@@ -561,6 +591,9 @@ export function AccentColorPicker({
           selectedValue={resolvedSecondary}
           showSelectedValue={variant === "panel"}
           hideLabel={variant === "panel"}
+          panelTitle={variant === "panel" ? secondarySectionLabel : undefined}
+          onReset={() => onSecondaryChange?.(defaultSecondaryValue)}
+          resetDisabled={resolvedSecondary === defaultSecondaryValue}
           onSelect={(next) => onSecondaryChange?.(next)}
         />
       ) : null}

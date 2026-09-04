@@ -103,6 +103,11 @@ export function createAccentStyle(
   } as CSSProperties;
 }
 
+/** Creates the neutral base token used by Opus surfaces and chrome. */
+export function createBaseStyle(base: string): CSSProperties {
+  return { "--opus-base": base } as CSSProperties;
+}
+
 function buildAccentCookie(key: string, value: string) {
   return `${key}=${encodeURIComponent(value)};path=/;max-age=31536000;SameSite=Lax`;
 }

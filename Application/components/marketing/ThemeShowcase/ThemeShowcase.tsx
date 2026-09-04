@@ -13,12 +13,17 @@ export function ThemeShowcase() {
     <section className={styles.section} aria-labelledby="theme-showcase-title">
       <div className={styles.inner}>
         <div className={styles.intro}>
-          <p className={styles.eyebrow}>Designed for both modes</p>
-          <h2 id="theme-showcase-title">One component system. Light and dark by default.</h2>
+          <p className={styles.eyebrow}>Visual theme designer</p>
+          <h2 id="theme-showcase-title">Build a complete theme visually. Use it everywhere.</h2>
           <p>
-            Opus components inherit theme tokens instead of baking in a single visual treatment.
-            Switch the provider, retain the same component API, and tune accents at runtime.
+            Set colours, tile gradients, typography, radius, surface treatment, and light or dark mode in one live workspace.
+            Opus turns those choices into a provider-ready theme that applies across your application while individual components can still opt out.
           </p>
+          <ul className={styles.featureList}>
+            <li>Live component canvas with controls, tiles, widgets, forms, and actions.</li>
+            <li>Primary, secondary, tertiary, and tile accent tokens with light and dark previews.</li>
+            <li>Copy-ready provider code for your parent application.</li>
+          </ul>
         </div>
 
         <div className={styles.snapshots}>
@@ -36,8 +41,8 @@ export function ThemeShowcase() {
                 <div className={styles.snapshotBody}>
                   <div className={styles.snapshotTitle}>
                     <div>
-                      <p>Project overview</p>
-                      <strong>Design system refresh</strong>
+                      <p>Shared theme</p>
+                      <strong>Visual system refresh</strong>
                     </div>
                     <Badge tone="success">{status}</Badge>
                   </div>

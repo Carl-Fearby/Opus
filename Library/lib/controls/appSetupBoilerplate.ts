@@ -20,6 +20,7 @@ export function generateAppSetupPlaygroundCode({
 import type { CSSProperties, ReactNode } from "react";
 import {
   createAccentStyle,
+  createBaseStyle,
   createTileAccentStyle,
   DescriptionList,
   Panel,
@@ -31,7 +32,7 @@ const appFont = ${JSON.stringify(fontFamily)};
 const appAppearance = {
   ...createAccentStyle(${JSON.stringify(accent)}, ${JSON.stringify(accentSecondary)}),
   ...createTileAccentStyle(${JSON.stringify(tileAccent)}, ${JSON.stringify(tileAccentSecondary)}),
-  "--opus-base": ${JSON.stringify(baseColor)},
+  ...createBaseStyle(${JSON.stringify(baseColor)}),
   fontFamily: appFont,
 } as CSSProperties;
 

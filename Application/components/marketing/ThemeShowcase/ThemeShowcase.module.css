@@ -37,6 +37,34 @@
   line-height: 1.7;
 }
 
+.featureList {
+  display: grid;
+  gap: 8px;
+  margin: 22px 0 0;
+  padding: 0;
+  color: var(--opus-text);
+  font-size: 0.94rem;
+  line-height: 1.5;
+  list-style: none;
+}
+
+.featureList li {
+  display: flex;
+  gap: 9px;
+  align-items: start;
+}
+
+.featureList li::before {
+  content: "";
+  flex: 0 0 auto;
+  width: 7px;
+  height: 7px;
+  margin-top: 0.42em;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--opus-accent), var(--opus-accent-secondary));
+  box-shadow: 0 0 12px color-mix(in srgb, var(--opus-accent) 52%, transparent);
+}
+
 .snapshots {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));

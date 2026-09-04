@@ -40,82 +40,6 @@ export const metadata: Metadata = {
   },
 };
 
-const performanceMeasureGuardScript = `
-(() => {
-  const performanceRef = window.performance;
-
-  if (!performanceRef || performanceRef.__opusMeasureGuard === true) {
-    return;
-  }
-
-  const nativeMeasure = performanceRef.measure.bind(performanceRef);
-
-  Object.defineProperty(performanceRef, "__opusMeasureGuard", {
-    configurable: false,
-    enumerable: false,
-    value: true,
-  });
-
-  Object.defineProperty(performanceRef, "measure", {
-    configurable: true,
-    value(name, startOrOptions, endMark) {
-      if (startOrOptions && typeof startOrOptions === "object") {
-        const options = { ...startOrOptions };
-        const start = Number(options.start);
-        const end = Number(options.end);
-
-        if (Number.isFinite(start) && start < 0) {
-          options.start = 0;
-        }
-
-        if (Number.isFinite(end) && end < 0) {
-          options.end = 0;
-        }
-
-        if (
-          Number.isFinite(Number(options.start)) &&
-          Number.isFinite(Number(options.end)) &&
-          Number(options.end) < Number(options.start)
-        ) {
-          options.end = options.start;
-        }
-
-        try {
-          return nativeMeasure(name, options);
-        } catch (error) {
-          if (String(error && error.message).includes("negative time stamp")) {
-            return nativeMeasure(name, { ...options, start: 0, end: 0 });
-          }
-
-          throw error;
-        }
-      }
-
-      return nativeMeasure(name, startOrOptions, endMark);
-    },
-  });
-})();
-`;
-
-const fontBootstrapScript = `
-(() => {
-  try {
-    const family = window.localStorage.getItem("opus-components-font");
-    if (!family) return;
-    const safeFamily = family.replace(/'/g, "\\\\'");
-    document.documentElement.style.setProperty(
-      "--opus-font-family",
-      "'" + safeFamily + "', ui-sans-serif, system-ui, sans-serif"
-    );
-    const link = document.createElement("link");
-    link.rel = "stylesheet";
-    link.href = "https://fonts.googleapis.com/css2?family=" +
-      encodeURIComponent(family).replace(/%20/g, "+") + "&display=swap";
-    document.head.appendChild(link);
-  } catch {}
-})();
-`;
-
 export default async function RootLayout({
   children,
 }: Readonly<{
@@ -134,8 +58,6 @@ export default async function RootLayout({
       suppressHydrationWarning
     >
       <body className={`${spaceGrotesk.variable} ${ibmPlexMono.variable}`}>
-        <script dangerouslySetInnerHTML={{ __html: fontBootstrapScript }} />
-        <script dangerouslySetInnerHTML={{ __html: performanceMeasureGuardScript }} />
         <ThemeBootstrapScript />
         {children}
       </body>

@@ -1,9 +1,48 @@
 "use client";
 
-import { createContext, useContext, useEffect, type ReactNode } from "react";
-import type { Theme } from "@/components/fields/types";
+import { createContext, useContext, useEffect, type CSSProperties, type ReactNode } from "react";
+import type { ControlRadius, ControlTransparency, Theme } from "@/components/fields/types";
 
 const OpusThemeContext = createContext<Theme | null>(null);
+
+export type OpusThemeDefaults = {
+  /** Default control corner treatment. Component `radius` props override this. */
+  radius?: ControlRadius;
+  /** Default control surface. Component `transparency` props override this. */
+  transparency?: ControlTransparency;
+  /** Default gradient surface treatment. Component `gradient` props override this. */
+  gradient?: boolean;
+};
+
+const radiusTokens: Record<ControlRadius, Record<string, string>> = {
+  none: { "--opus-input-radius": "0", "--opus-input-radius-large": "0", "--opus-input-radius-small": "0" },
+  standard: {},
+  medium: { "--opus-input-radius": "12px", "--opus-input-radius-large": "12px", "--opus-input-radius-small": "12px" },
+  large: { "--opus-input-radius": "15px", "--opus-input-radius-large": "15px", "--opus-input-radius-small": "15px" },
+  full: { "--opus-input-radius": "999px", "--opus-input-radius-large": "20px", "--opus-input-radius-small": "999px" },
+};
+
+/** Create CSS variables for a library-wide control surface. */
+export function createOpusThemeDefaultsStyle(defaults: OpusThemeDefaults = {}): CSSProperties {
+  const style: Record<string, string> = {
+    ...(defaults.radius ? radiusTokens[defaults.radius] : {}),
+  };
+
+  if (defaults.transparency === "none") {
+    style["--opus-input-bg"] = "transparent";
+    style["--opus-input-fill"] = "transparent";
+  } else if (defaults.transparency === "glass") {
+    style["--opus-input-bg"] = "var(--opus-glass-surface, color-mix(in srgb, var(--opus-panel) 42%, transparent))";
+    style["--opus-input-fill"] = "var(--opus-glass-surface, color-mix(in srgb, var(--opus-panel) 32%, transparent))";
+  }
+
+  if (defaults.gradient) {
+    style["--opus-input-bg"] = "linear-gradient(135deg, color-mix(in srgb, var(--opus-accent) 12%, var(--opus-panel)), var(--opus-panel))";
+    style["--opus-input-fill"] = "linear-gradient(135deg, color-mix(in srgb, var(--opus-accent) 8%, var(--opus-panel)), var(--opus-panel))";
+  }
+
+  return style as CSSProperties;
+}
 
 function resolveDocumentTheme(): Theme {
   if (typeof document === "undefined") {
@@ -51,6 +90,10 @@ export type OpusThemeProviderProps = {
   fontFamily?: string;
   /** Third global accent exposed to every Opus component as `--opus-accent-tertiary`. */
   tertiaryAccent?: string;
+  /** Library-wide control defaults; individual component surface props take precedence. */
+  defaults?: OpusThemeDefaults;
+  /** CSS variables and styles scoped to this provider's theme boundary. */
+  style?: CSSProperties;
 };
 
 function resolveFontStack(fontFamily: string) {
@@ -65,6 +108,8 @@ export function OpusThemeProvider({
   applyToDocument = true,
   fontFamily,
   tertiaryAccent,
+  defaults,
+  style,
 }: OpusThemeProviderProps) {
   useEffect(() => {
     if (!applyToDocument || typeof document === "undefined") {
@@ -75,12 +120,16 @@ export function OpusThemeProvider({
     const previous = root.getAttribute("data-theme");
     const previousFont = root.style.getPropertyValue("--opus-font-family");
     const previousTertiaryAccent = root.style.getPropertyValue("--opus-accent-tertiary");
+    const previousDefaults = Object.keys(createOpusThemeDefaultsStyle(defaults)).map((key) => [key, root.style.getPropertyValue(key)] as const);
     root.setAttribute("data-theme", theme);
     if (fontFamily) {
       root.style.setProperty("--opus-font-family", resolveFontStack(fontFamily));
     }
     if (tertiaryAccent) {
       root.style.setProperty("--opus-accent-tertiary", tertiaryAccent);
+    }
+    for (const [key, value] of Object.entries(createOpusThemeDefaultsStyle(defaults))) {
+      root.style.setProperty(key, value);
     }
 
     return () => {
@@ -103,8 +152,25 @@ export function OpusThemeProvider({
           root.style.removeProperty("--opus-accent-tertiary");
         }
       }
+      for (const [key, value] of previousDefaults) {
+        if (value) root.style.setProperty(key, value);
+        else root.style.removeProperty(key);
+      }
     };
-  }, [applyToDocument, fontFamily, tertiaryAccent, theme]);
+  }, [applyToDocument, defaults, fontFamily, tertiaryAccent, theme]);
 
-  return <OpusThemeContext.Provider value={theme}>{children}</OpusThemeContext.Provider>;
+  const boundaryStyle = {
+    ...createOpusThemeDefaultsStyle(defaults),
+    ...(fontFamily ? { "--opus-font-family": resolveFontStack(fontFamily) } : {}),
+    ...(tertiaryAccent ? { "--opus-accent-tertiary": tertiaryAccent } : {}),
+    ...style,
+  } as CSSProperties;
+
+  return (
+    <OpusThemeContext.Provider value={theme}>
+      <div data-theme={theme} style={boundaryStyle}>
+        {children}
+      </div>
+    </OpusThemeContext.Provider>
+  );
 }

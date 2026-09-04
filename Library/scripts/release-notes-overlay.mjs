@@ -1,6 +1,21 @@
 /** Curated opus-react release notes for npm publishes that only left chore commits in git. */
 export const releaseNotesOverlay = [
   {
+    version: "0.6.39",
+    releasedAt: "2026-09-04",
+    summary: "Visual Theme Designer, provider-scoped theme tokens, and marketing launch.",
+    changes: [
+      "Add a top-level visual Theme Designer with independently scrolling controls and live component canvas, card tabs, resizeable panes, resettable theme state, and responsive light/dark previewing.",
+      "Expose base, primary, secondary, tertiary, tile, and tile-secondary colour tokens alongside global font, radius, background transparency, and gradient defaults.",
+      "Add provider-ready generated code with createAccentStyle, createTileAccentStyle, createBaseStyle, and a reusable themeDefaults object.",
+      "Extend OpusThemeProvider with a scoped style boundary so consumer applications no longer need an extra wrapper element to apply a complete theme.",
+      "Add createBaseStyle to the public opus-react API and align application boilerplate and preview token generation around the three style helpers.",
+      "Keep long Search Box category menus inside the available viewport, scrolling their options and opening upward when needed; expand the live preview categories for realistic testing.",
+      "Refresh the marketing site with a dedicated Visual Theme Designer story and clearer real-world light/dark theme examples.",
+      "Publish opus-react 0.6.39.",
+    ],
+  },
+  {
     version: "0.2.5",
     releasedAt: "2026-07-07",
     summary: "Early packaging iteration before the public 0.2.15 line.",

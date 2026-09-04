@@ -19,6 +19,7 @@ type DocumentationSection =
   | "guide"
   | "playground"
   | "security"
+  | "theme"
   | "version";
 
 type DocumentationNavProps = {
@@ -85,6 +86,8 @@ export function DocumentationNav({ current }: DocumentationNavProps) {
           ? "playground"
           : pathname.startsWith("/documentation/security")
             ? "security"
+            : pathname === "/theme-designer"
+              ? "theme"
           : pathname.startsWith("/documentation/version")
           ? "version"
           : pathname === DOCUMENTATION_BASE_PATH
@@ -109,6 +112,9 @@ export function DocumentationNav({ current }: DocumentationNavProps) {
       </Link>
       <ComponentsNavLink isActive={active === "components"} />
       <PlaygroundNavLink isActive={active === "playground"} />
+      <Link aria-current={active === "theme" ? "page" : undefined} className={active === "theme" ? styles.navLinkActive : styles.navLink} href="/theme-designer">
+        Theme designer
+      </Link>
       <Link
         aria-current={active === "security" ? "page" : undefined}
         className={active === "security" ? styles.navLinkActive : styles.navLink}

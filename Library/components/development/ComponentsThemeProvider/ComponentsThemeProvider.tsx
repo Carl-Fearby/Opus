@@ -5,11 +5,13 @@ import { useAccentPreference, useTileAccentPreference } from "@/components/Accen
 import { DEFAULT_FONT_FAMILY, googleFonts, useFontPreference, type GoogleFontFamily } from "@/components/FontPicker";
 import type { Theme } from "@/components/fields";
 import { OpusThemeProvider } from "@/components/OpusThemeProvider";
+import type { OpusThemeDefaults } from "@/components/OpusThemeProvider";
 import { ToastProvider } from "@/components/ToastProvider";
 import { ContextMenuProvider } from "@/components/ContextMenu";
 import { PersistentVideoPlayerProvider } from "@/components/VideoPlayer";
 import {
   createAccentStyle,
+  createBaseStyle,
   createTileAccentStyle,
   DEFAULT_ACCENT_COLOR,
   DEFAULT_ACCENT_SECONDARY,
@@ -39,6 +41,7 @@ type ComponentsThemeContextValue = {
   previewAccent: string;
   previewAccentSecondary: string;
   previewTertiaryAccent: string;
+  previewDefaults: OpusThemeDefaults;
   previewAccentStyle: CSSProperties | undefined;
   previewBaseColor: string;
   previewTheme: Theme;
@@ -58,6 +61,7 @@ type ComponentsThemeContextValue = {
   setPreviewAccent: (accent: string) => void;
   setPreviewAccentSecondary: (accent: string) => void;
   setPreviewTertiaryAccent: (accent: string) => void;
+  setPreviewDefaults: (defaults: OpusThemeDefaults) => void;
   setPreviewBaseColor: (color: string) => void;
   setPreviewTheme: (theme: Theme) => void;
   setPreviewTileAccent: (accent: string) => void;
@@ -130,6 +134,7 @@ export function ComponentsThemeProvider({ children }: { children: ReactNode }) {
   const [previewAccent, setPreviewAccentState] = useState(DEFAULT_ACCENT_COLOR);
   const [previewAccentSecondary, setPreviewAccentSecondaryState] = useState(DEFAULT_ACCENT_SECONDARY);
   const [previewTertiaryAccent, setPreviewTertiaryAccentState] = useState(DEFAULT_TERTIARY_ACCENT);
+  const [previewDefaults, setPreviewDefaults] = useState<OpusThemeDefaults>({ radius: "standard", transparency: "standard", gradient: false });
   const [previewBaseColor, setPreviewBaseColorState] = useState(DEFAULT_BASE_COLOR);
   const [previewFontFamily, setPreviewFontFamilyState] = useState<GoogleFontFamily>(DEFAULT_FONT_FAMILY);
   const [previewTileAccent, setPreviewTileAccentState] = useState(DEFAULT_TILE_ACCENT);
@@ -302,7 +307,7 @@ export function ComponentsThemeProvider({ children }: { children: ReactNode }) {
   }, []);
 
   const combinedStyle = useMemo(
-    () => ({ ...accentStyle, ...tileAccentStyle, "--opus-base": baseColor }) as CSSProperties,
+    () => ({ ...accentStyle, ...tileAccentStyle, ...createBaseStyle(baseColor) }) as CSSProperties,
     [accentStyle, baseColor, tileAccentStyle],
   );
 
@@ -310,7 +315,7 @@ export function ComponentsThemeProvider({ children }: { children: ReactNode }) {
     () => ({
       ...createAccentStyle(previewAccent, previewAccentSecondary),
       ...createTileAccentStyle(previewTileAccent, previewTileAccentSecondary),
-      "--opus-base": previewBaseColor,
+      ...createBaseStyle(previewBaseColor),
       "--opus-accent-tertiary": previewTertiaryAccent,
     }) as CSSProperties,
     [previewAccent, previewAccentSecondary, previewBaseColor, previewTertiaryAccent, previewTileAccent, previewTileAccentSecondary],
@@ -340,6 +345,7 @@ export function ComponentsThemeProvider({ children }: { children: ReactNode }) {
       previewAccent,
       previewAccentSecondary,
       previewTertiaryAccent,
+      previewDefaults,
       previewAppearanceReady,
       previewAccentStyle,
       previewBaseColor,
@@ -360,6 +366,7 @@ export function ComponentsThemeProvider({ children }: { children: ReactNode }) {
       setPreviewAccent,
       setPreviewAccentSecondary,
       setPreviewTertiaryAccent,
+      setPreviewDefaults,
       setPreviewBaseColor,
       setPreviewFontFamily,
       setPreviewTheme,
@@ -384,6 +391,7 @@ export function ComponentsThemeProvider({ children }: { children: ReactNode }) {
       previewAccent,
       previewAccentSecondary,
       previewTertiaryAccent,
+      previewDefaults,
       previewAppearanceReady,
       previewAccentStyle,
       previewBaseColor,
@@ -404,6 +412,7 @@ export function ComponentsThemeProvider({ children }: { children: ReactNode }) {
       setPreviewAccent,
       setPreviewAccentSecondary,
       setPreviewTertiaryAccent,
+      setPreviewDefaults,
       setPreviewBaseColor,
       setPreviewFontFamily,
       setPreviewTheme,
