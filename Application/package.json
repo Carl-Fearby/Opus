@@ -9,7 +9,7 @@
     "generate:repository-stats": "node scripts/generate-repository-stats.mjs",
     "start": "next start",
     "lint": "eslint",
-    "sync-versions": "npm run sync-versions --prefix ../Library && cp ../Library/lib/documentation/versionLog.ts lib/documentation/versionLog.ts",
+    "sync-versions": "npm run sync-versions --prefix ../Library && cp ../Library/lib/documentation/versionLog.ts lib/documentation/versionLog.ts && cp ../Library/lib/documentation/commitLog.ts lib/documentation/commitLog.ts",
     "sync-from-library": "node scripts/sync-from-library.mjs"
   },
   "dependencies": {

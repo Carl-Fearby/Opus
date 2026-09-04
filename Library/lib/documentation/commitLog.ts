@@ -1309,5 +1309,17 @@ export const commitLog: CommitEntry[] = [
     shortHash: "326fccb",
     committedAt: "2026-09-04",
     summary: "fix: simplify backfilled news article layout",
+  },
+  {
+    hash: "57990d4ca7994b87a0d64ef17bca9cbe95c5157d",
+    shortHash: "57990d4",
+    committedAt: "2026-09-04",
+    summary: "fix: sort published version history semantically",
+  },
+  {
+    hash: "ea93f85bdee0052d70f1b43fc543e3a2a24b653e",
+    shortHash: "ea93f85",
+    committedAt: "2026-09-05",
+    summary: "feat: release opus-react@0.7.2 — international currency controls",
   }
 ].reverse();
