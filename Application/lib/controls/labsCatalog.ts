@@ -8,6 +8,7 @@ export type LabsCatalogEntry = {
     | "application-footer"
     | "application-header"
     | "auth-form"
+    | "background-blobs-lab"
     | "company-details"
     | "chat-conversation"
     | "contact-details"
@@ -25,6 +26,19 @@ export type LabsCatalogEntry = {
 };
 
 export const labsCatalog = [
+  {
+    slug: "lab-background-blobs",
+    title: "Background Blobs Theme Lab",
+    componentName: "BackgroundBlobsThemeLab",
+    description: "Visual contrast cases for a dark documentation shell and light or dark BackgroundBlobs content.",
+    settingsType: "background-blobs-lab",
+    navigationGroup: "Application",
+    compositionParts: ["background-blobs", "panel", "heading", "text"],
+    sourceFiles: [
+      "components/BackgroundBlobsThemeLab/BackgroundBlobsThemeLab.tsx",
+      "components/BackgroundBlobsThemeLab/BackgroundBlobsThemeLab.module.css",
+    ],
+  },
   {
     slug: "lab-chat-conversation",
     title: "Chat Conversation",

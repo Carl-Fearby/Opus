@@ -137,6 +137,14 @@
 .copy p { margin: 0; }
 .copy p + p { margin-top: 20px; }
 .copy code { color: var(--opus-text); font-family: var(--font-ibm-plex-mono), monospace; }
+.highlight h2 a { color: inherit; text-decoration: none; }
+.highlight h2 a:hover { color: var(--opus-cyan); }
+.components { margin-top: 68px; }
+.componentCard { display: grid; grid-template-columns: 1fr auto; gap: 10px 16px; padding: 18px; border: 1px solid var(--opus-border); border-radius: 14px; background: color-mix(in srgb, var(--opus-panel) 88%, transparent); color: var(--opus-text); transition: border-color .18s ease, transform .18s ease; }
+.componentCard:hover { border-color: var(--opus-cyan); transform: translateY(-2px); }
+.componentCard > span { font-weight: 700; }
+.componentCard > small { color: var(--opus-cyan); font-family: var(--font-ibm-plex-mono), monospace; font-size: .72rem; }
+.componentCard pre { grid-column: 1 / -1; margin: 0; padding: 14px; overflow-x: auto; border-radius: 9px; background: #07091a; color: #d8d4ff; font-family: var(--font-ibm-plex-mono), monospace; font-size: .76rem; line-height: 1.6; white-space: pre; }
 
 .links { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-top: 88px; }
 .links a { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 20px; border: 1px solid var(--opus-border); border-radius: var(--opus-radius); background: color-mix(in srgb, var(--opus-panel) 88%, transparent); font-weight: 700; }

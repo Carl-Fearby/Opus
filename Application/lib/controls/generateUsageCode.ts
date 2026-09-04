@@ -130,6 +130,9 @@ type FieldUsageSettings = {
   label: string;
   labelPosition: string;
   mode: string;
+  radius: string;
+  transparency?: string;
+  gradient?: boolean;
   required?: boolean;
   size?: string;
 };
@@ -328,6 +331,9 @@ function fieldProps(settings: FieldUsageSettings) {
     formatStringProp("label", settings.label),
     formatStringProp("mode", settings.mode),
     formatStringProp("labelPosition", settings.labelPosition),
+    formatStringProp("radius", settings.radius),
+    formatStringProp("transparency", settings.transparency ?? "standard"),
+    ...(settings.gradient ? [formatBoolProp("gradient", true)] : []),
   ];
 
   if (settings.required) {
@@ -784,6 +790,13 @@ return (
     case "time-range-picker": return `${usageClientPrefix()}\n${importLine(["TimeRangeField"])}\n\nconst [value, setValue] = useState({ start: "09:00", end: "17:30" });\n\nreturn <TimeRangeField id="hours" label="Working hours" value={value} onChange={setValue} />;`;
     case "signature-pad": return `${usageClientPrefix(false)}\n${importLine(["SignaturePad"])}\n\nreturn <SignaturePad onChange={(dataUrl) => console.log(dataUrl)} onClear={() => console.log("Cleared")} />;`;
     case "diff-viewer": return `${usageClientPrefix(false)}\n${importLine(["DiffViewer"])}\n\nconst originalCode = ${codeLines(brokenReactCode)};\n\nconst correctedCode = ${codeLines(correctedReactCode)};\n\nreturn (\n  <DiffViewer\n    before={originalCode}\n    after={correctedCode}\n    beforeLabel="Original code"\n    afterLabel="Corrected code"\n    defaultView="unified"\n  />\n);`;
+    case "search-box": {
+      const s = settings as ControlSettingsBySlug["search-box"];
+      const categories = s.categories.split(",").map((label) => ({ label: label.trim(), value: label.trim().toLowerCase().replaceAll(" ", "-") }));
+      const sharedProps = fieldProps(s).join(" ");
+      const selectedCategory = categories.find((item) => item.label === s.category)?.value ?? categories[0]?.value ?? "";
+      return `${usageClientPrefix()}\n${importLine(["SearchBox"])}\n\nconst categories = ${JSON.stringify(categories, null, 2)};\nconst [query, setQuery] = useState(${JSON.stringify(s.value)});\nconst [category, setCategory] = useState(${JSON.stringify(selectedCategory)});\n\nreturn <SearchBox ${sharedProps} labelVisuallyHidden={${!s.showLabel}} categories={categories} category={category} onCategoryChange={setCategory} placeholder=${quote(s.placeholder)} searchLabel=${quote(s.searchLabel)} value={query} onValueChange={setQuery} onSearch={(search, selectedCategory) => console.log({ search, category: selectedCategory })} />;`;
+    }
     case "text-input": {
       const s = settings as ControlSettingsBySlug["text-input"];
       const state = toStateName(s.label);
@@ -954,6 +967,12 @@ return (
           initial: quote(s.value),
         },
       );
+    }
+    case "currency-select": {
+      const s = settings as ControlSettingsBySlug["currency-select"];
+      const state = toStateName(s.label);
+      const props = [formatStringProp("id", id), ...fieldProps(s), ...(s.placeholderEnabled ? [formatStringProp("placeholder", s.placeholder)] : []), formatStringProp("searchPlaceholder", s.searchPlaceholder), formatExpressionProp("value", state), formatExpressionProp("onChange", `(currency) => ${toSetter(state)}(currency)`)];
+      return controlledFieldUsage(["CurrencySelectField"], "CurrencySelectField", state, props, { initial: quote(s.value) });
     }
     case "date-picker":
     case "datetime-picker":
@@ -2450,6 +2469,142 @@ ${wrapDashboardWidget(
         s as unknown as ControlSettings,
         category,
       );
+    }
+    case "lab-background-blobs": {
+      const s = settings as ControlSettingsBySlug["lab-background-blobs"];
+      const radius = s.controlRadius ?? "standard";
+      const transparency = s.transparency ?? "standard";
+      const containerSize = s.containerSize ?? "xl";
+      const containerPadded = s.containerPadded ?? true;
+      return interactiveUsage({
+        components: ["BackgroundBlobs", "Badge", "Button", "CheckboxField", "ChoiceChipsField", "ColorField", "Container", "DateField", "Grid", "Heading", "MultiSelectField", "NumberField", "OtpField", "PasswordStrengthField", "Radio", "RadioGroup", "RangeField", "RatingField", "SegmentedControlField", "SelectField", "SliderRangeField", "Stack", "SwitchField", "Text", "TextAreaField", "TextField"],
+        state: [
+          'const [query, setQuery] = useState("");',
+          'const [selected, setSelected] = useState("All components");',
+          "const [enabled, setEnabled] = useState(true);",
+          "const [surfaceLight, setSurfaceLight] = useState(true);",
+          'const [date, setDate] = useState("2026-09-02");',
+          'const [colour, setColour] = useState("#8f6cff");',
+          'const [notes, setNotes] = useState("A translucent surface keeps the content legible.");',
+          "const [quantity, setQuantity] = useState(3);",
+          "const [range, setRange] = useState(62);",
+          "const [priceRange, setPriceRange] = useState<[number, number]>([25, 75]);",
+          'const [categories, setCategories] = useState<string[]>(["Design"]);',
+          'const [chips, setChips] = useState<string | string[]>(["React"]);',
+          'const [layout, setLayout] = useState("Comfortable");',
+          'const [priority, setPriority] = useState("Normal");',
+          "const [rating, setRating] = useState(4);",
+          'const [otp, setOtp] = useState("");',
+          'const [password, setPassword] = useState("");',
+        ],
+        jsx: `
+
+<div data-component-theme={surfaceLight ? "light" : "dark"} data-control-transparency="${transparency}">
+<BackgroundBlobs placement="fixed">
+  <Container padded={${containerPadded}} size="${containerSize}">
+    <Stack gap={28}>
+    <Heading level={2} size={300}>Background Blobs control lab</Heading>
+    <Text>Test real controls over a moving colour field and compare light and dark component surfaces.</Text>
+    <Badge label={surfaceLight ? "Light component surface" : "Dark component surface"} tone="info" />
+    <Badge label={enabled ? "Live samples enabled" : "Live samples paused"} tone={enabled ? "success" : "neutral"} />
+    <Grid columns={2} gap={16}>
+    <TextField
+      id="background-blobs-query"
+      label="Search content"
+      radius="${radius}"
+      transparency="${transparency}"
+      onChange={(event) => setQuery(event.target.value)}
+      placeholder="Try typing here"
+      type="search"
+      value={query}
+    />
+    <SelectField
+      id="background-blobs-filter"
+      label="Filter"
+      radius="${radius}"
+      transparency="${transparency}"
+      onChange={(event) => setSelected(event.target.value)}
+      options={["All components", "Forms", "Actions", "Status"]}
+      value={selected}
+    />
+    <CheckboxField
+      checked={enabled}
+      id="background-blobs-enabled"
+      label="Enable live samples"
+      radius="${radius}"
+      transparency="${transparency}"
+      onChange={(event) => setEnabled(event.target.checked)}
+    />
+    <SwitchField
+      checked={surfaceLight}
+      id="background-blobs-light-surface"
+      label="Light component surface"
+      radius="${radius}"
+      transparency="${transparency}"
+      onChange={(event) => setSurfaceLight(event.target.checked)}
+    />
+    </Grid>
+    <Grid columns={2} gap={16}>
+    <TextAreaField id="background-blobs-notes" label="Notes" maxChars={120} radius="${radius}" transparency="${transparency}" value={notes} onChange={(event) => setNotes(event.target.value)} />
+    <MultiSelectField id="background-blobs-categories" label="Categories" options={["Design", "Engineering", "Research", "Marketing"]} radius="${radius}" transparency="${transparency}" value={categories} onChange={setCategories} />
+    <ChoiceChipsField id="background-blobs-chips" label="Tags" options={[{ label: "React", value: "React" }, { label: "CSS", value: "CSS" }, { label: "A11y", value: "A11y" }]} radius="${radius}" transparency="${transparency}" selectionMode="multiple" value={chips} onChange={setChips} />
+    <SegmentedControlField id="background-blobs-layout" label="Density" options={["Compact", "Comfortable", "Spacious"]} radius="${radius}" transparency="${transparency}" value={layout} onChange={setLayout} />
+    <RadioGroup id="background-blobs-priority" label="Priority" name="background-blobs-priority" radius="${radius}" transparency="${transparency}" value={priority} onChange={setPriority} orientation="horizontal">
+      <Radio value="Low">Low</Radio>
+      <Radio value="Normal">Normal</Radio>
+      <Radio value="High">High</Radio>
+    </RadioGroup>
+    </Grid>
+    <Grid columns={2} gap={16}>
+    <NumberField id="background-blobs-quantity" label="Quantity" min={0} max={20} radius="${radius}" transparency="${transparency}" value={quantity} onChange={(event) => setQuantity(event.target.valueAsNumber)} />
+    <RangeField id="background-blobs-range" label="Opacity" min={0} max={100} radius="${radius}" transparency="${transparency}" value={range} onChange={(event) => setRange(Number(event.target.value))} />
+    <SliderRangeField id="background-blobs-price" label="Price range" min={0} max={100} radius="${radius}" transparency="${transparency}" value={priceRange} onChange={setPriceRange} />
+    <RatingField id="background-blobs-rating" label="Rating" radius="${radius}" transparency="${transparency}" value={rating} onChange={setRating} variant="hearts" />
+    </Grid>
+    <Grid columns={2} gap={16}>
+    <PasswordStrengthField id="background-blobs-password" label="Password" radius="${radius}" transparency="${transparency}" value={password} onChange={setPassword} />
+    <OtpField id="background-blobs-otp" label="Verification code" radius="${radius}" transparency="${transparency}" value={otp} onChange={setOtp} />
+    </Grid>
+    <Grid columns={2} gap={16}>
+    <DateField
+      id="background-blobs-date"
+      label="Date picker"
+      radius="${radius}"
+      transparency="${transparency}"
+      onChange={(event) => setDate(event.target.value)}
+      type="date"
+      value={date}
+    />
+    <ColorField
+      id="background-blobs-colour"
+      label="Colour picker"
+      radius="${radius}"
+      transparency="${transparency}"
+      onChange={(event) => setColour(event.target.value)}
+      value={colour}
+    />
+    </Grid>
+    <Grid minItemWidth={140}>
+    <Button radius="${radius}" variant="primary">Primary action</Button>
+    <Button radius="${radius}" variant="secondary">Secondary action</Button>
+    <Button radius="${radius}" variant="tertiary">Tertiary action</Button>
+    <Button radius="${radius}" variant="success">Success action</Button>
+    <Button radius="${radius}" variant="warning">Warning action</Button>
+    <Button radius="${radius}" variant="danger">Danger action</Button>
+    <Button radius="${radius}" variant="info">Info action</Button>
+    <Button radius="${radius}" variant="ghost">Ghost action</Button>
+    <Button radius="${radius}" variant="link">Link action</Button>
+    <Badge label="Neutral status" tone="neutral" />
+    <Badge label="Info status" tone="info" />
+    <Badge label="Success status" tone="success" />
+    <Badge label="Warning status" tone="warning" />
+    <Badge label="Danger status" tone="danger" />
+    </Grid>
+    </Stack>
+  </Container>
+</BackgroundBlobs>
+</div>`,
+      });
     }
     case "pac-man": {
       return `<PacMan title=${quote("Arcade game")} />`;
@@ -5209,6 +5364,32 @@ const value = ${formatJsonValueForUsage()};
       ];
       const openingProps = props.length ? `\n  ${props.join("\n  ")}\n` : "";
       return `${importLine(["TextMarquee"])}\n\n<TextMarquee${openingProps}>\n  ${s.text}\n</TextMarquee>`;
+    }
+    case "background-blobs": {
+      const s = settings as ControlSettingsBySlug["background-blobs"];
+      const colors = Array.from({ length: Math.max(1, Math.min(8, s.count)) }, (_, index) =>
+        s.colors[index] ?? s.colors[index % s.colors.length],
+      );
+      const props = [
+        formatStringProp("placement", s.placement),
+        formatStringProp("size", s.size),
+        formatBoolProp("animated", s.animated),
+        formatNumberProp("blur", s.blur),
+        formatNumberProp("brightness", s.brightness),
+        formatNumberProp("count", s.count),
+        formatExpressionProp("colors", JSON.stringify(colors)),
+        formatBoolProp("padParent", s.padParent),
+      ];
+      return `${importLine(["BackgroundBlobs", "Panel", "Text"])}
+
+<BackgroundBlobs${props.length ? `\n  ${props.join("\n  ")}\n` : ""}>
+  <Panel
+    title="Content inside the colour field"
+    style={{ background: "var(--opus-glass-surface, var(--opus-panel))" }}
+  >
+    <Text>Place your page content inside BackgroundBlobs.</Text>
+  </Panel>
+</BackgroundBlobs>`;
     }
     case "text": {
       const s = settings as ControlSettingsBySlug["text"];

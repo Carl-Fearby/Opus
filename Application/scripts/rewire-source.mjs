@@ -2,6 +2,7 @@
 const localRoots = new Set([
   "AccentColorPicker",
   "AudioPlayer",
+  "BackgroundBlobsThemeLab",
   "control-detail",
   "DeployUpdateNotifier",
   "development",
@@ -10,6 +11,7 @@ const localRoots = new Set([
   "Map",
   "MediaShareCastControl",
   "NotesActivity",
+  "OpusThemeProvider",
   "Tabs",
   "theme",
   "VideoPlayer",

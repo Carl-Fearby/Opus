@@ -397,6 +397,7 @@ const formsControls: Record<(typeof formsControlOrder)[number], ControlDefinitio
     sourceFiles: ["components/fields/TextField/TextField.tsx", "components/fields/TextField/TextField.module.css"],
     usesFieldShell: true,
   },
+  "search-box": { slug: "search-box", title: "Search Box", category: "forms", componentName: "SearchBox", description: "Unified search field with an optional category filter and submit action.", sourceFiles: ["components/SearchBox/SearchBox.tsx", "components/SearchBox/SearchBox.module.css"], usesFieldShell: false },
   "file-upload": {
     slug: "file-upload",
     title: "File upload",
@@ -633,6 +634,7 @@ const formsControls: Record<(typeof formsControlOrder)[number], ControlDefinitio
   "date-range-picker": { slug: "date-range-picker", title: "Date range picker", category: "forms", componentName: "DateRangeField", description: "Single calendar range control: first click sets the start date, second click sets the end date, with the inclusive range highlighted.", sourceFiles: ["components/fields/AdvancedFields/AdvancedFields.tsx", "components/fields/AdvancedFields/AdvancedFields.module.css", "components/fields/DatePickerPanel/DatePickerPanel.tsx", "components/fields/DatePickerPanel/OpusDateRangeInput.tsx"], usesFieldShell: true },
   combobox: { slug: "combobox", title: "Combobox", category: "forms", componentName: "ComboboxField", description: "Editable text field with a filtered suggestion list.", sourceFiles: ["components/fields/ComboboxField/ComboboxField.tsx", "components/fields/ComboboxField/ComboboxField.module.css"], usesFieldShell: true },
   "currency-input": { slug: "currency-input", title: "Currency input", category: "forms", componentName: "CurrencyField", description: "Numeric monetary input with a locale-aware currency symbol.", sourceFiles: ["components/fields/AdvancedFields/AdvancedFields.tsx", "components/fields/AdvancedFields/AdvancedFields.module.css"], usesFieldShell: true },
+  "currency-select": { slug: "currency-select", title: "Currency selector", category: "forms", componentName: "CurrencySelectField", description: "Searchable ISO 4217 currency selector with flags, territories, and display signs.", sourceFiles: ["components/fields/CurrencySelectField/CurrencySelectField.tsx", "components/fields/AdvancedFields/AdvancedFields.tsx"], usesFieldShell: true },
   "masked-input": { slug: "masked-input", title: "Masked input", category: "forms", componentName: "MaskedField", description: "Structured input that applies a configurable character mask.", sourceFiles: ["components/fields/AdvancedFields/AdvancedFields.tsx", "components/fields/AdvancedFields/AdvancedFields.module.css"], usesFieldShell: true },
   "multi-file-upload": { slug: "multi-file-upload", title: "Multi-file upload", category: "forms", componentName: "MultiFileField", description: "Multiple file selector with file list and individual removal actions.", sourceFiles: ["components/fields/AdvancedFields/AdvancedFields.tsx", "components/fields/AdvancedFields/AdvancedFields.module.css"], usesFieldShell: true },
   "checkbox-group": { slug: "checkbox-group", title: "Checkbox group", category: "forms", componentName: "CheckboxGroupField", description: "Labelled group of related multi-select checkbox options.", sourceFiles: ["components/fields/AdvancedFields/AdvancedFields.tsx", "components/fields/AdvancedFields/AdvancedFields.module.css"], usesFieldShell: true },
@@ -1331,6 +1333,18 @@ const rawControls: ControlDefinition[] = [
     componentName: "TextMarquee",
     description: "Seamlessly looping text strip with measured speed, directional motion, edge fades, and reduced-motion support.",
     sourceFiles: ["components/TextMarquee/TextMarquee.tsx", "components/TextMarquee/TextMarquee.module.css"],
+    usesFieldShell: false,
+  },
+  {
+    slug: "background-blobs",
+    title: "Background blobs",
+    category: "content",
+    componentName: "BackgroundBlobs",
+    description: "Animated colour field for page atmospheres with an internal content layer. Fill a parent or cover the viewport.",
+    sourceFiles: [
+      "components/BackgroundBlobs/BackgroundBlobs.tsx",
+      "components/BackgroundBlobs/BackgroundBlobs.module.css",
+    ],
     usesFieldShell: false,
   },
   {

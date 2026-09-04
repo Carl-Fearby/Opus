@@ -322,6 +322,7 @@ export const defaultSettings: ControlSettingsBySlug = {
     placeholder: "Search contacts, companies, deals…",
     placeholderEnabled: true,
   },
+  "search-box": { ...baseFieldDefaults, label: "Search", showLabel: true, value: "", categories: "All categories, Components, Documentation, Accessibility, Analytics, Authentication, Automation, Billing, Content, Dashboards, Data visualisation, Developer tools, Integrations, Marketing, Navigation, Notifications, Onboarding, Overlays, Reporting, Security, Settings, Workflows", category: "All categories", placeholder: "Search for anything", searchLabel: "Search" },
   "file-upload": {
     ...baseFieldDefaults,
     label: "Upload a file",
@@ -496,6 +497,7 @@ export const defaultSettings: ControlSettingsBySlug = {
   },
   combobox: { ...baseFieldDefaults, label: "Company", value: "", placeholder: "Search companies…", options: "Acme Ltd, Global Corp, Initech, Umbrella Group" },
   "currency-input": { ...baseFieldDefaults, label: "Budget", currency: "GBP", value: 24800 },
+  "currency-select": { ...baseFieldDefaults, label: "Currency", value: "GBP", placeholder: "Select currency…", placeholderEnabled: true, searchPlaceholder: "Search currencies, countries, codes, or symbols…" },
   "masked-input": { ...baseFieldDefaults, label: "Reference", mask: "AA-####-##", placeholder: "AB-1234-56", value: "OP-2026-01" },
   "multi-file-upload": { ...baseFieldDefaults, label: "Documents", fileNames: "proposal.pdf, pricing.xlsx", maxFiles: 5 },
   "checkbox-group": { ...baseFieldDefaults, label: "Notifications", options: "Email, SMS, Push notification", value: ["Email", "Push notification"] },
@@ -1484,6 +1486,13 @@ export const defaultSettings: ControlSettingsBySlug = {
     showMore: false,
     showMoreMaxLines: 3,
   },
+  "lab-background-blobs": {
+    controlRadius: "standard",
+    transparency: "standard",
+    gradient: false,
+    containerSize: "xl",
+    containerPadded: true,
+  },
   "empty-state": {
     title: "No components yet",
     description:
@@ -1774,6 +1783,16 @@ export const defaultSettings: ControlSettingsBySlug = {
     pauseOnHover: true,
     fadeEdges: true,
     surface: true,
+  },
+  "background-blobs": {
+    animated: true,
+    brightness: 1,
+    blur: 80,
+    colors: ["#8f6cff", "#22d3ee", "#fb7185", "#f59e0b"],
+    count: 4,
+    padParent: false,
+    placement: "fixed",
+    size: "large",
   },
   portal: {
     disabled: false,

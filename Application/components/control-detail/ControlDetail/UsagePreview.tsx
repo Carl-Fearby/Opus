@@ -171,13 +171,17 @@ export function UsagePreview({
 
   useEffect(() => {
     const previewElement = previewRef.current;
-    if (!previewElement || !showActionStatus) return;
+    const showSearchBoxJson = slug === "search-box";
+    if (!previewElement || (!showActionStatus && !showSearchBoxJson)) return;
     let actionFrame: number | undefined;
 
     const updateOutput = (label: string | null) => {
       if (label) setLastAction(`Last action: ${label}`);
       const formOutput = collectPreviewOutput(previewElement);
-      setDataOutput(formOutput ?? (label ? { action: label } : null));
+      const output = showSearchBoxJson && formOutput
+        ? { search: formOutput.search ?? "", category: formOutput.category ?? "" }
+        : formOutput;
+      setDataOutput(output ?? (label ? { action: label } : null));
     };
 
     const reportAction = (event: Event) => {
@@ -196,7 +200,8 @@ export function UsagePreview({
     previewElement.addEventListener("keydown", reportAction);
     previewElement.dataset.hydrated = "true";
     const frame = requestAnimationFrame(() => {
-      setDataOutput(collectPreviewOutput(previewElement));
+      const formOutput = collectPreviewOutput(previewElement);
+      setDataOutput(showSearchBoxJson && formOutput ? { search: formOutput.search ?? "", category: formOutput.category ?? "" } : formOutput);
     });
     return () => {
       cancelAnimationFrame(frame);
@@ -211,6 +216,7 @@ export function UsagePreview({
   return (
     <div
       className={styles.globalActionPreview}
+      data-hydrated="true"
       data-testid="usage-preview"
       ref={previewRef}
     >
@@ -221,12 +227,12 @@ export function UsagePreview({
           {preview.error}
         </p>
       )}
-      {showActionStatus ? (
+      {showActionStatus || slug === "search-box" ? (
         <div className={styles.globalActionStatus} aria-live="polite">
-          <p data-testid="usage-preview-action">{lastAction}</p>
+          {showActionStatus ? <p data-testid="usage-preview-action">{lastAction}</p> : null}
           {dataOutput ? (
             <div className={styles.globalDataOutput} data-testid="usage-preview-data">
-              <strong>Data output</strong>
+              {showActionStatus ? <strong>Data output</strong> : null}
               <JsonViewer collapsedDepth={2} value={dataOutput} />
             </div>
           ) : null}

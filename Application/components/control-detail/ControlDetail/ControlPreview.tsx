@@ -24,6 +24,8 @@ import { continueWithApple, continueWithGoogle } from "@/lib/auth/socialAuth";
 import { PersistentVideoPlayer, VideoPlayer } from "@/components/VideoPlayer";
 import { AudioPlayer } from "@/components/AudioPlayer";
 import { OtpField } from "opus-react";
+import { CoverViewportBlobs } from "./BodyPortal";
+import { BackgroundBlobsThemeLab } from "@/components/BackgroundBlobsThemeLab";
 import {DiffPreview,InfiniteSelectableListPreview,MentionInputPreview,ProductTourPreview,RecurrencePreview,SignaturePreview,TimeRangePreview,VirtualListPreview} from "./NewComponentPreviews";
 import { FormWizard } from "opus-react";
 import { CheckboxGroupField, ComboboxField, CurrencyField, DateRangeField, Form, FormActions, FormHeader, FormSection, FormValidationSummary, MaskedField, MultiFileField } from "opus-react";
@@ -69,6 +71,7 @@ import {
   SliderRangeField,
   PhoneNumberField,
   CountryPickerField,
+  CurrencySelectField,
   TreeSelectField,
   CascaderField,
   Skeleton,
@@ -77,6 +80,7 @@ import {
   TextAreaField,
   RichTextField,
   TextField,
+  SearchBox,
   ThemeToggleField,
   Tooltip,
   Dialog,
@@ -134,6 +138,7 @@ import {
   Clock,
   FlipClock,
   TextMarquee,
+  BackgroundBlobs,
   Text,
   Heading,
   Portal,
@@ -586,6 +591,9 @@ function fieldProps(settings: BaseFieldSettings) {
     label: settings.label,
     labelPosition: settings.labelPosition,
     mode: settings.mode,
+    radius: settings.radius,
+    transparency: settings.transparency ?? "standard",
+    gradient: settings.gradient,
     required: settings.required,
     size: settings.size ?? "md",
   };
@@ -3256,6 +3264,11 @@ function ControlPreviewContent({
         />
       );
     }
+    case "search-box": {
+      const s = settings as ControlSettingsBySlug["search-box"];
+      const categories = s.categories.split(",").map((label) => ({ label: label.trim(), value: label.trim().toLowerCase().replaceAll(" ", "-") }));
+      return <SearchBox {...fieldProps(s)} labelVisuallyHidden={!s.showLabel} categories={categories} category={categories.find((item) => item.label === s.category)?.value} onCategoryChange={(value) => onSettingsChange({ ...s, category: categories.find((item) => item.value === value)?.label ?? s.category } as ControlSettings)} onSearch={() => undefined} onValueChange={(value) => onSettingsChange({ ...s, value } as ControlSettings)} placeholder={s.placeholder} searchLabel={s.searchLabel} value={s.value} />;
+    }
     case "textarea": {
       const s = settings as ControlSettingsBySlug["textarea"];
       return (
@@ -3512,6 +3525,10 @@ function ControlPreviewContent({
     case "currency-input": {
       const s = settings as ControlSettingsBySlug["currency-input"];
       return <CurrencyField {...fieldProps(s)} currency={s.currency} id="preview-currency" value={s.value} onChange={(value) => onSettingsChange({ ...s, value: value ?? 0 } as ControlSettings)} />;
+    }
+    case "currency-select": {
+      const s = settings as ControlSettingsBySlug["currency-select"];
+      return <CurrencySelectField {...fieldProps(s)} id="preview-currency-select" placeholder={s.placeholderEnabled ? s.placeholder : undefined} searchPlaceholder={s.searchPlaceholder} value={s.value} onChange={(value) => onSettingsChange({ ...s, value } as ControlSettings)} />;
     }
     case "masked-input": {
       const s = settings as ControlSettingsBySlug["masked-input"];
@@ -4366,6 +4383,10 @@ function ControlPreviewContent({
           onAction={(action) => console.log(action)}
         />
       );
+    }
+    case "lab-background-blobs": {
+      const s = settings as ControlSettingsBySlug["lab-background-blobs"];
+      return <BackgroundBlobsThemeLab settings={s} />;
     }
     case "pac-man": {
       return (
@@ -6290,6 +6311,78 @@ function ControlPreviewContent({
         </div>
       );
     }
+    case "background-blobs": {
+      const s = settings as ControlSettingsBySlug["background-blobs"];
+      const coverViewport = s.placement === "fixed";
+      const blobs = (
+        <BackgroundBlobs
+          animated={s.animated}
+          brightness={s.brightness}
+          blur={s.blur}
+          colors={s.colors}
+          count={s.count}
+          padParent={s.padParent}
+          placement={s.placement}
+          size={s.size}
+        />
+      );
+      return (
+        <>
+          {coverViewport ? (
+            <CoverViewportBlobs
+              animated={s.animated}
+              brightness={s.brightness}
+              blur={s.blur}
+              colors={s.colors}
+              count={s.count}
+              size={s.size}
+            />
+          ) : null}
+          <div
+            data-cover-viewport={coverViewport ? "true" : undefined}
+            data-full-bleed="true"
+            style={{
+              position: "relative",
+              isolation: coverViewport ? undefined : "isolate",
+              overflow: "hidden",
+              width: "100%",
+              height: "100%",
+              minHeight: 640,
+              background: coverViewport
+                ? "transparent"
+                : "var(--opus-surface-sunken, var(--opus-panel))",
+              color: "var(--opus-text)",
+            }}
+          >
+            {coverViewport ? null : blobs}
+            <div
+              style={{
+                position: "relative",
+                zIndex: 1,
+                display: "grid",
+                placeItems: "end start",
+                height: "100%",
+                minHeight: 640,
+                padding: 32,
+              }}
+            >
+              <div
+                style={{
+                  maxWidth: 380,
+                  padding: 20,
+                  borderRadius: 16,
+                  background: "var(--opus-glass-surface, var(--opus-panel))",
+                  border: "1px solid var(--opus-border)",
+                }}
+              >
+                <strong>Content above the colour field</strong>
+                <p>Keep page copy in a stacking context above BackgroundBlobs.</p>
+              </div>
+            </div>
+          </div>
+        </>
+      );
+    }
     case "text": {
       const s = settings as ControlSettingsBySlug["text"];
       return <Text padding={s.padding} size={s.size} weight={s.weight}>{s.content}</Text>;
@@ -6561,6 +6654,8 @@ function ControlPreviewContent({
 export function ControlPreview(props: ControlPreviewProps) {
   const [lastAction, setLastAction] = useState("Waiting for action");
   const [dataOutput, setDataOutput] = useState<Record<string, unknown> | null>(null);
+  const previewTransparency =
+    "transparency" in props.settings ? props.settings.transparency : "standard";
 
   const reportCapturedAction = (event: React.SyntheticEvent<HTMLElement>) => {
     const target = event.target as HTMLElement;
@@ -6582,12 +6677,15 @@ export function ControlPreview(props: ControlPreviewProps) {
   return (
     <div
       className={styles.globalActionPreview}
+      data-control-transparency={previewTransparency}
+      data-hydrated="true"
+      data-testid="usage-preview"
       onClickCapture={reportCapturedAction}
       onChangeCapture={reportCapturedAction}
     >
       <ControlPreviewContent {...props} onPreviewAction={reportPreviewAction} />
       <div className={styles.globalActionStatus} aria-live="polite">
-        <p>{lastAction}</p>
+        <p data-testid="usage-preview-action">{lastAction}</p>
         {dataOutput ? (
           <div className={styles.globalDataOutput} data-testid="control-preview-data">
             <strong>Data output</strong>

@@ -29,6 +29,20 @@ export default async function StoryPage({ params }: Props) {
       <div className={styles.rule} />
       <div className={styles.body}>
         <p className={styles.summary}>{story.summary}</p>
+        {story.components?.length ? (
+          <section aria-label="Explore the components" className={styles.components}>
+            <p>Explore the components</p>
+            <div>
+              {story.components.map((component) => (
+                <Link className={styles.componentCard} href={component.href} key={component.name}>
+                  <span>{component.name}</span>
+                  <small>Open component →</small>
+                  <pre><code>{component.code}</code></pre>
+                </Link>
+              ))}
+            </div>
+          </section>
+        ) : null}
         {story.chapters.map((chapter, index) => <section key={chapter.heading}><span>0{index + 1}</span><h2>{chapter.heading}</h2><p>{chapter.body}</p></section>)}
       </div>
       <Link className={styles.back} href="/news">← All stories</Link>

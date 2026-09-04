@@ -10,10 +10,14 @@ export const metadata: Metadata = {
 };
 
 const highlights = [
-  ["Visual Theme Designer", "Build a complete application theme through a live canvas of cards, tiles, fields, dashboard widgets, and actions."],
-  ["Portable global tokens", "Copy provider-ready code for colours, typography, radius, surface treatment, and gradients — with component-level overrides when you need them."],
-  ["Responsive by design", "Switch every preview between Desktop and Mobile to verify real constrained layouts before components reach your application."],
-  ["Search Box", "A unified search control with optional categories, an independent tertiary action colour, and a menu that stays within its viewport."],
+  { title: "Visual Theme Designer", copy: "Build a complete application theme through a live canvas of cards, tiles, fields, dashboard widgets, and actions.", href: "/theme-designer" },
+  { title: "Portable global tokens", copy: "Copy provider-ready code for colours, typography, radius, surface treatment, and gradients — with component-level overrides when you need them." },
+  { title: "Responsive by design", copy: "Switch every preview between Desktop and Mobile to verify real constrained layouts before components reach your application." },
+  { title: "Search Box", copy: "A unified search control with optional categories, an independent tertiary action colour, and a menu that stays within its viewport.", href: "/documentation/components/search-box" },
+];
+
+const componentExamples = [
+  { name: "Search Box", href: "/documentation/components/search-box", code: `<SearchBox\n  categories={["All", "Documentation", "Components"]}\n  onSearch={({ query, category }) => search(query, category)}\n/>` },
 ];
 
 export default function OpusZeroSevenNewsPage() {
@@ -34,7 +38,7 @@ export default function OpusZeroSevenNewsPage() {
         <div className={styles.actions}>
           <Link className={styles.primary} href={docsComponentsUrl}>Explore Opus components</Link>
           <a className={styles.secondary} href={npmPackageUrl} rel="noreferrer" target="_blank">
-            Install opus-react 0.7.1
+            Install opus-react 0.7.2
           </a>
         </div>
       </header>
@@ -45,10 +49,10 @@ export default function OpusZeroSevenNewsPage() {
       </section>
 
       <section aria-label="Opus 0.7 highlights" className={styles.highlights}>
-        {highlights.map(([title, copy], index) => (
+        {highlights.map(({ title, copy, href }, index) => (
           <div className={styles.highlight} key={title}>
             <span>0{index + 1}</span>
-            <h2>{title}</h2>
+            <h2>{href ? <Link href={href}>{title}</Link> : title}</h2>
             <p>{copy}</p>
           </div>
         ))}
@@ -72,6 +76,16 @@ export default function OpusZeroSevenNewsPage() {
             them for the exceptional cases that make a product feel considered.
           </p>
         </div>
+      </section>
+
+      <section aria-label="Explore the components" className={styles.components}>
+        <p className={styles.eyebrow}>Explore the component</p>
+        {componentExamples.map((component) => (
+          <Link className={styles.componentCard} href={component.href} key={component.name}>
+            <span>{component.name}</span><small>Open component →</small>
+            <pre><code>{component.code}</code></pre>
+          </Link>
+        ))}
       </section>
 
       <section className={styles.links}>

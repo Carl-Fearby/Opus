@@ -8,6 +8,14 @@
 .rule { height: 1px; margin: 52px 0 32px; background: var(--opus-border); }
 .body { max-width: 700px; margin: 0; }
 .summary { margin: 0 0 34px; color: var(--opus-text); font-size: 1.18rem; font-weight: 600; letter-spacing: -.02em; line-height: 1.55; }
+.components { padding: 0 0 30px; border-bottom: 1px solid var(--opus-border); }
+.components > p { margin: 0 0 14px; color: #b8a8ff; font-family: var(--font-ibm-plex-mono), monospace; font-size: .78rem; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; }
+.components > div { display: grid; gap: 12px; }
+.componentCard { display: grid; grid-template-columns: 1fr auto; gap: 10px 16px; padding: 18px; border: 1px solid var(--opus-border); border-radius: 14px; background: color-mix(in srgb, var(--opus-surface) 84%, transparent); color: var(--opus-text); transition: border-color .18s ease, transform .18s ease; }
+.componentCard:hover { border-color: var(--opus-cyan); transform: translateY(-2px); }
+.componentCard > span { font-weight: 700; }
+.componentCard > small { color: var(--opus-cyan); font-family: var(--font-ibm-plex-mono), monospace; font-size: .72rem; }
+.componentCard pre { grid-column: 1 / -1; margin: 0; padding: 14px; overflow-x: auto; border-radius: 9px; background: #07091a; color: #d8d4ff; font-family: var(--font-ibm-plex-mono), monospace; font-size: .76rem; line-height: 1.6; white-space: pre; }
 .body section { padding: 28px 0 30px; border-top: 1px solid var(--opus-border); }
 .body section span { display: block; margin-bottom: 12px; color: #b8a8ff; }
 .body h2 { margin: 0; font-size: 1.42rem; letter-spacing: -.04em; line-height: 1.2; }

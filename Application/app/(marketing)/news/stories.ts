@@ -6,6 +6,7 @@ export type NewsStory = {
   standfirst: string;
   summary: string;
   chapters: Array<{ heading: string; body: string }>;
+  components?: Array<{ name: string; href: string; code: string }>;
 };
 
 export const newsStories: NewsStory[] = [
@@ -16,6 +17,10 @@ export const newsStories: NewsStory[] = [
     title: "Money controls should speak the local language.",
     standfirst: "Opus 0.7.2 brings international currency formatting and a dedicated selector that makes the right choice clear before data leaves the form.",
     summary: "A small family of controls built around the practical details of entering, recognising, and storing money correctly.",
+    components: [
+      { name: "Currency selector", href: "/documentation/components/currency-select", code: `const [currency, setCurrency] = useState("GBP");\n\n<CurrencySelectField\n  id="currency"\n  label="Currency"\n  value={currency}\n  onChange={setCurrency}\n/>` },
+      { name: "Currency input", href: "/documentation/components/currency-input", code: `const [budget, setBudget] = useState(24800);\n\n<CurrencyField\n  id="budget"\n  label="Budget"\n  currency="GBP"\n  value={budget}\n  onChange={setBudget}\n/>` },
+    ],
     chapters: [
       { heading: "A selector with context", body: "CurrencySelectField makes the full ISO 4217 catalogue searchable by country, currency name, code, or sign. Every row pairs the code with a flag, territory, and display sign, so a choice is understandable at a glance." },
       { heading: "A compact value, not a display string", body: "The richer row is for people; the value is for applications. Selecting a currency returns the compact ISO code such as GBP or JPY, ready to store, validate, and pass between systems." },
@@ -42,6 +47,9 @@ export const newsStories: NewsStory[] = [
     title: "A component library should feel at home anywhere.",
     standfirst: "Background atmospheres and universal surface settings gave the catalogue a stronger, more adaptable visual foundation.",
     summary: "A richer foundation for control surfaces that need to feel consistent in calm dashboards, dense workspaces, and expressive product moments.",
+    components: [
+      { name: "Background Blobs", href: "/documentation/components/background-blobs", code: `<BackgroundBlobs\n  colours={["#8f6cff", "#0ea5e9"]}\n  fillParent\n/>` },
+    ],
     chapters: [
       { heading: "A surface system, not one fixed skin", body: "Universal radius, opaque, standard, and glass treatments let teams establish an application personality without reworking every individual control." },
       { heading: "Atmosphere with restraint", body: "Background Blobs introduced a decorative colour field with parent-fill placement, reduced-motion support, and the controls necessary to make atmosphere feel intentional." },
@@ -55,6 +63,11 @@ export const newsStories: NewsStory[] = [
     title: "Quality is a feature, not a finishing pass.",
     standfirst: "A library-wide quality baseline made accessibility, public APIs, and release confidence part of the product itself.",
     summary: "The work behind a dependable component library is often invisible — until it is missing. This milestone made it explicit.",
+    components: [
+      { name: "Table", href: "/documentation/components/table", code: `<Table columns={columns} rows={rows} />` },
+      { name: "Tree menu", href: "/documentation/components/tree-menu", code: `<TreeMenu items={navigation} />` },
+      { name: "Lightbox", href: "/documentation/components/lightbox", code: `<Lightbox items={images} open={open} onClose={close} />` },
+    ],
     chapters: [
       { heading: "Accessibility in the delivery loop", body: "Regression coverage strengthened table semantics, tree-menu leaves, lightbox triggers, and named scroll regions so the catalogue is checked for more than appearance." },
       { heading: "A public contract", body: "API stability, support, deprecation, and changelog policies clarified how consumers can adopt Opus with confidence as the package evolves." },
@@ -81,6 +94,19 @@ export const newsStories: NewsStory[] = [
     title: "The everyday work around the work.",
     standfirst: "A major expansion of workflow primitives brought the things business applications rely on into the core library.",
     summary: "The unglamorous but essential interactions — reviews, uploads, recurrences, bulk actions, and long lists — received first-class components.",
+    components: [
+      { name: "Audit log", href: "/documentation/components/audit-log", code: `<AuditLog entries={entries} />` },
+      { name: "Bulk action bar", href: "/documentation/components/bulk-action-bar", code: `<BulkActionBar selectedCount={selected.length} />` },
+      { name: "Diff viewer", href: "/documentation/components/diff-viewer", code: `<DiffViewer before={before} after={after} />` },
+      { name: "Editable data table", href: "/documentation/components/editable-data-table", code: `<EditableDataTable rows={rows} />` },
+      { name: "File manager", href: "/documentation/components/file-manager", code: `<FileManager entries={entries} />` },
+      { name: "Product tour", href: "/documentation/components/product-tour", code: `<ProductTour steps={steps} open />` },
+      { name: "Recurrence editor", href: "/documentation/components/recurrence-editor", code: `<RecurrenceEditor value={rule} onChange={setRule} />` },
+      { name: "Save-state indicator", href: "/documentation/components/save-state-indicator", code: `<SaveStateIndicator state="saved" />` },
+      { name: "Signature pad", href: "/documentation/components/signature-pad", code: `<SignaturePad onChange={setSignature} />` },
+      { name: "Upload queue", href: "/documentation/components/upload-queue", code: `<UploadQueue items={uploads} />` },
+      { name: "Virtual list", href: "/documentation/components/virtual-list", code: `<VirtualList items={items} renderItem={renderItem} />` },
+    ],
     chapters: [
       { heading: "Built for operations", body: "Audit Log, Bulk Action Bar, Diff Viewer, Editable Data Table, File Manager, Product Tour, Recurrence Editor, Save-State Indicator, Signature Pad, Upload Queue, and Virtual List expanded the library's operational vocabulary." },
       { heading: "Better previews, better decisions", body: "Richer interactive examples keep themes, font, colour, usage, Playground, and external rendering aligned so teams can understand a component before they commit to it." },
@@ -94,6 +120,11 @@ export const newsStories: NewsStory[] = [
     title: "Media that does not lose its place.",
     standfirst: "Persistent playback turned video from an isolated component into an experience that can follow a user through an application.",
     summary: "Navigation should not need to interrupt a task — or the media that supports it.",
+    components: [
+      { name: "Video player", href: "/documentation/components/video-player", code: `<VideoPlayer src={videoUrl} />` },
+      { name: "Diff viewer", href: "/documentation/components/diff-viewer", code: `<DiffViewer before={before} after={after} />` },
+      { name: "Virtual list", href: "/documentation/components/virtual-list", code: `<VirtualList items={items} renderItem={renderItem} />` },
+    ],
     chapters: [
       { heading: "Playback that survives navigation", body: "PersistentVideoPlayerProvider and PersistentVideoPlayer keep an active video alive across page changes and can collapse it into a docked mini-player." },
       { heading: "A complete interaction model", body: "The catalogue includes close, expand, shrink, and configurable persistence controls so teams can evaluate the behaviour as a real feature." },
@@ -107,6 +138,11 @@ export const newsStories: NewsStory[] = [
     title: "Time deserves a better interface.",
     standfirst: "Portaled pickers replaced browser-native date and time interfaces with a consistent, application-ready control family.",
     summary: "Choosing a date, time, month, or week should feel like part of the same system — no matter which browser is in front of the user.",
+    components: [
+      { name: "Date picker", href: "/documentation/components/date-picker", code: `<DateField id="start" label="Start date" value={date} onChange={setDate} />` },
+      { name: "Time picker", href: "/documentation/components/time-picker", code: `<DateField id="time" label="Time" type="time" value={time} onChange={setTime} />` },
+      { name: "Combobox", href: "/documentation/components/combobox", code: `<ComboboxField id="company" label="Company" options={companies} />` },
+    ],
     chapters: [
       { heading: "Beyond the native overlay", body: "DateField gained Opus date/time, time, month, and week pickers, removing the inconsistent browser-native experience from those workflows." },
       { heading: "Suggestions that belong to the system", body: "ComboboxField moved from a native datalist to a filtered, viewport-aware portaled list that behaves like the rest of the library." },

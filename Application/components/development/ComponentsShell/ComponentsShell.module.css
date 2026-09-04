@@ -7,7 +7,6 @@
   --opus-pane-fill: color-mix(in srgb, var(--opus-accent) 8%, rgba(10, 12, 22, 0.36));
   --opus-topbar-height: auto;
   position: relative;
-  z-index: 1;
   display: grid;
   grid-template-rows: auto minmax(0, 1fr);
   height: 100vh;
@@ -31,7 +30,17 @@ html[data-shell-theme="light"] .shell {
   color: #17132f;
 }
 
+.viewportAtmosphere {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+
 .body {
+  position: relative;
+  z-index: 1;
   display: grid;
   grid-template-columns: auto minmax(0, 1fr);
   min-height: 0;
@@ -70,8 +79,6 @@ html[data-shell-theme="light"] .shell {
   display: flex;
   min-height: 0;
   min-width: 0;
-  container-type: inline-size;
-  container-name: settings-sidebar;
   background: transparent;
 }
 
@@ -87,33 +94,17 @@ html[data-shell-theme="light"] .shell {
 }
 
 .settingsSidebar {
-  --opus-border: color-mix(in srgb, var(--opus-accent) 18%, transparent);
-  --opus-border-strong: color-mix(in srgb, var(--opus-accent) 32%, transparent);
-  --opus-text: #f5f7ff;
-  --opus-muted: rgba(223, 226, 255, 0.72);
-  --opus-input-bg: color-mix(in srgb, var(--opus-accent) 10%, rgba(14, 14, 20, 0.28));
-  --opus-input-fill: color-mix(in srgb, var(--opus-accent) 8%, rgba(12, 12, 18, 0.24));
-  --opus-shadow: none;
-  display: flex;
-  flex: 1;
-  flex-direction: column;
   min-width: 0;
-  min-height: 0;
-  background: var(--opus-pane-fill);
-  color: #f5f7ff;
-  transition: background 220ms ease;
+  background: transparent;
+  --opus-input-bg: color-mix(in srgb, var(--opus-accent) 12%, #3a3d5c);
+  --opus-input-fill: color-mix(in srgb, var(--opus-accent) 10%, #35385a);
 }
 
-.settingsSidebar[data-shell-theme="light"],
+.shell[data-shell-theme="light"] .settingsSidebar,
 html[data-shell-theme="light"] .settingsSidebar {
-  --opus-border: color-mix(in srgb, var(--opus-accent) 16%, transparent);
-  --opus-border-strong: color-mix(in srgb, var(--opus-accent) 28%, transparent);
-  --opus-text: #17132f;
-  --opus-muted: rgba(38, 32, 72, 0.68);
-  --opus-input-bg: color-mix(in srgb, var(--opus-accent) 6%, rgba(255, 255, 255, 0.28));
-  --opus-input-fill: color-mix(in srgb, var(--opus-accent) 4%, rgba(255, 255, 255, 0.32));
-  --opus-shadow: none;
-  color: var(--opus-text);
+  background: transparent;
+  --opus-input-bg: color-mix(in srgb, var(--opus-accent) 6%, #ffffff);
+  --opus-input-fill: color-mix(in srgb, var(--opus-accent) 4%, #ffffff);
 }
 
 .settingsSidebarHeader {
@@ -147,7 +138,7 @@ html[data-shell-theme="light"] .settingsSidebar {
   padding: 0;
   border: 1px solid color-mix(in srgb, var(--opus-border) 88%, transparent);
   border-radius: 8px;
-  background: color-mix(in srgb, var(--opus-panel) 88%, transparent);
+  background: color-mix(in srgb, var(--opus-pane-fill) 80%, transparent);
   color: var(--opus-muted);
   font-size: 0.72rem;
   cursor: pointer;
@@ -160,7 +151,7 @@ html[data-shell-theme="light"] .settingsSidebar {
 .settingsCollapseButton:hover,
 .settingsCollapseButton:focus-visible {
   border-color: color-mix(in srgb, var(--opus-accent) 36%, var(--opus-border));
-  background: color-mix(in srgb, var(--opus-accent) 12%, var(--opus-panel));
+  background: color-mix(in srgb, var(--opus-accent) 12%, var(--opus-pane-fill));
   color: var(--opus-accent);
   outline: none;
 }
@@ -202,6 +193,8 @@ html[data-shell-theme="light"] .settingsSidebar {
 }
 
 .settingsSidebarBodyInner {
+  container-type: inline-size;
+  container-name: settings-sidebar;
   padding: 12px 14px 18px;
 }
 
@@ -253,7 +246,7 @@ html[data-shell-theme="light"] .settingsSidebar {
   padding: 0 12px;
   border: 1px solid var(--opus-border);
   border-radius: var(--opus-input-radius);
-  background: color-mix(in srgb, var(--opus-panel) 88%, transparent);
+  background: color-mix(in srgb, var(--opus-pane-fill) 80%, transparent);
   color: var(--opus-text);
   font: inherit;
   font-size: 0.76rem;
@@ -264,7 +257,7 @@ html[data-shell-theme="light"] .settingsSidebar {
 .settingsActionButton:hover,
 .settingsActionButton:focus-visible {
   border-color: color-mix(in srgb, var(--opus-accent) 55%, var(--opus-border));
-  background: color-mix(in srgb, var(--opus-accent) 12%, var(--opus-panel));
+  background: color-mix(in srgb, var(--opus-accent) 12%, var(--opus-pane-fill));
   outline: none;
 }
 
@@ -280,6 +273,10 @@ html[data-shell-theme="light"] .settingsSidebar {
   transition:
     background 220ms ease,
     color 220ms ease;
+}
+
+.sidebar.settingsSidebar {
+  background: transparent;
 }
 
 .sidebarSearch {

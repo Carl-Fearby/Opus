@@ -18,6 +18,7 @@ const lightThemeTokens = {
   "--opus-accent-secondary": "var(--opus-user-accent-secondary, #0284c7)",
   "--opus-accent-secondary-soft":
     "var(--opus-user-accent-secondary-soft, color-mix(in srgb, var(--opus-accent-secondary) 12%, transparent))",
+  "--opus-accent-tertiary": "var(--opus-user-accent-tertiary, #0ea5e9)",
   "--opus-accent-contrast": "#ffffff",
   "--opus-error": "#eb2434",
   "--opus-input-bg": "color-mix(in srgb, var(--opus-accent) 6%, rgba(255, 255, 255, 0.88))",
@@ -52,6 +53,7 @@ const darkThemeTokens = {
   "--opus-accent-secondary": "var(--opus-user-accent-secondary, #0284c7)",
   "--opus-accent-secondary-soft":
     "var(--opus-user-accent-secondary-soft, color-mix(in srgb, var(--opus-accent-secondary) 16%, transparent))",
+  "--opus-accent-tertiary": "var(--opus-user-accent-tertiary, #0ea5e9)",
   "--opus-accent-contrast": "#ffffff",
   "--opus-error": "#ff5858",
   "--opus-input-bg": "color-mix(in srgb, var(--opus-accent) 10%, rgba(14, 14, 20, 0.92))",

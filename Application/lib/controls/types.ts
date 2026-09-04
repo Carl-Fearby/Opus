@@ -81,6 +81,7 @@ export type ControlSlug =
   | "email-input"
   | "url-input"
   | "search-input"
+  | "search-box"
   | "file-upload"
   | "image-crop-upload"
   | "hidden-input"
@@ -119,6 +120,7 @@ export type ControlSlug =
   | "date-range-picker"
   | "combobox"
   | "currency-input"
+  | "currency-select"
   | "masked-input"
   | "multi-file-upload"
   | "checkbox-group"
@@ -190,6 +192,7 @@ export type ControlSlug =
   | "clock"
   | "flip-clock"
   | "text-marquee"
+  | "background-blobs"
   | "portal"
   | "portal-host"
   | "visually-hidden"
@@ -229,6 +232,8 @@ export type BaseFieldSettings = {
   size: InputControlSize;
 };
 
+export type ControlRadius = "none" | "standard" | "medium" | "large" | "full";
+
 export type NativeInputSettings = {
   autoCapitalize: "none" | "off" | "on" | "sentences" | "words" | "characters";
   autoComplete: string;
@@ -253,6 +258,8 @@ export type TextInputSettings = BaseFieldSettings & NativeInputSettings & {
   placeholder: string;
   placeholderEnabled: boolean;
 };
+
+export type SearchBoxSettings = BaseFieldSettings & { value: string; categories: string; category: string; placeholder: string; searchLabel: string; showLabel: boolean };
 
 export type TextareaSettings = BaseFieldSettings & NativeInputSettings & {
   value: string;
@@ -342,6 +349,7 @@ export type OtpInputSettings = BaseFieldSettings & {
 export type DateRangeSettings = BaseFieldSettings & { from: string; to: string };
 export type ComboboxSettings = BaseFieldSettings & { options: string; placeholder: string; value: string };
 export type CurrencyInputSettings = BaseFieldSettings & { currency: string; value: number };
+export type CurrencySelectSettings = BaseFieldSettings & { value: string; placeholder: string; placeholderEnabled: boolean; searchPlaceholder: string };
 export type MaskedInputSettings = BaseFieldSettings & { mask: string; placeholder: string; value: string };
 export type MultiFileUploadSettings = BaseFieldSettings & { fileNames: string; maxFiles: number };
 export type CheckboxGroupSettings = BaseFieldSettings & { options: string; value: string[] };
@@ -1563,6 +1571,25 @@ export type TextMarqueeSettings = {
   surface: boolean;
 };
 
+export type BackgroundBlobsSettings = {
+  animated: boolean;
+  brightness: number;
+  blur: number;
+  colors: string[];
+  count: number;
+  padParent: boolean;
+  placement: "absolute" | "fixed";
+  size: "too-large" | "large" | "medium" | "small";
+};
+
+export type BackgroundBlobsLabSettings = {
+  controlRadius: ControlRadius;
+  transparency: "none" | "standard" | "glass";
+  gradient: boolean;
+  containerSize: "sm" | "md" | "lg" | "xl" | "full";
+  containerPadded: boolean;
+};
+
 export type TextSettings = {
   content: string;
   padding: "snug" | "compact" | "comfortable" | "relaxed" | "cozy";
@@ -1718,6 +1745,7 @@ export type ControlSettingsBySlug = {
   "email-input": ValueFieldSettings;
   "url-input": ValueFieldSettings;
   "search-input": ValueFieldSettings;
+  "search-box": SearchBoxSettings;
   "file-upload": FileUploadSettings;
   "image-crop-upload": ImageCropUploadSettings;
   "hidden-input": HiddenInputSettings;
@@ -1748,6 +1776,7 @@ export type ControlSettingsBySlug = {
   "date-range-picker": DateRangeSettings;
   combobox: ComboboxSettings;
   "currency-input": CurrencyInputSettings;
+  "currency-select": CurrencySelectSettings;
   "masked-input": MaskedInputSettings;
   "multi-file-upload": MultiFileUploadSettings;
   "checkbox-group": CheckboxGroupSettings;
@@ -1795,6 +1824,7 @@ export type ControlSettingsBySlug = {
   text: TextSettings;
   heading: HeadingSettings;
   "lab-chat-conversation": ChatConversationSettings;
+  "lab-background-blobs": BackgroundBlobsLabSettings;
   "empty-state": EmptyStateSettings;
   badge: BadgeSettings;
   avatar: AvatarSettings;
@@ -1852,6 +1882,7 @@ export type ControlSettingsBySlug = {
   clock: ClockSettings;
   "flip-clock": FlipClockSettings;
   "text-marquee": TextMarqueeSettings;
+  "background-blobs": BackgroundBlobsSettings;
   portal: PortalSettings;
   "portal-host": PortalHostSettings;
   "visually-hidden": VisuallyHiddenSettings;
@@ -1973,6 +2004,7 @@ export const formsControlOrder = [
   "email-input",
   "url-input",
   "search-input",
+  "search-box",
   "file-upload",
   "image-crop-upload",
   "hidden-input",
@@ -1997,6 +2029,7 @@ export const formsControlOrder = [
   "date-range-picker",
   "combobox",
   "currency-input",
+  "currency-select",
   "masked-input",
   "multi-file-upload",
   "checkbox-group",

@@ -1,12 +1,17 @@
 "use client";
 
-import type { CSSProperties, ReactNode } from "react";
+import { useState, type CSSProperties, type ReactNode } from "react";
 import { useComponentsTheme } from "@/components/development/ComponentsThemeProvider";
 import { ComponentsPageHeader } from "./ComponentsPageHeader";
 import { ComponentsShellHeader } from "./ComponentsShellHeader";
 import { ComponentsSidebar } from "./ComponentsSidebar";
 import { ComponentSettingsProvider, useComponentSettingsContext } from "./ComponentSettingsContext";
 import { ComponentsSettingsSidebar } from "./ComponentsSettingsSidebar";
+import {
+  ViewportAtmosphere,
+  ViewportAtmosphereProvider,
+  type ViewportAtmosphereSettings,
+} from "@/components/control-detail/ControlDetail/BodyPortal";
 import { controlHasSettingsPanel } from "@/lib/controls/controlSettingsPanel";
 import { CustomScrollbar } from "opus-react";
 import styles from "./ComponentsShell.module.css";
@@ -40,16 +45,22 @@ function ComponentsShellBody({ children }: { children: ReactNode }) {
 
 export function ComponentsDocsShell({ children }: { children: ReactNode }) {
   const { accentStyle } = useComponentsTheme();
+  const [atmosphere, setAtmosphere] = useState<ViewportAtmosphereSettings | null>(null);
 
   return (
-    <div className={styles.shell} style={accentStyle}>
-      <a className={styles.skipLink} href="#main-content">
-        Skip to main content
-      </a>
-      <ComponentsShellHeader />
-      <ComponentSettingsProvider>
-        <ComponentsShellBody>{children}</ComponentsShellBody>
-      </ComponentSettingsProvider>
-    </div>
+    <ViewportAtmosphereProvider setSettings={setAtmosphere}>
+      <div className={styles.shell} data-components-shell="" style={accentStyle}>
+        <div aria-hidden="true" className={styles.viewportAtmosphere} data-viewport-atmosphere="">
+          <ViewportAtmosphere settings={atmosphere} />
+        </div>
+        <a className={styles.skipLink} href="#main-content">
+          Skip to main content
+        </a>
+        <ComponentsShellHeader />
+        <ComponentSettingsProvider>
+          <ComponentsShellBody>{children}</ComponentsShellBody>
+        </ComponentSettingsProvider>
+      </div>
+    </ViewportAtmosphereProvider>
   );
 }

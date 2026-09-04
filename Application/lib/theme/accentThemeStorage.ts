@@ -15,6 +15,8 @@ export const TILE_ACCENT_CHANGE_EVENT = "opus-tile-accent-change";
 
 export const DEFAULT_ACCENT_COLOR = "#8f6cff";
 export const DEFAULT_ACCENT_SECONDARY = "#0284c7";
+/** Third global accent for component-specific emphasis, such as primary actions. */
+export const DEFAULT_ACCENT_TERTIARY = "#0ea5e9";
 export const DEFAULT_ACCENT_PAIR_ID = "violet-cyan";
 /** Purple-tone tile icon / glow (matches TileGradientDefs pink end). */
 export const DEFAULT_TILE_ACCENT = "#ec4899";
@@ -89,6 +91,7 @@ export function parseAccentPreference(
 export function createAccentStyle(
   accent: string,
   secondary: string = DEFAULT_ACCENT_SECONDARY,
+  tertiary: string = DEFAULT_ACCENT_TERTIARY,
 ): CSSProperties {
   return {
     "--opus-user-accent": accent,
@@ -99,6 +102,8 @@ export function createAccentStyle(
     "--opus-accent-soft": `color-mix(in srgb, ${accent} 16%, transparent)`,
     "--opus-accent-secondary": secondary,
     "--opus-accent-secondary-soft": `color-mix(in srgb, ${secondary} 16%, transparent)`,
+    "--opus-user-accent-tertiary": tertiary,
+    "--opus-accent-tertiary": tertiary,
     "--opus-accent-contrast": "#ffffff",
   } as CSSProperties;
 }

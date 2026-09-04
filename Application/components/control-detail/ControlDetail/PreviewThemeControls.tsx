@@ -14,6 +14,17 @@ type PreviewThemeControlsProps = {
   variant?: "panel" | "toolbar";
 };
 
+export function PreviewPlatformSelector() {
+  const { previewPlatform, setPreviewPlatform } = useComponentsTheme();
+
+  return (
+    <div aria-label="Preview platform" className={styles.previewPlatformSelector} role="group">
+      <button aria-pressed={previewPlatform === "desktop"} onClick={() => setPreviewPlatform("desktop")} type="button">Desktop</button>
+      <button aria-pressed={previewPlatform === "mobile"} onClick={() => setPreviewPlatform("mobile")} type="button">Mobile</button>
+    </div>
+  );
+}
+
 export function PreviewThemeControls({
   id = "preview-theme-toggle",
   onThemeChange,
@@ -23,6 +34,8 @@ export function PreviewThemeControls({
   const {
     previewAccent,
     previewAccentSecondary,
+    previewTertiaryAccent,
+    previewDefaults,
     previewBaseColor,
     previewFontFamily,
     previewTheme,
@@ -32,6 +45,8 @@ export function PreviewThemeControls({
     resetPreviewTileAccent,
     setPreviewAccent,
     setPreviewAccentSecondary,
+    setPreviewTertiaryAccent,
+    setPreviewDefaults,
     setPreviewBaseColor,
     setPreviewFontFamily,
     setPreviewTheme,
@@ -54,6 +69,8 @@ export function PreviewThemeControls({
         base={previewBaseColor}
         accent={previewAccent}
         accentSecondary={previewAccentSecondary}
+        tertiaryAccent={previewTertiaryAccent}
+        defaults={previewDefaults}
         compact
         fontFamily={previewFontFamily}
         idPrefix={`${id}-preview`}
@@ -63,6 +80,8 @@ export function PreviewThemeControls({
         tileAccentSecondary={previewTileAccentSecondary}
         onAccentChange={setPreviewAccent}
         onAccentSecondaryChange={setPreviewAccentSecondary}
+        onTertiaryAccentChange={setPreviewTertiaryAccent}
+        onDefaultsChange={setPreviewDefaults}
         onBaseChange={setPreviewBaseColor}
         onResetAccent={resetPreviewAccent}
         onResetTileAccent={resetPreviewTileAccent}
@@ -76,6 +95,7 @@ export function PreviewThemeControls({
         value={previewFontFamily}
         onChange={setPreviewFontFamily}
       />
+      <PreviewPlatformSelector />
       <span className={styles.previewThemeLabel} id={`${id}-label`}>
         Preview theme
       </span>
