@@ -6,6 +6,12 @@ import styles from "./news.module.css";
 export const metadata: Metadata = {
   title: "News",
   description: "Stories from Opus: product releases, library milestones, and the thinking behind the system.",
+  alternates: { canonical: "/news" },
+  openGraph: {
+    title: "Opus news — releases, components, and design-system decisions",
+    description: "Stories from Opus: product releases, library milestones, and the thinking behind the system.",
+    url: "/news",
+  },
 };
 
 function dateLabel(date: string) {

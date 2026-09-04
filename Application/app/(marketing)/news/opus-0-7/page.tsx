@@ -7,6 +7,15 @@ export const metadata: Metadata = {
   title: "Opus 0.7 — Visual themes for real applications",
   description:
     "Meet the visual Theme Designer, global component defaults, responsive preview modes, and the new Search Box in the Opus 0.7 release.",
+  alternates: { canonical: "/news/opus-0-7" },
+  openGraph: {
+    type: "article",
+    title: "Opus 0.7 — Visual themes for real applications",
+    description:
+      "Meet the visual Theme Designer, global component defaults, responsive preview modes, and the new Search Box in the Opus 0.7 release.",
+    url: "/news/opus-0-7",
+    publishedTime: "2026-09-04T00:00:00.000Z",
+  },
 };
 
 const highlights = [

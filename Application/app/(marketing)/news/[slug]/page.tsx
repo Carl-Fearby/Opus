@@ -10,7 +10,20 @@ export function generateStaticParams() { return newsStories.filter((story) => st
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const story = storyBySlug.get((await params).slug);
-  return story ? { title: story.title, description: story.standfirst } : {};
+  return story
+    ? {
+        title: story.title,
+        description: story.standfirst,
+        alternates: { canonical: `/news/${story.slug}` },
+        openGraph: {
+          type: "article",
+          title: story.title,
+          description: story.standfirst,
+          url: `/news/${story.slug}`,
+          publishedTime: `${story.date}T00:00:00.000Z`,
+        },
+      }
+    : {};
 }
 
 export default async function StoryPage({ params }: Props) {

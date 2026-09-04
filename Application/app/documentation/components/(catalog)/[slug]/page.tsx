@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { ControlDetail } from "@/components/control-detail/ControlDetail";
 import { getDefaultSettings } from "@/lib/controls/defaults";
@@ -14,7 +15,7 @@ export function generateStaticParams() {
   return getAllSlugs().map((slug) => ({ slug }));
 }
 
-export async function generateMetadata({ params }: ControlPageProps) {
+export async function generateMetadata({ params }: ControlPageProps): Promise<Metadata> {
   const { slug } = await params;
   const control = getControl(slug);
 
@@ -25,6 +26,12 @@ export async function generateMetadata({ params }: ControlPageProps) {
   return {
     title: `${control.title} | Opus`,
     description: control.description,
+    alternates: { canonical: `/documentation/components/${slug}` },
+    openGraph: {
+      title: `${control.title} — Opus React component`,
+      description: control.description,
+      url: `/documentation/components/${slug}`,
+    },
   };
 }
 

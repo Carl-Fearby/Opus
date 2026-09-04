@@ -7,6 +7,7 @@ import styles from "./version.module.css";
 export const metadata: Metadata = {
   title: "Release notes",
   description: "Every opus-react release, its complete change notes, and the Git commit history behind it.",
+  alternates: { canonical: "/version" },
 };
 
 function formatDate(isoDate: string) {

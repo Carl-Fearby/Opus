@@ -21,21 +21,33 @@ const ibmPlexMono = IBM_Plex_Mono({
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://project-opus.netlify.app"),
-  title: "Opus",
-  description: "A React component library and documented design system for modern business applications.",
+  title: "Opus — Free, open-source React component library",
+  description:
+    "Opus is a free, open-source React component library and visual design system for accessible business applications, internal tools, CRM, and operations products.",
   applicationName: "Opus",
-  keywords: ["React component library", "design system", "business UI", "accessible components", "Opus"],
+  alternates: { canonical: "/" },
+  keywords: [
+    "free React component library",
+    "open-source React component library",
+    "React design system",
+    "accessible business UI components",
+    "internal tools UI",
+    "Opus",
+  ],
+  robots: { index: true, follow: true },
   openGraph: {
     type: "website",
     siteName: "Opus",
-    title: "Opus — Design system for modern business apps",
-    description: "A React component library, documented design system, and live component Playground.",
+    title: "Opus — Free, open-source React component library",
+    description:
+      "Themeable, accessible React components for internal tools, CRM, operations, and business applications.",
     url: "/",
   },
   twitter: {
     card: "summary_large_image",
-    title: "Opus — Design system for modern business apps",
-    description: "A React component library, documented design system, and live component Playground.",
+    title: "Opus — Free, open-source React component library",
+    description:
+      "Themeable, accessible React components for internal tools, CRM, operations, and business applications.",
   },
   manifest: "/site.webmanifest",
   icons: {
@@ -53,6 +65,38 @@ export const metadata: Metadata = {
       },
     ],
   },
+};
+
+const siteStructuredData = {
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "Organization",
+      name: "Opus",
+      url: "https://project-opus.netlify.app",
+      description: "A free, open-source, not-for-profit React component library and design system.",
+      sameAs: ["https://github.com/Carl-Fearby/Opus"],
+    },
+    {
+      "@type": "WebSite",
+      name: "Opus",
+      url: "https://project-opus.netlify.app",
+      description: "Free, open-source React components and documented design-system tooling for business applications.",
+      publisher: { "@type": "Organization", name: "Opus" },
+    },
+    {
+      "@type": "SoftwareApplication",
+      name: "opus-react",
+      applicationCategory: "DeveloperApplication",
+      operatingSystem: "Web",
+      isAccessibleForFree: true,
+      license: "https://github.com/Carl-Fearby/Opus/blob/main/LICENSE",
+      codeRepository: "https://github.com/Carl-Fearby/Opus",
+      downloadUrl: "https://www.npmjs.com/package/opus-react",
+      url: "https://project-opus.netlify.app/documentation/components",
+      description: "A free, open-source React component library with live documentation, visual theming, and accessible business UI components.",
+    },
+  ],
 };
 
 const performanceMeasureGuardScript = `
@@ -149,6 +193,10 @@ export default async function RootLayout({
       suppressHydrationWarning
     >
       <body className={`${spaceGrotesk.variable} ${ibmPlexMono.variable}`}>
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(siteStructuredData) }}
+        />
         <script dangerouslySetInnerHTML={{ __html: fontBootstrapScript }} />
         <script dangerouslySetInnerHTML={{ __html: performanceMeasureGuardScript }} />
         <ThemeBootstrapScript />

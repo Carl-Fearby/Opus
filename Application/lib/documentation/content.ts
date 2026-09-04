@@ -63,6 +63,7 @@ export function getGuidePage(slug: string) {
   return {
     slug,
     title: titleFromMarkdown(content, fallbackTitle),
+    description: content.match(/^[^\n#].+/m)?.[0]?.trim(),
     content,
   };
 }
