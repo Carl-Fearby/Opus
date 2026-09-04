@@ -1,4 +1,4 @@
-.root { display:flex; width:100%; min-height:var(--opus-control-height); overflow:visible; border:1px solid var(--opus-border-strong); border-radius:var(--opus-input-radius); background:var(--opus-input-bg); color:var(--opus-text); box-shadow:0 1px 0 rgba(255,255,255,.05) inset, 0 14px 30px rgba(0,0,0,.06); }
+.root { display:flex; width:100%; min-height:var(--opus-control-height); container-type:inline-size; overflow:visible; border:1px solid var(--opus-border-strong); border-radius:var(--opus-input-radius); background:var(--opus-input-bg); color:var(--opus-text); box-shadow:0 1px 0 rgba(255,255,255,.05) inset, 0 14px 30px rgba(0,0,0,.06); }
 .root:focus-within { border-color:var(--opus-accent); box-shadow:0 0 0 4px color-mix(in srgb,var(--opus-accent) 22%,transparent),0 14px 30px rgba(0,0,0,.06); }
 .inputWrap { display:flex; flex:1; min-width:9rem; align-items:center; gap:10px; padding:0 12px; border-radius:var(--opus-input-radius) 0 0 var(--opus-input-radius); }
 .icon { width:1em; height:1em; flex:none; fill:none; stroke:var(--opus-muted); stroke-width:2.5; stroke-linecap:round; }
@@ -15,4 +15,49 @@
 .root > button:focus-visible { outline:2px solid color-mix(in srgb, var(--opus-search-box-accent,var(--opus-accent-tertiary,#0ea5e9)) 65%, transparent); outline-offset:-3px; }
 .root :is(input, button):disabled { cursor:not-allowed; opacity:.56; }
 .visuallyHidden { position:absolute; width:1px; height:1px; overflow:hidden; clip:rect(0 0 0 0); white-space:nowrap; }
-@media (max-width: 640px) { .root { flex-wrap:wrap; overflow:visible; } .inputWrap { min-height:64px; } .categoryWrap { flex:1; min-height:58px; border-top:1px solid var(--opus-border-strong, #26345d); border-left:0; } .categoryWrap select { width:100%; min-width:0; font-size:1rem; } .root button { min-height:58px; min-width:120px; font-size:1.1rem; border-top:1px solid var(--opus-border-strong, #26345d); } }
+@container (max-width: 420px) {
+  .root { flex-wrap:wrap; }
+  .inputWrap { flex:1 0 100%; min-height:44px; border-radius:var(--opus-input-radius) var(--opus-input-radius) 0 0; }
+  .categoryWrap { flex:1 0 100%; min-width:0; min-height:44px; border-top:1px solid var(--opus-border-strong, #26345d); border-left:0; }
+  .categoryTrigger { width:100%; min-width:0; min-height:44px; height:auto; padding-block:6px; font-size:1rem; line-height:1.25; white-space:normal; overflow-wrap:anywhere; }
+  .root > button { flex:1 0 100%; min-height:44px; min-width:0; border-radius:0 0 var(--opus-input-radius) var(--opus-input-radius); border-top:1px solid var(--opus-border-strong, #26345d); font-size:1rem; }
+}
+
+:global([data-preview-platform="mobile"]) .root {
+  flex-wrap:wrap;
+}
+
+:global([data-preview-platform="mobile"]) .inputWrap {
+  flex:1 0 100%;
+  min-height:44px;
+  border-radius:var(--opus-input-radius) var(--opus-input-radius) 0 0;
+}
+
+:global([data-preview-platform="mobile"]) .categoryWrap {
+  flex:1 0 100%;
+  min-width:0;
+  min-height:44px;
+  border-top:1px solid var(--opus-border-strong, #26345d);
+  border-left:0;
+}
+
+:global([data-preview-platform="mobile"]) .categoryTrigger {
+  width:100%;
+  min-width:0;
+  min-height:44px;
+  height:auto;
+  padding-block:6px;
+  font-size:1rem;
+  line-height:1.25;
+  white-space:normal;
+  overflow-wrap:anywhere;
+}
+
+:global([data-preview-platform="mobile"]) .root > button {
+  flex:1 0 100%;
+  min-height:44px;
+  min-width:0;
+  border-radius:0 0 var(--opus-input-radius) var(--opus-input-radius);
+  border-top:1px solid var(--opus-border-strong, #26345d);
+  font-size:1rem;
+}

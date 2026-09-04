@@ -25,6 +25,8 @@ import {
 } from "@/lib/theme/componentsThemeStorage";
 import { useStoredTheme } from "@/lib/theme/useStoredTheme";
 
+export type PreviewPlatform = "desktop" | "mobile";
+
 type ComponentsThemeContextValue = {
   pageHeader: {
     description: string;
@@ -37,6 +39,7 @@ type ComponentsThemeContextValue = {
   baseColor: string;
   fontFamily: GoogleFontFamily;
   previewFontFamily: GoogleFontFamily;
+  previewPlatform: PreviewPlatform;
   previewAppearanceReady: boolean;
   previewAccent: string;
   previewAccentSecondary: string;
@@ -58,6 +61,7 @@ type ComponentsThemeContextValue = {
   setBaseColor: (color: string) => void;
   setFontFamily: (fontFamily: string) => void;
   setPreviewFontFamily: (fontFamily: GoogleFontFamily) => void;
+  setPreviewPlatform: (platform: PreviewPlatform) => void;
   setPreviewAccent: (accent: string) => void;
   setPreviewAccentSecondary: (accent: string) => void;
   setPreviewTertiaryAccent: (accent: string) => void;
@@ -86,6 +90,7 @@ const PREVIEW_ACCENT_SECONDARY_STORAGE_KEY = "opus-components-preview-accent-sec
 const PREVIEW_TERTIARY_ACCENT_STORAGE_KEY = "opus-components-preview-tertiary-accent";
 const PREVIEW_BASE_COLOR_STORAGE_KEY = "opus-components-preview-base-color";
 const PREVIEW_FONT_STORAGE_KEY = "opus-components-preview-font";
+const PREVIEW_PLATFORM_STORAGE_KEY = "opus-components-preview-platform";
 const PREVIEW_TILE_ACCENT_STORAGE_KEY = "opus-components-preview-tile-accent";
 const PREVIEW_TILE_ACCENT_SECONDARY_STORAGE_KEY = "opus-components-preview-tile-accent-secondary";
 const DEFAULT_BASE_COLOR = "#64748b";
@@ -137,6 +142,7 @@ export function ComponentsThemeProvider({ children }: { children: ReactNode }) {
   const [previewDefaults, setPreviewDefaults] = useState<OpusThemeDefaults>({ radius: "standard", transparency: "standard", gradient: false });
   const [previewBaseColor, setPreviewBaseColorState] = useState(DEFAULT_BASE_COLOR);
   const [previewFontFamily, setPreviewFontFamilyState] = useState<GoogleFontFamily>(DEFAULT_FONT_FAMILY);
+  const [previewPlatform, setPreviewPlatformState] = useState<PreviewPlatform>("desktop");
   const [previewTileAccent, setPreviewTileAccentState] = useState(DEFAULT_TILE_ACCENT);
   const [previewTileAccentSecondary, setPreviewTileAccentSecondaryState] = useState(
     DEFAULT_TILE_ACCENT_SECONDARY,
@@ -186,6 +192,8 @@ export function ComponentsThemeProvider({ children }: { children: ReactNode }) {
         ?? readPreferenceCookie(PREVIEW_TERTIARY_ACCENT_STORAGE_KEY);
       const storedFont = window.localStorage.getItem(PREVIEW_FONT_STORAGE_KEY)
         ?? readPreferenceCookie(PREVIEW_FONT_STORAGE_KEY);
+      const storedPlatform = window.localStorage.getItem(PREVIEW_PLATFORM_STORAGE_KEY)
+        ?? readPreferenceCookie(PREVIEW_PLATFORM_STORAGE_KEY);
       const storedTileAccent = window.localStorage.getItem(PREVIEW_TILE_ACCENT_STORAGE_KEY)
         ?? readPreferenceCookie(PREVIEW_TILE_ACCENT_STORAGE_KEY);
       const storedTileAccentSecondary = window.localStorage.getItem(PREVIEW_TILE_ACCENT_SECONDARY_STORAGE_KEY)
@@ -200,6 +208,9 @@ export function ComponentsThemeProvider({ children }: { children: ReactNode }) {
       if (isHexColor(storedTertiaryAccent ?? "")) setPreviewTertiaryAccentState(storedTertiaryAccent!);
       if (storedFont && googleFontSet.has(storedFont)) {
         setPreviewFontFamilyState(storedFont as GoogleFontFamily);
+      }
+      if (storedPlatform === "desktop" || storedPlatform === "mobile") {
+        setPreviewPlatformState(storedPlatform);
       }
       if (isHexColor(storedTileAccent ?? "")) setPreviewTileAccentState(storedTileAccent!);
       if (isHexColor(storedTileAccentSecondary ?? "")) {
@@ -254,6 +265,11 @@ export function ComponentsThemeProvider({ children }: { children: ReactNode }) {
     if (!googleFontSet.has(font)) return;
     setPreviewFontFamilyState(font);
     persistPreviewValue(PREVIEW_FONT_STORAGE_KEY, font);
+  }, [persistPreviewValue]);
+
+  const setPreviewPlatform = useCallback((platform: PreviewPlatform) => {
+    setPreviewPlatformState(platform);
+    persistPreviewValue(PREVIEW_PLATFORM_STORAGE_KEY, platform);
   }, [persistPreviewValue]);
 
   const setPreviewTileAccent = useCallback((color: string) => {
@@ -350,6 +366,7 @@ export function ComponentsThemeProvider({ children }: { children: ReactNode }) {
       previewAccentStyle,
       previewBaseColor,
       previewFontFamily,
+      previewPlatform,
       previewTheme,
       previewTileAccent,
       previewTileAccentSecondary,
@@ -369,6 +386,7 @@ export function ComponentsThemeProvider({ children }: { children: ReactNode }) {
       setPreviewDefaults,
       setPreviewBaseColor,
       setPreviewFontFamily,
+      setPreviewPlatform,
       setPreviewTheme,
       setPreviewTileAccent,
       setPreviewTileAccentSecondary,
@@ -396,6 +414,7 @@ export function ComponentsThemeProvider({ children }: { children: ReactNode }) {
       previewAccentStyle,
       previewBaseColor,
       previewFontFamily,
+      previewPlatform,
       previewTheme,
       previewTileAccent,
       previewTileAccentSecondary,
@@ -415,6 +434,7 @@ export function ComponentsThemeProvider({ children }: { children: ReactNode }) {
       setPreviewDefaults,
       setPreviewBaseColor,
       setPreviewFontFamily,
+      setPreviewPlatform,
       setPreviewTheme,
       setPreviewTileAccent,
       setPreviewTileAccentSecondary,

@@ -109,13 +109,20 @@ export function SearchBox({
 
       const gutter = 12;
       const gap = 8;
-      const spaceBelow = window.innerHeight - bounds.bottom - gap - gutter;
-      const spaceAbove = bounds.top - gap - gutter;
+      const previewRoot = categoryRef.current?.closest<HTMLElement>("[data-preview-root]");
+      const previewBounds = previewRoot?.getBoundingClientRect();
+      const boundaryTop = previewBounds ? Math.max(gutter, previewBounds.top + gutter) : gutter;
+      const boundaryBottom = previewBounds
+        ? Math.min(window.innerHeight - gutter, previewBounds.bottom - gutter)
+        : window.innerHeight - gutter;
+      const spaceBelow = boundaryBottom - bounds.bottom - gap;
+      const spaceAbove = bounds.top - boundaryTop - gap;
       const openUpward = spaceAbove > spaceBelow;
-      const availableHeight = Math.max(96, Math.floor(openUpward ? spaceAbove : spaceBelow));
+      const availableHeight = Math.max(0, Math.floor(openUpward ? spaceAbove : spaceBelow));
 
       setCategoryPanelStyle({
         "--search-box-category-max-height": `${availableHeight}px`,
+        maxWidth: previewBounds ? `${Math.floor(previewBounds.width - gutter * 2)}px` : undefined,
         bottom: openUpward ? `calc(100% + ${gap}px)` : undefined,
         top: openUpward ? "auto" : `calc(100% + ${gap}px)`,
       } as CSSProperties);

@@ -55,6 +55,42 @@
   min-height: 36px;
 }
 
+.previewPlatformSelector {
+  display: inline-flex;
+  overflow: hidden;
+  border: 1px solid var(--opus-border);
+  border-radius: var(--opus-input-radius-large);
+  background: var(--opus-input-bg, var(--opus-panel));
+}
+
+.previewPlatformSelector button {
+  min-height: 28px;
+  border: 0;
+  padding: 0 8px;
+  background: transparent;
+  color: var(--opus-muted);
+  font: inherit;
+  font-size: .72rem;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.previewPlatformSelector button + button {
+  border-left: 1px solid var(--opus-border);
+}
+
+.previewPlatformSelector button[aria-pressed="true"] {
+  background: color-mix(in srgb, var(--opus-accent) 22%, transparent);
+  color: var(--opus-text);
+}
+
+.previewPlatformSelector button:focus-visible {
+  position: relative;
+  z-index: 1;
+  outline: 2px solid var(--opus-accent);
+  outline-offset: -2px;
+}
+
 .previewThemeLabel {
   color: var(--opus-muted);
   font-size: 0.82rem;

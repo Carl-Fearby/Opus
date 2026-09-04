@@ -1,6 +1,19 @@
 /** Curated opus-react release notes for npm publishes that only left chore commits in git. */
 export const releaseNotesOverlay = [
   {
+    version: "0.6.40",
+    releasedAt: "2026-09-04",
+    summary: "Responsive preview platforms and a mobile-safe Search Box.",
+    changes: [
+      "Add a shared Desktop/Mobile preview platform selector that persists across component previews and the Theme Designer.",
+      "Constrain mobile previews to a 390px device canvas while preserving the chosen visual theme and global tokens.",
+      "Make Search Box reflow into compact query, category, and action rows inside a mobile preview without hiding or truncating the category selector.",
+      "Anchor long Search Box category menus to the preview canvas so they use the available canvas space, scroll internally, and never expand the simulated device viewport.",
+      "Expand the Theme Designer canvas to eight representative application tiles for broader visual theme testing.",
+      "Publish opus-react 0.6.40.",
+    ],
+  },
+  {
     version: "0.6.39",
     releasedAt: "2026-09-04",
     summary: "Visual Theme Designer, provider-scoped theme tokens, and marketing launch.",

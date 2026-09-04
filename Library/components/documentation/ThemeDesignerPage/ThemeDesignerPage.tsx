@@ -23,6 +23,7 @@ import {
 } from "@/components/fields";
 import { DocumentationTopBar } from "@/components/documentation/DocumentationTopBar";
 import { PreviewThemeBoundary } from "@/components/control-detail/ControlDetail/PreviewThemeBoundary";
+import { PreviewPlatformSelector } from "@/components/control-detail/ControlDetail/PreviewThemeControls";
 import { useComponentsTheme } from "@/components/development/ComponentsThemeProvider";
 import { DEFAULT_FONT_FAMILY, googleFonts, type GoogleFontFamily } from "@/components/FontPicker";
 import { SyntaxHighlighter } from "@/components/SyntaxHighlighter";
@@ -258,6 +259,10 @@ export function App({ children }) {
                 label: "Preview",
                 value: "preview",
                 content: <PreviewThemeBoundary className={styles.canvas}>
+            <div className={styles.previewPlatformBar}>
+              <span>Preview platform</span>
+              <PreviewPlatformSelector />
+            </div>
             <Tiles
               className={styles.tilesPreview}
               items={[

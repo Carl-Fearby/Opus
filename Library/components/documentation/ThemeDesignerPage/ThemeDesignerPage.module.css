@@ -143,6 +143,21 @@
   box-shadow: none;
 }
 
+.previewPlatformBar {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 10px;
+}
+
+.previewPlatformBar > span {
+  color: var(--opus-muted);
+  font-size: .76rem;
+  font-weight: 800;
+  letter-spacing: .05em;
+  text-transform: uppercase;
+}
+
 .controlGroup {
   display: grid;
   gap: 11px;

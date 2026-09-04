@@ -25,6 +25,7 @@ export function PreviewThemeBoundary({
     previewAccentStyle,
     previewDefaults,
     previewFontFamily,
+    previewPlatform,
   } = useComponentsTheme();
   const previewTheme = controlledTheme ?? contextTheme;
 
@@ -33,6 +34,7 @@ export function PreviewThemeBoundary({
       <div
         {...rest}
         className={className}
+        data-preview-platform={previewPlatform}
         data-preview-root
         data-theme={previewTheme}
         style={{
@@ -44,6 +46,8 @@ export function PreviewThemeBoundary({
           fontFamily: fontStack(previewFontFamily),
           visibility: previewAppearanceReady ? undefined : "hidden",
           ...style,
+          width: previewPlatform === "mobile" ? "min(100%, 390px)" : style?.width,
+          marginInline: previewPlatform === "mobile" ? "auto" : style?.marginInline,
         } as CSSProperties}
       >
         {children}
