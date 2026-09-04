@@ -114,6 +114,7 @@ textarea {
   --opus-accent-soft: var(--opus-user-accent-soft, color-mix(in srgb, var(--opus-accent) 12%, transparent));
   --opus-accent-secondary: var(--opus-user-accent-secondary, #0284c7);
   --opus-accent-secondary-soft: var(--opus-user-accent-secondary-soft, color-mix(in srgb, var(--opus-accent-secondary) 12%, transparent));
+  --opus-accent-tertiary: var(--opus-user-accent-tertiary, #0ea5e9);
   --opus-accent-contrast: #ffffff;
   --opus-tile-accent: #ec4899;
   --opus-tile-accent-mid: color-mix(in srgb, #ec4899 55%, #0ea5e9 45%);
@@ -159,6 +160,7 @@ textarea {
   --opus-accent-soft: var(--opus-user-accent-soft, color-mix(in srgb, var(--opus-accent) 16%, transparent));
   --opus-accent-secondary: var(--opus-user-accent-secondary, #0284c7);
   --opus-accent-secondary-soft: var(--opus-user-accent-secondary-soft, color-mix(in srgb, var(--opus-accent-secondary) 16%, transparent));
+  --opus-accent-tertiary: var(--opus-user-accent-tertiary, #0ea5e9);
   --opus-accent-contrast: #ffffff;
   --opus-tile-accent: #ec4899;
   --opus-tile-accent-mid: color-mix(in srgb, #ec4899 55%, #0ea5e9 45%);

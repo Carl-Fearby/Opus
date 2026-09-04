@@ -38,6 +38,7 @@ type ComponentsThemeContextValue = {
   previewAppearanceReady: boolean;
   previewAccent: string;
   previewAccentSecondary: string;
+  previewTertiaryAccent: string;
   previewAccentStyle: CSSProperties | undefined;
   previewBaseColor: string;
   previewTheme: Theme;
@@ -56,6 +57,7 @@ type ComponentsThemeContextValue = {
   setPreviewFontFamily: (fontFamily: GoogleFontFamily) => void;
   setPreviewAccent: (accent: string) => void;
   setPreviewAccentSecondary: (accent: string) => void;
+  setPreviewTertiaryAccent: (accent: string) => void;
   setPreviewBaseColor: (color: string) => void;
   setPreviewTheme: (theme: Theme) => void;
   setPreviewTileAccent: (accent: string) => void;
@@ -77,11 +79,13 @@ const defaultPageHeader = {
 const BASE_COLOR_STORAGE_KEY = "opus-components-base-color";
 const PREVIEW_ACCENT_STORAGE_KEY = "opus-components-preview-accent";
 const PREVIEW_ACCENT_SECONDARY_STORAGE_KEY = "opus-components-preview-accent-secondary";
+const PREVIEW_TERTIARY_ACCENT_STORAGE_KEY = "opus-components-preview-tertiary-accent";
 const PREVIEW_BASE_COLOR_STORAGE_KEY = "opus-components-preview-base-color";
 const PREVIEW_FONT_STORAGE_KEY = "opus-components-preview-font";
 const PREVIEW_TILE_ACCENT_STORAGE_KEY = "opus-components-preview-tile-accent";
 const PREVIEW_TILE_ACCENT_SECONDARY_STORAGE_KEY = "opus-components-preview-tile-accent-secondary";
 const DEFAULT_BASE_COLOR = "#64748b";
+const DEFAULT_TERTIARY_ACCENT = "#0ea5e9";
 const googleFontSet = new Set<string>(googleFonts);
 
 function isHexColor(value: string) {
@@ -125,6 +129,7 @@ export function ComponentsThemeProvider({ children }: { children: ReactNode }) {
   const [baseColor, setBaseColorState] = useState(DEFAULT_BASE_COLOR);
   const [previewAccent, setPreviewAccentState] = useState(DEFAULT_ACCENT_COLOR);
   const [previewAccentSecondary, setPreviewAccentSecondaryState] = useState(DEFAULT_ACCENT_SECONDARY);
+  const [previewTertiaryAccent, setPreviewTertiaryAccentState] = useState(DEFAULT_TERTIARY_ACCENT);
   const [previewBaseColor, setPreviewBaseColorState] = useState(DEFAULT_BASE_COLOR);
   const [previewFontFamily, setPreviewFontFamilyState] = useState<GoogleFontFamily>(DEFAULT_FONT_FAMILY);
   const [previewTileAccent, setPreviewTileAccentState] = useState(DEFAULT_TILE_ACCENT);
@@ -172,6 +177,8 @@ export function ComponentsThemeProvider({ children }: { children: ReactNode }) {
         ?? readPreferenceCookie(PREVIEW_ACCENT_SECONDARY_STORAGE_KEY);
       const storedBase = window.localStorage.getItem(PREVIEW_BASE_COLOR_STORAGE_KEY)
         ?? readPreferenceCookie(PREVIEW_BASE_COLOR_STORAGE_KEY);
+      const storedTertiaryAccent = window.localStorage.getItem(PREVIEW_TERTIARY_ACCENT_STORAGE_KEY)
+        ?? readPreferenceCookie(PREVIEW_TERTIARY_ACCENT_STORAGE_KEY);
       const storedFont = window.localStorage.getItem(PREVIEW_FONT_STORAGE_KEY)
         ?? readPreferenceCookie(PREVIEW_FONT_STORAGE_KEY);
       const storedTileAccent = window.localStorage.getItem(PREVIEW_TILE_ACCENT_STORAGE_KEY)
@@ -185,6 +192,7 @@ export function ComponentsThemeProvider({ children }: { children: ReactNode }) {
       if (isHexColor(storedAccent ?? "")) setPreviewAccentState(storedAccent!);
       if (isHexColor(storedAccentSecondary ?? "")) setPreviewAccentSecondaryState(storedAccentSecondary!);
       if (isHexColor(storedBase ?? "")) setPreviewBaseColorState(storedBase!);
+      if (isHexColor(storedTertiaryAccent ?? "")) setPreviewTertiaryAccentState(storedTertiaryAccent!);
       if (storedFont && googleFontSet.has(storedFont)) {
         setPreviewFontFamilyState(storedFont as GoogleFontFamily);
       }
@@ -229,6 +237,12 @@ export function ComponentsThemeProvider({ children }: { children: ReactNode }) {
     if (!isHexColor(color)) return;
     setPreviewBaseColorState(color);
     persistPreviewValue(PREVIEW_BASE_COLOR_STORAGE_KEY, color);
+  }, [persistPreviewValue]);
+
+  const setPreviewTertiaryAccent = useCallback((color: string) => {
+    if (!isHexColor(color)) return;
+    setPreviewTertiaryAccentState(color);
+    persistPreviewValue(PREVIEW_TERTIARY_ACCENT_STORAGE_KEY, color);
   }, [persistPreviewValue]);
 
   const setPreviewFontFamily = useCallback((font: GoogleFontFamily) => {
@@ -297,15 +311,17 @@ export function ComponentsThemeProvider({ children }: { children: ReactNode }) {
       ...createAccentStyle(previewAccent, previewAccentSecondary),
       ...createTileAccentStyle(previewTileAccent, previewTileAccentSecondary),
       "--opus-base": previewBaseColor,
+      "--opus-accent-tertiary": previewTertiaryAccent,
     }) as CSSProperties,
-    [previewAccent, previewAccentSecondary, previewBaseColor, previewTileAccent, previewTileAccentSecondary],
+    [previewAccent, previewAccentSecondary, previewBaseColor, previewTertiaryAccent, previewTileAccent, previewTileAccentSecondary],
   );
 
   const resetPreviewAccent = useCallback(() => {
     setPreviewAccent(DEFAULT_ACCENT_COLOR);
     setPreviewAccentSecondary(DEFAULT_ACCENT_SECONDARY);
     setPreviewBaseColor(DEFAULT_BASE_COLOR);
-  }, [setPreviewAccent, setPreviewAccentSecondary, setPreviewBaseColor]);
+    setPreviewTertiaryAccent(DEFAULT_TERTIARY_ACCENT);
+  }, [setPreviewAccent, setPreviewAccentSecondary, setPreviewBaseColor, setPreviewTertiaryAccent]);
 
   const resetPreviewTileAccent = useCallback(() => {
     setPreviewTileAccent(DEFAULT_TILE_ACCENT);
@@ -323,6 +339,7 @@ export function ComponentsThemeProvider({ children }: { children: ReactNode }) {
       pageHeader,
       previewAccent,
       previewAccentSecondary,
+      previewTertiaryAccent,
       previewAppearanceReady,
       previewAccentStyle,
       previewBaseColor,
@@ -342,6 +359,7 @@ export function ComponentsThemeProvider({ children }: { children: ReactNode }) {
       setPageHeader,
       setPreviewAccent,
       setPreviewAccentSecondary,
+      setPreviewTertiaryAccent,
       setPreviewBaseColor,
       setPreviewFontFamily,
       setPreviewTheme,
@@ -365,6 +383,7 @@ export function ComponentsThemeProvider({ children }: { children: ReactNode }) {
       pageHeader,
       previewAccent,
       previewAccentSecondary,
+      previewTertiaryAccent,
       previewAppearanceReady,
       previewAccentStyle,
       previewBaseColor,
@@ -384,6 +403,7 @@ export function ComponentsThemeProvider({ children }: { children: ReactNode }) {
       setPageHeader,
       setPreviewAccent,
       setPreviewAccentSecondary,
+      setPreviewTertiaryAccent,
       setPreviewBaseColor,
       setPreviewFontFamily,
       setPreviewTheme,

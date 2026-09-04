@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useId, useRef, useState, type FormEvent } from "react";
+import { useEffect, useId, useRef, useState, type CSSProperties, type FormEvent } from "react";
 import { FieldShell } from "../fields/FieldShell";
 import { inputControlSizeClassName } from "../fields/shared/inputControlSizes";
 import type { ControlRadius, ControlTransparency, FieldMode, InputControlSize, LabelPosition } from "../fields/types";
@@ -36,6 +36,8 @@ export type SearchBoxProps = {
   help?: string;
   required?: boolean;
   size?: InputControlSize;
+  /** Optional third accent used by the search action. Defaults to the theme tertiary accent. */
+  tertiaryAccent?: string;
   searchLabel?: string;
   value?: string;
 };
@@ -65,6 +67,7 @@ export function SearchBox({
   help,
   required,
   size = "md",
+  tertiaryAccent,
   searchLabel = "Search",
   value,
 }: SearchBoxProps) {
@@ -95,7 +98,16 @@ export function SearchBox({
   }, [categoryOpen]);
 
   return <FieldShell error={error} help={help} id={inputId} label={label} labelVisuallyHidden={labelVisuallyHidden} labelPosition={labelPosition} mode={mode} radius={radius} transparency={transparency} gradient={gradient} required={required}>
-    <form className={[styles.root, inputControlSizeClassName[size], className].filter(Boolean).join(" ")} onSubmit={submit} role="search">
+    <form
+      className={[styles.root, inputControlSizeClassName[size], className].filter(Boolean).join(" ")}
+      role="search"
+      style={
+        tertiaryAccent
+          ? ({ "--opus-search-box-accent": tertiaryAccent } as CSSProperties)
+          : undefined
+      }
+      onSubmit={submit}
+    >
       <label className={styles.visuallyHidden} htmlFor={inputId}>{ariaLabel}</label>
       <span className={styles.inputWrap}>
         <svg aria-hidden="true" className={styles.icon} viewBox="0 0 24 24"><path d="m20 20-4.35-4.35m1.35-5.15a6.5 6.5 0 1 1-13 0 6.5 6.5 0 0 1 13 0Z" /></svg>

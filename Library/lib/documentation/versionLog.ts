@@ -632,10 +632,18 @@ export const versionLog: VersionEntry[] = [
   {
     version: "0.6.37",
     releasedAt: "2026-09-04",
-    commit: "overlay-0.6.37",
-    commitShort: "overlay",
+    commit: "ba3e9b91903c476e8b7143b80b9073a139b6938f",
+    commitShort: "ba3e9b9",
     summary: "Search Box: a configurable, accessible unified search control.",
     changes: ["Add the exported SearchBox control with a search field, optional category list, and primary search action.","Add Forms catalogue documentation, generated usage, live preview output, configuration controls, and public package exports.","Support Opus field settings including optional labels, radius, background, gradient, density, validation, and help text.","Use an Emoji Picker-style glass category menu while preserving the search control's shared outer focus and radius treatment.","Publish opus-react 0.6.37."],
+  },
+  {
+    version: "0.6.38",
+    releasedAt: "2026-09-04",
+    commit: "570179aa8a1282e79c4ee0a177bab077c5b2e56a",
+    commitShort: "570179a",
+    summary: "Global tertiary accent and clearer preview colour settings.",
+    changes: ["Add a first-class tertiary accent token to OpusThemeProvider, shared theme styles, preview tokens, and the public stylesheet for use across any component.","Add a global tertiary accent picker and swatch to the preview Colours dialog, and include it in exported opus-theme.json files.","Update SearchBox to use the global tertiary accent for its search action while retaining an optional per-instance override for external applications.","Rework the Colours dialog into clear, divided palette groups with matched swatches and selected colour names and hex values.","Publish opus-react 0.6.38."],
   }
 ].reverse();
 

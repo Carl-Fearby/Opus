@@ -764,4 +764,16 @@ export const releaseNotesOverlay = [
       "Publish opus-react 0.6.37.",
     ],
   },
+  {
+    version: "0.6.38",
+    releasedAt: "2026-09-04",
+    summary: "Global tertiary accent and clearer preview colour settings.",
+    changes: [
+      "Add a first-class tertiary accent token to OpusThemeProvider, shared theme styles, preview tokens, and the public stylesheet for use across any component.",
+      "Add a global tertiary accent picker and swatch to the preview Colours dialog, and include it in exported opus-theme.json files.",
+      "Update SearchBox to use the global tertiary accent for its search action while retaining an optional per-instance override for external applications.",
+      "Rework the Colours dialog into clear, divided palette groups with matched swatches and selected colour names and hex values.",
+      "Publish opus-react 0.6.38.",
+    ],
+  },
 ];

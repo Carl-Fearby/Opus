@@ -379,6 +379,8 @@ type AccentColorPickerProps = {
   showQuickSwatches?: boolean;
   /** Show the companion secondary colour palette. */
   showSecondary?: boolean;
+  /** Add a visual divider after an always-visible panel picker. */
+  panelDivider?: boolean;
   /**
    * `compact` — top-bar blob + dropdown.
    * `panel` — always-visible Accent / Second accent grids (modal).
@@ -393,14 +395,18 @@ function AccentSwatchGrid({
   label,
   onSelect,
   selectedValue,
+  showSelectedValue = false,
+  hideLabel = false,
 }: {
+  hideLabel?: boolean;
   label: string;
   onSelect: (value: string) => void;
   selectedValue: string;
+  showSelectedValue?: boolean;
 }) {
   return (
     <div className={styles.section}>
-      <p className={styles.sectionLabel}>{label}</p>
+      {!hideLabel ? <p className={styles.sectionLabel}>{label}</p> : null}
       <div aria-label={label} className={styles.swatches} role="radiogroup">
         {accentPalette.map((option) => {
           const selected = selectedValue === option.value;
@@ -421,6 +427,17 @@ function AccentSwatchGrid({
           );
         })}
       </div>
+      {showSelectedValue ? (
+        <div className={styles.selectedValue}>
+          <span
+            aria-hidden="true"
+            className={styles.selectedValueSwatch}
+            style={{ "--accent-option": selectedValue } as CSSProperties}
+          />
+          <span className={styles.selectedValueName}>{colorLabel(selectedValue)}</span>
+          <code className={styles.selectedValueHex}>{selectedValue.toUpperCase()}</code>
+        </div>
+      ) : null}
     </div>
   );
 }
@@ -441,6 +458,7 @@ export function AccentColorPicker({
   secondaryValue,
   showQuickSwatches = false,
   showSecondary = true,
+  panelDivider = false,
   variant = "compact",
   value,
   radius,
@@ -530,11 +548,19 @@ export function AccentColorPicker({
 
   const paletteBody = (
     <>
-      <AccentSwatchGrid label={primarySectionLabel} selectedValue={value} onSelect={onChange} />
+      <AccentSwatchGrid
+        label={primarySectionLabel}
+        selectedValue={value}
+        showSelectedValue={variant === "panel"}
+        hideLabel={variant === "panel"}
+        onSelect={onChange}
+      />
       {showSecondary ? (
         <AccentSwatchGrid
           label={secondarySectionLabel}
           selectedValue={resolvedSecondary}
+          showSelectedValue={variant === "panel"}
+          hideLabel={variant === "panel"}
           onSelect={(next) => onSecondaryChange?.(next)}
         />
       ) : null}
@@ -555,7 +581,7 @@ export function AccentColorPicker({
               } as CSSProperties
             }
           />
-          <p className={styles.summary}>{selectedLabel}</p>
+          <p className={styles.summary}>{label}</p>
           <button
             aria-label={`Reset ${label.toLowerCase()} colours`}
             className={styles.reset}
@@ -568,6 +594,7 @@ export function AccentColorPicker({
           </button>
         </div>
         {paletteBody}
+        {panelDivider ? <hr aria-hidden="true" className={styles.panelDivider} /> : null}
       </div>
     );
   }

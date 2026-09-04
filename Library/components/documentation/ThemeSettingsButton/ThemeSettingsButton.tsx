@@ -29,6 +29,7 @@ export type OpusThemeExport = {
   base?: string;
   accent: string;
   accentSecondary: string;
+  tertiaryAccent: string;
   tileAccent: string;
   tileAccentSecondary: string;
 };
@@ -43,6 +44,7 @@ type ThemeSettingsButtonProps = {
   onBaseChange?: (value: string) => void;
   onAccentChange: (value: string) => void;
   onAccentSecondaryChange: (value: string) => void;
+  onTertiaryAccentChange?: (value: string) => void;
   onFontFamilyChange?: (value: string) => void;
   onResetAccent: () => void;
   onResetTileAccent: () => void;
@@ -54,6 +56,7 @@ type ThemeSettingsButtonProps = {
   themeLabel?: string;
   tileAccent: string;
   tileAccentSecondary: string;
+  tertiaryAccent?: string;
 };
 
 type WindowRect = {
@@ -154,6 +157,7 @@ function buildThemeExport({
   base,
   accent,
   accentSecondary,
+  tertiaryAccent,
   fontFamily,
   theme,
   tileAccent,
@@ -162,6 +166,7 @@ function buildThemeExport({
   ThemeSettingsButtonProps,
   | "accent"
   | "accentSecondary"
+  | "tertiaryAccent"
   | "base"
   | "fontFamily"
   | "theme"
@@ -175,6 +180,7 @@ function buildThemeExport({
     base: base ?? "#64748b",
     accent,
     accentSecondary,
+    tertiaryAccent: tertiaryAccent ?? "#0ea5e9",
     tileAccent,
     tileAccentSecondary,
   };
@@ -184,12 +190,14 @@ export function ThemeSettingsButton({
   base = "#64748b",
   accent,
   accentSecondary,
+  tertiaryAccent = "#0ea5e9",
   compact = false,
   fontFamily,
   idPrefix,
   onBaseChange,
   onAccentChange,
   onAccentSecondaryChange,
+  onTertiaryAccentChange,
   onResetAccent,
   onResetTileAccent,
   onTileAccentChange,
@@ -215,6 +223,7 @@ export function ThemeSettingsButton({
           base,
           accent,
           accentSecondary,
+          tertiaryAccent,
           fontFamily,
           theme,
           tileAccent,
@@ -223,7 +232,7 @@ export function ThemeSettingsButton({
         null,
         2,
       ),
-    [accent, accentSecondary, base, fontFamily, theme, tileAccent, tileAccentSecondary],
+    [accent, accentSecondary, base, fontFamily, tertiaryAccent, theme, tileAccent, tileAccentSecondary],
   );
 
   useEffect(() => {
@@ -376,9 +385,14 @@ export function ThemeSettingsButton({
           label: "Secondary accent",
           color: accentSecondary,
         },
+        {
+          id: "accent-tertiary",
+          label: "Tertiary accent",
+          color: tertiaryAccent,
+        },
       ],
     }),
-    [accent, accentSecondary, base],
+    [accent, accentSecondary, base, tertiaryAccent],
   );
 
   const handleSaveTheme = useCallback(async () => {
@@ -459,7 +473,7 @@ export function ThemeSettingsButton({
                   Colour settings
                 </h2>
                 <p className={styles.windowDescription} id={descriptionId}>
-                  Drag to move · resize from edges · Save Theme exports JSON
+                  Drag to move · resize from edges · Save Theme copies and downloads portable JSON
                 </p>
               </div>
               <button
@@ -494,6 +508,7 @@ export function ThemeSettingsButton({
                       id={`${idPrefix}-base-picker`}
                       label="Base"
                       primarySectionLabel="Base"
+                      panelDivider
                       showSecondary={false}
                       value={base}
                       variant="panel"
@@ -502,16 +517,29 @@ export function ThemeSettingsButton({
                   ) : null}
                   <AccentColorPicker
                     id={`${idPrefix}-accent-picker`}
-                    label="Base UI"
+                    label="Accent"
                     primarySectionLabel="Accent"
                     secondarySectionLabel="Secondary accent"
                     secondaryValue={accentSecondary}
+                    panelDivider
                     value={accent}
                     variant="panel"
                     onChange={onAccentChange}
                     onReset={onResetAccent}
                     onSecondaryChange={onAccentSecondaryChange}
                   />
+                  {onTertiaryAccentChange ? (
+                    <AccentColorPicker
+                      defaultValue="#0ea5e9"
+                      id={`${idPrefix}-tertiary-accent-picker`}
+                      label="Tertiary accent"
+                      primarySectionLabel="Tertiary accent"
+                      showSecondary={false}
+                      value={tertiaryAccent}
+                      variant="panel"
+                      onChange={onTertiaryAccentChange}
+                    />
+                  ) : null}
                 </section>
 
                 <section className={styles.section}>

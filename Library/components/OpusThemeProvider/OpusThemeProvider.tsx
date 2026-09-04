@@ -49,6 +49,8 @@ export type OpusThemeProviderProps = {
   applyToDocument?: boolean;
   /** Global font family or complete CSS font stack exposed through the Opus font token. */
   fontFamily?: string;
+  /** Third global accent exposed to every Opus component as `--opus-accent-tertiary`. */
+  tertiaryAccent?: string;
 };
 
 function resolveFontStack(fontFamily: string) {
@@ -62,6 +64,7 @@ export function OpusThemeProvider({
   theme,
   applyToDocument = true,
   fontFamily,
+  tertiaryAccent,
 }: OpusThemeProviderProps) {
   useEffect(() => {
     if (!applyToDocument || typeof document === "undefined") {
@@ -71,9 +74,13 @@ export function OpusThemeProvider({
     const root = document.documentElement;
     const previous = root.getAttribute("data-theme");
     const previousFont = root.style.getPropertyValue("--opus-font-family");
+    const previousTertiaryAccent = root.style.getPropertyValue("--opus-accent-tertiary");
     root.setAttribute("data-theme", theme);
     if (fontFamily) {
       root.style.setProperty("--opus-font-family", resolveFontStack(fontFamily));
+    }
+    if (tertiaryAccent) {
+      root.style.setProperty("--opus-accent-tertiary", tertiaryAccent);
     }
 
     return () => {
@@ -89,8 +96,15 @@ export function OpusThemeProvider({
           root.style.removeProperty("--opus-font-family");
         }
       }
+      if (tertiaryAccent) {
+        if (previousTertiaryAccent) {
+          root.style.setProperty("--opus-accent-tertiary", previousTertiaryAccent);
+        } else {
+          root.style.removeProperty("--opus-accent-tertiary");
+        }
+      }
     };
-  }, [applyToDocument, fontFamily, theme]);
+  }, [applyToDocument, fontFamily, tertiaryAccent, theme]);
 
   return <OpusThemeContext.Provider value={theme}>{children}</OpusThemeContext.Provider>;
 }

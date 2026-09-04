@@ -1183,5 +1183,17 @@ export const commitLog: CommitEntry[] = [
     shortHash: "d26759b",
     committedAt: "2026-09-03",
     summary: "chore: release opus-react@0.6.36",
+  },
+  {
+    hash: "ba3e9b91903c476e8b7143b80b9073a139b6938f",
+    shortHash: "ba3e9b9",
+    committedAt: "2026-09-04",
+    summary: "feat: release SearchBox in opus-react@0.6.37",
+  },
+  {
+    hash: "570179aa8a1282e79c4ee0a177bab077c5b2e56a",
+    shortHash: "570179a",
+    committedAt: "2026-09-04",
+    summary: "feat: release theme accents in opus-react@0.6.38",
   }
 ].reverse();
