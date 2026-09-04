@@ -1,5 +1,5 @@
 .page {
-  width: min(1120px, 100%);
+  width: min(100%, var(--opus-max-width));
   margin: 0 auto;
   padding: 72px 24px 96px;
 }

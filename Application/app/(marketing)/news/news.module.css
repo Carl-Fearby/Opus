@@ -1,4 +1,4 @@
-.page { width: min(1120px, 100%); margin: 0 auto; padding: 80px 24px 104px; }
+.page { width: min(100%, var(--opus-max-width)); margin: 0 auto; padding: 80px 24px 104px; }
 .hero { max-width: 790px; margin-bottom: 56px; }
 .eyebrow, .meta span, .number { color: var(--opus-cyan); font-family: var(--font-ibm-plex-mono), monospace; font-size: .78rem; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; }
 .hero h1 { margin: 12px 0 0; font-size: clamp(3rem, 6vw, 5.8rem); letter-spacing: -.065em; line-height: .94; }
