@@ -5,7 +5,7 @@
 
 .inner {
   margin: 0 auto;
-  max-width: 1240px;
+  max-width: var(--opus-max-width);
 }
 
 .intro {

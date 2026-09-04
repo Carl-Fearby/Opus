@@ -4,13 +4,13 @@
 }
 
 .inner {
-  width: 100%;
+  width: min(100%, var(--opus-max-width));
   margin: 0 auto;
   padding: 88px 24px 72px;
 }
 
 .copy {
-  width: 100%;
+  max-width: 760px;
 }
 
 .eyebrow {
@@ -115,7 +115,7 @@
 
 .preview {
   position: relative;
-  width: 100%;
+  width: min(100%, var(--opus-max-width));
   margin-top: 48px;
 }
 
