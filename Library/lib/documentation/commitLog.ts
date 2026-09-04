@@ -1231,5 +1231,23 @@ export const commitLog: CommitEntry[] = [
     shortHash: "adef295",
     committedAt: "2026-09-04",
     summary: "feat: release opus-react@0.6.40 — responsive previews",
+  },
+  {
+    hash: "7ad3b0666c40d6ae044cf96abbb131ee6b805914",
+    shortHash: "7ad3b06",
+    committedAt: "2026-09-04",
+    summary: "chore: sync version history for opus-react@0.6.40",
+  },
+  {
+    hash: "f44ca3b99621887cf0bcf1d9ba490579b9a9576a",
+    shortHash: "f44ca3b",
+    committedAt: "2026-09-04",
+    summary: "chore: update Application to opus-react@0.6.40",
+  },
+  {
+    hash: "f5527ac08a50a71136f49941fcbb19462c84660e",
+    shortHash: "f5527ac",
+    committedAt: "2026-09-04",
+    summary: "feat: release opus-react@0.7.0 — visual theming milestone",
   }
 ].reverse();
