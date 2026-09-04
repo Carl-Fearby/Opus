@@ -397,6 +397,7 @@ const formsControls: Record<(typeof formsControlOrder)[number], ControlDefinitio
     sourceFiles: ["components/fields/TextField/TextField.tsx", "components/fields/TextField/TextField.module.css"],
     usesFieldShell: true,
   },
+  "search-box": { slug: "search-box", title: "Search Box", category: "forms", componentName: "SearchBox", description: "Unified search field with an optional category filter and submit action.", sourceFiles: ["components/SearchBox/SearchBox.tsx", "components/SearchBox/SearchBox.module.css"], usesFieldShell: false },
   "file-upload": {
     slug: "file-upload",
     title: "File upload",

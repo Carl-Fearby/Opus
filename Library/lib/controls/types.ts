@@ -81,6 +81,7 @@ export type ControlSlug =
   | "email-input"
   | "url-input"
   | "search-input"
+  | "search-box"
   | "file-upload"
   | "image-crop-upload"
   | "hidden-input"
@@ -256,6 +257,8 @@ export type TextInputSettings = BaseFieldSettings & NativeInputSettings & {
   placeholder: string;
   placeholderEnabled: boolean;
 };
+
+export type SearchBoxSettings = BaseFieldSettings & { value: string; categories: string; category: string; placeholder: string; searchLabel: string; showLabel: boolean };
 
 export type TextareaSettings = BaseFieldSettings & NativeInputSettings & {
   value: string;
@@ -1740,6 +1743,7 @@ export type ControlSettingsBySlug = {
   "email-input": ValueFieldSettings;
   "url-input": ValueFieldSettings;
   "search-input": ValueFieldSettings;
+  "search-box": SearchBoxSettings;
   "file-upload": FileUploadSettings;
   "image-crop-upload": ImageCropUploadSettings;
   "hidden-input": HiddenInputSettings;
@@ -1997,6 +2001,7 @@ export const formsControlOrder = [
   "email-input",
   "url-input",
   "search-input",
+  "search-box",
   "file-upload",
   "image-crop-upload",
   "hidden-input",

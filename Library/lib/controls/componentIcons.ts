@@ -293,6 +293,7 @@ const componentIcons: Record<string, IconDefinition> = {
   "range-slider": faSliders,
   "reset-button": faRotateLeft,
   "search-input": faMagnifyingGlass,
+  "search-box": faMagnifyingGlass,
   select: faCaretDown,
   "show-more": faEllipsis,
   "chat-bubble": faMessage,

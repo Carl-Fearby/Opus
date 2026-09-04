@@ -624,10 +624,18 @@ export const versionLog: VersionEntry[] = [
   {
     version: "0.6.36",
     releasedAt: "2026-09-03",
-    commit: "overlay-0.6.36",
-    commitShort: "overlay",
+    commit: "d26759be8958b941cc071501c674d6d6c63a1d4d",
+    commitShort: "d26759b",
     summary: "Publish the preview and browser-regression fixes as an installable patch release.",
     changes: ["Release the verified preview-surface, lint, type, and browser-interaction corrections to npm after the reserved 0.6.35 upload did not become publicly available.","Publish opus-react 0.6.36 for application and external consumer installation."],
+  },
+  {
+    version: "0.6.37",
+    releasedAt: "2026-09-04",
+    commit: "overlay-0.6.37",
+    commitShort: "overlay",
+    summary: "Search Box: a configurable, accessible unified search control.",
+    changes: ["Add the exported SearchBox control with a search field, optional category list, and primary search action.","Add Forms catalogue documentation, generated usage, live preview output, configuration controls, and public package exports.","Support Opus field settings including optional labels, radius, background, gradient, density, validation, and help text.","Use an Emoji Picker-style glass category menu while preserving the search control's shared outer focus and radius treatment.","Publish opus-react 0.6.37."],
   }
 ].reverse();
 

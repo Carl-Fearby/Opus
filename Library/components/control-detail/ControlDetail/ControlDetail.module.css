@@ -1317,5 +1317,6 @@
 
 .globalActionPreview .dialogResult{display:none}
 .globalActionStatus{margin:12px 0 0;padding-top:10px;border-top:1px solid var(--opus-border);color:var(--opus-text-muted);font-size:.85rem;font-weight:700}
+.previewJsonOutput{margin-top:12px;color:var(--opus-text-muted);font-size:.85rem}
 .globalActionStatus>p{margin:0}
 .globalDataOutput{display:grid;gap:8px;margin-top:10px}

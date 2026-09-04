@@ -79,6 +79,7 @@ import {
   TextAreaField,
   RichTextField,
   TextField,
+  SearchBox,
   ThemeToggleField,
   Tooltip,
   Dialog,
@@ -591,6 +592,7 @@ function fieldProps(settings: BaseFieldSettings) {
     mode: settings.mode,
     radius: settings.radius,
     transparency: settings.transparency ?? "standard",
+    gradient: settings.gradient,
     required: settings.required,
     size: settings.size ?? "md",
   };
@@ -3260,6 +3262,11 @@ function ControlPreviewContent({
           }
         />
       );
+    }
+    case "search-box": {
+      const s = settings as ControlSettingsBySlug["search-box"];
+      const categories = s.categories.split(",").map((label) => ({ label: label.trim(), value: label.trim().toLowerCase().replaceAll(" ", "-") }));
+      return <SearchBox {...fieldProps(s)} labelVisuallyHidden={!s.showLabel} categories={categories} category={categories.find((item) => item.label === s.category)?.value} onCategoryChange={(value) => onSettingsChange({ ...s, category: categories.find((item) => item.value === value)?.label ?? s.category } as ControlSettings)} onSearch={() => undefined} onValueChange={(value) => onSettingsChange({ ...s, value } as ControlSettings)} placeholder={s.placeholder} searchLabel={s.searchLabel} value={s.value} />;
     }
     case "textarea": {
       const s = settings as ControlSettingsBySlug["textarea"];

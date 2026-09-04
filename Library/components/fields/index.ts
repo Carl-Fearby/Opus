@@ -95,6 +95,8 @@ export { TextAreaField } from "./TextAreaField";
 export { RichTextField } from "./RichTextField";
 export { TextField } from "./TextField";
 export type { TextFieldProps } from "./TextField";
+export { SearchBox } from "../SearchBox";
+export type { SearchBoxCategory, SearchBoxProps } from "../SearchBox";
 export type { TextAreaFieldProps } from "./TextAreaField";
 export type { NativeInputProps, NativeTextAreaProps, TextEntryBehaviourProps } from "./shared/nativeFieldProps";
 export { ThemeToggleField } from "./ThemeToggleField";

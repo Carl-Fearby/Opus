@@ -151,14 +151,14 @@ function CommonFieldSettings({
         ]}
       />
       <SettingSelect
-        label="Transparency"
+        label="Background"
         value={settings.transparency ?? "standard"}
         onChange={(transparency) =>
           onChange({ ...settings, transparency: transparency as typeof settings.transparency })
         }
         options={[
-          { label: "None", value: "none" },
-          { label: "Standard", value: "standard" },
+          { label: "Transparent", value: "none" },
+          { label: "Solid", value: "standard" },
           { label: "Glass", value: "glass" },
         ]}
       />
@@ -638,6 +638,19 @@ export function ControlSettingsPanel({
           ) : null}
         </div>
       );
+    }
+    case "search-box": {
+      const s = settings as ControlSettingsBySlug["search-box"];
+      const categoryOptions = s.categories.split(",").map((item) => item.trim()).filter(Boolean).map((label) => ({ label, value: label }));
+      return <div className={shellStyles.settingsGrid}>
+        <CommonFieldSettings settings={s} onChange={(next) => onChange({ ...s, ...next } as ControlSettings)} />
+        <SettingToggle label="Show label" checked={s.showLabel} onChange={(showLabel) => onChange({ ...s, showLabel } as ControlSettings)} />
+        <SettingInput label="Search query" value={s.value} onChange={(value) => onChange({ ...s, value } as ControlSettings)} />
+        <SettingInput label="Placeholder" value={s.placeholder} onChange={(placeholder) => onChange({ ...s, placeholder } as ControlSettings)} />
+        <SettingInput label="Button label" value={s.searchLabel} onChange={(searchLabel) => onChange({ ...s, searchLabel } as ControlSettings)} />
+        <SettingSelect label="Selected category" value={s.category} options={categoryOptions} onChange={(category) => onChange({ ...s, category } as ControlSettings)} />
+        <div className={shellStyles.settingsFullWidth}><SettingTextarea label="Categories (comma-separated)" value={s.categories} onChange={(categories) => onChange({ ...s, categories, category: categories.split(",").map((item) => item.trim()).filter(Boolean).includes(s.category) ? s.category : categories.split(",")[0]?.trim() ?? "" } as ControlSettings)} /></div>
+      </div>;
     }
     case "textarea": {
       const s = settings as ControlSettingsBySlug["textarea"];

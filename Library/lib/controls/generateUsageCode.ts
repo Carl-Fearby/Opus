@@ -790,6 +790,13 @@ return (
     case "time-range-picker": return `${usageClientPrefix()}\n${importLine(["TimeRangeField"])}\n\nconst [value, setValue] = useState({ start: "09:00", end: "17:30" });\n\nreturn <TimeRangeField id="hours" label="Working hours" value={value} onChange={setValue} />;`;
     case "signature-pad": return `${usageClientPrefix(false)}\n${importLine(["SignaturePad"])}\n\nreturn <SignaturePad onChange={(dataUrl) => console.log(dataUrl)} onClear={() => console.log("Cleared")} />;`;
     case "diff-viewer": return `${usageClientPrefix(false)}\n${importLine(["DiffViewer"])}\n\nconst originalCode = ${codeLines(brokenReactCode)};\n\nconst correctedCode = ${codeLines(correctedReactCode)};\n\nreturn (\n  <DiffViewer\n    before={originalCode}\n    after={correctedCode}\n    beforeLabel="Original code"\n    afterLabel="Corrected code"\n    defaultView="unified"\n  />\n);`;
+    case "search-box": {
+      const s = settings as ControlSettingsBySlug["search-box"];
+      const categories = s.categories.split(",").map((label) => ({ label: label.trim(), value: label.trim().toLowerCase().replaceAll(" ", "-") }));
+      const sharedProps = fieldProps(s).join(" ");
+      const selectedCategory = categories.find((item) => item.label === s.category)?.value ?? categories[0]?.value ?? "";
+      return `${usageClientPrefix()}\n${importLine(["SearchBox"])}\n\nconst categories = ${JSON.stringify(categories, null, 2)};\nconst [query, setQuery] = useState(${JSON.stringify(s.value)});\nconst [category, setCategory] = useState(${JSON.stringify(selectedCategory)});\n\nreturn <SearchBox ${sharedProps} labelVisuallyHidden={${!s.showLabel}} categories={categories} category={category} onCategoryChange={setCategory} placeholder=${quote(s.placeholder)} searchLabel=${quote(s.searchLabel)} value={query} onValueChange={setQuery} onSearch={(search, selectedCategory) => console.log({ search, category: selectedCategory })} />;`;
+    }
     case "text-input": {
       const s = settings as ControlSettingsBySlug["text-input"];
       const state = toStateName(s.label);
