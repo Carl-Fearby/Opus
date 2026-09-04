@@ -1249,5 +1249,65 @@ export const commitLog: CommitEntry[] = [
     shortHash: "f5527ac",
     committedAt: "2026-09-04",
     summary: "feat: release opus-react@0.7.0 — visual theming milestone",
+  },
+  {
+    hash: "2a36214b4b34bbfedf46f5d983c706cee641d75c",
+    shortHash: "2a36214",
+    committedAt: "2026-09-04",
+    summary: "chore: sync version history for opus-react@0.7.0",
+  },
+  {
+    hash: "da27f11e2ea9b8c132d1b72bd6f430e296d29093",
+    shortHash: "da27f11",
+    committedAt: "2026-09-04",
+    summary: "fix: align preview toolbar control heights",
+  },
+  {
+    hash: "b9c8e5a018efa84bc9c5300d363c31dfee690ea0",
+    shortHash: "b9c8e5a",
+    committedAt: "2026-09-04",
+    summary: "chore: update Application to opus-react@0.7.0",
+  },
+  {
+    hash: "11c2b047b7ea437bf247c8ffd7923af0853b1ba4",
+    shortHash: "11c2b04",
+    committedAt: "2026-09-04",
+    summary: "fix: align preview platform segment heights",
+  },
+  {
+    hash: "8e539018a8ef89b9252ea7ac50f1e83720515b51",
+    shortHash: "8e53901",
+    committedAt: "2026-09-04",
+    summary: "chore: update Application to opus-react@0.7.1",
+  },
+  {
+    hash: "c1df9424a83530dd283c29a3489fa6d1f61f7523",
+    shortHash: "c1df942",
+    committedAt: "2026-09-04",
+    summary: "feat: publish Opus 0.7 launch story",
+  },
+  {
+    hash: "98c8ed7ddc24fc02628d20da732181034a8d1e8a",
+    shortHash: "98c8ed7",
+    committedAt: "2026-09-04",
+    summary: "feat: add backfilled marketing news stories",
+  },
+  {
+    hash: "60c4f064d6fb91042fe64e01dcb1bed8386d6baf",
+    shortHash: "60c4f06",
+    committedAt: "2026-09-04",
+    summary: "fix: make news stories navigable",
+  },
+  {
+    hash: "bf2b4c6538a25ccc88c84d72344fce8ddcd6d89a",
+    shortHash: "bf2b4c6",
+    committedAt: "2026-09-04",
+    summary: "feat: expand backfilled Opus news stories",
+  },
+  {
+    hash: "326fccb82f606316560de964bbbc03dcd58cb1e1",
+    shortHash: "326fccb",
+    committedAt: "2026-09-04",
+    summary: "fix: simplify backfilled news article layout",
   }
 ].reverse();
