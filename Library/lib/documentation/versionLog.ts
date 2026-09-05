@@ -684,6 +684,14 @@ export const versionLog: VersionEntry[] = [
     commitShort: "229e1dd",
     summary: "International currency workflows and a dedicated currency selector.",
     changes: ["Add CurrencySelectField: a searchable ISO 4217 selector with currency name, country or region, flag, and display sign in every row.","Ensure CurrencySelectField returns a compact ISO currency code while its rich selected row remains readable.","Upgrade CurrencyField with territory-aware locale formatting, correct decimal precision, grouping, sign placement, and blur-safe editing.","Publish opus-react 0.7.2."],
+  },
+  {
+    version: "0.7.3",
+    releasedAt: "2026-09-05",
+    commit: "088fe85612d328c6a40d1b759e5f88e464d66b64",
+    commitShort: "088fe85",
+    summary: "Cookie Consent banner with persistent visitor choices.",
+    changes: ["Add CookieConsent, a dismissible consent banner with accept, reject, and optional cookie-policy actions.","Persist a visitor choice for one year using both localStorage and a first-party SameSite=Lax cookie, with helpers to read or reset the saved choice.","Support full-width, compact bottom placement plus configurable labels, policy URL, placement, and dismissal behaviour.","Publish opus-react 0.7.3."],
   }
 ].reverse();
 

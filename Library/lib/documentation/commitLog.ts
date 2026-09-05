@@ -1333,5 +1333,71 @@ export const commitLog: CommitEntry[] = [
     shortHash: "229e1dd",
     committedAt: "2026-09-05",
     summary: "chore: update Application to opus-react@0.7.2",
+  },
+  {
+    hash: "5917ed867f268b8daa88ee492e2559b8c9a4cc63",
+    shortHash: "5917ed8",
+    committedAt: "2026-09-05",
+    summary: "chore: refresh release history after 0.7.2 consumer update",
+  },
+  {
+    hash: "0129258df4202d661f385db60e09ccd048dbdb61",
+    shortHash: "0129258",
+    committedAt: "2026-09-05",
+    summary: "feat: link marketing stories to documented components",
+  },
+  {
+    hash: "9df04f486b37dc951d6448dfafb9859f2a3e2e26",
+    shortHash: "9df04f4",
+    committedAt: "2026-09-05",
+    summary: "feat: share the homepage Background Blobs component",
+  },
+  {
+    hash: "a568063e24c9255d7199beb15e2cd22032245313",
+    shortHash: "a568063",
+    committedAt: "2026-09-05",
+    summary: "feat: improve Opus marketing discovery",
+  },
+  {
+    hash: "3d3ff68e2c6a89368eb757471d99a4ad320356d8",
+    shortHash: "3d3ff68",
+    committedAt: "2026-09-05",
+    summary: "docs: expand Background Blobs story",
+  },
+  {
+    hash: "d485ca5843effa2894a697b5fec772d4e4704a16",
+    shortHash: "d485ca5",
+    committedAt: "2026-09-05",
+    summary: "fix: keep marketing component count in sync",
+  },
+  {
+    hash: "54fad2deffcb138a2d6faa60cd5e3b36d37d062b",
+    shortHash: "54fad2d",
+    committedAt: "2026-09-05",
+    summary: "style: constrain marketing content width",
+  },
+  {
+    hash: "d0f63c9bd61f999e1cca4fb3a6e5820ee7659214",
+    shortHash: "d0f63c9",
+    committedAt: "2026-09-05",
+    summary: "style: unify marketing page widths",
+  },
+  {
+    hash: "660bc361f8f1c6d658b8d07d35d06b5987e38eab",
+    shortHash: "660bc36",
+    committedAt: "2026-09-05",
+    summary: "feat: share why Opus exists",
+  },
+  {
+    hash: "f388754301989384228f7a9f4eb8b85fa23e282e",
+    shortHash: "f388754",
+    committedAt: "2026-09-05",
+    summary: "feat: enrich marketing search metadata",
+  },
+  {
+    hash: "088fe85612d328c6a40d1b759e5f88e464d66b64",
+    shortHash: "088fe85",
+    committedAt: "2026-09-05",
+    summary: "feat: release opus-react@0.7.3 — Cookie Consent",
   }
 ].reverse();
