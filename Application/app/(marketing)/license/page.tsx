@@ -4,6 +4,7 @@ import styles from "./license.module.css";
 export const metadata: Metadata = {
   title: "MIT License",
   description: "The OSI-approved MIT License governing the Opus open-source project.",
+  alternates: { canonical: "/license" },
 };
 
 export default function LicensePage() {

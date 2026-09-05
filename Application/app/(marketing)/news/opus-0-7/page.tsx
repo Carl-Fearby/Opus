@@ -29,9 +29,35 @@ const componentExamples = [
   { name: "Search Box", href: "/documentation/components/search-box", code: `<SearchBox\n  categories={["All", "Documentation", "Components"]}\n  onSearch={({ query, category }) => search(query, category)}\n/>` },
 ];
 
+const structuredData = {
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "NewsArticle",
+      headline: "Design the system, then take it with you.",
+      description:
+        "Visual Theme Designer, global component defaults, responsive previews, and the new Search Box arrive in the Opus 0.7 release.",
+      datePublished: "2026-09-04T00:00:00.000Z",
+      dateModified: "2026-09-04T00:00:00.000Z",
+      mainEntityOfPage: { "@type": "WebPage", "@id": "https://project-opus.netlify.app/news/opus-0-7" },
+      author: { "@type": "Person", name: "Carl Fearby" },
+      publisher: { "@type": "Organization", name: "Opus", url: "https://project-opus.netlify.app" },
+    },
+    {
+      "@type": "BreadcrumbList",
+      itemListElement: [
+        { "@type": "ListItem", position: 1, name: "Home", item: "https://project-opus.netlify.app" },
+        { "@type": "ListItem", position: 2, name: "News", item: "https://project-opus.netlify.app/news" },
+        { "@type": "ListItem", position: 3, name: "Opus 0.7", item: "https://project-opus.netlify.app/news/opus-0-7" },
+      ],
+    },
+  ],
+};
+
 export default function OpusZeroSevenNewsPage() {
   return (
     <article className={styles.page}>
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }} />
       <nav aria-label="Breadcrumb" className={styles.breadcrumbs}>
         <Link href="/">Home</Link><span>/</span><Link href="/news">News</Link><span>/</span><span aria-current="page">Opus 0.7</span>
       </nav>

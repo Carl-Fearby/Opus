@@ -5,6 +5,7 @@ export const metadata: Metadata = {
   title: "Code of Conduct",
   description:
     "The Contributor Covenant Code of Conduct for the Opus open-source community.",
+  alternates: { canonical: "/code-of-conduct" },
 };
 
 export default function CodeOfConductPage() {

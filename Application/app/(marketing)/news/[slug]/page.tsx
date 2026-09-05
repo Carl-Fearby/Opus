@@ -29,8 +29,33 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 export default async function StoryPage({ params }: Props) {
   const story = storyBySlug.get((await params).slug);
   if (!story || story.slug === "opus-0-7") notFound();
+  const storyUrl = `https://project-opus.netlify.app/news/${story.slug}`;
+  const structuredData = {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "NewsArticle",
+        headline: story.title,
+        description: story.standfirst,
+        datePublished: `${story.date}T00:00:00.000Z`,
+        dateModified: `${story.date}T00:00:00.000Z`,
+        mainEntityOfPage: { "@type": "WebPage", "@id": storyUrl },
+        author: { "@type": "Person", name: "Carl Fearby" },
+        publisher: { "@type": "Organization", name: "Opus", url: "https://project-opus.netlify.app" },
+      },
+      {
+        "@type": "BreadcrumbList",
+        itemListElement: [
+          { "@type": "ListItem", position: 1, name: "Home", item: "https://project-opus.netlify.app" },
+          { "@type": "ListItem", position: 2, name: "News", item: "https://project-opus.netlify.app/news" },
+          { "@type": "ListItem", position: 3, name: story.title, item: storyUrl },
+        ],
+      },
+    ],
+  };
   return (
     <article className={styles.page}>
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }} />
       <nav aria-label="Breadcrumb" className={styles.breadcrumbs}>
         <Link href="/">Home</Link><span>/</span><Link href="/news">News</Link><span>/</span><span aria-current="page">{story.edition}</span>
       </nav>

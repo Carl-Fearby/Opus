@@ -7,11 +7,53 @@ export const metadata: Metadata = {
   description:
     "A note from Carl Fearby on why Opus is free, open source, and built in public: to share useful work, welcome thoughtful feedback, and take part in the wider web community.",
   alternates: { canonical: "/why-opus" },
+  openGraph: {
+    title: "Why Opus exists — a note from Carl Fearby",
+    description:
+      "Why Opus is free, open source, and built in public: to share useful work, welcome thoughtful feedback, and take part in the wider web community.",
+    url: "/why-opus",
+  },
+  twitter: {
+    card: "summary",
+    title: "Why Opus exists — a note from Carl Fearby",
+    description:
+      "A personal note on sharing useful work, welcoming critique, and joining the wider web community.",
+  },
+};
+
+const structuredData = {
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "Person",
+      name: "Carl Fearby",
+      url: "https://project-opus.netlify.app/why-opus",
+      sameAs: ["https://github.com/Carl-Fearby"],
+      worksFor: { "@type": "Organization", name: "Opus", url: "https://project-opus.netlify.app" },
+    },
+    {
+      "@type": "AboutPage",
+      name: "Why Opus exists",
+      url: "https://project-opus.netlify.app/why-opus",
+      description:
+        "A personal note from Carl Fearby on why Opus is free, open source, and built in public.",
+      author: { "@type": "Person", name: "Carl Fearby" },
+      about: { "@type": "SoftwareApplication", name: "opus-react" },
+    },
+    {
+      "@type": "BreadcrumbList",
+      itemListElement: [
+        { "@type": "ListItem", position: 1, name: "Home", item: "https://project-opus.netlify.app" },
+        { "@type": "ListItem", position: 2, name: "Why Opus", item: "https://project-opus.netlify.app/why-opus" },
+      ],
+    },
+  ],
 };
 
 export default function WhyOpusPage() {
   return (
     <article className={styles.page}>
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }} />
       <header className={styles.hero}>
         <p className={styles.eyebrow}>A personal note from Carl Fearby</p>
         <h1>Why Opus exists.</h1>
