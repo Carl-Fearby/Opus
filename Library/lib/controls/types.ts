@@ -144,6 +144,7 @@ export type ControlSlug =
   | "command-palette"
   | "alert"
   | "toast"
+  | "cookie-consent"
   | "tabs"
   | "card"
   | "panel"
@@ -622,6 +623,20 @@ export type ToastSettings = {
   autoDismissEnabled: boolean;
   positionVertical: ToastVerticalPosition;
   positionHorizontal: ToastHorizontalPosition;
+};
+
+export type CookieConsentSettings = {
+  acceptLabel: string;
+  description: string;
+  dismissible: boolean;
+  policyHref: string;
+  policyLabel: string;
+  placement: "bottom-left" | "bottom-right" | "bottom";
+  rejectLabel: string;
+  showPolicyLink: boolean;
+  showRejectButton: boolean;
+  title: string;
+  visible: boolean;
 };
 
 export type AccordionSettings = {
@@ -1800,6 +1815,7 @@ export type ControlSettingsBySlug = {
   popover: PopoverSettings;
   alert: AlertSettings;
   toast: ToastSettings;
+  "cookie-consent": CookieConsentSettings;
   tabs: TabsSettings;
   card: CardSettings;
   panel: PanelSettings;

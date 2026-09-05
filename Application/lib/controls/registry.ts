@@ -868,6 +868,15 @@ const rawControls: ControlDefinition[] = [
     usesFieldShell: false,
   },
   {
+    slug: "cookie-consent",
+    title: "Cookie consent",
+    category: "overlays",
+    componentName: "CookieConsent",
+    description: "Dismissible, persisted cookie preference notice with accept and reject actions.",
+    sourceFiles: ["components/CookieConsent/CookieConsent.tsx", "components/CookieConsent/CookieConsent.module.css"],
+    usesFieldShell: false,
+  },
+  {
     slug: "tabs",
     title: "Tabs",
     category: "content",

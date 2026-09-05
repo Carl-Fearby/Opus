@@ -24,6 +24,7 @@ import { continueWithApple, continueWithGoogle } from "@/lib/auth/socialAuth";
 import { PersistentVideoPlayer, VideoPlayer } from "@/components/VideoPlayer";
 import { AudioPlayer } from "@/components/AudioPlayer";
 import { OtpField } from "opus-react";
+import { CookieConsent } from "opus-react";
 import { CoverViewportBlobs } from "./BodyPortal";
 import { BackgroundBlobsThemeLab } from "@/components/BackgroundBlobsThemeLab";
 import {DiffPreview,InfiniteSelectableListPreview,MentionInputPreview,ProductTourPreview,RecurrencePreview,SignaturePreview,TimeRangePreview,VirtualListPreview} from "./NewComponentPreviews";
@@ -4073,6 +4074,13 @@ function ControlPreviewContent({
     case "toast": {
       const s = settings as ControlSettingsBySlug["toast"];
       return <ToastPreviewDemo settings={s} />;
+    }
+    case "cookie-consent": {
+      const s = settings as ControlSettingsBySlug["cookie-consent"];
+      if (!s.visible) {
+        return <p className={styles.dismissedHint}>Cookie notice dismissed. Turn on “Show notice” in settings to preview it again.</p>;
+      }
+      return <CookieConsent acceptLabel={s.acceptLabel} description={s.description} dismissible={s.dismissible} open={s.visible} persist={false} placement={s.placement} storageKey="opus-cookie-consent-catalogue-preview" policyHref={s.showPolicyLink ? s.policyHref : undefined} policyLabel={s.policyLabel} rejectLabel={s.rejectLabel} showRejectButton={s.showRejectButton} title={s.title} onDismiss={() => onSettingsChange({ ...s, visible: false } as ControlSettings)} />;
     }
     case "card": {
       const s = settings as ControlSettingsBySlug["card"];

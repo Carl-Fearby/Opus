@@ -90,6 +90,7 @@ export {
   parseColourClouds,
   serializeColourClouds,
 } from "../../../components/ColourClouds";
+export * from "../../../components/CookieConsent";
 export type {
   ColourCloud,
   ColourCloudsDesignation,

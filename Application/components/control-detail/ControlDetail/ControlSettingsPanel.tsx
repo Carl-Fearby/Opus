@@ -5581,6 +5581,24 @@ export function ControlSettingsPanel({
         </div>
       );
     }
+    case "cookie-consent": {
+      const s = settings as ControlSettingsBySlug["cookie-consent"];
+      return (
+        <div className={shellStyles.settingsGrid}>
+          <SettingToggle label="Show notice" checked={s.visible} onChange={(visible) => onChange({ ...s, visible } as ControlSettings)} />
+          <SettingSelect label="Placement" value={s.placement} onChange={(placement) => onChange({ ...s, placement: placement as typeof s.placement } as ControlSettings)} options={[{ label: "Bottom right", value: "bottom-right" }, { label: "Bottom left", value: "bottom-left" }, { label: "Bottom centre", value: "bottom" }]} />
+          <SettingToggle label="Dismissible" checked={s.dismissible} onChange={(dismissible) => onChange({ ...s, dismissible } as ControlSettings)} />
+          <SettingToggle label="Show reject action" checked={s.showRejectButton} onChange={(showRejectButton) => onChange({ ...s, showRejectButton } as ControlSettings)} />
+          <SettingToggle label="Show policy link" checked={s.showPolicyLink} onChange={(showPolicyLink) => onChange({ ...s, showPolicyLink } as ControlSettings)} />
+          <div className={shellStyles.settingsFullWidth}><SettingInput label="Title" value={s.title} onChange={(title) => onChange({ ...s, title } as ControlSettings)} /></div>
+          <div className={shellStyles.settingsFullWidth}><SettingTextarea label="Description" value={s.description} onChange={(description) => onChange({ ...s, description } as ControlSettings)} /></div>
+          <SettingInput label="Accept label" value={s.acceptLabel} onChange={(acceptLabel) => onChange({ ...s, acceptLabel } as ControlSettings)} />
+          <SettingInput label="Reject label" value={s.rejectLabel} onChange={(rejectLabel) => onChange({ ...s, rejectLabel } as ControlSettings)} />
+          <SettingInput label="Policy label" value={s.policyLabel} onChange={(policyLabel) => onChange({ ...s, policyLabel } as ControlSettings)} />
+          <SettingInput label="Policy URL" value={s.policyHref} onChange={(policyHref) => onChange({ ...s, policyHref } as ControlSettings)} />
+        </div>
+      );
+    }
     case "tabs": {
       const s = settings as ControlSettingsBySlug["tabs"];
       return (

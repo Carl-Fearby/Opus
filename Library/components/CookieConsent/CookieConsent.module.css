@@ -1,0 +1,16 @@
+.notice { position: fixed; z-index: 90; display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: center; gap: 16px; width: 100vw; padding: 14px 18px; border: 0; border-top: 1px solid color-mix(in srgb, var(--opus-accent, #8f6cff) 40%, var(--opus-border, #47516d)); border-radius: 0; background: var(--opus-panel, #17152a); box-shadow: 0 -12px 30px color-mix(in srgb, #05030d 24%, transparent); color: var(--opus-text, #f5f7ff); }
+.notice[data-placement="bottom-right"] { right: 0; bottom: 0; }
+.notice[data-placement="bottom-left"] { bottom: 0; left: 0; }
+.notice[data-placement="bottom"] { right: auto; bottom: 0; left: 0; transform: none; }
+.notice[data-placement="inline"] { position: relative; right: auto; bottom: auto; left: auto; width: 100%; transform: none; }
+.copy { min-width: 0; }
+.copy h2 { margin: 0; font-size: 0.98rem; line-height: 1.25; }
+.copy p { margin: 4px 0 0; color: var(--opus-muted, #b9b8d1); font-size: 0.84rem; line-height: 1.4; }
+.copy a { display: inline-block; margin-top: 6px; color: var(--opus-accent, #8f6cff); font-size: 0.82rem; font-weight: 700; text-underline-offset: 3px; }
+.actions { display: flex; flex-wrap: wrap; gap: 8px; padding-right: 30px; }
+.actions button { flex: 0 0 auto; }
+.dismiss { position: absolute; top: 10px; right: 10px; display: inline-grid; width: 30px; height: 30px; padding: 0; border: 0; border-radius: 999px; place-items: center; background: transparent; color: var(--opus-muted, #b9b8d1); cursor: pointer; }
+.dismiss:hover { background: color-mix(in srgb, var(--opus-accent, #8f6cff) 13%, transparent); color: var(--opus-text, #f5f7ff); }
+.dismiss:focus-visible { outline: none; box-shadow: 0 0 0 3px color-mix(in srgb, var(--opus-accent, #8f6cff) 36%, transparent); }
+.dismiss svg { width: 15px; height: 15px; fill: none; stroke: currentColor; stroke-linecap: round; stroke-width: 1.75; }
+@media (max-width: 700px) { .notice { grid-template-columns: 1fr; gap: 12px; width: 100vw; padding: 16px; } .notice[data-placement="bottom-right"] { right: 0; bottom: 0; } .notice[data-placement="bottom-left"] { bottom: 0; left: 0; } .notice[data-placement="bottom"] { bottom: 0; } .actions { padding-right: 0; } .actions button { flex: 1 1 140px; } }

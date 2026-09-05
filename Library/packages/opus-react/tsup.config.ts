@@ -38,6 +38,10 @@ export default defineConfig({
     options.alias = {
       "@": rootDir,
     };
+    options.loader = {
+      ...options.loader,
+      ".png": "file",
+    };
   },
   outDir: "dist",
 });

@@ -329,6 +329,33 @@ Use this lab as a reference implementation for JSON-driven desktop applications.
   "week-picker": "## Overview\n\nWeek field with an Opus-styled ISO week list (`type=\"week\"` value format). Opens a portaled panel with year navigation and Monday–Sunday ranges — not the browser-native week dialog.\n\n## When to use\n\n- Planning weeks, reporting periods, and other ISO week values that should match Opus panel styling.\n\n## Props\n\n| Prop | Type | Default | Description |\n| --- | --- | --- | --- |\n| `value` | `string` | — | `yyyy-Www`. |\n| `onChange` | `(event) => void` | — | Change handler; `event.target.value` is the week string (or empty when cleared). |\n| `min` / `max` | `string` | — | Optional `yyyy-Www` bounds. |\n\n## Accessibility\n\n- Trigger is a labelled button with `aria-expanded` / `aria-haspopup`.\n- Week options are exposed as a listbox; Escape closes the panel.",
 };
 
+componentDocumentation["cookie-consent"] = `## Overview
+
+A cookie preference notice that disappears after a visitor chooses an option or dismisses it. The decision is saved for one year in both \`localStorage\` and a first-party \`SameSite=Lax\` cookie.
+
+## Props
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| \`storageKey\` | \`string\` | \`"opus-cookie-consent"\` | Key used for both persisted values. |
+| \`placement\` | \`CookieConsentPlacement\` | \`"bottom-right"\` | Bottom-right, bottom-left, bottom-centre, or inline placement. |
+| \`policyHref\` | \`string\` | — | Optional URL for the site’s cookie policy. No policy link is rendered unless this is supplied. |
+| \`policyLabel\` | \`string\` | \`"Cookie policy"\` | Label for the optional cookie-policy link. |
+| \`onAccept\` | \`() => void\` | — | Called after accepting. |
+| \`onReject\` | \`() => void\` | — | Called after rejecting optional cookies. |
+| \`onDismiss\` | \`(value) => void\` | — | Receives accepted, rejected, or dismissed. |
+| \`persist\` | \`boolean\` | \`true\` | Set false for a temporary preview. |
+
+## Re-showing the notice
+
+Call \`resetCookieConsent()\` with the same storage key, then render the component again.
+
+## Accessibility
+
+- Uses a labelled landmark and descriptive text.
+- Every action is a native button with a visible label.
+- Do not load optional tracking until the visitor has opted in; this component records the choice but does not load third-party scripts.`;
+
 const nativeInputDocumentationSlugs = new Set<ControlSlug>([
   "text-input",
   "email-input",

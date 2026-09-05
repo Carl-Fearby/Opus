@@ -1,6 +1,17 @@
 /** Curated opus-react release notes for npm publishes that only left chore commits in git. */
 export const releaseNotesOverlay = [
   {
+    version: "0.7.3",
+    releasedAt: "2026-09-05",
+    summary: "Cookie Consent banner with persistent visitor choices.",
+    changes: [
+      "Add CookieConsent, a dismissible consent banner with accept, reject, and optional cookie-policy actions.",
+      "Persist a visitor choice for one year using both localStorage and a first-party SameSite=Lax cookie, with helpers to read or reset the saved choice.",
+      "Support full-width, compact bottom placement plus configurable labels, policy URL, placement, and dismissal behaviour.",
+      "Publish opus-react 0.7.3.",
+    ],
+  },
+  {
     version: "0.7.2",
     releasedAt: "2026-09-05",
     summary: "International currency workflows and a dedicated currency selector.",

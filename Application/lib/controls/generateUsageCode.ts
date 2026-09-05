@@ -2148,6 +2148,19 @@ ${children}
 </Button>`,
       });
     }
+    case "cookie-consent": {
+      const s = settings as ControlSettingsBySlug["cookie-consent"];
+      const props = [
+        formatStringProp("title", s.title),
+        formatStringProp("description", s.description),
+        formatStringProp("acceptLabel", s.acceptLabel),
+        ...(s.showRejectButton ? [formatStringProp("rejectLabel", s.rejectLabel)] : [formatBoolProp("showRejectButton", false)]),
+        ...(s.showPolicyLink ? [formatStringProp("policyHref", s.policyHref), formatStringProp("policyLabel", s.policyLabel)] : []),
+        ...(s.dismissible ? [] : [formatBoolProp("dismissible", false)]),
+        ...(s.placement === "bottom-right" ? [] : [formatStringProp("placement", s.placement)]),
+      ];
+      return `${importLine(["CookieConsent"])}\n\n<CookieConsent${formatSelfClosing(props)}`;
+    }
     case "card": {
       const s = settings as ControlSettingsBySlug["card"];
       const props = [

@@ -4,8 +4,9 @@ import { memo, useEffect, useMemo, useRef, useState } from "react";
 import type { ComponentType } from "react";
 import { compilePlaygroundCode } from "@/lib/playground/compilePlaygroundCode";
 import { JsonViewer } from "opus-react";
+import { CookieConsent } from "opus-react";
 import { generateUsageCode } from "@/lib/controls/generateUsageCode";
-import type { ComponentCategory, ControlSettings, ControlSlug } from "@/lib/controls/types";
+import type { ComponentCategory, ControlSettings, ControlSettingsBySlug, ControlSlug } from "@/lib/controls/types";
 import styles from "./ControlDetail.module.css";
 
 type UsagePreviewProps = {
@@ -129,24 +130,34 @@ export function UsagePreview({
     () => generateUsageCode(slug, settings, category).full,
     [category, settings, slug],
   );
+  // The catalogue must always be able to demonstrate CookieConsent, even when
+  // this browser has already saved a real consent decision. Keep the code
+  // shown to consumers unchanged; only the compiled catalogue example is
+  // deliberately temporary.
+  const previewSource = useMemo(
+    () => slug === "cookie-consent"
+      ? source.replace("<CookieConsent", "<CookieConsent persist={false}")
+      : source,
+    [slug, source],
+  );
   const previewRefCache = useRef<{
     Component?: ComponentType;
     error?: string;
     source: string;
   } | undefined>(undefined);
 
-  if (!previewRefCache.current || previewRefCache.current.source !== source) {
-    if (!source.trim()) {
+  if (!previewRefCache.current || previewRefCache.current.source !== previewSource) {
+    if (!previewSource.trim()) {
       previewRefCache.current = {
         error:
           `No usage example is registered for ${slug}.`,
-        source,
+        source: previewSource,
       };
     } else {
       try {
         previewRefCache.current = {
-          Component: compilePlaygroundCode(source),
-          source,
+          Component: compilePlaygroundCode(previewSource),
+          source: previewSource,
         };
       } catch (error) {
         previewRefCache.current = {
@@ -154,12 +165,15 @@ export function UsagePreview({
             error instanceof Error
               ? error.message
               : `Unable to compile the ${slug} usage example.`,
-          source,
+          source: previewSource,
         };
       }
     }
   }
   const preview = previewRefCache.current;
+  const cookieConsentSettings = slug === "cookie-consent"
+    ? settings as ControlSettingsBySlug["cookie-consent"]
+    : null;
   const [lastAction, setLastAction] = useState("Waiting for action");
   const [dataOutput, setDataOutput] = useState<Record<string, unknown> | null>(null);
   const previewRef = useRef<HTMLDivElement>(null);
@@ -211,7 +225,7 @@ export function UsagePreview({
       previewElement.removeEventListener("click", reportAction);
       previewElement.removeEventListener("keydown", reportAction);
     };
-  }, [showActionStatus]);
+  }, [showActionStatus, slug]);
 
   return (
     <div
@@ -220,7 +234,20 @@ export function UsagePreview({
       data-testid="usage-preview"
       ref={previewRef}
     >
-      {preview.Component ? (
+      {cookieConsentSettings ? (
+        <CookieConsent
+          acceptLabel={cookieConsentSettings.acceptLabel}
+          description={cookieConsentSettings.description}
+          dismissible={cookieConsentSettings.dismissible}
+          persist={false}
+          placement={cookieConsentSettings.placement}
+          policyHref={cookieConsentSettings.showPolicyLink ? cookieConsentSettings.policyHref : undefined}
+          policyLabel={cookieConsentSettings.policyLabel}
+          rejectLabel={cookieConsentSettings.rejectLabel}
+          showRejectButton={cookieConsentSettings.showRejectButton}
+          title={cookieConsentSettings.title}
+        />
+      ) : preview.Component ? (
         <CompiledPreview component={preview.Component} />
       ) : (
         <p className={styles.globalActionStatus} role="alert">
