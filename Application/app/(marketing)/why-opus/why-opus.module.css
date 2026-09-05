@@ -1,0 +1,148 @@
+.page {
+  width: min(100%, var(--opus-max-width));
+  margin: 0 auto;
+  padding: 80px 24px 104px;
+}
+
+.hero {
+  max-width: 960px;
+}
+
+.eyebrow {
+  margin: 0;
+  color: var(--opus-cyan);
+  font-family: var(--font-ibm-plex-mono), monospace;
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.hero h1 {
+  max-width: 860px;
+  margin: 16px 0 0;
+  font-size: clamp(3rem, 6vw, 5.8rem);
+  letter-spacing: -0.065em;
+  line-height: 0.94;
+}
+
+.hero > p:last-child {
+  max-width: 730px;
+  margin: 24px 0 0;
+  color: var(--opus-muted);
+  font-size: 1.16rem;
+  line-height: 1.7;
+}
+
+.rule {
+  height: 1px;
+  margin: 54px 0 0;
+  background: var(--opus-border);
+}
+
+.body {
+  display: grid;
+  grid-template-columns: minmax(0, 1.25fr) minmax(300px, 0.75fr);
+  gap: 0 80px;
+}
+
+.body section {
+  grid-column: 1;
+  padding: 38px 0;
+  border-bottom: 1px solid var(--opus-border);
+}
+
+.body h2 {
+  margin: 0;
+  font-size: clamp(1.65rem, 3vw, 2.25rem);
+  letter-spacing: -0.045em;
+  line-height: 1.1;
+}
+
+.body section p {
+  max-width: 68ch;
+  margin: 16px 0 0;
+  color: var(--opus-muted);
+  font-size: 1.04rem;
+  line-height: 1.75;
+}
+
+.invitation {
+  grid-column: 2;
+  grid-row: 1 / span 3;
+  align-self: start;
+  margin-top: 38px;
+  padding: 28px;
+  border: 1px solid var(--opus-border-strong);
+  border-radius: 20px;
+  background:
+    radial-gradient(circle at 0 0, color-mix(in srgb, var(--opus-accent) 25%, transparent), transparent 56%),
+    color-mix(in srgb, var(--opus-panel) 90%, transparent);
+  box-shadow: var(--opus-shadow);
+}
+
+.invitation p {
+  margin: 0;
+  font-size: 1.3rem;
+  font-weight: 750;
+}
+
+.invitation > span {
+  display: block;
+  margin-top: 10px;
+  color: var(--opus-muted);
+  line-height: 1.6;
+}
+
+.invitation div {
+  display: grid;
+  gap: 10px;
+  margin-top: 22px;
+}
+
+.invitation a {
+  display: inline-flex;
+  min-height: 44px;
+  align-items: center;
+  justify-content: center;
+  padding: 0 16px;
+  border: 1px solid var(--opus-border);
+  border-radius: 999px;
+  color: var(--opus-text);
+  background: color-mix(in srgb, var(--opus-panel) 82%, transparent);
+  font-weight: 700;
+  text-align: center;
+}
+
+.invitation a:first-child {
+  border-color: transparent;
+  background: linear-gradient(135deg, var(--opus-accent), #6b46ff);
+}
+
+.invitation a:hover {
+  border-color: var(--opus-cyan);
+}
+
+@media (max-width: 800px) {
+  .body {
+    display: block;
+  }
+
+  .invitation {
+    margin-top: 30px;
+  }
+}
+
+@media (max-width: 560px) {
+  .page {
+    padding: 60px 18px 80px;
+  }
+
+  .rule {
+    margin-top: 42px;
+  }
+
+  .invitation {
+    padding: 24px 20px;
+  }
+}

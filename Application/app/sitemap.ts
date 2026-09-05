@@ -30,6 +30,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     entry("/documentation/version", 0.5),
     entry("/news", 0.8),
     entry("/version", 0.6),
+    entry("/why-opus", 0.7),
     entry("/license", 0.4),
     entry("/code-of-conduct", 0.3),
   ];

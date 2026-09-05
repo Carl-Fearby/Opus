@@ -25,3 +25,73 @@
 .marketingSite ::selection {
   background: rgba(143, 108, 255, 0.35);
 }
+
+.marketingWhyOpus {
+  padding: 0 24px 88px;
+}
+
+.marketingWhyOpus > div {
+  max-width: var(--opus-max-width);
+  margin: 0 auto;
+  padding: 42px;
+  border: 1px solid var(--opus-border-strong);
+  border-radius: 28px;
+  background:
+    radial-gradient(circle at 92% 15%, color-mix(in srgb, var(--opus-cyan) 18%, transparent), transparent 36%),
+    color-mix(in srgb, var(--opus-panel) 88%, transparent);
+}
+
+.marketingWhyOpus p {
+  margin: 0;
+  color: var(--opus-cyan);
+  font-family: var(--font-ibm-plex-mono), monospace;
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.marketingWhyOpus h2 {
+  max-width: 760px;
+  margin: 14px 0 0;
+  font-size: clamp(1.9rem, 3.5vw, 3.2rem);
+  letter-spacing: -0.05em;
+  line-height: 1.04;
+}
+
+.marketingWhyOpus > div > span {
+  display: block;
+  max-width: 760px;
+  margin-top: 18px;
+  color: var(--opus-muted);
+  font-size: 1.06rem;
+  line-height: 1.7;
+}
+
+.marketingWhyOpus a {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 44px;
+  margin-top: 26px;
+  padding: 0 18px;
+  border: 1px solid var(--opus-border);
+  border-radius: 999px;
+  color: var(--opus-text);
+  background: color-mix(in srgb, var(--opus-panel) 82%, transparent);
+  font-weight: 700;
+}
+
+.marketingWhyOpus a:hover {
+  border-color: var(--opus-cyan);
+}
+
+@media (max-width: 560px) {
+  .marketingWhyOpus {
+    padding: 0 18px 70px;
+  }
+
+  .marketingWhyOpus > div {
+    padding: 28px 22px;
+  }
+}
