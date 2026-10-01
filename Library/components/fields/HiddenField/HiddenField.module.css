@@ -2,9 +2,9 @@
   display: grid;
   gap: 6px;
   padding: var(--opus-control-padding-y, 8px) var(--opus-control-padding-x, 10px);
-  border: 1px dashed var(--opus-border);
+  border: 1px dashed var(--opus-surface-border, var(--opus-border));
   border-radius: var(--opus-input-radius);
-  background: color-mix(in srgb, var(--opus-input-bg) 70%, transparent);
+  background: var(--opus-surface-fill, color-mix(in srgb, var(--opus-input-bg) 70%, transparent));
 }
 
 .note {

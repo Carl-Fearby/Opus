@@ -1,7 +1,11 @@
 .root {
   width: 100%;
-  background: color-mix(in srgb, var(--opus-panel) 92%, transparent);
+  background: var(--opus-surface-fill, color-mix(in srgb, var(--opus-panel) 92%, transparent));
   overflow: hidden;
+}
+
+:global([data-opus-appearance="neumorphism"]) .root {
+  box-shadow: var(--opus-control-shadow, none);
 }
 
 .header {
@@ -10,7 +14,7 @@
   justify-content: space-between;
   gap: 12px;
   padding: 10px 12px;
-  border-bottom: 1px solid var(--opus-border);
+  border-bottom: 1px solid var(--opus-surface-border, var(--opus-border));
 }
 
 .title {
@@ -21,7 +25,7 @@
 
 .add,
 .remove {
-  border: 1px solid var(--opus-border);
+  border: 1px solid var(--opus-surface-border, var(--opus-border));
   border-radius: 999px;
   background: transparent;
   color: var(--opus-muted);
@@ -37,7 +41,7 @@
 .add:hover,
 .remove:hover {
   color: var(--opus-text);
-  border-color: color-mix(in srgb, var(--opus-accent) 40%, var(--opus-border));
+  border-color: var(--opus-surface-border, color-mix(in srgb, var(--opus-accent) 40%, var(--opus-border)));
 }
 
 .remove {
@@ -83,12 +87,17 @@
 .input {
   min-width: 0;
   padding: 7px 8px;
-  border: 1px solid var(--opus-border);
+  border: 1px solid var(--opus-surface-border, var(--opus-border));
   border-radius: 6px;
-  background: color-mix(in srgb, var(--opus-panel) 88%, transparent);
-  color: var(--opus-text);
+  background: var(--opus-surface-fill, color-mix(in srgb, var(--opus-panel) 88%, transparent));
+  color: var(--opus-surface-text, var(--opus-text));
   font: inherit;
   font-size: 0.8rem;
+}
+
+:global([data-opus-appearance="neumorphism"]) .select,
+:global([data-opus-appearance="neumorphism"]) .input {
+  box-shadow: var(--opus-control-inset-shadow, none);
 }
 
 .valuePlaceholder {
@@ -101,8 +110,8 @@
   display: grid;
   gap: 8px;
   padding: 10px 12px 12px;
-  border-top: 1px solid var(--opus-border);
-  background: color-mix(in srgb, var(--opus-panel) 88%, #000 6%);
+  border-top: 1px solid var(--opus-surface-border, var(--opus-border));
+  background: var(--opus-surface-fill, color-mix(in srgb, var(--opus-panel) 88%, #000 6%));
 }
 
 .outputLabel {
@@ -127,10 +136,10 @@
   max-height: 160px;
   overflow: auto;
   padding: 8px 10px;
-  border: 1px solid var(--opus-border);
+  border: 1px solid var(--opus-surface-border, var(--opus-border));
   border-radius: 6px;
-  background: color-mix(in srgb, var(--opus-panel) 94%, #000 4%);
-  color: var(--opus-muted);
+  background: var(--opus-surface-fill, color-mix(in srgb, var(--opus-panel) 94%, #000 4%));
+  color: var(--opus-surface-text, var(--opus-muted));
   font-family: var(--font-ibm-plex-mono), ui-monospace, monospace;
   font-size: 0.72rem;
   line-height: 1.5;

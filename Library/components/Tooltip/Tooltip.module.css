@@ -15,15 +15,19 @@
   width: 16px;
   height: 16px;
   padding: 0;
-  border: 1px solid color-mix(in srgb, var(--opus-accent) 42%, transparent);
+  border: 1px solid var(--opus-surface-border, color-mix(in srgb, var(--opus-accent) 42%, transparent));
   border-radius: 999px;
-  background: color-mix(in srgb, var(--opus-accent) 12%, transparent);
-  color: var(--opus-accent);
+  background: var(--opus-surface-fill, color-mix(in srgb, var(--opus-accent) 12%, transparent));
+  color: var(--opus-surface-text, var(--opus-accent));
   font-size: 0.62rem;
   font-weight: 700;
   font-style: normal;
   line-height: 1;
   cursor: help;
+}
+
+:global([data-opus-appearance="neumorphism"]) .trigger {
+  box-shadow: var(--opus-control-shadow, none);
 }
 
 .trigger:hover,
@@ -39,11 +43,11 @@
   width: max-content;
   max-width: min(240px, 70vw);
   padding: 8px 10px;
-  border: 1px solid var(--opus-border-strong);
+  border: 1px solid var(--opus-surface-border, var(--opus-border-strong));
   border-radius: var(--opus-input-radius);
-  background: var(--opus-panel);
-  box-shadow: var(--opus-shadow);
-  color: var(--opus-muted);
+  background: var(--opus-surface-fill, var(--opus-panel));
+  box-shadow: var(--opus-control-shadow, var(--opus-shadow));
+  color: var(--opus-surface-text, var(--opus-muted));
   font-size: 0.76rem;
   font-weight: 400;
   font-style: normal;

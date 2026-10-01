@@ -20,7 +20,7 @@
   border: 0;
   border-radius: 3px;
   background:
-    linear-gradient(
+    var(--opus-surface-fill, linear-gradient(
       135deg,
       transparent 45%,
       color-mix(in srgb, var(--opus-muted) 55%, transparent) 45%,
@@ -33,7 +33,7 @@
       color-mix(in srgb, var(--opus-muted) 55%, transparent) 65%,
       color-mix(in srgb, var(--opus-muted) 55%, transparent) 75%,
       transparent 75%
-    );
+    ));
   cursor: nwse-resize;
 }
 

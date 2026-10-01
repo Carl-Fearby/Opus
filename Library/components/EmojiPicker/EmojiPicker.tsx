@@ -14,7 +14,7 @@ import {
   type ReactElement,
   type ReactNode,
 } from "react";
-import { createPortal } from "react-dom";
+import { createThemedPortal as createPortal } from "@/lib/theme/createThemedPortal";
 import { CatalogIcon } from "@/components/CatalogIcon";
 import { useOpusTheme } from "@/components/OpusThemeProvider";
 import {

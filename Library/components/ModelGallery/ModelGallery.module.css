@@ -28,7 +28,7 @@
   display: grid;
   min-height: 160px;
   place-items: center;
-  border: 1px dashed var(--opus-border);
+  border: 1px dashed var(--opus-surface-border, var(--opus-border));
   border-radius: var(--opus-input-radius-large);
   color: var(--opus-muted);
   font-size: var(--opus-control-font-size);

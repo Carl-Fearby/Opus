@@ -129,10 +129,10 @@
   width: 100%;
   appearance: none;
   padding: 7px 24px 7px 10px;
-  border: 1px solid color-mix(in srgb, var(--dashboard-section-text) 14%, transparent);
+  border: 1px solid var(--opus-surface-border, color-mix(in srgb, var(--dashboard-section-text) 14%, transparent));
   border-radius: 8px;
-  background: color-mix(in srgb, var(--dashboard-section-panel) 90%, transparent);
-  color: var(--dashboard-section-text);
+  background: var(--opus-surface-fill, color-mix(in srgb, var(--dashboard-section-panel) 90%, transparent));
+  color: var(--opus-surface-text, var(--dashboard-section-text));
   font: inherit;
   font-size: 0.72rem;
   font-weight: 600;

@@ -1,13 +1,13 @@
 .viewport {
   overflow: auto;
   position: relative;
-  border: 1px solid var(--opus-border);
+  border: 1px solid var(--opus-surface-border, var(--opus-border));
   border-radius: var(--opus-radius, 12px);
   background:
-    radial-gradient(85% 65% at 14% 0%, color-mix(in srgb, var(--opus-accent) 13%, transparent), transparent 58%),
+    var(--opus-surface-fill, radial-gradient(85% 65% at 14% 0%, color-mix(in srgb, var(--opus-accent) 13%, transparent), transparent 58%),
     radial-gradient(72% 58% at 100% 100%, color-mix(in srgb, var(--opus-accent-secondary, #0284c7) 10%, transparent), transparent 62%),
-    var(--dashboard-section-bg, var(--opus-panel));
-  box-shadow: inset 0 1px 0 color-mix(in srgb, #ffffff 5%, transparent);
+    var(--dashboard-section-bg, var(--opus-panel)));
+  box-shadow: var(--opus-control-shadow, inset 0 1px 0 color-mix(in srgb, #ffffff 5%, transparent));
   outline: none;
   overscroll-behavior: contain;
   touch-action: pan-y;
@@ -31,7 +31,7 @@
   inset-inline: 0;
   top: 0;
   padding: 10px 24px 10px 14px;
-  border-bottom: 1px solid var(--opus-border);
+  border-bottom: 1px solid var(--opus-surface-border, var(--opus-border));
   color: var(--opus-text);
   cursor: default;
   user-select: none;
@@ -39,15 +39,15 @@
 }
 
 .row:hover {
-  background: color-mix(in srgb, var(--opus-accent) 7%, transparent);
+  background: var(--opus-surface-fill, color-mix(in srgb, var(--opus-accent) 7%, transparent));
 }
 
 .row[data-selected] {
-  background: linear-gradient(90deg, color-mix(in srgb, var(--opus-accent) 24%, transparent), color-mix(in srgb, var(--opus-accent-secondary, var(--opus-accent)) 10%, transparent));
+  background: var(--opus-surface-fill, linear-gradient(90deg, color-mix(in srgb, var(--opus-accent) 24%, transparent), color-mix(in srgb, var(--opus-accent-secondary, var(--opus-accent)) 10%, transparent)));
 }
 
 .row[data-focused] {
-  box-shadow: inset 3px 0 0 var(--opus-accent);
+  box-shadow: var(--opus-control-shadow, inset 3px 0 0 var(--opus-accent));
 }
 
 .row[aria-disabled="true"] {
@@ -94,10 +94,10 @@
   box-sizing: border-box;
   width: 18px;
   height: 18px;
-  border: 1px solid var(--opus-border-strong);
+  border: 1px solid var(--opus-surface-border, var(--opus-border-strong));
   border-radius: var(--opus-input-radius, 5px);
-  background: var(--opus-input-bg);
-  box-shadow: inset 0 1px 0 color-mix(in srgb, #ffffff 6%, transparent);
+  background: var(--opus-surface-fill, var(--opus-input-bg));
+  box-shadow: var(--opus-control-shadow, inset 0 1px 0 color-mix(in srgb, #ffffff 6%, transparent));
 }
 
 .selectionControl[data-kind="radio"] .selectionVisual {
@@ -129,15 +129,19 @@
 }
 
 .selectionInput:checked + .selectionVisual {
-  border-color: color-mix(in srgb, var(--opus-accent) 72%, var(--opus-border-strong));
+  border-color: var(--opus-surface-border, color-mix(in srgb, var(--opus-accent) 72%, var(--opus-border-strong)));
 }
 
 .selectionControl[data-kind="checkbox"] .selectionInput:checked + .selectionVisual {
-  background: linear-gradient(
+  background: var(--opus-surface-fill, linear-gradient(
     135deg,
     var(--opus-accent),
     color-mix(in srgb, var(--opus-accent) 42%, var(--opus-accent-secondary, #00d2ff))
-  );
+  ));
+}
+
+:global([data-opus-appearance="neumorphism"]) .selectionControl[data-kind="checkbox"] .selectionInput:checked + .selectionVisual {
+  box-shadow: var(--opus-control-inset-shadow, none);
 }
 
 .selectionInput:checked + .selectionVisual::after {

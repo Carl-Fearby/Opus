@@ -10,7 +10,7 @@ import {
   type CSSProperties,
   type KeyboardEvent,
 } from "react";
-import { createPortal } from "react-dom";
+import { createThemedPortal as createPortal } from "@/lib/theme/createThemedPortal";
 import { FieldShell } from "@/components/fields/FieldShell";
 import type { ControlRadius, FieldMode, LabelPosition } from "@/components/fields/types";
 import {

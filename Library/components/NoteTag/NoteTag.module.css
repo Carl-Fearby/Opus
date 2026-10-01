@@ -19,57 +19,97 @@
 }
 
 .tag[data-selected="true"] {
-  box-shadow: inset 0 0 0 1px currentColor;
+  box-shadow: var(--opus-control-shadow, inset 0 0 0 1px currentColor);
 }
 
 .tag[data-tone="purple"] {
-  background: color-mix(in srgb, #7c3aed 24%, transparent);
-  color: #c4b5fd;
+  background: var(--opus-surface-fill, color-mix(in srgb, #7c3aed 24%, transparent));
+  color: var(--opus-surface-text, #c4b5fd);
+}
+
+:global([data-opus-appearance="neumorphism"]) .tag[data-tone="purple"] {
+  box-shadow: var(--opus-control-shadow, none);
 }
 
 .tag[data-tone="orange"] {
-  background: color-mix(in srgb, #f97316 22%, transparent);
-  color: #fdba74;
+  background: var(--opus-surface-fill, color-mix(in srgb, #f97316 22%, transparent));
+  color: var(--opus-surface-text, #fdba74);
+}
+
+:global([data-opus-appearance="neumorphism"]) .tag[data-tone="orange"] {
+  box-shadow: var(--opus-control-shadow, none);
 }
 
 .tag[data-tone="green"] {
-  background: color-mix(in srgb, #22c55e 20%, transparent);
-  color: #86efac;
+  background: var(--opus-surface-fill, color-mix(in srgb, #22c55e 20%, transparent));
+  color: var(--opus-surface-text, #86efac);
+}
+
+:global([data-opus-appearance="neumorphism"]) .tag[data-tone="green"] {
+  box-shadow: var(--opus-control-shadow, none);
 }
 
 .tag[data-tone="blue"] {
-  background: color-mix(in srgb, #3b82f6 22%, transparent);
-  color: #93c5fd;
+  background: var(--opus-surface-fill, color-mix(in srgb, #3b82f6 22%, transparent));
+  color: var(--opus-surface-text, #93c5fd);
+}
+
+:global([data-opus-appearance="neumorphism"]) .tag[data-tone="blue"] {
+  box-shadow: var(--opus-control-shadow, none);
 }
 
 .tag[data-tone="cyan"] {
-  background: color-mix(in srgb, #06b6d4 22%, transparent);
-  color: #67e8f9;
+  background: var(--opus-surface-fill, color-mix(in srgb, #06b6d4 22%, transparent));
+  color: var(--opus-surface-text, #67e8f9);
+}
+
+:global([data-opus-appearance="neumorphism"]) .tag[data-tone="cyan"] {
+  box-shadow: var(--opus-control-shadow, none);
 }
 
 .tag[data-tone="pink"] {
-  background: color-mix(in srgb, #ec4899 22%, transparent);
-  color: #f9a8d4;
+  background: var(--opus-surface-fill, color-mix(in srgb, #ec4899 22%, transparent));
+  color: var(--opus-surface-text, #f9a8d4);
+}
+
+:global([data-opus-appearance="neumorphism"]) .tag[data-tone="pink"] {
+  box-shadow: var(--opus-control-shadow, none);
 }
 
 .tag[data-tone="red"] {
-  background: color-mix(in srgb, #ef4444 22%, transparent);
-  color: #fca5a5;
+  background: var(--opus-surface-fill, color-mix(in srgb, #ef4444 22%, transparent));
+  color: var(--opus-surface-text, #fca5a5);
+}
+
+:global([data-opus-appearance="neumorphism"]) .tag[data-tone="red"] {
+  box-shadow: var(--opus-control-shadow, none);
 }
 
 .tag[data-tone="slate"] {
-  background: color-mix(in srgb, #94a3b8 20%, transparent);
-  color: #cbd5e1;
+  background: var(--opus-surface-fill, color-mix(in srgb, #94a3b8 20%, transparent));
+  color: var(--opus-surface-text, #cbd5e1);
+}
+
+:global([data-opus-appearance="neumorphism"]) .tag[data-tone="slate"] {
+  box-shadow: var(--opus-control-shadow, none);
 }
 
 .tag[data-tone="teal"] {
-  background: color-mix(in srgb, #14b8a6 22%, transparent);
-  color: #5eead4;
+  background: var(--opus-surface-fill, color-mix(in srgb, #14b8a6 22%, transparent));
+  color: var(--opus-surface-text, #5eead4);
+}
+
+:global([data-opus-appearance="neumorphism"]) .tag[data-tone="teal"] {
+  box-shadow: var(--opus-control-shadow, none);
 }
 
 .tag[data-tone="yellow"] {
-  background: color-mix(in srgb, #eab308 22%, transparent);
-  color: #fde68a;
+  background: var(--opus-surface-fill, color-mix(in srgb, #eab308 22%, transparent));
+  color: var(--opus-surface-text, #fde68a);
+}
+
+:global([data-opus-appearance="neumorphism"]) .tag[data-tone="yellow"] {
+  box-shadow: var(--opus-control-shadow, none);
 }
 
 .removeButton {
@@ -82,8 +122,8 @@
   padding: 0;
   border: 0;
   border-radius: 999px;
-  background: color-mix(in srgb, currentColor 12%, transparent);
-  color: inherit;
+  background: var(--opus-surface-fill, color-mix(in srgb, currentColor 12%, transparent));
+  color: var(--opus-surface-text, inherit);
   font: inherit;
   font-size: 0.52rem;
   line-height: 1;
@@ -120,11 +160,11 @@
   min-width: 13.5rem;
   max-width: min(20rem, 80vw);
   padding: 10px;
-  border: 1px solid color-mix(in srgb, var(--opus-accent) 28%, var(--dashboard-section-border, var(--opus-border)));
+  border: 1px solid var(--opus-surface-border, color-mix(in srgb, var(--opus-accent) 28%, var(--dashboard-section-border, var(--opus-border))));
   border-radius: 12px;
-  background: color-mix(in srgb, var(--dashboard-section-bg, var(--opus-bg)) 86%, transparent);
-  box-shadow: 0 16px 40px color-mix(in srgb, #020617 32%, transparent);
-  backdrop-filter: blur(12px);
+  background: var(--opus-surface-fill, color-mix(in srgb, var(--dashboard-section-bg, var(--opus-bg)) 86%, transparent));
+  box-shadow: var(--opus-control-shadow, 0 16px 40px color-mix(in srgb, #020617 32%, transparent));
+  backdrop-filter: var(--opus-surface-backdrop-filter, blur(12px));
 }
 
 .menuHeader {

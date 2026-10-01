@@ -20,13 +20,13 @@
   width: 56px;
   height: 56px;
   border-radius: 999px;
-  border: 1px solid color-mix(in srgb, var(--opus-accent) 24%, var(--opus-border));
+  border: 1px solid var(--opus-surface-border, color-mix(in srgb, var(--opus-accent) 24%, var(--opus-border)));
   background:
-    radial-gradient(circle at 30% 30%, color-mix(in srgb, var(--opus-accent) 18%, transparent), transparent 55%),
-    color-mix(in srgb, var(--opus-panel) 72%, transparent);
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
-  color: var(--opus-accent);
+    var(--opus-surface-fill, radial-gradient(circle at 30% 30%, color-mix(in srgb, var(--opus-accent) 18%, transparent), transparent 55%),
+    color-mix(in srgb, var(--opus-panel) 72%, transparent));
+  backdrop-filter: var(--opus-surface-backdrop-filter, blur(10px));
+  -webkit-backdrop-filter: var(--opus-surface-backdrop-filter, blur(10px));
+  color: var(--opus-surface-text, var(--opus-accent));
   font-size: 1.35rem;
   line-height: 1;
 }

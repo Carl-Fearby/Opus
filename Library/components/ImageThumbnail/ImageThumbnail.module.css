@@ -27,9 +27,9 @@
   height: var(--thumbnail-height);
   margin: 0;
   overflow: hidden;
-  border: 1px solid color-mix(in srgb, var(--opus-border) 78%, transparent);
-  background: color-mix(in srgb, var(--opus-input-bg) 84%, black 16%);
-  box-shadow: var(--opus-shadow);
+  border: 1px solid var(--opus-surface-border, color-mix(in srgb, var(--opus-border) 78%, transparent));
+  background: var(--opus-surface-fill, color-mix(in srgb, var(--opus-input-bg) 84%, black 16%));
+  box-shadow: var(--opus-control-shadow, var(--opus-shadow));
 }
 
 .image {

@@ -19,10 +19,10 @@
   height: var(--opus-control-height);
   margin: 0;
   border-radius: 999px;
-  border: 1px solid var(--opus-border-strong);
-  background: color-mix(in srgb, var(--opus-muted) 24%, transparent);
+  border: 1px solid var(--opus-surface-border, var(--opus-border-strong));
+  background: var(--opus-surface-fill, color-mix(in srgb, var(--opus-muted) 24%, transparent));
   cursor: pointer;
-  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.05);
+  box-shadow: var(--opus-control-inset-shadow, inset 0 0 0 1px rgba(255, 255, 255, 0.05));
 }
 
 .track::before {
@@ -33,14 +33,19 @@
   width: var(--opus-switch-thumb, 20px);
   height: var(--opus-switch-thumb, 20px);
   border-radius: 999px;
-  background: linear-gradient(180deg, #ffffff, #d7dff9);
+  background: var(--opus-surface-fill, linear-gradient(180deg, #ffffff, #d7dff9));
+  box-shadow: var(--opus-control-shadow, none);
   transform: translateY(-50%);
   transition: transform 160ms ease;
   pointer-events: none;
 }
 
 .track:checked {
-  background: linear-gradient(135deg, var(--opus-accent), color-mix(in srgb, var(--opus-accent) 40%, #00d2ff));
+  background: var(--opus-surface-fill, linear-gradient(135deg, var(--opus-accent), color-mix(in srgb, var(--opus-accent) 40%, #00d2ff)));
+}
+
+:global([data-opus-appearance="neumorphism"]) .track:checked {
+  box-shadow: var(--opus-control-inset-shadow, none);
 }
 
 .track:checked::before {

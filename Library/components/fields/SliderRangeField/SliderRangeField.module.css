@@ -25,7 +25,11 @@
   inset: calc((var(--opus-control-height) - var(--opus-range-track, 8px)) / 2) 0 auto;
   height: var(--opus-range-track, 8px);
   border-radius: 999px;
-  background: color-mix(in srgb, var(--opus-muted) 24%, var(--opus-input-bg));
+  background: var(--opus-surface-fill, color-mix(in srgb, var(--opus-muted) 24%, var(--opus-input-bg)));
+}
+
+:global([data-opus-appearance="neumorphism"]) .track {
+  box-shadow: var(--opus-control-inset-shadow, none);
 }
 
 .track::before {
@@ -53,20 +57,20 @@
   appearance: none;
   width: var(--opus-range-thumb, 22px);
   height: var(--opus-range-thumb, 22px);
-  border: 3px solid var(--opus-accent);
+  border: 3px solid var(--opus-surface-border, var(--opus-accent));
   border-radius: 999px;
-  background: #fff;
-  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.18);
+  background: var(--opus-surface-fill, #fff);
+  box-shadow: var(--opus-control-shadow, 0 4px 14px rgba(0, 0, 0, 0.18));
   pointer-events: auto;
 }
 
 .slider::-moz-range-thumb {
   width: var(--opus-range-thumb, 22px);
   height: var(--opus-range-thumb, 22px);
-  border: 3px solid var(--opus-accent);
+  border: 3px solid var(--opus-surface-border, var(--opus-accent));
   border-radius: 999px;
-  background: #fff;
-  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.18);
+  background: var(--opus-surface-fill, #fff);
+  box-shadow: var(--opus-control-shadow, 0 4px 14px rgba(0, 0, 0, 0.18));
   pointer-events: auto;
 }
 

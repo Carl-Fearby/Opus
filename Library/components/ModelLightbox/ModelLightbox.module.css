@@ -8,15 +8,19 @@
   min-height: var(--opus-control-height);
   align-items: center;
   justify-content: center;
-  border: 1px solid color-mix(in srgb, var(--opus-accent) 58%, transparent);
+  border: 1px solid var(--opus-surface-border, color-mix(in srgb, var(--opus-accent) 58%, transparent));
   border-radius: var(--opus-input-radius);
-  background: color-mix(in srgb, var(--opus-accent) 65%, #11132b);
-  color: var(--opus-accent-contrast);
+  background: var(--opus-surface-fill, color-mix(in srgb, var(--opus-accent) 65%, #11132b));
+  color: var(--opus-surface-text, var(--opus-accent-contrast));
   cursor: pointer;
   font: inherit;
   font-size: var(--opus-control-font-size);
   font-weight: 900;
   padding: 0 16px;
+}
+
+:global([data-opus-appearance="neumorphism"]) .trigger {
+  box-shadow: var(--opus-control-shadow, none);
 }
 
 .customTrigger {
@@ -89,10 +93,10 @@
   width: 40px;
   height: 40px;
   padding: 0;
-  border: 1px solid var(--opus-border-strong);
+  border: 1px solid var(--opus-surface-border, var(--opus-border-strong));
   border-radius: 999px;
-  background: var(--opus-panel);
-  color: var(--opus-text);
+  background: var(--opus-surface-fill, var(--opus-panel));
+  color: var(--opus-surface-text, var(--opus-text));
   cursor: pointer;
   line-height: 0;
   transition:
@@ -101,16 +105,24 @@
     transform 160ms ease;
 }
 
+:global([data-opus-appearance="neumorphism"]) .close {
+  box-shadow: var(--opus-control-shadow, none);
+}
+
 .closeIcon {
   width: 16px;
   height: 16px;
 }
 
 .close:hover {
-  border-color: var(--opus-accent);
-  background: var(--opus-accent);
-  color: #fff;
+  border-color: var(--opus-surface-border, var(--opus-accent));
+  background: var(--opus-surface-fill, var(--opus-accent));
+  color: var(--opus-surface-text, #fff);
   transform: scale(1.04);
+}
+
+:global([data-opus-appearance="neumorphism"]) .close:hover {
+  box-shadow: var(--opus-control-shadow, none);
 }
 
 @keyframes modelLightboxFadeIn {

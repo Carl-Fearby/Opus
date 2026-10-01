@@ -35,7 +35,7 @@
 
 .caption {
   padding: 12px 14px;
-  border-bottom: 1px solid color-mix(in srgb, var(--opus-border) 72%, transparent);
+  border-bottom: 1px solid var(--opus-surface-border, color-mix(in srgb, var(--opus-border) 72%, transparent));
   color: var(--opus-muted);
   font-size: 0.82rem;
   font-weight: 800;
@@ -76,8 +76,8 @@
 .grid tbody th,
 .grid td {
   padding: var(--grid-cell-padding);
-  border-bottom: 1px solid color-mix(in srgb, var(--opus-border) 72%, transparent);
-  background: color-mix(in srgb, var(--opus-panel) 96%, transparent);
+  border-bottom: 1px solid var(--opus-surface-border, color-mix(in srgb, var(--opus-border) 72%, transparent));
+  background: var(--opus-surface-fill, color-mix(in srgb, var(--opus-panel) 96%, transparent));
   text-align: left;
   vertical-align: middle;
   white-space: nowrap;
@@ -102,7 +102,7 @@
   max-width: 0;
   padding-block: var(--grid-cell-padding-block);
   padding-inline: var(--grid-cell-padding-inline) 0;
-  border-bottom: 1px solid var(--grid-header-glass-border);
+  border-bottom: 1px solid var(--opus-surface-border, var(--grid-header-glass-border));
   background: transparent;
   color: color-mix(in srgb, var(--opus-text) 84%, var(--opus-accent));
   font-size: 0.74rem;
@@ -235,15 +235,19 @@
   height: 22px;
   flex: 0 0 auto;
   place-items: center;
-  border: 1px solid color-mix(in srgb, var(--opus-border) 76%, transparent);
+  border: 1px solid var(--opus-surface-border, color-mix(in srgb, var(--opus-border) 76%, transparent));
   border-radius: var(--opus-input-radius);
-  background: color-mix(in srgb, var(--opus-panel) 64%, transparent);
-  color: inherit;
+  background: var(--opus-surface-fill, color-mix(in srgb, var(--opus-panel) 64%, transparent));
+  color: var(--opus-surface-text, inherit);
   cursor: pointer;
   transition:
     background 160ms ease,
     border-color 160ms ease,
     color 160ms ease;
+}
+
+:global([data-opus-appearance="neumorphism"]) .menuButton {
+  box-shadow: var(--opus-control-shadow, none);
 }
 
 .menuChevron {
@@ -260,14 +264,22 @@
 }
 
 .menuButton[data-filter-active="true"] {
-  border-color: color-mix(in srgb, var(--opus-accent) 72%, transparent);
-  background: color-mix(in srgb, var(--opus-accent) 24%, var(--opus-panel));
-  color: var(--opus-accent);
+  border-color: var(--opus-surface-border, color-mix(in srgb, var(--opus-accent) 72%, transparent));
+  background: var(--opus-surface-fill, color-mix(in srgb, var(--opus-accent) 24%, var(--opus-panel)));
+  color: var(--opus-surface-text, var(--opus-accent));
+}
+
+:global([data-opus-appearance="neumorphism"]) .menuButton[data-filter-active="true"] {
+  box-shadow: var(--opus-control-shadow, none);
 }
 
 .menuButton[aria-expanded="true"] {
-  border-color: color-mix(in srgb, var(--opus-accent) 62%, transparent);
-  background: color-mix(in srgb, var(--opus-accent) 18%, transparent);
+  border-color: var(--opus-surface-border, color-mix(in srgb, var(--opus-accent) 62%, transparent));
+  background: var(--opus-surface-fill, color-mix(in srgb, var(--opus-accent) 18%, transparent));
+}
+
+:global([data-opus-appearance="neumorphism"]) .menuButton[aria-expanded="true"] {
+  box-shadow: var(--opus-control-shadow, none);
 }
 
 .grid thead th[data-filter-active="true"]::before {
@@ -324,16 +336,20 @@
   width: 100%;
   min-width: 0;
   height: 34px;
-  border: 1px solid color-mix(in srgb, var(--opus-border) 92%, var(--opus-accent) 8%);
+  border: 1px solid var(--opus-surface-border, color-mix(in srgb, var(--opus-border) 92%, var(--opus-accent) 8%));
   border-radius: var(--opus-input-radius);
-  background: color-mix(in srgb, var(--opus-input-bg) 92%, var(--opus-panel) 8%);
-  color: var(--opus-text);
+  background: var(--opus-surface-fill, color-mix(in srgb, var(--opus-input-bg) 92%, var(--opus-panel) 8%));
+  color: var(--opus-surface-text, var(--opus-text));
   font: inherit;
   font-size: 0.82rem;
   font-weight: 700;
   letter-spacing: 0;
   padding: 0 10px;
   text-transform: none;
+}
+
+:global([data-opus-appearance="neumorphism"]) .filterInput {
+  box-shadow: var(--opus-control-inset-shadow, none);
 }
 
 .headerMenu {
@@ -343,20 +359,20 @@
   gap: 12px;
   overflow: auto;
   padding: 12px;
-  border: 1px solid color-mix(in srgb, var(--opus-border) 82%, transparent);
+  border: 1px solid var(--opus-surface-border, color-mix(in srgb, var(--opus-border) 82%, transparent));
   border-radius: var(--opus-input-radius-large);
   background:
-    linear-gradient(
+    var(--opus-surface-fill, linear-gradient(
       135deg,
       color-mix(in srgb, var(--opus-accent) 12%, transparent),
       transparent 48%
     ),
-    color-mix(in srgb, var(--opus-page-bg) 88%, var(--opus-panel) 12%);
+    color-mix(in srgb, var(--opus-page-bg) 88%, var(--opus-panel) 12%));
   box-shadow:
-    0 18px 44px color-mix(in srgb, black 42%, transparent),
-    inset 0 1px 0 color-mix(in srgb, white 10%, transparent);
-  backdrop-filter: blur(14px) saturate(1.12);
-  color: var(--opus-text);
+    var(--opus-control-shadow, 0 18px 44px color-mix(in srgb, black 42%, transparent),
+    inset 0 1px 0 color-mix(in srgb, white 10%, transparent));
+  backdrop-filter: var(--opus-surface-backdrop-filter, blur(14px) saturate(1.12));
+  color: var(--opus-surface-text, var(--opus-text));
   font-size: var(--opus-control-font-size);
   font-weight: 800;
   letter-spacing: 0;
@@ -379,10 +395,10 @@
 
 .menuAction {
   min-height: 30px;
-  border: 1px solid color-mix(in srgb, var(--opus-border) 76%, transparent);
+  border: 1px solid var(--opus-surface-border, color-mix(in srgb, var(--opus-border) 76%, transparent));
   border-radius: var(--opus-input-radius);
-  background: color-mix(in srgb, var(--opus-input-bg) 78%, transparent);
-  color: var(--opus-text);
+  background: var(--opus-surface-fill, color-mix(in srgb, var(--opus-input-bg) 78%, transparent));
+  color: var(--opus-surface-text, var(--opus-text));
   cursor: pointer;
   font: inherit;
   font-size: 0.78rem;
@@ -391,9 +407,17 @@
   padding: 0 9px;
 }
 
+:global([data-opus-appearance="neumorphism"]) .menuAction {
+  box-shadow: var(--opus-control-shadow, none);
+}
+
 .menuAction:hover {
-  border-color: color-mix(in srgb, var(--opus-accent) 54%, transparent);
-  background: color-mix(in srgb, var(--opus-accent) 14%, var(--opus-input-bg));
+  border-color: var(--opus-surface-border, color-mix(in srgb, var(--opus-accent) 54%, transparent));
+  background: var(--opus-surface-fill, color-mix(in srgb, var(--opus-accent) 14%, var(--opus-input-bg)));
+}
+
+:global([data-opus-appearance="neumorphism"]) .menuAction:hover {
+  box-shadow: var(--opus-control-shadow, none);
 }
 
 .filterInput::placeholder {
@@ -465,12 +489,12 @@
 
 .wrap[data-striped="true"] tbody tr:nth-child(even) th,
 .wrap[data-striped="true"] tbody tr:nth-child(even) td {
-  background: color-mix(in srgb, var(--opus-accent) 6%, var(--opus-panel));
+  background: var(--opus-surface-fill, color-mix(in srgb, var(--opus-accent) 6%, var(--opus-panel)));
 }
 
 .wrap[data-bordered="true"] .grid th,
 .wrap[data-bordered="true"] .grid td {
-  border-right: 1px solid color-mix(in srgb, var(--opus-border) 72%, transparent);
+  border-right: 1px solid var(--opus-surface-border, color-mix(in srgb, var(--opus-border) 72%, transparent));
 }
 
 .grid tbody td[data-align="right"] {
@@ -546,8 +570,8 @@
 }
 
 .expandButton:hover {
-  color: var(--opus-accent);
-  background: color-mix(in srgb, var(--opus-accent) 12%, transparent);
+  color: var(--opus-surface-text, var(--opus-accent));
+  background: var(--opus-surface-fill, color-mix(in srgb, var(--opus-accent) 12%, transparent));
 }
 
 .expandButton svg {
@@ -567,7 +591,7 @@
   max-height: 34px;
   padding: 0 !important;
   vertical-align: middle;
-  background: color-mix(in srgb, var(--opus-accent) 10%, var(--opus-panel)) !important;
+  background: var(--opus-surface-fill, color-mix(in srgb, var(--opus-accent) 10%, var(--opus-panel))) !important;
 }
 
 .groupButton {
@@ -606,9 +630,9 @@
 .detailRow td,
 .detailCell {
   white-space: normal !important;
-  background: color-mix(in srgb, var(--opus-accent) 6%, var(--opus-panel)) !important;
+  background: var(--opus-surface-fill, color-mix(in srgb, var(--opus-accent) 6%, var(--opus-panel))) !important;
   padding: 12px 14px !important;
-  color: var(--opus-muted);
+  color: var(--opus-surface-text, var(--opus-muted));
   font-size: 0.82rem;
   line-height: 1.45;
 }
@@ -622,7 +646,7 @@
   display: grid;
   place-items: center;
   min-height: 36px;
-  border-top: 1px solid color-mix(in srgb, var(--opus-border) 72%, transparent);
+  border-top: 1px solid var(--opus-surface-border, color-mix(in srgb, var(--opus-border) 72%, transparent));
   color: var(--opus-muted);
   font-size: 0.74rem;
   font-weight: 700;

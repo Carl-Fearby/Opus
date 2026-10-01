@@ -120,8 +120,8 @@
 }
 
 .dismiss:hover {
-  background: color-mix(in srgb, var(--toast-accent) 12%, transparent);
-  color: var(--opus-text, #f5f7ff);
+  background: var(--opus-surface-fill, color-mix(in srgb, var(--toast-accent) 12%, transparent));
+  color: var(--opus-surface-text, var(--opus-text, #f5f7ff));
 }
 
 .dismiss:focus-visible {
@@ -137,12 +137,16 @@
 .progressTrack {
   height: 3px;
   margin-top: auto;
-  background: color-mix(in srgb, var(--toast-accent, var(--opus-accent, #8f6cff)) 16%, transparent);
+  background: var(--opus-surface-fill, color-mix(in srgb, var(--toast-accent, var(--opus-accent, #8f6cff)) 16%, transparent));
+}
+
+:global([data-opus-appearance="neumorphism"]) .progressTrack {
+  box-shadow: var(--opus-control-inset-shadow, none);
 }
 
 .progressBar {
   height: 100%;
-  background: var(--toast-accent, var(--opus-accent, #8f6cff));
+  background: var(--opus-surface-fill, var(--toast-accent, var(--opus-accent, #8f6cff)));
   transform-origin: left center;
   animation: toastProgress linear forwards;
 }

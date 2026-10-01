@@ -11,13 +11,13 @@
   width: 100%;
   min-height: var(--opus-control-height);
   padding: calc(var(--opus-control-padding-y, 8px) / 2) var(--opus-control-padding-x, 10px);
-  border: 1px solid var(--opus-border-strong);
+  border: 1px solid var(--opus-surface-border, var(--opus-border-strong));
   border-radius: var(--opus-input-radius);
-  background: var(--opus-input-bg);
-  color: var(--opus-text);
+  background: var(--opus-surface-fill, var(--opus-input-bg));
+  color: var(--opus-surface-text, var(--opus-text));
   box-shadow:
-    0 1px 0 rgba(255, 255, 255, 0.05) inset,
-    0 14px 30px rgba(0, 0, 0, 0.06);
+    var(--opus-control-shadow, 0 1px 0 rgba(255, 255, 255, 0.05) inset,
+    0 14px 30px rgba(0, 0, 0, 0.06));
   cursor: text;
   transition:
     border-color 160ms ease,
@@ -25,7 +25,7 @@
 }
 
 .field:hover:not(.disabled):not(.readOnly) {
-  border-color: color-mix(in srgb, var(--opus-accent) 28%, var(--opus-border-strong));
+  border-color: var(--opus-surface-border, color-mix(in srgb, var(--opus-accent) 28%, var(--opus-border-strong)));
 }
 
 .field:focus-within:not(.disabled):not(.readOnly) {
@@ -100,7 +100,7 @@
 
 .remove:hover:not(:disabled) {
   opacity: 1;
-  background: color-mix(in srgb, currentColor 12%, transparent);
+  background: var(--opus-surface-fill, color-mix(in srgb, currentColor 12%, transparent));
 }
 
 .remove:focus-visible {
@@ -136,42 +136,42 @@
 }
 
 .field[data-chip-variant="filled"] .chip {
-  border: 1px solid color-mix(in srgb, var(--opus-border-strong) 85%, transparent);
-  background: color-mix(in srgb, var(--opus-text) 8%, var(--opus-input-bg));
-  color: var(--opus-text);
+  border: 1px solid var(--opus-surface-border, color-mix(in srgb, var(--opus-border-strong) 85%, transparent));
+  background: var(--opus-surface-fill, color-mix(in srgb, var(--opus-text) 8%, var(--opus-input-bg)));
+  color: var(--opus-surface-text, var(--opus-text));
 }
 
 .field[data-chip-variant="outlined"] .chip {
-  border: 1px solid var(--opus-border-strong);
+  border: 1px solid var(--opus-surface-border, var(--opus-border-strong));
   background: transparent;
   color: var(--opus-text);
 }
 
 .field[data-chip-variant="soft"] .chip {
-  border: 1px solid color-mix(in srgb, var(--opus-accent) 35%, var(--opus-border-strong));
-  background: var(--opus-accent-soft);
-  color: var(--opus-accent);
+  border: 1px solid var(--opus-surface-border, color-mix(in srgb, var(--opus-accent) 35%, var(--opus-border-strong)));
+  background: var(--opus-surface-fill, var(--opus-accent-soft));
+  color: var(--opus-surface-text, var(--opus-accent));
 }
 
 .field[data-chip-variant="glass"] .chip {
-  border: 1px solid color-mix(in srgb, var(--opus-border-strong) 55%, transparent);
-  background: color-mix(in srgb, var(--opus-input-bg) 55%, transparent);
-  backdrop-filter: blur(10px);
-  color: var(--opus-text);
+  border: 1px solid var(--opus-surface-border, color-mix(in srgb, var(--opus-border-strong) 55%, transparent));
+  background: var(--opus-surface-fill, color-mix(in srgb, var(--opus-input-bg) 55%, transparent));
+  backdrop-filter: var(--opus-surface-backdrop-filter, blur(10px));
+  color: var(--opus-surface-text, var(--opus-text));
 }
 
 .field[data-chip-variant="gradient"] .chip {
   border: 1px solid transparent;
   background:
-    linear-gradient(var(--opus-input-bg), var(--opus-input-bg)) padding-box,
+    var(--opus-surface-fill, linear-gradient(var(--opus-input-bg), var(--opus-input-bg)) padding-box,
     linear-gradient(
       135deg,
       color-mix(in srgb, var(--opus-accent) 85%, #4f8cff),
       color-mix(in srgb, var(--opus-accent) 55%, white)
     )
-      border-box;
-  color: var(--opus-accent);
-  box-shadow: 0 0 0 1px color-mix(in srgb, var(--opus-accent) 10%, transparent);
+      border-box);
+  color: var(--opus-surface-text, var(--opus-accent));
+  box-shadow: var(--opus-control-shadow, 0 0 0 1px color-mix(in srgb, var(--opus-accent) 10%, transparent));
 }
 
 @media (prefers-reduced-motion: reduce) {

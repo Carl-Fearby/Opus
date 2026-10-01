@@ -4,7 +4,7 @@
   flex: 0 0 8px;
   padding: 0;
   border: 0;
-  background: color-mix(in srgb, var(--opus-accent) 8%, transparent);
+  background: var(--opus-surface-fill, color-mix(in srgb, var(--opus-accent) 8%, transparent));
   touch-action: none;
 }
 
@@ -25,11 +25,11 @@
 }
 
 .handle[data-background="accent"] {
-  background: color-mix(in srgb, var(--opus-accent) 8%, transparent);
+  background: var(--opus-surface-fill, color-mix(in srgb, var(--opus-accent) 8%, transparent));
 }
 
 .handle[data-background="contrast"] {
-  background: color-mix(in srgb, var(--opus-text) 12%, transparent);
+  background: var(--opus-surface-fill, color-mix(in srgb, var(--opus-text) 12%, transparent));
 }
 
 .handle:hover,
@@ -135,12 +135,12 @@
   align-items: center;
   justify-content: center;
   gap: 2px;
-  border: 1px solid color-mix(in srgb, var(--opus-accent) 52%, #070912);
+  border: 1px solid var(--opus-surface-border, color-mix(in srgb, var(--opus-accent) 52%, #070912));
   border-radius: 999px;
-  background-color: color-mix(in srgb, var(--opus-accent) 52%, #070912);
+  background-color: var(--opus-surface-fill, color-mix(in srgb, var(--opus-accent) 52%, #070912));
   box-shadow:
-    0 1px 3px color-mix(in srgb, #000 28%, transparent),
-    0 0 4px color-mix(in srgb, var(--opus-accent) 7%, transparent);
+    var(--opus-control-shadow, 0 1px 3px color-mix(in srgb, #000 28%, transparent),
+    0 0 4px color-mix(in srgb, var(--opus-accent) 7%, transparent));
   transform: translate(-50%, -50%);
   pointer-events: none;
   transition:
@@ -179,7 +179,7 @@
 }
 
 :global([data-theme="light"]) .handle {
-  background: color-mix(in srgb, var(--opus-accent) 6%, transparent);
+  background: var(--opus-surface-fill, color-mix(in srgb, var(--opus-accent) 6%, transparent));
 }
 
 :global([data-theme="light"]) .handle[data-background="none"] {
@@ -187,11 +187,11 @@
 }
 
 :global([data-theme="light"]) .handle[data-background="accent"] {
-  background: color-mix(in srgb, var(--opus-accent) 8%, transparent);
+  background: var(--opus-surface-fill, color-mix(in srgb, var(--opus-accent) 8%, transparent));
 }
 
 :global([data-theme="light"]) .handle[data-background="contrast"] {
-  background: color-mix(in srgb, var(--opus-text) 7%, transparent);
+  background: var(--opus-surface-fill, color-mix(in srgb, var(--opus-text) 7%, transparent));
 }
 
 :global([data-theme="light"]) .handle[data-orientation="vertical"]::after {
@@ -215,11 +215,11 @@
 }
 
 :global([data-theme="light"]) .grip {
-  border-color: color-mix(in srgb, var(--opus-accent) 74%, #fff);
-  background-color: color-mix(in srgb, var(--opus-accent) 82%, #fff);
+  border-color: var(--opus-surface-border, color-mix(in srgb, var(--opus-accent) 74%, #fff));
+  background-color: var(--opus-surface-fill, color-mix(in srgb, var(--opus-accent) 82%, #fff));
   box-shadow:
-    0 1px 3px color-mix(in srgb, var(--opus-muted) 20%, transparent),
-    0 0 5px color-mix(in srgb, var(--opus-accent) 18%, transparent);
+    var(--opus-control-shadow, 0 1px 3px color-mix(in srgb, var(--opus-muted) 20%, transparent),
+    0 0 5px color-mix(in srgb, var(--opus-accent) 18%, transparent));
 }
 
 :global([data-theme="light"]) .dot {

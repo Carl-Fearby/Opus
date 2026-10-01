@@ -14,10 +14,10 @@
   position: relative;
   min-height: 260px;
   overflow: hidden;
-  border: 1px solid color-mix(in srgb, var(--opus-border) 78%, transparent);
+  border: 1px solid var(--opus-surface-border, color-mix(in srgb, var(--opus-border) 78%, transparent));
   border-radius: var(--opus-input-radius-large);
-  background: #000000;
-  box-shadow: var(--opus-shadow);
+  background: var(--opus-surface-fill, #000000);
+  box-shadow: var(--opus-control-shadow, var(--opus-shadow));
 }
 
 .stage canvas {

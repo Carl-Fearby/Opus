@@ -12,6 +12,10 @@
   vertical-align: middle;
 }
 
+:global([data-opus-appearance="neumorphism"]) .badge {
+  box-shadow: var(--opus-control-shadow, none);
+}
+
 .badge[data-size="sm"] {
   min-height: 20px;
   padding: 0 8px;
@@ -39,7 +43,7 @@
   min-width: 1.5em;
   padding: 0.2em 0.4em;
   border-radius: 999px;
-  background: color-mix(in srgb, currentColor 18%, transparent);
+  background: var(--opus-surface-fill, color-mix(in srgb, currentColor 18%, transparent));
   font-variant-numeric: tabular-nums;
   font-size: 0.92em;
   line-height: 1;
@@ -47,7 +51,11 @@
 }
 
 .badge[data-variant="solid"] .count {
-  background: color-mix(in srgb, currentColor 24%, transparent);
+  background: var(--opus-surface-fill, color-mix(in srgb, currentColor 24%, transparent));
+}
+
+:global([data-opus-appearance="neumorphism"]) .badge[data-variant="solid"] .count {
+  box-shadow: var(--opus-control-shadow, none);
 }
 
 .badge:has(.count) {
@@ -63,20 +71,32 @@
 }
 
 .badge[data-variant="solid"] {
-  color: var(--badge-solid-fg);
-  background: var(--badge-solid-bg);
+  color: var(--opus-surface-text, var(--badge-solid-fg));
+  background: var(--opus-surface-fill, var(--badge-solid-bg));
+}
+
+:global([data-opus-appearance="neumorphism"]) .badge[data-variant="solid"] {
+  box-shadow: var(--opus-control-shadow, none);
 }
 
 .badge[data-variant="soft"] {
-  color: var(--badge-soft-fg);
-  border-color: var(--badge-soft-border, transparent);
-  background: var(--badge-soft-bg);
+  color: var(--opus-surface-text, var(--badge-soft-fg));
+  border-color: var(--opus-surface-border, var(--badge-soft-border, transparent));
+  background: var(--opus-surface-fill, var(--badge-soft-bg));
+}
+
+:global([data-opus-appearance="neumorphism"]) .badge[data-variant="soft"] {
+  box-shadow: var(--opus-control-shadow, none);
 }
 
 .badge[data-variant="outline"] {
-  color: var(--badge-outline-fg);
-  border-color: var(--badge-outline-border);
-  background: transparent;
+  color: var(--opus-surface-text, var(--badge-outline-fg));
+  border-color: var(--opus-surface-border, var(--badge-outline-border));
+  background: var(--opus-surface-fill, transparent);
+}
+
+:global([data-opus-appearance="neumorphism"]) .badge[data-variant="outline"] {
+  box-shadow: var(--opus-control-shadow, none);
 }
 
 .badge[data-tone="neutral"] {

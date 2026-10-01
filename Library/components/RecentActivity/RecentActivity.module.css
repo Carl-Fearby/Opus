@@ -52,18 +52,18 @@
 }
 
 .iconWrap[data-tone="blue"] {
-  background: color-mix(in srgb, #3b82f6 24%, transparent);
-  color: #93c5fd;
+  background: var(--opus-surface-fill, color-mix(in srgb, #3b82f6 24%, transparent));
+  color: var(--opus-surface-text, #93c5fd);
 }
 
 .iconWrap[data-tone="green"] {
-  background: color-mix(in srgb, #22c55e 22%, transparent);
-  color: #86efac;
+  background: var(--opus-surface-fill, color-mix(in srgb, #22c55e 22%, transparent));
+  color: var(--opus-surface-text, #86efac);
 }
 
 .iconWrap[data-tone="orange"] {
-  background: color-mix(in srgb, #f97316 22%, transparent);
-  color: #fdba74;
+  background: var(--opus-surface-fill, color-mix(in srgb, #f97316 22%, transparent));
+  color: var(--opus-surface-text, #fdba74);
 }
 
 .copy {

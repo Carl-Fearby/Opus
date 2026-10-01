@@ -5,12 +5,12 @@
 }
 
 .editorShell {
-  border: 1px solid var(--opus-border-strong);
+  border: 1px solid var(--opus-surface-border, var(--opus-border-strong));
   border-radius: var(--opus-input-radius);
-  background: var(--opus-input-bg);
+  background: var(--opus-surface-fill, var(--opus-input-bg));
   box-shadow:
-    0 1px 0 rgba(255, 255, 255, 0.05) inset,
-    0 14px 30px rgba(0, 0, 0, 0.06);
+    var(--opus-control-inset-shadow, 0 1px 0 rgba(255, 255, 255, 0.05) inset,
+    0 14px 30px rgba(0, 0, 0, 0.06));
 }
 
 .editorShell:focus-within {
@@ -30,26 +30,30 @@
   align-items: center;
   gap: 3px;
   padding: 6px;
-  border-bottom: 1px solid var(--opus-border-strong);
+  border-bottom: 1px solid var(--opus-surface-border, var(--opus-border-strong));
   border-top-left-radius: var(--opus-input-radius);
   border-top-right-radius: var(--opus-input-radius);
-  background: color-mix(in srgb, var(--opus-surface-raised) 88%, transparent);
+  background: var(--opus-surface-fill, color-mix(in srgb, var(--opus-surface-raised) 88%, transparent));
+}
+
+:global([data-opus-appearance="neumorphism"]) .toolbar {
+  box-shadow: var(--opus-control-shadow, none);
 }
 
 .divider {
   width: 1px;
   align-self: stretch;
   margin: 2px 4px;
-  background: color-mix(in srgb, var(--opus-border-strong) 80%, transparent);
+  background: var(--opus-surface-fill, color-mix(in srgb, var(--opus-border-strong) 80%, transparent));
 }
 
 .blockSelect {
   min-height: calc(var(--opus-control-height) - 2px);
   padding: 0 var(--opus-control-padding-x, 6px);
-  border: 1px solid var(--opus-border-strong);
+  border: 1px solid var(--opus-surface-border, var(--opus-border-strong));
   border-radius: 5px;
-  background: var(--opus-input-bg);
-  color: var(--opus-text);
+  background: var(--opus-surface-fill, var(--opus-input-bg));
+  color: var(--opus-surface-text, var(--opus-text));
   font-size: calc(var(--opus-control-font-size) - 0.14rem);
   font-weight: 600;
   cursor: pointer;
@@ -91,8 +95,12 @@
 }
 
 .toolbarButton:hover:not(:disabled) {
-  border-color: var(--opus-border-strong);
-  background: color-mix(in srgb, var(--opus-accent-soft) 55%, transparent);
+  border-color: var(--opus-surface-border, var(--opus-border-strong));
+  background: var(--opus-surface-fill, color-mix(in srgb, var(--opus-accent-soft) 55%, transparent));
+}
+
+:global([data-opus-appearance="neumorphism"]) .toolbarButton:hover:not(:disabled) {
+  box-shadow: var(--opus-control-shadow, none);
 }
 
 .toolbarButton:focus-visible {
@@ -102,14 +110,22 @@
 }
 
 .toolbarButtonActive {
-  border-color: color-mix(in srgb, var(--opus-accent) 45%, transparent);
-  background: var(--opus-accent);
-  color: var(--opus-accent-contrast, #fff);
+  border-color: var(--opus-surface-border, color-mix(in srgb, var(--opus-accent) 45%, transparent));
+  background: var(--opus-surface-fill, var(--opus-accent));
+  color: var(--opus-surface-text, var(--opus-accent-contrast, #fff));
+}
+
+:global([data-opus-appearance="neumorphism"]) .toolbarButtonActive {
+  box-shadow: var(--opus-control-inset-shadow, none);
 }
 
 .toolbarButtonActive:hover:not(:disabled) {
-  background: var(--opus-accent);
-  color: var(--opus-accent-contrast, #fff);
+  background: var(--opus-surface-fill, var(--opus-accent));
+  color: var(--opus-surface-text, var(--opus-accent-contrast, #fff));
+}
+
+:global([data-opus-appearance="neumorphism"]) .toolbarButtonActive:hover:not(:disabled) {
+  box-shadow: var(--opus-control-inset-shadow, none);
 }
 
 .toolbarButton:disabled {
@@ -204,7 +220,7 @@
 .editor blockquote {
   margin: 0 0 0.75em;
   padding: 4px 0 4px 14px;
-  border-left: 3px solid color-mix(in srgb, var(--opus-accent) 55%, transparent);
+  border-left: 3px solid var(--opus-surface-border, color-mix(in srgb, var(--opus-accent) 55%, transparent));
   color: var(--opus-muted);
   font-style: italic;
 }
@@ -213,12 +229,16 @@
   margin: 0 0 0.75em;
   padding: 12px 14px;
   border-radius: 8px;
-  background: color-mix(in srgb, var(--opus-surface-sunken, #0b0b0f) 92%, transparent);
-  color: var(--opus-text);
+  background: var(--opus-surface-fill, color-mix(in srgb, var(--opus-surface-sunken, #0b0b0f) 92%, transparent));
+  color: var(--opus-surface-text, var(--opus-text));
   font-family: var(--opus-font-mono, ui-monospace, monospace);
   font-size: 0.85rem;
   white-space: pre-wrap;
   overflow-x: auto;
+}
+
+:global([data-opus-appearance="neumorphism"]) .editor pre {
+  box-shadow: var(--opus-control-inset-shadow, none);
 }
 
 .editor img {
@@ -230,7 +250,7 @@
 .editor hr {
   margin: 1em 0;
   border: 0;
-  border-top: 1px solid var(--opus-border-strong);
+  border-top: 1px solid var(--opus-surface-border, var(--opus-border-strong));
 }
 
 .editor table {
@@ -244,18 +264,22 @@
 .editor td {
   min-width: 40px;
   padding: 6px 8px;
-  border: 1px solid var(--opus-border-strong);
+  border: 1px solid var(--opus-surface-border, var(--opus-border-strong));
   text-align: left;
   vertical-align: top;
 }
 
 .editor th {
-  background: color-mix(in srgb, var(--opus-surface-raised) 80%, transparent);
+  background: var(--opus-surface-fill, color-mix(in srgb, var(--opus-surface-raised) 80%, transparent));
   font-weight: 700;
 }
 
+:global([data-opus-appearance="neumorphism"]) .editor th {
+  box-shadow: var(--opus-control-inset-shadow, none);
+}
+
 .readOnly {
-  background: color-mix(in srgb, var(--opus-surface-raised) 70%, transparent);
+  background: var(--opus-surface-fill, color-mix(in srgb, var(--opus-surface-raised) 70%, transparent));
   cursor: default;
 }
 
@@ -271,17 +295,21 @@
   backdrop-filter: blur(2px);
 }
 
+:global([data-opus-appearance="neumorphism"]) .modalOverlay {
+  box-shadow: var(--opus-control-shadow, none);
+}
+
 .modal {
   width: 100%;
   max-width: 340px;
   display: grid;
   gap: 14px;
   padding: 18px;
-  border: 1px solid var(--opus-border-strong);
+  border: 1px solid var(--opus-surface-border, var(--opus-border-strong));
   border-radius: 14px;
-  background: var(--opus-panel);
-  color: var(--opus-text);
-  box-shadow: var(--opus-shadow, 0 24px 60px rgba(0, 0, 0, 0.4));
+  background: var(--opus-surface-fill, var(--opus-panel));
+  color: var(--opus-surface-text, var(--opus-text));
+  box-shadow: var(--opus-control-shadow, var(--opus-shadow, 0 24px 60px rgba(0, 0, 0, 0.4)));
 }
 
 .modalTitle {
@@ -308,11 +336,16 @@
   width: 100%;
   min-height: 34px;
   padding: 0 10px;
-  border: 1px solid var(--opus-border-strong);
+  border: 1px solid var(--opus-surface-border, var(--opus-border-strong));
   border-radius: 8px;
-  background: var(--opus-input-fill);
-  color: var(--opus-text);
+  background: var(--opus-surface-fill, var(--opus-input-fill));
+  color: var(--opus-surface-text, var(--opus-text));
   font-size: 0.85rem;
+}
+
+:global([data-opus-appearance="neumorphism"]) .modalInput,
+:global([data-opus-appearance="neumorphism"]) .modalNumber {
+  box-shadow: var(--opus-control-inset-shadow, none);
 }
 
 .modalInput:focus-visible,
@@ -358,19 +391,31 @@
 }
 
 .modalCancel {
-  border: 1px solid var(--opus-border-strong);
-  background: var(--opus-input-fill);
-  color: var(--opus-text);
+  border: 1px solid var(--opus-surface-border, var(--opus-border-strong));
+  background: var(--opus-surface-fill, var(--opus-input-fill));
+  color: var(--opus-surface-text, var(--opus-text));
+}
+
+:global([data-opus-appearance="neumorphism"]) .modalCancel {
+  box-shadow: var(--opus-control-shadow, none);
 }
 
 .modalCancel:hover {
-  background: color-mix(in srgb, var(--opus-accent-soft) 70%, var(--opus-input-fill));
+  background: var(--opus-surface-fill, color-mix(in srgb, var(--opus-accent-soft) 70%, var(--opus-input-fill)));
+}
+
+:global([data-opus-appearance="neumorphism"]) .modalCancel:hover {
+  box-shadow: var(--opus-control-shadow, none);
 }
 
 .modalConfirm {
-  border: 1px solid var(--opus-accent);
-  background: var(--opus-accent);
-  color: var(--opus-accent-contrast, #fff);
+  border: 1px solid var(--opus-surface-border, var(--opus-accent));
+  background: var(--opus-surface-fill, var(--opus-accent));
+  color: var(--opus-surface-text, var(--opus-accent-contrast, #fff));
+}
+
+:global([data-opus-appearance="neumorphism"]) .modalConfirm {
+  box-shadow: var(--opus-control-shadow, none);
 }
 
 .modalConfirm:hover:not(:disabled) {

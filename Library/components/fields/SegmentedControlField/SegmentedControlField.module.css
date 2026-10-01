@@ -3,9 +3,13 @@
   flex-wrap: wrap;
   gap: 0;
   padding: 3px;
-  border: 1px solid var(--opus-border-strong);
+  border: 1px solid var(--opus-surface-border, var(--opus-border-strong));
   border-radius: var(--opus-input-radius-large);
-  background: color-mix(in srgb, var(--opus-input-bg) 88%, var(--opus-panel));
+  background: var(--opus-surface-fill, color-mix(in srgb, var(--opus-input-bg) 88%, var(--opus-panel)));
+}
+
+:global([data-opus-appearance="neumorphism"]) .root {
+  box-shadow: var(--opus-control-shadow, none);
 }
 
 .segment {
@@ -25,7 +29,7 @@
 }
 
 .segmentActive {
-  background: color-mix(in srgb, var(--opus-accent) 65%, #11132b);
-  color: #fff;
-  box-shadow: 0 8px 18px color-mix(in srgb, var(--opus-accent) 28%, transparent);
+  background: var(--opus-surface-fill, color-mix(in srgb, var(--opus-accent) 65%, #11132b));
+  color: var(--opus-surface-text, #fff);
+  box-shadow: var(--opus-control-inset-shadow, 0 8px 18px color-mix(in srgb, var(--opus-accent) 28%, transparent));
 }

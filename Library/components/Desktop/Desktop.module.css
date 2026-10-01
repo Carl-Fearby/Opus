@@ -5,10 +5,14 @@
   height: 100%;
   min-height: 580px;
   overflow: hidden;
-  border: 1px solid color-mix(in srgb, var(--opus-accent) 24%, var(--opus-border));
+  border: 1px solid var(--opus-surface-border, color-mix(in srgb, var(--opus-accent) 24%, var(--opus-border)));
   border-radius: 18px;
-  background-color: #060914;
+  background-color: var(--opus-surface-fill, #060914);
   isolation: isolate;
+}
+
+:global([data-opus-appearance="neumorphism"]) .root {
+  box-shadow: var(--opus-control-shadow, none);
 }
 
 .root[data-edge-to-edge="true"] {
@@ -19,16 +23,27 @@
 
 .root[data-wallpaper="aurora"] {
   background:
-    radial-gradient(75% 80% at 18% 10%, color-mix(in srgb, var(--opus-accent) 34%, transparent), transparent 62%),
+    var(--opus-surface-fill, radial-gradient(75% 80% at 18% 10%, color-mix(in srgb, var(--opus-accent) 34%, transparent), transparent 62%),
     radial-gradient(70% 75% at 86% 78%, color-mix(in srgb, var(--opus-accent) 20%, transparent), transparent 65%),
-    linear-gradient(145deg, #070716 0%, #071522 52%, #080b17 100%);
+    linear-gradient(145deg, #070716 0%, #071522 52%, #080b17 100%));
+}
+
+:global([data-opus-appearance="neumorphism"]) .root[data-wallpaper="aurora"] {
+  box-shadow: var(--opus-control-shadow, none);
 }
 
 .root[data-wallpaper="gradient"] {
-  background: linear-gradient(145deg, color-mix(in srgb, var(--opus-accent) 30%, #090716), #071522 58%, #050914);
+  background: var(--opus-surface-fill, linear-gradient(145deg, color-mix(in srgb, var(--opus-accent) 30%, #090716), #071522 58%, #050914));
 }
 
-.root[data-wallpaper="plain"] { background: var(--opus-bg); }
+:global([data-opus-appearance="neumorphism"]) .root[data-wallpaper="gradient"] {
+  box-shadow: var(--opus-control-shadow, none);
+}
+
+.root[data-wallpaper="plain"] { background: var(--opus-surface-fill, var(--opus-bg)); }
+
+:global([data-opus-appearance="neumorphism"]) .root[data-wallpaper="plain"] { box-shadow: var(--opus-control-shadow, none);
+}
 
 .root::before {
   position: absolute;
@@ -66,7 +81,7 @@
 
 :global([data-theme="light"]) .root[data-wallpaper="aurora"] {
   background:
-    radial-gradient(75% 80% at 18% 10%, color-mix(in srgb, var(--opus-accent) 20%, transparent), transparent 62%),
+    var(--opus-surface-fill, radial-gradient(75% 80% at 18% 10%, color-mix(in srgb, var(--opus-accent) 20%, transparent), transparent 62%),
     radial-gradient(70% 75% at 86% 78%, color-mix(in srgb, var(--opus-accent) 13%, transparent), transparent 65%),
-    linear-gradient(145deg, #f6f3ff 0%, #edf7ff 52%, #f7f9ff 100%);
+    linear-gradient(145deg, #f6f3ff 0%, #edf7ff 52%, #f7f9ff 100%));
 }

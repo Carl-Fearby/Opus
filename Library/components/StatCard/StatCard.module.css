@@ -9,12 +9,16 @@
   white-space: nowrap;
 }
 
+:global([data-opus-appearance="neumorphism"]) .change {
+  box-shadow: var(--opus-control-inset-shadow, none);
+}
+
 .change[data-trend="up"] {
-  background: color-mix(in srgb, #16a34a 14%, transparent);
-  color: #16a34a;
+  background: var(--opus-surface-fill, color-mix(in srgb, #16a34a 14%, transparent));
+  color: var(--opus-surface-text, #16a34a);
 }
 
 .change[data-trend="down"] {
-  background: color-mix(in srgb, #ef4444 12%, transparent);
-  color: #ef4444;
+  background: var(--opus-surface-fill, color-mix(in srgb, #ef4444 12%, transparent));
+  color: var(--opus-surface-text, #ef4444);
 }

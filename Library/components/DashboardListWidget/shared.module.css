@@ -26,7 +26,7 @@
 }
 
 .itemAction:hover {
-  background: color-mix(in srgb, var(--dashboard-section-text) 4%, transparent);
+  background: var(--opus-surface-fill, color-mix(in srgb, var(--dashboard-section-text) 4%, transparent));
 }
 
 .itemAction:focus-visible {

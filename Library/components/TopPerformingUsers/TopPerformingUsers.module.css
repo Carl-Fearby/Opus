@@ -61,9 +61,13 @@
 .barTrack {
   height: 0.42rem;
   border-radius: 999px;
-  background: color-mix(in srgb, var(--dashboard-section-text) 8%, transparent);
+  background: var(--opus-surface-fill, color-mix(in srgb, var(--dashboard-section-text) 8%, transparent));
   overflow: hidden;
   min-width: 0;
+}
+
+:global([data-opus-appearance="neumorphism"]) .barTrack {
+  box-shadow: var(--opus-control-inset-shadow, none);
 }
 
 .barFill {

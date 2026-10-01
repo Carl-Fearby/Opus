@@ -37,16 +37,25 @@
 }
 
 .track {
+  padding: var(--opus-progress-padding, 0);
   overflow: hidden;
   width: 100%;
   height: 10px;
   border-radius: 999px;
-  background: color-mix(in srgb, var(--dashboard-section-text, var(--opus-border)) 14%, transparent);
+  background: var(--opus-surface-fill, color-mix(in srgb, var(--dashboard-section-text, var(--opus-border)) 14%, transparent));
+}
+
+:global([data-opus-appearance="neumorphism"]) .track {
+  box-shadow: var(--opus-control-inset-shadow, none);
 }
 
 .fill {
   display: block;
   height: 100%;
   border-radius: inherit;
-  background: linear-gradient(90deg, var(--opus-accent), color-mix(in srgb, var(--opus-accent) 70%, white));
+  background: var(--opus-surface-fill, linear-gradient(90deg, var(--opus-accent), color-mix(in srgb, var(--opus-accent) 70%, white)));
+}
+
+:global([data-opus-appearance="neumorphism"]) .fill {
+  box-shadow: var(--opus-control-shadow, none);
 }

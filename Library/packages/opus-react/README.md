@@ -122,6 +122,25 @@ export function App() {
 
 Available themes: `"light"` | `"dark"`
 
+Neumorphism is an optional surface style in either colour mode:
+
+```tsx
+<OpusThemeProvider theme="dark" defaults={{ appearance: "neumorphism" }}>
+  <App />
+</OpusThemeProvider>
+```
+
+Controls share one material colour, with raised surfaces and inset inputs/selected states.
+Dark mode uses subtler lighting. This applies to the component library, including navigation,
+forms, tables, dashboard widgets, and portalled menus/dialogs. Scoped providers also carry their
+appearance into portals without changing the surrounding application.
+
+Keyboard focus, validation, status indicators, chart series, colour-picker swatches, media,
+and branded artwork retain their meaningful visual cues. Neumorphism takes precedence over
+decorative gradients and glass surfaces; explicit corner-radius settings still apply.
+Switch `appearance` to `"standard"` to restore normal component styling.
+
+
 Pass `applyToDocument={false}` if you manage `data-theme` yourself (for example on a scoped container in embedded widgets).
 
 ## Accent colour

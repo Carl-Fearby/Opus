@@ -4,13 +4,13 @@
   width: 100%;
   min-height: var(--opus-control-height);
   overflow: hidden;
-  border: 1px solid var(--opus-border-strong);
+  border: 1px solid var(--opus-surface-border, var(--opus-border-strong));
   border-radius: var(--opus-input-radius);
-  background: var(--opus-input-bg);
-  color: var(--opus-text);
+  background: var(--opus-surface-fill, var(--opus-input-bg));
+  color: var(--opus-surface-text, var(--opus-text));
   box-shadow:
-    0 1px 0 rgba(255, 255, 255, 0.05) inset,
-    0 14px 30px rgba(0, 0, 0, 0.06);
+    var(--opus-control-shadow, 0 1px 0 rgba(255, 255, 255, 0.05) inset,
+    0 14px 30px rgba(0, 0, 0, 0.06));
 }
 
 .input {
@@ -19,8 +19,8 @@
   min-height: var(--opus-control-height);
   padding: 0 8px;
   border: 0;
-  border-right: 1px solid color-mix(in srgb, var(--opus-border-strong) 45%, transparent);
-  border-left: 1px solid color-mix(in srgb, var(--opus-border-strong) 45%, transparent);
+  border-right: 1px solid var(--opus-surface-border, color-mix(in srgb, var(--opus-border-strong) 45%, transparent));
+  border-left: 1px solid var(--opus-surface-border, color-mix(in srgb, var(--opus-border-strong) 45%, transparent));
   background: transparent;
   color: inherit;
   text-align: center;

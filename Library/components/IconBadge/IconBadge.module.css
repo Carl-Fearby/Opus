@@ -98,13 +98,13 @@ button.root:focus-visible {
   height: 0.86rem;
   padding: 0 0.2rem;
   border-radius: 999px;
-  background: var(--icon-badge-bg, #8b5cf6);
-  color: var(--icon-badge-fg, #f8fafc);
+  background: var(--opus-surface-fill, var(--icon-badge-bg, #8b5cf6));
+  color: var(--opus-surface-text, var(--icon-badge-fg, #f8fafc));
   font-size: 0.62rem;
   font-weight: 700;
   line-height: 1;
   white-space: nowrap;
-  box-shadow: 0 0 0 1px color-mix(in srgb, var(--icon-badge-ring, #020617) 24%, transparent);
+  box-shadow: var(--opus-control-shadow, 0 0 0 1px color-mix(in srgb, var(--icon-badge-ring, #020617) 24%, transparent));
   transform: translate(48%, -48%);
   pointer-events: none;
 }

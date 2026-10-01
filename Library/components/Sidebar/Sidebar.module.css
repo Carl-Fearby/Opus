@@ -240,15 +240,19 @@
 }
 
 .link:hover {
-  border-color: var(--opus-border);
-  background: color-mix(in srgb, var(--opus-accent-soft) 70%, transparent);
-  color: var(--opus-text);
+  border-color: var(--opus-surface-border, var(--opus-border));
+  background: var(--opus-surface-fill, color-mix(in srgb, var(--opus-accent-soft) 70%, transparent));
+  color: var(--opus-surface-text, var(--opus-text));
 }
 
 .linkActive {
-  border-color: color-mix(in srgb, var(--opus-accent) 45%, transparent);
-  background: var(--opus-accent-soft);
-  color: var(--opus-accent);
+  border-color: var(--opus-surface-border, color-mix(in srgb, var(--opus-accent) 45%, transparent));
+  background: var(--opus-surface-fill, var(--opus-accent-soft));
+  color: var(--opus-surface-text, var(--opus-accent));
+}
+
+:global([data-opus-appearance="neumorphism"]) .linkActive {
+  box-shadow: var(--opus-control-inset-shadow, none);
 }
 
 .icon {
@@ -334,7 +338,7 @@
   display: grid;
   gap: 2px;
   padding: 2px 0 4px;
-  border-left: 1px solid color-mix(in srgb, var(--opus-accent) 32%, transparent);
+  border-left: 1px solid var(--opus-surface-border, color-mix(in srgb, var(--opus-accent) 32%, transparent));
 }
 
 .collapsedGroup:hover,
@@ -451,7 +455,7 @@
 }
 
 .groupItemsWrap[data-open="true"] .groupItems {
-  border-left-color: var(--opus-border);
+  border-left-color: var(--opus-surface-border, var(--opus-border));
   opacity: 1;
 }
 

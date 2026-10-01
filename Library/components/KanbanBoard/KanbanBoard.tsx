@@ -9,7 +9,7 @@ import {
   type PointerEvent as ReactPointerEvent,
   type ReactNode,
 } from "react";
-import { createPortal } from "react-dom";
+import { createThemedPortal as createPortal } from "@/lib/theme/createThemedPortal";
 import { CatalogIcon } from "@/components/CatalogIcon";
 import { CustomScrollbar } from "@/components/CustomScrollbar";
 import styles from "./KanbanBoard.module.css";

@@ -22,7 +22,7 @@
 .table th,
 .table td {
   padding: var(--table-cell-padding);
-  border-bottom: 1px solid color-mix(in srgb, var(--opus-border) 72%, transparent);
+  border-bottom: 1px solid var(--opus-surface-border, color-mix(in srgb, var(--opus-border) 72%, transparent));
   text-align: left;
   vertical-align: middle;
 }
@@ -36,8 +36,8 @@
 }
 
 .table th {
-  background: color-mix(in srgb, var(--opus-input-bg) 62%, transparent);
-  color: var(--opus-muted);
+  background: var(--opus-surface-fill, color-mix(in srgb, var(--opus-input-bg) 62%, transparent));
+  color: var(--opus-surface-text, var(--opus-muted));
   font-size: 0.74rem;
   font-weight: 900;
   letter-spacing: 0.06em;
@@ -49,12 +49,12 @@
 }
 
 .wrap[data-striped="true"] tbody tr:nth-child(even) td {
-  background: color-mix(in srgb, var(--opus-accent) 6%, transparent);
+  background: var(--opus-surface-fill, color-mix(in srgb, var(--opus-accent) 6%, transparent));
 }
 
 .wrap[data-bordered="true"] .table th,
 .wrap[data-bordered="true"] .table td {
-  border-right: 1px solid color-mix(in srgb, var(--opus-border) 72%, transparent);
+  border-right: 1px solid var(--opus-surface-border, color-mix(in srgb, var(--opus-border) 72%, transparent));
 }
 
 .wrap[data-bordered="true"] .table th:last-child,

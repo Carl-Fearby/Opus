@@ -14,7 +14,7 @@
   align-items: center;
   gap: 12px;
   min-width: 0;
-  border-bottom: 1px solid color-mix(in srgb, var(--opus-border) 72%, transparent);
+  border-bottom: 1px solid var(--opus-surface-border, color-mix(in srgb, var(--opus-border) 72%, transparent));
 }
 
 .listViewport {
@@ -92,12 +92,12 @@
   width: 26px;
   height: 32px;
   padding: 0;
-  border: 1px solid color-mix(in srgb, var(--opus-accent) 42%, var(--opus-border));
-  background: color-mix(in srgb, var(--dashboard-section-bg, var(--opus-panel)) 88%, var(--opus-accent) 12%);
-  color: color-mix(in srgb, var(--opus-accent) 78%, var(--opus-text));
+  border: 1px solid var(--opus-surface-border, color-mix(in srgb, var(--opus-accent) 42%, var(--opus-border)));
+  background: var(--opus-surface-fill, color-mix(in srgb, var(--dashboard-section-bg, var(--opus-panel)) 88%, var(--opus-accent) 12%));
+  color: var(--opus-surface-text, color-mix(in srgb, var(--opus-accent) 78%, var(--opus-text)));
   cursor: pointer;
   transform: translateY(-50%);
-  backdrop-filter: blur(8px);
+  backdrop-filter: var(--opus-surface-backdrop-filter, blur(8px));
 }
 
 .scrollButton svg {
@@ -116,19 +116,19 @@
 .previousButton {
   left: 0;
   border-radius: 0 14px 14px 0;
-  box-shadow: 8px 0 18px color-mix(in srgb, #000000 22%, transparent);
+  box-shadow: var(--opus-control-shadow, 8px 0 18px color-mix(in srgb, #000000 22%, transparent));
 }
 
 .nextButton {
   right: 0;
   border-radius: 14px 0 0 14px;
-  box-shadow: -8px 0 18px color-mix(in srgb, #000000 22%, transparent);
+  box-shadow: var(--opus-control-shadow, -8px 0 18px color-mix(in srgb, #000000 22%, transparent));
 }
 
 :global([data-preview-root][data-theme="light"]) .scrollButton,
 :global([data-theme="light"]) .scrollButton {
-  background: color-mix(in srgb, #ffffff 90%, var(--opus-accent) 10%);
-  box-shadow: 0 4px 14px color-mix(in srgb, var(--opus-muted) 16%, transparent);
+  background: var(--opus-surface-fill, color-mix(in srgb, #ffffff 90%, var(--opus-accent) 10%));
+  box-shadow: var(--opus-control-shadow, 0 4px 14px color-mix(in srgb, var(--opus-muted) 16%, transparent));
 }
 
 :global([data-preview-root][data-theme="light"]) .scrollButton:hover,
@@ -166,7 +166,7 @@
 .root[data-orientation="vertical"] .header {
   flex-direction: column;
   align-items: stretch;
-  border-right: 1px solid color-mix(in srgb, var(--opus-border) 72%, transparent);
+  border-right: 1px solid var(--opus-surface-border, color-mix(in srgb, var(--opus-border) 72%, transparent));
   border-bottom: 0;
   padding-right: 10px;
 }
@@ -238,9 +238,13 @@
 .root[data-variant="contained"] .list {
   gap: 6px;
   padding: 6px;
-  border: 1px solid var(--opus-border);
+  border: 1px solid var(--opus-surface-border, var(--opus-border));
   border-radius: var(--opus-input-radius-large);
-  background: color-mix(in srgb, var(--opus-input-bg) 54%, transparent);
+  background: var(--opus-surface-fill, color-mix(in srgb, var(--opus-input-bg) 54%, transparent));
+}
+
+:global([data-opus-appearance="neumorphism"]) .root[data-variant="contained"] .list {
+  box-shadow: var(--opus-control-shadow, none);
 }
 
 .root[data-variant="contained"] .tab {
@@ -254,20 +258,24 @@
 }
 
 .root[data-variant="contained"] .tab[aria-selected="true"] {
-  color: var(--opus-text);
-  background: color-mix(in srgb, var(--opus-accent) 18%, transparent);
+  color: var(--opus-surface-text, var(--opus-text));
+  background: var(--opus-surface-fill, color-mix(in srgb, var(--opus-accent) 18%, transparent));
+}
+
+:global([data-opus-appearance="neumorphism"]) .root[data-variant="contained"] .tab[aria-selected="true"] {
+  box-shadow: var(--opus-control-inset-shadow, none);
 }
 
 .panel {
   min-width: 0;
   padding: 14px;
-  border: 1px solid var(--opus-border);
+  border: 1px solid var(--opus-surface-border, var(--opus-border));
   border-radius: var(--opus-input-radius-large);
-  background: color-mix(in srgb, var(--opus-panel) 92%, transparent);
-  color: var(--opus-muted);
+  background: var(--opus-surface-fill, color-mix(in srgb, var(--opus-panel) 92%, transparent));
+  color: var(--opus-surface-text, var(--opus-muted));
   font-size: var(--opus-control-font-size);
   line-height: 1.55;
-  box-shadow: var(--opus-shadow);
+  box-shadow: var(--opus-control-shadow, var(--opus-shadow));
 }
 
 .panel:focus-visible {
@@ -319,7 +327,7 @@
   box-sizing: border-box;
   min-height: calc(var(--tabs-card-tab-height) + var(--tabs-card-rail-pad-top) + 1px);
   padding-top: var(--tabs-card-rail-pad-top);
-  border-bottom: 1px solid var(--tabs-card-border);
+  border-bottom: 1px solid var(--opus-surface-border, var(--tabs-card-border));
 }
 
 .root[data-variant="card"] .listViewport {
@@ -338,9 +346,13 @@
   box-sizing: border-box;
   width: var(--opus-control-height, 28px);
   height: var(--opus-control-height, 28px);
-  border-color: color-mix(in srgb, var(--opus-accent) 46%, var(--opus-border));
-  background: var(--opus-input-bg, color-mix(in srgb, var(--dashboard-section-bg, var(--opus-panel)) 88%, var(--opus-accent) 12%));
-  color: var(--opus-text);
+  border-color: var(--opus-surface-border, color-mix(in srgb, var(--opus-accent) 46%, var(--opus-border)));
+  background: var(--opus-surface-fill, var(--opus-input-bg, color-mix(in srgb, var(--dashboard-section-bg, var(--opus-panel)) 88%, var(--opus-accent) 12%)));
+  color: var(--opus-surface-text, var(--opus-text));
+}
+
+:global([data-opus-appearance="neumorphism"]) .root[data-variant="card"] .scrollButton {
+  box-shadow: var(--opus-control-shadow, none);
 }
 
 .root[data-variant="card"] .scrollButton:hover,
@@ -539,9 +551,9 @@
   padding: 0;
   border: 0;
   border-radius: 0;
-  background: var(--tabs-card-active-fill);
+  background: var(--opus-surface-fill, var(--tabs-card-active-fill));
   box-shadow: none;
-  color: inherit;
+  color: var(--opus-surface-text, inherit);
   scrollbar-width: thin;
   scrollbar-color: color-mix(in srgb, var(--opus-accent) 42%, var(--opus-border)) transparent;
 }
@@ -552,7 +564,11 @@
 
 .root[data-variant="card"] .panel::-webkit-scrollbar-thumb {
   border-radius: 999px;
-  background: color-mix(in srgb, var(--opus-accent) 42%, var(--opus-border));
+  background: var(--opus-surface-fill, color-mix(in srgb, var(--opus-accent) 42%, var(--opus-border)));
+}
+
+:global([data-opus-appearance="neumorphism"]) .root[data-variant="card"] .panel::-webkit-scrollbar-thumb {
+  box-shadow: var(--opus-control-shadow, none);
 }
 
 .root[data-variant="card"] .panel::-webkit-scrollbar-track {
@@ -603,7 +619,11 @@
 
 .root[data-variant="card"] .panelContent::-webkit-scrollbar-thumb {
   border-radius: 999px;
-  background: color-mix(in srgb, var(--opus-accent) 42%, var(--opus-border));
+  background: var(--opus-surface-fill, color-mix(in srgb, var(--opus-accent) 42%, var(--opus-border)));
+}
+
+:global([data-opus-appearance="neumorphism"]) .root[data-variant="card"] .panelContent::-webkit-scrollbar-thumb {
+  box-shadow: var(--opus-control-shadow, none);
 }
 
 .root[data-variant="card"] .panelContent::-webkit-scrollbar-track {
@@ -642,7 +662,7 @@
     height: auto;
     margin-top: 0;
     padding: 10px 16px;
-    border-top: 1px solid var(--opus-border);
+    border-top: 1px solid var(--opus-surface-border, var(--opus-border));
   }
 }
 
@@ -680,7 +700,7 @@
     flex-direction: row;
     align-items: flex-end;
     border-right: 0;
-    border-bottom: 1px solid color-mix(in srgb, var(--opus-border) 72%, transparent);
+    border-bottom: 1px solid var(--opus-surface-border, color-mix(in srgb, var(--opus-border) 72%, transparent));
     padding-right: 0;
   }
 

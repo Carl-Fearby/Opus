@@ -70,8 +70,7 @@
   gap: 12px;
   width: 100%;
   min-width: 0;
-  border-bottom: 1px solid
-    color-mix(in srgb, var(--dashboard-section-text) 10%, transparent);
+  border-bottom: 1px solid var(--opus-surface-border, color-mix(in srgb, var(--dashboard-section-text) 10%, transparent));
 }
 
 .tabs {
@@ -154,10 +153,10 @@
   margin: 0;
   padding: 0 12px;
   min-height: 2rem;
-  border: 1px solid color-mix(in srgb, var(--opus-accent) 42%, var(--dashboard-section-border, var(--opus-border)));
+  border: 1px solid var(--opus-surface-border, color-mix(in srgb, var(--opus-accent) 42%, var(--dashboard-section-border, var(--opus-border))));
   border-radius: 8px;
-  background: color-mix(in srgb, var(--opus-accent) 14%, transparent);
-  color: var(--dashboard-section-text, var(--opus-text));
+  background: var(--opus-surface-fill, color-mix(in srgb, var(--opus-accent) 14%, transparent));
+  color: var(--opus-surface-text, var(--dashboard-section-text, var(--opus-text)));
   font: inherit;
   font-size: 0.74rem;
   font-weight: 700;
@@ -398,10 +397,14 @@
   align-items: stretch;
   min-width: 0;
   min-height: 2.15rem;
-  border: 1px solid var(--notes-composer-border);
+  border: 1px solid var(--opus-surface-border, var(--notes-composer-border));
   border-radius: 12px;
-  background: var(--notes-composer-bg);
+  background: var(--opus-surface-fill, var(--notes-composer-bg));
   box-sizing: border-box;
+}
+
+:global([data-opus-appearance="neumorphism"]) .replyInputShell {
+  box-shadow: var(--opus-control-inset-shadow, none);
 }
 
 .replyInputShell[data-has-tools="true"] {
@@ -589,8 +592,7 @@
 .footer {
   grid-area: footer;
   padding: 10px 0 10px;
-  border-top: 1px solid
-    color-mix(in srgb, var(--dashboard-section-text) 10%, transparent);
+  border-top: 1px solid var(--opus-surface-border, color-mix(in srgb, var(--dashboard-section-text) 10%, transparent));
 }
 
 .footerAction {

@@ -48,13 +48,17 @@
 .slider::-webkit-slider-runnable-track {
   height: var(--opus-range-track, 8px);
   border-radius: 999px;
-  background: linear-gradient(
+  background: var(--opus-surface-fill, linear-gradient(
     to right,
     var(--opus-accent) 0%,
     var(--opus-accent) var(--range-progress),
     color-mix(in srgb, var(--opus-muted) 24%, var(--opus-input-bg)) var(--range-progress),
     color-mix(in srgb, var(--opus-muted) 24%, var(--opus-input-bg)) 100%
-  );
+  ));
+}
+
+:global([data-opus-appearance="neumorphism"]) .slider::-webkit-slider-runnable-track {
+  box-shadow: var(--opus-control-inset-shadow, none);
 }
 
 .slider::-webkit-slider-thumb {
@@ -62,32 +66,36 @@
   width: var(--opus-range-thumb, 22px);
   height: var(--opus-range-thumb, 22px);
   margin-top: calc((var(--opus-range-track, 8px) - var(--opus-range-thumb, 22px)) / 2);
-  border: 3px solid var(--opus-accent);
+  border: 3px solid var(--opus-surface-border, var(--opus-accent));
   border-radius: 999px;
-  background: #ffffff;
-  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.18);
+  background: var(--opus-surface-fill, #ffffff);
+  box-shadow: var(--opus-control-shadow, 0 4px 14px rgba(0, 0, 0, 0.18));
 }
 
 .slider::-moz-range-track {
   height: var(--opus-range-track, 8px);
   border: 0;
   border-radius: 999px;
-  background: color-mix(in srgb, var(--opus-muted) 24%, var(--opus-input-bg));
+  background: var(--opus-surface-fill, color-mix(in srgb, var(--opus-muted) 24%, var(--opus-input-bg)));
+}
+
+:global([data-opus-appearance="neumorphism"]) .slider::-moz-range-track {
+  box-shadow: var(--opus-control-inset-shadow, none);
 }
 
 .slider::-moz-range-progress {
   height: var(--opus-range-track, 8px);
   border-radius: 999px;
-  background: var(--opus-accent);
+  background: var(--opus-surface-fill, var(--opus-accent));
 }
 
 .slider::-moz-range-thumb {
   width: var(--opus-range-thumb, 22px);
   height: var(--opus-range-thumb, 22px);
-  border: 3px solid var(--opus-accent);
+  border: 3px solid var(--opus-surface-border, var(--opus-accent));
   border-radius: 999px;
-  background: #ffffff;
-  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.18);
+  background: var(--opus-surface-fill, #ffffff);
+  box-shadow: var(--opus-control-shadow, 0 4px 14px rgba(0, 0, 0, 0.18));
 }
 
 .slider:focus-visible {

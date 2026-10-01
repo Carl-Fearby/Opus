@@ -122,7 +122,7 @@
   width: 2px;
   min-height: 16px;
   border-radius: 999px;
-  background: color-mix(in srgb, var(--opus-border) 92%, transparent);
+  background: var(--opus-surface-fill, color-mix(in srgb, var(--opus-border) 92%, transparent));
 }
 
 .body {
@@ -248,23 +248,39 @@
 }
 
 .tag[data-tone="purple"] {
-  background: color-mix(in srgb, #7c3aed 24%, transparent);
-  color: #c4b5fd;
+  background: var(--opus-surface-fill, color-mix(in srgb, #7c3aed 24%, transparent));
+  color: var(--opus-surface-text, #c4b5fd);
+}
+
+:global([data-opus-appearance="neumorphism"]) .tag[data-tone="purple"] {
+  box-shadow: var(--opus-control-shadow, none);
 }
 
 .tag[data-tone="orange"] {
-  background: color-mix(in srgb, #f97316 22%, transparent);
-  color: #fdba74;
+  background: var(--opus-surface-fill, color-mix(in srgb, #f97316 22%, transparent));
+  color: var(--opus-surface-text, #fdba74);
+}
+
+:global([data-opus-appearance="neumorphism"]) .tag[data-tone="orange"] {
+  box-shadow: var(--opus-control-shadow, none);
 }
 
 .tag[data-tone="green"] {
-  background: color-mix(in srgb, #22c55e 20%, transparent);
-  color: #86efac;
+  background: var(--opus-surface-fill, color-mix(in srgb, #22c55e 20%, transparent));
+  color: var(--opus-surface-text, #86efac);
+}
+
+:global([data-opus-appearance="neumorphism"]) .tag[data-tone="green"] {
+  box-shadow: var(--opus-control-shadow, none);
 }
 
 .tag[data-tone="blue"] {
-  background: color-mix(in srgb, #3b82f6 22%, transparent);
-  color: #93c5fd;
+  background: var(--opus-surface-fill, color-mix(in srgb, #3b82f6 22%, transparent));
+  color: var(--opus-surface-text, #93c5fd);
+}
+
+:global([data-opus-appearance="neumorphism"]) .tag[data-tone="blue"] {
+  box-shadow: var(--opus-control-shadow, none);
 }
 
 .children {

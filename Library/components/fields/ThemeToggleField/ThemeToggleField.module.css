@@ -10,13 +10,13 @@
   min-height: var(--opus-control-height);
   max-height: var(--opus-control-height);
   padding: 2px;
-  border: 1px solid var(--opus-border-strong);
+  border: 1px solid var(--opus-surface-border, var(--opus-border-strong));
   border-radius: 999px;
-  background: color-mix(in srgb, var(--opus-input-bg) 88%, transparent);
+  background: var(--opus-surface-fill, color-mix(in srgb, var(--opus-input-bg) 88%, transparent));
   box-shadow:
-    0 1px 0 rgba(255, 255, 255, 0.05) inset,
-    0 8px 20px rgba(0, 0, 0, 0.06);
-  color: inherit;
+    var(--opus-control-shadow, 0 1px 0 rgba(255, 255, 255, 0.05) inset,
+    0 8px 20px rgba(0, 0, 0, 0.06));
+  color: var(--opus-surface-text, inherit);
   cursor: pointer;
   font: inherit;
   line-height: 1;
@@ -39,12 +39,12 @@
   width: var(--theme-option-size);
   height: var(--theme-option-size);
   border-radius: 999px;
-  background: linear-gradient(
+  background: var(--opus-surface-fill, linear-gradient(
     135deg,
     var(--opus-accent),
     color-mix(in srgb, var(--opus-accent) 40%, #00d2ff)
-  );
-  box-shadow: 0 8px 18px color-mix(in srgb, var(--opus-accent) 28%, transparent);
+  ));
+  box-shadow: var(--opus-control-shadow, 0 8px 18px color-mix(in srgb, var(--opus-accent) 28%, transparent));
   transform: translateX(0);
   transition:
     transform 220ms cubic-bezier(0.4, 0, 0.2, 1),

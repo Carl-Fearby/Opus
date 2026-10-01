@@ -1,17 +1,18 @@
 .divider,
 .line {
+  box-shadow: var(--opus-divider-shadow, none);
   border: 0;
-  background: color-mix(in srgb, var(--opus-border) 100%, transparent);
+  background: var(--opus-surface-fill, color-mix(in srgb, var(--opus-border) 100%, transparent));
 }
 
 .divider[data-tone="muted"],
 .labelled[data-tone="muted"] .line {
-  background: color-mix(in srgb, var(--opus-muted) 28%, transparent);
+  background: var(--opus-surface-fill, color-mix(in srgb, var(--opus-muted) 28%, transparent));
 }
 
 .divider[data-tone="strong"],
 .labelled[data-tone="strong"] .line {
-  background: color-mix(in srgb, var(--opus-border-strong, var(--opus-border)) 100%, transparent);
+  background: var(--opus-surface-fill, color-mix(in srgb, var(--opus-border-strong, var(--opus-border)) 100%, transparent));
 }
 
 .divider[data-orientation="horizontal"] {

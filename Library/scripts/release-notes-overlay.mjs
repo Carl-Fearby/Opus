@@ -1,6 +1,18 @@
 /** Curated opus-react release notes for npm publishes that only left chore commits in git. */
 export const releaseNotesOverlay = [
   {
+    version: "0.7.4",
+    releasedAt: "2026-10-01",
+    summary: "Neumorphism appearance across Opus components.",
+    changes: [
+      "Add a shared monochrome Neumorphism appearance with raised actions, recessed inputs, and subtle dark-mode shadows.",
+      "Preserve scoped appearance in menus, dialogs, tooltips, and other portals.",
+      "Add persistent appearance selection and generated theme code to the Theme Designer.",
+      "Support featured imagery in MegaMenu panels.",
+      "Publish opus-react 0.7.4.",
+    ],
+  },
+  {
     version: "0.7.3",
     releasedAt: "2026-09-05",
     summary: "Cookie Consent banner with persistent visitor choices.",

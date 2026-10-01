@@ -19,8 +19,8 @@
   gap: 0;
   height: var(--contact-summary-height, 432px);
   min-width: 0;
-  background: var(--contact-tab-rail-bg);
-  background-image: none;
+  background: var(--opus-surface-fill, var(--contact-tab-rail-bg));
+  background-image: var(--opus-surface-background-image, none);
 }
 
 .summaryTabs {
@@ -38,7 +38,7 @@
 }
 
 .summaryPanel {
-  background: var(--contact-tab-widget-bg) !important;
+  background: var(--opus-surface-fill, var(--contact-tab-widget-bg)) !important;
 }
 
 :global([data-preview-root][data-theme="light"]) .detailsCard,
@@ -82,7 +82,7 @@
   gap: var(--detail-row-gap);
   min-width: 0;
   padding: 16px 14px 12px;
-  border-left: 1px solid color-mix(in srgb, var(--opus-border) 78%, transparent);
+  border-left: 1px solid var(--opus-surface-border, color-mix(in srgb, var(--opus-border) 78%, transparent));
 }
 
 .detailsColumn:first-child {
@@ -90,7 +90,7 @@
 }
 
 .detailsColumn[data-empty="true"] {
-  border-left-color: color-mix(in srgb, var(--opus-border) 40%, transparent);
+  border-left-color: var(--opus-surface-border, color-mix(in srgb, var(--opus-border) 40%, transparent));
 }
 
 .detailsColumn[data-empty="true"]:empty {
@@ -199,7 +199,7 @@
     grid-column: 1 / -1;
     margin-top: 22px;
     padding-top: 22px;
-    border-top: 1px solid var(--opus-border);
+    border-top: 1px solid var(--opus-surface-border, var(--opus-border));
     border-left: 0;
   }
 
@@ -218,7 +218,7 @@
     grid-column: auto;
     margin: 0;
     padding: 20px 0;
-    border-top: 1px solid var(--opus-border);
+    border-top: 1px solid var(--opus-surface-border, var(--opus-border));
     border-left: 0;
   }
 

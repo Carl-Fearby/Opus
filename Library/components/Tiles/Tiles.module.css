@@ -13,7 +13,7 @@
   grid-auto-columns: var(--tile-width);
   align-items: start;
   justify-content: start;
-  gap: 12px;
+  gap: var(--opus-tile-track-gap, 12px);
   width: 100%;
   min-width: 0;
   overflow-x: auto;
@@ -21,8 +21,9 @@
   scrollbar-width: none;
   scroll-behavior: smooth;
   scroll-snap-type: x mandatory;
-  padding: 0;
-  background: transparent;
+  scroll-padding-inline: var(--opus-tile-track-padding, 0);
+  padding: var(--opus-tile-track-padding, 0);
+  background: var(--opus-surface-fill, transparent);
   border: 0;
 }
 
@@ -41,13 +42,13 @@
   width: 24px;
   height: 76px;
   padding: 0;
-  color: color-mix(in srgb, var(--opus-accent, #9b72ff) 72%, white);
+  color: var(--opus-surface-text, color-mix(in srgb, var(--opus-accent, #9b72ff) 72%, white));
   font-size: 14px;
   cursor: pointer;
-  background: color-mix(in srgb, var(--opus-panel, #11182a) 84%, var(--opus-accent, #9b72ff) 16%);
-  border: 1px solid color-mix(in srgb, var(--opus-accent, #9b72ff) 42%, transparent);
+  background: var(--opus-surface-fill, color-mix(in srgb, var(--opus-panel, #11182a) 84%, var(--opus-accent, #9b72ff) 16%));
+  border: 1px solid var(--opus-surface-border, color-mix(in srgb, var(--opus-accent, #9b72ff) 42%, transparent));
   transform: translateY(-50%);
-  backdrop-filter: blur(8px);
+  backdrop-filter: var(--opus-surface-backdrop-filter, blur(8px));
   transition:
     color 160ms ease,
     background-color 160ms ease,
@@ -58,7 +59,7 @@
 .moreButton svg {
   width: 9px;
   height: 14px;
-  filter: drop-shadow(0 0 3px color-mix(in srgb, var(--opus-accent, #9b72ff) 72%, transparent));
+  filter: var(--opus-tile-icon-filter, drop-shadow(0 0 3px color-mix(in srgb, var(--opus-accent, #9b72ff) 72%, transparent)));
   transition: filter 160ms ease;
 }
 
@@ -66,20 +67,20 @@
   left: 0;
   border-left: 0;
   border-radius: 0 18px 18px 0;
-  box-shadow: 10px 0 24px color-mix(in srgb, var(--opus-panel, #080b18) 80%, transparent);
+  box-shadow: var(--opus-control-shadow, 10px 0 24px color-mix(in srgb, var(--opus-panel, #080b18) 80%, transparent));
 }
 
 .nextButton {
   right: 0;
   border-right: 0;
   border-radius: 18px 0 0 18px;
-  box-shadow: -10px 0 24px color-mix(in srgb, var(--opus-panel, #080b18) 80%, transparent);
+  box-shadow: var(--opus-control-shadow, -10px 0 24px color-mix(in srgb, var(--opus-panel, #080b18) 80%, transparent));
 }
 
 .moreButton:hover,
 .moreButton:focus-visible {
-  color: var(--opus-accent-contrast, #fff);
-  background: var(--opus-accent, #9b72ff);
+  color: var(--opus-surface-text, var(--opus-accent-contrast, #fff));
+  background: var(--opus-surface-fill, var(--opus-accent, #9b72ff));
   outline: none;
 }
 
@@ -88,27 +89,27 @@
 }
 
 :global([data-theme="light"]) .moreButton {
-  color: var(--opus-accent, #6b46ff);
-  background: color-mix(in srgb, var(--opus-input-fill, #fff) 90%, var(--opus-accent, #6b46ff) 10%);
-  border-color: color-mix(in srgb, var(--opus-accent, #6b46ff) 34%, transparent);
+  color: var(--opus-surface-text, var(--opus-accent, #6b46ff));
+  background: var(--opus-surface-fill, color-mix(in srgb, var(--opus-input-fill, #fff) 90%, var(--opus-accent, #6b46ff) 10%));
+  border-color: var(--opus-surface-border, color-mix(in srgb, var(--opus-accent, #6b46ff) 34%, transparent));
 }
 
 :global([data-theme="light"]) .moreButton svg {
-  filter: drop-shadow(0 0 3px color-mix(in srgb, var(--opus-accent, #6b46ff) 28%, transparent));
+  filter: var(--opus-tile-icon-filter, drop-shadow(0 0 3px color-mix(in srgb, var(--opus-accent, #6b46ff) 28%, transparent)));
 }
 
 :global([data-theme="light"]) .previousButton {
-  box-shadow: 10px 0 20px color-mix(in srgb, var(--opus-muted, #655f83) 14%, transparent);
+  box-shadow: var(--opus-control-shadow, 10px 0 20px color-mix(in srgb, var(--opus-muted, #655f83) 14%, transparent));
 }
 
 :global([data-theme="light"]) .nextButton {
-  box-shadow: -10px 0 20px color-mix(in srgb, var(--opus-muted, #655f83) 14%, transparent);
+  box-shadow: var(--opus-control-shadow, -10px 0 20px color-mix(in srgb, var(--opus-muted, #655f83) 14%, transparent));
 }
 
 :global([data-theme="light"]) .moreButton:hover,
 :global([data-theme="light"]) .moreButton:focus-visible {
-  color: var(--opus-accent-contrast, #fff);
-  background: var(--opus-accent, #6b46ff);
+  color: var(--opus-surface-text, var(--opus-accent-contrast, #fff));
+  background: var(--opus-surface-fill, var(--opus-accent, #6b46ff));
 }
 
 .row[data-layout="fill"] {

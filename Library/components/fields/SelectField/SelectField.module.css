@@ -16,7 +16,7 @@
 }
 
 .option:hover {
-  background: color-mix(in srgb, var(--opus-accent-soft) 65%, transparent);
+  background: var(--opus-surface-fill, color-mix(in srgb, var(--opus-accent-soft) 65%, transparent));
 }
 
 .option:focus-visible {
@@ -26,14 +26,22 @@
 }
 
 .optionActive {
-  background: var(--opus-accent-soft);
-  color: var(--opus-accent);
+  background: var(--opus-surface-fill, var(--opus-accent-soft));
+  color: var(--opus-surface-text, var(--opus-accent));
   font-weight: 650;
+}
+
+:global([data-opus-appearance="neumorphism"]) .optionActive {
+  box-shadow: var(--opus-control-inset-shadow, none);
 }
 
 .optionHighlighted {
   outline: none;
-  background: color-mix(in srgb, var(--opus-accent) 14%, transparent);
+  background: var(--opus-surface-fill, color-mix(in srgb, var(--opus-accent) 14%, transparent));
+}
+
+:global([data-opus-appearance="neumorphism"]) .optionHighlighted {
+  box-shadow: var(--opus-control-inset-shadow);
 }
 
 .hiddenSelect {

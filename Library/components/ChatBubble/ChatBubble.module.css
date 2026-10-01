@@ -3,10 +3,10 @@
 .messages { display:grid; width:min(78%, 46rem); min-width:0; gap:2px; }
 .message { display:grid; gap:4px; min-width:0; }
 .group[data-alignment="right"] .message { justify-items:end; }
-.bubble { width:fit-content; max-width:100%; min-width:0; padding:10px 12px; border:1px solid var(--chat-bubble-border-active, color-mix(in srgb, var(--opus-border) 78%, transparent)); border-radius:16px; background:var(--chat-bubble-background-active, color-mix(in srgb, var(--opus-panel) 78%, var(--opus-accent) 22%)); color:var(--chat-bubble-foreground-active, var(--opus-text)); font-size:.92rem; line-height:1.5; overflow-wrap:anywhere; }
+.bubble { width:fit-content; max-width:100%; min-width:0; padding:10px 12px; border:1px solid var(--opus-surface-border, var(--chat-bubble-border-active, color-mix(in srgb, var(--opus-border) 78%, transparent))); border-radius:16px; background:var(--opus-surface-fill, var(--chat-bubble-background-active, color-mix(in srgb, var(--opus-panel) 78%, var(--opus-accent) 22%))); color:var(--opus-surface-text, var(--chat-bubble-foreground-active, var(--opus-text))); font-size:.92rem; line-height:1.5; overflow-wrap:anywhere; }
 .group[data-alignment="left"] .bubble { justify-self:start; }
 .group[data-alignment="right"] .bubble { justify-self:end; }
-.group[data-alignment="right"] .bubble { border-color:var(--chat-bubble-border-active, color-mix(in srgb, var(--opus-accent) 70%, var(--opus-border))); }
+.group[data-alignment="right"] .bubble { border-color:var(--opus-surface-border, var(--chat-bubble-border-active, color-mix(in srgb, var(--opus-accent) 70%, var(--opus-border)))); }
 :global([data-preview-root][data-theme="light"]) .group,
 :global([data-theme="light"]) .group { --chat-bubble-background-active:var(--chat-bubble-background-light); --chat-bubble-foreground-active:var(--chat-bubble-foreground-light); --chat-bubble-border-active:var(--chat-bubble-border-light); }
 :global([data-preview-root][data-theme="dark"]) .group,

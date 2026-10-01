@@ -12,8 +12,12 @@
   min-width: 0;
   padding: 12px;
   border-radius: 12px;
-  background: color-mix(in srgb, var(--note-composer-panel) 88%, transparent);
+  background: var(--opus-surface-fill, color-mix(in srgb, var(--note-composer-panel) 88%, transparent));
   box-sizing: border-box;
+}
+
+:global([data-opus-appearance="neumorphism"]) .root {
+  box-shadow: var(--opus-control-shadow, none);
 }
 
 .textarea {
@@ -85,8 +89,8 @@
   padding: 0 14px;
   border: 0;
   border-radius: 8px;
-  background: var(--opus-accent);
-  color: var(--opus-accent-contrast, #f8fafc);
+  background: var(--opus-surface-fill, var(--opus-accent));
+  color: var(--opus-surface-text, var(--opus-accent-contrast, #f8fafc));
   font: inherit;
   font-size: 0.72rem;
   font-weight: 700;
@@ -94,7 +98,7 @@
 }
 
 .saveButton:hover {
-  background: color-mix(in srgb, var(--opus-accent) 82%, #000 18%);
+  background: var(--opus-surface-fill, color-mix(in srgb, var(--opus-accent) 82%, #000 18%));
 }
 
 .saveButton:focus-visible {

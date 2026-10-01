@@ -30,7 +30,7 @@ export function PreviewThemeBoundary({
   const previewTheme = controlledTheme ?? contextTheme;
 
   return (
-    <OpusThemeProvider applyToDocument={false} defaults={previewDefaults} theme={previewTheme}>
+    <OpusThemeProvider applyToDocument={false} defaults={previewDefaults} fontFamily={previewFontFamily} style={previewAccentStyle} theme={previewTheme}>
       <div
         {...rest}
         className={className}
@@ -40,7 +40,7 @@ export function PreviewThemeBoundary({
         style={{
           ...opusThemeTokens(previewTheme),
           ...previewAccentStyle,
-          ...createOpusThemeDefaultsStyle(previewDefaults),
+          ...createOpusThemeDefaultsStyle(previewDefaults, previewTheme),
           "--opus-font-family": fontStack(previewFontFamily),
           colorScheme: previewTheme,
           fontFamily: fontStack(previewFontFamily),

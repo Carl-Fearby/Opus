@@ -19,6 +19,10 @@
     color 160ms ease;
 }
 
+:global([data-opus-appearance="neumorphism"]) .button {
+  box-shadow: var(--opus-control-shadow, none);
+}
+
 .button[data-control-radius="medium"] {
   --opus-input-radius: 12px;
 }
@@ -47,80 +51,84 @@
 }
 
 .primary {
-  border-color: color-mix(in srgb, var(--opus-accent) 72%, #ffffff);
-  background: color-mix(in srgb, var(--opus-accent) 65%, #11132b);
-  color: var(--opus-accent-contrast, #ffffff);
+  border-color: var(--opus-surface-border, color-mix(in srgb, var(--opus-accent) 72%, #ffffff));
+  background: var(--opus-surface-fill, color-mix(in srgb, var(--opus-accent) 65%, #11132b));
+  color: var(--opus-surface-text, var(--opus-accent-contrast, #ffffff));
 }
 
 .secondary {
-  border-color: #6c757d;
-  background: #6c757d;
-  color: #ffffff;
+  border-color: var(--opus-surface-border, #6c757d);
+  background: var(--opus-surface-fill, #6c757d);
+  color: var(--opus-surface-text, #ffffff);
 }
 
 .tertiary {
-  border-color: color-mix(in srgb, var(--opus-border) 84%, var(--opus-accent));
-  background: color-mix(in srgb, var(--opus-panel) 88%, var(--opus-accent) 12%);
-  color: var(--opus-text);
+  border-color: var(--opus-surface-border, color-mix(in srgb, var(--opus-border) 84%, var(--opus-accent)));
+  background: var(--opus-surface-fill, color-mix(in srgb, var(--opus-panel) 88%, var(--opus-accent) 12%));
+  color: var(--opus-surface-text, var(--opus-text));
 }
 
 .tertiary:hover {
-  border-color: var(--opus-accent);
-  background: var(--opus-accent-soft);
-  color: var(--opus-accent);
+  border-color: var(--opus-surface-border, var(--opus-accent));
+  background: var(--opus-surface-fill, var(--opus-accent-soft));
+  color: var(--opus-surface-text, var(--opus-accent));
 }
 
 .success {
-  border-color: #198754;
-  background: #198754;
-  color: #ffffff;
+  border-color: var(--opus-surface-border, #198754);
+  background: var(--opus-surface-fill, #198754);
+  color: var(--opus-surface-text, #ffffff);
 }
 
 .danger {
-  border-color: #dc3545;
-  background: #dc3545;
-  color: #ffffff;
+  border-color: var(--opus-surface-border, #dc3545);
+  background: var(--opus-surface-fill, #dc3545);
+  color: var(--opus-surface-text, #ffffff);
 }
 
 .warning {
-  border-color: #ffc107;
-  background: #ffc107;
-  color: #17132f;
+  border-color: var(--opus-surface-border, #ffc107);
+  background: var(--opus-surface-fill, #ffc107);
+  color: var(--opus-surface-text, #17132f);
 }
 
 .info {
-  border-color: #0dcaf0;
-  background: #0dcaf0;
-  color: #071018;
+  border-color: var(--opus-surface-border, #0dcaf0);
+  background: var(--opus-surface-fill, #0dcaf0);
+  color: var(--opus-surface-text, #071018);
 }
 
 .light {
-  border-color: #f8f9fa;
-  background: #f8f9fa;
-  color: #17132f;
+  border-color: var(--opus-surface-border, #f8f9fa);
+  background: var(--opus-surface-fill, #f8f9fa);
+  color: var(--opus-surface-text, #17132f);
 }
 
 .dark {
-  border-color: #212529;
-  background: #212529;
-  color: #ffffff;
+  border-color: var(--opus-surface-border, #212529);
+  background: var(--opus-surface-fill, #212529);
+  color: var(--opus-surface-text, #ffffff);
 }
 
 .ghost {
-  border-color: transparent;
-  background: transparent;
-  color: var(--opus-text);
+  border-color: var(--opus-surface-border, transparent);
+  background: var(--opus-surface-fill, transparent);
+  color: var(--opus-surface-text, var(--opus-text));
 }
 
 .ghost:hover {
-  background: var(--opus-accent-soft);
-  color: var(--opus-accent);
+  background: var(--opus-surface-fill, var(--opus-accent-soft));
+  color: var(--opus-surface-text, var(--opus-accent));
 }
 
 .link {
-  border-color: transparent;
-  background: transparent;
-  color: var(--opus-accent);
+  border-color: var(--opus-surface-border, transparent);
+  background: var(--opus-surface-fill, transparent);
+  color: var(--opus-surface-text, var(--opus-accent));
   text-decoration: underline;
   text-underline-offset: 3px;
+}
+
+.button:active:not(:disabled):not([aria-disabled="true"]) {
+  box-shadow: var(--opus-control-inset-shadow, var(--opus-control-shadow, none));
 }

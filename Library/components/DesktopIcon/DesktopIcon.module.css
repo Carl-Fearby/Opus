@@ -34,15 +34,15 @@
   place-items: center;
   width: 54px;
   height: 54px;
-  border: 1px solid color-mix(in srgb, var(--desktop-icon-accent) 34%, transparent);
+  border: 1px solid var(--opus-surface-border, color-mix(in srgb, var(--desktop-icon-accent) 34%, transparent));
   border-radius: 15px;
   background:
-    radial-gradient(circle at 50% 38%, color-mix(in srgb, var(--desktop-icon-accent) 40%, transparent), transparent 58%),
-    linear-gradient(155deg, color-mix(in srgb, var(--desktop-icon-accent) 25%, #172034), color-mix(in srgb, #07101d 88%, var(--desktop-icon-accent)));
-  color: var(--desktop-icon-accent);
+    var(--opus-surface-fill, radial-gradient(circle at 50% 38%, color-mix(in srgb, var(--desktop-icon-accent) 40%, transparent), transparent 58%),
+    linear-gradient(155deg, color-mix(in srgb, var(--desktop-icon-accent) 25%, #172034), color-mix(in srgb, #07101d 88%, var(--desktop-icon-accent))));
+  color: var(--opus-surface-text, var(--desktop-icon-accent));
   box-shadow:
-    inset 0 1px 0 color-mix(in srgb, var(--desktop-icon-accent) 34%, transparent),
-    0 1px 5px color-mix(in srgb, #000 40%, transparent);
+    var(--opus-control-shadow, inset 0 1px 0 color-mix(in srgb, var(--desktop-icon-accent) 34%, transparent),
+    0 1px 5px color-mix(in srgb, #000 40%, transparent));
   filter: drop-shadow(0 0 3px color-mix(in srgb, var(--desktop-icon-accent) 24%, transparent));
   transition: transform 150ms ease, box-shadow 150ms ease, filter 150ms ease;
 }
@@ -76,8 +76,8 @@
 
 :global([data-theme="light"]) .icon {
   background:
-    radial-gradient(circle at 50% 38%, color-mix(in srgb, var(--desktop-icon-accent) 30%, transparent), transparent 60%),
-    linear-gradient(155deg, color-mix(in srgb, var(--desktop-icon-accent) 16%, #fff), color-mix(in srgb, #eef5ff 86%, var(--desktop-icon-accent)));
+    var(--opus-surface-fill, radial-gradient(circle at 50% 38%, color-mix(in srgb, var(--desktop-icon-accent) 30%, transparent), transparent 60%),
+    linear-gradient(155deg, color-mix(in srgb, var(--desktop-icon-accent) 16%, #fff), color-mix(in srgb, #eef5ff 86%, var(--desktop-icon-accent))));
 }
 
 :global([data-theme="light"]) .label {

@@ -82,7 +82,7 @@
 }
 
 .avatarButton:hover {
-  box-shadow: 0 0 0 2px color-mix(in srgb, var(--opus-accent, #7c3aed) 28%, transparent);
+  box-shadow: var(--opus-control-shadow, 0 0 0 2px color-mix(in srgb, var(--opus-accent, #7c3aed) 28%, transparent));
 }
 
 .avatarButton:focus-visible {

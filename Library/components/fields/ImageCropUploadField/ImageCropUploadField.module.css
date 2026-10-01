@@ -13,8 +13,8 @@
   min-height: var(--opus-file-min-height, 96px);
   padding: var(--opus-file-padding-y, 16px) var(--opus-file-padding-x, 20px);
   border-radius: var(--opus-input-radius-large);
-  border: 1px dashed var(--opus-border-strong);
-  background: var(--opus-input-fill);
+  border: 1px dashed var(--opus-surface-border, var(--opus-border-strong));
+  background: var(--opus-surface-fill, var(--opus-input-fill));
   cursor: pointer;
   transition:
     border-color 160ms ease,
@@ -23,8 +23,8 @@
 
 .drop:hover,
 .dragging {
-  border-color: var(--opus-accent);
-  background: color-mix(in srgb, var(--opus-accent-soft) 72%, var(--opus-input-fill));
+  border-color: var(--opus-surface-border, var(--opus-accent));
+  background: var(--opus-surface-fill, color-mix(in srgb, var(--opus-accent-soft) 72%, var(--opus-input-fill)));
 }
 
 .dropError {
@@ -73,7 +73,7 @@
   min-height: var(--opus-control-height);
   padding: 0 var(--opus-control-padding-x, 14px);
   border-radius: var(--opus-input-radius);
-  border: 1px solid var(--opus-border-strong);
+  border: 1px solid var(--opus-surface-border, var(--opus-border-strong));
   background: transparent;
   color: var(--opus-accent);
   font-size: var(--opus-control-font-size);
@@ -98,8 +98,13 @@
   gap: 12px;
   padding: 14px;
   border-radius: var(--opus-input-radius-large);
-  border: 1px solid var(--opus-border-strong);
-  background: color-mix(in srgb, var(--opus-panel) 88%, transparent);
+  border: 1px solid var(--opus-surface-border, var(--opus-border-strong));
+  background: var(--opus-surface-fill, color-mix(in srgb, var(--opus-panel) 88%, transparent));
+}
+
+:global([data-opus-appearance="neumorphism"]) .previewCard,
+:global([data-opus-appearance="neumorphism"]) .editor {
+  box-shadow: var(--opus-control-inset-shadow, none);
 }
 
 .previewRow {
@@ -139,10 +144,10 @@
   margin: 0 auto;
   overflow: hidden;
   border-radius: 999px;
-  border: 1px solid color-mix(in srgb, var(--opus-border) 80%, transparent);
+  border: 1px solid var(--opus-surface-border, color-mix(in srgb, var(--opus-border) 80%, transparent));
   background:
-    linear-gradient(45deg, color-mix(in srgb, var(--opus-muted) 16%, transparent) 25%, transparent 25%, transparent 75%, color-mix(in srgb, var(--opus-muted) 16%, transparent) 75%),
-    linear-gradient(45deg, color-mix(in srgb, var(--opus-muted) 16%, transparent) 25%, transparent 25%, transparent 75%, color-mix(in srgb, var(--opus-muted) 16%, transparent) 75%);
+    var(--opus-surface-fill, linear-gradient(45deg, color-mix(in srgb, var(--opus-muted) 16%, transparent) 25%, transparent 25%, transparent 75%, color-mix(in srgb, var(--opus-muted) 16%, transparent) 75%),
+    linear-gradient(45deg, color-mix(in srgb, var(--opus-muted) 16%, transparent) 25%, transparent 25%, transparent 75%, color-mix(in srgb, var(--opus-muted) 16%, transparent) 75%));
   background-size: 16px 16px;
   background-position:
     0 0,
@@ -153,7 +158,11 @@
 
 .root[data-shape="rect"] .viewport {
   border-radius: 16px;
-  background: #ffffff;
+  background: var(--opus-surface-fill, #ffffff);
+}
+
+:global([data-opus-appearance="neumorphism"]) .root[data-shape="rect"] .viewport {
+  box-shadow: var(--opus-control-shadow, none);
 }
 
 .root[data-shape="rect"] .previewImage {
@@ -180,7 +189,7 @@
   position: absolute;
   inset: 0;
   border-radius: inherit;
-  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--opus-accent) 45%, transparent);
+  box-shadow: var(--opus-control-shadow, inset 0 0 0 1px color-mix(in srgb, var(--opus-accent) 45%, transparent));
   pointer-events: none;
 }
 
@@ -198,9 +207,9 @@
   width: var(--opus-control-height);
   min-height: var(--opus-control-height);
   border-radius: var(--opus-input-radius);
-  border: 1px solid var(--opus-border-strong);
-  background: var(--opus-input-fill);
-  color: var(--opus-text);
+  border: 1px solid var(--opus-surface-border, var(--opus-border-strong));
+  background: var(--opus-surface-fill, var(--opus-input-fill));
+  color: var(--opus-surface-text, var(--opus-text));
   font-size: 1rem;
   font-weight: 700;
   line-height: 1;
@@ -246,8 +255,12 @@
 }
 
 .root[data-embedded="true"] .drop {
-  border-color: color-mix(in srgb, var(--opus-border) 55%, transparent);
-  background: color-mix(in srgb, var(--opus-input-fill) 72%, transparent);
+  border-color: var(--opus-surface-border, color-mix(in srgb, var(--opus-border) 55%, transparent));
+  background: var(--opus-surface-fill, color-mix(in srgb, var(--opus-input-fill) 72%, transparent));
+}
+
+:global([data-opus-appearance="neumorphism"]) .root[data-embedded="true"] .drop {
+  box-shadow: var(--opus-control-shadow, none);
 }
 
 .root[data-embedded="true"] .previewRow {
@@ -274,16 +287,16 @@
   width: 42px;
   height: 42px;
   padding: 0;
-  border: 1px solid color-mix(in srgb, #ffffff 55%, transparent);
+  border: 1px solid var(--opus-surface-border, color-mix(in srgb, #ffffff 55%, transparent));
   border-radius: 50%;
-  background: color-mix(in srgb, #0b1220 78%, transparent);
-  color: #ffffff;
+  background: var(--opus-surface-fill, color-mix(in srgb, #0b1220 78%, transparent));
+  color: var(--opus-surface-text, #ffffff);
   transform: translateX(-50%);
   cursor: pointer;
-  backdrop-filter: blur(8px);
+  backdrop-filter: var(--opus-surface-backdrop-filter, blur(8px));
   box-shadow:
-    0 6px 16px color-mix(in srgb, #000000 35%, transparent),
-    inset 0 1px 0 color-mix(in srgb, #ffffff 18%, transparent);
+    var(--opus-control-shadow, 0 6px 16px color-mix(in srgb, #000000 35%, transparent),
+    inset 0 1px 0 color-mix(in srgb, #ffffff 18%, transparent));
 }
 
 .previewCameraButton svg {
@@ -293,8 +306,8 @@
 }
 
 .previewCameraButton:hover {
-  background: color-mix(in srgb, #0b1220 88%, var(--opus-accent) 12%);
-  border-color: color-mix(in srgb, #ffffff 72%, var(--opus-accent) 28%);
+  background: var(--opus-surface-fill, color-mix(in srgb, #0b1220 88%, var(--opus-accent) 12%));
+  border-color: var(--opus-surface-border, color-mix(in srgb, #ffffff 72%, var(--opus-accent) 28%));
 }
 
 .previewCameraButton:focus-visible {
@@ -304,7 +317,7 @@
 
 .root[data-embedded="true"] .viewport {
   border: 0;
-  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--opus-border) 45%, transparent);
+  box-shadow: var(--opus-control-shadow, inset 0 0 0 1px color-mix(in srgb, var(--opus-border) 45%, transparent));
 }
 
 .root[data-embedded="true"] .viewportRing {
@@ -313,7 +326,11 @@
 
 .root[data-embedded="true"] .zoomButton {
   border: 0;
-  background: color-mix(in srgb, var(--opus-input-fill) 80%, transparent);
+  background: var(--opus-surface-fill, color-mix(in srgb, var(--opus-input-fill) 80%, transparent));
+}
+
+:global([data-opus-appearance="neumorphism"]) .root[data-embedded="true"] .zoomButton {
+  box-shadow: var(--opus-control-shadow, none);
 }
 
 .changeLink {

@@ -4,6 +4,13 @@ All notable public-package changes are recorded here. Opus follows [Semantic Ver
 
 ## Unreleased
 
+## 0.7.4 — 2026-10-01
+
+- Add opt-in Neumorphism appearance across component surfaces, with matching material fills, raised actions, recessed inputs, and subtle dark shadows.
+- Carry scoped themes into portalled menus, dialogs, and tooltips.
+- Persist appearance selection in the Theme Designer and include it in generated provider code.
+- Add featured imagery support to MegaMenu panels.
+
 ## 0.6.32
 
 ### Added

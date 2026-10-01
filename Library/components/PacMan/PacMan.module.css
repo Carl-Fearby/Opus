@@ -81,8 +81,8 @@
 }
 
 .startGameButton {
-    background: linear-gradient(135deg, #10b981 0%, #059669 100%);
-    color: #ffffff;
+    background: var(--opus-surface-fill, linear-gradient(135deg, #10b981 0%, #059669 100%));
+    color: var(--opus-surface-text, #ffffff);
     padding: 10px 24px;
     border-radius: 8px;
     font-weight: 600;
@@ -90,7 +90,7 @@
     cursor: pointer;
     font-size: 0.875rem;
     transition: all 0.2s ease;
-    box-shadow: 0 2px 8px rgba(16, 185, 129, 0.3);
+    box-shadow: var(--opus-control-shadow, 0 2px 8px rgba(16, 185, 129, 0.3));
     letter-spacing: 0.02em;
     min-width: 120px;
     position: relative;
@@ -99,18 +99,18 @@
 
 .startGameButton:hover {
     transform: translateY(-1px);
-    box-shadow: 0 4px 12px rgba(16, 185, 129, 0.5);
-    background: linear-gradient(135deg, #059669 0%, #047857 100%);
+    box-shadow: var(--opus-control-shadow, 0 4px 12px rgba(16, 185, 129, 0.5));
+    background: var(--opus-surface-fill, linear-gradient(135deg, #059669 0%, #047857 100%));
 }
 
 .startGameButton:active {
     transform: translateY(0);
-    box-shadow: 0 2px 6px rgba(16, 185, 129, 0.4);
+    box-shadow: var(--opus-control-inset-shadow, 0 2px 6px rgba(16, 185, 129, 0.4));
 }
 
 .newGameButton {
-    background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
-    color: #ffffff;
+    background: var(--opus-surface-fill, linear-gradient(135deg, #3b82f6 0%, #2563eb 100%));
+    color: var(--opus-surface-text, #ffffff);
     padding: 10px 24px;
     border-radius: 8px;
     font-weight: 600;
@@ -118,7 +118,7 @@
     cursor: pointer;
     font-size: 0.875rem;
     transition: all 0.2s ease;
-    box-shadow: 0 2px 8px rgba(59, 130, 246, 0.3);
+    box-shadow: var(--opus-control-shadow, 0 2px 8px rgba(59, 130, 246, 0.3));
     letter-spacing: 0.02em;
     min-width: 120px;
     position: relative;
@@ -127,22 +127,22 @@
 
 .newGameButton:hover {
     transform: translateY(-1px);
-    box-shadow: 0 4px 12px rgba(59, 130, 246, 0.5);
-    background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
+    box-shadow: var(--opus-control-shadow, 0 4px 12px rgba(59, 130, 246, 0.5));
+    background: var(--opus-surface-fill, linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%));
 }
 
 .newGameButton:active {
     transform: translateY(0);
-    box-shadow: 0 2px 6px rgba(59, 130, 246, 0.4);
+    box-shadow: var(--opus-control-inset-shadow, 0 2px 6px rgba(59, 130, 246, 0.4));
 }
 
 .fullscreenButton {
-    background: rgba(15, 23, 42, 0.85);
-    color: #f8fafc;
+    background: var(--opus-surface-fill, rgba(15, 23, 42, 0.85));
+    color: var(--opus-surface-text, #f8fafc);
     padding: 10px 16px;
     border-radius: 8px;
     font-weight: 600;
-    border: 1px solid rgba(148, 163, 184, 0.45);
+    border: 1px solid var(--opus-surface-border, rgba(148, 163, 184, 0.45));
     cursor: pointer;
     font-size: 0.875rem;
     transition: all 0.2s ease;
@@ -153,22 +153,30 @@
 }
 
 .fullscreenButton:hover {
-    border-color: rgba(248, 250, 252, 0.75);
-    background: rgba(30, 41, 59, 0.95);
+    border-color: var(--opus-surface-border, rgba(248, 250, 252, 0.75));
+    background: var(--opus-surface-fill, rgba(30, 41, 59, 0.95));
 }
 
 .closeButton {
-    background: rgba(15, 23, 42, 0.7);
-    border: 1px solid rgba(148, 163, 184, 0.4);
-    color: #f1f5f9;
+    background: var(--opus-surface-fill, rgba(15, 23, 42, 0.7));
+    border: 1px solid var(--opus-surface-border, rgba(148, 163, 184, 0.4));
+    color: var(--opus-surface-text, #f1f5f9);
     border-radius: 999px;
     padding: 8px 14px;
     font-weight: 600;
     cursor: pointer;
 }
 
+:global([data-opus-appearance="neumorphism"]) .closeButton {
+    box-shadow: var(--opus-control-shadow, none);
+}
+
 .closeButton:hover {
-    background: rgba(30, 41, 59, 0.9);
+    background: var(--opus-surface-fill, rgba(30, 41, 59, 0.9));
+}
+
+:global([data-opus-appearance="neumorphism"]) .closeButton:hover {
+    box-shadow: var(--opus-control-shadow, none);
 }
 
 .statsRow {
@@ -178,8 +186,8 @@
 }
 
 .statBox {
-    background: rgba(15, 23, 42, 0.7);
-    border: 1px solid rgba(59, 130, 246, 0.3);
+    background: var(--opus-surface-fill, rgba(15, 23, 42, 0.7));
+    border: 1px solid var(--opus-surface-border, rgba(59, 130, 246, 0.3));
     padding: 10px 12px;
     border-radius: 12px;
     display: flex;
@@ -209,8 +217,8 @@
 }
 
 .actionButton {
-    background: linear-gradient(120deg, #3b82f6, #06b6d4);
-    color: #fff;
+    background: var(--opus-surface-fill, linear-gradient(120deg, #3b82f6, #06b6d4));
+    color: var(--opus-surface-text, #fff);
     padding: 10px 18px;
     border-radius: 999px;
     font-weight: 600;
@@ -218,9 +226,17 @@
     cursor: pointer;
 }
 
+:global([data-opus-appearance="neumorphism"]) .actionButton {
+    box-shadow: var(--opus-control-shadow, none);
+}
+
 .actionButton[aria-pressed="true"] {
-    background: rgba(15, 23, 42, 0.9);
-    border: 1px solid #3b82f6;
+    background: var(--opus-surface-fill, rgba(15, 23, 42, 0.9));
+    border: 1px solid var(--opus-surface-border, #3b82f6);
+}
+
+:global([data-opus-appearance="neumorphism"]) .actionButton[aria-pressed="true"] {
+    box-shadow: var(--opus-control-inset-shadow, none);
 }
 
 .canvasWrapper {
@@ -259,10 +275,14 @@
     width: 64px;
     height: 64px;
     border-radius: 16px;
-    background: rgba(15, 23, 42, 0.8);
-    border: 1px solid rgba(96, 165, 250, 0.5);
-    color: #f8fafc;
+    background: var(--opus-surface-fill, rgba(15, 23, 42, 0.8));
+    border: 1px solid var(--opus-surface-border, rgba(96, 165, 250, 0.5));
+    color: var(--opus-surface-text, #f8fafc);
     font-size: 1.25rem;
+}
+
+:global([data-opus-appearance="neumorphism"]) .controlButton {
+    box-shadow: var(--opus-control-shadow, none);
 }
 
 @media (min-width: 900px) {
@@ -343,7 +363,11 @@
     width: 100vw;
     height: 100vh;
     max-width: none;
-    background: #020617;
+    background: var(--opus-surface-fill, #020617);
+}
+
+:global([data-opus-appearance="neumorphism"]) .container[data-fullscreen="true"] {
+    box-shadow: var(--opus-control-shadow, none);
 }
 
 .container[data-fullscreen="true"] .buttonContainer {

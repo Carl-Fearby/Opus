@@ -27,12 +27,16 @@
 }
 
 .row:hover {
-  background: color-mix(in srgb, var(--opus-accent) 8%, transparent);
+  background: var(--opus-surface-fill, color-mix(in srgb, var(--opus-accent) 8%, transparent));
 }
 
 .row[data-selected="true"] {
-  background: color-mix(in srgb, var(--opus-accent) 15%, var(--opus-panel));
-  border-color: color-mix(in srgb, var(--opus-accent) 48%, var(--opus-border));
+  background: var(--opus-surface-fill, color-mix(in srgb, var(--opus-accent) 15%, var(--opus-panel)));
+  border-color: var(--opus-surface-border, color-mix(in srgb, var(--opus-accent) 48%, var(--opus-border)));
+}
+
+:global([data-opus-appearance="neumorphism"]) .row[data-selected="true"] {
+  box-shadow: var(--opus-control-inset-shadow);
 }
 
 .toggle,

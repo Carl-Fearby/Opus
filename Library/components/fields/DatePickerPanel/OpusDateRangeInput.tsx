@@ -8,7 +8,7 @@ import {
   useState,
   type CSSProperties,
 } from "react";
-import { createPortal } from "react-dom";
+import { createThemedPortal as createPortal } from "@/lib/theme/createThemedPortal";
 import { CatalogIcon } from "@/components/CatalogIcon";
 import {
   resolveEmojiPickerPortalStyle,

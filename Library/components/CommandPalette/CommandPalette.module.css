@@ -28,12 +28,12 @@
   width: min(100%, 560px);
   max-height: min(70vh, 70%, 520px);
   overflow: hidden;
-  border: 1px solid color-mix(in srgb, var(--opus-accent) 22%, var(--opus-border));
+  border: 1px solid var(--opus-surface-border, color-mix(in srgb, var(--opus-accent) 22%, var(--opus-border)));
   border-radius: var(--opus-input-radius-large);
-  background: color-mix(in srgb, var(--opus-panel) 96%, transparent);
+  background: var(--opus-surface-fill, color-mix(in srgb, var(--opus-panel) 96%, transparent));
   box-shadow:
-    0 24px 80px color-mix(in srgb, #020617 32%, transparent),
-    0 0 0 1px color-mix(in srgb, var(--opus-accent) 10%, transparent);
+    var(--opus-control-shadow, 0 24px 80px color-mix(in srgb, #020617 32%, transparent),
+    0 0 0 1px color-mix(in srgb, var(--opus-accent) 10%, transparent));
   cursor: default;
 }
 
@@ -51,7 +51,7 @@
   align-items: center;
   gap: 10px;
   padding: 14px 16px;
-  border-bottom: 1px solid color-mix(in srgb, var(--opus-border) 72%, transparent);
+  border-bottom: 1px solid var(--opus-surface-border, color-mix(in srgb, var(--opus-border) 72%, transparent));
 }
 
 .searchIcon {
@@ -125,7 +125,12 @@
 
 .item:hover,
 .item[data-active="true"] {
-  background: color-mix(in srgb, var(--opus-accent) 14%, transparent);
+  background: var(--opus-surface-fill, color-mix(in srgb, var(--opus-accent) 14%, transparent));
+}
+
+:global([data-opus-appearance="neumorphism"]) .item:hover,
+:global([data-opus-appearance="neumorphism"]) .item[data-active="true"] {
+  box-shadow: var(--opus-control-inset-shadow, none);
 }
 
 .itemMain {
@@ -150,9 +155,9 @@
   flex-shrink: 0;
   padding: 3px 6px;
   border-radius: var(--opus-input-radius-small);
-  border: 1px solid color-mix(in srgb, var(--opus-border) 88%, transparent);
-  background: color-mix(in srgb, var(--opus-panel) 88%, transparent);
-  color: var(--opus-muted);
+  border: 1px solid var(--opus-surface-border, color-mix(in srgb, var(--opus-border) 88%, transparent));
+  background: var(--opus-surface-fill, color-mix(in srgb, var(--opus-panel) 88%, transparent));
+  color: var(--opus-surface-text, var(--opus-muted));
   font-size: 0.72rem;
   font-weight: 700;
   letter-spacing: 0.04em;
@@ -171,7 +176,7 @@
   flex-wrap: wrap;
   gap: 10px 14px;
   padding: 10px 14px;
-  border-top: 1px solid color-mix(in srgb, var(--opus-border) 72%, transparent);
+  border-top: 1px solid var(--opus-surface-border, color-mix(in srgb, var(--opus-border) 72%, transparent));
   color: var(--opus-muted);
   font-size: 0.72rem;
   font-weight: 600;

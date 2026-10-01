@@ -32,7 +32,7 @@
   height: 15px;
   flex-shrink: 0;
   border-radius: 2px;
-  box-shadow: 0 0 0 1px color-mix(in srgb, var(--opus-border-strong) 70%, transparent);
+  box-shadow: var(--opus-control-shadow, 0 0 0 1px color-mix(in srgb, var(--opus-border-strong) 70%, transparent));
   background-size: cover;
   background-position: center;
 }
@@ -72,12 +72,16 @@
 }
 
 .option:hover {
-  background: color-mix(in srgb, var(--opus-accent-soft) 65%, transparent);
+  background: var(--opus-surface-fill, color-mix(in srgb, var(--opus-accent-soft) 65%, transparent));
 }
 
 .optionActive {
-  background: var(--opus-accent-soft);
-  color: var(--opus-accent);
+  background: var(--opus-surface-fill, var(--opus-accent-soft));
+  color: var(--opus-surface-text, var(--opus-accent));
+}
+
+:global([data-opus-appearance="neumorphism"]) .optionActive {
+  box-shadow: var(--opus-control-inset-shadow, none);
 }
 
 .optionLabel {

@@ -80,10 +80,10 @@
   position: relative;
   width: var(--clock-size);
   height: var(--clock-size);
-  border: 1px solid var(--clock-face-border);
+  border: 1px solid var(--opus-surface-border, var(--clock-face-border));
   border-radius: 50%;
-  background: var(--clock-face-bg);
-  box-shadow: var(--clock-face-shadow);
+  background: var(--opus-surface-fill, var(--clock-face-bg));
+  box-shadow: var(--opus-control-shadow, var(--clock-face-shadow));
 }
 
 .tick {
@@ -124,26 +124,26 @@
   bottom: 50%;
   border-radius: 999px;
   transform-origin: 50% 100%;
-  box-shadow: var(--clock-hand-shadow);
+  box-shadow: var(--opus-control-shadow, var(--clock-hand-shadow));
 }
 
 .hourHand {
   width: 7px;
   height: var(--clock-hour-hand);
-  background: var(--clock-hour-hand-color);
+  background: var(--opus-surface-fill, var(--clock-hour-hand-color));
 }
 
 .minuteHand {
   width: 5px;
   height: var(--clock-minute-hand);
-  background: var(--clock-minute-hand-color);
+  background: var(--opus-surface-fill, var(--clock-minute-hand-color));
 }
 
 .secondHand {
   width: 2px;
   height: var(--clock-second-hand);
-  background: var(--opus-accent);
-  box-shadow: 0 0 12px color-mix(in srgb, var(--opus-accent) 80%, transparent);
+  background: var(--opus-surface-fill, var(--opus-accent));
+  box-shadow: var(--opus-control-shadow, 0 0 12px color-mix(in srgb, var(--opus-accent) 80%, transparent));
 }
 
 .centreDot {
@@ -155,8 +155,8 @@
   display: grid;
   place-items: center;
   border-radius: 50%;
-  background: var(--opus-accent);
-  box-shadow: 0 0 18px color-mix(in srgb, var(--opus-accent) 65%, transparent);
+  background: var(--opus-surface-fill, var(--opus-accent));
+  box-shadow: var(--opus-control-shadow, 0 0 18px color-mix(in srgb, var(--opus-accent) 65%, transparent));
   transform: translate(-50%, -50%);
 }
 
@@ -164,7 +164,7 @@
   width: 6px;
   height: 6px;
   border-radius: 50%;
-  background: var(--opus-accent-contrast);
+  background: var(--opus-surface-fill, var(--opus-accent-contrast));
 }
 
 .digitalTime {

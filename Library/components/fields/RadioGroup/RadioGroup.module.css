@@ -56,11 +56,11 @@
   flex: 0 0 auto;
   width: var(--choice-control-size, var(--opus-control-height));
   height: var(--choice-control-size, var(--opus-control-height));
-  border: 1px solid var(--opus-border-strong);
-  background: var(--opus-input-bg);
+  border: 1px solid var(--opus-surface-border, var(--opus-border-strong));
+  background: var(--opus-surface-fill, var(--opus-input-bg));
   box-shadow:
-    0 1px 0 rgba(255, 255, 255, 0.05) inset,
-    0 14px 30px rgba(0, 0, 0, 0.06);
+    var(--opus-control-shadow, 0 1px 0 rgba(255, 255, 255, 0.05) inset,
+    0 14px 30px rgba(0, 0, 0, 0.06));
   transition:
     background 160ms ease,
     border-color 160ms ease,
@@ -83,19 +83,23 @@
   width: var(--choice-control-dot-size);
   height: var(--choice-control-dot-size);
   border-radius: inherit;
-  background: linear-gradient(
+  background: var(--opus-mark-color, linear-gradient(
     135deg,
     var(--opus-accent),
     color-mix(in srgb, var(--opus-accent) 40%, #00d2ff)
-  );
+  ));
   opacity: 0;
   transform: translate(-50%, -50%);
   transition: opacity 160ms ease;
 }
 
 .nativeInput:checked + .visual {
-  border-color: var(--opus-border-strong);
-  background: var(--opus-input-bg);
+  border-color: var(--opus-surface-border, var(--opus-border-strong));
+  background: var(--opus-surface-fill, var(--opus-input-bg));
+}
+
+:global([data-opus-appearance="neumorphism"]) .nativeInput:checked + .visual {
+  box-shadow: var(--opus-control-inset-shadow, none);
 }
 
 .nativeInput:checked + .visual::after {

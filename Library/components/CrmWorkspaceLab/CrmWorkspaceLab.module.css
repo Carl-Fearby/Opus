@@ -24,7 +24,7 @@
   gap: 10px;
   margin: 0;
   padding: 0 0 4px;
-  border-bottom: 1px solid color-mix(in srgb, var(--opus-border) 70%, transparent);
+  border-bottom: 1px solid var(--opus-surface-border, color-mix(in srgb, var(--opus-border) 70%, transparent));
 }
 
 .headerAction {
@@ -123,9 +123,13 @@ button:focus-visible .openChevron {
   gap: 10px;
   margin: 0;
   padding: 6px 8px;
-  border: 1px solid var(--opus-border);
+  border: 1px solid var(--opus-surface-border, var(--opus-border));
   border-radius: 10px 10px 0 0;
-  background: color-mix(in srgb, var(--opus-surface, var(--opus-panel)) 82%, transparent);
+  background: var(--opus-surface-fill, color-mix(in srgb, var(--opus-surface, var(--opus-panel)) 82%, transparent));
+}
+
+:global([data-opus-appearance="neumorphism"]) .toolbar {
+  box-shadow: var(--opus-control-shadow, none);
 }
 
 .toolbar > :first-child {
@@ -142,7 +146,7 @@ button:focus-visible .openChevron {
 
 .table {
   overflow: hidden;
-  border: 1px solid var(--opus-border);
+  border: 1px solid var(--opus-surface-border, var(--opus-border));
   border-top: 0;
   border-radius: 0 0 12px 12px;
 }
@@ -153,7 +157,7 @@ button:focus-visible .openChevron {
   gap: 12px;
   min-height: 0;
   padding: 7px 12px;
-  border-top: 1px solid color-mix(in srgb, var(--opus-border) 70%, transparent);
+  border-top: 1px solid var(--opus-surface-border, color-mix(in srgb, var(--opus-border) 70%, transparent));
   color: var(--opus-text);
 }
 
@@ -162,7 +166,7 @@ button:focus-visible .openChevron {
 }
 
 .row:hover:not(.tableHead) {
-  background: color-mix(in srgb, var(--opus-accent) 8%, transparent);
+  background: var(--opus-surface-fill, color-mix(in srgb, var(--opus-accent) 8%, transparent));
 }
 
 .actionRow {
@@ -264,12 +268,12 @@ button:focus-visible .openChevron {
 
 .tableHead {
   min-height: 40px;
-  color: var(--opus-muted, var(--opus-text-muted));
+  color: var(--opus-surface-text, var(--opus-muted, var(--opus-text-muted)));
   font-size: 0.72rem;
   font-weight: 800;
   letter-spacing: 0.05em;
   text-transform: uppercase;
-  background: color-mix(in srgb, var(--opus-surface, var(--opus-panel)) 88%, transparent);
+  background: var(--opus-surface-fill, color-mix(in srgb, var(--opus-surface, var(--opus-panel)) 88%, transparent));
 }
 
 /* Appointment timeline */
@@ -308,12 +312,12 @@ button:focus-visible .openChevron {
   gap: 8px;
   align-items: flex-start;
   padding: 6px 8px;
-  border: 1px solid color-mix(in srgb, var(--opus-accent) 22%, var(--opus-border));
+  border: 1px solid var(--opus-surface-border, color-mix(in srgb, var(--opus-accent) 22%, var(--opus-border)));
   border-radius: 8px;
   background:
-    linear-gradient(90deg, color-mix(in srgb, var(--opus-accent) 10%, transparent), transparent 42%),
-    color-mix(in srgb, var(--opus-panel) 92%, transparent);
-  color: inherit;
+    var(--opus-surface-fill, linear-gradient(90deg, color-mix(in srgb, var(--opus-accent) 10%, transparent), transparent 42%),
+    color-mix(in srgb, var(--opus-panel) 92%, transparent));
+  color: var(--opus-surface-text, inherit);
   cursor: pointer;
   font: inherit;
   text-align: left;
@@ -364,10 +368,10 @@ button:focus-visible .openChevron {
   column-gap: 8px;
   row-gap: 0;
   padding: 6px 8px;
-  border: 1px solid var(--opus-border);
+  border: 1px solid var(--opus-surface-border, var(--opus-border));
   border-radius: 8px;
-  background: color-mix(in srgb, var(--opus-panel) 94%, transparent);
-  color: inherit;
+  background: var(--opus-surface-fill, color-mix(in srgb, var(--opus-panel) 94%, transparent));
+  color: var(--opus-surface-text, inherit);
   cursor: pointer;
   font: inherit;
   text-align: left;
@@ -404,8 +408,8 @@ button:focus-visible .openChevron {
 }
 
 .feedItem[data-unread="true"] {
-  border-color: color-mix(in srgb, var(--opus-accent) 40%, var(--opus-border));
-  background: color-mix(in srgb, var(--opus-accent) 8%, var(--opus-panel));
+  border-color: var(--opus-surface-border, color-mix(in srgb, var(--opus-accent) 40%, var(--opus-border)));
+  background: var(--opus-surface-fill, color-mix(in srgb, var(--opus-accent) 8%, var(--opus-panel)));
 }
 
 /* Pipeline board */
@@ -419,9 +423,9 @@ button:focus-visible .openChevron {
 .boardColumn {
   min-width: 0;
   padding: 10px;
-  border: 1px solid var(--opus-border);
+  border: 1px solid var(--opus-surface-border, var(--opus-border));
   border-radius: 12px;
-  background: color-mix(in srgb, var(--opus-surface, var(--opus-panel)) 80%, transparent);
+  background: var(--opus-surface-fill, color-mix(in srgb, var(--opus-surface, var(--opus-panel)) 80%, transparent));
 }
 
 .boardColumn header {
@@ -456,10 +460,10 @@ button:focus-visible .openChevron {
   display: grid;
   gap: 2px;
   padding: 6px 8px;
-  border: 1px solid var(--opus-border);
+  border: 1px solid var(--opus-surface-border, var(--opus-border));
   border-radius: 10px;
-  background: color-mix(in srgb, var(--opus-panel) 96%, transparent);
-  color: inherit;
+  background: var(--opus-surface-fill, color-mix(in srgb, var(--opus-panel) 96%, transparent));
+  color: var(--opus-surface-text, inherit);
   cursor: pointer;
   font: inherit;
   text-align: left;
@@ -489,12 +493,12 @@ button:focus-visible .openChevron {
   display: grid;
   gap: 8px;
   padding: 10px;
-  border: 1px solid var(--opus-border);
+  border: 1px solid var(--opus-surface-border, var(--opus-border));
   border-radius: 12px;
   background:
-    radial-gradient(80% 70% at 0% 0%, color-mix(in srgb, var(--opus-accent) 12%, transparent), transparent 55%),
-    color-mix(in srgb, var(--opus-panel) 94%, transparent);
-  color: inherit;
+    var(--opus-surface-fill, radial-gradient(80% 70% at 0% 0%, color-mix(in srgb, var(--opus-accent) 12%, transparent), transparent 55%),
+    color-mix(in srgb, var(--opus-panel) 94%, transparent));
+  color: var(--opus-surface-text, inherit);
   cursor: pointer;
   font: inherit;
   text-align: left;
@@ -536,10 +540,10 @@ button:focus-visible .openChevron {
   align-items: center;
   width: 100%;
   padding: 6px 8px;
-  border: 1px solid var(--opus-border);
+  border: 1px solid var(--opus-surface-border, var(--opus-border));
   border-radius: 12px;
-  background: color-mix(in srgb, var(--opus-panel) 94%, transparent);
-  color: inherit;
+  background: var(--opus-surface-fill, color-mix(in srgb, var(--opus-panel) 94%, transparent));
+  color: var(--opus-surface-text, inherit);
   text-align: left;
   cursor: pointer;
   font: inherit;
@@ -549,8 +553,8 @@ button:focus-visible .openChevron {
 .feedItem:hover,
 .boardCard:hover,
 .catalogueCard:hover {
-  border-color: color-mix(in srgb, var(--opus-accent) 36%, var(--opus-border));
-  background-color: color-mix(in srgb, var(--opus-accent) 7%, var(--opus-panel));
+  border-color: var(--opus-surface-border, color-mix(in srgb, var(--opus-accent) 36%, var(--opus-border)));
+  background-color: var(--opus-surface-fill, color-mix(in srgb, var(--opus-accent) 7%, var(--opus-panel)));
 }
 
 .timelineCard:focus-visible,
@@ -566,8 +570,8 @@ button:focus-visible .openChevron {
 }
 
 .settingsRow:hover {
-  border-color: color-mix(in srgb, var(--opus-accent) 36%, var(--opus-border));
-  background: color-mix(in srgb, var(--opus-accent) 7%, var(--opus-panel));
+  border-color: var(--opus-surface-border, color-mix(in srgb, var(--opus-accent) 36%, var(--opus-border)));
+  background: var(--opus-surface-fill, color-mix(in srgb, var(--opus-accent) 7%, var(--opus-panel)));
 }
 
 .settingsIcon {
@@ -590,9 +594,9 @@ button:focus-visible .openChevron {
 
 .docTree {
   padding: 10px;
-  border: 1px solid var(--opus-border);
+  border: 1px solid var(--opus-surface-border, var(--opus-border));
   border-radius: 12px;
-  background: color-mix(in srgb, var(--opus-surface, var(--opus-panel)) 84%, transparent);
+  background: var(--opus-surface-fill, color-mix(in srgb, var(--opus-surface, var(--opus-panel)) 84%, transparent));
 }
 
 .docTreeHeading {
@@ -657,7 +661,12 @@ button:focus-visible .openChevron {
 
 .docTreeItem[data-active="true"],
 .docTreeItem:hover {
-  background: color-mix(in srgb, var(--opus-accent) 12%, transparent);
+  background: var(--opus-surface-fill, color-mix(in srgb, var(--opus-accent) 12%, transparent));
+}
+
+:global([data-opus-appearance="neumorphism"]) .docTreeItem[data-active="true"],
+:global([data-opus-appearance="neumorphism"]) .docTreeItem:hover {
+  box-shadow: var(--opus-control-inset-shadow, none);
 }
 
 .docBrowser {
@@ -671,9 +680,9 @@ button:focus-visible .openChevron {
   justify-content: space-between;
   gap: 12px;
   padding: 6px 8px;
-  border: 1px solid var(--opus-border);
+  border: 1px solid var(--opus-surface-border, var(--opus-border));
   border-radius: 12px;
-  background: color-mix(in srgb, var(--opus-panel) 94%, transparent);
+  background: var(--opus-surface-fill, color-mix(in srgb, var(--opus-panel) 94%, transparent));
 }
 
 .docToolbarControls {
@@ -691,8 +700,8 @@ button:focus-visible .openChevron {
 
 .docViewOptions {
   align-items: center;
-  background: color-mix(in srgb, var(--opus-input-bg, var(--opus-panel)) 88%, transparent);
-  border: 1px solid var(--opus-border);
+  background: var(--opus-surface-fill, color-mix(in srgb, var(--opus-input-bg, var(--opus-panel)) 88%, transparent));
+  border: 1px solid var(--opus-surface-border, var(--opus-border));
   border-radius: 9px;
   display: inline-flex;
   flex: 0 0 auto;
@@ -716,13 +725,17 @@ button:focus-visible .openChevron {
 }
 
 .docViewButton:hover {
-  background: color-mix(in srgb, var(--opus-accent) 10%, transparent);
-  color: var(--opus-accent);
+  background: var(--opus-surface-fill, color-mix(in srgb, var(--opus-accent) 10%, transparent));
+  color: var(--opus-surface-text, var(--opus-accent));
 }
 
 .docViewButton[aria-pressed="true"] {
-  background: color-mix(in srgb, var(--opus-accent) 18%, var(--opus-panel));
-  color: var(--opus-accent);
+  background: var(--opus-surface-fill, color-mix(in srgb, var(--opus-accent) 18%, var(--opus-panel)));
+  color: var(--opus-surface-text, var(--opus-accent));
+}
+
+:global([data-opus-appearance="neumorphism"]) .docViewButton[aria-pressed="true"] {
+  box-shadow: var(--opus-control-inset-shadow, none);
 }
 
 .docViewButton:focus-visible {
@@ -771,17 +784,17 @@ button:focus-visible .openChevron {
   align-content: start;
   min-height: 0;
   padding: 12px;
-  border: 1px solid var(--opus-border);
+  border: 1px solid var(--opus-surface-border, var(--opus-border));
   border-radius: 12px;
-  background: color-mix(in srgb, var(--opus-panel) 92%, transparent);
+  background: var(--opus-surface-fill, color-mix(in srgb, var(--opus-panel) 92%, transparent));
 }
 
 .docList,
 .docColumns {
   min-height: 0;
-  border: 1px solid var(--opus-border);
+  border: 1px solid var(--opus-surface-border, var(--opus-border));
   border-radius: 12px;
-  background: color-mix(in srgb, var(--opus-panel) 92%, transparent);
+  background: var(--opus-surface-fill, color-mix(in srgb, var(--opus-panel) 92%, transparent));
 }
 
 .docList {
@@ -812,7 +825,7 @@ button:focus-visible .openChevron {
 .docListRow {
   background: transparent;
   border: 0;
-  border-top: 1px solid color-mix(in srgb, var(--opus-border) 72%, transparent);
+  border-top: 1px solid var(--opus-surface-border, color-mix(in srgb, var(--opus-border) 72%, transparent));
   color: var(--opus-muted, var(--opus-text-muted));
   cursor: pointer;
   font: inherit;
@@ -821,7 +834,7 @@ button:focus-visible .openChevron {
 }
 
 .docListRow:hover {
-  background: color-mix(in srgb, var(--opus-accent) 7%, transparent);
+  background: var(--opus-surface-fill, color-mix(in srgb, var(--opus-accent) 7%, transparent));
 }
 
 .docListName {
@@ -852,7 +865,7 @@ button:focus-visible .openChevron {
 }
 
 .docColumn + .docColumn {
-  border-left: 1px solid var(--opus-border);
+  border-left: 1px solid var(--opus-surface-border, var(--opus-border));
 }
 
 .docColumnHeading {
@@ -884,7 +897,12 @@ button:focus-visible .openChevron {
 
 .docColumnItem:hover,
 .docColumnItem[data-active="true"] {
-  background: color-mix(in srgb, var(--opus-accent) 12%, transparent);
+  background: var(--opus-surface-fill, color-mix(in srgb, var(--opus-accent) 12%, transparent));
+}
+
+:global([data-opus-appearance="neumorphism"]) .docColumnItem:hover,
+:global([data-opus-appearance="neumorphism"]) .docColumnItem[data-active="true"] {
+  box-shadow: var(--opus-control-inset-shadow, none);
 }
 
 .docColumnItem > span:nth-child(2) {
@@ -910,10 +928,10 @@ button:focus-visible .openChevron {
   gap: 6px;
   align-content: start;
   padding: 12px;
-  border: 1px solid var(--opus-border);
+  border: 1px solid var(--opus-surface-border, var(--opus-border));
   border-radius: 12px;
-  background: color-mix(in srgb, var(--opus-surface, var(--opus-panel)) 70%, transparent);
-  color: inherit;
+  background: var(--opus-surface-fill, color-mix(in srgb, var(--opus-surface, var(--opus-panel)) 70%, transparent));
+  color: var(--opus-surface-text, inherit);
   text-align: left;
   cursor: default;
 }
@@ -932,8 +950,8 @@ button.docCard {
 
 button.docCard:hover,
 .docCard[data-kind="folder"]:hover {
-  border-color: color-mix(in srgb, var(--opus-accent) 40%, var(--opus-border));
-  background: color-mix(in srgb, var(--opus-accent) 8%, var(--opus-panel));
+  border-color: var(--opus-surface-border, color-mix(in srgb, var(--opus-accent) 40%, var(--opus-border)));
+  background: var(--opus-surface-fill, color-mix(in srgb, var(--opus-accent) 8%, var(--opus-panel)));
 }
 
 .docCardIcon {

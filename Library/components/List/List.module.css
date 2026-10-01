@@ -18,7 +18,7 @@
   gap: 12px;
   align-items: start;
   padding: 14px 16px;
-  border-bottom: 1px solid var(--opus-border);
+  border-bottom: 1px solid var(--opus-surface-border, var(--opus-border));
 }
 
 .list[data-density="compact"] .item {
@@ -56,7 +56,7 @@
 }
 
 .itemAction:hover {
-  background: color-mix(in srgb, var(--opus-accent) 8%, transparent);
+  background: var(--opus-surface-fill, color-mix(in srgb, var(--opus-accent) 8%, transparent));
 }
 
 .itemAction:focus-visible {
@@ -107,8 +107,8 @@
   width: 28px;
   height: 28px;
   border-radius: 8px;
-  background: color-mix(in srgb, var(--opus-accent) 12%, transparent);
-  color: var(--opus-accent);
+  background: var(--opus-surface-fill, color-mix(in srgb, var(--opus-accent) 12%, transparent));
+  color: var(--opus-surface-text, var(--opus-accent));
   font-size: 0.82rem;
 }
 

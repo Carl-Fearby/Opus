@@ -16,7 +16,7 @@
   justify-content: space-between;
   min-width: 0;
   padding: 12px 14px;
-  border-bottom: 1px solid color-mix(in srgb, var(--opus-border) 78%, transparent);
+  border-bottom: 1px solid var(--opus-surface-border, color-mix(in srgb, var(--opus-border) 78%, transparent));
 }
 
 .breadcrumb,
@@ -70,9 +70,9 @@
   flex: 0 0 auto;
   gap: 2px;
   padding: 3px;
-  border: 1px solid var(--opus-border);
+  border: 1px solid var(--opus-surface-border, var(--opus-border));
   border-radius: 9px;
-  background: color-mix(in srgb, var(--opus-panel) 82%, transparent);
+  background: var(--opus-surface-fill, color-mix(in srgb, var(--opus-panel) 82%, transparent));
 }
 
 .viewOptions button {
@@ -129,9 +129,9 @@
   align-items: center;
   width: 100%;
   padding: 9px 10px;
-  border: 1px solid color-mix(in srgb, var(--opus-border) 72%, transparent);
+  border: 1px solid var(--opus-surface-border, color-mix(in srgb, var(--opus-border) 72%, transparent));
   border-radius: 10px;
-  background: color-mix(in srgb, var(--opus-panel) 84%, transparent);
+  background: var(--opus-surface-fill, color-mix(in srgb, var(--opus-panel) 84%, transparent));
 }
 
 .listRow:hover,
@@ -200,9 +200,13 @@
   gap: 7px;
   min-width: 0;
   padding: 12px;
-  border: 1px solid color-mix(in srgb, var(--opus-border) 72%, transparent);
+  border: 1px solid var(--opus-surface-border, color-mix(in srgb, var(--opus-border) 72%, transparent));
   border-radius: 12px;
-  background: color-mix(in srgb, var(--opus-panel) 84%, transparent);
+  background: var(--opus-surface-fill, color-mix(in srgb, var(--opus-panel) 84%, transparent));
+}
+
+:global([data-opus-appearance="neumorphism"]) .card {
+  box-shadow: var(--opus-control-shadow, none);
 }
 
 .cardTop {
@@ -227,7 +231,7 @@
   flex-direction: column;
   width: 210px;
   min-width: 210px;
-  border-right: 1px solid color-mix(in srgb, var(--opus-border) 72%, transparent);
+  border-right: 1px solid var(--opus-surface-border, color-mix(in srgb, var(--opus-border) 72%, transparent));
 }
 
 .columnTitle {
@@ -249,8 +253,8 @@
 }
 
 .columnRow[aria-current="page"] {
-  background: color-mix(in srgb, var(--opus-accent) 18%, transparent);
-  color: var(--opus-accent);
+  background: var(--opus-surface-fill, color-mix(in srgb, var(--opus-accent) 18%, transparent));
+  color: var(--opus-surface-text, var(--opus-accent));
 }
 
 .columnRow span:nth-child(2) {

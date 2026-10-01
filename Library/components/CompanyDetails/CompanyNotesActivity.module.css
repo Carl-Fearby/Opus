@@ -28,8 +28,8 @@
   height: auto;
   min-width: 0;
   padding: 0;
-  background: var(--contact-tab-rail-bg);
-  background-image: none;
+  background: var(--opus-surface-fill, var(--contact-tab-rail-bg));
+  background-image: var(--opus-surface-background-image, none);
 }
 
 .workspaceTabs {
@@ -72,7 +72,7 @@
   border: 0 !important;
   border-radius: 0 !important;
   box-shadow: none !important;
-  background: var(--notes-tab-widget-bg) !important;
+  background: var(--opus-surface-fill, var(--notes-tab-widget-bg)) !important;
   overflow: hidden !important;
 }
 
@@ -134,9 +134,9 @@
   gap: 12px;
   align-items: start;
   padding: 12px 12px;
-  border: 1px solid color-mix(in srgb, var(--opus-border) 78%, transparent);
+  border: 1px solid var(--opus-surface-border, color-mix(in srgb, var(--opus-border) 78%, transparent));
   border-radius: 12px;
-  background: color-mix(in srgb, var(--dashboard-section-bg, var(--opus-panel)) 88%, transparent);
+  background: var(--opus-surface-fill, color-mix(in srgb, var(--dashboard-section-bg, var(--opus-panel)) 88%, transparent));
 }
 
 .contactCopy {
@@ -201,10 +201,10 @@
   margin: 0;
   padding: 0 12px;
   min-height: 2rem;
-  border: 1px solid color-mix(in srgb, var(--opus-accent) 42%, var(--dashboard-section-border, var(--opus-border)));
+  border: 1px solid var(--opus-surface-border, color-mix(in srgb, var(--opus-accent) 42%, var(--dashboard-section-border, var(--opus-border))));
   border-radius: 8px;
-  background: color-mix(in srgb, var(--opus-accent) 14%, transparent);
-  color: var(--dashboard-section-text, var(--opus-text));
+  background: var(--opus-surface-fill, color-mix(in srgb, var(--opus-accent) 14%, transparent));
+  color: var(--opus-surface-text, var(--dashboard-section-text, var(--opus-text)));
   font: inherit;
   font-size: 0.74rem;
   font-weight: 700;

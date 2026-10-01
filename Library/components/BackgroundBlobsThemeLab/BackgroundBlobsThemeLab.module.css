@@ -65,10 +65,14 @@
   justify-content: space-between;
   gap: 12px;
   padding: 12px 14px;
-  border: 1px solid var(--opus-border);
+  border: 1px solid var(--opus-surface-border, var(--opus-border));
   border-radius: 12px;
-  background: color-mix(in srgb, var(--opus-panel) 68%, transparent);
-  backdrop-filter: blur(12px);
+  background: var(--opus-surface-fill, color-mix(in srgb, var(--opus-panel) 68%, transparent));
+  backdrop-filter: var(--opus-surface-backdrop-filter, blur(12px));
+}
+
+:global([data-opus-appearance="neumorphism"]) .toolbar {
+  box-shadow: var(--opus-control-shadow, none);
 }
 
 .contentStack {
@@ -92,10 +96,10 @@
   display: grid;
   gap: 24px;
   padding: 18px;
-  border: 1px solid var(--opus-border);
+  border: 1px solid var(--opus-surface-border, var(--opus-border));
   border-radius: 14px;
-  background: color-mix(in srgb, var(--opus-glass-surface) 72%, transparent);
-  backdrop-filter: blur(14px);
+  background: var(--opus-surface-fill, color-mix(in srgb, var(--opus-glass-surface) 72%, transparent));
+  backdrop-filter: var(--opus-surface-backdrop-filter, blur(14px));
 }
 
 .contextBlock {
@@ -137,11 +141,11 @@
 }
 
 .themeButton {
-  border: 1px solid var(--opus-border);
+  border: 1px solid var(--opus-surface-border, var(--opus-border));
   border-radius: 999px;
   padding: 7px 11px;
-  background: color-mix(in srgb, var(--opus-panel) 92%, transparent);
-  color: inherit;
+  background: var(--opus-surface-fill, color-mix(in srgb, var(--opus-panel) 92%, transparent));
+  color: var(--opus-surface-text, inherit);
   cursor: pointer;
   font: inherit;
   font-size: 0.76rem;

@@ -216,6 +216,11 @@ export function ComponentsThemeProvider({ children }: { children: ReactNode }) {
       if (isHexColor(storedTileAccentSecondary ?? "")) {
         setPreviewTileAccentSecondaryState(storedTileAccentSecondary!);
       }
+      const storedAppearance = window.localStorage.getItem("opus-preview-appearance")
+        ?? readPreferenceCookie("opus-preview-appearance");
+      if (storedAppearance === "neumorphism" || storedAppearance === "standard") {
+        setPreviewDefaults((current) => ({ ...current, appearance: storedAppearance }));
+      }
       setPreviewThemeState(parseTheme(storedTheme));
     } catch {
       // Keep the preview defaults when storage is unavailable.
@@ -223,6 +228,17 @@ export function ComponentsThemeProvider({ children }: { children: ReactNode }) {
       setPreviewAppearanceReady(true);
     }
   }, []);
+
+  useEffect(() => {
+    if (!previewAppearanceReady) return;
+    const appearance = previewDefaults.appearance ?? "standard";
+    try {
+      window.localStorage.setItem("opus-preview-appearance", appearance);
+      document.cookie = `opus-preview-appearance=${appearance};path=/;max-age=31536000;SameSite=Lax`;
+    } catch {
+      // Keep the selected style in memory if persistence is unavailable.
+    }
+  }, [previewAppearanceReady, previewDefaults.appearance]);
 
   const persistPreviewValue = useCallback((key: string, value: string) => {
     try {

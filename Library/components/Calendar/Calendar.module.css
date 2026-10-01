@@ -7,9 +7,13 @@
 
   width: 100%;
   overflow: hidden;
-  border: 1px solid var(--calendar-line);
+  border: 1px solid var(--opus-surface-border, var(--calendar-line));
   border-radius: var(--opus-input-radius-large);
-  background: color-mix(in srgb, var(--opus-panel) 92%, transparent);
+  background: var(--opus-surface-fill, color-mix(in srgb, var(--opus-panel) 92%, transparent));
+}
+
+:global([data-opus-appearance="neumorphism"]) .root {
+  box-shadow: var(--opus-control-shadow, none);
 }
 
 .toolbar {
@@ -18,7 +22,7 @@
   align-items: center;
   gap: 8px;
   padding: 10px 12px;
-  border-bottom: 1px solid var(--calendar-line);
+  border-bottom: 1px solid var(--opus-surface-border, var(--calendar-line));
 }
 
 .label {
@@ -45,10 +49,10 @@
   min-width: 0;
   height: 32px;
   padding: 0 28px 0 10px;
-  border: 1px solid var(--calendar-line);
+  border: 1px solid var(--opus-surface-border, var(--calendar-line));
   border-radius: 8px;
-  background: color-mix(in srgb, var(--opus-input-bg) 72%, transparent);
-  color: var(--opus-text);
+  background: var(--opus-surface-fill, color-mix(in srgb, var(--opus-input-bg) 72%, transparent));
+  color: var(--opus-surface-text, var(--opus-text));
   font: inherit;
   font-size: 0.82rem;
   font-weight: 650;
@@ -62,6 +66,10 @@
     calc(100% - 9px) calc(50% - 2px);
   background-size: 5px 5px, 5px 5px;
   background-repeat: no-repeat;
+}
+
+:global([data-opus-appearance="neumorphism"]) .select {
+  box-shadow: var(--opus-control-shadow, none);
 }
 
 .select:focus-visible {
@@ -99,19 +107,19 @@
 .nav {
   width: 32px;
   height: 32px;
-  border: 1px solid var(--calendar-line);
+  border: 1px solid var(--opus-surface-border, var(--calendar-line));
   border-radius: 8px;
-  background: color-mix(in srgb, var(--opus-input-bg) 72%, transparent);
-  color: var(--opus-muted);
+  background: var(--opus-surface-fill, color-mix(in srgb, var(--opus-input-bg) 72%, transparent));
+  color: var(--opus-surface-text, var(--opus-muted));
   font-size: 1.1rem;
   cursor: pointer;
   appearance: none;
 }
 
 .nav:hover {
-  color: var(--opus-text);
-  border-color: color-mix(in srgb, var(--opus-accent) 40%, var(--opus-border));
-  background: color-mix(in srgb, var(--opus-accent) 8%, var(--opus-input-bg));
+  color: var(--opus-surface-text, var(--opus-text));
+  border-color: var(--opus-surface-border, color-mix(in srgb, var(--opus-accent) 40%, var(--opus-border)));
+  background: var(--opus-surface-fill, color-mix(in srgb, var(--opus-accent) 8%, var(--opus-input-bg)));
 }
 
 .weekdays,
@@ -125,7 +133,7 @@
 }
 
 .weekdays {
-  border-bottom: 1px solid var(--calendar-line);
+  border-bottom: 1px solid var(--opus-surface-border, var(--calendar-line));
 }
 
 .weekday {
@@ -143,8 +151,8 @@
   min-height: 72px;
   margin: 0;
   border: none;
-  border-right: 1px solid var(--calendar-line);
-  border-bottom: 1px solid var(--calendar-line);
+  border-right: 1px solid var(--opus-surface-border, var(--calendar-line));
+  border-bottom: 1px solid var(--opus-surface-border, var(--calendar-line));
 }
 
 .day:nth-child(7n),
@@ -174,7 +182,7 @@
 }
 
 .day:hover {
-  background: var(--calendar-hover);
+  background: var(--opus-surface-fill, var(--calendar-hover));
 }
 
 .day:focus-visible {
@@ -186,20 +194,20 @@
 .empty {
   height: 100%;
   min-height: 0;
-  background: var(--calendar-empty);
+  background: var(--opus-surface-fill, var(--calendar-empty));
 }
 
 .today {
-  box-shadow: inset 0 0 0 1px var(--calendar-today-ring);
+  box-shadow: var(--opus-control-shadow, inset 0 0 0 1px var(--calendar-today-ring));
 }
 
 .selected {
-  background: var(--calendar-selected);
-  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--opus-accent) 55%, transparent);
+  background: var(--opus-surface-fill, var(--calendar-selected));
+  box-shadow: var(--opus-control-inset-shadow, inset 0 0 0 1px color-mix(in srgb, var(--opus-accent) 55%, transparent));
 }
 
 .today.selected {
-  box-shadow: inset 0 0 0 2px var(--opus-accent);
+  box-shadow: var(--opus-control-shadow, inset 0 0 0 2px var(--opus-accent));
 }
 
 .dayNumber {
@@ -298,13 +306,13 @@
   align-items: flex-start;
   gap: 10px;
   padding: 10px 12px;
-  border: 1px solid color-mix(in srgb, var(--opus-border) 80%, transparent);
+  border: 1px solid var(--opus-surface-border, color-mix(in srgb, var(--opus-border) 80%, transparent));
   border-radius: var(--opus-input-radius);
-  background: color-mix(in srgb, var(--opus-panel) 88%, transparent);
+  background: var(--opus-surface-fill, color-mix(in srgb, var(--opus-panel) 88%, transparent));
 }
 
 .dayModalItem[data-tone="accent"] {
-  border-color: color-mix(in srgb, var(--opus-accent) 28%, var(--opus-border));
+  border-color: var(--opus-surface-border, color-mix(in srgb, var(--opus-accent) 28%, var(--opus-border)));
 }
 
 .dayModalItem[data-tone="success"] {
@@ -325,7 +333,7 @@
   height: 8px;
   margin-top: 5px;
   border-radius: 999px;
-  background: var(--opus-accent);
+  background: var(--opus-surface-fill, var(--opus-accent));
 }
 
 .dayModalDot[data-tone="success"] {

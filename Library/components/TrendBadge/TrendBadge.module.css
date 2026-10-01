@@ -10,11 +10,19 @@
 }
 
 .badge[data-direction="up"] {
-  color: #15803d;
-  background: color-mix(in srgb, #22c55e 16%, transparent);
+  color: var(--opus-surface-text, #15803d);
+  background: var(--opus-surface-fill, color-mix(in srgb, #22c55e 16%, transparent));
+}
+
+:global([data-opus-appearance="neumorphism"]) .badge[data-direction="up"] {
+  box-shadow: var(--opus-control-shadow, none);
 }
 
 .badge[data-direction="down"] {
-  color: #b91c1c;
-  background: color-mix(in srgb, #ef4444 14%, transparent);
+  color: var(--opus-surface-text, #b91c1c);
+  background: var(--opus-surface-fill, color-mix(in srgb, #ef4444 14%, transparent));
+}
+
+:global([data-opus-appearance="neumorphism"]) .badge[data-direction="down"] {
+  box-shadow: var(--opus-control-shadow, none);
 }

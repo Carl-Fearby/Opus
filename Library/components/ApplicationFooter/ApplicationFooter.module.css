@@ -10,10 +10,10 @@
   min-width: 0;
   min-height: 58px;
   padding: 8px 18px;
-  border: 1px solid var(--application-footer-border);
+  border: 1px solid var(--opus-surface-border, var(--application-footer-border));
   border-radius: 14px;
   background:
-    radial-gradient(
+    var(--opus-surface-fill, radial-gradient(
       110% 180% at 0% 100%,
       color-mix(in srgb, var(--opus-accent) 14%, transparent),
       transparent 58%
@@ -23,11 +23,11 @@
       color-mix(in srgb, var(--opus-accent) 7%, transparent),
       transparent 62%
     ),
-    linear-gradient(180deg, #070c1a 0%, #06101d 100%);
+    linear-gradient(180deg, #070c1a 0%, #06101d 100%));
   box-shadow:
-    inset 0 1px 0 color-mix(in srgb, #ffffff 6%, transparent),
-    0 12px 28px color-mix(in srgb, #020617 68%, transparent);
-  color: var(--dashboard-section-text, var(--opus-text));
+    var(--opus-control-shadow, inset 0 1px 0 color-mix(in srgb, #ffffff 6%, transparent),
+    0 12px 28px color-mix(in srgb, #020617 68%, transparent));
+  color: var(--opus-surface-text, var(--dashboard-section-text, var(--opus-text)));
 }
 
 .brand,
@@ -110,7 +110,7 @@
 :global([data-theme="light"]) .root {
   --application-footer-border: color-mix(in srgb, var(--opus-accent) 12%, #cbd5e1);
   background:
-    radial-gradient(
+    var(--opus-surface-fill, radial-gradient(
       110% 180% at 0% 100%,
       color-mix(in srgb, var(--opus-accent) 10%, transparent),
       transparent 60%
@@ -120,11 +120,11 @@
       color-mix(in srgb, var(--opus-accent) 6%, transparent),
       transparent 64%
     ),
-    linear-gradient(180deg, #f8fafc 0%, #f1f5f9 100%);
+    linear-gradient(180deg, #f8fafc 0%, #f1f5f9 100%));
   box-shadow:
-    inset 0 1px 0 rgba(255, 255, 255, 0.9),
-    0 12px 28px color-mix(in srgb, var(--opus-accent) 6%, transparent);
-  color: #17132f;
+    var(--opus-control-shadow, inset 0 1px 0 rgba(255, 255, 255, 0.9),
+    0 12px 28px color-mix(in srgb, var(--opus-accent) 6%, transparent));
+  color: var(--opus-surface-text, #17132f);
 }
 
 :global([data-preview-root][data-theme="dark"]) .root {
@@ -133,7 +133,7 @@
     color-mix(in srgb, var(--opus-accent-secondary, var(--opus-accent)) 20%, transparent)
   );
   background:
-    radial-gradient(
+    var(--opus-surface-fill, radial-gradient(
       110% 180% at 0% 100%,
       color-mix(in srgb, var(--opus-accent) 14%, transparent),
       transparent 58%
@@ -143,11 +143,11 @@
       color-mix(in srgb, var(--opus-accent) 7%, transparent),
       transparent 62%
     ),
-    linear-gradient(180deg, #070c1a 0%, #06101d 100%);
+    linear-gradient(180deg, #070c1a 0%, #06101d 100%));
   box-shadow:
-    inset 0 1px 0 color-mix(in srgb, #ffffff 6%, transparent),
-    0 12px 28px color-mix(in srgb, #020617 68%, transparent);
-  color: var(--dashboard-section-text, var(--opus-text));
+    var(--opus-control-shadow, inset 0 1px 0 color-mix(in srgb, #ffffff 6%, transparent),
+    0 12px 28px color-mix(in srgb, #020617 68%, transparent));
+  color: var(--opus-surface-text, var(--dashboard-section-text, var(--opus-text)));
 }
 
 @media (max-width: 720px) {

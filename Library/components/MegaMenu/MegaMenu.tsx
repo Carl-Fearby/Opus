@@ -2,7 +2,7 @@
 
 import { useCallback, useEffect, useId, useLayoutEffect, useRef, useState, type CSSProperties } from "react";
 import type { ReactNode } from "react";
-import { createPortal } from "react-dom";
+import { createThemedPortal as createPortal } from "@/lib/theme/createThemedPortal";
 import type { SurfaceDensity } from "@/components/fields/types";
 import { useOpusTheme } from "@/components/OpusThemeProvider";
 import { useTopNavigation } from "@/components/TopNavigation/TopNavigationContext";
@@ -35,6 +35,8 @@ export type MegaMenuFeatured = {
   actionLabel?: string;
   description: string;
   eyebrow?: string;
+  imageAlt?: string;
+  imageSrc?: string;
   onAction?: () => void;
   title: string;
 };
@@ -514,21 +516,24 @@ export function MegaMenu({
           </div>
 
           {activeConfig.featured ? (
-            <aside className={styles.featured}>
-              {activeConfig.featured.eyebrow ? (
-                <span className={styles.eyebrow}>{activeConfig.featured.eyebrow}</span>
-              ) : null}
-              <strong>{activeConfig.featured.title}</strong>
-              <p>{activeConfig.featured.description}</p>
-              {activeConfig.featured.actionLabel ? (
-                <button
-                  className={styles.featuredAction}
-                  type="button"
-                  onClick={handleFeaturedAction}
-                >
-                  {activeConfig.featured.actionLabel}
-                </button>
-              ) : null}
+            <aside className={styles.featured} data-has-image={Boolean(activeConfig.featured.imageSrc)}>
+              {activeConfig.featured.imageSrc ? <img className={styles.featuredImage} src={activeConfig.featured.imageSrc} alt={activeConfig.featured.imageAlt ?? ""} /> : null}
+              <div className={styles.featuredCopy}>
+                {activeConfig.featured.eyebrow ? (
+                  <span className={styles.eyebrow}>{activeConfig.featured.eyebrow}</span>
+                ) : null}
+                <strong>{activeConfig.featured.title}</strong>
+                {activeConfig.featured.description ? <p>{activeConfig.featured.description}</p> : null}
+                {activeConfig.featured.actionLabel ? (
+                  <button
+                    className={styles.featuredAction}
+                    type="button"
+                    onClick={handleFeaturedAction}
+                  >
+                    {activeConfig.featured.actionLabel}
+                  </button>
+                ) : null}
+              </div>
             </aside>
           ) : null}
         </div>

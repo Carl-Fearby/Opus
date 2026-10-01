@@ -61,10 +61,10 @@
   -webkit-appearance: none;
   -moz-appearance: none;
   padding: 7px 30px 7px 12px;
-  border: 1px solid color-mix(in srgb, var(--dashboard-section-text) 16%, transparent);
+  border: 1px solid var(--opus-surface-border, color-mix(in srgb, var(--dashboard-section-text) 16%, transparent));
   border-radius: 8px;
-  background: color-mix(in srgb, var(--dashboard-section-panel) 92%, transparent);
-  color: var(--dashboard-section-text);
+  background: var(--opus-surface-fill, color-mix(in srgb, var(--dashboard-section-panel) 92%, transparent));
+  color: var(--opus-surface-text, var(--dashboard-section-text));
   font: inherit;
   font-size: 0.72rem;
   font-weight: 600;
@@ -174,12 +174,12 @@
   gap: 2px;
   min-width: 5.5rem;
   padding: 8px 10px;
-  border: 1px solid color-mix(in srgb, var(--tooltip-accent, #9b8cff) 22%, transparent);
+  border: 1px solid var(--opus-surface-border, color-mix(in srgb, var(--tooltip-accent, #9b8cff) 22%, transparent));
   border-radius: 10px;
-  background: color-mix(in srgb, #111827 94%, var(--tooltip-accent, #312e81) 6%);
+  background: var(--opus-surface-fill, color-mix(in srgb, #111827 94%, var(--tooltip-accent, #312e81) 6%));
   box-shadow:
-    0 10px 24px color-mix(in srgb, #020617 55%, transparent),
-    0 0 0 1px color-mix(in srgb, var(--tooltip-accent, #7c5cff) 12%, transparent);
+    var(--opus-control-shadow, 0 10px 24px color-mix(in srgb, #020617 55%, transparent),
+    0 0 0 1px color-mix(in srgb, var(--tooltip-accent, #7c5cff) 12%, transparent));
   pointer-events: none;
   transform: translate(-50%, calc(-100% - 14px));
 }

@@ -101,11 +101,11 @@
   position: relative;
   width: var(--flip-w);
   height: var(--flip-h);
-  border: 1px solid var(--flip-border);
+  border: 1px solid var(--opus-surface-border, var(--flip-border));
   border-radius: var(--flip-radius);
-  background: var(--flip-face);
-  box-shadow: var(--flip-shadow);
-  color: var(--flip-digit);
+  background: var(--opus-surface-fill, var(--flip-face));
+  box-shadow: var(--opus-control-shadow, var(--flip-shadow));
+  color: var(--opus-surface-text, var(--flip-digit));
   font-family: inherit;
   font-size: var(--flip-font);
   font-weight: 700;
@@ -272,8 +272,8 @@
   width: calc(var(--flip-w) * 0.15);
   height: calc(var(--flip-w) * 0.15);
   border-radius: 50%;
-  background: var(--flip-separator);
-  box-shadow: 0 0 14px color-mix(in srgb, var(--opus-accent) 75%, transparent);
+  background: var(--opus-surface-fill, var(--flip-separator));
+  box-shadow: var(--opus-control-shadow, 0 0 14px color-mix(in srgb, var(--opus-accent) 75%, transparent));
   animation: colonPulse 1s steps(1, end) infinite;
 }
 

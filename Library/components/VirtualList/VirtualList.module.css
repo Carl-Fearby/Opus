@@ -1,15 +1,15 @@
 .viewport {
   overflow: auto;
   position: relative;
-  border: 1px solid var(--opus-border);
+  border: 1px solid var(--opus-surface-border, var(--opus-border));
   border-radius: var(--opus-radius, 12px);
   background:
-    radial-gradient(85% 65% at 14% 0%, color-mix(in srgb, var(--opus-accent) 16%, transparent), transparent 58%),
+    var(--opus-surface-fill, radial-gradient(85% 65% at 14% 0%, color-mix(in srgb, var(--opus-accent) 16%, transparent), transparent 58%),
     radial-gradient(72% 58% at 100% 100%, color-mix(in srgb, var(--opus-accent-secondary, #0284c7) 12%, transparent), transparent 62%),
-    linear-gradient(180deg, color-mix(in srgb, var(--dashboard-section-bg, var(--opus-panel)) 94%, #ffffff 3%), var(--dashboard-section-bg, var(--opus-panel)));
+    linear-gradient(180deg, color-mix(in srgb, var(--dashboard-section-bg, var(--opus-panel)) 94%, #ffffff 3%), var(--dashboard-section-bg, var(--opus-panel))));
   box-shadow:
-    inset 0 1px 0 color-mix(in srgb, #ffffff 6%, transparent),
-    0 12px 28px color-mix(in srgb, #020617 42%, transparent);
+    var(--opus-control-shadow, inset 0 1px 0 color-mix(in srgb, #ffffff 6%, transparent),
+    0 12px 28px color-mix(in srgb, #020617 42%, transparent));
   overscroll-behavior: contain;
 }
 
@@ -37,6 +37,6 @@
   top: 0;
   padding: 10px 14px;
   padding-inline-end: 24px;
-  border-bottom: 1px solid var(--opus-border);
+  border-bottom: 1px solid var(--opus-surface-border, var(--opus-border));
   color: var(--opus-text);
 }

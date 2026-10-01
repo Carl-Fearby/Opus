@@ -3,10 +3,14 @@
   width: 100%;
   min-width: 0;
   min-height: 180px;
-  border: 1px solid var(--opus-border);
+  border: 1px solid var(--opus-surface-border, var(--opus-border));
   border-radius: var(--opus-input-radius-large, 6px);
   overflow: hidden;
-  background: color-mix(in srgb, var(--opus-panel) 92%, transparent);
+  background: var(--opus-surface-fill, color-mix(in srgb, var(--opus-panel) 92%, transparent));
+}
+
+:global([data-opus-appearance="neumorphism"]) .root {
+  box-shadow: var(--opus-control-shadow, none);
 }
 
 .root[data-flush] {

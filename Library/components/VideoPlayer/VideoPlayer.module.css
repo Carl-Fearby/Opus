@@ -6,13 +6,13 @@
   height: 100%;
   min-width: 0;
   min-height: 0;
-  border: 1px solid var(--opus-border-strong);
+  border: 1px solid var(--opus-surface-border, var(--opus-border-strong));
   border-radius: 14px;
   background:
-    linear-gradient(135deg, color-mix(in srgb, var(--opus-accent) 14%, transparent), transparent 42%),
-    color-mix(in srgb, var(--opus-panel) 94%, transparent);
-  box-shadow: var(--opus-shadow);
-  color: var(--opus-text);
+    var(--opus-surface-fill, linear-gradient(135deg, color-mix(in srgb, var(--opus-accent) 14%, transparent), transparent 42%),
+    color-mix(in srgb, var(--opus-panel) 94%, transparent));
+  box-shadow: var(--opus-control-shadow, var(--opus-shadow));
+  color: var(--opus-surface-text, var(--opus-text));
   /* Docs fallback when parent height is indefinite */
   aspect-ratio: 16 / 9;
 }
@@ -23,7 +23,7 @@
   border-radius: 0;
   box-shadow: none;
   outline: none;
-  background: var(--opus-panel);
+  background: var(--opus-surface-fill, var(--opus-panel));
 }
 
 .player[data-edge-to-edge="true"] {
@@ -127,13 +127,13 @@
   display: grid;
   gap: 10px;
   padding: 28px 14px 14px;
-  background: linear-gradient(
+  background: var(--opus-surface-fill, linear-gradient(
     180deg,
     transparent 0%,
     color-mix(in srgb, var(--opus-panel) 62%, transparent) 42%,
     color-mix(in srgb, var(--opus-panel) 94%, transparent) 100%
-  );
-  color: var(--opus-text);
+  ));
+  color: var(--opus-surface-text, var(--opus-text));
   opacity: 0;
   pointer-events: none;
   transform: translateY(10px);
@@ -209,15 +209,19 @@
 
 .progressTrack {
   width: 100%;
-  background: color-mix(in srgb, var(--opus-border) 78%, transparent);
+  background: var(--opus-surface-fill, color-mix(in srgb, var(--opus-border) 78%, transparent));
+}
+
+:global([data-opus-appearance="neumorphism"]) .progressTrack {
+  box-shadow: var(--opus-control-inset-shadow, none);
 }
 
 .progressFill {
-  background: linear-gradient(
+  background: var(--opus-surface-fill, linear-gradient(
     90deg,
     color-mix(in srgb, var(--opus-accent) 78%, white 8%),
     var(--opus-accent)
-  );
+  ));
 }
 
 .progressThumb {
@@ -225,10 +229,10 @@
   top: 50%;
   width: 12px;
   height: 12px;
-  border: 2px solid color-mix(in srgb, var(--opus-accent) 40%, white 20%);
+  border: 2px solid var(--opus-surface-border, color-mix(in srgb, var(--opus-accent) 40%, white 20%));
   border-radius: 999px;
-  background: var(--opus-accent);
-  box-shadow: 0 0 0 3px color-mix(in srgb, var(--opus-accent) 18%, transparent);
+  background: var(--opus-surface-fill, var(--opus-accent));
+  box-shadow: var(--opus-control-shadow, 0 0 0 3px color-mix(in srgb, var(--opus-accent) 18%, transparent));
   transform: translate(-50%, -50%);
   pointer-events: none;
 }

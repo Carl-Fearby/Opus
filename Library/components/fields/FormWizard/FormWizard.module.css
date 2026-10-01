@@ -1,5 +1,6 @@
-.wizard{display:grid;grid-template-columns:1fr;overflow:hidden;border:1px solid var(--opus-border);border-radius:var(--opus-widget-radius,16px);background:var(--opus-panel);color:var(--opus-text)}
-.stepNavigation{padding:18px;border-bottom:1px solid var(--opus-border);background:color-mix(in srgb,var(--opus-panel) 88%,var(--opus-accent) 12%)}
+.wizard{display:grid;grid-template-columns:1fr;overflow:hidden;border:1px solid var(--opus-surface-border, var(--opus-border));border-radius:var(--opus-widget-radius,16px);background:var(--opus-surface-fill, var(--opus-panel));color:var(--opus-surface-text, var(--opus-text))}
+.stepNavigation{padding:18px;border-bottom:1px solid var(--opus-surface-border, var(--opus-border));background:var(--opus-surface-fill, color-mix(in srgb,var(--opus-panel) 88%,var(--opus-accent) 12%))}
+:global([data-opus-appearance="neumorphism"]) .stepNavigation{box-shadow:var(--opus-control-shadow, none)}
 .steps{display:grid;grid-auto-flow:column;grid-auto-columns:minmax(0,1fr);gap:0;margin:0;padding:0;list-style:none;counter-reset:steps}
 .step{position:relative;min-width:0}
 .step:not(:last-child)::after{content:"";position:absolute;z-index:0;inset-block-start:18px;inset-inline-start:calc(50% + 22px);inset-inline-end:calc(-50% + 22px);block-size:2px;background:var(--opus-border)}
@@ -22,29 +23,30 @@
 .panelHeader p:not(.progress){color:var(--opus-muted)}
 .progress{color:var(--opus-accent);font-size:.72rem;font-weight:800;text-transform:uppercase;letter-spacing:.08em}
 .content{display:grid;gap:14px;align-content:start}
-.actions{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:16px 22px;border-top:1px solid var(--opus-border);background:color-mix(in srgb,var(--opus-panel) 94%,var(--opus-accent) 6%)}
+.actions{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:16px 22px;border-top:1px solid var(--opus-surface-border, var(--opus-border));background:var(--opus-surface-fill, color-mix(in srgb,var(--opus-panel) 94%,var(--opus-accent) 6%))}
 .primaryActions{display:flex;align-items:center;gap:10px}
 .wizard[data-orientation=vertical]{grid-template-columns:minmax(190px,28%) minmax(0,1fr)}
-.wizard[data-orientation=vertical] .stepNavigation{grid-row:1/3;border-right:1px solid var(--opus-border);border-bottom:0}
+.wizard[data-orientation=vertical] .stepNavigation{grid-row:1/3;border-right:1px solid var(--opus-surface-border, var(--opus-border));border-bottom:0}
 .wizard[data-orientation=vertical] .steps{grid-auto-flow:row;grid-auto-columns:auto;grid-template-columns:1fr;gap:8px}
 .wizard[data-orientation=vertical] .step:not(:last-child)::after{inset-block-start:38px;inset-block-end:-14px;inset-inline-start:17px;inset-inline-end:auto;inline-size:2px;block-size:auto}
 .wizard[data-orientation=vertical] .stepButton{grid-template-columns:36px minmax(0,1fr);justify-items:start;text-align:left;padding:6px 0}
 .wizard[data-orientation=vertical] .stepLabel{justify-content:flex-start}
 .wizard[data-orientation=vertical] .actions{grid-column:2}
-@media(max-width:720px){.stepNavigation{overflow-x:auto}.steps{grid-auto-columns:minmax(140px,1fr);min-width:620px}.stepDescription{display:none}.wizard[data-orientation=vertical]{grid-template-columns:1fr}.wizard[data-orientation=vertical] .stepNavigation{grid-row:auto;border-right:0;border-bottom:1px solid var(--opus-border)}.wizard[data-orientation=vertical] .steps{grid-auto-flow:column;grid-auto-columns:minmax(140px,1fr);grid-template-columns:none;min-width:620px}.wizard[data-orientation=vertical] .stepButton{grid-template-columns:1fr;justify-items:center;text-align:center}.wizard[data-orientation=vertical] .step:not(:last-child)::after{inset-block-start:24px;inset-inline-start:calc(50% + 22px);inset-inline-end:calc(-50% + 22px);inline-size:auto;block-size:2px}.wizard[data-orientation=vertical] .actions{grid-column:auto}}
+@media(max-width:720px){.stepNavigation{overflow-x:auto}.steps{grid-auto-columns:minmax(140px,1fr);min-width:620px}.stepDescription{display:none}.wizard[data-orientation=vertical]{grid-template-columns:1fr}.wizard[data-orientation=vertical] .stepNavigation{grid-row:auto;border-right:0;border-bottom:1px solid var(--opus-surface-border, var(--opus-border))}.wizard[data-orientation=vertical] .steps{grid-auto-flow:column;grid-auto-columns:minmax(140px,1fr);grid-template-columns:none;min-width:620px}.wizard[data-orientation=vertical] .stepButton{grid-template-columns:1fr;justify-items:center;text-align:center}.wizard[data-orientation=vertical] .step:not(:last-child)::after{inset-block-start:24px;inset-inline-start:calc(50% + 22px);inset-inline-end:calc(-50% + 22px);inline-size:auto;block-size:2px}.wizard[data-orientation=vertical] .actions{grid-column:auto}}
 @media(max-width:520px){.panel{padding:18px}.actions{align-items:stretch;flex-direction:column-reverse;padding:14px 18px}.actions>div,.primaryActions{display:grid;grid-template-columns:1fr 1fr}.actions>div:first-child{grid-template-columns:1fr}.actions button{width:100%}}
 .wizard {
   background:
-    radial-gradient(85% 65% at 14% 0%, color-mix(in srgb, var(--opus-accent) 16%, transparent), transparent 58%),
+    var(--opus-surface-fill, radial-gradient(85% 65% at 14% 0%, color-mix(in srgb, var(--opus-accent) 16%, transparent), transparent 58%),
     radial-gradient(72% 58% at 100% 100%, color-mix(in srgb, var(--opus-accent-secondary, #0284c7) 12%, transparent), transparent 62%),
-    linear-gradient(180deg, color-mix(in srgb, var(--dashboard-section-bg, #070d18) 94%, #ffffff 3%), var(--dashboard-section-bg, #070d18));
-  box-shadow: inset 0 1px 0 color-mix(in srgb, #ffffff 6%, transparent);
+    linear-gradient(180deg, color-mix(in srgb, var(--dashboard-section-bg, #070d18) 94%, #ffffff 3%), var(--dashboard-section-bg, #070d18)));
 }
+:global([data-opus-appearance="neumorphism"]) .wizard{
+  box-shadow: var(--opus-control-shadow, inset 0 1px 0 color-mix(in srgb, #ffffff 6%, transparent))}
 
 :global([data-preview-root][data-theme="light"]) .wizard,
 :global([data-theme="light"]) .wizard {
   background:
-    radial-gradient(85% 65% at 14% 0%, color-mix(in srgb, var(--opus-accent) 10%, transparent), transparent 58%),
+    var(--opus-surface-fill, radial-gradient(85% 65% at 14% 0%, color-mix(in srgb, var(--opus-accent) 10%, transparent), transparent 58%),
     radial-gradient(72% 58% at 100% 100%, color-mix(in srgb, var(--opus-accent-secondary, #0284c7) 8%, transparent), transparent 62%),
-    linear-gradient(180deg, color-mix(in srgb, var(--dashboard-section-bg, #f8fbff) 94%, #ffffff 6%), var(--dashboard-section-bg, #f8fbff));
+    linear-gradient(180deg, color-mix(in srgb, var(--dashboard-section-bg, #f8fbff) 94%, #ffffff 6%), var(--dashboard-section-bg, #f8fbff)));
 }

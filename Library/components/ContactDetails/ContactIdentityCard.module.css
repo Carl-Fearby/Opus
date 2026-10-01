@@ -32,10 +32,10 @@
   place-items: center;
   width: 38px;
   height: 38px;
-  border: 1px solid color-mix(in srgb, var(--opus-accent) 46%, var(--opus-border));
+  border: 1px solid var(--opus-surface-border, color-mix(in srgb, var(--opus-accent) 46%, var(--opus-border)));
   border-radius: 50%;
-  background: var(--dashboard-section-bg, var(--opus-panel));
-  color: var(--opus-accent);
+  background: var(--opus-surface-fill, var(--dashboard-section-bg, var(--opus-panel)));
+  color: var(--opus-surface-text, var(--opus-accent));
   cursor: pointer;
 }
 
@@ -121,10 +121,10 @@
 
 .primaryMark {
   padding: 1px 6px;
-  border: 1px solid color-mix(in srgb, var(--opus-accent) 34%, var(--opus-border));
+  border: 1px solid var(--opus-surface-border, color-mix(in srgb, var(--opus-accent) 34%, var(--opus-border)));
   border-radius: 999px;
-  background: color-mix(in srgb, var(--opus-accent) 14%, transparent);
-  color: color-mix(in srgb, var(--opus-accent) 72%, var(--opus-text));
+  background: var(--opus-surface-fill, color-mix(in srgb, var(--opus-accent) 14%, transparent));
+  color: var(--opus-surface-text, color-mix(in srgb, var(--opus-accent) 72%, var(--opus-text)));
   font-size: 0.62rem;
   font-weight: 700;
   letter-spacing: 0.02em;
@@ -133,9 +133,9 @@
 
 :global([data-theme="light"]) .primaryMark,
 :global([data-preview-root][data-theme="light"]) .primaryMark {
-  border-color: color-mix(in srgb, var(--opus-accent) 40%, var(--opus-border));
-  background: color-mix(in srgb, var(--opus-accent) 16%, #ffffff);
-  color: color-mix(in srgb, var(--opus-accent) 82%, #4c0519);
+  border-color: var(--opus-surface-border, color-mix(in srgb, var(--opus-accent) 40%, var(--opus-border)));
+  background: var(--opus-surface-fill, color-mix(in srgb, var(--opus-accent) 16%, #ffffff));
+  color: var(--opus-surface-text, color-mix(in srgb, var(--opus-accent) 82%, #4c0519));
 }
 
 .companyCopy small {

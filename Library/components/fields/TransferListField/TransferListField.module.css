@@ -8,15 +8,15 @@
 .column {
   display: grid;
   grid-template-rows: auto minmax(180px, 1fr);
-  border: 1px solid var(--opus-border-strong);
+  border: 1px solid var(--opus-surface-border, var(--opus-border-strong));
   border-radius: var(--opus-input-radius-large);
-  background: var(--opus-input-bg);
+  background: var(--opus-surface-fill, var(--opus-input-bg));
   overflow: hidden;
 }
 
 .columnHeader {
   padding: 10px 12px;
-  border-bottom: 1px solid var(--opus-border);
+  border-bottom: 1px solid var(--opus-surface-border, var(--opus-border));
   color: var(--opus-muted);
   font-size: 0.72rem;
   font-weight: 700;
@@ -44,13 +44,17 @@
 }
 
 .item:hover {
-  background: color-mix(in srgb, var(--opus-accent-soft) 65%, transparent);
+  background: var(--opus-surface-fill, color-mix(in srgb, var(--opus-accent-soft) 65%, transparent));
 }
 
 .itemActive {
-  border-color: color-mix(in srgb, var(--opus-accent) 45%, transparent);
-  background: var(--opus-accent-soft);
-  color: var(--opus-accent);
+  border-color: var(--opus-surface-border, color-mix(in srgb, var(--opus-accent) 45%, transparent));
+  background: var(--opus-surface-fill, var(--opus-accent-soft));
+  color: var(--opus-surface-text, var(--opus-accent));
+}
+
+:global([data-opus-appearance="neumorphism"]) .itemActive {
+  box-shadow: var(--opus-control-inset-shadow, none);
 }
 
 .controls {
@@ -62,16 +66,24 @@
 .controlButton {
   min-width: var(--opus-control-height);
   min-height: var(--opus-control-height);
-  border: 1px solid var(--opus-border-strong);
+  border: 1px solid var(--opus-surface-border, var(--opus-border-strong));
   border-radius: var(--opus-input-radius);
-  background: var(--opus-input-bg);
-  color: var(--opus-text);
+  background: var(--opus-surface-fill, var(--opus-input-bg));
+  color: var(--opus-surface-text, var(--opus-text));
   font-size: var(--opus-control-font-size);
   cursor: pointer;
 }
 
+:global([data-opus-appearance="neumorphism"]) .controlButton {
+  box-shadow: var(--opus-control-shadow, none);
+}
+
 .controlButton:hover {
-  border-color: color-mix(in srgb, var(--opus-accent) 45%, transparent);
-  background: var(--opus-accent-soft);
-  color: var(--opus-accent);
+  border-color: var(--opus-surface-border, color-mix(in srgb, var(--opus-accent) 45%, transparent));
+  background: var(--opus-surface-fill, var(--opus-accent-soft));
+  color: var(--opus-surface-text, var(--opus-accent));
+}
+
+:global([data-opus-appearance="neumorphism"]) .controlButton:hover {
+  box-shadow: var(--opus-control-shadow, none);
 }

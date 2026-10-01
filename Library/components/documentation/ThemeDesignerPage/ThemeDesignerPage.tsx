@@ -131,6 +131,13 @@ function ThemeDesignerControls() {
     <aside className={styles.controls} aria-label="Theme designer controls">
       <div className={styles.controlGroup}>
         <p className={styles.controlTitle}>Appearance</p>
+        <SelectField
+          id="theme-designer-style"
+          label="Theme style"
+          options={["Standard", "Neumorphism"]}
+          value={previewDefaults.appearance === "neumorphism" ? "Neumorphism" : "Standard"}
+          onChange={(event) => updateDefaults({ appearance: event.target.value === "Neumorphism" ? "neumorphism" : "standard" })}
+        />
         <ThemeToggleField
           id="theme-designer-appearance"
           label="Preview theme"
@@ -216,6 +223,7 @@ const themeStyle = {
 };
 
 const themeDefaults = {
+  appearance: "${previewDefaults.appearance ?? "standard"}",
   radius: "${previewDefaults.radius ?? "standard"}",
   transparency: "${previewDefaults.transparency ?? "standard"}",
   gradient: ${previewDefaults.gradient ?? false},
@@ -310,7 +318,7 @@ export function App({ children }) {
                   placeholder="Search for anything"
                   onSearch={() => undefined}
                 />
-                <p>The search action uses the global tertiary accent.</p>
+                <p>{previewDefaults.appearance === "neumorphism" ? "One shared surface, with raised actions and recessed inputs." : "The search action uses the global tertiary accent."}</p>
               </div>
               <div className={styles.widgetGrid} aria-label="Dashboard widget preview">
                 <DashboardContentContainer className={styles.widgetBackground} width="full">

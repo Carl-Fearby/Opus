@@ -4,11 +4,11 @@
   justify-content: center;
   overflow: hidden;
   flex-shrink: 0;
-  border: 1px solid color-mix(in srgb, var(--opus-border) 80%, transparent);
+  border: 1px solid var(--opus-surface-border, color-mix(in srgb, var(--opus-border) 80%, transparent));
   background:
-    linear-gradient(135deg, color-mix(in srgb, var(--opus-accent) 28%, transparent), color-mix(in srgb, var(--opus-muted) 18%, transparent)),
-    color-mix(in srgb, var(--opus-panel) 88%, transparent);
-  color: var(--opus-text);
+    var(--opus-surface-fill, linear-gradient(135deg, color-mix(in srgb, var(--opus-accent) 28%, transparent), color-mix(in srgb, var(--opus-muted) 18%, transparent)),
+    color-mix(in srgb, var(--opus-panel) 88%, transparent));
+  color: var(--opus-surface-text, var(--opus-text));
   font-weight: 700;
   line-height: 1;
   user-select: none;

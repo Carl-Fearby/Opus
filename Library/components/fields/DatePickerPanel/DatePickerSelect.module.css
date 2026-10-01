@@ -12,10 +12,10 @@
   min-width: 0;
   height: 30px;
   padding: 0 8px 0 8px;
-  border: 1px solid color-mix(in srgb, var(--opus-border) 88%, transparent);
+  border: 1px solid var(--opus-surface-border, color-mix(in srgb, var(--opus-border) 88%, transparent));
   border-radius: 8px;
-  background: var(--opus-input-bg);
-  color: var(--opus-text);
+  background: var(--opus-surface-fill, var(--opus-input-bg));
+  color: var(--opus-surface-text, var(--opus-text));
   font: inherit;
   font-size: 0.8rem;
   font-weight: 650;
@@ -23,8 +23,12 @@
   cursor: pointer;
 }
 
+:global([data-opus-appearance="neumorphism"]) .trigger {
+  box-shadow: var(--opus-control-shadow, none);
+}
+
 .trigger:hover {
-  border-color: color-mix(in srgb, var(--opus-accent) 40%, var(--opus-border));
+  border-color: var(--opus-surface-border, color-mix(in srgb, var(--opus-accent) 40%, var(--opus-border)));
 }
 
 .triggerOpen,
@@ -57,10 +61,10 @@
   right: 0;
   z-index: 30;
   min-width: 100%;
-  border: 1px solid var(--opus-border-strong);
+  border: 1px solid var(--opus-surface-border, var(--opus-border-strong));
   border-radius: var(--opus-input-radius);
-  background: var(--opus-panel);
-  box-shadow: var(--opus-shadow);
+  background: var(--opus-surface-fill, var(--opus-panel));
+  box-shadow: var(--opus-control-shadow, var(--opus-shadow));
   overflow: hidden;
 }
 
@@ -84,7 +88,7 @@
 }
 
 .option:hover {
-  background: color-mix(in srgb, var(--opus-accent-soft) 65%, transparent);
+  background: var(--opus-surface-fill, color-mix(in srgb, var(--opus-accent-soft) 65%, transparent));
 }
 
 .option:focus-visible {
@@ -94,7 +98,11 @@
 }
 
 .optionActive {
-  background: var(--opus-accent-soft);
-  color: var(--opus-accent);
+  background: var(--opus-surface-fill, var(--opus-accent-soft));
+  color: var(--opus-surface-text, var(--opus-accent));
   font-weight: 700;
+}
+
+:global([data-opus-appearance="neumorphism"]) .optionActive {
+  box-shadow: var(--opus-control-inset-shadow, none);
 }

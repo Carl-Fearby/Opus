@@ -3,11 +3,11 @@
   max-width: 900px;
   margin: auto;
   overflow: hidden;
-  color: #f8fafc;
-  background: #080808;
-  border: 1px solid #3f3f46;
+  color: var(--opus-surface-text, #f8fafc);
+  background: var(--opus-surface-fill, #080808);
+  border: 1px solid var(--opus-surface-border, #3f3f46);
   border-radius: 18px;
-  box-shadow: 0 25px 80px rgba(0, 0, 0, 0.5);
+  box-shadow: var(--opus-control-shadow, 0 25px 80px rgba(0, 0, 0, 0.5));
 }
 .header {
   display: flex;
@@ -15,8 +15,8 @@
   justify-content: space-between;
   gap: 20px;
   padding: 16px 20px;
-  background: linear-gradient(90deg, #18181b, #09090b);
-  border-bottom: 1px solid #3f3f46;
+  background: var(--opus-surface-fill, linear-gradient(90deg, #18181b, #09090b));
+  border-bottom: 1px solid var(--opus-surface-border, #3f3f46);
 }
 .header h2 {
   margin: 3px 0 0;
@@ -42,10 +42,10 @@
 }
 .header button {
   padding: 9px 13px;
-  border: 1px solid #71717a;
+  border: 1px solid var(--opus-surface-border, #71717a);
   border-radius: 8px;
-  color: #fafafa;
-  background: #27272a;
+  color: var(--opus-surface-text, #fafafa);
+  background: var(--opus-surface-fill, #27272a);
   cursor: pointer;
 }
 .screenShell {
@@ -54,7 +54,7 @@
   min-height: 480px;
   place-items: center;
   padding: 24px;
-  background: radial-gradient(circle, #20202a, #030303 70%);
+  background: var(--opus-surface-fill, radial-gradient(circle, #20202a, #030303 70%));
 }
 .canvas {
   display: block;
@@ -88,7 +88,7 @@
   justify-content: center;
   gap: 10px 22px;
   padding: 13px 18px;
-  border-top: 1px solid #27272a;
+  border-top: 1px solid var(--opus-surface-border, #27272a);
   color: #a1a1aa;
   font:
     12px/1.3 ui-monospace,
@@ -115,7 +115,7 @@
   border: 0;
   border-radius: 0;
   flex-direction: column;
-  background: #000;
+  background: var(--opus-surface-fill, #000);
 }
 .component:fullscreen .screenShell {
   min-height: 0;

@@ -57,7 +57,7 @@
   position: relative;
   overflow: hidden;
   border-radius: var(--opus-input-radius-large, 6px);
-  box-shadow: var(--opus-shadow, 0 28px 110px rgba(4, 5, 14, 0.48));
+  box-shadow: var(--opus-control-shadow, var(--opus-shadow, 0 28px 110px rgba(4, 5, 14, 0.48)));
   transform: translate3d(0, 0, 0);
   backface-visibility: hidden;
   -webkit-backface-visibility: hidden;

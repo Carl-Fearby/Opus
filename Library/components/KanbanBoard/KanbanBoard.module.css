@@ -25,16 +25,16 @@
   gap: 0;
   min-height: 0;
   padding: 0;
-  border: 1px solid var(--dashboard-section-border);
+  border: 1px solid var(--opus-surface-border, var(--dashboard-section-border));
   border-radius: 14px;
   background:
-    radial-gradient(85% 65% at 14% 0%, color-mix(in srgb, var(--opus-accent) 16%, transparent), transparent 58%),
+    var(--opus-surface-fill, radial-gradient(85% 65% at 14% 0%, color-mix(in srgb, var(--opus-accent) 16%, transparent), transparent 58%),
     radial-gradient(72% 58% at 100% 100%, color-mix(in srgb, var(--opus-accent-secondary, #0284c7) 12%, transparent), transparent 62%),
-    linear-gradient(180deg, color-mix(in srgb, var(--dashboard-section-bg) 94%, #ffffff 3%), var(--dashboard-section-bg));
+    linear-gradient(180deg, color-mix(in srgb, var(--dashboard-section-bg) 94%, #ffffff 3%), var(--dashboard-section-bg)));
   box-shadow:
-    inset 0 1px 0 color-mix(in srgb, #ffffff 6%, transparent),
-    0 12px 28px color-mix(in srgb, #020617 68%, transparent);
-  color: var(--dashboard-section-text);
+    var(--opus-control-shadow, inset 0 1px 0 color-mix(in srgb, #ffffff 6%, transparent),
+    0 12px 28px color-mix(in srgb, #020617 68%, transparent));
+  color: var(--opus-surface-text, var(--dashboard-section-text));
   box-sizing: border-box;
   overflow: hidden;
 }
@@ -49,8 +49,8 @@
   --kanban-header-bg: color-mix(in srgb, var(--kanban-header-accent) 12%, #ffffff);
   --kanban-header-border: color-mix(in srgb, var(--kanban-header-accent) 22%, transparent);
   box-shadow:
-    inset 0 1px 0 color-mix(in srgb, #ffffff 90%, transparent),
-    0 8px 20px color-mix(in srgb, var(--opus-accent-secondary, #0284c7) 10%, transparent);
+    var(--opus-control-shadow, inset 0 1px 0 color-mix(in srgb, #ffffff 90%, transparent),
+    0 8px 20px color-mix(in srgb, var(--opus-accent-secondary, #0284c7) 10%, transparent));
 }
 
 :global([data-preview-root][data-theme="dark"]) .column {
@@ -60,8 +60,8 @@
   --dashboard-section-muted: color-mix(in srgb, #f8fafc 56%, transparent);
   --dashboard-section-panel: color-mix(in srgb, #0f172a 90%, #1e293b 10%);
   box-shadow:
-    inset 0 1px 0 color-mix(in srgb, #ffffff 6%, transparent),
-    0 12px 28px color-mix(in srgb, #020617 68%, transparent);
+    var(--opus-control-shadow, inset 0 1px 0 color-mix(in srgb, #ffffff 6%, transparent),
+    0 12px 28px color-mix(in srgb, #020617 68%, transparent));
 }
 
 .columnHeader {
@@ -74,8 +74,8 @@
   box-sizing: border-box;
   min-height: 40px;
   padding: 10px 12px;
-  border-bottom: 1px solid var(--kanban-header-border);
-  background: var(--kanban-header-bg);
+  border-bottom: 1px solid var(--opus-surface-border, var(--kanban-header-border));
+  background: var(--opus-surface-fill, var(--kanban-header-bg));
 }
 
 .columnTitle {
@@ -91,8 +91,8 @@
   min-width: 1.5rem;
   padding: 2px 7px;
   border-radius: 999px;
-  background: color-mix(in srgb, var(--kanban-header-accent) 18%, transparent);
-  color: var(--dashboard-section-text);
+  background: var(--opus-surface-fill, color-mix(in srgb, var(--kanban-header-accent) 18%, transparent));
+  color: var(--opus-surface-text, var(--dashboard-section-text));
   font-size: 0.72rem;
   font-weight: 700;
   text-align: center;
@@ -170,9 +170,9 @@
   right: 0;
   z-index: 1;
   box-sizing: border-box;
-  border: 1.5px dashed color-mix(in srgb, var(--card-accent, #38bdf8) 70%, transparent);
+  border: 1.5px dashed var(--opus-surface-border, color-mix(in srgb, var(--card-accent, #38bdf8) 70%, transparent));
   border-radius: 10px;
-  background: color-mix(in srgb, var(--card-accent, #38bdf8) 8%, transparent);
+  background: var(--opus-surface-fill, color-mix(in srgb, var(--card-accent, #38bdf8) 8%, transparent));
   pointer-events: none;
 }
 
@@ -217,12 +217,12 @@
   padding: 14px 12px 14px 16px;
   border: 0;
   border-radius: 10px;
-  background: color-mix(in srgb, var(--dashboard-section-panel) 88%, #ffffff 4%);
-  color: var(--dashboard-section-text);
+  background: var(--opus-surface-fill, color-mix(in srgb, var(--dashboard-section-panel) 88%, #ffffff 4%));
+  color: var(--opus-surface-text, var(--dashboard-section-text));
   cursor: grab;
   box-shadow:
-    inset 0 1px 0 color-mix(in srgb, #ffffff 5%, transparent),
-    0 1px 0 color-mix(in srgb, #000000 18%, transparent);
+    var(--opus-control-shadow, inset 0 1px 0 color-mix(in srgb, #ffffff 5%, transparent),
+    0 1px 0 color-mix(in srgb, #000000 18%, transparent));
   overflow: hidden;
   box-sizing: border-box;
 }
@@ -244,7 +244,11 @@ button.card {
 }
 
 .card:hover {
-  background: color-mix(in srgb, var(--card-accent) 10%, var(--dashboard-section-panel));
+  background: var(--opus-surface-fill, color-mix(in srgb, var(--card-accent) 10%, var(--dashboard-section-panel)));
+}
+
+:global([data-opus-appearance="neumorphism"]) .card:hover {
+  box-shadow: var(--opus-control-shadow, none);
 }
 
 .card:focus-visible {
@@ -336,13 +340,13 @@ button.card {
 
 .dragPreview {
   opacity: 1;
-  background: var(--dashboard-section-panel, #111827);
-  color: var(--dashboard-section-text, #f8fafc);
+  background: var(--opus-surface-fill, var(--dashboard-section-panel, #111827));
+  color: var(--opus-surface-text, var(--dashboard-section-text, #f8fafc));
   box-shadow:
-    0 0 0 1px color-mix(in srgb, var(--card-accent, #38bdf8) 50%, transparent),
+    var(--opus-control-shadow, 0 0 0 1px color-mix(in srgb, var(--card-accent, #38bdf8) 50%, transparent),
     0 0 20px color-mix(in srgb, var(--card-accent, #38bdf8) 42%, transparent),
     0 0 40px color-mix(in srgb, var(--card-accent, #38bdf8) 22%, transparent),
-    0 18px 36px rgba(2, 6, 23, 0.55);
+    0 18px 36px rgba(2, 6, 23, 0.55));
   cursor: grabbing;
   transition:
     transform 220ms cubic-bezier(0.2, 0.8, 0.2, 1),
@@ -351,6 +355,6 @@ button.card {
 
 .dragPreview[data-dropping="true"] {
   box-shadow:
-    inset 0 1px 0 color-mix(in srgb, #ffffff 5%, transparent),
-    0 1px 0 color-mix(in srgb, #000000 18%, transparent);
+    var(--opus-control-shadow, inset 0 1px 0 color-mix(in srgb, #ffffff 5%, transparent),
+    0 1px 0 color-mix(in srgb, #000000 18%, transparent));
 }

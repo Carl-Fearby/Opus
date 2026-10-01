@@ -11,21 +11,21 @@
   width: 100%;
   min-height: var(--opus-control-height);
   padding: 0 var(--opus-control-padding-x, 10px);
-  border: 1px solid var(--opus-border-strong);
+  border: 1px solid var(--opus-surface-border, var(--opus-border-strong));
   border-radius: var(--opus-input-radius);
-  background: var(--opus-input-bg);
-  color: var(--opus-text);
+  background: var(--opus-surface-fill, var(--opus-input-bg));
+  color: var(--opus-surface-text, var(--opus-text));
   font: inherit;
   font-size: var(--opus-control-font-size);
   text-align: left;
   cursor: pointer;
   box-shadow:
-    0 1px 0 rgba(255, 255, 255, 0.05) inset,
-    0 14px 30px rgba(0, 0, 0, 0.06);
+    var(--opus-control-shadow, 0 1px 0 rgba(255, 255, 255, 0.05) inset,
+    0 14px 30px rgba(0, 0, 0, 0.06));
 }
 
 .picker:hover {
-  border-color: color-mix(in srgb, var(--opus-accent) 36%, var(--opus-border-strong));
+  border-color: var(--opus-surface-border, color-mix(in srgb, var(--opus-accent) 36%, var(--opus-border-strong)));
 }
 
 .picker:focus-visible {
@@ -73,7 +73,7 @@
   position: absolute;
   width: 10px;
   height: 5px;
-  border: 2px solid currentColor;
+  border: 2px solid var(--opus-surface-border, currentColor);
   border-radius: var(--opus-input-radius-small);
   transform: rotate(-45deg);
 }

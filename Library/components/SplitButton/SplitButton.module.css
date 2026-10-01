@@ -74,10 +74,10 @@
   margin: 0;
   padding: 6px;
   list-style: none;
-  border: 1px solid var(--opus-border);
+  border: 1px solid var(--opus-surface-border, var(--opus-border));
   border-radius: 8px;
-  background: var(--opus-panel, #fff);
-  box-shadow: 0 10px 28px color-mix(in srgb, #000 16%, transparent);
+  background: var(--opus-surface-fill, var(--opus-panel, #fff));
+  box-shadow: var(--opus-control-shadow, 0 10px 28px color-mix(in srgb, #000 16%, transparent));
 }
 
 .menuItem {
@@ -95,7 +95,11 @@
 }
 
 .menuItem:hover:not(:disabled) {
-  background: color-mix(in srgb, var(--opus-accent) 12%, transparent);
+  background: var(--opus-surface-fill, color-mix(in srgb, var(--opus-accent) 12%, transparent));
+}
+
+:global([data-opus-appearance="neumorphism"]) .menuItem:hover:not(:disabled) {
+  box-shadow: var(--opus-control-shadow, none);
 }
 
 .menuItem:disabled {

@@ -32,16 +32,16 @@
   width: min(260px, calc(100vw - 32px));
   padding: 6px;
   overflow: visible;
-  border: 1px solid var(--opus-menu-glass-border);
+  border: 1px solid var(--opus-surface-border, var(--opus-menu-glass-border));
   border-radius: var(--opus-input-radius-large);
   background:
-    radial-gradient(circle at 10% 0%, color-mix(in srgb, var(--opus-accent) 14%, transparent), transparent 34%),
-    var(--opus-menu-glass-surface);
+    var(--opus-surface-fill, radial-gradient(circle at 10% 0%, color-mix(in srgb, var(--opus-accent) 14%, transparent), transparent 34%),
+    var(--opus-menu-glass-surface));
   box-shadow:
-    0 28px 80px color-mix(in srgb, #020617 34%, transparent),
-    0 0 0 1px color-mix(in srgb, var(--opus-accent) 10%, transparent);
-  -webkit-backdrop-filter: blur(20px) saturate(1.35);
-  backdrop-filter: blur(20px) saturate(1.35);
+    var(--opus-control-shadow, 0 28px 80px color-mix(in srgb, #020617 34%, transparent),
+    0 0 0 1px color-mix(in srgb, var(--opus-accent) 10%, transparent));
+  -webkit-backdrop-filter: var(--opus-surface-backdrop-filter, blur(20px) saturate(1.35));
+  backdrop-filter: var(--opus-surface-backdrop-filter, blur(20px) saturate(1.35));
 }
 
 .pointer {
@@ -62,14 +62,18 @@
   );
 
   background:
-    radial-gradient(
+    var(--opus-surface-fill, radial-gradient(
       circle at 10% 0%,
       color-mix(in srgb, var(--opus-accent) 14%, transparent),
       transparent 34%
     ),
-    var(--opus-pointed-menu-surface);
-  -webkit-backdrop-filter: none;
-  backdrop-filter: none;
+    var(--opus-pointed-menu-surface));
+  -webkit-backdrop-filter: var(--opus-surface-backdrop-filter, none);
+  backdrop-filter: var(--opus-surface-backdrop-filter, none);
+}
+
+:global([data-opus-appearance="neumorphism"]) .menu[data-show-pointer="true"] {
+  box-shadow: var(--opus-control-shadow, none);
 }
 
 .menu[data-show-pointer="true"][data-theme="light"] {
@@ -283,8 +287,9 @@
 
 @media (prefers-reduced-transparency: reduce) {
   .menu {
-    -webkit-backdrop-filter: none;
-    backdrop-filter: none;
-    background: color-mix(in srgb, var(--opus-panel) 96%, transparent);
+    -webkit-backdrop-filter: var(--opus-surface-backdrop-filter, none);
+    backdrop-filter: var(--opus-surface-backdrop-filter, none);
+    background: var(--opus-surface-fill, color-mix(in srgb, var(--opus-panel) 96%, transparent));
+    box-shadow: var(--opus-control-shadow, none);
   }
 }

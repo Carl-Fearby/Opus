@@ -1,5 +1,5 @@
 .item {
-  border-bottom: 1px solid var(--opus-border);
+  border-bottom: 1px solid var(--opus-surface-border, var(--opus-border));
 }
 
 .standalone {
@@ -35,7 +35,11 @@
 }
 
 .trigger:hover:not(:disabled) {
-  background: color-mix(in srgb, var(--opus-accent) 8%, transparent);
+  background: var(--opus-surface-fill, color-mix(in srgb, var(--opus-accent) 8%, transparent));
+}
+
+:global([data-opus-appearance="neumorphism"]) .trigger:hover:not(:disabled) {
+  box-shadow: var(--opus-control-shadow, none);
 }
 
 .trigger:focus-visible {

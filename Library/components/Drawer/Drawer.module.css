@@ -44,11 +44,11 @@
   display: grid;
   grid-template-rows: auto minmax(0, 1fr) auto;
   overflow: hidden;
-  border: 1px solid color-mix(in srgb, var(--opus-accent) 22%, var(--opus-border));
-  background: color-mix(in srgb, var(--opus-panel) 95%, transparent);
+  border: 1px solid var(--opus-surface-border, color-mix(in srgb, var(--opus-accent) 22%, var(--opus-border)));
+  background: var(--opus-surface-fill, color-mix(in srgb, var(--opus-panel) 95%, transparent));
   box-shadow:
-    0 24px 80px color-mix(in srgb, #020617 32%, transparent),
-    0 0 0 1px color-mix(in srgb, var(--opus-accent) 10%, transparent);
+    var(--opus-control-shadow, 0 24px 80px color-mix(in srgb, #020617 32%, transparent),
+    0 0 0 1px color-mix(in srgb, var(--opus-accent) 10%, transparent));
   cursor: default;
 }
 
@@ -122,7 +122,7 @@
   gap: 16px;
   align-items: start;
   padding: 18px 18px 14px;
-  border-bottom: 1px solid color-mix(in srgb, var(--opus-border) 72%, transparent);
+  border-bottom: 1px solid var(--opus-surface-border, color-mix(in srgb, var(--opus-border) 72%, transparent));
 }
 
 .heading {
@@ -153,15 +153,19 @@
   width: 28px;
   height: 28px;
   padding: 0;
-  border: 1px solid color-mix(in srgb, var(--opus-border) 80%, transparent);
+  border: 1px solid var(--opus-surface-border, color-mix(in srgb, var(--opus-border) 80%, transparent));
   border-radius: 999px;
-  background: color-mix(in srgb, var(--opus-input-bg) 72%, transparent);
-  color: var(--opus-muted);
+  background: var(--opus-surface-fill, color-mix(in srgb, var(--opus-input-bg) 72%, transparent));
+  color: var(--opus-surface-text, var(--opus-muted));
   cursor: pointer;
 }
 
+:global([data-opus-appearance="neumorphism"]) .close {
+  box-shadow: var(--opus-control-shadow, none);
+}
+
 .close:hover {
-  border-color: color-mix(in srgb, var(--opus-accent) 42%, var(--opus-border));
+  border-color: var(--opus-surface-border, color-mix(in srgb, var(--opus-accent) 42%, var(--opus-border)));
   color: var(--opus-text);
 }
 
@@ -199,7 +203,7 @@
   align-items: center;
   justify-content: space-between;
   padding: 14px 18px 18px;
-  border-top: 1px solid color-mix(in srgb, var(--opus-border) 72%, transparent);
+  border-top: 1px solid var(--opus-surface-border, color-mix(in srgb, var(--opus-border) 72%, transparent));
 }
 
 .footerContent {

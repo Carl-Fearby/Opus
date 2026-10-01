@@ -15,7 +15,7 @@
 }
 
 .treeOption:hover {
-  background: color-mix(in srgb, var(--opus-accent-soft) 65%, transparent);
+  background: var(--opus-surface-fill, color-mix(in srgb, var(--opus-accent-soft) 65%, transparent));
 }
 
 .treeOptionActive {

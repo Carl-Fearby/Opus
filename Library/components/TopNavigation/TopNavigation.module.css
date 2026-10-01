@@ -6,9 +6,9 @@
   width: 100%;
   min-height: 36px;
   padding: 0 10px;
-  border-bottom: 1px solid var(--opus-border);
-  background: color-mix(in srgb, var(--opus-panel) 92%, transparent);
-  backdrop-filter: blur(10px);
+  border-bottom: 1px solid var(--opus-surface-border, var(--opus-border));
+  background: var(--opus-surface-fill, color-mix(in srgb, var(--opus-panel) 92%, transparent));
+  backdrop-filter: var(--opus-surface-backdrop-filter, blur(10px));
 }
 
 .bar[data-density="compact"] {
@@ -76,7 +76,12 @@
 
 .menuTrigger:hover,
 .menuTrigger[aria-expanded="true"] {
-  background: color-mix(in srgb, var(--opus-accent) 14%, transparent);
+  background: var(--opus-surface-fill, color-mix(in srgb, var(--opus-accent) 14%, transparent));
+}
+
+:global([data-opus-appearance="neumorphism"]) .menuTrigger:hover,
+:global([data-opus-appearance="neumorphism"]) .menuTrigger[aria-expanded="true"] {
+  box-shadow: var(--opus-control-shadow, none);
 }
 
 .menuTrigger:focus-visible {

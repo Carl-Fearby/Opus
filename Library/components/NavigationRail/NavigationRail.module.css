@@ -3,7 +3,11 @@
   gap: 4px;
   width: 168px;
   padding: 8px;
-  background: color-mix(in srgb, var(--opus-panel) 94%, transparent);
+  background: var(--opus-surface-fill, color-mix(in srgb, var(--opus-panel) 94%, transparent));
+}
+
+:global([data-opus-appearance="neumorphism"]) .root {
+  box-shadow: var(--opus-control-shadow, none);
 }
 
 .root[data-collapsed="true"] {
@@ -29,13 +33,17 @@
 }
 
 .item:hover {
-  color: var(--opus-text);
-  background: color-mix(in srgb, var(--opus-accent) 10%, transparent);
+  color: var(--opus-surface-text, var(--opus-text));
+  background: var(--opus-surface-fill, color-mix(in srgb, var(--opus-accent) 10%, transparent));
 }
 
 .active {
-  color: var(--opus-accent);
-  background: color-mix(in srgb, var(--opus-accent) 14%, transparent);
+  color: var(--opus-surface-text, var(--opus-accent));
+  background: var(--opus-surface-fill, color-mix(in srgb, var(--opus-accent) 14%, transparent));
+}
+
+:global([data-opus-appearance="neumorphism"]) .active {
+  box-shadow: var(--opus-control-inset-shadow);
 }
 
 .icon {

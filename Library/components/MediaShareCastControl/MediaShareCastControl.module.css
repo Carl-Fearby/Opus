@@ -42,11 +42,11 @@
   gap: 2px;
   min-width: 13.5rem;
   padding: 6px;
-  border: 1px solid var(--opus-border-strong);
+  border: 1px solid var(--opus-surface-border, var(--opus-border-strong));
   border-radius: 12px;
-  background: color-mix(in srgb, var(--opus-panel) 96%, transparent);
-  box-shadow: var(--opus-shadow);
-  backdrop-filter: blur(10px);
+  background: var(--opus-surface-fill, color-mix(in srgb, var(--opus-panel) 96%, transparent));
+  box-shadow: var(--opus-control-shadow, var(--opus-shadow));
+  backdrop-filter: var(--opus-surface-backdrop-filter, blur(10px));
 }
 
 .item {

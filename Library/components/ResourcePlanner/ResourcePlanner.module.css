@@ -1,7 +1,11 @@
 .root {
   width: 100%;
-  background: color-mix(in srgb, var(--opus-panel) 92%, transparent);
+  background: var(--opus-surface-fill, color-mix(in srgb, var(--opus-panel) 92%, transparent));
   overflow: hidden;
+}
+
+:global([data-opus-appearance="neumorphism"]) .root {
+  box-shadow: var(--opus-control-shadow, none);
 }
 
 .scroll {
@@ -18,8 +22,8 @@
 .hour,
 .resource {
   padding: 8px;
-  border-bottom: 1px solid var(--opus-border);
-  border-right: 1px solid color-mix(in srgb, var(--opus-border) 70%, transparent);
+  border-bottom: 1px solid var(--opus-surface-border, var(--opus-border));
+  border-right: 1px solid var(--opus-surface-border, color-mix(in srgb, var(--opus-border) 70%, transparent));
   color: var(--opus-muted);
   font-size: 0.72rem;
   font-weight: 700;
@@ -27,7 +31,7 @@
 
 .corner,
 .hour {
-  background: color-mix(in srgb, var(--opus-muted) 8%, transparent);
+  background: var(--opus-surface-fill, color-mix(in srgb, var(--opus-muted) 8%, transparent));
   text-align: center;
   text-transform: uppercase;
   letter-spacing: 0.03em;
@@ -43,18 +47,18 @@
 .resource {
   display: flex;
   align-items: center;
-  color: var(--opus-text);
+  color: var(--opus-surface-text, var(--opus-text));
   font-size: 0.8rem;
   position: sticky;
   left: 0;
   z-index: 1;
-  background: color-mix(in srgb, var(--opus-panel) 96%, transparent);
+  background: var(--opus-surface-fill, color-mix(in srgb, var(--opus-panel) 96%, transparent));
 }
 
 .track {
   position: relative;
   min-height: 56px;
-  border-bottom: 1px solid var(--opus-border);
+  border-bottom: 1px solid var(--opus-surface-border, var(--opus-border));
 }
 
 .lanes {
@@ -64,7 +68,7 @@
 }
 
 .lane {
-  border-right: 1px solid color-mix(in srgb, var(--opus-border) 55%, transparent);
+  border-right: 1px solid var(--opus-surface-border, color-mix(in srgb, var(--opus-border) 55%, transparent));
 }
 
 .block {
@@ -96,8 +100,8 @@ button.block:focus-visible {
 }
 
 .block[data-tone="accent"] {
-  background: color-mix(in srgb, var(--opus-accent) 20%, transparent);
-  border-color: color-mix(in srgb, var(--opus-accent) 40%, transparent);
+  background: var(--opus-surface-fill, color-mix(in srgb, var(--opus-accent) 20%, transparent));
+  border-color: var(--opus-surface-border, color-mix(in srgb, var(--opus-accent) 40%, transparent));
 }
 
 .block[data-tone="success"] {

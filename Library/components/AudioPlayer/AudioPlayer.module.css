@@ -4,13 +4,13 @@
   gap: 16px;
   width: 100%;
   padding: 16px;
-  border: 1px solid var(--opus-border-strong);
+  border: 1px solid var(--opus-surface-border, var(--opus-border-strong));
   border-radius: 14px;
   background:
-    linear-gradient(135deg, color-mix(in srgb, var(--opus-accent) 14%, transparent), transparent 42%),
-    color-mix(in srgb, var(--opus-panel) 94%, transparent);
-  box-shadow: var(--opus-shadow);
-  color: var(--opus-text);
+    var(--opus-surface-fill, linear-gradient(135deg, color-mix(in srgb, var(--opus-accent) 14%, transparent), transparent 42%),
+    color-mix(in srgb, var(--opus-panel) 94%, transparent));
+  box-shadow: var(--opus-control-shadow, var(--opus-shadow));
+  color: var(--opus-surface-text, var(--opus-text));
 }
 
 .artwork {
@@ -18,11 +18,11 @@
   overflow: hidden;
   width: 96px;
   height: 96px;
-  border: 1px solid color-mix(in srgb, var(--opus-accent) 35%, var(--opus-border));
+  border: 1px solid var(--opus-surface-border, color-mix(in srgb, var(--opus-accent) 35%, var(--opus-border)));
   border-radius: 14px;
   background:
-    radial-gradient(circle at 30% 25%, color-mix(in srgb, var(--opus-accent) 42%, transparent), transparent 55%),
-    linear-gradient(160deg, color-mix(in srgb, #0f172a 80%, #1e293b), #070d18);
+    var(--opus-surface-fill, radial-gradient(circle at 30% 25%, color-mix(in srgb, var(--opus-accent) 42%, transparent), transparent 55%),
+    linear-gradient(160deg, color-mix(in srgb, #0f172a 80%, #1e293b), #070d18));
 }
 
 .artworkImage {
@@ -38,7 +38,7 @@
   width: 70%;
   height: 70%;
   border-radius: 50%;
-  background: color-mix(in srgb, #0284c7 28%, transparent);
+  background: var(--opus-surface-fill, color-mix(in srgb, #0284c7 28%, transparent));
   filter: blur(18px);
 }
 
@@ -111,15 +111,19 @@
 
 .progressTrack {
   width: 100%;
-  background: color-mix(in srgb, var(--opus-border) 78%, transparent);
+  background: var(--opus-surface-fill, color-mix(in srgb, var(--opus-border) 78%, transparent));
+}
+
+:global([data-opus-appearance="neumorphism"]) .progressTrack {
+  box-shadow: var(--opus-control-inset-shadow, none);
 }
 
 .progressFill {
-  background: linear-gradient(
+  background: var(--opus-surface-fill, linear-gradient(
     90deg,
     color-mix(in srgb, var(--opus-accent) 78%, white 8%),
     var(--opus-accent)
-  );
+  ));
 }
 
 .progressThumb {
@@ -127,10 +131,10 @@
   top: 50%;
   width: 12px;
   height: 12px;
-  border: 2px solid color-mix(in srgb, var(--opus-accent) 40%, white 20%);
+  border: 2px solid var(--opus-surface-border, color-mix(in srgb, var(--opus-accent) 40%, white 20%));
   border-radius: 999px;
-  background: var(--opus-accent);
-  box-shadow: 0 0 0 3px color-mix(in srgb, var(--opus-accent) 18%, transparent);
+  background: var(--opus-surface-fill, var(--opus-accent));
+  box-shadow: var(--opus-control-shadow, 0 0 0 3px color-mix(in srgb, var(--opus-accent) 18%, transparent));
   transform: translate(-50%, -50%);
   pointer-events: none;
 }

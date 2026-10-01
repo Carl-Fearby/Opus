@@ -33,7 +33,7 @@
 }
 
 .toggleLine:hover {
-  background: color-mix(in srgb, var(--opus-accent) 8%, transparent);
+  background: var(--opus-surface-fill, color-mix(in srgb, var(--opus-accent) 8%, transparent));
 }
 
 .toggleLine:focus-visible {

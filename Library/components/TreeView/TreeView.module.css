@@ -20,7 +20,7 @@
   gap: 6px;
   min-height: 36px;
   padding-right: 12px;
-  border-bottom: 1px solid color-mix(in srgb, var(--opus-border) 70%, transparent);
+  border-bottom: 1px solid var(--opus-surface-border, color-mix(in srgb, var(--opus-border) 70%, transparent));
 }
 
 .node:last-child > .row {
@@ -47,8 +47,8 @@
 }
 
 .toggle:hover {
-  background: color-mix(in srgb, var(--opus-accent) 12%, transparent);
-  color: var(--opus-text);
+  background: var(--opus-surface-fill, color-mix(in srgb, var(--opus-accent) 12%, transparent));
+  color: var(--opus-surface-text, var(--opus-text));
 }
 
 .toggle:focus-visible {

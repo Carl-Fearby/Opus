@@ -12,15 +12,15 @@
 .trigger {
   justify-self: start;
   min-height: var(--opus-input-height);
-  border: 1px solid color-mix(in srgb, var(--opus-accent) 64%, white 18%);
-  background: linear-gradient(135deg, var(--opus-accent), color-mix(in srgb, var(--opus-accent) 68%, #39a3ff 32%));
-  color: white;
+  border: 1px solid var(--opus-surface-border, color-mix(in srgb, var(--opus-accent) 64%, white 18%));
+  background: var(--opus-surface-fill, linear-gradient(135deg, var(--opus-accent), color-mix(in srgb, var(--opus-accent) 68%, #39a3ff 32%)));
+  color: var(--opus-surface-text, white);
   cursor: pointer;
   font: inherit;
   font-size: var(--opus-control-font-size);
   font-weight: 900;
   padding: 0 18px;
-  box-shadow: var(--opus-shadow);
+  box-shadow: var(--opus-control-shadow, var(--opus-shadow));
 }
 
 .trigger[data-variant="image"] {
@@ -72,9 +72,9 @@
   max-height: min(90vh, 100%);
   margin: 0;
   overflow: hidden;
-  border: 1px solid color-mix(in srgb, var(--opus-border) 82%, transparent);
-  background: color-mix(in srgb, var(--opus-page-bg) 90%, black 10%);
-  box-shadow: 0 28px 90px color-mix(in srgb, black 54%, transparent);
+  border: 1px solid var(--opus-surface-border, color-mix(in srgb, var(--opus-border) 82%, transparent));
+  background: var(--opus-surface-fill, color-mix(in srgb, var(--opus-page-bg) 90%, black 10%));
+  box-shadow: var(--opus-control-shadow, 0 28px 90px color-mix(in srgb, black 54%, transparent));
 }
 
 .image {
@@ -96,10 +96,10 @@
   width: 40px;
   height: 40px;
   padding: 0;
-  border: 1px solid var(--opus-border-strong);
+  border: 1px solid var(--opus-surface-border, var(--opus-border-strong));
   border-radius: 999px;
-  background: var(--opus-panel);
-  color: var(--opus-text);
+  background: var(--opus-surface-fill, var(--opus-panel));
+  color: var(--opus-surface-text, var(--opus-text));
   cursor: pointer;
   line-height: 0;
   transition:
@@ -108,16 +108,24 @@
     transform 160ms ease;
 }
 
+:global([data-opus-appearance="neumorphism"]) .close {
+  box-shadow: var(--opus-control-shadow, none);
+}
+
 .closeIcon {
   width: 16px;
   height: 16px;
 }
 
 .close:hover {
-  border-color: var(--opus-accent);
-  background: var(--opus-accent);
-  color: #fff;
+  border-color: var(--opus-surface-border, var(--opus-accent));
+  background: var(--opus-surface-fill, var(--opus-accent));
+  color: var(--opus-surface-text, #fff);
   transform: scale(1.04);
+}
+
+:global([data-opus-appearance="neumorphism"]) .close:hover {
+  box-shadow: var(--opus-control-shadow, none);
 }
 
 .caption {

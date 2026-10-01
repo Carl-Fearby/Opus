@@ -23,12 +23,16 @@
   width: 100%;
   min-height: var(--opus-control-height);
   padding: 0 12px;
-  border: 1px solid var(--opus-border);
+  border: 1px solid var(--opus-surface-border, var(--opus-border));
   border-radius: var(--opus-input-radius);
-  background: var(--opus-input-bg);
-  color: var(--opus-text);
+  background: var(--opus-surface-fill, var(--opus-input-bg));
+  color: var(--opus-surface-text, var(--opus-text));
   box-sizing: border-box;
   font: inherit;
+}
+
+:global([data-opus-appearance="neumorphism"]) .input {
+  box-shadow: var(--opus-control-inset-shadow, none);
 }
 
 .input:focus {
@@ -50,14 +54,14 @@
 .list {
   max-height: min(280px, 50vh);
   overflow: auto;
-  border: 1px solid var(--opus-border-strong);
+  border: 1px solid var(--opus-surface-border, var(--opus-border-strong));
   border-radius: 14px;
   background:
-    radial-gradient(circle at 10% 0%, color-mix(in srgb, var(--opus-accent) 14%, transparent), transparent 34%),
-    var(--opus-menu-surface-token, var(--opus-panel));
-  box-shadow: var(--opus-shadow);
-  -webkit-backdrop-filter: blur(20px) saturate(1.35);
-  backdrop-filter: blur(20px) saturate(1.35);
+    var(--opus-surface-fill, radial-gradient(circle at 10% 0%, color-mix(in srgb, var(--opus-accent) 14%, transparent), transparent 34%),
+    var(--opus-menu-surface-token, var(--opus-panel)));
+  box-shadow: var(--opus-control-shadow, var(--opus-shadow));
+  -webkit-backdrop-filter: var(--opus-surface-backdrop-filter, blur(20px) saturate(1.35));
+  backdrop-filter: var(--opus-surface-backdrop-filter, blur(20px) saturate(1.35));
 }
 
 .option {
@@ -74,5 +78,10 @@
 
 .option:hover,
 .optionActive {
-  background: color-mix(in srgb, var(--opus-accent) 14%, var(--opus-panel));
+  background: var(--opus-surface-fill, color-mix(in srgb, var(--opus-accent) 14%, var(--opus-panel)));
+}
+
+:global([data-opus-appearance="neumorphism"]) .option:hover,
+:global([data-opus-appearance="neumorphism"]) .optionActive {
+  box-shadow: var(--opus-control-inset-shadow, none);
 }

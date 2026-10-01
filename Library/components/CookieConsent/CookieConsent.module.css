@@ -1,4 +1,4 @@
-.notice { position: fixed; z-index: 90; display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: center; gap: 16px; width: 100vw; padding: 14px 18px; border: 0; border-top: 1px solid color-mix(in srgb, var(--opus-accent, #8f6cff) 40%, var(--opus-border, #47516d)); border-radius: 0; background: var(--opus-panel, #17152a); box-shadow: 0 -12px 30px color-mix(in srgb, #05030d 24%, transparent); color: var(--opus-text, #f5f7ff); }
+.notice { position: fixed; z-index: 90; display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: center; gap: 16px; width: 100vw; padding: 14px 18px; border: 0; border-top: 1px solid var(--opus-surface-border, color-mix(in srgb, var(--opus-accent, #8f6cff) 40%, var(--opus-border, #47516d))); border-radius: 0; background: var(--opus-surface-fill, var(--opus-panel, #17152a)); box-shadow: var(--opus-control-shadow, 0 -12px 30px color-mix(in srgb, #05030d 24%, transparent)); color: var(--opus-surface-text, var(--opus-text, #f5f7ff)); }
 .notice[data-placement="bottom-right"] { right: 0; bottom: 0; }
 .notice[data-placement="bottom-left"] { bottom: 0; left: 0; }
 .notice[data-placement="bottom"] { right: auto; bottom: 0; left: 0; transform: none; }
@@ -10,7 +10,7 @@
 .actions { display: flex; flex-wrap: wrap; gap: 8px; padding-right: 30px; }
 .actions button { flex: 0 0 auto; }
 .dismiss { position: absolute; top: 10px; right: 10px; display: inline-grid; width: 30px; height: 30px; padding: 0; border: 0; border-radius: 999px; place-items: center; background: transparent; color: var(--opus-muted, #b9b8d1); cursor: pointer; }
-.dismiss:hover { background: color-mix(in srgb, var(--opus-accent, #8f6cff) 13%, transparent); color: var(--opus-text, #f5f7ff); }
+.dismiss:hover { background: var(--opus-surface-fill, color-mix(in srgb, var(--opus-accent, #8f6cff) 13%, transparent)); color: var(--opus-surface-text, var(--opus-text, #f5f7ff)); }
 .dismiss:focus-visible { outline: none; box-shadow: 0 0 0 3px color-mix(in srgb, var(--opus-accent, #8f6cff) 36%, transparent); }
 .dismiss svg { width: 15px; height: 15px; fill: none; stroke: currentColor; stroke-linecap: round; stroke-width: 1.75; }
 @media (max-width: 700px) { .notice { grid-template-columns: 1fr; gap: 12px; width: 100vw; padding: 16px; } .notice[data-placement="bottom-right"] { right: 0; bottom: 0; } .notice[data-placement="bottom-left"] { bottom: 0; left: 0; } .notice[data-placement="bottom"] { bottom: 0; } .actions { padding-right: 0; } .actions button { flex: 1 1 140px; } }

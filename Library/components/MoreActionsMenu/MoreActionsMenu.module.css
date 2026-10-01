@@ -2,14 +2,22 @@
   width: var(--opus-control-height);
   min-width: var(--opus-control-height);
   padding-inline: 0;
-  border-color: color-mix(in srgb, var(--opus-accent) 46%, var(--opus-border));
-  background: var(--opus-input-bg);
-  color: var(--opus-text);
+  border-color: var(--opus-surface-border, color-mix(in srgb, var(--opus-accent) 46%, var(--opus-border)));
+  background: var(--opus-surface-fill, var(--opus-input-bg));
+  color: var(--opus-surface-text, var(--opus-text));
+}
+
+:global([data-opus-appearance="neumorphism"]) .trigger {
+  box-shadow: var(--opus-control-shadow, none);
 }
 
 .trigger:hover {
-  border-color: var(--opus-accent);
-  background: color-mix(in srgb, var(--opus-accent) 12%, var(--opus-input-bg));
+  border-color: var(--opus-surface-border, var(--opus-accent));
+  background: var(--opus-surface-fill, color-mix(in srgb, var(--opus-accent) 12%, var(--opus-input-bg)));
+}
+
+:global([data-opus-appearance="neumorphism"]) .trigger:hover {
+  box-shadow: var(--opus-control-shadow, none);
 }
 
 .trigger svg {
