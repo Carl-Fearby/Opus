@@ -74,7 +74,7 @@ export default async function StoryPage({ params }: Props) {
               {story.components.map((component) => (
                 <Link className={styles.componentCard} href={component.href} key={component.name}>
                   <span>{component.name}</span>
-                  <small>Open component →</small>
+                  <small>{component.href.startsWith("/documentation/guide/") ? "Open guide →" : "Open component →"}</small>
                   <pre><code>{component.code}</code></pre>
                 </Link>
               ))}

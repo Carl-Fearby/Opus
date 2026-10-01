@@ -24,6 +24,9 @@ export function Hero() {
               Try the Playground
             </Link>
           </div>
+          <p>
+            <Link href="/news/neumorphism-theme">New in Opus 0.7.4: explore the Neumorphism theme →</Link>
+          </p>
           <InstallCommand />
           <div className={styles.meta}>
             <span>{controls.length.toLocaleString("en-GB")} catalogue entries</span>

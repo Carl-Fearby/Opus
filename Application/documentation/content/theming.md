@@ -20,6 +20,21 @@ import { OpusThemeProvider, useOpusTheme } from "@/components/fields";
 
 Overlay providers (`ToastProvider`, `ContextMenuProvider`) call `useOpusTheme()` so portaled content picks up the correct tokens. An optional `theme` prop on those providers overrides the context when needed.
 
+## Neumorphism appearance
+
+Opus 0.7.4 adds an opt-in Neumorphism appearance for surfaces, controls, menus, dialogs, and other portalled UI. It keeps one shared material colour and uses paired light and dark shadows to make raised actions and recessed inputs feel moulded into the same surface.
+
+```tsx
+<OpusThemeProvider
+  theme="light"
+  defaults={{ appearance: "neumorphism" }}
+>
+  {children}
+</OpusThemeProvider>
+```
+
+Switch `theme` to `"dark"` for the darker version. Existing applications keep the standard appearance until `defaults.appearance` is set to `"neumorphism"`.
+
 ## CSS tokens
 
 **File:** `app/globals.css`

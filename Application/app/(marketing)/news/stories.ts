@@ -11,6 +11,23 @@ export type NewsStory = {
 
 export const newsStories: NewsStory[] = [
   {
+    slug: "neumorphism-theme",
+    date: "2026-10-01",
+    edition: "Opus 0.7.4 · Neumorphism",
+    title: "Introducing Neumorphism: a softer surface for Opus.",
+    standfirst: "Opus 0.7.4 introduces a Neumorphism theme across the component library, with raised actions, recessed inputs, and a shared material colour in light and dark modes.",
+    summary: "Controls feel moulded into their background. Soft light and shadow give surfaces depth without decorative outlines, while a restrained dark treatment keeps the effect subtle.",
+    components: [
+      { name: "Use Neumorphism in your app", href: "/documentation/guide/theming", code: `<OpusThemeProvider\n  theme="light"\n  defaults={{ appearance: "neumorphism" }}\n>\n  <App />\n</OpusThemeProvider>` },
+    ],
+    chapters: [
+      { heading: "One material, shaped by light", body: "Buttons and cards rise gently from the background; inputs sit within it. Matching surface fills and paired shadows create the relief, keeping the interface visually calm without adding borders around every control." },
+      { heading: "Light and dark, each with its own balance", body: "Light mode gives the material a soft, tactile definition. Dark mode uses quieter highlights and shorter shadows so controls remain distinct without bright rims or a heavy bevel." },
+      { heading: "Across the component library", body: "The appearance applies to shared surfaces across forms, navigation, cards, and overlays. Menus, dialogs, and tooltips carry their surrounding theme even when rendered through a portal. Focus indicators, validation feedback, chart colours, and imagery retain their purpose." },
+      { heading: "Try it, then take it into your app", body: "Choose Neumorphism under Theme style in the Theme Designer while working locally, then copy the generated provider code into your app. The appearance is available now in opus-react 0.7.4 on npm and is opt-in for existing applications." },
+    ],
+  },
+  {
     slug: "the-atmosphere-is-a-component",
     date: "2026-09-05",
     edition: "Background Blobs",
