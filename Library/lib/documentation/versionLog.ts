@@ -696,8 +696,8 @@ export const versionLog: VersionEntry[] = [
   {
     version: "0.7.4",
     releasedAt: "2026-10-01",
-    commit: "overlay-0.7.4",
-    commitShort: "overlay",
+    commit: "2ada3fbeb85699c7d4df1de230be11b07a92525d",
+    commitShort: "2ada3fb",
     summary: "Neumorphism appearance across Opus components.",
     changes: ["Add a shared monochrome Neumorphism appearance with raised actions, recessed inputs, and subtle dark-mode shadows.","Preserve scoped appearance in menus, dialogs, tooltips, and other portals.","Add persistent appearance selection and generated theme code to the Theme Designer.","Support featured imagery in MegaMenu panels.","Publish opus-react 0.7.4."],
   }

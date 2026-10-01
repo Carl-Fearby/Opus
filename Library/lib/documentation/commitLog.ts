@@ -1405,5 +1405,11 @@ export const commitLog: CommitEntry[] = [
     shortHash: "c30f260",
     committedAt: "2026-09-05",
     summary: "chore: sync version history for opus-react@0.7.3",
+  },
+  {
+    hash: "2ada3fbeb85699c7d4df1de230be11b07a92525d",
+    shortHash: "2ada3fb",
+    committedAt: "2026-10-01",
+    summary: "feat: release opus-react@0.7.4 with Neumorphism themes",
   }
 ].reverse();
