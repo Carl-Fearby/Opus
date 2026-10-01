@@ -5,6 +5,7 @@ export type NewsStory = {
   title: string;
   standfirst: string;
   summary: string;
+  image?: { src: string; alt: string; width: number; height: number; caption?: string };
   chapters: Array<{ heading: string; body: string }>;
   components?: Array<{ name: string; href: string; code: string }>;
 };
@@ -17,6 +18,13 @@ export const newsStories: NewsStory[] = [
     title: "Introducing Neumorphism: a softer surface for Opus.",
     standfirst: "Opus 0.7.4 introduces a Neumorphism theme across the component library, with raised actions, recessed inputs, and a shared material colour in light and dark modes.",
     summary: "Controls feel moulded into their background. Soft light and shadow give surfaces depth without decorative outlines, while a restrained dark treatment keeps the effect subtle.",
+    image: {
+      src: "/images/news/opus-neumorphism-theme-designer.jpg",
+      alt: "The Opus Theme Designer previewing the Neumorphism appearance with raised tiles, recessed search, dashboard cards, and a shared light surface.",
+      width: 1077,
+      height: 1143,
+      caption: "Opus in Neumorphism mode inside the Theme Designer preview.",
+    },
     components: [
       { name: "Use Neumorphism in your app", href: "/documentation/guide/theming", code: `<OpusThemeProvider\n  theme="light"\n  defaults={{ appearance: "neumorphism" }}\n>\n  <App />\n</OpusThemeProvider>` },
     ],

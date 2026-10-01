@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Image from "next/image";
 import { notFound } from "next/navigation";
 import Link from "next/link";
 import { newsStories, storyBySlug } from "../stories";
@@ -10,6 +11,7 @@ export function generateStaticParams() { return newsStories.filter((story) => st
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const story = storyBySlug.get((await params).slug);
+  const image = story?.image ? { url: story.image.src, alt: story.image.alt } : undefined;
   return story
     ? {
         title: story.title,
@@ -21,6 +23,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
           description: story.standfirst,
           url: `/news/${story.slug}`,
           publishedTime: `${story.date}T00:00:00.000Z`,
+          images: image ? [image] : undefined,
         },
       }
     : {};
@@ -40,6 +43,7 @@ export default async function StoryPage({ params }: Props) {
         datePublished: `${story.date}T00:00:00.000Z`,
         dateModified: `${story.date}T00:00:00.000Z`,
         mainEntityOfPage: { "@type": "WebPage", "@id": storyUrl },
+        image: story.image ? `https://project-opus.netlify.app${story.image.src}` : undefined,
         author: { "@type": "Person", name: "Carl Fearby" },
         publisher: { "@type": "Organization", name: "Opus", url: "https://project-opus.netlify.app" },
       },
@@ -67,6 +71,19 @@ export default async function StoryPage({ params }: Props) {
       <div className={styles.rule} />
       <div className={styles.body}>
         <p className={styles.summary}>{story.summary}</p>
+        {story.image ? (
+          <figure className={styles.storyImage}>
+            <Image
+              src={story.image.src}
+              alt={story.image.alt}
+              width={story.image.width}
+              height={story.image.height}
+              sizes="(max-width: 1200px) calc(100vw - 48px), 1152px"
+              priority
+            />
+            {story.image.caption ? <figcaption>{story.image.caption}</figcaption> : null}
+          </figure>
+        ) : null}
         {story.components?.length ? (
           <section aria-label="Explore the components" className={styles.components}>
             <p>Explore the components</p>

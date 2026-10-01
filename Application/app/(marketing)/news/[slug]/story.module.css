@@ -8,6 +8,9 @@
 .rule { height: 1px; margin: 52px 0 32px; background: var(--opus-border); }
 .body { max-width: none; margin: 0; }
 .summary { margin: 0 0 34px; color: var(--opus-text); font-size: 1.18rem; font-weight: 600; letter-spacing: -.02em; line-height: 1.55; }
+.storyImage { margin: 0 0 34px; }
+.storyImage img { display: block; width: 100%; height: auto; border: 1px solid color-mix(in srgb, var(--opus-border) 84%, transparent); border-radius: 18px; box-shadow: 0 28px 80px color-mix(in srgb, #020617 34%, transparent); }
+.storyImage figcaption { margin: 10px 2px 0; color: var(--opus-muted); font-family: var(--font-ibm-plex-mono), monospace; font-size: .75rem; }
 .components { padding: 0 0 30px; border-bottom: 1px solid var(--opus-border); }
 .components > p { margin: 0 0 14px; color: #b8a8ff; font-family: var(--font-ibm-plex-mono), monospace; font-size: .78rem; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; }
 .components > div { display: grid; gap: 12px; }
