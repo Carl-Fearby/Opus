@@ -175,6 +175,7 @@ import { AccentColorPicker } from "opus-react";
 
 - `Button`, `TextField`, `TextAreaField`, `RichTextField`
 - `SelectField`, `FilterSelectField`, `MultiSelectField`, `TreeSelectField`, `CascaderField`
+- `ComboboxField`, `AsyncSelectField`, `AsyncMultiSelectField`
 - `CheckboxField`, `RadioGroup`, `SwitchField`
 - `NumberField`, `RangeField`, `SliderRangeField`, `RatingField`
 - `DateField`, `ColorField`, `FileField`, `HiddenField`
@@ -184,7 +185,7 @@ import { AccentColorPicker } from "opus-react";
 
 ### Overlays and feedback
 
-- `Modal`, `Dialog`, `Drawer`, `Popover`
+- `Modal`, `Dialog`, `ConfirmDialog`, `Drawer`, `BottomSheet`, `Popover`
 - `DropdownMenu`, `ContextMenuProvider`, `CommandPalette`
 - `Tooltip`, `Toast`, `ToastProvider`, `Alert`
 
@@ -192,16 +193,19 @@ import { AccentColorPicker } from "opus-react";
 
 - `OpusBrand` — canonical `icon`, `wordmark`, and `full` logo variants
 - `Card`, `Panel`, `Section`, `Table`, `DataGrid`
+- `DataGrid` supports sort, filter, resize, grouped/tree/pivot layouts, a column manager, and saved column views
+- `TreeTable` for expandable hierarchical records
+- `Markdown` and `CodeEditor` for documentation and developer surfaces
 - `Tabs`, `Accordion`, `AccordionGroup`, `ShowMore`
 - `Badge`, `Avatar`, `AvatarGroup`, `List`, `DescriptionList`
-- `PropertyGrid`, `Statistic`, `EmptyState`, `Skeleton`
+- `PropertyGrid`, `Statistic`, `EmptyState`, `ErrorState`, `ErrorBoundary`, `Skeleton`
 - `ContentTimeline`, `TreeView`, `MasonryGrid`, `JsonViewer`
 
 ### Layout
 
 - `Stack`, `Columns`, `Grid`, `Splitter`, `ResizablePanel`
 - `DockLayout`, `ScrollArea`, `AspectRatio`, `Container`, `Spacer`
-- `Breadcrumb`, `Pagination`, `PageHeader`, `Toolbar`
+- `Breadcrumb`, `Pagination`, `PageHeader`, `Toolbar`, `OverflowToolbar`
 - `BottomNavigation`, `NavigationRail`, `SplitButton`, `FloatingActionButton`
 
 ### Navigation

@@ -1,6 +1,17 @@
 /** Curated opus-react release notes for npm publishes that only left chore commits in git. */
 export const releaseNotesOverlay = [
   {
+    version: "0.9.1",
+    releasedAt: "2026-10-22",
+    summary: "Release notes and documentation for Opus 0.8 and 0.9.",
+    changes: [
+      "Add public changelog entries for the 0.8.0 component release and the 0.9.0 DataGrid release.",
+      "Document DataGrid column management, controlled visibility, and saved views.",
+      "Add the enterprise components and DataGrid story to the Opus journal.",
+      "Publish opus-react 0.9.1.",
+    ],
+  },
+  {
     version: "0.9.0",
     releasedAt: "2026-10-22",
     summary: "DataGrid column management and saved views.",

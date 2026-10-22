@@ -1477,5 +1477,11 @@ export const commitLog: CommitEntry[] = [
     shortHash: "18f1a2e",
     committedAt: "2026-10-22",
     summary: "chore: update repository stats",
+  },
+  {
+    hash: "17a8a5c8fbbaecaa936ca4913135ec3d566e4e76",
+    shortHash: "17a8a5c",
+    committedAt: "2026-10-22",
+    summary: "fix: avoid duplicate all-columns saved view",
   }
 ].reverse();

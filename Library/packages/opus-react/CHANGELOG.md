@@ -4,6 +4,43 @@ All notable public-package changes are recorded here. Opus follows [Semantic Ver
 
 ## Unreleased
 
+## 0.9.1 — 2026-10-22
+
+### Documentation
+
+- Add release notes for Opus 0.8.0 and 0.9.0.
+- Document DataGrid column management, controlled visibility, and saved views.
+- Add the enterprise components and DataGrid story to the Opus journal.
+
+## 0.9.0 — 2026-10-22
+
+### Added
+
+- DataGrid column manager with a visibility menu for showing and hiding data columns.
+- Controlled and uncontrolled column visibility through `columnVisibility`, `defaultColumnVisibility`, and `onColumnVisibilityChange`.
+- Saved column views through `views`, `activeViewId`, `defaultActiveViewId`, and `onActiveViewChange`.
+- Exported `DataGridColumnVisibility` and `DataGridView` types.
+
+## 0.8.0 — 2026-10-22
+
+### Added
+
+- `ConfirmDialog` for destructive and asynchronous confirmations, with `danger` tone and loading state.
+- `BottomSheet` with drag-to-dismiss, containment sizes, and mobile-safe action footers.
+- `TreeTable` for expandable hierarchical records with controlled expansion, custom columns, density, and sticky headers.
+- `Markdown` and `CodeEditor`, backed by react-markdown and CodeMirror, with Opus light/dark theming.
+- `ErrorState` and `ErrorBoundary` for reusable error, warning, offline, forbidden, and not-found states.
+- `AsyncMultiSelectField` with debounced search, removable chips, keyboard navigation, and native form submission support.
+- `OverflowToolbar` for moving excess actions into a More menu as space shrinks.
+- `size` support for AsyncSelectField, MentionInputField, and ComboboxField.
+
+### Changed
+
+- Unified input surfaces across Standard, Neumorphism, and Liquid glass appearances.
+- Added disabled states to the remaining form controls.
+- Preserved theme, font, and colour inside portalled controls.
+- Aligned radius, shadow, focus, and semantic colour tokens across theme sources.
+
 ## 0.7.4 — 2026-10-01
 
 - Add opt-in Neumorphism appearance across component surfaces, with matching material fills, raised actions, recessed inputs, and subtle dark shadows.

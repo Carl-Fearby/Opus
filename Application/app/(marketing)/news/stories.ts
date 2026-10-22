@@ -12,6 +12,51 @@ export type NewsStory = {
 
 export const newsStories: NewsStory[] = [
   {
+    slug: "enterprise-components-and-datagrid",
+    date: "2026-10-22",
+    edition: "Opus 0.8 + 0.9",
+    title: "Components for the work after the demo.",
+    standfirst: "Opus 0.8 adds eight components for production workflows, and Opus 0.9 gives DataGrid a column manager and saved views. Together they close the gap between a polished prototype and an application people use every day.",
+    summary: "The library now covers confirmations, mobile actions, hierarchical records, markdown and code surfaces, recoverable errors, async multi-select, responsive toolbars, and a data grid that adapts to how each person works.",
+    components: [
+      { name: "Confirm dialog", href: "/documentation/components/confirm-dialog", code: `<ConfirmDialog
+  open={open}
+  tone="danger"
+  title="Delete workspace?"
+  description="This cannot be undone."
+  onConfirm={remove}
+  onClose={() => setOpen(false)}
+/>` },
+      { name: "Bottom sheet", href: "/documentation/components/bottom-sheet", code: `<BottomSheet open={open} title="Filters" onClose={close}>
+  <Filters />
+</BottomSheet>` },
+      { name: "Tree table", href: "/documentation/components/tree-table", code: `<TreeTable
+  ariaLabel="Documents"
+  columns={columns}
+  nodes={nodes}
+  defaultExpandedIds={["documents"]}
+/>` },
+      { name: "Async multi-select", href: "/documentation/components/async-multi-select", code: `<AsyncMultiSelectField
+  id="reviewers"
+  label="Reviewers"
+  value={reviewers}
+  loadOptions={searchPeople}
+  onChange={setReviewers}
+/>` },
+      { name: "DataGrid column manager", href: "/documentation/components/data-grid", code: `<DataGrid
+  columns={columns}
+  rows={rows}
+  columnManager
+  views={views}
+/>` },
+    ],
+    chapters: [
+      { heading: "The missing workflows", body: "Confirm Dialog makes destructive actions explicit without rebuilding a modal each time. Bottom Sheet handles mobile filters and short forms. Tree Table gives hierarchical records a real table surface. Markdown and Code Editor serve the documentation and developer tools around the product. Error State and Error Boundary make failure recoverable instead of terminal. Async Multi-select handles the people and tags that only exist on the server. Overflow Toolbar keeps dense actions usable as space shrinks." },
+      { heading: "A grid that adapts to the work", body: "DataGrid now has a column manager and saved views. Show or hide columns from the toolbar, keep visibility under application control with columnVisibility and onColumnVisibilityChange, or offer presets such as Quarterly and Adoption focus. The grid still handles sort, filter, resize, grouping, tree rows, pivot layouts, virtualisation, and infinite loading." },
+      { heading: "One input language", body: "The release also aligns the small details that make a library feel coherent: matching input surfaces across Standard, Neumorphism, and Liquid glass, disabled states on the remaining controls, shared focus rings, and theme, font, and colour carried into portalled menus and overlays." },
+    ],
+  },
+  {
     slug: "neumorphism-theme",
     date: "2026-10-01",
     edition: "Opus 0.7.4 · Neumorphism",
