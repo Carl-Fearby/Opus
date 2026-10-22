@@ -1,0 +1,25 @@
+.stack {
+  display: grid;
+  gap: 12px;
+  justify-items: flex-start;
+}
+
+.sheetBody {
+  display: grid;
+  gap: 10px;
+  color: var(--opus-text);
+  font-size: var(--opus-control-font-size);
+  line-height: 1.55;
+}
+
+.sheetBody p {
+  margin: 0;
+}
+
+.toolbarFrame {
+  width: min(430px, 100%);
+  padding: 8px;
+  border: 1px solid var(--opus-surface-border, var(--opus-border));
+  border-radius: var(--opus-input-radius-large);
+  background: var(--opus-surface-fill, color-mix(in srgb, var(--opus-panel) 87%, transparent));
+}

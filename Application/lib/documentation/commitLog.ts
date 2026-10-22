@@ -1411,5 +1411,41 @@ export const commitLog: CommitEntry[] = [
     shortHash: "2ada3fb",
     committedAt: "2026-10-01",
     summary: "feat: release opus-react@0.7.4 with Neumorphism themes",
+  },
+  {
+    hash: "00d032898a084d52347cb2022f8525397a8aa2f4",
+    shortHash: "00d0328",
+    committedAt: "2026-10-01",
+    summary: "chore: sync version history for opus-react@0.7.4",
+  },
+  {
+    hash: "dcabc6a9bc34ce9c837df8b76e48c5050992fb89",
+    shortHash: "dcabc6a",
+    committedAt: "2026-10-01",
+    summary: "chore: update Application to opus-react@0.7.4",
+  },
+  {
+    hash: "4c32a1aad27b17c63d1db96e71dd12571d714bcc",
+    shortHash: "4c32a1a",
+    committedAt: "2026-10-01",
+    summary: "docs: announce Neumorphism theme on Opus website",
+  },
+  {
+    hash: "ddedebccfc2814ec72844deae8d777b94be697e2",
+    shortHash: "ddedebc",
+    committedAt: "2026-10-01",
+    summary: "docs: showcase Neumorphism theme in announcement",
+  },
+  {
+    hash: "21d6cb9741c687f1d859d1a29a6cad87b4000214",
+    shortHash: "21d6cb9",
+    committedAt: "2026-10-22",
+    summary: "feat: add enterprise components and theme-consistent inputs",
+  },
+  {
+    hash: "aef700b4cab082895d63002fe6649988732ded0a",
+    shortHash: "aef700b",
+    committedAt: "2026-10-22",
+    summary: "chore: release opus-react@0.8.0",
   }
 ].reverse();

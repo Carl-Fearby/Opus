@@ -5695,6 +5695,88 @@ ${navProps}
 />`,
       });
     }
+    case "markdown": {
+      return `${usageClientPrefix(false)}\n${importLine(["Markdown"])}\n\nconst notes = \`# Release notes\n\n- Confirm dialogs\n- Bottom sheets\n- Tree tables\n\`;\n\nreturn <Markdown>{notes}</Markdown>;`;
+    }
+    case "code-editor": {
+      return interactiveUsage({
+        components: ["Button", "CodeEditor"],
+        state: ['const [code, setCode] = useState("const answer = 42;");'],
+        jsx: `<CodeEditor
+  ariaLabel="Example code"
+  height={260}
+  value={code}
+  onChange={setCode}
+/>`,
+      });
+    }
+    case "tree-table": {
+      return `${usageClientPrefix(false)}\n${importLine(["TreeTable"])}\n\nconst nodes = [\n  {\n    id: "documents",\n    label: "Documents",\n    children: [{ id: "contracts", label: "Contracts" }],\n  },\n  { id: "archive", label: "Archive" },\n];\n\nconst columns = [\n  { id: "name", header: "Name", render: (node) => node.label },\n  { id: "updated", header: "Updated", render: () => "2h ago" },\n];\n\nreturn <TreeTable ariaLabel="Files" columns={columns} nodes={nodes} defaultExpandedIds={["documents"]} />;`;
+    }
+    case "error-state": {
+      return `${usageClientPrefix(false)}\n${importLine(["Button", "ErrorState"])}\n\nreturn (\n  <ErrorState\n    status="error"\n    title="We couldn't load this workspace"\n    description="Check your connection and try again."\n    actions={<Button onClick={() => console.log("Retry")}>Retry</Button>}\n  />\n);`;
+    }
+    case "confirm-dialog": {
+      return interactiveUsage({
+        components: ["Button", "ConfirmDialog"],
+        state: ["const [open, setOpen] = useState(false);", "const [loading, setLoading] = useState(false);"],
+        jsx: `<>
+  <Button variant="danger" onClick={() => setOpen(true)}>Delete workspace</Button>
+  <ConfirmDialog
+    open={open}
+    title="Delete workspace?"
+    description="This permanently removes the workspace and all saved views."
+    tone="danger"
+    loading={loading}
+    onClose={() => setOpen(false)}
+    onConfirm={() => {
+      setLoading(true);
+      window.setTimeout(() => {
+        setLoading(false);
+        setOpen(false);
+      }, 900);
+    }}
+  />
+</>`,
+      });
+    }
+    case "bottom-sheet": {
+      return interactiveUsage({
+        components: ["Button", "BottomSheet"],
+        state: ["const [open, setOpen] = useState(false);"],
+        jsx: `<>
+  <Button onClick={() => setOpen(true)}>Open filters</Button>
+  <BottomSheet
+    open={open}
+    title="Filter results"
+    description="Choose which records are included in this view."
+    onClose={() => setOpen(false)}
+  >
+    <p>Sheet content goes here.</p>
+  </BottomSheet>
+</>`,
+      });
+    }
+    case "overflow-toolbar": {
+      return `${usageClientPrefix(false)}\n${importLine(["Button", "OverflowToolbar"])}\n\nreturn (\n  <div style={{ width: "min(360px, 100%)" }}>\n    <OverflowToolbar label="Document actions">\n      <Button size="sm" variant="secondary">Share</Button>\n      <Button size="sm" variant="secondary">Export</Button>\n      <Button size="sm" variant="secondary">Duplicate</Button>\n      <Button size="sm">Publish</Button>\n    </OverflowToolbar>\n  </div>\n);`;
+    }
+    case "async-multi-select": {
+      return interactiveUsage({
+        components: ["AsyncMultiSelectField"],
+        preamble: [`const people = [\n  { label: "Emma Davis", value: "emma" },\n  { label: "Michael Brown", value: "michael" },\n  { label: "Olivia Wilson", value: "olivia" },\n];`],
+        state: ["const [reviewers, setReviewers] = useState<{ label: string; value: string }[]>([]);"],
+        jsx: `<AsyncMultiSelectField
+  id="reviewers"
+  label="Reviewers"
+  value={reviewers}
+  defaultOptions={people}
+  loadOptions={async (query) =>
+    people.filter((person) => person.label.toLowerCase().includes(query.toLowerCase()))
+  }
+  onChange={setReviewers}
+/>`,
+      });
+    }
     default:
       return "";
   }

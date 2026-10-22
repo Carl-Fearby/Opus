@@ -391,6 +391,176 @@ These controls expose the browser's native form behaviour instead of replacing i
 
 Use autocomplete purpose tokens that describe the data rather than arbitrary labels. Browser support varies by input type, and autofocus should be enabled only when the surrounding context remains clear.`;
 
+
+Object.assign(componentDocumentation, {
+  markdown: `## Overview
+
+Renders trusted Markdown with GitHub-flavoured tables, task lists, autolinks, and code blocks. External links open in a new tab with \`rel="noreferrer noopener"\`.
+
+## Props
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| \`children\` | \`string\` | required | Markdown source. |
+| \`components\` | \`Components\` | — | Override individual React Markdown renderers. |
+| \`externalLinksInNewTab\` | \`boolean\` | \`true\` | Open absolute links in a new tab. |
+| \`className\` | \`string\` | — | Optional class name on the wrapper. |
+
+## Accessibility
+
+- Headings keep the Markdown document outline.
+- Tables scroll horizontally instead of forcing the page wider.
+- Raw HTML is not rendered by default.`,
+  "code-editor": `## Overview
+
+CodeMirror-backed editor with syntax highlighting, line numbers, and Opus theme integration. The editor follows the active Opus light or dark theme automatically.
+
+## Props
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| \`value\` | \`string\` | required | Controlled editor value. |
+| \`onChange\` | \`(value: string) => void\` | — | Called whenever the document changes. |
+| \`language\` | \`"javascript" \\| "jsx" \\| "tsx" \\| "typescript" \\| "text"\` | \`"tsx"\` | Syntax mode. |
+| \`height\` | \`number \\| string\` | \`260\` | Fixed editor height. |
+| \`readOnly\` | \`boolean\` | \`false\` | Prevents editing while keeping selection and copy. |
+| \`showLineNumbers\` | \`boolean\` | \`true\` | Shows the line-number gutter. |
+| \`ariaLabel\` | \`string\` | \`"Code editor"\` | Accessible name for the editor. |
+
+## Accessibility
+
+- The content area exposes the supplied \`ariaLabel\`.
+- Keyboard editing, undo/redo, and search are handled by CodeMirror.
+- Pair read-only editors with a visible heading or label in the surrounding layout.`,
+  "tree-table": `## Overview
+
+Hierarchical table for folders, org structures, categories, and other parent/child records. Rows expand in place while keeping tabular columns aligned.
+
+## Props
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| \`nodes\` | \`TreeTableNode[]\` | required | Root nodes with optional \`children\`. |
+| \`columns\` | \`TreeTableColumn[]\` | required | Column headers and cell renderers. The first column shows the disclosure control. |
+| \`ariaLabel\` | \`string\` | required | Accessible table name. |
+| \`expandedIds\` | \`string[]\` | — | Controlled expansion. Pair with \`onExpandedChange\`. |
+| \`defaultExpandedIds\` | \`string[]\` | \`[]\` | Initial expansion in uncontrolled usage. |
+| \`onExpandedChange\` | \`(ids: string[]) => void\` | — | Fired when a row or expand-all is toggled. |
+| \`onRowClick\` | \`(node) => void\` | — | Makes rows keyboard-activatable. |
+| \`density\` | \`"compact" \\| "standard" \\| "comfortable"\` | \`"standard"\` | Row spacing. |
+| \`stickyHeader\` | \`boolean\` | \`false\` | Keeps headers visible while scrolling. |
+
+## Accessibility
+
+- Rows expose \`aria-level\` and \`aria-expanded\` for tree navigation.
+- Disclosure controls are labelled with the row label and are keyboard operable.
+- Expand-all is only shown when the data contains nested rows.`,
+  "error-state": `## Overview
+
+Reusable failure, warning, offline, forbidden, and not-found state. \`ErrorBoundary\` uses the same surface as its default fallback and resets when \`resetKeys\` change.
+
+## Props
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| \`status\` | \`"error" \\| "warning" \\| "offline" \\| "forbidden" \\| "not-found"\` | \`"error"\` | Selects the icon, tone, and default copy. |
+| \`title\` | \`string\` | status copy | Optional heading override. |
+| \`description\` | \`string\` | status copy | Optional supporting copy. |
+| \`code\` | \`string\` | — | Short status code such as 404 or 500. |
+| \`actions\` | \`ReactNode\` | — | Recovery actions. |
+| \`compact\` | \`boolean\` | \`false\` | Smaller inline variant. |
+
+## Accessibility
+
+- Errors render with \`role="alert"\`; warnings use \`role="status"\`.
+- Provide a recovery action whenever the user can reasonably retry.`,
+  "confirm-dialog": `## Overview
+
+A focused confirmation surface built on Dialog. Use it for destructive actions and short decisions that need an explicit confirm/cancel choice.
+
+## Props
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| \`open\` | \`boolean\` | required | Controls visibility. |
+| \`title\` | \`string\` | required | Dialog heading. |
+| \`description\` | \`string\` | required | Consequence or context. |
+| \`tone\` | \`"default" \\| "danger"\` | \`"default"\` | Styles the confirm action and status icon. |
+| \`confirmLabel\` | \`string\` | \`"Confirm"\` | Confirm action label. |
+| \`cancelLabel\` | \`string\` | \`"Cancel"\` | Cancel action label. |
+| \`loading\` | \`boolean\` | \`false\` | Disables both actions and blocks dismissal. |
+| \`onConfirm\` | \`() => void\` | required | Confirm callback. |
+| \`onClose\` | \`() => void\` | required | Cancel, Escape, or backdrop dismissal. |
+
+## Accessibility
+
+- Uses a modal dialog with labelled title and description.
+- Focus is trapped while open and restored afterwards.
+- Destructive confirmations should name the object in the title and explain the consequence in the description.`,
+  "bottom-sheet": `## Overview
+
+Bottom-anchored overlay for mobile filters, actions, and short forms. Larger viewports centre the sheet at a comfortable maximum width.
+
+## Props
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| \`open\` | \`boolean\` | required | Controls visibility. |
+| \`title\` | \`string\` | required | Sheet heading. |
+| \`description\` | \`string\` | — | Supporting copy under the heading. |
+| \`size\` | \`"content" \\| "half" \\| "full"\` | \`"content"\` | Maximum height behaviour. |
+| \`showHandle\` | \`boolean\` | \`true\` | Shows the drag handle and enables swipe-to-dismiss. |
+| \`footer\` / \`actions\` | \`ReactNode\` | — | Footer content and action buttons. |
+| \`onClose\` | \`() => void\` | required | Close request from the button, backdrop, Escape, or swipe. |
+
+## Accessibility
+
+- Renders a modal dialog and traps focus while open.
+- Always keep the close button available, even when the handle is shown.
+- Swipe-to-dismiss is an enhancement; every action remains reachable by button or keyboard.`,
+  "overflow-toolbar": `## Overview
+
+Toolbar that measures its actions and moves the ones that no longer fit into a More menu. Useful for editors, document tools, and responsive page headers.
+
+## Props
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| \`children\` | \`ReactNode\` | required | Direct children are treated as toolbar actions. |
+| \`label\` | \`string\` | \`"Toolbar"\` | Accessible toolbar name. |
+| \`moreLabel\` | \`string\` | \`"More"\` | Overflow trigger label prefix. |
+| \`gap\` | \`number\` | \`8\` | Gap between actions in pixels. |
+
+## Accessibility
+
+- The container exposes \`role="toolbar"\` with the supplied label.
+- Actions moved into the overflow panel remain real buttons and keep their labels.
+- The overflow trigger exposes \`aria-expanded\` and \`aria-controls\`.`,
+  "async-multi-select": `## Overview
+
+Search-backed multi-select with removable chips. Queries are debounced, results are rendered in a themed portal, and keyboard navigation follows the combobox pattern.
+
+## Props
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| \`value\` | \`AsyncMultiSelectOption[]\` | required | Controlled selection. |
+| \`onChange\` | \`(options) => void\` | required | Called when values are added or removed. |
+| \`loadOptions\` | \`(query) => Promise<AsyncMultiSelectOption[]>\` | required | Async result loader. |
+| \`defaultOptions\` | \`AsyncMultiSelectOption[]\` | \`[]\` | Options shown before a query is entered. |
+| \`debounceMs\` | \`number\` | \`250\` | Search debounce. |
+| \`minQueryLength\` | \`number\` | \`0\` | Minimum query before loading. |
+| \`max\` | \`number\` | — | Maximum selected values. |
+| \`name\` | \`string\` | — | Renders hidden inputs for native form submission. |
+| \`size\` | \`"sm" \\| "md" \\| "lg"\` | \`"md"\` | Control size. |
+
+## Accessibility
+
+- The input exposes role \`combobox\` with \`aria-expanded\`, \`aria-controls\`, and \`aria-activedescendant\`.
+- Chips include individually labelled remove buttons.
+- Backspace on an empty query removes the most recent value.`,
+});
+
 export function getComponentDocumentationMarkdown(slug: ControlSlug): string | null {
   const labDocumentationAliases: Partial<Record<ControlSlug, ControlSlug>> = {
     "lab-sidebar": "sidebar",

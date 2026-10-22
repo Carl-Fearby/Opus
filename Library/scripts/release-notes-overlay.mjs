@@ -1,6 +1,22 @@
 /** Curated opus-react release notes for npm publishes that only left chore commits in git. */
 export const releaseNotesOverlay = [
   {
+    version: "0.8.0",
+    releasedAt: "2026-10-22",
+    summary: "Enterprise components and theme-consistent form controls.",
+    changes: [
+      "Add ConfirmDialog for destructive and async confirmation flows, with a danger tone and loading state.",
+      "Add BottomSheet with drag-to-dismiss, containment sizes, and mobile-safe action footers.",
+      "Add TreeTable for expandable hierarchical records with controlled expansion, custom columns, density, and sticky headers.",
+      "Add Markdown and CodeEditor components, backed by react-markdown and CodeMirror, with full Opus light/dark theming.",
+      "Add ErrorState and ErrorBoundary for reusable error, warning, offline, forbidden, and not-found states.",
+      "Add AsyncMultiSelectField with debounced search, removable chips, keyboard navigation, and native form submission support.",
+      "Add OverflowToolbar so toolbars move excess actions into a More menu as space shrinks.",
+      "Unify input surfaces across Standard, Neumorphism, and Liquid glass, add missing disabled states, and preserve theme, font, and colour inside portalled controls.",
+      "Publish opus-react 0.8.0.",
+    ],
+  },
+  {
     version: "0.7.4",
     releasedAt: "2026-10-01",
     summary: "Neumorphism appearance across Opus components.",

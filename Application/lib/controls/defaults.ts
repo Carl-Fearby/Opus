@@ -1894,6 +1894,14 @@ export const defaultSettings: ControlSettingsBySlug = {
     density: "comfortable",
     showShortcuts: true,
   },
+  "async-multi-select": {},
+  markdown: {},
+  "code-editor": {},
+  "confirm-dialog": {},
+  "bottom-sheet": {},
+  "tree-table": {},
+  "error-state": {},
+  "overflow-toolbar": {},
 };
 
 export function getDefaultSettings<S extends ControlSlug>(

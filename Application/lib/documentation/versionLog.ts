@@ -696,10 +696,18 @@ export const versionLog: VersionEntry[] = [
   {
     version: "0.7.4",
     releasedAt: "2026-10-01",
-    commit: "2ada3fbeb85699c7d4df1de230be11b07a92525d",
-    commitShort: "2ada3fb",
+    commit: "dcabc6a9bc34ce9c837df8b76e48c5050992fb89",
+    commitShort: "dcabc6a",
     summary: "Neumorphism appearance across Opus components.",
     changes: ["Add a shared monochrome Neumorphism appearance with raised actions, recessed inputs, and subtle dark-mode shadows.","Preserve scoped appearance in menus, dialogs, tooltips, and other portals.","Add persistent appearance selection and generated theme code to the Theme Designer.","Support featured imagery in MegaMenu panels.","Publish opus-react 0.7.4."],
+  },
+  {
+    version: "0.8.0",
+    releasedAt: "2026-10-22",
+    commit: "aef700b4cab082895d63002fe6649988732ded0a",
+    commitShort: "aef700b",
+    summary: "Enterprise components and theme-consistent form controls.",
+    changes: ["Add ConfirmDialog for destructive and async confirmation flows, with a danger tone and loading state.","Add BottomSheet with drag-to-dismiss, containment sizes, and mobile-safe action footers.","Add TreeTable for expandable hierarchical records with controlled expansion, custom columns, density, and sticky headers.","Add Markdown and CodeEditor components, backed by react-markdown and CodeMirror, with full Opus light/dark theming.","Add ErrorState and ErrorBoundary for reusable error, warning, offline, forbidden, and not-found states.","Add AsyncMultiSelectField with debounced search, removable chips, keyboard navigation, and native form submission support.","Add OverflowToolbar so toolbars move excess actions into a More menu as space shrinks.","Unify input surfaces across Standard, Neumorphism, and Liquid glass, add missing disabled states, and preserve theme, font, and colour inside portalled controls.","Publish opus-react 0.8.0."],
   }
 ].reverse();
 

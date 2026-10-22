@@ -101,6 +101,7 @@ export type ControlSlug =
   | "segmented-control"
   | "form-wizard"
   | "async-select"
+  | "async-multi-select"
   | "save-state-indicator"
   | "editable-data-table"
   | "bulk-action-bar"
@@ -115,6 +116,8 @@ export type ControlSlug =
   | "time-range-picker"
   | "signature-pad"
   | "diff-viewer"
+  | "markdown"
+  | "code-editor"
   | "slider-range"
   | "otp-input"
   | "date-range-picker"
@@ -136,7 +139,9 @@ export type ControlSlug =
   | "emoji-picker"
   | "tooltip"
   | "dialog"
+  | "confirm-dialog"
   | "drawer"
+  | "bottom-sheet"
   | "dropdown-menu"
   | "context-menu"
   | "modal"
@@ -151,7 +156,9 @@ export type ControlSlug =
   | "section"
   | "table"
   | "data-grid"
+  | "overflow-toolbar"
   | "skeleton"
+  | "error-state"
   | "carousel"
   | "video-player"
   | "audio-player"
@@ -178,6 +185,7 @@ export type ControlSlug =
   | "content-timeline"
   | "tree-menu"
   | "tree-view"
+  | "tree-table"
   | "masonry-grid"
   | "property-grid"
   | "map"
@@ -1732,6 +1740,14 @@ export type ControlSettingsBySlug = {
     selectionIndicator: "none" | "checkbox" | "radio";
     virtualItemCount: number;
   };
+  "async-multi-select": Record<string, never>;
+  "markdown": Record<string, never>;
+  "code-editor": Record<string, never>;
+  "confirm-dialog": Record<string, never>;
+  "bottom-sheet": Record<string, never>;
+  "tree-table": Record<string, never>;
+  "error-state": Record<string, never>;
+  "overflow-toolbar": Record<string, never>;
   "virtual-list": {
     hasMore: boolean;
     scrollbarSizing: "loaded" | "virtual";
@@ -2040,6 +2056,7 @@ export const formsControlOrder = [
   "segmented-control",
   "form-wizard",
   "async-select",
+  "async-multi-select",
   "slider-range",
   "otp-input",
   "date-range-picker",
