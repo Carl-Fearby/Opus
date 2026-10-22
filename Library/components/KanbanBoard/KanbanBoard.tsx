@@ -842,42 +842,6 @@ export function KanbanBoard({
       } as CSSProperties)
     : undefined;
 
-  const originGhost =
-    drag && draggingCard && portalReady && drag.phase === "dragging"
-      ? createPortal(
-          <div
-            aria-hidden="true"
-            className={styles.originGhostShell}
-            style={
-              {
-                ...themeStyle,
-                left: drag.originLeft,
-                top: drag.originTop,
-                width: drag.width,
-                height: drag.height,
-              } as CSSProperties
-            }
-          >
-            <article
-              className={`${styles.card} ${styles.originGhost}`}
-              data-tone={draggingCard.tone ?? "default"}
-              style={
-                {
-                  width: drag.width,
-                  height: drag.height,
-                  backgroundColor: drag.panel,
-                  color: drag.text,
-                  ["--card-accent" as string]: drag.accent,
-                } as CSSProperties
-              }
-            >
-              <CardContent card={draggingCard} />
-            </article>
-          </div>,
-          document.body,
-        )
-      : null;
-
   const preview =
     drag && draggingCard && portalReady
       ? createPortal(
@@ -1253,7 +1217,6 @@ export function KanbanBoard({
         </section>
       ) : null}
       </div>
-      {originGhost}
       {preview}
       {columnPreview}
       {commentsEnabled && selectedCard ? (
