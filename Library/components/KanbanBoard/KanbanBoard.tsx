@@ -1004,6 +1004,7 @@ export function KanbanBoard({
         className={styles.root}
         aria-label="Kanban board"
         data-column-dragging={columnDrag ? "true" : undefined}
+        data-column-dropping={columnDrag?.phase === "dropping" ? "true" : undefined}
         data-dragging={drag ? "true" : undefined}
         data-dropping={drag?.phase === "dropping" ? "true" : undefined}
         ref={rootRef}

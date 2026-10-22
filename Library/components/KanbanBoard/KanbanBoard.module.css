@@ -107,7 +107,16 @@
   color: var(--opus-surface-text, var(--dashboard-section-text));
   box-sizing: border-box;
   overflow: hidden;
+  transition: none;
+}
+
+.root[data-column-dragging="true"]:not([data-column-dropping="true"])
+  .column:not([data-column-dragging="true"]) {
   transition: transform 180ms cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+.root[data-column-dropping="true"] .column {
+  transition: none !important;
 }
 
 .column[data-column-dragging="true"] {
