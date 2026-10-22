@@ -49,12 +49,27 @@ export type DataGridRow = {
   values: Record<string, ReactNode>;
 };
 
+export type DataGridColumnVisibility = Record<string, boolean>;
+
+export type DataGridView = {
+  /** Column keys that should be hidden when this view is selected. */
+  hiddenColumnKeys?: string[];
+  id: string;
+  label: string;
+};
+
 export type { DataGridLayout, DataGridPivotConfig };
 
 type DataGridProps = {
+  activeViewId?: string;
   bordered?: boolean;
   caption?: string;
+  /** Shows the Columns button above the grid. */
+  columnManager?: boolean;
+  columnVisibility?: DataGridColumnVisibility;
   columns: DataGridColumn[];
+  defaultActiveViewId?: string;
+  defaultColumnVisibility?: DataGridColumnVisibility;
   defaultExpandedIds?: string[];
   density?: TableDensity;
   detailExpandedIds?: string[];
@@ -63,6 +78,8 @@ type DataGridProps = {
   hasMore?: boolean;
   layout?: DataGridLayout;
   loadingMore?: boolean;
+  onActiveViewChange?: (viewId: string) => void;
+  onColumnVisibilityChange?: (visibility: DataGridColumnVisibility) => void;
   onExpandedChange?: (ids: string[]) => void;
   onLoadMore?: () => void;
   pivot?: DataGridPivotConfig;
@@ -72,6 +89,8 @@ type DataGridProps = {
   stickyFirstColumn?: boolean;
   stickyHeader?: boolean;
   striped?: boolean;
+  /** Saved column presets rendered in the grid toolbar. */
+  views?: DataGridView[];
   viewportHeight?: number;
   virtualized?: boolean;
 };
@@ -162,9 +181,14 @@ function defaultRowHeight(density: TableDensity) {
 }
 
 export function DataGrid({
+  activeViewId,
   bordered = true,
   caption,
+  columnManager = false,
+  columnVisibility,
   columns,
+  defaultActiveViewId,
+  defaultColumnVisibility,
   defaultExpandedIds,
   density = "compact",
   detailExpandedIds,
@@ -173,6 +197,8 @@ export function DataGrid({
   hasMore = false,
   layout = "flat",
   loadingMore = false,
+  onActiveViewChange,
+  onColumnVisibilityChange,
   onExpandedChange,
   onLoadMore,
   pivot,
@@ -182,6 +208,7 @@ export function DataGrid({
   stickyFirstColumn = true,
   stickyHeader = true,
   striped = true,
+  views,
   viewportHeight = DEFAULT_VIEWPORT,
   virtualized = false,
 }: DataGridProps) {
@@ -196,6 +223,20 @@ export function DataGrid({
   );
   const [uncontrolledDetailIds, setUncontrolledDetailIds] = useState<Set<string>>(() => new Set());
   const [scrollTop, setScrollTop] = useState(0);
+  const [columnMenuOpen, setColumnMenuOpen] = useState(false);
+  const [internalColumnVisibility, setInternalColumnVisibility] = useState<DataGridColumnVisibility>(() => {
+    if (defaultColumnVisibility) {
+      return defaultColumnVisibility;
+    }
+
+    const initialView = views?.find((view) => view.id === defaultActiveViewId);
+    return initialView
+      ? Object.fromEntries((initialView.hiddenColumnKeys ?? []).map((key) => [key, false]))
+      : {};
+  });
+  const [internalActiveViewId, setInternalActiveViewId] = useState(defaultActiveViewId ?? "");
+  const columnManagerRef = useRef<HTMLDivElement | null>(null);
+  const appliedViewRef = useRef<string | null>(null);
   const menuAnchorRef = useRef<MenuAnchor | null>(null);
   const menuHostRef = useRef<HTMLDivElement | null>(null);
   const menuRef = useRef<HTMLSpanElement | null>(null);
@@ -230,6 +271,20 @@ export function DataGrid({
     () => gridColumns.filter((column) => column.key !== "team"),
     [gridColumns],
   );
+  const resolvedColumnVisibility = columnVisibility ?? internalColumnVisibility;
+  const visibleGridColumns = useMemo(
+    () =>
+      gridColumns.filter(
+        (column) => column.key === "team" || resolvedColumnVisibility[column.key] !== false,
+      ),
+    [gridColumns, resolvedColumnVisibility],
+  );
+  const visibleDataColumns = useMemo(
+    () => visibleGridColumns.filter((column) => column.key !== "team"),
+    [visibleGridColumns],
+  );
+  const selectedViewId = activeViewId ?? internalActiveViewId;
+  const showToolbar = columnManager || Boolean(views?.length);
   const columnFeatures = useMemo(() => {
     const features: Record<string, { filterable: boolean; resizable: boolean; sortable: boolean }> = {};
 
@@ -245,7 +300,7 @@ export function DataGrid({
     (source: DataGridRow[]) => {
       return source
         .filter((row) =>
-          gridColumns.every((column) => {
+          visibleGridColumns.every((column) => {
             const features = columnFeatures[column.key];
 
             if (!features?.filterable) {
@@ -275,7 +330,7 @@ export function DataGrid({
           return sort.direction === "ascending" ? result : -result;
         });
     },
-    [columnFeatures, filters, gridColumns, sort],
+    [columnFeatures, filters, sort, visibleGridColumns],
   );
 
   useEffect(() => {
@@ -538,6 +593,30 @@ export function DataGrid({
     return () => observer.disconnect();
   }, [displayRows.length, hasMore, loadingMore, onLoadMore]);
 
+  useEffect(() => {
+    if (!columnMenuOpen) {
+      return;
+    }
+
+    const handlePointerDown = (event: globalThis.PointerEvent) => {
+      if (!columnManagerRef.current?.contains(event.target as Node)) {
+        setColumnMenuOpen(false);
+      }
+    };
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === "Escape") {
+        setColumnMenuOpen(false);
+      }
+    };
+
+    document.addEventListener("pointerdown", handlePointerDown);
+    document.addEventListener("keydown", handleKeyDown);
+    return () => {
+      document.removeEventListener("pointerdown", handlePointerDown);
+      document.removeEventListener("keydown", handleKeyDown);
+    };
+  }, [columnMenuOpen]);
+
   const toggleSort = (key: string) => {
     if (!columnFeatures[key]?.sortable) {
       return;
@@ -671,7 +750,52 @@ export function DataGrid({
     beginResize(event, columnKey, width);
   }, [beginResize, columnFeatures]);
 
-  const colSpan = gridColumns.length;
+  const setColumnVisible = (key: string, visible: boolean) => {
+    const next = { ...resolvedColumnVisibility, [key]: visible };
+
+    if (!columnVisibility) {
+      setInternalColumnVisibility(next);
+    }
+
+    if (!visible && sort?.key === key) {
+      setSort(null);
+    }
+
+    onColumnVisibilityChange?.(next);
+  };
+
+  const applyView = useCallback((viewId: string) => {
+    appliedViewRef.current = viewId;
+    const view = views?.find((entry) => entry.id === viewId);
+    const next = view
+      ? Object.fromEntries((view.hiddenColumnKeys ?? []).map((key) => [key, false]))
+      : {};
+
+    if (!columnVisibility) {
+      setInternalColumnVisibility(next);
+    }
+
+    if (sort && view?.hiddenColumnKeys?.includes(sort.key)) {
+      setSort(null);
+    }
+
+    if (activeViewId === undefined) {
+      setInternalActiveViewId(viewId);
+    }
+
+    onColumnVisibilityChange?.(next);
+    onActiveViewChange?.(viewId);
+  }, [activeViewId, columnVisibility, onActiveViewChange, onColumnVisibilityChange, sort, views]);
+
+  useEffect(() => {
+    if (activeViewId === undefined || activeViewId === appliedViewRef.current) {
+      return;
+    }
+
+    applyView(activeViewId);
+  }, [activeViewId, applyView]);
+
+  const colSpan = visibleGridColumns.length;
 
   const virtualWindow = useMemo(() => {
     if (!virtualized) {
@@ -741,7 +865,7 @@ export function DataGrid({
               <span className={styles.rowHeaderLabel}>{row.values.team ?? row.label}</span>
             </span>
           </th>
-          {dataColumns.map((column) => (
+          {visibleDataColumns.map((column) => (
             <td
               data-align={column.align ?? "left"}
               data-column-key={column.key}
@@ -792,8 +916,72 @@ export function DataGrid({
   };
 
   return (
-    <div className={styles.frame}>
-      {caption ? <div className={styles.caption}>{caption}</div> : null}
+    <div className={styles.frame} data-column-menu-open={columnMenuOpen || undefined}>
+      {showToolbar ? (
+        <div className={styles.toolbar}>
+          <div className={styles.toolbarTitle}>{caption}</div>
+          <div className={styles.toolbarActions}>
+            {views?.length ? (
+              <label className={styles.viewControl}>
+                <span className={styles.visuallyHidden}>Saved view</span>
+                <select
+                  aria-label="Saved view"
+                  className={styles.viewSelect}
+                  value={views.some((view) => view.id === selectedViewId) ? selectedViewId : ""}
+                  onChange={(event) => applyView(event.target.value)}
+                >
+                  <option value="">All columns</option>
+                  {views.map((view) => (
+                    <option key={view.id} value={view.id}>
+                      {view.label}
+                    </option>
+                  ))}
+                </select>
+              </label>
+            ) : null}
+            {columnManager ? (
+              <div className={styles.columnManager} ref={columnManagerRef}>
+                <button
+                  aria-expanded={columnMenuOpen}
+                  aria-haspopup="true"
+                  className={styles.columnsButton}
+                  onClick={() => setColumnMenuOpen((current) => !current)}
+                  type="button"
+                >
+                  Columns
+                </button>
+                {columnMenuOpen ? (
+                  <div aria-label="Column visibility" className={styles.columnsMenu} role="group">
+                    <span className={styles.columnsHeading}>Show columns</span>
+                    {dataColumns.map((column) => (
+                      <label className={styles.columnOption} key={column.key}>
+                        <input
+                          checked={resolvedColumnVisibility[column.key] !== false}
+                          type="checkbox"
+                          onChange={(event) => setColumnVisible(column.key, event.target.checked)}
+                        />
+                        <span>{column.label}</span>
+                      </label>
+                    ))}
+                    <button
+                      className={styles.columnsReset}
+                      onClick={() => {
+                        if (!columnVisibility) setInternalColumnVisibility({});
+                        onColumnVisibilityChange?.({});
+                      }}
+                      type="button"
+                    >
+                      Show all
+                    </button>
+                  </div>
+                ) : null}
+              </div>
+            ) : null}
+          </div>
+        </div>
+      ) : caption ? (
+        <div className={styles.caption}>{caption}</div>
+      ) : null}
       <div className={styles.gridBody}>
         <div
           ref={wrapRef}
@@ -817,7 +1005,7 @@ export function DataGrid({
           <table className={styles.grid}>
             {caption ? <caption className={styles.visuallyHidden}>{caption}</caption> : null}
             <colgroup>
-              {gridColumns.map((column) => (
+              {visibleGridColumns.map((column) => (
                 <col
                   key={column.key}
                   style={{ width: columnWidths[column.key] ?? (column.key === "team" ? 180 : 130) }}
@@ -826,7 +1014,7 @@ export function DataGrid({
             </colgroup>
             <thead>
               <tr>
-                {gridColumns.map((column) => (
+                {visibleGridColumns.map((column) => (
                   <th
                     aria-sort={
                       columnFeatures[column.key].sortable
@@ -896,7 +1084,7 @@ export function DataGrid({
                   <th className={styles.rowHeader} scope="row">
                     No rows
                   </th>
-                  <td className={styles.empty} colSpan={Math.max(dataColumns.length, 1)}>
+                  <td className={styles.empty} colSpan={Math.max(visibleDataColumns.length, 1)}>
                     No matching rows.
                   </td>
                 </tr>

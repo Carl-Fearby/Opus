@@ -2650,6 +2650,7 @@ function DataGridPreview({
     <DataGrid
       bordered={s.bordered}
       caption={s.caption}
+      columnManager={s.columnManager}
       columns={columns}
       density={s.density}
       getDetailContent={
@@ -2672,6 +2673,15 @@ function DataGridPreview({
       stickyHeader={s.stickyHeader}
       striped={s.striped}
       virtualized={s.virtualized}
+      views={
+        s.savedViews
+          ? [
+              { id: "all", label: "All columns" },
+              { id: "quarterly", label: "Quarterly", hiddenColumnKeys: ["adoption", "coverage", "a11y", "velocity"] },
+              { id: "adoption", label: "Adoption focus", hiddenColumnKeys: ["q1", "q2", "q3", "q4", "velocity"] },
+            ]
+          : undefined
+      }
       viewportHeight={s.virtualized || s.infiniteScroll ? 360 : undefined}
     />
   );

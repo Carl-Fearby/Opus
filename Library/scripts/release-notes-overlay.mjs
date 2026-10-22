@@ -1,6 +1,19 @@
 /** Curated opus-react release notes for npm publishes that only left chore commits in git. */
 export const releaseNotesOverlay = [
   {
+    version: "0.9.0",
+    releasedAt: "2026-10-22",
+    summary: "DataGrid column management and saved views.",
+    changes: [
+      "Add a DataGrid column manager with a toolbar visibility menu for showing and hiding data columns.",
+      "Support controlled and uncontrolled column visibility through columnVisibility, defaultColumnVisibility, and onColumnVisibilityChange.",
+      "Add saved column views through the views prop, with preset switching and onActiveViewChange reporting.",
+      "Expose DataGridColumnVisibility and DataGridView types for consumer-owned persistence and view management.",
+      "Add documentation, generated usage examples, settings controls, and unit tests for the new DataGrid tooling.",
+      "Publish opus-react 0.9.0.",
+    ],
+  },
+  {
     version: "0.8.0",
     releasedAt: "2026-10-22",
     summary: "Enterprise components and theme-consistent form controls.",
