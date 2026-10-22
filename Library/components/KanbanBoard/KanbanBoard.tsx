@@ -2,23 +2,39 @@
 
 import {
   useEffect,
+  useId,
   useMemo,
   useRef,
   useState,
   type CSSProperties,
+  type KeyboardEvent as ReactKeyboardEvent,
   type PointerEvent as ReactPointerEvent,
   type ReactNode,
 } from "react";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faChevronLeft, faChevronRight, faComment, faGripVertical, faPaperPlane } from "@fortawesome/free-solid-svg-icons";
 import { createThemedPortal as createPortal } from "@/lib/theme/createThemedPortal";
-import { CatalogIcon } from "@/components/CatalogIcon";
+import { Button } from "@/components/fields/Button";
 import { CustomScrollbar } from "@/components/CustomScrollbar";
+import { Modal } from "@/components/Modal";
+import { CatalogIcon } from "@/components/CatalogIcon";
 import styles from "./KanbanBoard.module.css";
+
+export type KanbanComment = {
+  id: string;
+  author?: string;
+  body: string;
+  /** ISO timestamp. */
+  createdAt?: string;
+};
 
 export type KanbanCard = {
   id: string;
   title: string;
   meta?: string;
   tone?: "default" | "accent" | "success" | "warning" | "danger";
+  description?: string;
+  comments?: KanbanComment[];
 };
 
 export type KanbanColumn = {
@@ -30,15 +46,46 @@ export type KanbanColumn = {
 };
 
 export type KanbanBoardProps = {
+  /** Label for the new-list button. */
+  addColumnLabel?: string;
   cards: Record<string, KanbanCard>;
+  /** Fixed width for each list. Numbers are pixels. */
+  columnWidth?: number | string;
   columns: KanbanColumn[];
+  /** Show comment counts and the comment thread action on each card. Defaults to true. */
+  commentsEnabled?: boolean;
+  /** The current commenter shown in the composer. */
+  currentUser?: { name: string };
   onChange?: (columns: KanbanColumn[]) => void;
+  onAddComment?: (cardId: string, comment: KanbanComment) => void;
   onCardClick?: (card: KanbanCard) => void;
+  onCommentsChange?: (cardId: string, comments: KanbanComment[]) => void;
 };
 
 type DropTarget = {
   columnId: string;
   index: number;
+};
+
+type ColumnDragState = {
+  accent: string;
+  columnId: string;
+  dropIndex: number | null;
+  fromIndex: number;
+  headerHeight: number;
+  muted: string;
+  offsetX: number;
+  offsetY: number;
+  originLeft: number;
+  originTop: number;
+  panel: string;
+  phase: "dragging" | "dropping";
+  step: number;
+  text: string;
+  title: string;
+  width: number;
+  x: number;
+  y: number;
 };
 
 type DragState = {
@@ -132,6 +179,20 @@ function readTranslateY(element: HTMLElement) {
   return 0;
 }
 
+function readTranslateX(element: HTMLElement) {
+  const transform = getComputedStyle(element).transform;
+  if (!transform || transform === "none") return 0;
+  if (transform.startsWith("matrix3d(")) {
+    const parts = transform.slice(9, -1).split(",").map((part) => Number(part.trim()));
+    return parts[12] || 0;
+  }
+  if (transform.startsWith("matrix(")) {
+    const parts = transform.slice(7, -1).split(",").map((part) => Number(part.trim()));
+    return parts[4] || 0;
+  }
+  return 0;
+}
+
 /** Bounding box in layout space (ignores live translateY used for gap animation). */
 function getLayoutRect(element: HTMLElement) {
   const rect = element.getBoundingClientRect();
@@ -199,6 +260,31 @@ function resolveDropTarget(
   return { columnId, index: slots.length };
 }
 
+function getLayoutColumnRect(element: HTMLElement) {
+  const rect = element.getBoundingClientRect();
+  const translateX = readTranslateX(element);
+  return {
+    left: rect.left - translateX,
+    right: rect.right - translateX,
+    width: rect.width,
+  };
+}
+
+function resolveColumnDropIndex(clientX: number, draggingColumnId: string) {
+  const columns = Array.from(
+    document.querySelectorAll<HTMLElement>("[data-kanban-column-id]"),
+  ).filter((column) => column.dataset.kanbanColumnId !== draggingColumnId);
+
+  for (let index = 0; index < columns.length; index += 1) {
+    const rect = getLayoutColumnRect(columns[index]);
+    if (clientX < rect.left + rect.width / 2) {
+      return index;
+    }
+  }
+
+  return columns.length;
+}
+
 function sameDropTarget(a: DropTarget | null, b: DropTarget | null) {
   if (a === b) return true;
   if (!a || !b) return false;
@@ -247,13 +333,38 @@ function resolveDropLanding(
   };
 }
 
-export function KanbanBoard({ cards, columns, onCardClick, onChange }: KanbanBoardProps) {
+export function KanbanBoard({
+  addColumnLabel = "Add list",
+  cards,
+  columnWidth,
+  columns,
+  commentsEnabled = true,
+  currentUser,
+  onAddComment,
+  onCardClick,
+  onChange,
+  onCommentsChange,
+}: KanbanBoardProps) {
   const [drag, setDrag] = useState<DragState | null>(null);
+  const [columnDrag, setColumnDrag] = useState<ColumnDragState | null>(null);
   const [portalReady, setPortalReady] = useState(false);
+  const [addingColumn, setAddingColumn] = useState(false);
+  const [newColumnTitle, setNewColumnTitle] = useState("");
+  const [selectedCardId, setSelectedCardId] = useState<string | null>(null);
+  const [commentDraft, setCommentDraft] = useState("");
+  const [localComments, setLocalComments] = useState<Record<string, KanbanComment[]>>({});
+  const [scrollInfo, setScrollInfo] = useState({ left: 0, max: 0 });
+  const commentFieldId = useId();
+  const columnFieldId = useId();
   const didDragRef = useRef(false);
   const dragRef = useRef<DragState | null>(null);
+  const columnDragRef = useRef<ColumnDragState | null>(null);
+  const rootRef = useRef<HTMLDivElement | null>(null);
+  const columnInputRef = useRef<HTMLInputElement | null>(null);
   const columnsRef = useRef(columns);
   const onChangeRef = useRef(onChange);
+  const onAddCommentRef = useRef(onAddComment);
+  const onCommentsChangeRef = useRef(onCommentsChange);
   const cardLookup = useMemo(() => cards, [cards]);
 
   useEffect(() => {
@@ -264,11 +375,100 @@ export function KanbanBoard({ cards, columns, onCardClick, onChange }: KanbanBoa
   useEffect(() => {
     columnsRef.current = columns;
     onChangeRef.current = onChange;
-  }, [columns, onChange]);
+    onAddCommentRef.current = onAddComment;
+    onCommentsChangeRef.current = onCommentsChange;
+  }, [columns, onAddComment, onChange, onCommentsChange]);
 
   useEffect(() => {
     dragRef.current = drag;
   }, [drag]);
+
+  useEffect(() => {
+    columnDragRef.current = columnDrag;
+  }, [columnDrag]);
+
+  useEffect(() => {
+    if (selectedCardId && !cards[selectedCardId]) {
+      setSelectedCardId(null);
+    }
+  }, [cards, selectedCardId]);
+
+  useEffect(() => {
+    const board = rootRef.current;
+    if (!board) return;
+
+    const handleWheel = (event: WheelEvent) => {
+      if (event.ctrlKey) return;
+
+      const maxScroll = board.scrollWidth - board.clientWidth;
+      if (maxScroll <= 0) return;
+
+      const target = event.target as HTMLElement | null;
+      const cardViewport = target?.closest<HTMLElement>("[data-kanban-cards-viewport]");
+
+      // Let a list scroll its own cards first. Once it reaches the end, the
+      // remaining wheel movement continues across the board.
+      if (cardViewport && !event.shiftKey) {
+        const canScrollUp = event.deltaY < 0 && cardViewport.scrollTop > 1;
+        const canScrollDown =
+          event.deltaY > 0
+          && cardViewport.scrollTop + cardViewport.clientHeight < cardViewport.scrollHeight - 1;
+
+        if (canScrollUp || canScrollDown) return;
+      }
+
+      const unit = event.deltaMode === 1 ? 16 : event.deltaMode === 2 ? board.clientWidth : 1;
+      const horizontalDelta = event.deltaX * unit;
+      const verticalDelta = event.deltaY * unit;
+
+      // Horizontal trackpad and tilt-wheel gestures scroll the board directly.
+      // Handle them here as well because card viewports contain vertical scroll
+      // chaining, which can otherwise swallow the gesture.
+      if (Math.abs(horizontalDelta) > Math.abs(verticalDelta)) {
+        event.preventDefault();
+        board.scrollLeft = Math.min(
+          maxScroll,
+          Math.max(0, board.scrollLeft + horizontalDelta),
+        );
+        return;
+      }
+
+      if (!verticalDelta) return;
+
+      event.preventDefault();
+      board.scrollLeft = Math.min(
+        maxScroll,
+        Math.max(0, board.scrollLeft + verticalDelta),
+      );
+    };
+
+    board.addEventListener("wheel", handleWheel, { passive: false });
+    return () => board.removeEventListener("wheel", handleWheel);
+  }, []);
+
+  useEffect(() => {
+    const board = rootRef.current;
+    if (!board) return;
+
+    const update = () => {
+      setScrollInfo({
+        left: board.scrollLeft,
+        max: Math.max(0, board.scrollWidth - board.clientWidth),
+      });
+    };
+
+    update();
+    const observer = new ResizeObserver(update);
+    observer.observe(board);
+    board.addEventListener("scroll", update, { passive: true });
+    window.addEventListener("resize", update);
+
+    return () => {
+      observer.disconnect();
+      board.removeEventListener("scroll", update);
+      window.removeEventListener("resize", update);
+    };
+  }, [columns.length]);
 
   function moveCard(cardId: string, toColumnId: string, toIndex: number) {
     const change = onChangeRef.current;
@@ -289,6 +489,79 @@ export function KanbanBoard({ cards, columns, onCardClick, onChange }: KanbanBoa
         return { ...column, cardIds };
       }),
     );
+  }
+
+  function commentsForCard(card: KanbanCard) {
+    return localComments[card.id] ?? card.comments ?? [];
+  }
+
+  function openComments(card: KanbanCard) {
+    setSelectedCardId(card.id);
+    setCommentDraft("");
+  }
+
+  function addComment(event: { preventDefault: () => void }) {
+    event.preventDefault();
+    const card = selectedCardId ? cardLookup[selectedCardId] : null;
+    const body = commentDraft.trim();
+    if (!card || !body) return;
+
+    const comment: KanbanComment = {
+      id: `comment-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`,
+      author: currentUser?.name ?? "You",
+      body,
+      createdAt: new Date().toISOString(),
+    };
+    const next = [...commentsForCard(card), comment];
+
+    setLocalComments((current) => ({ ...current, [card.id]: next }));
+    setCommentDraft("");
+    onAddCommentRef.current?.(card.id, comment);
+    onCommentsChangeRef.current?.(card.id, next);
+  }
+
+  function addColumn(event: { preventDefault: () => void }) {
+    event.preventDefault();
+    const title = newColumnTitle.trim();
+    const change = onChangeRef.current;
+    if (!title || !change) return;
+
+    change([
+      ...columnsRef.current,
+      {
+        id: `column-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`,
+        title,
+        cardIds: [],
+      },
+    ]);
+    setNewColumnTitle("");
+    window.requestAnimationFrame(() => {
+      const board = rootRef.current;
+      board?.scrollTo({ left: board.scrollWidth, behavior: "smooth" });
+      columnInputRef.current?.focus();
+    });
+  }
+
+  function moveColumn(columnId: string, toIndex: number) {
+    const change = onChangeRef.current;
+    if (!change) return;
+    const current = columnsRef.current;
+    const fromIndex = current.findIndex((column) => column.id === columnId);
+    const nextIndex = Math.max(0, Math.min(toIndex, current.length - 1));
+    if (fromIndex < 0 || fromIndex === nextIndex) return;
+
+    const next = [...current];
+    const [column] = next.splice(fromIndex, 1);
+    next.splice(nextIndex, 0, column);
+    change(next);
+  }
+
+  function handleColumnKeyDown(event: ReactKeyboardEvent<HTMLButtonElement>, columnId: string) {
+    if (event.key !== "ArrowLeft" && event.key !== "ArrowRight") return;
+    event.preventDefault();
+    const index = columnsRef.current.findIndex((column) => column.id === columnId);
+    if (index < 0) return;
+    moveColumn(columnId, index + (event.key === "ArrowRight" ? 1 : -1));
   }
 
   function finishDragSession() {
@@ -440,6 +713,125 @@ export function KanbanBoard({ cards, columns, onCardClick, onChange }: KanbanBoa
     window.addEventListener("pointercancel", onPointerUp);
   }
 
+  function handleColumnPointerDown(
+    event: ReactPointerEvent<HTMLButtonElement>,
+    columnId: string,
+  ) {
+    if (!onChange || event.button !== 0) return;
+
+    const handle = event.currentTarget;
+    const sourceColumn = handle.closest("[data-kanban-column-id]") as HTMLElement | null;
+    if (!sourceColumn) return;
+    const columnElement = sourceColumn;
+
+    const startX = event.clientX;
+    const startY = event.clientY;
+    let active: ColumnDragState | null = null;
+
+    function onPointerMove(moveEvent: PointerEvent) {
+      if (active?.phase === "dropping") return;
+
+      if (!active) {
+        if (Math.hypot(moveEvent.clientX - startX, moveEvent.clientY - startY) < DRAG_THRESHOLD_PX) {
+          return;
+        }
+
+        const rect = columnElement.getBoundingClientRect();
+        const header = columnElement.querySelector<HTMLElement>("[data-kanban-column-header]");
+        const headerRect = header?.getBoundingClientRect() ?? rect;
+        const tokens = readThemeTokens(columnElement);
+        const fromIndex = columnsRef.current.findIndex((column) => column.id === columnId);
+        const column = columnsRef.current[fromIndex];
+        const root = rootRef.current;
+        const gap = root
+          ? Number.parseFloat(getComputedStyle(root).columnGap || getComputedStyle(root).gap || "10") || 10
+          : 10;
+
+        active = {
+          accent: column?.accent ?? tokens.accent,
+          columnId,
+          dropIndex: fromIndex,
+          fromIndex,
+          headerHeight: headerRect.height,
+          muted: tokens.muted,
+          offsetX: startX - rect.left,
+          offsetY: startY - rect.top,
+          originLeft: rect.left,
+          originTop: rect.top,
+          panel: tokens.panel,
+          phase: "dragging",
+          step: rect.width + gap,
+          text: tokens.text,
+          title: column?.title ?? "",
+          width: rect.width,
+          x: moveEvent.clientX,
+          y: moveEvent.clientY,
+        };
+        columnDragRef.current = active;
+        setColumnDrag(active);
+        return;
+      }
+
+      const root = rootRef.current;
+      if (root) {
+        const bounds = root.getBoundingClientRect();
+        if (moveEvent.clientX < bounds.left + 48) {
+          root.scrollLeft = Math.max(0, root.scrollLeft - 14);
+        } else if (moveEvent.clientX > bounds.right - 48) {
+          root.scrollLeft = Math.min(root.scrollWidth - root.clientWidth, root.scrollLeft + 14);
+        }
+      }
+
+      const dropIndex = resolveColumnDropIndex(moveEvent.clientX, columnId);
+      active = {
+        ...active,
+        dropIndex,
+        x: moveEvent.clientX,
+        y: moveEvent.clientY,
+      };
+      columnDragRef.current = active;
+      setColumnDrag(active);
+    }
+
+    function onPointerUp(upEvent: PointerEvent) {
+      window.removeEventListener("pointermove", onPointerMove);
+      window.removeEventListener("pointerup", onPointerUp);
+      window.removeEventListener("pointercancel", onPointerUp);
+
+      const current = columnDragRef.current;
+      if (!current || current.phase === "dropping") {
+        columnDragRef.current = null;
+        setColumnDrag(null);
+        return;
+      }
+
+      const dropIndex = resolveColumnDropIndex(upEvent.clientX, columnId);
+
+      if (dropIndex !== current.fromIndex) {
+        moveColumn(columnId, dropIndex);
+      }
+
+      const dropping: ColumnDragState = {
+        ...current,
+        dropIndex,
+        phase: "dropping",
+        x: upEvent.clientX,
+        y: upEvent.clientY,
+      };
+      columnDragRef.current = dropping;
+      setColumnDrag(dropping);
+
+      window.setTimeout(() => {
+        columnDragRef.current = null;
+        setColumnDrag(null);
+      }, DROP_ANIMATION_MS);
+    }
+
+    window.addEventListener("pointermove", onPointerMove);
+    window.addEventListener("pointerup", onPointerUp);
+    window.addEventListener("pointercancel", onPointerUp);
+  }
+
   const draggingCard = drag ? cardLookup[drag.cardId] : null;
   const themeStyle = drag
     ? ({
@@ -525,13 +917,105 @@ export function KanbanBoard({ cards, columns, onCardClick, onChange }: KanbanBoa
         )
       : null;
 
+  const selectedCard = selectedCardId ? cardLookup[selectedCardId] : null;
+
+  function scrollBoard(direction: -1 | 1) {
+    const board = rootRef.current;
+    if (!board) return;
+    const step = Math.max(240, board.clientWidth * 0.75);
+    board.scrollBy({ left: step * direction, behavior: "smooth" });
+  }
+
+  const columnShiftFor = (columnId: string) => {
+    if (!columnDrag || columnDrag.phase !== "dragging" || columnDrag.dropIndex === null) {
+      return 0;
+    }
+    if (columnId === columnDrag.columnId) {
+      return 0;
+    }
+
+    const home = columnDrag.fromIndex;
+    const drop = columnDrag.dropIndex;
+    const remaining = columns.filter((column) => column.id !== columnDrag.columnId);
+    const index = remaining.findIndex((column) => column.id === columnId);
+
+    if (index < 0) return 0;
+    if (home < drop && index >= home && index < drop) return -columnDrag.step;
+    if (drop < home && index >= drop && index < home) return columnDrag.step;
+    return 0;
+  };
+
+  const columnPreview =
+    columnDrag && portalReady
+      ? createPortal(
+          <div
+            aria-hidden="true"
+            className={styles.columnDragShell}
+            data-dropping={columnDrag.phase === "dropping" ? "true" : undefined}
+            style={
+              {
+                left: columnDrag.x - columnDrag.offsetX,
+                top: columnDrag.y - columnDrag.offsetY,
+                width: columnDrag.width,
+              } as CSSProperties
+            }
+          >
+            <div
+              className={styles.columnDragPreview}
+              style={
+                {
+                  "--kanban-header-accent": columnDrag.accent,
+                } as CSSProperties
+              }
+            >
+              <FontAwesomeIcon className={styles.columnDragGrip} icon={faGripVertical} />
+              <span>{columnDrag.title}</span>
+            </div>
+          </div>,
+          document.body,
+        )
+      : null;
+
   return (
-    <div
-      className={styles.root}
-      aria-label="Kanban board"
-      data-dragging={drag ? "true" : undefined}
-      data-dropping={drag?.phase === "dropping" ? "true" : undefined}
-    >
+    <div className={styles.shell}>
+      {scrollInfo.max > 1 ? (
+        <div className={styles.scrollControls}>
+          <button
+            aria-label="Scroll board left"
+            className={styles.scrollButton}
+            disabled={scrollInfo.left <= 1}
+            onClick={() => scrollBoard(-1)}
+            type="button"
+          >
+            <FontAwesomeIcon icon={faChevronLeft} />
+          </button>
+          <button
+            aria-label="Scroll board right"
+            className={styles.scrollButton}
+            disabled={scrollInfo.left >= scrollInfo.max - 1}
+            onClick={() => scrollBoard(1)}
+            type="button"
+          >
+            <FontAwesomeIcon icon={faChevronRight} />
+          </button>
+        </div>
+      ) : null}
+      <div
+        className={styles.root}
+        aria-label="Kanban board"
+        data-column-dragging={columnDrag ? "true" : undefined}
+        data-dragging={drag ? "true" : undefined}
+        data-dropping={drag?.phase === "dropping" ? "true" : undefined}
+        ref={rootRef}
+        style={
+          columnWidth
+            ? ({
+                ["--kanban-column-width" as string]:
+                  typeof columnWidth === "number" ? `${columnWidth}px` : columnWidth,
+              } as CSSProperties)
+            : undefined
+        }
+      >
       {columns.map((column) => {
         const atHome =
           Boolean(drag) &&
@@ -557,17 +1041,32 @@ export function KanbanBoard({ cards, columns, onCardClick, onChange }: KanbanBoa
         return (
           <section
             className={styles.column}
-            data-drop-active={drag?.phase === "dragging" ? "true" : undefined}
+            data-column-dragging={columnDrag?.columnId === column.id ? "true" : undefined}
+            data-drop-active={
+              drag?.phase === "dragging" || columnDrag?.phase === "dragging" ? "true" : undefined
+            }
             data-kanban-column="true"
             data-kanban-column-id={column.id}
             key={column.id}
             style={
-              column.accent
-                ? ({ ["--kanban-header-accent" as string]: column.accent } as CSSProperties)
-                : undefined
+              {
+                ...(column.accent ? { ["--kanban-header-accent" as string]: column.accent } : {}),
+                transform: columnShiftFor(column.id)
+                  ? `translateX(${columnShiftFor(column.id)}px)`
+                  : undefined,
+              } as CSSProperties
             }
           >
-            <header className={styles.columnHeader}>
+            <header className={styles.columnHeader} data-kanban-column-header="true">
+              <button
+                aria-label={`Reorder ${column.title}. Use the left and right arrow keys to move this list.`}
+                className={styles.columnDragHandle}
+                onKeyDown={(event) => handleColumnKeyDown(event, column.id)}
+                onPointerDown={(event) => handleColumnPointerDown(event, column.id)}
+                type="button"
+              >
+                <FontAwesomeIcon icon={faGripVertical} />
+              </button>
               <h3 className={styles.columnTitle}>{column.title}</h3>
               <span className={styles.count}>{column.cardIds.length}</span>
             </header>
@@ -605,6 +1104,7 @@ export function KanbanBoard({ cards, columns, onCardClick, onChange }: KanbanBoa
                   dropIndex !== null &&
                   visibleIndex === dropIndex;
                 const body: ReactNode = <CardContent card={card} />;
+                const commentCount = commentsForCard(card).length;
                 const sharedProps = {
                   "aria-grabbed": isDragCard || undefined,
                   className: styles.card,
@@ -644,23 +1144,40 @@ export function KanbanBoard({ cards, columns, onCardClick, onChange }: KanbanBoa
                         }
                       />
                     ) : null}
-                    {onCardClick ? (
-                      <button
-                        {...sharedProps}
-                        type="button"
-                        onClick={() => {
-                          if (didDragRef.current) {
-                            didDragRef.current = false;
-                            return;
-                          }
-                          onCardClick(card);
-                        }}
-                      >
-                        {body}
-                      </button>
-                    ) : (
-                      <article {...sharedProps}>{body}</article>
-                    )}
+                    <article {...sharedProps}>
+                      {onCardClick ? (
+                        <button
+                          className={styles.cardOpen}
+                          onClick={() => {
+                            if (didDragRef.current) {
+                              didDragRef.current = false;
+                              return;
+                            }
+                            onCardClick(card);
+                          }}
+                          type="button"
+                        >
+                          {body}
+                        </button>
+                      ) : (
+                        <div className={styles.cardOpenStatic}>{body}</div>
+                      )}
+                      {commentsEnabled ? (
+                        <button
+                          aria-label={`Comments for ${card.title}${commentCount ? `, ${commentCount === 1 ? "1 comment" : `${commentCount} comments`}` : ""}`}
+                          className={styles.commentButton}
+                          onClick={(event) => {
+                            event.stopPropagation();
+                            openComments(card);
+                          }}
+                          onPointerDown={(event) => event.stopPropagation()}
+                          type="button"
+                        >
+                          <FontAwesomeIcon icon={faComment} />
+                          <span>{commentCount || "Comment"}</span>
+                        </button>
+                      ) : null}
+                    </article>
                   </li>
                 );
               })}
@@ -685,8 +1202,115 @@ export function KanbanBoard({ cards, columns, onCardClick, onChange }: KanbanBoa
           </section>
         );
       })}
+      {onChange ? (
+        <section className={styles.addColumn} data-kanban-add-column="true">
+          {addingColumn ? (
+            <form className={styles.addColumnForm} onSubmit={addColumn}>
+              <label className={styles.addColumnLabel} htmlFor={columnFieldId}>
+                List title
+              </label>
+              <input
+                autoFocus
+                className={styles.addColumnInput}
+                id={columnFieldId}
+                ref={columnInputRef}
+                onChange={(event) => setNewColumnTitle(event.target.value)}
+                onKeyDown={(event) => {
+                  if (event.key === "Escape") {
+                    setAddingColumn(false);
+                    setNewColumnTitle("");
+                  }
+                }}
+                placeholder="e.g. Ready for review"
+                value={newColumnTitle}
+              />
+              <div className={styles.addColumnActions}>
+                <Button size="sm" type="submit">
+                  Add list
+                </Button>
+                <Button
+                  size="sm"
+                  variant="secondary"
+                  onClick={() => {
+                    setAddingColumn(false);
+                    setNewColumnTitle("");
+                  }}
+                >
+                  Cancel
+                </Button>
+              </div>
+            </form>
+          ) : (
+            <button
+              className={styles.addColumnButton}
+              onClick={() => setAddingColumn(true)}
+              type="button"
+            >
+              <span aria-hidden="true">+</span> {addColumnLabel}
+            </button>
+          )}
+        </section>
+      ) : null}
+      </div>
       {originGhost}
       {preview}
+      {columnPreview}
+      {commentsEnabled && selectedCard ? (
+        <Modal
+          description={selectedCard.meta ?? selectedCard.description}
+          onClose={() => setSelectedCardId(null)}
+          open
+          title={selectedCard.title}
+        >
+          <div className={styles.commentPanel}>
+            {commentsForCard(selectedCard).length ? (
+              <ul aria-label="Comments" className={styles.commentList}>
+                {commentsForCard(selectedCard).map((comment) => (
+                  <li className={styles.comment} key={comment.id}>
+                    <span aria-hidden="true" className={styles.commentAvatar}>
+                      {(comment.author ?? "You").slice(0, 1).toUpperCase()}
+                    </span>
+                    <div className={styles.commentBody}>
+                      <div className={styles.commentMeta}>
+                        <strong>{comment.author ?? "You"}</strong>
+                        {comment.createdAt ? (
+                          <time dateTime={comment.createdAt}>
+                            {new Date(comment.createdAt).toLocaleString()}
+                          </time>
+                        ) : null}
+                      </div>
+                      <p>{comment.body}</p>
+                    </div>
+                  </li>
+                ))}
+              </ul>
+            ) : (
+              <p className={styles.commentEmpty}>No comments yet. Start the conversation.</p>
+            )}
+            <form className={styles.commentForm} onSubmit={addComment}>
+              <label className={styles.commentLabel} htmlFor={commentFieldId}>
+                Add a comment
+              </label>
+              <textarea
+                className={styles.commentInput}
+                id={commentFieldId}
+                onChange={(event) => setCommentDraft(event.target.value)}
+                placeholder="Write a comment…"
+                rows={3}
+                value={commentDraft}
+              />
+              <div className={styles.commentActions}>
+                <span className={styles.commentAuthor}>
+                  {currentUser?.name ?? "You"}
+                </span>
+                <Button disabled={!commentDraft.trim()} size="sm" type="submit">
+                  <FontAwesomeIcon icon={faPaperPlane} /> Add comment
+                </Button>
+              </div>
+            </form>
+          </div>
+        </Modal>
+      ) : null}
     </div>
   );
 }

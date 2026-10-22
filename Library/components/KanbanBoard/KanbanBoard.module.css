@@ -1,9 +1,76 @@
-.root {
+.shell {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 6px;
+  width: 100%;
+  min-width: 0;
+}
+
+.scrollControls {
+  display: flex;
+  justify-self: end;
+  gap: 4px;
+}
+
+.scrollButton {
+  display: inline-grid;
+  place-items: center;
+  width: 26px;
+  height: 26px;
+  padding: 0;
+  border: 1px solid var(--opus-surface-border, var(--opus-border-strong));
+  border-radius: 999px;
+  background: var(--opus-surface-fill, var(--opus-input-bg));
+  color: var(--opus-muted);
+  font-size: 0.68rem;
+  cursor: pointer;
+  box-shadow: var(--opus-input-shadow, var(--opus-control-inset-shadow, none));
+}
+
+.scrollButton:hover:not(:disabled) {
+  border-color: color-mix(in srgb, var(--opus-accent) 42%, var(--opus-border));
+  color: var(--opus-text);
+}
+
+.scrollButton:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--opus-accent) 24%, transparent);
+}
+
+.scrollButton:disabled {
+  opacity: 0.42;
+  cursor: default;
+}
+
+.root {
+  display: flex;
+  flex-wrap: nowrap;
   gap: 10px;
   width: 100%;
-  align-items: start;
+  align-items: flex-start;
+  overflow-x: auto;
+  overflow-y: hidden;
+  padding-bottom: 10px;
+  overscroll-behavior-x: contain;
+  scrollbar-width: thin;
+  scrollbar-color: color-mix(in srgb, var(--opus-accent) 34%, transparent) transparent;
+}
+
+.root::-webkit-scrollbar {
+  height: 10px;
+}
+
+.root::-webkit-scrollbar-track {
+  border-radius: 999px;
+  background: transparent;
+}
+
+.root::-webkit-scrollbar-thumb {
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--opus-accent) 30%, transparent);
+}
+
+.root::-webkit-scrollbar-thumb:hover {
+  background: color-mix(in srgb, var(--opus-accent) 48%, transparent);
 }
 
 .column {
@@ -21,8 +88,11 @@
   --kanban-header-bg: color-mix(in srgb, var(--kanban-header-accent) 18%, var(--dashboard-section-bg));
   --kanban-header-border: color-mix(in srgb, var(--kanban-header-accent) 28%, transparent);
   display: flex;
+  flex: 0 0 var(--kanban-column-width, 280px);
   flex-direction: column;
   gap: 0;
+  width: var(--kanban-column-width, 280px);
+  max-width: min(var(--kanban-column-width, 280px), calc(100vw - 32px));
   min-height: 0;
   padding: 0;
   border: 1px solid var(--opus-surface-border, var(--dashboard-section-border));
@@ -37,6 +107,16 @@
   color: var(--opus-surface-text, var(--dashboard-section-text));
   box-sizing: border-box;
   overflow: hidden;
+  transition: transform 180ms cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+.column[data-column-dragging="true"] {
+  visibility: hidden;
+}
+
+.root[data-column-dragging="true"] {
+  user-select: none;
+  cursor: grabbing;
 }
 
 :global([data-preview-root][data-theme="light"]) .column,
@@ -68,7 +148,6 @@
   display: flex;
   flex: 0 0 auto;
   align-items: center;
-  justify-content: space-between;
   gap: 8px;
   width: 100%;
   box-sizing: border-box;
@@ -78,7 +157,39 @@
   background: var(--opus-surface-fill, var(--kanban-header-bg));
 }
 
+.columnDragHandle {
+  display: inline-grid;
+  place-items: center;
+  flex-shrink: 0;
+  width: 20px;
+  height: 24px;
+  padding: 0;
+  border: 0;
+  border-radius: var(--opus-input-radius-small);
+  background: transparent;
+  color: var(--dashboard-section-muted);
+  font-size: 0.72rem;
+  cursor: grab;
+}
+
+.columnDragHandle:hover {
+  background: var(--opus-surface-fill, color-mix(in srgb, var(--kanban-header-accent) 14%, transparent));
+  color: var(--dashboard-section-text);
+}
+
+.columnDragHandle:focus-visible {
+  outline: none;
+  color: var(--dashboard-section-text);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--kanban-header-accent) 30%, transparent);
+}
+
+.columnDragHandle:active {
+  cursor: grabbing;
+}
+
 .columnTitle {
+  flex: 1 1 auto;
+  min-width: 0;
   margin: 0;
   color: var(--dashboard-section-text);
   font-size: 0.875rem;
@@ -206,15 +317,13 @@
 .card {
   --card-accent: var(--opus-accent-secondary, #38bdf8);
   position: relative;
-  display: grid;
-  grid-template-rows: auto auto;
+  display: flex;
+  flex-direction: column;
   align-content: center;
-  gap: 8px;
+  gap: 6px;
   width: 100%;
-  height: var(--kanban-card-min-height, 72px);
   min-height: var(--kanban-card-min-height, 72px);
-  max-height: var(--kanban-card-min-height, 72px);
-  padding: 14px 12px 14px 16px;
+  padding: 12px 12px 10px 16px;
   border: 0;
   border-radius: 10px;
   background: var(--opus-surface-fill, color-mix(in srgb, var(--dashboard-section-panel) 88%, #ffffff 4%));
@@ -237,10 +346,49 @@
   background: var(--card-accent);
 }
 
-button.card {
+.cardOpen,
+.cardOpenStatic {
+  display: grid;
+  grid-template-rows: auto auto;
+  gap: 8px;
+  width: 100%;
+  min-width: 0;
+  padding: 0;
+  border: 0;
+  background: transparent;
   color: inherit;
   font: inherit;
   text-align: left;
+}
+
+.cardOpen {
+  cursor: inherit;
+}
+
+.commentButton {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  align-self: flex-start;
+  padding: 2px 0;
+  border: 0;
+  background: transparent;
+  color: var(--kanban-header-accent);
+  font: inherit;
+  font-size: 0.7rem;
+  font-weight: 650;
+  line-height: 1.2;
+  cursor: pointer;
+}
+
+.commentButton:hover {
+  color: var(--dashboard-section-text);
+}
+
+.commentButton:focus-visible {
+  outline: none;
+  border-radius: var(--opus-input-radius-small);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--kanban-header-accent) 30%, transparent);
 }
 
 .card:hover {
@@ -357,4 +505,251 @@ button.card {
   box-shadow:
     var(--opus-control-shadow, inset 0 1px 0 color-mix(in srgb, #ffffff 5%, transparent),
     0 1px 0 color-mix(in srgb, #000000 18%, transparent));
+}
+
+
+.columnDragShell {
+  position: fixed;
+  z-index: 10000;
+  margin: 0;
+  pointer-events: none;
+}
+
+.columnDragPreview {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  box-sizing: border-box;
+  width: 100%;
+  min-height: 40px;
+  padding: 10px 12px;
+  border: 1px solid color-mix(in srgb, var(--kanban-header-accent) 36%, transparent);
+  border-radius: 12px;
+  background: var(--opus-surface-fill, color-mix(in srgb, var(--opus-panel) 94%, transparent));
+  color: var(--opus-text);
+  box-shadow:
+    var(--opus-control-shadow, 0 18px 36px rgba(2, 6, 23, 0.42),
+    0 0 0 1px color-mix(in srgb, var(--kanban-header-accent) 18%, transparent));
+  font-size: 0.875rem;
+  font-weight: 700;
+  transform: rotate(0.6deg);
+}
+
+.columnDragGrip {
+  flex-shrink: 0;
+  color: var(--opus-muted);
+  font-size: 0.72rem;
+}
+
+.addColumn {
+  display: flex;
+  flex: 0 0 var(--kanban-column-width, 280px);
+  flex-direction: column;
+  width: var(--kanban-column-width, 280px);
+  max-width: min(var(--kanban-column-width, 280px), calc(100vw - 32px));
+  box-sizing: border-box;
+  padding: 8px;
+  border: 1px dashed var(--opus-surface-border, color-mix(in srgb, var(--opus-border) 70%, transparent));
+  border-radius: 14px;
+  background: color-mix(in srgb, var(--opus-panel) 34%, transparent);
+}
+
+.addColumnButton {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  width: 100%;
+  min-height: 38px;
+  padding: 0 10px;
+  border: 0;
+  border-radius: 10px;
+  background: transparent;
+  color: var(--opus-muted);
+  font: inherit;
+  font-size: var(--opus-control-font-size);
+  font-weight: 650;
+  text-align: left;
+  cursor: pointer;
+}
+
+.addColumnButton:hover {
+  background: var(--opus-surface-fill, color-mix(in srgb, var(--opus-accent-soft) 60%, transparent));
+  color: var(--opus-text);
+}
+
+.addColumnButton:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--opus-accent) 24%, transparent);
+}
+
+.addColumnForm {
+  display: grid;
+  gap: 7px;
+}
+
+.addColumnLabel {
+  color: var(--opus-muted);
+  font-size: 0.72rem;
+  font-weight: 750;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.addColumnInput {
+  width: 100%;
+  min-height: var(--opus-control-height);
+  box-sizing: border-box;
+  padding: 0 var(--opus-control-padding-x, 10px);
+  border: 1px solid var(--opus-surface-border, var(--opus-border-strong));
+  border-radius: var(--opus-input-radius);
+  background: var(--opus-surface-fill, var(--opus-input-bg));
+  color: var(--opus-text);
+  font: inherit;
+  font-size: var(--opus-control-font-size);
+  box-shadow: var(--opus-input-shadow, var(--opus-control-inset-shadow, none));
+}
+
+.addColumnInput:focus {
+  outline: none;
+  border-color: var(--opus-accent);
+  box-shadow:
+    0 0 0 4px color-mix(in srgb, var(--opus-accent) 22%, transparent),
+    0 14px 30px rgba(0, 0, 0, 0.06);
+}
+
+.addColumnActions {
+  display: flex;
+  gap: 6px;
+}
+
+.commentPanel {
+  display: grid;
+  gap: 16px;
+}
+
+.commentList {
+  display: grid;
+  gap: 10px;
+  max-height: min(42vh, 360px);
+  margin: 0;
+  padding: 0;
+  overflow: auto;
+  list-style: none;
+  scrollbar-width: thin;
+}
+
+.comment {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  gap: 9px;
+  padding: 10px;
+  border: 1px solid var(--opus-surface-border, color-mix(in srgb, var(--opus-border) 68%, transparent));
+  border-radius: var(--opus-input-radius);
+  background: var(--opus-surface-fill, color-mix(in srgb, var(--opus-panel) 88%, transparent));
+}
+
+.commentAvatar {
+  display: grid;
+  place-items: center;
+  width: 26px;
+  height: 26px;
+  border-radius: 999px;
+  background: var(--opus-accent-soft);
+  color: var(--opus-accent);
+  font-size: 0.72rem;
+  font-weight: 800;
+}
+
+.commentBody {
+  display: grid;
+  gap: 4px;
+  min-width: 0;
+}
+
+.commentMeta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 8px;
+}
+
+.commentMeta strong {
+  color: var(--opus-text);
+  font-size: 0.8rem;
+}
+
+.commentMeta time {
+  color: var(--opus-muted);
+  font-size: 0.7rem;
+}
+
+.commentBody p {
+  margin: 0;
+  color: var(--opus-text);
+  font-size: 0.82rem;
+  line-height: 1.5;
+  overflow-wrap: anywhere;
+}
+
+.commentEmpty {
+  margin: 0;
+  padding: 16px;
+  border: 1px dashed var(--opus-surface-border, var(--opus-border));
+  border-radius: var(--opus-input-radius);
+  color: var(--opus-muted);
+  font-size: 0.82rem;
+  text-align: center;
+}
+
+.commentForm {
+  display: grid;
+  gap: 7px;
+}
+
+.commentLabel {
+  color: var(--opus-muted);
+  font-size: 0.76rem;
+  font-weight: 700;
+}
+
+.commentInput {
+  width: 100%;
+  min-height: 78px;
+  padding: 9px 10px;
+  border: 1px solid var(--opus-surface-border, var(--opus-border-strong));
+  border-radius: var(--opus-input-radius);
+  background: var(--opus-surface-fill, var(--opus-input-bg));
+  color: var(--opus-text);
+  font: inherit;
+  font-size: var(--opus-control-font-size);
+  line-height: 1.5;
+  resize: vertical;
+  box-shadow: var(--opus-input-shadow, var(--opus-control-inset-shadow, none));
+}
+
+.commentInput:focus {
+  outline: none;
+  border-color: var(--opus-accent);
+  box-shadow:
+    0 0 0 4px color-mix(in srgb, var(--opus-accent) 22%, transparent),
+    0 14px 30px rgba(0, 0, 0, 0.06);
+}
+
+.commentActions {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.commentAuthor {
+  color: var(--opus-muted);
+  font-size: 0.76rem;
+  font-weight: 650;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .column {
+    transition: none;
+  }
 }
