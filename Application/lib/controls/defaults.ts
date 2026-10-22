@@ -1339,6 +1339,8 @@ export const defaultSettings: ControlSettingsBySlug = {
   },
   "data-grid": {
     caption: "Quarterly component metrics",
+    columnManager: true,
+    savedViews: true,
     density: "compact",
     striped: true,
     bordered: true,

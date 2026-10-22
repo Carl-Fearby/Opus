@@ -719,6 +719,8 @@ export type DataGridLayoutSetting = "flat" | "grouped" | "tree" | "pivot";
 
 export type DataGridSettings = {
   caption: string;
+  columnManager: boolean;
+  savedViews: boolean;
   density: TableDensity;
   striped: boolean;
   bordered: boolean;

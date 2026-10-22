@@ -1447,5 +1447,17 @@ export const commitLog: CommitEntry[] = [
     shortHash: "9c0ed57",
     committedAt: "2026-10-22",
     summary: "chore: release opus-react@0.8.0",
+  },
+  {
+    hash: "a6d77b980e6cbc1bb7a6d3a56c02af352da54fa6",
+    shortHash: "a6d77b9",
+    committedAt: "2026-10-22",
+    summary: "chore: sync version history for opus-react@0.8.0",
+  },
+  {
+    hash: "976894bd967eecbedca70b8bf37d8ccc654401db",
+    shortHash: "976894b",
+    committedAt: "2026-10-22",
+    summary: "feat(data-grid): add column manager and saved column views",
   }
 ].reverse();

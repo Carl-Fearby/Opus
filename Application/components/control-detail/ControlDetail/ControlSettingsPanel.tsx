@@ -5042,6 +5042,20 @@ export function ControlSettingsPanel({
               }
             />
           ) : null}
+          <SettingToggle
+            label="Column manager"
+            checked={s.columnManager}
+            onChange={(columnManager) =>
+              onChange({ ...s, columnManager } as ControlSettings)
+            }
+          />
+          <SettingToggle
+            label="Saved views"
+            checked={s.savedViews}
+            onChange={(savedViews) =>
+              onChange({ ...s, savedViews } as ControlSettings)
+            }
+          />
           <SettingSelect
             label="Density"
             value={s.density}
