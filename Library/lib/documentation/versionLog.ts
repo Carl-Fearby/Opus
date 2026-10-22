@@ -712,8 +712,8 @@ export const versionLog: VersionEntry[] = [
   {
     version: "0.9.0",
     releasedAt: "2026-10-22",
-    commit: "overlay-0.9.0",
-    commitShort: "overlay",
+    commit: "0d757b3325de94adc21da2a55297a9b2d5e2195b",
+    commitShort: "0d757b3",
     summary: "DataGrid column management and saved views.",
     changes: ["Add a DataGrid column manager with a toolbar visibility menu for showing and hiding data columns.","Support controlled and uncontrolled column visibility through columnVisibility, defaultColumnVisibility, and onColumnVisibilityChange.","Add saved column views through the views prop, with preset switching and onActiveViewChange reporting.","Expose DataGridColumnVisibility and DataGridView types for consumer-owned persistence and view management.","Add documentation, generated usage examples, settings controls, and unit tests for the new DataGrid tooling.","Publish opus-react 0.9.0."],
   }
