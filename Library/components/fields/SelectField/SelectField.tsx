@@ -3,18 +3,26 @@
 import {
   useEffect,
   useId,
+  useLayoutEffect,
   useRef,
   useState,
+  type CSSProperties,
   type ChangeEvent,
   type ChangeEventHandler,
 } from "react";
+import { createThemedPortal as createPortal } from "@/lib/theme/createThemedPortal";
 import { FieldShell, fieldInputAriaProps, useFieldShellAria } from "@/components/fields/FieldShell";
 import type { ControlRadius, ControlTransparency, FieldMode, InputControlSize, LabelPosition } from "@/components/fields/types";
+import {
+  resolveFieldListPortalStyle,
+  type FloatingPortalStyle,
+} from "@/lib/ui/floatingPortalPosition";
 import shared from "../shared/fieldControl.module.css";
 import { inputControlSizeClassName } from "../shared/inputControlSizes";
 import styles from "./SelectField.module.css";
 
 type SelectFieldProps = {
+  disabled?: boolean;
   error?: string;
   help?: string;
   id: string;
@@ -50,6 +58,7 @@ function emitSelectChange(
 }
 
 export function SelectField({
+  disabled = false,
   error,
   help,
   id,
@@ -70,15 +79,50 @@ export function SelectField({
   const shellAria = useFieldShellAria();
   const listboxId = useId();
   const rootRef = useRef<HTMLDivElement>(null);
+  const panelRef = useRef<HTMLDivElement>(null);
   const [open, setOpen] = useState(false);
   const [highlight, setHighlight] = useState(Math.max(options.indexOf(value), 0));
+  const [portalStyle, setPortalStyle] = useState<FloatingPortalStyle | null>(null);
   const display = value || options[0] || "";
+
+  useLayoutEffect(() => {
+    if (!open || !rootRef.current) {
+      setPortalStyle(null);
+      return;
+    }
+
+    const updatePosition = () => {
+      const anchor = rootRef.current;
+      if (!anchor) return;
+      setPortalStyle(
+        resolveFieldListPortalStyle(
+          anchor.getBoundingClientRect(),
+          panelRef.current?.getBoundingClientRect() ?? null,
+        ),
+      );
+    };
+
+    updatePosition();
+    const frame = window.requestAnimationFrame(updatePosition);
+    window.addEventListener("resize", updatePosition);
+    window.addEventListener("scroll", updatePosition, true);
+    return () => {
+      window.cancelAnimationFrame(frame);
+      window.removeEventListener("resize", updatePosition);
+      window.removeEventListener("scroll", updatePosition, true);
+    };
+  }, [open, options.length]);
+
+  useEffect(() => {
+    if (disabled) setOpen(false);
+  }, [disabled]);
 
   useEffect(() => {
     if (!open) return;
 
-    function handlePointerDown(event: MouseEvent) {
-      if (!rootRef.current?.contains(event.target as Node)) {
+    function handlePointerDown(event: PointerEvent) {
+      const target = event.target as Node;
+      if (!rootRef.current?.contains(target) && !panelRef.current?.contains(target)) {
         setOpen(false);
       }
     }
@@ -89,10 +133,10 @@ export function SelectField({
       }
     }
 
-    document.addEventListener("mousedown", handlePointerDown);
+    document.addEventListener("pointerdown", handlePointerDown);
     document.addEventListener("keydown", handleKeyDown);
     return () => {
-      document.removeEventListener("mousedown", handlePointerDown);
+      document.removeEventListener("pointerdown", handlePointerDown);
       document.removeEventListener("keydown", handleKeyDown);
     };
   }, [open]);
@@ -103,6 +147,7 @@ export function SelectField({
   }
 
   function handleKeyDown(event: React.KeyboardEvent<HTMLButtonElement>) {
+    if (disabled) return;
     if (event.key === "Escape") {
       event.preventDefault();
       setOpen(false);
@@ -136,6 +181,60 @@ export function SelectField({
     }
   }
 
+  const panel =
+    open && portalStyle
+      ? createPortal(
+          <div
+            className={[shared.panel, styles.portal].join(" ")}
+            data-control-radius={radius}
+            data-portaled="true"
+            ref={panelRef}
+            style={
+              {
+                left: portalStyle.left,
+                top: portalStyle.top,
+                width: portalStyle.width,
+              } as CSSProperties
+            }
+          >
+            <div
+              aria-label={label}
+              className={shared.list}
+              id={listboxId}
+              role="listbox"
+            >
+              {options.map((option) => {
+                const index = options.indexOf(option);
+                const selected = option === value || (!value && option === options[0]);
+                return (
+                  <button
+                    aria-selected={selected}
+                    className={[
+                      styles.option,
+                      selected ? styles.optionActive : "",
+                      highlight === index ? styles.optionHighlighted : "",
+                    ]
+                      .filter(Boolean)
+                      .join(" ")}
+                    id={`${listboxId}-option-${index}`}
+                    key={option}
+                    role="option"
+                    tabIndex={-1}
+                    type="button"
+                    onClick={() => selectOption(option)}
+                    onMouseDown={(event) => event.preventDefault()}
+                    onMouseEnter={() => setHighlight(index)}
+                  >
+                    {option}
+                  </button>
+                );
+              })}
+            </div>
+          </div>,
+          document.body,
+        )
+      : null;
+
   return (
     <FieldShell
       error={error}
@@ -153,10 +252,12 @@ export function SelectField({
     >
       <div className={styles.root} ref={rootRef}>
         <button
-          aria-label={label}
+          aria-activedescendant={open && options[highlight] ? `${listboxId}-option-${highlight}` : undefined}
           aria-controls={open ? listboxId : undefined}
           aria-expanded={open}
           aria-haspopup="listbox"
+          aria-label={label}
+          role="combobox"
           className={[
             inputControlSizeClassName[size],
             shared.trigger,
@@ -165,6 +266,7 @@ export function SelectField({
           ]
             .filter(Boolean)
             .join(" ")}
+          disabled={disabled}
           id={id}
           type="button"
           onClick={() => setOpen((current) => !current)}
@@ -179,6 +281,7 @@ export function SelectField({
         <select
           aria-hidden="true"
           className={styles.hiddenSelect}
+          disabled={disabled}
           name={name}
           required={required}
           tabIndex={-1}
@@ -191,40 +294,7 @@ export function SelectField({
             </option>
           ))}
         </select>
-        {open ? (
-          <div className={shared.panel}>
-            <div
-              aria-label={label}
-              className={shared.list}
-              id={listboxId}
-              role="listbox"
-            >
-              {options.map((option) => {
-                const selected = option === value || (!value && option === options[0]);
-                return (
-                  <button
-                    aria-selected={selected}
-                    className={[
-                      styles.option,
-                      selected ? styles.optionActive : "",
-                      highlight === options.indexOf(option) ? styles.optionHighlighted : "",
-                    ]
-                      .filter(Boolean)
-                      .join(" ")}
-                  id={`${listboxId}-option-${options.indexOf(option)}`}
-                  key={option}
-                    role="option"
-                  tabIndex={-1}
-                    type="button"
-                    onClick={() => selectOption(option)}
-                  >
-                    {option}
-                  </button>
-                );
-              })}
-            </div>
-          </div>
-        ) : null}
+        {panel}
       </div>
     </FieldShell>
   );

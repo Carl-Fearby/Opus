@@ -7,9 +7,11 @@
   background: var(--opus-surface-fill, var(--opus-input-bg));
   color: var(--opus-surface-text, var(--opus-text));
   font-size: var(--opus-control-font-size);
-  box-shadow: var(--opus-input-shadow,
+  box-shadow: var(--opus-input-shadow, var(--opus-control-inset-shadow,
     inset 0 1px 0 rgba(255, 255, 255, 0.05),
-    0 14px 30px rgba(0, 0, 0, 0.06));
+    0 14px 30px rgba(0, 0, 0, 0.06)));
+  -webkit-backdrop-filter: var(--opus-input-backdrop-filter, none);
+  backdrop-filter: var(--opus-input-backdrop-filter, none);
   transition:
     border-color 160ms ease,
     box-shadow 160ms ease;
@@ -28,9 +30,11 @@
   background: var(--opus-surface-fill, var(--opus-input-bg));
   color: var(--opus-surface-text, var(--opus-text));
   font-size: var(--opus-control-font-size);
-  box-shadow: var(--opus-input-shadow,
+  box-shadow: var(--opus-input-shadow, var(--opus-control-inset-shadow,
     inset 0 1px 0 rgba(255, 255, 255, 0.05),
-    0 14px 30px rgba(0, 0, 0, 0.06));
+    0 14px 30px rgba(0, 0, 0, 0.06)));
+  -webkit-backdrop-filter: var(--opus-input-backdrop-filter, none);
+  backdrop-filter: var(--opus-input-backdrop-filter, none);
   cursor: text;
   transition:
     border-color 160ms ease,
@@ -88,6 +92,10 @@
   outline: none;
 }
 
+.searchInput:disabled {
+  cursor: not-allowed;
+}
+
 .searchInput::placeholder {
   color: color-mix(in srgb, var(--opus-muted) 80%, transparent);
 }
@@ -98,6 +106,11 @@
     0 0 0 4px color-mix(in srgb, var(--opus-accent) 22%, transparent),
     0 14px 30px rgba(0, 0, 0, 0.06);
   outline: none;
+}
+
+.input:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
 }
 
 .input::placeholder {
@@ -170,10 +183,11 @@
   font-size: var(--opus-control-font-size);
   cursor: pointer;
   text-align: left;
-}
-
-:global([data-opus-appearance="neumorphism"]) .trigger {
-  box-shadow: var(--opus-input-shadow, none);
+  box-shadow: var(--opus-input-shadow, var(--opus-control-inset-shadow,
+    inset 0 1px 0 rgba(255, 255, 255, 0.05),
+    0 14px 30px rgba(0, 0, 0, 0.06)));
+  -webkit-backdrop-filter: var(--opus-input-backdrop-filter, none);
+  backdrop-filter: var(--opus-input-backdrop-filter, none);
 }
 
 .trigger > span:first-child,
@@ -184,8 +198,13 @@
   white-space: nowrap;
 }
 
-.trigger:hover {
+.trigger:hover:not(:disabled) {
   border-color: var(--opus-surface-border, color-mix(in srgb, var(--opus-accent) 45%, var(--opus-border-strong)));
+}
+
+.trigger:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
 }
 
 .triggerOpen,
@@ -231,6 +250,13 @@
   -webkit-backdrop-filter: var(--opus-surface-backdrop-filter, blur(20px) saturate(1.35));
   backdrop-filter: var(--opus-surface-backdrop-filter, blur(20px) saturate(1.35));
   overflow: hidden;
+}
+
+.panel[data-portaled="true"] {
+  position: fixed;
+  right: auto;
+  bottom: auto;
+  z-index: 1000;
 }
 
 .panelFooter {

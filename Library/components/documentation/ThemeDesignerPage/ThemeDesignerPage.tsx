@@ -134,9 +134,9 @@ function ThemeDesignerControls() {
         <SelectField
           id="theme-designer-style"
           label="Theme style"
-          options={["Standard", "Neumorphism"]}
-          value={previewDefaults.appearance === "neumorphism" ? "Neumorphism" : "Standard"}
-          onChange={(event) => updateDefaults({ appearance: event.target.value === "Neumorphism" ? "neumorphism" : "standard" })}
+          options={["Standard", "Neumorphism", "Liquid glass"]}
+          value={previewDefaults.appearance === "liquid-glass" ? "Liquid glass" : previewDefaults.appearance === "neumorphism" ? "Neumorphism" : "Standard"}
+          onChange={(event) => updateDefaults({ appearance: event.target.value === "Liquid glass" ? "liquid-glass" : event.target.value === "Neumorphism" ? "neumorphism" : "standard" })}
         />
         <ThemeToggleField
           id="theme-designer-appearance"
@@ -268,7 +268,7 @@ export function App({ children }) {
                 value: "preview",
                 content: <PreviewThemeBoundary className={styles.canvas}>
             <div className={styles.previewPlatformBar}>
-              <span>Preview platform</span>
+              <span>{previewDefaults.appearance === "liquid-glass" ? "Liquid glass · Preview platform" : "Preview platform"}</span>
               <PreviewPlatformSelector />
             </div>
             <Tiles
@@ -318,7 +318,7 @@ export function App({ children }) {
                   placeholder="Search for anything"
                   onSearch={() => undefined}
                 />
-                <p>{previewDefaults.appearance === "neumorphism" ? "One shared surface, with raised actions and recessed inputs." : "The search action uses the global tertiary accent."}</p>
+                <p>{previewDefaults.appearance === "liquid-glass" ? "Smoked glass, soft reflections and luminous edges. Switch colour modes to explore both finishes." : previewDefaults.appearance === "neumorphism" ? "One shared surface, with raised actions and recessed inputs." : "The search action uses the global tertiary accent."}</p>
               </div>
               <div className={styles.widgetGrid} aria-label="Dashboard widget preview">
                 <DashboardContentContainer className={styles.widgetBackground} width="full">

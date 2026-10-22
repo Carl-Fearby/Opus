@@ -26,6 +26,7 @@ type ColorFieldProps = {
   radius?: ControlRadius;
   transparency?: ControlTransparency;
   gradient?: boolean;
+  disabled?: boolean;
   error?: string;
   help?: string;
   id: string;
@@ -53,6 +54,7 @@ function emitColorChange(
 }
 
 export function ColorField({
+  disabled = false,
   error,
   help,
   id,
@@ -72,14 +74,8 @@ export function ColorField({
   const rootRef = useRef<HTMLDivElement>(null);
   const panelRef = useRef<HTMLDivElement>(null);
   const [open, setOpen] = useState(false);
-  const [portalReady, setPortalReady] = useState(false);
   const [portalStyle, setPortalStyle] = useState<FloatingPortalStyle | null>(null);
   const hex = (normalizeHex(value) ?? "#8f6cff").toUpperCase();
-
-  useEffect(() => {
-    const timeout = window.setTimeout(() => setPortalReady(true), 0);
-    return () => window.clearTimeout(timeout);
-  }, []);
 
   useLayoutEffect(() => {
     if (!open || !rootRef.current) {
@@ -109,6 +105,10 @@ export function ColorField({
   }, [open, value]);
 
   useEffect(() => {
+    if (disabled) setOpen(false);
+  }, [disabled]);
+
+  useEffect(() => {
     if (!open) return;
 
     const handlePointerDown = (event: PointerEvent) => {
@@ -130,7 +130,7 @@ export function ColorField({
   }, [open]);
 
   const panel =
-    open && portalReady && portalStyle
+    open && portalStyle
       ? createPortal(
           <div
             className={styles.portal}
@@ -176,6 +176,7 @@ export function ColorField({
           ]
             .filter(Boolean)
             .join(" ")}
+          disabled={disabled}
           id={id}
           type="button"
           onClick={() => setOpen((current) => !current)}

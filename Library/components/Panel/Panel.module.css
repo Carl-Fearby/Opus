@@ -110,3 +110,8 @@
   color: var(--opus-muted);
   font-size: 0.8rem;
 }
+
+.panel {
+  -webkit-backdrop-filter: var(--opus-surface-backdrop-filter, none);
+  backdrop-filter: var(--opus-surface-backdrop-filter, none);
+}

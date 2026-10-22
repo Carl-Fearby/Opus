@@ -10,7 +10,8 @@ import {
 } from "react";
 import { FieldShell } from "../FieldShell";
 import styles from "./MentionInputField.module.css";
-import type { ControlRadius } from "../types";
+import type { ControlRadius, InputControlSize } from "../types";
+import { inputControlSizeClassName } from "../shared/inputControlSizes";
 
 export type MentionOption = { id: string; label: string; description?: string };
 export type MentionInputFieldProps = {
@@ -25,8 +26,10 @@ export type MentionInputFieldProps = {
   name?: string;
   value: string;
   options: MentionOption[];
+  disabled?: boolean;
   trigger?: string;
   placeholder?: string;
+  size?: InputControlSize;
   spellCheck?: boolean;
   onChange: (value: string) => void;
   onMention?: (option: MentionOption) => void;
@@ -41,8 +44,10 @@ export function MentionInputField({
   name = id,
   value,
   options,
+  disabled = false,
   trigger = "@",
   placeholder,
+  size = "md",
   spellCheck = false,
   onChange,
   radius,
@@ -106,6 +111,7 @@ export function MentionInputField({
     <FieldShell id={id} label={label} radius={radius} transparency={transparency} gradient={gradient}>
       <div className={styles.root}>
         <input
+          aria-activedescendant={shown.length ? `${id}-mention-${active}` : undefined}
           aria-autocomplete="list"
           aria-controls={shown.length ? `${id}-mentions` : undefined}
           aria-expanded={Boolean(shown.length)}
@@ -113,6 +119,8 @@ export function MentionInputField({
           autoCapitalize={autoCapitalize}
           autoComplete={autoComplete}
           autoCorrect={autoCorrect}
+          className={inputControlSizeClassName[size]}
+          disabled={disabled}
           id={id}
           name={name}
           placeholder={placeholder}
@@ -130,6 +138,7 @@ export function MentionInputField({
             {shown.map((option, index) => (
               <button
                 aria-selected={index === active}
+                id={`${id}-mention-${index}`}
                 key={option.id}
                 role="option"
                 type="button"

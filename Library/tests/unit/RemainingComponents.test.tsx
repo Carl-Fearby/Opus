@@ -185,7 +185,7 @@ describe("remaining component set", () => {
     render(
       <RecurrenceEditor value={{ frequency: "daily", interval: 1, ends: "never" }} onChange={change} />,
     );
-    fireEvent.click(screen.getByRole("button", { name: "Frequency" }));
+    fireEvent.click(screen.getByRole("combobox", { name: "Frequency" }));
     fireEvent.click(screen.getByRole("option", { name: "month(s)" }));
     expect(change).toHaveBeenCalledWith(expect.objectContaining({ frequency: "monthly" }));
   });

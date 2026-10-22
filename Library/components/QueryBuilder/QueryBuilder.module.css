@@ -99,6 +99,7 @@
   color: var(--opus-text);
   font: inherit;
   font-size: 0.8rem;
+  box-shadow: var(--opus-input-shadow, var(--opus-control-inset-shadow, none));
 }
 
 .output {

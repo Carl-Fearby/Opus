@@ -95,9 +95,9 @@
   font-size: 0.8rem;
 }
 
-:global([data-opus-appearance="neumorphism"]) .select,
-:global([data-opus-appearance="neumorphism"]) .input {
-  box-shadow: var(--opus-control-inset-shadow, none);
+.select,
+.input {
+  box-shadow: var(--opus-input-shadow, var(--opus-control-inset-shadow, none));
 }
 
 .valuePlaceholder {

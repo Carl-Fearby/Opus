@@ -6,10 +6,9 @@
   border: 1px solid var(--opus-surface-border, var(--opus-border-strong));
   border-radius: var(--opus-input-radius-large);
   background: var(--opus-surface-fill, color-mix(in srgb, var(--opus-input-bg) 88%, var(--opus-panel)));
-}
-
-:global([data-opus-appearance="neumorphism"]) .root {
-  box-shadow: var(--opus-control-shadow, none);
+  box-shadow: var(--opus-input-shadow, var(--opus-control-inset-shadow,
+    inset 0 1px 0 rgba(255, 255, 255, 0.05),
+    0 14px 30px rgba(0, 0, 0, 0.06)));
 }
 
 .segment {
@@ -26,6 +25,13 @@
 
 .segment:hover {
   color: var(--opus-text);
+}
+
+.segment:focus-visible {
+  outline: none;
+  position: relative;
+  z-index: 1;
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--opus-accent) 24%, transparent);
 }
 
 .segmentActive {

@@ -32,7 +32,7 @@
   height: 15px;
   flex-shrink: 0;
   border-radius: 2px;
-  box-shadow: var(--opus-control-shadow, 0 0 0 1px color-mix(in srgb, var(--opus-border-strong) 70%, transparent));
+  box-shadow: 0 0 0 1px color-mix(in srgb, var(--opus-border-strong) 70%, transparent);
   background-size: cover;
   background-position: center;
 }

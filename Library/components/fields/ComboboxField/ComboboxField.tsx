@@ -12,11 +12,12 @@ import {
 } from "react";
 import { createThemedPortal as createPortal } from "@/lib/theme/createThemedPortal";
 import { FieldShell } from "@/components/fields/FieldShell";
-import type { ControlRadius, FieldMode, LabelPosition } from "@/components/fields/types";
+import type { ControlRadius, FieldMode, InputControlSize, LabelPosition } from "@/components/fields/types";
 import {
   resolveFieldListPortalStyle,
   type FloatingPortalStyle,
 } from "@/lib/ui/floatingPortalPosition";
+import { inputControlSizeClassName } from "../shared/inputControlSizes";
 import styles from "./ComboboxField.module.css";
 
 export type ComboboxOption = { label: string; value: string };
@@ -32,8 +33,10 @@ export type ComboboxFieldProps = {
   labelPosition?: LabelPosition;
   mode?: FieldMode;
   options: ComboboxOption[];
+  disabled?: boolean;
   placeholder?: string;
   required?: boolean;
+  size?: InputControlSize;
   value: string;
   onChange: (value: string) => void;
 };
@@ -45,9 +48,11 @@ export function ComboboxField({
   label,
   labelPosition = "left",
   mode = "stacked",
+  disabled = false,
   options,
   placeholder,
   required,
+  size = "md",
   value,
   onChange,
   radius,
@@ -60,7 +65,6 @@ export function ComboboxField({
   const panelRef = useRef<HTMLDivElement>(null);
   const [open, setOpen] = useState(false);
   const [highlight, setHighlight] = useState(0);
-  const [portalReady, setPortalReady] = useState(false);
   const [portalStyle, setPortalStyle] = useState<FloatingPortalStyle | null>(null);
 
   const filtered = useMemo(() => {
@@ -74,9 +78,8 @@ export function ComboboxField({
   }, [options, value]);
 
   useEffect(() => {
-    const timeout = window.setTimeout(() => setPortalReady(true), 0);
-    return () => window.clearTimeout(timeout);
-  }, []);
+    if (disabled) setOpen(false);
+  }, [disabled]);
 
   useEffect(() => {
     setHighlight(0);
@@ -173,7 +176,7 @@ export function ComboboxField({
   }
 
   const activeOption = open && filtered[highlight] ? `${listId}-option-${highlight}` : undefined;
-  const showList = open && portalReady && portalStyle && filtered.length > 0;
+  const showList = open && portalStyle && filtered.length > 0;
 
   const panel = showList
     ? createPortal(
@@ -243,7 +246,8 @@ export function ComboboxField({
           aria-expanded={open}
           aria-invalid={error ? "true" : undefined}
           autoComplete="off"
-          className={[styles.input, error ? styles.inputError : ""].filter(Boolean).join(" ")}
+          className={[inputControlSizeClassName[size], styles.input, error ? styles.inputError : ""].filter(Boolean).join(" ")}
+          disabled={disabled}
           id={id}
           placeholder={placeholder}
           ref={inputRef}

@@ -2,7 +2,8 @@
 
 import { useEffect, useId, useRef, useState, type ChangeEvent, type KeyboardEvent } from "react";
 import { FieldShell } from "../FieldShell";
-import type { ControlRadius } from "../types";
+import type { ControlRadius, InputControlSize } from "../types";
+import { inputControlSizeClassName } from "../shared/inputControlSizes";
 import styles from "./AsyncSelectField.module.css";
 
 export type AsyncSelectOption = { label: string; value: string; description?: string };
@@ -22,12 +23,13 @@ export type AsyncSelectFieldProps = {
   emptyMessage?: string;
   disabled?: boolean;
   required?: boolean;
+  size?: InputControlSize;
   error?: string;
   help?: string;
   onChange: (option: AsyncSelectOption | null) => void;
 };
 
-export function AsyncSelectField({ id, label, value, defaultOptions = [], loadOptions, debounceMs = 250, minQueryLength = 0, placeholder = "Search…", loadingMessage = "Loading options…", emptyMessage = "No options found", disabled, required, error, help, radius, transparency, gradient, onChange }: AsyncSelectFieldProps) {
+export function AsyncSelectField({ id, label, value, defaultOptions = [], loadOptions, debounceMs = 250, minQueryLength = 0, placeholder = "Search…", loadingMessage = "Loading options…", emptyMessage = "No options found", disabled, required, size = "md", error, help, radius, transparency, gradient, onChange }: AsyncSelectFieldProps) {
   const listId = useId();
   const requestRef = useRef(0);
   const [query, setQuery] = useState(value?.label ?? "");
@@ -72,7 +74,7 @@ export function AsyncSelectField({ id, label, value, defaultOptions = [], loadOp
 
   return <FieldShell id={id} label={label} required={required} error={error} help={help} radius={radius} transparency={transparency} gradient={gradient}>
     <div className={styles.root}>
-      <input id={id} role="combobox" aria-autocomplete="list" aria-expanded={open} aria-controls={listId} aria-activedescendant={open && options[highlight] ? `${listId}-${highlight}` : undefined} className={styles.input} disabled={disabled} placeholder={placeholder} value={query} onChange={handleChange} onFocus={() => setOpen(true)} onKeyDown={handleKeyDown} />
+      <input id={id} role="combobox" aria-autocomplete="list" aria-expanded={open} aria-controls={listId} aria-activedescendant={open && options[highlight] ? `${listId}-${highlight}` : undefined} className={[inputControlSizeClassName[size], styles.input].filter(Boolean).join(" ")} disabled={disabled} placeholder={placeholder} value={query} onChange={handleChange} onFocus={() => setOpen(true)} onKeyDown={handleKeyDown} />
       {open ? <div className={styles.list} id={listId} role="listbox">
         {loading ? <p role="status">{loadingMessage}</p> : options.length ? options.map((option, index) => <button aria-selected={value?.value === option.value} className={styles.option} data-highlighted={index === highlight} id={`${listId}-${index}`} key={option.value} role="option" type="button" onMouseDown={(event) => event.preventDefault()} onClick={() => select(option)}><strong>{option.label}</strong>{option.description ? <small>{option.description}</small> : null}</button>) : <p role="status">{emptyMessage}</p>}
       </div> : null}

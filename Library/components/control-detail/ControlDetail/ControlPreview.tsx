@@ -28,6 +28,7 @@ import { CookieConsent } from "@/components/CookieConsent";
 import { CoverViewportBlobs } from "./BodyPortal";
 import { BackgroundBlobsThemeLab } from "@/components/BackgroundBlobsThemeLab";
 import {DiffPreview,InfiniteSelectableListPreview,MentionInputPreview,ProductTourPreview,RecurrencePreview,SignaturePreview,TimeRangePreview,VirtualListPreview} from "./NewComponentPreviews";
+import {AsyncMultiSelectPreview,BottomSheetPreview,CodeEditorPreview,ConfirmDialogPreview,ErrorStatePreview,MarkdownPreview,OverflowToolbarPreview,TreeTablePreview} from "./ExtensionPreviews";
 import { FormWizard } from "@/components/fields/FormWizard";
 import { CheckboxGroupField, ComboboxField, CurrencyField, DateRangeField, Form, FormActions, FormHeader, FormSection, FormValidationSummary, MaskedField, MultiFileField } from "@/components/fields/AdvancedFields";
 import {
@@ -6654,6 +6655,14 @@ function ControlPreviewContent({
         />
       );
     }
+    case "markdown": return <MarkdownPreview />;
+    case "code-editor": return <CodeEditorPreview />;
+    case "tree-table": return <TreeTablePreview />;
+    case "error-state": return <ErrorStatePreview />;
+    case "confirm-dialog": return <ConfirmDialogPreview />;
+    case "bottom-sheet": return <BottomSheetPreview />;
+    case "overflow-toolbar": return <OverflowToolbarPreview />;
+    case "async-multi-select": return <AsyncMultiSelectPreview />;
     default:
       return null;
   }

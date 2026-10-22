@@ -101,3 +101,8 @@
   gap: 8px;
   margin-left: auto;
 }
+
+.card {
+  -webkit-backdrop-filter: var(--opus-surface-backdrop-filter, none);
+  backdrop-filter: var(--opus-surface-backdrop-filter, none);
+}

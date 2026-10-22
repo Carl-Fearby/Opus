@@ -1,0 +1,179 @@
+.root {
+  color: var(--opus-text);
+  font-size: var(--opus-control-font-size);
+  line-height: 1.65;
+  overflow-wrap: anywhere;
+}
+
+.root > :first-child {
+  margin-top: 0;
+}
+
+.root > :last-child {
+  margin-bottom: 0;
+}
+
+.root h1,
+.root h2,
+.root h3,
+.root h4,
+.root h5,
+.root h6 {
+  margin: 1.4em 0 0.5em;
+  color: var(--opus-text);
+  line-height: 1.25;
+  text-wrap: balance;
+}
+
+.root h1 {
+  font-size: 1.5em;
+}
+
+.root h2 {
+  padding-bottom: 0.3em;
+  border-bottom: 1px solid var(--opus-surface-border, color-mix(in srgb, var(--opus-border) 72%, transparent));
+  font-size: 1.25em;
+}
+
+.root h3 {
+  font-size: 1.1em;
+}
+
+.root h4,
+.root h5,
+.root h6 {
+  font-size: 1em;
+}
+
+.root p,
+.root ul,
+.root ol,
+.root blockquote,
+.root pre,
+.root .tableWrap {
+  margin: 0 0 1em;
+}
+
+.root ul,
+.root ol {
+  padding-left: 1.4em;
+}
+
+.root li + li {
+  margin-top: 0.3em;
+}
+
+.root li > ul,
+.root li > ol {
+  margin: 0.3em 0 0;
+}
+
+.root a {
+  border-radius: var(--opus-input-radius-small);
+  color: var(--opus-accent);
+  font-weight: 600;
+  text-decoration: underline;
+  text-decoration-color: color-mix(in srgb, var(--opus-accent) 45%, transparent);
+  text-underline-offset: 0.18em;
+}
+
+.root a:hover {
+  text-decoration-color: currentColor;
+}
+
+.root a:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--opus-accent) 24%, transparent);
+}
+
+.root strong {
+  color: var(--opus-text);
+  font-weight: 750;
+}
+
+.root hr {
+  height: 1px;
+  margin: 1.5em 0;
+  border: 0;
+  background: var(--opus-surface-border, color-mix(in srgb, var(--opus-border) 72%, transparent));
+}
+
+.root blockquote {
+  padding: 0.2em 1em;
+  border-left: 3px solid var(--opus-accent);
+  background: var(--opus-surface-fill, color-mix(in srgb, var(--opus-accent-soft) 42%, transparent));
+  color: var(--opus-muted);
+}
+
+.root blockquote > :last-child {
+  margin-bottom: 0;
+}
+
+.root code {
+  padding: 0.12em 0.38em;
+  border: 1px solid var(--opus-surface-border, color-mix(in srgb, var(--opus-border) 80%, transparent));
+  border-radius: var(--opus-input-radius-small);
+  background: var(--opus-surface-fill, color-mix(in srgb, var(--opus-input-bg) 82%, var(--opus-panel)));
+  color: var(--opus-text);
+  font-family: var(--opus-font-mono, ui-monospace, SFMono-Regular, Menlo, Consolas, monospace);
+  font-size: 0.88em;
+}
+
+.root pre {
+  overflow: auto;
+  padding: 14px 16px;
+  border: 1px solid var(--opus-surface-border, var(--opus-border-strong));
+  border-radius: var(--opus-input-radius-large);
+  background: color-mix(in srgb, var(--opus-panel) 88%, #020617);
+  box-shadow: inset 0 1px 0 color-mix(in srgb, #ffffff 5%, transparent);
+  color: #e6e8f2;
+  line-height: 1.55;
+  scrollbar-width: thin;
+}
+
+.root pre code {
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: inherit;
+  font-size: 0.86em;
+}
+
+.root .tableWrap {
+  overflow-x: auto;
+  border: 1px solid var(--opus-surface-border, var(--opus-border-strong));
+  border-radius: var(--opus-input-radius-large);
+}
+
+.root table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.92em;
+}
+
+.root th,
+.root td {
+  padding: 8px 12px;
+  border-bottom: 1px solid var(--opus-surface-border, color-mix(in srgb, var(--opus-border) 72%, transparent));
+  text-align: left;
+  vertical-align: top;
+}
+
+.root th {
+  background: var(--opus-surface-fill, color-mix(in srgb, var(--opus-panel) 90%, var(--opus-accent-soft)));
+  color: var(--opus-muted);
+  font-size: 0.78em;
+  font-weight: 750;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.root tr:last-child td {
+  border-bottom: 0;
+}
+
+.root img {
+  max-width: 100%;
+  height: auto;
+  border-radius: var(--opus-input-radius);
+}

@@ -35,6 +35,7 @@ export function PreviewThemeBoundary({
         {...rest}
         className={className}
         data-preview-platform={previewPlatform}
+        data-opus-appearance={previewDefaults.appearance ?? "standard"}
         data-preview-root
         data-theme={previewTheme}
         style={{

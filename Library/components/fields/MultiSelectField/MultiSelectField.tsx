@@ -11,6 +11,7 @@ type MultiSelectFieldProps = {
   radius?: ControlRadius;
   transparency?: import("../types").ControlTransparency;
   gradient?: boolean;
+  disabled?: boolean;
   error?: string;
   help?: string;
   id: string;
@@ -26,6 +27,7 @@ type MultiSelectFieldProps = {
 };
 
 export function MultiSelectField({
+  disabled = false,
   error,
   help,
   id,
@@ -45,6 +47,10 @@ export function MultiSelectField({
   const shellAria = useFieldShellAria();
   const rootRef = useRef<HTMLDivElement>(null);
   const [open, setOpen] = useState(false);
+
+  useEffect(() => {
+    if (disabled) setOpen(false);
+  }, [disabled]);
 
   useEffect(() => {
     if (!open) {
@@ -110,6 +116,7 @@ export function MultiSelectField({
           ]
             .filter(Boolean)
             .join(" ")}
+          disabled={disabled}
           id={id}
           type="button"
           onClick={() => setOpen((current) => !current)}
@@ -125,6 +132,7 @@ export function MultiSelectField({
                 <label className={shared.option} key={option}>
                   <input
                     checked={value.includes(option)}
+                    disabled={disabled}
                     type="checkbox"
                     onChange={() => toggleOption(option)}
                   />

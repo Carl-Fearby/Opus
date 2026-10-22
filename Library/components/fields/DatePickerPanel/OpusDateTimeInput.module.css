@@ -21,6 +21,9 @@
   background: var(--opus-surface-fill, var(--opus-input-bg));
   color: var(--opus-surface-text, var(--opus-text));
   font: inherit;
+  box-shadow: var(--opus-input-shadow, var(--opus-control-inset-shadow, none));
+  -webkit-backdrop-filter: var(--opus-input-backdrop-filter, none);
+  backdrop-filter: var(--opus-input-backdrop-filter, none);
 }
 
 .timeSelect:focus {

@@ -18,6 +18,7 @@ type TreeSelectFieldProps = {
   radius?: ControlRadius;
   transparency?: import("../types").ControlTransparency;
   gradient?: boolean;
+  disabled?: boolean;
   error?: string;
   help?: string;
   id: string;
@@ -46,10 +47,12 @@ function flattenLabels(nodes: TreeSelectNode[], prefix = ""): Record<string, str
 function TreeOptions({
   depth = 0,
   nodes,
+  disabled = false,
   onSelect,
   selected,
 }: {
   depth?: number;
+  disabled?: boolean;
   nodes: TreeSelectNode[];
   onSelect: (value: string) => void;
   selected: string | null;
@@ -64,12 +67,13 @@ function TreeOptions({
               .join(" ")}
             style={{ paddingLeft: `${10 + depth * 14}px` }}
             type="button"
+            disabled={disabled}
             onClick={() => onSelect(node.value)}
           >
             {node.label}
           </button>
           {node.children?.length ? (
-            <TreeOptions depth={depth + 1} nodes={node.children} onSelect={onSelect} selected={selected} />
+            <TreeOptions depth={depth + 1} disabled={disabled} nodes={node.children} onSelect={onSelect} selected={selected} />
           ) : null}
         </div>
       ))}
@@ -78,6 +82,7 @@ function TreeOptions({
 }
 
 export function TreeSelectField({
+  disabled = false,
   error,
   help,
   id,
@@ -98,6 +103,10 @@ export function TreeSelectField({
   const rootRef = useRef<HTMLDivElement>(null);
   const [open, setOpen] = useState(false);
   const labels = useMemo(() => flattenLabels(nodes), [nodes]);
+
+  useEffect(() => {
+    if (disabled) setOpen(false);
+  }, [disabled]);
 
   useEffect(() => {
     if (!open) {
@@ -149,6 +158,7 @@ export function TreeSelectField({
           ]
             .filter(Boolean)
             .join(" ")}
+          disabled={disabled}
           id={id}
           type="button"
           onClick={() => setOpen((current) => !current)}

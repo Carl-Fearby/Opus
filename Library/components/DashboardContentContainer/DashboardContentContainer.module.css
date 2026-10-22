@@ -113,3 +113,8 @@
     width: 100%;
   }
 }
+
+.container {
+  -webkit-backdrop-filter: var(--opus-surface-backdrop-filter, none);
+  backdrop-filter: var(--opus-surface-backdrop-filter, none);
+}

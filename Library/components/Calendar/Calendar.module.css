@@ -68,8 +68,8 @@
   background-repeat: no-repeat;
 }
 
-:global([data-opus-appearance="neumorphism"]) .select {
-  box-shadow: var(--opus-control-shadow, none);
+.select {
+  box-shadow: var(--opus-input-shadow, var(--opus-control-inset-shadow, none));
 }
 
 .select:focus-visible {

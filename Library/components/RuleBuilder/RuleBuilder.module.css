@@ -108,10 +108,10 @@
   font-size: 0.8rem;
 }
 
-:global([data-opus-appearance="neumorphism"]) .name,
-:global([data-opus-appearance="neumorphism"]) .input,
-:global([data-opus-appearance="neumorphism"]) .select {
-  box-shadow: var(--opus-control-inset-shadow, none);
+.name,
+.input,
+.select {
+  box-shadow: var(--opus-input-shadow, var(--opus-control-inset-shadow, none));
 }
 
 .name {

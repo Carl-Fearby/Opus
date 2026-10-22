@@ -1,0 +1,84 @@
+.root {
+  position: relative;
+  width: 100%;
+  min-width: 0;
+  overflow: hidden;
+  border: 1px solid var(--opus-surface-border, var(--opus-border-strong));
+  border-radius: var(--opus-input-radius-large);
+  background: var(--opus-surface-fill, var(--opus-input-bg));
+  box-shadow: var(--opus-input-shadow, var(--opus-control-inset-shadow, none));
+}
+
+.root:focus-within {
+  border-color: var(--opus-accent);
+  box-shadow:
+    0 0 0 4px color-mix(in srgb, var(--opus-accent) 22%, transparent),
+    0 14px 30px rgba(0, 0, 0, 0.06);
+}
+
+.root :global(.cm-editor) {
+  height: var(--code-editor-height, 260px);
+  background: transparent;
+  color: var(--opus-text);
+  font-family: var(--opus-font-mono, ui-monospace, SFMono-Regular, Menlo, Consolas, monospace);
+  font-size: 0.84rem;
+}
+
+.root :global(.cm-editor.cm-focused) {
+  outline: none;
+}
+
+.root :global(.cm-scroller) {
+  overflow: auto;
+  font-family: inherit;
+  line-height: 1.6;
+  scrollbar-width: thin;
+}
+
+.root :global(.cm-content) {
+  padding: 12px 0;
+  caret-color: var(--opus-accent);
+}
+
+.root :global(.cm-line) {
+  padding: 0 14px;
+}
+
+.root :global(.cm-gutters) {
+  border-right: 1px solid var(--opus-surface-border, color-mix(in srgb, var(--opus-border) 58%, transparent));
+  background: color-mix(in srgb, var(--opus-panel) 92%, transparent);
+  color: var(--opus-muted);
+}
+
+.root :global(.cm-activeLine) {
+  background: color-mix(in srgb, var(--opus-accent-soft) 34%, transparent);
+}
+
+.root :global(.cm-activeLineGutter) {
+  background: color-mix(in srgb, var(--opus-accent-soft) 44%, transparent);
+  color: var(--opus-text);
+}
+
+.root :global(.cm-selectionBackground),
+.root :global(.cm-content ::selection) {
+  background: color-mix(in srgb, var(--opus-accent) 28%, transparent) !important;
+}
+
+.root :global(.cm-cursor) {
+  border-left-color: var(--opus-accent);
+}
+
+.root :global(.cm-placeholder) {
+  color: color-mix(in srgb, var(--opus-muted) 82%, transparent);
+  font-style: italic;
+}
+
+.root[data-readonly] :global(.cm-content) {
+  cursor: default;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .root {
+    transition: none;
+  }
+}

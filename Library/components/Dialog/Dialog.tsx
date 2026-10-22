@@ -29,6 +29,7 @@ export type DialogProps = {
 };
 
 export type DialogAction = {
+  disabled?: boolean;
   label: string;
   result: DialogResult;
   variant: ButtonVariant;
@@ -167,7 +168,12 @@ export function Dialog({
             {children ? <div className={styles.body}>{children}</div> : null}
             <div className={styles.actions}>
               {actions.map((action) => (
-                <Button key={action.label} variant={action.variant} onClick={() => onClose(action.result)}>
+                <Button
+                  key={action.label}
+                  disabled={action.disabled}
+                  variant={action.variant}
+                  onClick={() => onClose(action.result)}
+                >
                   {action.label}
                 </Button>
               ))}

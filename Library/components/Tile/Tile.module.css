@@ -161,3 +161,8 @@
   outline: var(--opus-tile-focus-outline, none);
   outline-offset: 4px;
 }
+
+.tile {
+  -webkit-backdrop-filter: var(--opus-surface-backdrop-filter, none);
+  backdrop-filter: var(--opus-surface-backdrop-filter, none);
+}

@@ -3,7 +3,7 @@
 import { createContext, useContext, useEffect, type CSSProperties, type ReactNode } from "react";
 import type { ControlRadius, ControlTransparency, Theme } from "@/components/fields/types";
 
-const OpusPortalAppearanceContext = createContext<{ theme: Theme; style: CSSProperties } | null>(null);
+const OpusPortalAppearanceContext = createContext<{ theme: Theme; appearance: NonNullable<OpusThemeDefaults["appearance"]>; style: CSSProperties } | null>(null);
 
 /** Internal context used by menus, tooltips, and other portalled controls. */
 export function useOpusPortalAppearance() {
@@ -14,7 +14,7 @@ const OpusThemeContext = createContext<Theme | null>(null);
 
 export type OpusThemeDefaults = {
   /** Surface styling, independent of light/dark colour mode. */
-  appearance?: "standard" | "neumorphism";
+  appearance?: "standard" | "neumorphism" | "liquid-glass";
   /** Default control corner treatment. Component `radius` props override this. */
   radius?: ControlRadius;
   /** Default control surface. Component `transparency` props override this. */
@@ -36,6 +36,45 @@ export function createOpusThemeDefaultsStyle(defaults: OpusThemeDefaults = {}, t
   const style: Record<string, string> = {
     ...(defaults.radius ? radiusTokens[defaults.radius] : {}),
   };
+
+  if (defaults.appearance === "liquid-glass") {
+    const dark = theme === "dark";
+    const surface = dark ? "rgba(38, 39, 44, 0.62)" : "rgba(255, 255, 255, 0.58)";
+    const border = dark ? "rgba(255, 255, 255, 0.18)" : "rgba(255, 255, 255, 0.8)";
+    const shadow = "inset 0 1px 0 rgba(255,255,255,.25), inset 0 -1px 0 rgba(255,255,255,.04), 0 12px 32px rgba(0,0,0,.24)";
+    Object.assign(style, {
+      "--opus-panel": dark ? "#25262b" : "#e9edf2",
+      "--opus-text": dark ? "#f4f5f7" : "#202630",
+      "--opus-muted": dark ? "#b9bdc7" : "#515b6b",
+      "--opus-border": border,
+      "--opus-border-strong": dark ? "rgba(255,255,255,.3)" : "rgba(75,85,100,.3)",
+      "--opus-glass-surface": surface,
+      "--opus-glass-border": border,
+      "--opus-input-bg": surface,
+      "--opus-input-fill": surface,
+      "--opus-input-shadow": "inset 0 1px 0 rgba(255,255,255,.18), 0 2px 8px rgba(0,0,0,.12)",
+      "--opus-input-backdrop-filter": "blur(16px) saturate(1.4)",
+      "--opus-surface-fill": "linear-gradient(145deg, rgba(255,255,255,.12), transparent 48%), " + surface,
+      "--opus-surface-border": border,
+      "--opus-surface-text": "var(--opus-text)",
+      "--opus-surface-shadow": shadow,
+      "--opus-shadow": shadow,
+      "--opus-control-shadow": shadow,
+      "--opus-surface-backdrop-filter": "blur(24px) saturate(1.3)",
+      "--opus-menu-glass-surface": dark ? "rgba(35,36,41,.94)" : "rgba(248,250,252,.94)",
+      "--opus-menu-surface-token": "var(--opus-menu-glass-surface)",
+      "--opus-menu-glass-border": border,
+      "--opus-liquid-backdrop": dark ? "#101114" : "#cbd3dd",
+    });
+    if (!defaults.radius || defaults.radius === "standard") Object.assign(style, radiusTokens.large);
+    if (defaults.gradient) {
+      const gradient = `linear-gradient(135deg, color-mix(in srgb, var(--opus-accent) 14%, transparent), transparent 65%), ${surface}`;
+      style["--opus-input-bg"] = gradient;
+      style["--opus-input-fill"] = gradient;
+      style["--opus-surface-fill"] = gradient;
+    }
+    return style as CSSProperties;
+  }
 
   if (defaults.appearance === "neumorphism") {
     const surface = theme === "light"
@@ -232,7 +271,7 @@ export function OpusThemeProvider({
 
   return (
     <OpusThemeContext.Provider value={theme}>
-      <OpusPortalAppearanceContext.Provider value={{ theme, style: boundaryStyle }}>
+      <OpusPortalAppearanceContext.Provider value={{ theme, appearance: defaults?.appearance ?? "standard", style: boundaryStyle }}>
         <div data-theme={theme} data-opus-appearance={defaults?.appearance ?? "standard"} style={boundaryStyle}>
           {children}
         </div>

@@ -9,7 +9,17 @@ function PortalAppearance({ children }: { children: ReactNode }) {
   const appearance = useOpusPortalAppearance();
   if (!appearance) return <>{children}</>;
   return (
-    <div data-opus-appearance={"--opus-surface-fill" in appearance.style ? "neumorphism" : "standard"} data-theme={appearance.theme} style={{ ...appearance.style, display: "contents" }}>
+    <div
+      data-opus-appearance={appearance.appearance}
+      data-theme={appearance.theme}
+      style={{
+        ...appearance.style,
+        color: "var(--opus-text)",
+        colorScheme: appearance.theme,
+        display: "contents",
+        fontFamily: "var(--opus-font-family, inherit)",
+      }}
+    >
       {children}
     </div>
   );

@@ -18,6 +18,7 @@ type CascaderFieldProps = {
   radius?: ControlRadius;
   transparency?: import("../types").ControlTransparency;
   gradient?: boolean;
+  disabled?: boolean;
   error?: string;
   help?: string;
   id: string;
@@ -65,6 +66,7 @@ function labelForValue(options: CascaderOption[], value: string[]) {
 }
 
 export function CascaderField({
+  disabled = false,
   error,
   help,
   id,
@@ -86,6 +88,10 @@ export function CascaderField({
   const [open, setOpen] = useState(false);
   const columns = useMemo(() => getColumns(options, value), [options, value]);
   const summary = value.length ? labelForValue(options, value) : placeholder;
+
+  useEffect(() => {
+    if (disabled) setOpen(false);
+  }, [disabled]);
 
   useEffect(() => {
     if (!open) {
@@ -146,6 +152,7 @@ export function CascaderField({
           ]
             .filter(Boolean)
             .join(" ")}
+          disabled={disabled}
           id={id}
           type="button"
           onClick={() => setOpen((current) => !current)}
@@ -168,6 +175,7 @@ export function CascaderField({
                       .join(" ")}
                     key={option.value}
                     type="button"
+                    disabled={disabled}
                     onClick={() => selectOption(level, option)}
                   >
                     <span>{option.label}</span>

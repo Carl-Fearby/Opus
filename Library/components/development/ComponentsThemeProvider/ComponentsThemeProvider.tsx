@@ -218,7 +218,7 @@ export function ComponentsThemeProvider({ children }: { children: ReactNode }) {
       }
       const storedAppearance = window.localStorage.getItem("opus-preview-appearance")
         ?? readPreferenceCookie("opus-preview-appearance");
-      if (storedAppearance === "neumorphism" || storedAppearance === "standard") {
+      if (storedAppearance === "neumorphism" || storedAppearance === "standard" || storedAppearance === "liquid-glass") {
         setPreviewDefaults((current) => ({ ...current, appearance: storedAppearance }));
       }
       setPreviewThemeState(parseTheme(storedTheme));

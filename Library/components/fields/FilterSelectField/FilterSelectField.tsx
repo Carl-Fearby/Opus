@@ -16,6 +16,7 @@ type FilterSelectFieldProps = {
   radius?: ControlRadius;
   transparency?: import("../types").ControlTransparency;
   gradient?: boolean;
+  disabled?: boolean;
   error?: string;
   groups: FilterSelectGroup[];
   help?: string;
@@ -33,6 +34,7 @@ type FilterSelectFieldProps = {
 };
 
 export function FilterSelectField({
+  disabled = false,
   error,
   groups,
   help,
@@ -57,6 +59,10 @@ export function FilterSelectField({
   const [openUpward, setOpenUpward] = useState(false);
   const [query, setQuery] = useState("");
   const [draft, setDraft] = useState(value);
+
+  useEffect(() => {
+    if (disabled) setOpen(false);
+  }, [disabled]);
 
   useEffect(() => {
     if (open) {
@@ -165,6 +171,7 @@ export function FilterSelectField({
           ]
             .filter(Boolean)
             .join(" ")}
+          disabled={disabled}
           id={id}
           type="button"
           onClick={toggleMenu}
@@ -178,6 +185,7 @@ export function FilterSelectField({
             <input
               aria-label="Search filters"
               className={shared.search}
+              disabled={disabled}
               placeholder={searchPlaceholder}
               type="search"
               value={query}
@@ -192,6 +200,7 @@ export function FilterSelectField({
                       <button
                         aria-selected={value.includes(option)}
                         className={shared.option}
+                        disabled={disabled}
                         key={option}
                         role="option"
                         type="button"
@@ -206,6 +215,7 @@ export function FilterSelectField({
                       <label className={shared.option} key={option}>
                         <input
                           checked={draft.includes(option)}
+                          disabled={disabled}
                           type="checkbox"
                           onChange={() => toggleOption(option)}
                         />

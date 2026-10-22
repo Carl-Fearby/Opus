@@ -29,6 +29,12 @@
   font-size: var(--opus-control-font-size);
   font-weight: 600;
   cursor: pointer;
+  box-shadow: var(--opus-input-shadow, var(--opus-control-inset-shadow, none));
+}
+
+.numeric:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 4px color-mix(in srgb, var(--opus-accent) 22%, transparent);
 }
 
 .numericActive {
@@ -37,6 +43,11 @@
   color: var(--opus-surface-text, var(--opus-accent));
 }
 
-:global([data-opus-appearance="neumorphism"]) .numericActive {
+:global([data-opus-appearance="neumorphism"]) .numeric:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 4px color-mix(in srgb, var(--opus-accent) 22%, transparent);
+}
+
+.numericActive {
   box-shadow: var(--opus-control-inset-shadow, none);
 }

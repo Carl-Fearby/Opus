@@ -403,8 +403,8 @@
   box-sizing: border-box;
 }
 
-:global([data-opus-appearance="neumorphism"]) .replyInputShell {
-  box-shadow: var(--opus-control-inset-shadow, none);
+.replyInputShell {
+  box-shadow: var(--opus-input-shadow, var(--opus-control-inset-shadow, none));
 }
 
 .replyInputShell[data-has-tools="true"] {

@@ -11,6 +11,7 @@ type NumberFieldProps = {
   radius?: ControlRadius;
   transparency?: import("../types").ControlTransparency;
   gradient?: boolean;
+  disabled?: boolean;
   error?: string;
   help?: string;
   id: string;
@@ -63,6 +64,7 @@ function sanitizeNumericInput(
 }
 
 export function NumberField({
+  disabled = false,
   error,
   help,
   id,
@@ -153,12 +155,13 @@ export function NumberField({
         ]
           .filter(Boolean)
           .join(" ")}
+        data-disabled={disabled || undefined}
       >
         <button
           aria-controls={id}
           aria-label={`Decrease ${label}`}
           className={styles.button}
-          disabled={atMin}
+          disabled={disabled || atMin}
           onClick={() => emitValue(value - step)}
           type="button"
         >
@@ -167,6 +170,7 @@ export function NumberField({
         <input
           aria-invalid={error ? "true" : undefined}
           className={styles.input}
+          disabled={disabled}
           id={id}
           inputMode={allowDecimal ? "decimal" : "numeric"}
           name={name}
@@ -180,7 +184,7 @@ export function NumberField({
           aria-controls={id}
           aria-label={`Increase ${label}`}
           className={styles.button}
-          disabled={atMax}
+          disabled={disabled || atMax}
           onClick={() => emitValue(value + step)}
           type="button"
         >

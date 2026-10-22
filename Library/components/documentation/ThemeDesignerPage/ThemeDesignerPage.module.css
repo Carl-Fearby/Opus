@@ -372,3 +372,15 @@
     padding: 16px;
   }
 }
+
+/* Layered facets give transparent surfaces something to refract. */
+.canvas[data-opus-appearance="liquid-glass"] {
+  background:
+    radial-gradient(ellipse at 85% 10%, rgba(148, 163, 184, .22), transparent 44%),
+    repeating-linear-gradient(135deg, transparent 0 110px, rgba(255,255,255,.12) 111px, rgba(255,255,255,.025) 113px, transparent 115px 220px),
+    repeating-linear-gradient(35deg, transparent 0 160px, rgba(0,0,0,.35) 162px 205px, rgba(255,255,255,.1) 207px, transparent 210px 330px),
+    var(--opus-liquid-backdrop);
+  background-attachment: local;
+  gap: 24px;
+  padding: 28px;
+}

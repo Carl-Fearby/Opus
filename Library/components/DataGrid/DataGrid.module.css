@@ -348,8 +348,8 @@
   text-transform: none;
 }
 
-:global([data-opus-appearance="neumorphism"]) .filterInput {
-  box-shadow: var(--opus-control-inset-shadow, none);
+.filterInput {
+  box-shadow: var(--opus-input-shadow, var(--opus-control-inset-shadow, none));
 }
 
 .headerMenu {
