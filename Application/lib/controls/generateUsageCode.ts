@@ -3873,7 +3873,6 @@ const columns = ${formatDataGridColumnsForUsage(columns)};
 const rows = ${formatDataGridRowsForUsage(demoRows)};
 ${s.savedViews ? `
 const views = [
-  { id: "all", label: "All columns" },
   { id: "quarterly", label: "Quarterly", hiddenColumnKeys: ["adoption", "coverage", "a11y", "velocity"] },
   { id: "adoption", label: "Adoption focus", hiddenColumnKeys: ["q1", "q2", "q3", "q4", "velocity"] },
 ];
