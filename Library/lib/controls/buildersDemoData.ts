@@ -4,6 +4,7 @@ import type {
   FilterCondition,
   KanbanCard,
   KanbanColumn,
+  KanbanMember,
   KanbanTag,
   PermissionLevel,
   PropertyInspectorItem,
@@ -100,10 +101,10 @@ export const demoSchedulerEvents: SchedulerEvent[] = [
 ];
 
 export const demoKanbanCards: Record<string, KanbanCard> = {
-  c1: { id: "c1", title: "Sidebar collapse animation", meta: "Navigation", tone: "default", tagIds: ["tag-planning"] },
+  c1: { id: "c1", title: "Sidebar collapse animation", meta: "Navigation", tone: "default", tagIds: ["tag-planning"], assigneeIds: ["member-emma"] },
   c2: { id: "c2", title: "Toast stacking rules", meta: "Feedback", tone: "accent" },
   c3: { id: "c3", title: "Empty state illustrations", meta: "Content", tone: "default" },
-  c4: { id: "c4", title: "Keyboard shortcuts panel", meta: "A11y", tone: "warning", tagIds: ["tag-bug"] },
+  c4: { id: "c4", title: "Keyboard shortcuts panel", meta: "A11y", tone: "warning", tagIds: ["tag-bug"], assigneeIds: ["member-michael"] },
   c5: { id: "c5", title: "Export board as CSV", meta: "Planning", tone: "default" },
   c6: { id: "c6", title: "Filter builder validation", meta: "Forms", tone: "accent" },
   c7: { id: "c7", title: "Property inspector polish", meta: "Builders", tone: "default" },
@@ -114,12 +115,18 @@ export const demoKanbanCards: Record<string, KanbanCard> = {
   c12: { id: "c12", title: "Calendar event popover", meta: "Planning", tone: "success" },
   c13: { id: "c13", title: "Permissions matrix a11y", meta: "Security", tone: "danger" },
   c14: { id: "c14", title: "Select chevron alignment", meta: "Forms", tone: "success" },
-  c15: { id: "c15", title: "JsonViewer expand depth", meta: "Content", tone: "default", tagIds: ["tag-ready"] },
+  c15: { id: "c15", title: "JsonViewer expand depth", meta: "Content", tone: "default", tagIds: ["tag-ready"], assigneeIds: ["member-olivia"] },
   c16: { id: "c16", title: "Usage preview action status", meta: "Docs", tone: "success" },
   c17: { id: "c17", title: "Column min-height for eight cards", meta: "Planning", tone: "success" },
   c18: { id: "c18", title: "Drop ghost dashed outline", meta: "Planning", tone: "accent" },
   c19: { id: "c19", title: "Origin ghost fade polish", meta: "Planning", tone: "default" },
 };
+
+export const demoKanbanMembers: KanbanMember[] = [
+  { id: "member-emma", name: "Emma Davis", role: "Design", color: "#ec4899" },
+  { id: "member-michael", name: "Michael Brown", role: "Engineering", color: "#0ea5e9" },
+  { id: "member-olivia", name: "Olivia Wilson", role: "Product", color: "#22c55e" },
+];
 
 export const demoKanbanTags: KanbanTag[] = [
   { id: "tag-planning", label: "Planning", color: "#22c55e" },

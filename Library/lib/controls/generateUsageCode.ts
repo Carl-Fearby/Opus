@@ -66,6 +66,7 @@ import {
   formatJsonValueForUsage,
   formatKanbanCardsForUsage,
   formatKanbanColumnsForUsage,
+  formatKanbanMembersForUsage,
   formatKanbanTagsForUsage,
   formatLayoutTileChildren,
   formatListItemsForUsage,
@@ -5174,6 +5175,7 @@ const events = ${formatSchedulerEventsForUsage()};
       const state = [
         `const cards = ${formatKanbanCardsForUsage()};`,
         `const tags = ${formatKanbanTagsForUsage()};`,
+        `const members = ${formatKanbanMembersForUsage()};`,
         `const [columns, setColumns] = useState(${formatKanbanColumnsForUsage()});`,
         ...(cardClickAction === "callback"
           ? ['const [lastAction, setLastAction] = useState("Click a card to fire onCardClick.");']
@@ -5192,6 +5194,7 @@ const events = ${formatSchedulerEventsForUsage()};
     <KanbanBoard
       cards={cards}
       columns={columns}
+      defaultMembers={members}
       defaultTags={tags}${s.interactive ? "\n      onChange={setColumns}" : ""}${cardClickAction === "none" ? "\n      ticketView={false}" : ""}${cardClickProp}
     />
     <JsonViewer collapsedDepth={2} value={{ cards, columns }} />${callbackStatus}

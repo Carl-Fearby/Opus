@@ -288,10 +288,10 @@ Trello-style board with draggable cards and lists on one horizontal track. Lists
 
 The ticket modal uses a two-column layout:
 
-- **Left:** editable title in the modal header, list selector, description, selected tags, and header colour picker.
+- **Left:** editable title in the modal header, list selector, description, selected tags, assigned members, list selector, and header colour picker.
 - **Right:** the comment thread and composer.
 
-Selected tags are shown as removable chips; **Add tag** opens a searchable picker instead of listing every tag inline.
+Selected tags are shown as removable chips; **Add tag** opens a searchable modal where new tags can also be created. **Add member** opens a searchable member picker with assign/unassign toggles.
 
 ## Comments and tags
 
@@ -312,7 +312,7 @@ Selected tags are shown as removable chips; **Add tag** opens a searchable picke
 
 \`KanbanCard\` supports \`title\`, \`meta\`, \`description\`, \`color\`, \`tone\`, \`comments\` and \`tagIds\`. The \`color\` value is the ticket side-border colour.
 
-\`KanbanActivity\` is a discriminated union covering: \`list-created\`, \`list-updated\`, \`list-reordered\`, \`card-created\`, \`card-moved\`, \`card-updated\`, \`comment-added\`, \`tag-created\`, \`tag-updated\`, \`tag-deleted\` and \`card-tags-changed\`. Every event includes an ISO \`at\` timestamp and the relevant records or resulting collections.
+\`KanbanActivity\` is a discriminated union covering: \`list-created\`, \`list-updated\`, \`list-reordered\`, \`card-created\`, \`card-moved\`, \`card-updated\`, \`comment-added\`, \`tag-created\`, \`tag-updated\`, \`tag-deleted\` and \`card-tags-changed\` and \`card-assignees-changed\`. Every event includes an ISO \`at\` timestamp and the relevant records or resulting collections.
 
 ## Accessibility
 

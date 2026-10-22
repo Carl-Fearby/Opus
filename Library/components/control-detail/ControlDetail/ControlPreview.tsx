@@ -235,6 +235,7 @@ import {
   demoInspectorFields,
   demoKanbanCards,
   demoKanbanColumns,
+  demoKanbanMembers,
   demoKanbanTags,
   demoPermissionResources,
   demoPermissionRoles,
@@ -2868,6 +2869,7 @@ function KanbanBoardPreview({
       <KanbanBoard
         cards={demoKanbanCards}
         columns={columns}
+        defaultMembers={demoKanbanMembers}
         defaultTags={demoKanbanTags}
         onCardClick={
           cardClickAction === "callback"

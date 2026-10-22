@@ -4,6 +4,7 @@ import {
   KanbanBoard,
   type KanbanCard,
   type KanbanColumn,
+  type KanbanMember,
   type KanbanTag,
 } from "../../components/KanbanBoard";
 
@@ -267,6 +268,81 @@ describe("KanbanBoard ticket view", () => {
       "alpha",
       { color: "#f59e0b" },
       expect.objectContaining({ color: "#f59e0b" }),
+    );
+  });
+});
+
+const members: KanbanMember[] = [
+  { id: "m1", name: "Emma Davis", role: "Design", color: "#ec4899" },
+  { id: "m2", name: "Michael Brown", role: "Engineering", color: "#0ea5e9" },
+];
+
+describe("KanbanBoard members and ticket activation", () => {
+  it("opens the ticket when the card body is clicked", () => {
+    const onActiveCardChange = vi.fn();
+    render(
+      <KanbanBoard
+        cards={cards}
+        columns={columns}
+        onActiveCardChange={onActiveCardChange}
+      />,
+    );
+
+    fireEvent.click(screen.getByText("Alpha ticket"));
+    expect(onActiveCardChange).toHaveBeenCalledWith(
+      "alpha",
+      expect.objectContaining({ id: "alpha" }),
+    );
+  });
+
+  it("assigns and unassigns a member from the ticket", () => {
+    const onCardAssigneesChange = vi.fn();
+    render(
+      <KanbanBoard
+        cards={{ ...cards, alpha: { ...cards.alpha, assigneeIds: [] } }}
+        columns={columns}
+        defaultMembers={members}
+        onCardAssigneesChange={onCardAssigneesChange}
+      />,
+    );
+
+    fireEvent.click(screen.getByText("Alpha ticket"));
+    fireEvent.click(screen.getByRole("button", { name: "+ Add member" }));
+    fireEvent.click(screen.getByRole("button", { name: /Emma Davis/ }));
+
+    expect(onCardAssigneesChange).toHaveBeenCalledWith(
+      "alpha",
+      ["m1"],
+      expect.objectContaining({ id: "alpha" }),
+    );
+  });
+
+  it("creates and assigns a new tag from the ticket picker", () => {
+    const onTagsChange = vi.fn();
+    const onCardTagsChange = vi.fn();
+    render(
+      <KanbanBoard
+        cards={{ ...cards, alpha: { ...cards.alpha, tagIds: [] } }}
+        columns={columns}
+        onCardTagsChange={onCardTagsChange}
+        onTagsChange={onTagsChange}
+      />,
+    );
+
+    fireEvent.click(screen.getByText("Alpha ticket"));
+    fireEvent.click(screen.getByRole("button", { name: "+ Add tag" }));
+    fireEvent.change(screen.getByLabelText("New tag name"), {
+      target: { value: "Needs review" },
+    });
+    fireEvent.click(screen.getByRole("button", { name: "Create tag" }));
+
+    expect(onTagsChange).toHaveBeenCalledWith([
+      expect.objectContaining({ label: "Needs review" }),
+    ]);
+    expect(onCardTagsChange).toHaveBeenCalledWith(
+      "alpha",
+      [expect.any(String)],
+      expect.objectContaining({ id: "alpha" }),
     );
   });
 });

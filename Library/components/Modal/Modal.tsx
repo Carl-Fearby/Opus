@@ -1,6 +1,6 @@
 "use client";
 
-import type { ReactNode } from "react";
+import type { CSSProperties, ReactNode } from "react";
 import { useEffect, useId, useRef, useState } from "react";
 import type { ModalSize } from "@/components/fields/types";
 import { Button } from "@/components/fields/Button";
@@ -26,6 +26,10 @@ type ModalProps = {
   footer?: ReactNode;
   onClose: () => void;
   open: boolean;
+  /** Optional class applied to the modal panel. */
+  panelClassName?: string;
+  /** Optional style applied to the modal panel. */
+  panelStyle?: CSSProperties;
   size?: ModalSize;
   title: string;
 };
@@ -41,6 +45,8 @@ export function Modal({
   footer,
   onClose,
   open,
+  panelClassName,
+  panelStyle,
   size = "medium",
   title,
   titleContent,
@@ -113,10 +119,11 @@ export function Modal({
           aria-describedby={description ? descriptionId : undefined}
           aria-labelledby={titleId}
           aria-modal="true"
-          className={styles.modal}
+          className={[styles.modal, panelClassName].filter(Boolean).join(" ")}
           data-phase={phase}
           data-size={size}
           role="dialog"
+          style={panelStyle}
         >
           <header className={styles.header}>
             <div className={styles.heading}>

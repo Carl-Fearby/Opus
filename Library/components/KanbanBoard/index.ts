@@ -7,5 +7,6 @@ export type {
   KanbanColumn,
   KanbanColumnReorder,
   KanbanComment,
+  KanbanMember,
   KanbanTag,
 } from "./KanbanBoard";

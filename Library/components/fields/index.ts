@@ -406,6 +406,7 @@ export type {
   KanbanColumn,
   KanbanColumnReorder,
   KanbanComment,
+  KanbanMember,
   KanbanTag,
 } from "../KanbanBoard";
 export { Calendar } from "../Calendar";

@@ -16,6 +16,7 @@ import { faChevronLeft, faChevronRight, faComment, faGripVertical, faPalette, fa
 import { createThemedPortal as createPortal } from "@/lib/theme/createThemedPortal";
 import { Button } from "@/components/fields/Button";
 import { ColorPickerPanel } from "@/components/fields/ColorPickerPanel";
+import { SelectField } from "@/components/fields/SelectField";
 import { CustomScrollbar } from "@/components/CustomScrollbar";
 import { Modal } from "@/components/Modal";
 import styles from "./KanbanBoard.module.css";
@@ -40,6 +41,18 @@ export type KanbanCard = {
   comments?: KanbanComment[];
   /** Board tag ids assigned to this card. */
   tagIds?: string[];
+  /** Board member ids assigned to this card. */
+  assigneeIds?: string[];
+};
+
+export type KanbanMember = {
+  /** Optional avatar image URL. Initials are used when omitted. */
+  avatar?: string;
+  /** Fallback avatar colour. */
+  color?: string;
+  id: string;
+  name: string;
+  role?: string;
 };
 
 export type KanbanTag = {
@@ -59,6 +72,7 @@ export type KanbanActivity =
   | { at: string; previousTag: KanbanTag; tag: KanbanTag; tags: KanbanTag[]; type: "tag-updated" }
   | { at: string; tag: KanbanTag; tags: KanbanTag[]; type: "tag-deleted" }
   | { at: string; card: KanbanCard; cardId: string; tagIds: string[]; type: "card-tags-changed" }
+  | { at: string; card: KanbanCard; cardId: string; memberIds: string[]; type: "card-assignees-changed" }
   | { at: string; card: KanbanCard; columnId: string; columns: KanbanColumn[]; type: "card-created" }
   | { at: string; card: KanbanCard; cardId: string; changes: string[]; previousCard: KanbanCard; type: "card-updated" };
 
@@ -89,6 +103,8 @@ export type KanbanColumn = {
 export type KanbanBoardProps = {
   /** Controlled open card/ticket. */
   activeCardId?: string | null;
+  /** Board members available for assignment. */
+  members?: KanbanMember[];
   /** Label for the new-card composer trigger. */
   addCardLabel?: string;
   /** Label for the new-list button. */
@@ -105,6 +121,8 @@ export type KanbanBoardProps = {
   currentUser?: { name: string };
   /** Initial open card when the board owns ticket state. */
   defaultActiveCardId?: string | null;
+  /** Initial members when the board owns member data. */
+  defaultMembers?: KanbanMember[];
   /** Initial tags when the board owns tag state. */
   defaultTags?: KanbanTag[];
   onChange?: (columns: KanbanColumn[]) => void;
@@ -119,6 +137,7 @@ export type KanbanBoardProps = {
   ) => void;
   onCardMove?: (cardId: string, move: KanbanCardMove, columns: KanbanColumn[]) => void;
   onCardUpdate?: (cardId: string, patch: Partial<KanbanCard>, card: KanbanCard) => void;
+  onCardAssigneesChange?: (cardId: string, memberIds: string[], card: KanbanCard) => void;
   onCardTagsChange?: (cardId: string, tagIds: string[], card: KanbanCard) => void;
   onColumnChange?: (column: KanbanColumn, previousColumn: KanbanColumn, columns: KanbanColumn[]) => void;
   onColumnCreate?: (column: KanbanColumn, columns: KanbanColumn[]) => void;
@@ -208,6 +227,15 @@ const DEFAULT_COLUMN_COLORS = [
   "#6366f1",
 ];
 const DROP_ANIMATION_MS = 220;
+
+function memberInitials(name: string) {
+  return name
+    .split(/\s+/)
+    .filter(Boolean)
+    .slice(0, 2)
+    .map((part) => part[0]?.toUpperCase())
+    .join("");
+}
 
 function CardContent({ card }: { card: KanbanCard }) {
   return (
@@ -419,11 +447,13 @@ export function KanbanBoard({
   activeCardId,
   currentUser,
   defaultActiveCardId = null,
+  defaultMembers = [],
   defaultTags = [],
   onActivity,
   onActiveCardChange,
   onAddComment,
   onCardClick,
+  onCardAssigneesChange,
   onCardCreate,
   onCardMove,
   onCardTagsChange,
@@ -438,6 +468,7 @@ export function KanbanBoard({
   onTagUpdate,
   onTagsChange,
   tagManager = true,
+  members,
   tags,
   ticketView = true,
 }: KanbanBoardProps) {
@@ -455,6 +486,7 @@ export function KanbanBoard({
   const [colorMenu, setColorMenu] = useState<{ columnId: string; left: number; top: number } | null>(null);
   const [internalTags, setInternalTags] = useState<KanbanTag[]>(defaultTags);
   const resolvedTags = tags ?? internalTags;
+  const resolvedMembers = members ?? defaultMembers;
   const [tagManagerOpen, setTagManagerOpen] = useState(false);
   const [editingTagId, setEditingTagId] = useState<string | null>(null);
   const [editingTagLabel, setEditingTagLabel] = useState("");
@@ -464,6 +496,9 @@ export function KanbanBoard({
   const [customColorOpen, setCustomColorOpen] = useState(false);
   const [tagColorPicker, setTagColorPicker] = useState<{ left: number; targetId: string; top: number } | null>(null);
   const [localCardTags, setLocalCardTags] = useState<Record<string, string[]>>({});
+  const [localCardAssignees, setLocalCardAssignees] = useState<Record<string, string[]>>({});
+  const [ticketMemberPickerOpen, setTicketMemberPickerOpen] = useState(false);
+  const [ticketMemberSearch, setTicketMemberSearch] = useState("");
   const [localCards, setLocalCards] = useState<Record<string, KanbanCard>>({});
   const [cardComposerColumnId, setCardComposerColumnId] = useState<string | null>(null);
   const [cardDraft, setCardDraft] = useState("");
@@ -473,6 +508,8 @@ export function KanbanBoard({
   const [ticketColorMenu, setTicketColorMenu] = useState<{ left: number; top: number } | null>(null);
   const [ticketTagPickerOpen, setTicketTagPickerOpen] = useState(false);
   const [ticketTagSearch, setTicketTagSearch] = useState("");
+  const [moveTicketListId, setMoveTicketListId] = useState<string | null>(null);
+  const [moveTicketIndex, setMoveTicketIndex] = useState(0);
   const ticketColorMenuRef = useRef<HTMLDivElement | null>(null);
   const ticketColorPickerRef = useRef<HTMLDivElement | null>(null);
   const previousActiveCardRef = useRef<string | null>(null);
@@ -485,6 +522,7 @@ export function KanbanBoard({
   const rootRef = useRef<HTMLDivElement | null>(null);
   const columnInputRef = useRef<HTMLInputElement | null>(null);
   const cardComposerRef = useRef<HTMLTextAreaElement | null>(null);
+  const wheelSnapTimerRef = useRef<number | null>(null);
   const colorMenuRef = useRef<HTMLDivElement | null>(null);
   const colorPickerRef = useRef<HTMLDivElement | null>(null);
   const tagManagerRef = useRef<HTMLDivElement | null>(null);
@@ -494,6 +532,7 @@ export function KanbanBoard({
   const onActiveCardChangeRef = useRef(onActiveCardChange);
   const onTagsChangeRef = useRef(onTagsChange);
   const onCardTagsChangeRef = useRef(onCardTagsChange);
+  const onCardAssigneesChangeRef = useRef(onCardAssigneesChange);
   const onCardCreateRef = useRef(onCardCreate);
   const onCardUpdateRef = useRef(onCardUpdate);
   const onCardMoveRef = useRef(onCardMove);
@@ -524,6 +563,7 @@ export function KanbanBoard({
     onActiveCardChangeRef.current = onActiveCardChange;
     onTagsChangeRef.current = onTagsChange;
     onCardTagsChangeRef.current = onCardTagsChange;
+    onCardAssigneesChangeRef.current = onCardAssigneesChange;
     onCardCreateRef.current = onCardCreate;
     onCardUpdateRef.current = onCardUpdate;
     onCardMoveRef.current = onCardMove;
@@ -533,7 +573,7 @@ export function KanbanBoard({
     onTagCreateRef.current = onTagCreate;
     onTagDeleteRef.current = onTagDelete;
     onTagUpdateRef.current = onTagUpdate;
-  }, [columns, onActiveCardChange, onActivity, onAddComment, onCardCreate, onCardMove, onCardTagsChange, onCardUpdate, onColumnChange, onColumnCreate, onColumnReorder, onChange, onCommentsChange, onTagCreate, onTagDelete, onTagUpdate, onTagsChange]);
+  }, [columns, onActiveCardChange, onActivity, onAddComment, onCardAssigneesChange, onCardCreate, onCardMove, onCardTagsChange, onCardUpdate, onColumnChange, onColumnCreate, onColumnReorder, onChange, onCommentsChange, onTagCreate, onTagDelete, onTagUpdate, onTagsChange]);
 
   useEffect(() => {
     dragRef.current = drag;
@@ -553,6 +593,10 @@ export function KanbanBoard({
     setTicketColorMenu(null);
     setTicketTagPickerOpen(false);
     setTicketTagSearch("");
+    setTicketMemberPickerOpen(false);
+    setTicketMemberSearch("");
+    setMoveTicketListId(null);
+    setMoveTicketIndex(0);
   }, [cardLookup, resolvedActiveCardId]);
 
   useEffect(() => {
@@ -588,6 +632,19 @@ export function KanbanBoard({
       }
 
       event.preventDefault();
+
+      // Disable CSS snapping while the gesture is active; mandatory snapping
+      // would otherwise pull the board back to its current column after every
+      // incremental wheel delta. Restore it once the gesture settles.
+      board.style.scrollSnapType = "none";
+      if (wheelSnapTimerRef.current !== null) {
+        window.clearTimeout(wheelSnapTimerRef.current);
+      }
+      wheelSnapTimerRef.current = window.setTimeout(() => {
+        board.style.scrollSnapType = "";
+        wheelSnapTimerRef.current = null;
+      }, 180);
+
       board.scrollLeft = Math.min(
         maxScroll,
         Math.max(0, board.scrollLeft + horizontalDelta),
@@ -595,7 +652,13 @@ export function KanbanBoard({
     };
 
     board.addEventListener("wheel", handleWheel, { passive: false });
-    return () => board.removeEventListener("wheel", handleWheel);
+    return () => {
+      board.removeEventListener("wheel", handleWheel);
+      if (wheelSnapTimerRef.current !== null) {
+        window.clearTimeout(wheelSnapTimerRef.current);
+        wheelSnapTimerRef.current = null;
+      }
+    };
   }, []);
 
   useEffect(() => {
@@ -753,6 +816,15 @@ export function KanbanBoard({
   function openTicket(card: KanbanCard) {
     setActiveCard(card.id);
     setCommentDraft("");
+  }
+
+  function activateCard(card: KanbanCard) {
+    if (didDragRef.current) {
+      didDragRef.current = false;
+      return;
+    }
+    if (onCardClick) onCardClick(card);
+    else if (ticketView) openTicket(card);
   }
 
   function addComment(event: { preventDefault: () => void }) {
@@ -960,7 +1032,7 @@ export function KanbanBoard({
   function createTag(event: { preventDefault: () => void }) {
     event.preventDefault();
     const label = newTagLabel.trim();
-    if (!label) return;
+    if (!label) return null;
 
     const tag: KanbanTag = {
       id: createId("tag"),
@@ -972,10 +1044,25 @@ export function KanbanBoard({
     setNewTagLabel("");
     onTagCreateRef.current?.(tag, nextTags);
     emitActivity({ type: "tag-created", tag, tags: nextTags });
+    return tag;
   }
 
   function tagsForCard(card: KanbanCard) {
     return localCardTags[card.id] ?? card.tagIds ?? [];
+  }
+
+  function membersForCard(card: KanbanCard) {
+    return localCardAssignees[card.id] ?? card.assigneeIds ?? [];
+  }
+
+  function toggleCardMember(card: KanbanCard, memberId: string) {
+    const current = membersForCard(card);
+    const memberIds = current.includes(memberId)
+      ? current.filter((id) => id !== memberId)
+      : [...current, memberId];
+    setLocalCardAssignees((membersByCard) => ({ ...membersByCard, [card.id]: memberIds }));
+    onCardAssigneesChangeRef.current?.(card.id, memberIds, card);
+    emitActivity({ type: "card-assignees-changed", card, cardId: card.id, memberIds });
   }
 
   function toggleCardTag(card: KanbanCard, tagId: string) {
@@ -1330,10 +1417,9 @@ export function KanbanBoard({
     : null;
   const selectedTicketTagIds = selectedCard ? tagsForCard(selectedCard) : [];
   const selectedTicketTags = resolvedTags.filter((tag) => selectedTicketTagIds.includes(tag.id));
-  const availableTicketTags = resolvedTags.filter(
-    (tag) =>
-      !selectedTicketTagIds.includes(tag.id)
-      && tag.label.toLowerCase().includes(ticketTagSearch.trim().toLowerCase()),
+  const selectedTicketMemberIds = selectedCard ? membersForCard(selectedCard) : [];
+  const selectedTicketMembers = resolvedMembers.filter((member) =>
+    selectedTicketMemberIds.includes(member.id),
   );
 
   function setActiveCard(cardId: string | null) {
@@ -1794,6 +1880,9 @@ export function KanbanBoard({
                 const assignedTags = tagsForCard(card)
                   .map((tagId) => resolvedTags.find((tag) => tag.id === tagId))
                   .filter((tag): tag is KanbanTag => Boolean(tag));
+                const assignedMembers = membersForCard(card)
+                  .map((memberId) => resolvedMembers.find((member) => member.id === memberId))
+                  .filter((member): member is KanbanMember => Boolean(member));
                 const body: ReactNode = (
                   <>
                     <CardContent card={card} />
@@ -1814,6 +1903,23 @@ export function KanbanBoard({
                         ) : null}
                       </div>
                     ) : null}
+                    {assignedMembers.length ? (
+                      <div className={styles.cardMembers}>
+                        {assignedMembers.slice(0, 3).map((member) => (
+                          <span
+                            className={styles.cardMemberAvatar}
+                            key={member.id}
+                            style={{ background: member.color ?? "var(--opus-accent)" }}
+                            title={member.name}
+                          >
+                            {memberInitials(member.name)}
+                          </span>
+                        ))}
+                        {assignedMembers.length > 3 ? (
+                          <span className={styles.cardMemberMore}>+{assignedMembers.length - 3}</span>
+                        ) : null}
+                      </div>
+                    ) : null}
                   </>
                 );
                 const commentCount = commentsForCard(card).length;
@@ -1822,6 +1928,7 @@ export function KanbanBoard({
                   className: styles.card,
                   "data-dragging": isDragCard ? "true" : undefined,
                   "data-tone": card.tone ?? "default",
+                  onClick: () => activateCard(card),
                   onPointerDown: (event: ReactPointerEvent<HTMLElement>) =>
                     handleCardPointerDown(event, card.id, column.id),
                   style: card.color
@@ -1860,16 +1967,12 @@ export function KanbanBoard({
                       />
                     ) : null}
                     <article {...sharedProps}>
-                      {onCardClick ? (
+                      {onCardClick || ticketView ? (
                         <button
                           className={styles.cardOpen}
-                          onClick={() => {
-                            if (didDragRef.current) {
-                              didDragRef.current = false;
-                              return;
-                            }
-                            if (onCardClick) onCardClick(card);
-                            else if (ticketView) openTicket(card);
+                          onClick={(event) => {
+                            event.stopPropagation();
+                            activateCard(card);
                           }}
                           type="button"
                         >
@@ -2212,6 +2315,13 @@ export function KanbanBoard({
           }
           onClose={() => setActiveCard(null)}
           open
+          panelClassName={styles.ticketModal}
+          panelStyle={
+            {
+              ["--ticket-color" as string]:
+                selectedCard.color ?? "var(--opus-accent)",
+            } as CSSProperties
+          }
           size="large"
           title={selectedCard.title}
           titleContent={
@@ -2234,29 +2344,6 @@ export function KanbanBoard({
         >
           <div className={styles.ticketLayout} data-single={commentsEnabled ? undefined : "true"}>
             <section aria-label="Ticket details" className={styles.ticketDetails}>
-              <div className={styles.ticketMetaGrid}>
-                <label className={styles.ticketField}>
-                  <span>List</span>
-                  <select
-                    className={styles.ticketSelect}
-                    disabled={!onChange}
-                    onChange={(event) => {
-                      const target = columns.find((column) => column.id === event.target.value);
-                      if (target && target.id !== selectedCardColumn?.id) {
-                        moveCard(selectedCard.id, target.id, target.cardIds.length);
-                      }
-                    }}
-                    value={selectedCardColumn?.id ?? ""}
-                  >
-                    {columns.map((column) => (
-                      <option key={column.id} value={column.id}>
-                        {column.title}
-                      </option>
-                    ))}
-                  </select>
-                </label>
-              </div>
-
               <label className={styles.ticketField}>
                 <span>Description</span>
                 <textarea
@@ -2282,7 +2369,7 @@ export function KanbanBoard({
                     aria-expanded={ticketTagPickerOpen}
                     className={styles.ticketAddTagButton}
                     onClick={() => {
-                      setTicketTagPickerOpen((current) => !current);
+                      setTicketTagPickerOpen(true);
                       setTicketTagSearch("");
                     }}
                     type="button"
@@ -2313,39 +2400,72 @@ export function KanbanBoard({
                     <span className={styles.ticketTagsEmpty}>No tags selected.</span>
                   )}
                 </div>
-                {ticketTagPickerOpen ? (
-                  <div className={styles.ticketTagPicker}>
-                    <input
-                      aria-label="Search tags"
-                      className={styles.ticketInput}
-                      onChange={(event) => setTicketTagSearch(event.target.value)}
-                      placeholder="Search tags…"
-                      value={ticketTagSearch}
-                    />
-                    <div className={styles.ticketTagList}>
-                      {availableTicketTags.length ? (
-                        availableTicketTags.map((tag) => (
-                          <button
-                            className={styles.ticketTagOption}
-                            key={tag.id}
-                            onClick={() => toggleCardTag(selectedCard, tag.id)}
-                            style={{ ["--kanban-tag-color" as string]: tag.color }}
-                            type="button"
-                          >
-                            <span aria-hidden="true" className={styles.cardTagDot} />
-                            {tag.label}
-                          </button>
-                        ))
-                      ) : (
-                        <p className={styles.ticketTagsEmpty}>
-                          {resolvedTags.length ? "All matching tags are selected." : "No tags yet."}
-                        </p>
-                      )}
-                    </div>
-                  </div>
-                ) : null}
               </div>
 
+              <div className={styles.ticketMembers}>
+                <div className={styles.ticketTagsHeader}>
+                  <span className={styles.cardTagPickerLabel}>Members</span>
+                  <button
+                    aria-expanded={ticketMemberPickerOpen}
+                    className={styles.ticketAddTagButton}
+                    onClick={() => {
+                      setTicketMemberPickerOpen(true);
+                      setTicketMemberSearch("");
+                    }}
+                    type="button"
+                  >
+                    + Add member
+                  </button>
+                </div>
+                <div className={styles.ticketSelectedMembers}>
+                  {selectedTicketMembers.length ? (
+                    selectedTicketMembers.map((member) => (
+                      <span className={styles.ticketMemberChip} key={member.id}>
+                        <span
+                          aria-hidden="true"
+                          className={styles.ticketMemberAvatar}
+                          style={{ background: member.color ?? "var(--opus-accent)" }}
+                        >
+                          {memberInitials(member.name)}
+                        </span>
+                        <span>{member.name}</span>
+                        <button
+                          aria-label={`Remove ${member.name} from ticket`}
+                          onClick={() => toggleCardMember(selectedCard, member.id)}
+                          type="button"
+                        >
+                          ×
+                        </button>
+                      </span>
+                    ))
+                  ) : (
+                    <span className={styles.ticketTagsEmpty}>No members assigned.</span>
+                  )}
+                </div>
+              </div>
+
+              <div className={styles.ticketMetaGrid}>
+                <SelectField
+                  disabled={!onChange}
+                  id={`${selectedCard.id}-ticket-list`}
+                  label="List"
+                  mode="stacked"
+                  options={columns.map((column) => column.title)}
+                  size="sm"
+                  value={
+                    columns.find((column) => column.id === (moveTicketListId ?? selectedCardColumn?.id))
+                      ?.title ?? selectedCardColumn?.title ?? ""
+                  }
+                  onChange={(event) => {
+                    const target = columns.find((column) => column.title === event.target.value);
+                    if (target && target.id !== selectedCardColumn?.id) {
+                      const remaining = target.cardIds.filter((id) => id !== selectedCard.id);
+                      setMoveTicketListId(target.id);
+                      setMoveTicketIndex(remaining.length);
+                    }
+                  }}
+                />
+              </div>
             </section>
 
             {commentsEnabled ? (
@@ -2402,6 +2522,222 @@ export function KanbanBoard({
           </div>
         </Modal>
       ) : null}
+      {ticketTagPickerOpen && selectedCard ? (
+        <Modal
+          actions={
+            <Button variant="secondary" onClick={() => setTicketTagPickerOpen(false)}>
+              Done
+            </Button>
+          }
+          onClose={() => setTicketTagPickerOpen(false)}
+          open
+          size="small"
+          title={`Tags for ${selectedCard.title}`}
+        >
+          <div className={styles.ticketTagModal}>
+            <input
+              aria-label="Search tags"
+              autoFocus
+              className={styles.ticketInput}
+              onChange={(event) => setTicketTagSearch(event.target.value)}
+              placeholder="Search tags…"
+              value={ticketTagSearch}
+            />
+            <div className={styles.ticketTagModalList}>
+              {resolvedTags
+                .filter((tag) =>
+                  tag.label.toLowerCase().includes(ticketTagSearch.trim().toLowerCase()),
+                )
+                .map((tag) => {
+                  const active = tagsForCard(selectedCard).includes(tag.id);
+                  return (
+                    <button
+                      aria-pressed={active}
+                      className={styles.ticketTagModalOption}
+                      key={tag.id}
+                      onClick={() => toggleCardTag(selectedCard, tag.id)}
+                      style={{ ["--kanban-tag-color" as string]: tag.color }}
+                      type="button"
+                    >
+                      <span aria-hidden="true" className={styles.cardTagDot} />
+                      <span>{tag.label}</span>
+                      {active ? (
+                        <span aria-hidden="true" className={styles.ticketTagCheck}>
+                          ✓
+                        </span>
+                      ) : null}
+                    </button>
+                  );
+                })}
+              {resolvedTags.length === 0 ? (
+                <p className={styles.ticketTagsEmpty}>No tags yet. Create one below.</p>
+              ) : null}
+            </div>
+            <form
+              className={styles.ticketTagCreate}
+              onSubmit={(event) => {
+                const tag = createTag(event);
+                if (tag) toggleCardTag(selectedCard, tag.id);
+              }}
+            >
+              <span className={styles.tagFormLabel}>Create a tag</span>
+              <div className={styles.tagFormRow}>
+                <input
+                  aria-label="New tag name"
+                  className={styles.ticketInput}
+                  onChange={(event) => setNewTagLabel(event.target.value)}
+                  placeholder="e.g. Ready for QA"
+                  value={newTagLabel}
+                />
+                <Button disabled={!newTagLabel.trim()} size="sm" type="submit">
+                  Create tag
+                </Button>
+              </div>
+              <div className={styles.tagPalette}>
+                {columnColors.map((color) => (
+                  <button
+                    aria-label={`New tag colour ${color}`}
+                    aria-pressed={newTagColor === color}
+                    className={styles.tagSwatch}
+                    key={color}
+                    onClick={() => setNewTagColor(color)}
+                    style={{ background: color }}
+                    type="button"
+                  />
+                ))}
+                <button
+                  aria-expanded={tagColorPicker?.targetId === "new"}
+                  className={styles.tagCustomButton}
+                  onClick={(event) => openTagColorPicker(event, "new")}
+                  type="button"
+                >
+                  Custom…
+                </button>
+              </div>
+            </form>
+          </div>
+        </Modal>
+      ) : null}
+      {ticketMemberPickerOpen && selectedCard ? (
+        <Modal
+          actions={
+            <Button variant="secondary" onClick={() => setTicketMemberPickerOpen(false)}>
+              Done
+            </Button>
+          }
+          onClose={() => setTicketMemberPickerOpen(false)}
+          open
+          size="small"
+          title={`Members for ${selectedCard.title}`}
+        >
+          <div className={styles.ticketMemberModal}>
+            <input
+              aria-label="Search members"
+              autoFocus
+              className={styles.ticketInput}
+              onChange={(event) => setTicketMemberSearch(event.target.value)}
+              placeholder="Search members…"
+              value={ticketMemberSearch}
+            />
+            <div className={styles.ticketMemberList}>
+              {resolvedMembers
+                .filter((member) =>
+                  [member.name, member.role ?? ""]
+                    .join(" ")
+                    .toLowerCase()
+                    .includes(ticketMemberSearch.trim().toLowerCase()),
+                )
+                .map((member) => {
+                  const active = membersForCard(selectedCard).includes(member.id);
+                  return (
+                    <button
+                      aria-pressed={active}
+                      className={styles.ticketMemberOption}
+                      key={member.id}
+                      onClick={() => toggleCardMember(selectedCard, member.id)}
+                      type="button"
+                    >
+                      <span
+                        aria-hidden="true"
+                        className={styles.ticketMemberAvatar}
+                        style={{ background: member.color ?? "var(--opus-accent)" }}
+                      >
+                        {memberInitials(member.name)}
+                      </span>
+                      <span className={styles.ticketMemberCopy}>
+                        <strong>{member.name}</strong>
+                        {member.role ? <small>{member.role}</small> : null}
+                      </span>
+                      <span aria-hidden="true" className={styles.ticketTagCheck}>
+                        {active ? "✓" : ""}
+                      </span>
+                    </button>
+                  );
+                })}
+              {resolvedMembers.length === 0 ? (
+                <p className={styles.ticketTagsEmpty}>No members available.</p>
+              ) : null}
+            </div>
+          </div>
+        </Modal>
+      ) : null}
+      {moveTicketListId && selectedCard ? (() => {
+        const target = columns.find((column) => column.id === moveTicketListId);
+        if (!target) return null;
+        const remaining = target.cardIds.filter((id) => id !== selectedCard.id);
+
+        return (
+          <Modal
+            actions={
+              <>
+                <Button variant="secondary" onClick={() => setMoveTicketListId(null)}>
+                  Cancel
+                </Button>
+                <Button
+                  onClick={() => {
+                    moveCard(selectedCard.id, target.id, moveTicketIndex);
+                    setMoveTicketListId(null);
+                  }}
+                >
+                  Move
+                </Button>
+              </>
+            }
+            onClose={() => setMoveTicketListId(null)}
+            open
+            size="small"
+            title={`Move to ${target.title}`}
+          >
+            <div className={styles.ticketMove}>
+              {(() => {
+                const positionOptions = [
+                  "Top",
+                  ...remaining.map(
+                    (cardId) => `After ${cardLookup[cardId]?.title ?? cardId}`,
+                  ),
+                  ...(remaining.length > 0 ? ["Bottom"] : []),
+                ];
+                return (
+                  <SelectField
+                    id={`${selectedCard.id}-ticket-position`}
+                    label="Position"
+                    mode="stacked"
+                    options={positionOptions}
+                    size="sm"
+                    value={positionOptions[moveTicketIndex] ?? positionOptions[0] ?? "Top"}
+                    onChange={(event) => {
+                      setMoveTicketIndex(Math.max(0, positionOptions.indexOf(event.target.value)));
+                    }}
+                  />
+                );
+              })()}
+              <p className={styles.ticketMoveHint}>
+                Choose where this ticket should sit in {target.title}.
+              </p>
+            </div>
+          </Modal>
+        );
+      })() : null}
     </div>
   );
 }
