@@ -1443,8 +1443,8 @@ export const commitLog: CommitEntry[] = [
     summary: "feat: add enterprise components and theme-consistent inputs",
   },
   {
-    hash: "aef700b4cab082895d63002fe6649988732ded0a",
-    shortHash: "aef700b",
+    hash: "9c0ed572a1aa179cf84534bb85343f4f9a7d3ac1",
+    shortHash: "9c0ed57",
     committedAt: "2026-10-22",
     summary: "chore: release opus-react@0.8.0",
   }
