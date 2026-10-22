@@ -1483,5 +1483,11 @@ export const commitLog: CommitEntry[] = [
     shortHash: "17a8a5c",
     committedAt: "2026-10-22",
     summary: "fix: avoid duplicate all-columns saved view",
+  },
+  {
+    hash: "a3d36b127178d51e3e1f3d4c3dbb38458ea6950d",
+    shortHash: "a3d36b1",
+    committedAt: "2026-10-22",
+    summary: "chore: release opus-react@0.9.1",
   }
 ].reverse();

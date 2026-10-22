@@ -720,8 +720,8 @@ export const versionLog: VersionEntry[] = [
   {
     version: "0.9.1",
     releasedAt: "2026-10-22",
-    commit: "overlay-0.9.1",
-    commitShort: "overlay",
+    commit: "a3d36b127178d51e3e1f3d4c3dbb38458ea6950d",
+    commitShort: "a3d36b1",
     summary: "Release notes and documentation for Opus 0.8 and 0.9.",
     changes: ["Add public changelog entries for the 0.8.0 component release and the 0.9.0 DataGrid release.","Document DataGrid column management, controlled visibility, and saved views.","Add the enterprise components and DataGrid story to the Opus journal.","Publish opus-react 0.9.1."],
   }
