@@ -97,7 +97,7 @@ export const buildersCatalog = [
     title: "Kanban Board",
     componentName: "KanbanBoard",
     navigationGroup: "Planning",
-    description: "Trello-style board with draggable cards and lists, horizontal scrolling, new-list creation, and ticket comments.",
+    description: "Trello-style board with draggable cards and lists, inline list renaming and colours, horizontal scrolling, new-list creation, and ticket comments.",
     sourceFiles: [
       "components/KanbanBoard/KanbanBoard.tsx",
       "components/KanbanBoard/KanbanBoard.module.css",

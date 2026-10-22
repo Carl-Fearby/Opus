@@ -207,6 +207,81 @@
   line-height: 1.25;
 }
 
+.columnTitleButton {
+  display: block;
+  max-width: 100%;
+  padding: 1px 3px;
+  margin-left: -3px;
+  overflow: hidden;
+  border: 0;
+  border-radius: var(--opus-input-radius-small);
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  text-align: left;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  cursor: text;
+}
+
+.columnTitleButton:hover {
+  background: transparent;
+  text-decoration: underline;
+  text-decoration-color: color-mix(in srgb, currentColor 45%, transparent);
+  text-underline-offset: 2px;
+}
+
+.columnTitleButton:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 2px color-mix(in srgb, var(--kanban-header-accent) 38%, transparent);
+}
+
+.columnTitleInput {
+  width: 100%;
+  min-height: 24px;
+  box-sizing: border-box;
+  padding: 1px 4px;
+  border: 1px solid var(--kanban-header-accent);
+  border-radius: var(--opus-input-radius-small);
+  background: var(--opus-surface-fill, var(--dashboard-section-panel));
+  color: var(--dashboard-section-text);
+  font: inherit;
+  font-size: 0.875rem;
+  font-weight: 700;
+}
+
+.columnTitleInput:focus {
+  outline: none;
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--kanban-header-accent) 26%, transparent);
+}
+
+.columnColorButton {
+  display: inline-grid;
+  place-items: center;
+  flex-shrink: 0;
+  width: 22px;
+  height: 24px;
+  padding: 0;
+  border: 0;
+  border-radius: var(--opus-input-radius-small);
+  background: transparent;
+  color: var(--dashboard-section-muted);
+  font-size: 0.72rem;
+  cursor: pointer;
+}
+
+.columnColorButton:hover,
+.columnColorButton[aria-expanded="true"] {
+  background: transparent;
+  color: var(--dashboard-section-text);
+}
+
+.columnColorButton:focus-visible {
+  outline: none;
+  color: var(--dashboard-section-text);
+  box-shadow: 0 0 0 2px color-mix(in srgb, var(--kanban-header-accent) 38%, transparent);
+}
+
 .count {
   min-width: 1.5rem;
   padding: 2px 7px;
@@ -747,4 +822,114 @@
   .column {
     transition: none;
   }
+}
+
+
+.colorMenu {
+  position: fixed;
+  z-index: 10010;
+  display: grid;
+  gap: 9px;
+  width: 204px;
+  box-sizing: border-box;
+  padding: 12px;
+  border: 1px solid var(--opus-surface-border, var(--opus-border-strong));
+  border-radius: var(--opus-input-radius-large);
+  background: var(--opus-menu-glass-surface, var(--opus-panel));
+  box-shadow: var(--opus-control-shadow, var(--opus-shadow));
+  color: var(--opus-text);
+  -webkit-backdrop-filter: var(--opus-surface-backdrop-filter, blur(18px) saturate(1.3));
+  backdrop-filter: var(--opus-surface-backdrop-filter, blur(18px) saturate(1.3));
+}
+
+.colorMenuTitle {
+  color: var(--opus-muted);
+  font-size: 0.68rem;
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.colorGrid {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  gap: 7px;
+}
+
+.colorSwatch {
+  width: 100%;
+  aspect-ratio: 1;
+  padding: 0;
+  border: 2px solid transparent;
+  border-radius: 999px;
+  cursor: pointer;
+  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--opus-text) 18%, transparent);
+}
+
+.colorSwatch:hover {
+  transform: scale(1.08);
+}
+
+.colorSwatch[aria-pressed="true"] {
+  border-color: var(--opus-text);
+  box-shadow:
+    0 0 0 2px var(--opus-menu-glass-surface, var(--opus-panel)),
+    0 0 0 3px var(--opus-text);
+}
+
+.colorSwatch:focus-visible {
+  outline: none;
+  box-shadow:
+    0 0 0 2px var(--opus-menu-glass-surface, var(--opus-panel)),
+    0 0 0 4px color-mix(in srgb, var(--opus-accent) 55%, transparent);
+}
+
+.colorMenuFooter {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  padding-top: 8px;
+  border-top: 1px solid var(--opus-surface-border, color-mix(in srgb, var(--opus-border) 70%, transparent));
+}
+
+.colorCustom {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  color: var(--opus-muted);
+  font-size: 0.74rem;
+  font-weight: 650;
+  cursor: pointer;
+}
+
+.colorCustom input[type="color"] {
+  width: 26px;
+  height: 24px;
+  padding: 0;
+  border: 1px solid var(--opus-surface-border, var(--opus-border));
+  border-radius: 7px;
+  background: transparent;
+  cursor: pointer;
+}
+
+.colorClear {
+  padding: 3px 0;
+  border: 0;
+  background: transparent;
+  color: var(--opus-accent);
+  font: inherit;
+  font-size: 0.74rem;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.colorClear:hover {
+  text-decoration: underline;
+}
+
+.colorClear:focus-visible {
+  outline: none;
+  border-radius: var(--opus-input-radius-small);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--opus-accent) 24%, transparent);
 }

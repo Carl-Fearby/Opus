@@ -12,7 +12,7 @@ import {
   type ReactNode,
 } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faChevronLeft, faChevronRight, faComment, faGripVertical, faPaperPlane } from "@fortawesome/free-solid-svg-icons";
+import { faChevronLeft, faChevronRight, faComment, faGripVertical, faPalette, faPaperPlane } from "@fortawesome/free-solid-svg-icons";
 import { createThemedPortal as createPortal } from "@/lib/theme/createThemedPortal";
 import { Button } from "@/components/fields/Button";
 import { CustomScrollbar } from "@/components/CustomScrollbar";
@@ -49,6 +49,8 @@ export type KanbanBoardProps = {
   /** Label for the new-list button. */
   addColumnLabel?: string;
   cards: Record<string, KanbanCard>;
+  /** Colour presets offered by the list colour menu. */
+  columnColors?: string[];
   /** Fixed width for each list. Numbers are pixels. */
   columnWidth?: number | string;
   columns: KanbanColumn[];
@@ -112,6 +114,21 @@ type DragState = {
 };
 
 const DRAG_THRESHOLD_PX = 4;
+
+const DEFAULT_COLUMN_COLORS = [
+  "#64748b",
+  "#0284c7",
+  "#0ea5e9",
+  "#14b8a6",
+  "#22c55e",
+  "#84cc16",
+  "#f59e0b",
+  "#f97316",
+  "#ef4444",
+  "#ec4899",
+  "#8b5cf6",
+  "#6366f1",
+];
 const DROP_ANIMATION_MS = 220;
 
 function metaIconName(meta?: string) {
@@ -336,6 +353,7 @@ function resolveDropLanding(
 export function KanbanBoard({
   addColumnLabel = "Add list",
   cards,
+  columnColors = DEFAULT_COLUMN_COLORS,
   columnWidth,
   columns,
   commentsEnabled = true,
@@ -354,6 +372,9 @@ export function KanbanBoard({
   const [commentDraft, setCommentDraft] = useState("");
   const [localComments, setLocalComments] = useState<Record<string, KanbanComment[]>>({});
   const [scrollInfo, setScrollInfo] = useState({ left: 0, max: 0 });
+  const [editingColumnId, setEditingColumnId] = useState<string | null>(null);
+  const [editingColumnTitle, setEditingColumnTitle] = useState("");
+  const [colorMenu, setColorMenu] = useState<{ columnId: string; left: number; top: number } | null>(null);
   const commentFieldId = useId();
   const columnFieldId = useId();
   const didDragRef = useRef(false);
@@ -361,6 +382,8 @@ export function KanbanBoard({
   const columnDragRef = useRef<ColumnDragState | null>(null);
   const rootRef = useRef<HTMLDivElement | null>(null);
   const columnInputRef = useRef<HTMLInputElement | null>(null);
+  const colorMenuRef = useRef<HTMLDivElement | null>(null);
+  const skipTitleCommitRef = useRef(false);
   const columnsRef = useRef(columns);
   const onChangeRef = useRef(onChange);
   const onAddCommentRef = useRef(onAddComment);
@@ -445,6 +468,28 @@ export function KanbanBoard({
     board.addEventListener("wheel", handleWheel, { passive: false });
     return () => board.removeEventListener("wheel", handleWheel);
   }, []);
+
+  useEffect(() => {
+    if (!colorMenu) return;
+
+    const handlePointerDown = (event: PointerEvent) => {
+      if (!colorMenuRef.current?.contains(event.target as Node)) {
+        setColorMenu(null);
+      }
+    };
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === "Escape") {
+        setColorMenu(null);
+      }
+    };
+
+    document.addEventListener("pointerdown", handlePointerDown);
+    document.addEventListener("keydown", handleKeyDown);
+    return () => {
+      document.removeEventListener("pointerdown", handlePointerDown);
+      document.removeEventListener("keydown", handleKeyDown);
+    };
+  }, [colorMenu]);
 
   useEffect(() => {
     const board = rootRef.current;
@@ -540,6 +585,29 @@ export function KanbanBoard({
       board?.scrollTo({ left: board.scrollWidth, behavior: "smooth" });
       columnInputRef.current?.focus();
     });
+  }
+
+  function updateColumn(columnId: string, patch: Partial<KanbanColumn>) {
+    onChangeRef.current?.(
+      columnsRef.current.map((column) =>
+        column.id === columnId ? { ...column, ...patch } : column,
+      ),
+    );
+  }
+
+  function beginEditingColumn(column: KanbanColumn) {
+    if (!onChange) return;
+    setEditingColumnId(column.id);
+    setEditingColumnTitle(column.title);
+  }
+
+  function finishEditingColumn(save: boolean) {
+    const columnId = editingColumnId;
+    if (!columnId) return;
+    const title = editingColumnTitle.trim();
+    if (save && title) updateColumn(columnId, { title });
+    setEditingColumnId(null);
+    setEditingColumnTitle("");
   }
 
   function moveColumn(columnId: string, toIndex: number) {
@@ -882,6 +950,9 @@ export function KanbanBoard({
       : null;
 
   const selectedCard = selectedCardId ? cardLookup[selectedCardId] : null;
+  const colorMenuColumn = colorMenu
+    ? columns.find((column) => column.id === colorMenu.columnId) ?? null
+    : null;
 
   function scrollBoard(direction: -1 | 1) {
     const board = rootRef.current;
@@ -1032,7 +1103,75 @@ export function KanbanBoard({
               >
                 <FontAwesomeIcon icon={faGripVertical} />
               </button>
-              <h3 className={styles.columnTitle}>{column.title}</h3>
+              <h3 className={styles.columnTitle}>
+                {editingColumnId === column.id ? (
+                  <input
+                    aria-label={`List name for ${column.title}`}
+                    autoFocus
+                    className={styles.columnTitleInput}
+                    onBlur={() => {
+                      if (skipTitleCommitRef.current) {
+                        skipTitleCommitRef.current = false;
+                        return;
+                      }
+                      finishEditingColumn(true);
+                    }}
+                    onChange={(event) => setEditingColumnTitle(event.target.value)}
+                    onFocus={(event) => event.currentTarget.select()}
+                    onKeyDown={(event) => {
+                      if (event.key === "Enter") {
+                        event.preventDefault();
+                        finishEditingColumn(true);
+                      }
+                      if (event.key === "Escape") {
+                        event.preventDefault();
+                        skipTitleCommitRef.current = true;
+                        finishEditingColumn(false);
+                        event.currentTarget.blur();
+                      }
+                    }}
+                    value={editingColumnTitle}
+                  />
+                ) : onChange ? (
+                  <button
+                    className={styles.columnTitleButton}
+                    onClick={() => beginEditingColumn(column)}
+                    title="Rename list"
+                    type="button"
+                  >
+                    {column.title}
+                  </button>
+                ) : (
+                  column.title
+                )}
+              </h3>
+              {onChange ? (
+                <button
+                  aria-expanded={colorMenu?.columnId === column.id}
+                  aria-haspopup="dialog"
+                  aria-label={`Change colour for ${column.title}`}
+                  className={styles.columnColorButton}
+                  onClick={(event) => {
+                    if (colorMenu?.columnId === column.id) {
+                      setColorMenu(null);
+                      return;
+                    }
+                    const rect = event.currentTarget.getBoundingClientRect();
+                    const width = 204;
+                    setColorMenu({
+                      columnId: column.id,
+                      left: Math.min(
+                        Math.max(8, rect.right - width),
+                        window.innerWidth - width - 8,
+                      ),
+                      top: Math.min(rect.bottom + 6, window.innerHeight - 220),
+                    });
+                  }}
+                  type="button"
+                >
+                  <FontAwesomeIcon icon={faPalette} />
+                </button>
+              ) : null}
               <span className={styles.count}>{column.cardIds.length}</span>
             </header>
             <CustomScrollbar
@@ -1219,6 +1358,59 @@ export function KanbanBoard({
       </div>
       {preview}
       {columnPreview}
+      {colorMenu && colorMenuColumn
+        ? createPortal(
+            <div
+              aria-label={`Colour for ${colorMenuColumn.title}`}
+              className={styles.colorMenu}
+              ref={colorMenuRef}
+              role="dialog"
+              style={{ left: colorMenu.left, top: colorMenu.top }}
+            >
+              <span className={styles.colorMenuTitle}>List colour</span>
+              <div className={styles.colorGrid}>
+                {columnColors.map((color) => (
+                  <button
+                    aria-label={`Use ${color}`}
+                    aria-pressed={colorMenuColumn.accent === color}
+                    className={styles.colorSwatch}
+                    key={color}
+                    onClick={() => {
+                      updateColumn(colorMenuColumn.id, { accent: color });
+                      setColorMenu(null);
+                    }}
+                    style={{ background: color }}
+                    type="button"
+                  />
+                ))}
+              </div>
+              <div className={styles.colorMenuFooter}>
+                <label className={styles.colorCustom}>
+                  <span>Custom</span>
+                  <input
+                    aria-label="Custom list colour"
+                    onChange={(event) =>
+                      updateColumn(colorMenuColumn.id, { accent: event.target.value })
+                    }
+                    type="color"
+                    value={colorMenuColumn.accent ?? columnColors[0] ?? "#64748b"}
+                  />
+                </label>
+                <button
+                  className={styles.colorClear}
+                  onClick={() => {
+                    updateColumn(colorMenuColumn.id, { accent: undefined });
+                    setColorMenu(null);
+                  }}
+                  type="button"
+                >
+                  Clear
+                </button>
+              </div>
+            </div>,
+            document.body,
+          )
+        : null}
       {commentsEnabled && selectedCard ? (
         <Modal
           description={selectedCard.meta ?? selectedCard.description}

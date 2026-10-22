@@ -73,3 +73,38 @@ describe("KanbanBoard", () => {
     ]);
   });
 });
+
+describe("KanbanBoard list editing", () => {
+  it("renames a list inline", () => {
+    const onChange = vi.fn();
+    render(<KanbanBoard cards={cards} columns={columns} onChange={onChange} />);
+
+    fireEvent.click(screen.getAllByTitle("Rename list")[0]);
+    fireEvent.change(screen.getByLabelText("List name for To do"), {
+      target: { value: "In review" },
+    });
+    fireEvent.keyDown(screen.getByLabelText("List name for To do"), { key: "Enter" });
+
+    expect(onChange).toHaveBeenCalledTimes(1);
+    expect((onChange.mock.calls[0][0] as KanbanColumn[])[0]).toMatchObject({
+      id: "todo",
+      title: "In review",
+    });
+  });
+
+  it("changes a list colour from the palette", () => {
+    const onChange = vi.fn();
+    render(<KanbanBoard cards={cards} columns={columns} onChange={onChange} />);
+
+    fireEvent.click(screen.getByRole("button", { name: "Change colour for To do" }));
+    expect(screen.getByRole("dialog", { name: "Colour for To do" })).toBeInTheDocument();
+
+    fireEvent.click(screen.getByRole("button", { name: "Use #f59e0b" }));
+
+    expect(onChange).toHaveBeenCalledTimes(1);
+    expect((onChange.mock.calls[0][0] as KanbanColumn[])[0]).toMatchObject({
+      id: "todo",
+      accent: "#f59e0b",
+    });
+  });
+});
