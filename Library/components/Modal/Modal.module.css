@@ -72,6 +72,12 @@
   border-bottom: 1px solid var(--opus-surface-border, color-mix(in srgb, var(--opus-border) 72%, transparent));
 }
 
+.headerActions {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
 .heading {
   display: grid;
   gap: 5px;

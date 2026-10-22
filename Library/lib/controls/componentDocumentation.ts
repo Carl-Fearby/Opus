@@ -256,7 +256,69 @@ Use this lab as a reference implementation for JSON-driven desktop applications.
   "permissions-matrix": "## Overview\n\nRole-by-resource access matrix.\n\n## Props\n\n| Prop | Type | Default | Description |\n| --- | --- | --- | --- |\n| `roles` | `string[]` | \u2014 | Row headers. |\n| `resources` | `string[]` | \u2014 | Column headers. |\n| `permissions` | `Record<string, Record<string, PermissionLevel>>` | \u2014 | Levels. |\n| `onChange` | `(role, resource, level) => void` | \u2014 | Update handler. |",
   "dual-list-builder": "## Overview\n\nSearchable dual-pane transfer list.\n\n## Props\n\n| Prop | Type | Default | Description |\n| --- | --- | --- | --- |\n| `available` | `DualListItem[]` | \u2014 | All options. |\n| `selectedIds` | `string[]` | \u2014 | Selected ids. |\n| `onChange` | `(selectedIds) => void` | \u2014 | Update handler. |",
   scheduler: "## Overview\n\nWeek-style timed event grid.\n\n## Props\n\n| Prop | Type | Default | Description |\n| --- | --- | --- | --- |\n| `events` | `SchedulerEvent[]` | \u2014 | Timed events. |\n| `days` | `string[]` | Mon–Fri | Column labels. |\n| `startHour` / `endHour` | `number` | `9` / `17` | Visible hours. |",
-  "kanban-board": "## Overview\n\nTrello-style column board with draggable cards and lists. Lists stay on one horizontal track instead of wrapping, and new lists can be created inline. Cards can carry a comment thread with a built-in composer.\n\n## Props\n\n| Prop | Type | Default | Description |\n| --- | --- | --- | --- |\n| `columns` | `KanbanColumn[]` | — | Lists and card ids. |\n| `cards` | `Record<string, KanbanCard>` | — | Card lookup. |\n| `onChange` | `(columns) => void` | — | Enables card moves, list reordering, and new lists. |\n| `onCardClick` | `(card) => void` | — | Optional card body click callback. |\n| `columnWidth` | `number \\| string` | `280` | Fixed width for every list. |\n| `columnColors` | `string[]` | Built-in palette | Colour presets offered by the list colour menu. |\n| `addColumnLabel` | `string` | `\"Add list\"` | Label for the new-list trigger. |\n| `commentsEnabled` | `boolean` | `true` | Shows comment counts and the thread action. |\n| `currentUser` | `{ name: string }` | `You` | Author shown in the comment composer. |\n| `onAddComment` | `(cardId, comment) => void` | — | Called when a comment is added. |\n| `onCommentsChange` | `(cardId, comments) => void` | — | Called with the full comment thread after a change. |\n\n## Lists and comments\n\nDrag the grip in a list header to reorder lists; neighbouring lists animate aside to open the drop gap. Focus the grip and use the left or right arrow keys for keyboard reordering.\n\nClick a list title to rename it inline; press Enter to save or Escape to cancel. Use the palette button to pick a preset accent or a custom colour.\n\nCards read their thread from `card.comments` and keep new comments locally when no handler is supplied. Persist comments by handling `onCommentsChange` or `onAddComment`.\n\n## KanbanComment\n\n| Field | Type | Description |\n| --- | --- | --- |\n| `id` | `string` | Comment id. |\n| `body` | `string` | Comment text. |\n| `author` | `string` | Optional display name. |\n| `createdAt` | `string` | Optional ISO timestamp. |",
+  "kanban-board": `## Overview
+
+Trello-style board with draggable cards and lists on one horizontal track. Lists can be created, renamed, recoloured and reordered; cards support inline creation, comments, tags and a two-column ticket view.
+
+## Board props
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| \`columns\` | \`KanbanColumn[]\` | required | Lists and their card ids. |
+| \`cards\` | \`Record<string, KanbanCard>\` | required | Card lookup. New cards are also held locally until the parent responds. |
+| \`onChange\` | \`(columns: KanbanColumn[]) => void\` | — | Enables card moves, list reordering, list creation and list edits. |
+| \`onColumnCreate\` | \`(column, columns) => void\` | — | Called after a list is created. |
+| \`onColumnChange\` | \`(column, previousColumn, columns) => void\` | — | Called after a title or colour edit. |
+| \`onColumnReorder\` | \`(columns, { columnId, fromIndex, toIndex }) => void\` | — | Called after a list is reordered. |
+| \`onCardCreate\` | \`(card, columnId, columns, cards) => void\` | — | Called after a card is created inline. |
+| \`onCardMove\` | \`(cardId, { fromColumnId, fromIndex, toColumnId, toIndex }, columns) => void\` | — | Called after a card is moved. |
+| \`onCardUpdate\` | \`(cardId, patch, card) => void\` | — | Called when ticket title, description or header colour changes. |
+| \`columnColors\` | \`string[]\` | Built-in palette | Shared by list headers, ticket headers and tags. |
+| \`columnWidth\` | \`number \\| string\` | \`280\` | Fixed width for every list. |
+| \`addColumnLabel\` / \`addCardLabel\` | \`string\` | “Add list” / “Add a card” | Composer labels. |
+| \`tagManager\` | \`boolean\` | \`true\` | Shows the board-level tag manager. |
+| \`ticketView\` | \`boolean\` | \`true\` | Enables the two-column ticket view. |
+| \`activeCardId\` | \`string \\| null\` | — | Controlled open ticket. |
+| \`defaultActiveCardId\` | \`string \\| null\` | — | Initial ticket when uncontrolled. |
+| \`onActiveCardChange\` | \`(cardId, card) => void\` | — | Called when the ticket opens, closes, or the active card changes. |
+| \`onCardClick\` | \`(card) => void\` | — | Optional external card-body click handler; otherwise the ticket opens. |
+| \`onActivity\` | \`(activity: KanbanActivity) => void\` | — | Single structured event stream for persistence. |
+
+## Ticket view
+
+The ticket modal uses a two-column layout:
+
+- **Left:** editable title in the modal header, list selector, description, selected tags, and header colour picker.
+- **Right:** the comment thread and composer.
+
+Selected tags are shown as removable chips; **Add tag** opens a searchable picker instead of listing every tag inline.
+
+## Comments and tags
+
+| Prop | Type | Description |
+| --- | --- | --- |
+| \`commentsEnabled\` | \`boolean\` | Shows the comment thread inside the ticket. |
+| \`currentUser\` | \`{ name: string }\` | Author shown in the composer. |
+| \`onAddComment\` | \`(cardId, comment) => void\` | Called when a comment is added. |
+| \`onCommentsChange\` | \`(cardId, comments) => void\` | Full thread after a change. |
+| \`tags\` / \`defaultTags\` | \`KanbanTag[]\` | Controlled or initial board tags. |
+| \`onTagsChange\` | \`(tags) => void\` | Called after tag create, update or delete. |
+| \`onTagCreate\` | \`(tag, tags) => void\` | Called after a tag is created. |
+| \`onTagUpdate\` | \`(tag, previousTag, tags) => void\` | Called after a tag rename or recolour. |
+| \`onTagDelete\` | \`(tag, tags) => void\` | Called after a tag is deleted. |
+| \`onCardTagsChange\` | \`(cardId, tagIds, card) => void\` | Called when tags are added or removed from a ticket. |
+
+## Card and activity models
+
+\`KanbanCard\` supports \`title\`, \`meta\`, \`description\`, \`color\`, \`tone\`, \`comments\` and \`tagIds\`. The \`color\` value is the ticket side-border colour.
+
+\`KanbanActivity\` is a discriminated union covering: \`list-created\`, \`list-updated\`, \`list-reordered\`, \`card-created\`, \`card-moved\`, \`card-updated\`, \`comment-added\`, \`tag-created\`, \`tag-updated\`, \`tag-deleted\` and \`card-tags-changed\`. Every event includes an ISO \`at\` timestamp and the relevant records or resulting collections.
+
+## Accessibility
+
+- List grips are keyboard reorderable with the left and right arrow keys.
+- Ticket titles are labelled inputs inside the modal heading.
+- Tag pickers use labelled search fields and buttons; selected tags expose individual remove actions.`,
   calendar: "## Overview\n\nMonth calendar with selectable days, labelled timed events, and a day-detail overlay built on the shared `Modal` component.\n\n## Props\n\n| Prop | Type | Default | Description |\n| --- | --- | --- | --- |\n| `events` | `CalendarEvent[]` | `[]` | Day markers with optional `startTime`, `endTime`, tone, and title. |\n| `maxDayEvents` | `number` | `3` | Maximum events shown in a month cell; extra events collapse to `+N more`. |\n| `selectedDate` | `string` | \u2014 | `YYYY-MM-DD`. |\n| `onSelectDate` | `(date) => void` | \u2014 | Day click handler. |\n| `openDayOnSelect` | `boolean` | `true` | Open the shared Opus modal with schedule and booking form. |\n| `onBookEvent` | `(event) => void` | \u2014 | Called when a fake booking is added in the modal. |\n| `showMonthYearPicker` | `boolean` | `true` | Show month and year dropdowns in the header. |\n| `month` / `year` | `number` | \u2014 | Controlled visible month. |\n\n## CalendarEvent\n\n| Field | Type | Description |\n| --- | --- | --- |\n| `date` | `string` | `YYYY-MM-DD` day key. |\n| `title` | `string` | Event label. |\n| `startTime` | `string` | Optional `HH:mm` from time. |\n| `endTime` | `string` | Optional `HH:mm` to time. |\n| `tone` | `\"accent\" \\| \"success\" \\| \"warning\" \\| \"danger\"` | Marker colour. |",
   "resource-planner": "## Overview\n\nResource-by-hour assignment timeline.\n\n## Props\n\n| Prop | Type | Default | Description |\n| --- | --- | --- | --- |\n| `resources` | `ResourcePlannerResource[]` | \u2014 | Rows. |\n| `items` | `ResourcePlannerItem[]` | \u2014 | Timed assignments. |\n| `startHour` / `endHour` | `number` | `8` / `17` | Visible hours. |",
   "json-viewer": "## Overview\n\nRead-only JSON tree.\n\n## Props\n\n| Prop | Type | Default | Description |\n| --- | --- | --- | --- |\n| `value` | `unknown` | \u2014 | JSON-compatible value. |\n| `collapsedDepth` | `number` | `1` | Auto-expand depth. |",

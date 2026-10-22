@@ -1,14 +1,312 @@
 .shell {
+  position: relative;
   display: grid;
   gap: 6px;
   width: 100%;
   min-width: 0;
 }
 
+.boardToolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.tagManagerWrap {
+  position: relative;
+}
+
+.tagsButton {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  min-height: 28px;
+  padding: 0 10px;
+  border: 1px solid var(--opus-surface-border, var(--opus-border-strong));
+  border-radius: 999px;
+  background: var(--opus-surface-fill, var(--opus-input-bg));
+  color: var(--opus-surface-text, var(--opus-text));
+  font: inherit;
+  font-size: 0.76rem;
+  font-weight: 700;
+  cursor: pointer;
+  box-shadow: var(--opus-input-shadow, var(--opus-control-inset-shadow, none));
+}
+
+.tagsButton:hover,
+.tagsButton[aria-expanded="true"] {
+  border-color: color-mix(in srgb, var(--opus-accent) 48%, var(--opus-border));
+  color: var(--opus-text);
+}
+
+.tagsButton:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--opus-accent) 24%, transparent);
+}
+
+.tagCount {
+  min-width: 1.3rem;
+  padding: 1px 6px;
+  border-radius: 999px;
+  background: var(--opus-accent-soft);
+  color: var(--opus-accent);
+  font-size: 0.68rem;
+  font-weight: 800;
+  text-align: center;
+}
+
+.tagManager {
+  position: absolute;
+  top: calc(100% + 6px);
+  left: 0;
+  z-index: 60;
+  display: grid;
+  gap: 8px;
+  width: min(320px, calc(100vw - 24px));
+  max-height: min(520px, 74vh);
+  box-sizing: border-box;
+  padding: 12px;
+  overflow: auto;
+  border: 1px solid color-mix(in srgb, var(--opus-border-strong) 82%, transparent);
+  border-radius: var(--opus-input-radius-large);
+  background-color: var(--opus-menu-solid, var(--opus-panel));
+  background-image: none;
+  -webkit-backdrop-filter: none;
+  backdrop-filter: none;
+  box-shadow:
+    0 18px 48px color-mix(in srgb, #020617 34%, transparent),
+    0 0 0 1px color-mix(in srgb, var(--opus-accent) 10%, transparent);
+  color: var(--opus-text);
+  scrollbar-width: thin;
+}
+
+.tagManagerHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  padding-bottom: 7px;
+  border-bottom: 1px solid var(--opus-surface-border, color-mix(in srgb, var(--opus-border) 70%, transparent));
+}
+
+.tagManagerHeader span {
+  color: var(--opus-text);
+  font-size: 0.8rem;
+  font-weight: 800;
+  letter-spacing: -0.01em;
+}
+
+.tagManagerClose {
+  display: inline-grid;
+  place-items: center;
+  width: 20px;
+  height: 20px;
+  padding: 0;
+  border: 0;
+  border-radius: 999px;
+  background: transparent;
+  color: var(--opus-muted);
+  font: inherit;
+  font-size: 0.95rem;
+  line-height: 1;
+  cursor: pointer;
+}
+
+.tagManagerClose:hover {
+  background: color-mix(in srgb, var(--opus-error) 12%, transparent);
+  color: var(--opus-error);
+}
+
+.tagManagerClose:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--opus-accent) 24%, transparent);
+}
+
+.tagList {
+  display: grid;
+  gap: 1px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.tagRow {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 7px;
+  padding: 3px 2px;
+  border-radius: var(--opus-input-radius);
+}
+
+.tagColorDot {
+  width: 14px;
+  height: 14px;
+  padding: 0;
+  border: 1px solid color-mix(in srgb, var(--opus-text) 18%, transparent);
+  border-radius: 999px;
+  cursor: pointer;
+}
+
+.tagColorDot:hover,
+.tagColorDot[aria-expanded="true"] {
+  box-shadow: 0 0 0 2px var(--opus-menu-solid, var(--opus-panel)), 0 0 0 3px var(--opus-text);
+}
+
+.tagColorDot:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 2px var(--opus-menu-solid, var(--opus-panel)), 0 0 0 4px color-mix(in srgb, var(--opus-accent) 55%, transparent);
+}
+
+.tagName {
+  min-width: 0;
+  padding: 2px 4px;
+  overflow: hidden;
+  border: 0;
+  border-radius: var(--opus-input-radius-small);
+  background: transparent;
+  color: var(--opus-text);
+  font: inherit;
+  font-size: 0.78rem;
+  font-weight: 600;
+  text-align: left;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  cursor: text;
+}
+
+.tagName:hover {
+  text-decoration: underline;
+  text-decoration-color: color-mix(in srgb, currentColor 45%, transparent);
+  text-underline-offset: 2px;
+}
+
+.tagName:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 2px color-mix(in srgb, var(--opus-accent) 30%, transparent);
+}
+
+.tagNameInput {
+  width: 100%;
+  min-width: 0;
+  min-height: 24px;
+  box-sizing: border-box;
+  padding: 2px 6px;
+  border: 1px solid var(--opus-surface-border, var(--opus-border-strong));
+  border-radius: var(--opus-input-radius-small);
+  background: var(--opus-surface-fill, var(--opus-input-bg));
+  color: var(--opus-text);
+  font: inherit;
+  font-size: 0.78rem;
+}
+
+.tagNameInput:focus {
+  outline: none;
+  border-color: var(--opus-accent);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--opus-accent) 22%, transparent);
+}
+
+.tagDelete {
+  display: inline-grid;
+  place-items: center;
+  width: 20px;
+  height: 20px;
+  padding: 0;
+  border: 0;
+  border-radius: 999px;
+  background: transparent;
+  color: var(--opus-muted);
+  font: inherit;
+  font-size: 0.85rem;
+  line-height: 1;
+  cursor: pointer;
+}
+
+.tagDelete:hover {
+  background: color-mix(in srgb, var(--opus-error) 12%, transparent);
+  color: var(--opus-error);
+}
+
+.tagDelete:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--opus-accent) 24%, transparent);
+}
+
+.tagPalette {
+  display: flex;
+  flex-wrap: wrap;
+  grid-column: 1 / -1;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 2px 2px;
+}
+
+.tagSwatch {
+  flex: 0 0 auto;
+  width: 18px;
+  height: 18px;
+  padding: 0;
+  border: 2px solid transparent;
+  border-radius: 999px;
+  cursor: pointer;
+  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--opus-text) 18%, transparent);
+}
+
+.tagSwatch:hover {
+  transform: scale(1.1);
+}
+
+.tagSwatch[aria-pressed="true"] {
+  border-color: var(--opus-menu-solid, var(--opus-panel));
+  box-shadow:
+    0 0 0 1px var(--opus-text),
+    inset 0 0 0 1px color-mix(in srgb, var(--opus-text) 18%, transparent);
+}
+
+.tagSwatch:focus-visible {
+  outline: none;
+  box-shadow:
+    0 0 0 2px var(--opus-menu-solid, var(--opus-panel)),
+    0 0 0 4px color-mix(in srgb, var(--opus-accent) 55%, transparent);
+}
+
+.tagEmpty {
+  margin: 0;
+  padding: 6px 2px;
+  color: var(--opus-muted);
+  font-size: 0.74rem;
+}
+
+.tagForm {
+  display: grid;
+  gap: 6px;
+  padding-top: 8px;
+  border-top: 1px solid var(--opus-surface-border, color-mix(in srgb, var(--opus-border) 70%, transparent));
+}
+
+.tagFormLabel {
+  color: var(--opus-muted);
+  font-size: 0.66rem;
+  font-weight: 800;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+.tagFormRow {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.tagFormRow .tagNameInput {
+  flex: 1 1 auto;
+}
+
 .scrollControls {
   display: flex;
-  justify-self: end;
   gap: 4px;
+  margin-left: auto;
 }
 
 .scrollButton {
@@ -344,6 +642,78 @@
   transition: none;
 }
 
+.cardComposerArea {
+  padding-top: 8px;
+}
+
+.addCardButton {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  width: 100%;
+  min-height: 34px;
+  padding: 0 10px;
+  border: 1px dashed transparent;
+  border-radius: 10px;
+  background: transparent;
+  color: var(--dashboard-section-muted);
+  font: inherit;
+  font-size: 0.8rem;
+  font-weight: 650;
+  text-align: left;
+  cursor: pointer;
+}
+
+.addCardButton:hover {
+  border-color: color-mix(in srgb, var(--kanban-header-accent) 32%, transparent);
+  background: var(--opus-surface-fill, color-mix(in srgb, var(--kanban-header-accent) 10%, transparent));
+  color: var(--dashboard-section-text);
+}
+
+.addCardButton:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--kanban-header-accent) 28%, transparent);
+}
+
+.cardComposer {
+  display: grid;
+  gap: 6px;
+  padding: 9px;
+  border: 1px solid color-mix(in srgb, var(--kanban-header-accent) 36%, var(--dashboard-section-border));
+  border-radius: 10px;
+  background: var(--opus-surface-fill, var(--dashboard-section-panel));
+  box-shadow: var(--opus-input-shadow, var(--opus-control-inset-shadow, none));
+}
+
+.cardComposerInput {
+  width: 100%;
+  min-height: 48px;
+  box-sizing: border-box;
+  padding: 6px 7px;
+  border: 1px solid var(--kanban-header-accent);
+  border-radius: var(--opus-input-radius-small);
+  background: var(--opus-surface-fill, var(--dashboard-section-bg));
+  color: var(--dashboard-section-text);
+  font: inherit;
+  font-size: 0.82rem;
+  line-height: 1.4;
+  resize: vertical;
+}
+
+.cardComposerInput::placeholder {
+  color: var(--dashboard-section-muted);
+}
+
+.cardComposerInput:focus {
+  outline: none;
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--kanban-header-accent) 24%, transparent);
+}
+
+.cardComposerActions {
+  display: flex;
+  gap: 6px;
+}
+
 .ghostSlot {
   display: none;
 }
@@ -509,33 +879,11 @@
   text-overflow: ellipsis;
 }
 
-.cardMeta {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  min-width: 0;
-  max-width: 100%;
-  overflow: hidden;
-  color: var(--card-accent);
-  font-size: 0.72rem;
-  font-weight: 650;
-  line-height: 1.3;
-  white-space: nowrap;
-}
 
-.cardMeta span {
-  min-width: 0;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
 
-.cardMetaIcon {
-  flex-shrink: 0;
-  width: 0.72rem;
-  height: 0.72rem;
-  font-size: 0.72rem;
-}
+
+
+
 
 .root[data-dragging="true"] {
   user-select: none;
@@ -830,7 +1178,7 @@
   z-index: 10010;
   display: grid;
   gap: 9px;
-  width: 204px;
+  width: 292px;
   box-sizing: border-box;
   padding: 12px;
   border: 1px solid var(--opus-surface-border, var(--opus-border-strong));
@@ -851,14 +1199,15 @@
 }
 
 .colorGrid {
-  display: grid;
-  grid-template-columns: repeat(6, 1fr);
+  display: flex;
+  flex-wrap: wrap;
   gap: 7px;
 }
 
 .colorSwatch {
-  width: 100%;
-  aspect-ratio: 1;
+  flex: 0 0 auto;
+  width: 20px;
+  height: 20px;
   padding: 0;
   border: 2px solid transparent;
   border-radius: 999px;
@@ -893,24 +1242,42 @@
   border-top: 1px solid var(--opus-surface-border, color-mix(in srgb, var(--opus-border) 70%, transparent));
 }
 
-.colorCustom {
-  display: inline-flex;
-  align-items: center;
-  gap: 7px;
-  color: var(--opus-muted);
-  font-size: 0.74rem;
+.colorCustomButton,
+.tagCustomButton {
+  padding: 3px 7px;
+  border: 1px solid var(--opus-surface-border, var(--opus-border));
+  border-radius: var(--opus-input-radius-small);
+  background: transparent;
+  color: var(--opus-text);
+  font: inherit;
+  font-size: 0.72rem;
   font-weight: 650;
   cursor: pointer;
 }
 
-.colorCustom input[type="color"] {
-  width: 26px;
-  height: 24px;
-  padding: 0;
-  border: 1px solid var(--opus-surface-border, var(--opus-border));
-  border-radius: 7px;
-  background: transparent;
-  cursor: pointer;
+.colorCustomButton:hover,
+.tagCustomButton:hover,
+.colorCustomButton[aria-expanded="true"],
+.tagCustomButton[aria-expanded="true"] {
+  border-color: color-mix(in srgb, var(--opus-accent) 45%, var(--opus-border));
+  color: var(--opus-accent);
+}
+
+.colorCustomButton:focus-visible,
+.tagCustomButton:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--opus-accent) 24%, transparent);
+}
+
+.colorPickerWrap {
+  display: grid;
+  justify-items: center;
+  padding-top: 2px;
+}
+
+.colorPickerPopover {
+  position: fixed;
+  z-index: 10020;
 }
 
 .colorClear {
@@ -932,4 +1299,477 @@
   outline: none;
   border-radius: var(--opus-input-radius-small);
   box-shadow: 0 0 0 3px color-mix(in srgb, var(--opus-accent) 24%, transparent);
+}
+
+
+.cardTagRow {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  min-width: 0;
+}
+
+.cardTag {
+  display: inline-flex;
+  max-width: 100%;
+  padding: 2px 6px;
+  overflow: hidden;
+  border: 1px solid color-mix(in srgb, var(--kanban-tag-color) 44%, transparent);
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--kanban-tag-color) 20%, transparent);
+  color: color-mix(in srgb, var(--kanban-tag-color) 78%, var(--dashboard-section-text));
+  font-size: 0.62rem;
+  font-weight: 750;
+  letter-spacing: 0.01em;
+  line-height: 1.3;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.cardTagMore {
+  color: var(--dashboard-section-muted);
+  font-size: 0.64rem;
+  font-weight: 700;
+}
+
+.cardTagPicker {
+  display: grid;
+  gap: 6px;
+}
+
+.cardTagPickerLabel {
+  color: var(--opus-muted);
+  font-size: 0.68rem;
+  font-weight: 800;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+.cardTagOptions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+}
+
+.cardTagOption {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  min-height: 26px;
+  padding: 2px 9px;
+  border: 1px solid var(--opus-surface-border, var(--opus-border));
+  border-radius: 999px;
+  background: transparent;
+  color: var(--opus-text);
+  font: inherit;
+  font-size: 0.74rem;
+  font-weight: 650;
+  cursor: pointer;
+}
+
+.cardTagOption[aria-pressed="true"] {
+  border-color: color-mix(in srgb, var(--kanban-tag-color) 70%, transparent);
+  background: color-mix(in srgb, var(--kanban-tag-color) 18%, transparent);
+}
+
+.cardTagOption:hover {
+  border-color: color-mix(in srgb, var(--kanban-tag-color) 50%, var(--opus-border));
+}
+
+.cardTagOption:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--kanban-tag-color) 26%, transparent);
+}
+
+.cardTagDot {
+  width: 8px;
+  height: 8px;
+  border-radius: 999px;
+  background: var(--kanban-tag-color);
+}
+
+
+.ticketLayout {
+  display: grid;
+  grid-template-columns: minmax(0, 1.05fr) minmax(0, 0.95fr);
+  gap: 0;
+  min-height: 420px;
+}
+
+.ticketLayout[data-single="true"] {
+  grid-template-columns: minmax(0, 1fr);
+}
+
+.ticketDetails {
+  display: grid;
+  align-content: start;
+  gap: 14px;
+  min-width: 0;
+  padding-right: 20px;
+  border-right: 1px solid var(--opus-surface-border, color-mix(in srgb, var(--opus-border) 70%, transparent));
+}
+
+.ticketLayout[data-single="true"] .ticketDetails {
+  padding-right: 0;
+  border-right: 0;
+}
+
+.ticketDiscussion {
+  display: grid;
+  align-content: start;
+  gap: 10px;
+  min-width: 0;
+  max-height: min(62vh, 560px);
+  padding-left: 20px;
+  overflow: auto;
+  scrollbar-width: thin;
+}
+
+.ticketSectionHeader {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 8px;
+  padding-bottom: 7px;
+  border-bottom: 1px solid var(--opus-surface-border, color-mix(in srgb, var(--opus-border) 70%, transparent));
+}
+
+.ticketSectionHeader span {
+  color: var(--opus-text);
+  font-size: 0.8rem;
+  font-weight: 800;
+}
+
+.ticketSectionHeader small {
+  color: var(--opus-muted);
+  font-size: 0.7rem;
+  font-weight: 700;
+}
+
+.ticketField {
+  display: grid;
+  gap: 5px;
+  min-width: 0;
+}
+
+.ticketField > span {
+  color: var(--opus-muted);
+  font-size: 0.68rem;
+  font-weight: 800;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+.ticketMetaGrid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 0.7fr);
+  gap: 12px;
+}
+
+.ticketInput,
+.ticketTextarea {
+  width: 100%;
+  box-sizing: border-box;
+  border: 1px solid var(--opus-surface-border, var(--opus-border-strong));
+  border-radius: var(--opus-input-radius);
+  background: var(--opus-surface-fill, var(--opus-input-bg));
+  color: var(--opus-text);
+  font: inherit;
+  font-size: var(--opus-control-font-size);
+  box-shadow: var(--opus-input-shadow, var(--opus-control-inset-shadow, none));
+}
+
+.ticketInput {
+  min-height: var(--opus-control-height);
+  padding: 0 var(--opus-control-padding-x, 10px);
+}
+
+.ticketTextarea {
+  min-height: 110px;
+  padding: 9px var(--opus-control-padding-x, 10px);
+  line-height: 1.55;
+  resize: vertical;
+}
+
+.ticketInput:focus,
+.ticketTextarea:focus {
+  outline: none;
+  border-color: var(--opus-accent);
+  box-shadow:
+    0 0 0 4px color-mix(in srgb, var(--opus-accent) 22%, transparent),
+    0 14px 30px rgba(0, 0, 0, 0.06);
+}
+
+.ticketReadonly {
+  margin: 0;
+  min-height: var(--opus-control-height);
+  display: flex;
+  align-items: center;
+  color: var(--opus-text);
+  font-size: var(--opus-control-font-size);
+  font-weight: 650;
+}
+
+
+
+
+
+
+
+.ticketTitleInput {
+  width: 100%;
+  min-height: 28px;
+  padding: 2px 5px;
+  margin-left: -5px;
+  border: 1px solid transparent;
+  border-radius: var(--opus-input-radius-small);
+  background: transparent;
+  color: var(--opus-text);
+  font: inherit;
+  font-weight: 800;
+  line-height: 1.25;
+}
+
+.ticketTitleInput:hover {
+  border-color: color-mix(in srgb, var(--opus-border) 60%, transparent);
+}
+
+.ticketTitleInput:focus {
+  outline: none;
+  border-color: var(--opus-accent);
+  background: var(--opus-surface-fill, var(--opus-input-bg));
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--opus-accent) 22%, transparent);
+}
+
+.ticketHeaderColorButton {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  min-height: 28px;
+  padding: 0 8px;
+  border: 1px solid var(--opus-surface-border, var(--opus-border-strong));
+  border-radius: 999px;
+  background: var(--opus-surface-fill, var(--opus-input-bg));
+  color: var(--opus-muted);
+  font: inherit;
+  font-size: 0.68rem;
+  cursor: pointer;
+}
+
+.ticketHeaderColorButton:hover,
+.ticketHeaderColorButton[aria-expanded="true"] {
+  border-color: color-mix(in srgb, var(--opus-accent) 45%, var(--opus-border));
+  color: var(--opus-text);
+}
+
+.ticketHeaderColorButton:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--opus-accent) 24%, transparent);
+}
+
+.ticketHeaderColorDot {
+  width: 12px;
+  height: 12px;
+  border: 1px solid color-mix(in srgb, var(--opus-text) 22%, transparent);
+  border-radius: 999px;
+}
+
+.ticketSelect {
+  width: 100%;
+  min-height: var(--opus-control-height);
+  box-sizing: border-box;
+  padding: 0 28px 0 var(--opus-control-padding-x, 10px);
+  border: 1px solid var(--opus-surface-border, var(--opus-border-strong));
+  border-radius: var(--opus-input-radius);
+  background-color: var(--opus-surface-fill, var(--opus-input-bg));
+  background-image:
+    linear-gradient(45deg, transparent 50%, var(--opus-muted) 50%),
+    linear-gradient(135deg, var(--opus-muted) 50%, transparent 50%);
+  background-position:
+    calc(100% - 14px) calc(50% - 2px),
+    calc(100% - 9px) calc(50% - 2px);
+  background-repeat: no-repeat;
+  background-size: 5px 5px, 5px 5px;
+  color: var(--opus-text);
+  font: inherit;
+  font-size: var(--opus-control-font-size);
+  font-weight: 650;
+  cursor: pointer;
+  appearance: none;
+  box-shadow: var(--opus-input-shadow, var(--opus-control-inset-shadow, none));
+}
+
+.ticketSelect:focus {
+  outline: none;
+  border-color: var(--opus-accent);
+  box-shadow:
+    0 0 0 4px color-mix(in srgb, var(--opus-accent) 22%, transparent),
+    0 14px 30px rgba(0, 0, 0, 0.06);
+}
+
+.ticketSelect:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+.ticketTags {
+  display: grid;
+  gap: 7px;
+}
+
+.ticketTagsHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.ticketAddTagButton {
+  padding: 2px 6px;
+  border: 0;
+  border-radius: var(--opus-input-radius-small);
+  background: transparent;
+  color: var(--opus-accent);
+  font: inherit;
+  font-size: 0.72rem;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.ticketAddTagButton:hover {
+  text-decoration: underline;
+}
+
+.ticketAddTagButton:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--opus-accent) 24%, transparent);
+}
+
+.ticketSelectedTags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+  min-height: 28px;
+  align-items: center;
+}
+
+.ticketTagChip {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  max-width: 100%;
+  padding: 3px 4px 3px 8px;
+  border: 1px solid color-mix(in srgb, var(--kanban-tag-color) 55%, transparent);
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--kanban-tag-color) 14%, transparent);
+  color: var(--opus-text);
+  font-size: 0.72rem;
+  font-weight: 650;
+}
+
+.ticketTagChip > span:nth-child(2) {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.ticketTagChip button {
+  display: inline-grid;
+  place-items: center;
+  width: 16px;
+  height: 16px;
+  padding: 0;
+  border: 0;
+  border-radius: 999px;
+  background: transparent;
+  color: var(--opus-muted);
+  font: inherit;
+  font-size: 0.8rem;
+  line-height: 1;
+  cursor: pointer;
+}
+
+.ticketTagChip button:hover {
+  background: color-mix(in srgb, var(--opus-error) 14%, transparent);
+  color: var(--opus-error);
+}
+
+.ticketTagChip button:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 2px color-mix(in srgb, var(--opus-accent) 30%, transparent);
+}
+
+.ticketTagsEmpty {
+  margin: 0;
+  color: var(--opus-muted);
+  font-size: 0.74rem;
+}
+
+.ticketTagPicker {
+  display: grid;
+  gap: 5px;
+  padding: 8px;
+  border: 1px solid var(--opus-surface-border, var(--opus-border-strong));
+  border-radius: var(--opus-input-radius);
+  background: var(--opus-surface-fill, color-mix(in srgb, var(--opus-panel) 88%, transparent));
+}
+
+.ticketTagList {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+  max-height: 140px;
+  overflow: auto;
+  scrollbar-width: thin;
+}
+
+.ticketTagOption {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  min-height: 26px;
+  padding: 2px 9px;
+  border: 1px solid var(--opus-surface-border, var(--opus-border));
+  border-radius: 999px;
+  background: transparent;
+  color: var(--opus-text);
+  font: inherit;
+  font-size: 0.72rem;
+  font-weight: 650;
+  cursor: pointer;
+}
+
+.ticketTagOption:hover {
+  border-color: color-mix(in srgb, var(--kanban-tag-color) 55%, var(--opus-border));
+  background: color-mix(in srgb, var(--kanban-tag-color) 12%, transparent);
+}
+
+.ticketTagOption:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--kanban-tag-color) 26%, transparent);
+}
+
+@media (max-width: 760px) {
+  .ticketLayout {
+    grid-template-columns: minmax(0, 1fr);
+    min-height: 0;
+  }
+
+  .ticketDetails {
+    padding-right: 0;
+    padding-bottom: 16px;
+    border-right: 0;
+    border-bottom: 1px solid var(--opus-surface-border, color-mix(in srgb, var(--opus-border) 70%, transparent));
+  }
+
+  .ticketDiscussion {
+    max-height: none;
+    padding-left: 0;
+    padding-top: 16px;
+    overflow: visible;
+  }
+
+  .ticketMetaGrid {
+    grid-template-columns: minmax(0, 1fr);
+  }
 }

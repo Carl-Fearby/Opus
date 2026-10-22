@@ -399,9 +399,14 @@ export { Scheduler } from "../Scheduler";
 export type { SchedulerEvent, SchedulerProps } from "../Scheduler";
 export { KanbanBoard } from "../KanbanBoard";
 export type {
+  KanbanActivity,
   KanbanBoardProps,
   KanbanCard,
+  KanbanCardMove,
   KanbanColumn,
+  KanbanColumnReorder,
+  KanbanComment,
+  KanbanTag,
 } from "../KanbanBoard";
 export { Calendar } from "../Calendar";
 export type { CalendarEvent, CalendarProps } from "../Calendar";

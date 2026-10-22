@@ -1,6 +1,11 @@
 import { fireEvent, render, screen } from "@testing-library/react";
 import { describe, expect, it, vi } from "vitest";
-import { KanbanBoard, type KanbanCard, type KanbanColumn } from "../../components/KanbanBoard";
+import {
+  KanbanBoard,
+  type KanbanCard,
+  type KanbanColumn,
+  type KanbanTag,
+} from "../../components/KanbanBoard";
 
 const cards: Record<string, KanbanCard> = {
   alpha: {
@@ -40,7 +45,7 @@ describe("KanbanBoard", () => {
     const onAddComment = vi.fn();
     render(<KanbanBoard cards={cards} columns={columns} onAddComment={onAddComment} />);
 
-    fireEvent.click(screen.getByRole("button", { name: "Comments for Alpha ticket, 1 comment" }));
+    fireEvent.click(screen.getByRole("button", { name: "Open ticket for Alpha ticket, 1 comment" }));
     expect(screen.getByRole("dialog")).toBeInTheDocument();
     expect(screen.getByText("Existing comment")).toBeInTheDocument();
 
@@ -54,7 +59,7 @@ describe("KanbanBoard", () => {
       expect.objectContaining({ body: "Looks good to me.", author: "You" }),
     );
     expect(screen.getByText("Looks good to me.")).toBeInTheDocument();
-    expect(screen.getByRole("button", { name: "Comments for Alpha ticket, 2 comments" })).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "Open ticket for Alpha ticket, 2 comments" })).toBeInTheDocument();
   });
 
   it("reorders lists with the keyboard handle", () => {
@@ -106,5 +111,162 @@ describe("KanbanBoard list editing", () => {
       id: "todo",
       accent: "#f59e0b",
     });
+  });
+});
+
+describe("KanbanBoard tags", () => {
+  it("creates tags from the board tag manager and emits activity", () => {
+    const onTagsChange = vi.fn();
+    const onActivity = vi.fn();
+    render(
+      <KanbanBoard
+        cards={cards}
+        columns={columns}
+        onActivity={onActivity}
+        onTagsChange={onTagsChange}
+      />,
+    );
+
+    fireEvent.click(screen.getByRole("button", { name: /Tags/ }));
+    expect(screen.getByRole("dialog", { name: "Tag manager" })).toBeInTheDocument();
+
+    fireEvent.change(screen.getByLabelText("New tag"), { target: { value: "Customer" } });
+    fireEvent.click(screen.getByRole("button", { name: "New tag colour #f59e0b" }));
+    fireEvent.click(screen.getByRole("button", { name: "Add tag" }));
+
+    expect(onTagsChange).toHaveBeenCalledTimes(1);
+    expect(onTagsChange.mock.calls[0][0]).toEqual([
+      expect.objectContaining({ label: "Customer", color: "#f59e0b" }),
+    ]);
+    expect(onActivity).toHaveBeenCalledWith(
+      expect.objectContaining({ type: "tag-created" }),
+    );
+    expect(screen.getByRole("button", { name: "Customer" })).toBeInTheDocument();
+  });
+
+  it("renames a tag inline", () => {
+    const tags: KanbanTag[] = [{ id: "t1", label: "Customer", color: "#f59e0b" }];
+    const onTagsChange = vi.fn();
+    render(
+      <KanbanBoard cards={cards} columns={columns} onTagsChange={onTagsChange} tags={tags} />,
+    );
+
+    fireEvent.click(screen.getByRole("button", { name: /Tags/ }));
+    fireEvent.click(screen.getByRole("button", { name: "Customer" }));
+    fireEvent.change(screen.getByLabelText("Tag name for Customer"), {
+      target: { value: "Account" },
+    });
+    fireEvent.keyDown(screen.getByLabelText("Tag name for Customer"), { key: "Enter" });
+
+    expect(onTagsChange.mock.calls[0][0]).toEqual([
+      { id: "t1", label: "Account", color: "#f59e0b" },
+    ]);
+  });
+
+  it("assigns tags to a card from its thread", () => {
+    const tags: KanbanTag[] = [{ id: "t1", label: "VIP", color: "#ec4899" }];
+    const onCardTagsChange = vi.fn();
+    render(
+      <KanbanBoard
+        cards={{ ...cards, alpha: { ...cards.alpha, tagIds: [] } }}
+        columns={columns}
+        onCardTagsChange={onCardTagsChange}
+        tags={tags}
+      />,
+    );
+
+    fireEvent.click(screen.getByRole("button", { name: "Open ticket for Alpha ticket, 1 comment" }));
+    fireEvent.click(screen.getByRole("button", { name: "+ Add tag" }));
+    fireEvent.click(screen.getByRole("button", { name: "VIP" }));
+
+    expect(onCardTagsChange).toHaveBeenCalledWith(
+      "alpha",
+      ["t1"],
+      expect.objectContaining({ id: "alpha" }),
+    );
+  });
+});
+
+describe("KanbanBoard card creation", () => {
+  it("adds a card from the inline composer", () => {
+    const onChange = vi.fn();
+    const onCardCreate = vi.fn();
+    const onActivity = vi.fn();
+    render(
+      <KanbanBoard
+        cards={cards}
+        columns={columns}
+        onActivity={onActivity}
+        onCardCreate={onCardCreate}
+        onChange={onChange}
+      />,
+    );
+
+    fireEvent.click(screen.getAllByRole("button", { name: "Add a card" })[0]);
+    const input = screen.getByLabelText("New card title for To do");
+    fireEvent.change(input, { target: { value: "Ship the release" } });
+    fireEvent.keyDown(input, { key: "Enter" });
+
+    expect(onChange).toHaveBeenCalledTimes(1);
+    const nextColumns = onChange.mock.calls[0][0] as KanbanColumn[];
+    expect(nextColumns[0].cardIds).toHaveLength(2);
+
+    expect(onCardCreate).toHaveBeenCalledWith(
+      expect.objectContaining({ title: "Ship the release" }),
+      "todo",
+      expect.any(Array),
+      expect.objectContaining({ alpha: expect.any(Object) }),
+    );
+    expect(onActivity).toHaveBeenCalledWith(
+      expect.objectContaining({ type: "card-created" }),
+    );
+    expect(screen.getByLabelText("New card title for To do")).toBeInTheDocument();
+  });
+});
+
+describe("KanbanBoard ticket view", () => {
+  it("updates the title and description through onCardUpdate", () => {
+    const onCardUpdate = vi.fn();
+    render(
+      <KanbanBoard cards={cards} columns={columns} onCardUpdate={onCardUpdate} />,
+    );
+
+    fireEvent.click(screen.getByRole("button", { name: "Open ticket for Alpha ticket, 1 comment" }));
+    fireEvent.change(screen.getByLabelText("Ticket title"), { target: { value: "Alpha ticket revised" } });
+    fireEvent.blur(screen.getByLabelText("Ticket title"));
+    fireEvent.change(screen.getByLabelText("Description"), {
+      target: { value: "Add acceptance criteria." },
+    });
+    fireEvent.blur(screen.getByLabelText("Description"));
+
+    expect(onCardUpdate).toHaveBeenCalledWith(
+      "alpha",
+      { title: "Alpha ticket revised" },
+      expect.objectContaining({ id: "alpha" }),
+    );
+    expect(onCardUpdate).toHaveBeenCalledWith(
+      "alpha",
+      { description: "Add acceptance criteria." },
+      expect.objectContaining({ description: "Add acceptance criteria." }),
+    );
+  });
+
+  it("updates the ticket header colour", () => {
+    const onCardUpdate = vi.fn();
+    render(
+      <KanbanBoard cards={cards} columns={columns} onCardUpdate={onCardUpdate} />,
+    );
+
+    fireEvent.click(screen.getByRole("button", { name: "Open ticket for Alpha ticket, 1 comment" }));
+    fireEvent.click(screen.getByRole("button", { name: "Change ticket header colour" }));
+    fireEvent.click(
+      screen.getByRole("button", { name: "Use #f59e0b for ticket header" }),
+    );
+
+    expect(onCardUpdate).toHaveBeenCalledWith(
+      "alpha",
+      { color: "#f59e0b" },
+      expect.objectContaining({ color: "#f59e0b" }),
+    );
   });
 });

@@ -16,6 +16,10 @@ type ModalProps = {
   actions?: ReactNode;
   children: ReactNode;
   closeButton?: boolean;
+  /** Extra controls shown beside the close button. */
+  headerActions?: ReactNode;
+  /** Replaces the visual heading while keeping the accessible title. */
+  titleContent?: ReactNode;
   description?: string;
   dismissOnBackdrop?: boolean;
   dismissOnEscape?: boolean;
@@ -32,12 +36,14 @@ export function Modal({
   closeButton = true,
   description,
   dismissOnBackdrop = true,
+  headerActions,
   dismissOnEscape = true,
   footer,
   onClose,
   open,
   size = "medium",
   title,
+  titleContent,
 }: ModalProps) {
   const titleId = useId();
   const descriptionId = useId();
@@ -115,7 +121,7 @@ export function Modal({
           <header className={styles.header}>
             <div className={styles.heading}>
               <h2 className={styles.title} id={titleId}>
-                {title}
+                {titleContent ?? title}
               </h2>
               {description ? (
                 <p className={styles.description} id={descriptionId}>
@@ -123,6 +129,8 @@ export function Modal({
                 </p>
               ) : null}
             </div>
+            <div className={styles.headerActions}>
+              {headerActions}
             {closeButton ? (
               <button
                 ref={closeRef}
@@ -142,6 +150,7 @@ export function Modal({
                 </svg>
               </button>
             ) : null}
+            </div>
           </header>
           <div className={styles.body}>{children}</div>
           {footer || actions ? (

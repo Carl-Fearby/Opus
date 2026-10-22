@@ -1,2 +1,11 @@
 export { KanbanBoard } from "./KanbanBoard";
-export type { KanbanBoardProps, KanbanCard, KanbanColumn } from "./KanbanBoard";
+export type {
+  KanbanActivity,
+  KanbanBoardProps,
+  KanbanCard,
+  KanbanCardMove,
+  KanbanColumn,
+  KanbanColumnReorder,
+  KanbanComment,
+  KanbanTag,
+} from "./KanbanBoard";

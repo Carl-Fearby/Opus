@@ -12,12 +12,12 @@ import {
   type ReactNode,
 } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faChevronLeft, faChevronRight, faComment, faGripVertical, faPalette, faPaperPlane } from "@fortawesome/free-solid-svg-icons";
+import { faChevronLeft, faChevronRight, faComment, faGripVertical, faPalette, faPaperPlane, faTags } from "@fortawesome/free-solid-svg-icons";
 import { createThemedPortal as createPortal } from "@/lib/theme/createThemedPortal";
 import { Button } from "@/components/fields/Button";
+import { ColorPickerPanel } from "@/components/fields/ColorPickerPanel";
 import { CustomScrollbar } from "@/components/CustomScrollbar";
 import { Modal } from "@/components/Modal";
-import { CatalogIcon } from "@/components/CatalogIcon";
 import styles from "./KanbanBoard.module.css";
 
 export type KanbanComment = {
@@ -31,10 +31,51 @@ export type KanbanComment = {
 export type KanbanCard = {
   id: string;
   title: string;
+  /** Legacy external metadata. Prefer tagIds for visible ticket labels. */
   meta?: string;
   tone?: "default" | "accent" | "success" | "warning" | "danger";
   description?: string;
+  /** Optional side-border colour for the ticket. Falls back to the tone accent. */
+  color?: string;
   comments?: KanbanComment[];
+  /** Board tag ids assigned to this card. */
+  tagIds?: string[];
+};
+
+export type KanbanTag = {
+  id: string;
+  label: string;
+  /** CSS colour shared with the list header palette. */
+  color: string;
+};
+
+export type KanbanActivity =
+  | { at: string; column: KanbanColumn; columns: KanbanColumn[]; type: "list-created" }
+  | { at: string; changes: string[]; column: KanbanColumn; columns: KanbanColumn[]; previousColumn: KanbanColumn; type: "list-updated" }
+  | { at: string; columnId: string; columns: KanbanColumn[]; fromIndex: number; toIndex: number; type: "list-reordered" }
+  | { at: string; cardId: string; columns: KanbanColumn[]; fromColumnId: string; fromIndex: number; toColumnId: string; toIndex: number; type: "card-moved" }
+  | { at: string; cardId: string; comment: KanbanComment; comments: KanbanComment[]; type: "comment-added" }
+  | { at: string; tag: KanbanTag; tags: KanbanTag[]; type: "tag-created" }
+  | { at: string; previousTag: KanbanTag; tag: KanbanTag; tags: KanbanTag[]; type: "tag-updated" }
+  | { at: string; tag: KanbanTag; tags: KanbanTag[]; type: "tag-deleted" }
+  | { at: string; card: KanbanCard; cardId: string; tagIds: string[]; type: "card-tags-changed" }
+  | { at: string; card: KanbanCard; columnId: string; columns: KanbanColumn[]; type: "card-created" }
+  | { at: string; card: KanbanCard; cardId: string; changes: string[]; previousCard: KanbanCard; type: "card-updated" };
+
+type WithoutActivityTimestamp<T> = T extends { at: string } ? Omit<T, "at"> : never;
+
+export type KanbanColumnReorder = {
+  columnId: string;
+  fromIndex: number;
+  toIndex: number;
+};
+
+export type KanbanCardMove = {
+  cardId: string;
+  fromColumnId: string;
+  fromIndex: number;
+  toColumnId: string;
+  toIndex: number;
 };
 
 export type KanbanColumn = {
@@ -46,10 +87,14 @@ export type KanbanColumn = {
 };
 
 export type KanbanBoardProps = {
+  /** Controlled open card/ticket. */
+  activeCardId?: string | null;
+  /** Label for the new-card composer trigger. */
+  addCardLabel?: string;
   /** Label for the new-list button. */
   addColumnLabel?: string;
   cards: Record<string, KanbanCard>;
-  /** Colour presets offered by the list colour menu. */
+  /** Colour presets offered by list headers and the tag manager. */
   columnColors?: string[];
   /** Fixed width for each list. Numbers are pixels. */
   columnWidth?: number | string;
@@ -58,10 +103,39 @@ export type KanbanBoardProps = {
   commentsEnabled?: boolean;
   /** The current commenter shown in the composer. */
   currentUser?: { name: string };
+  /** Initial open card when the board owns ticket state. */
+  defaultActiveCardId?: string | null;
+  /** Initial tags when the board owns tag state. */
+  defaultTags?: KanbanTag[];
   onChange?: (columns: KanbanColumn[]) => void;
+  onActiveCardChange?: (cardId: string | null, card: KanbanCard | null) => void;
   onAddComment?: (cardId: string, comment: KanbanComment) => void;
   onCardClick?: (card: KanbanCard) => void;
+  onCardCreate?: (
+    card: KanbanCard,
+    columnId: string,
+    columns: KanbanColumn[],
+    cards: Record<string, KanbanCard>,
+  ) => void;
+  onCardMove?: (cardId: string, move: KanbanCardMove, columns: KanbanColumn[]) => void;
+  onCardUpdate?: (cardId: string, patch: Partial<KanbanCard>, card: KanbanCard) => void;
+  onCardTagsChange?: (cardId: string, tagIds: string[], card: KanbanCard) => void;
+  onColumnChange?: (column: KanbanColumn, previousColumn: KanbanColumn, columns: KanbanColumn[]) => void;
+  onColumnCreate?: (column: KanbanColumn, columns: KanbanColumn[]) => void;
+  onColumnReorder?: (columns: KanbanColumn[], change: KanbanColumnReorder) => void;
   onCommentsChange?: (cardId: string, comments: KanbanComment[]) => void;
+  /** Structured event stream for persistence: every list, card, comment and tag mutation. */
+  onActivity?: (activity: KanbanActivity) => void;
+  onTagCreate?: (tag: KanbanTag, tags: KanbanTag[]) => void;
+  onTagDelete?: (tag: KanbanTag, tags: KanbanTag[]) => void;
+  onTagUpdate?: (tag: KanbanTag, previousTag: KanbanTag, tags: KanbanTag[]) => void;
+  onTagsChange?: (tags: KanbanTag[]) => void;
+  /** Shows the board-level tag manager. Defaults to true. */
+  tagManager?: boolean;
+  /** Controlled tags. */
+  tags?: KanbanTag[];
+  /** Enables the built-in ticket view. Defaults to true. */
+  ticketView?: boolean;
 };
 
 type DropTarget = {
@@ -115,6 +189,10 @@ type DragState = {
 
 const DRAG_THRESHOLD_PX = 4;
 
+function createId(prefix: string) {
+  return `${prefix}-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`;
+}
+
 const DEFAULT_COLUMN_COLORS = [
   "#64748b",
   "#0284c7",
@@ -131,31 +209,11 @@ const DEFAULT_COLUMN_COLORS = [
 ];
 const DROP_ANIMATION_MS = 220;
 
-function metaIconName(meta?: string) {
-  const normalised = meta?.trim().toLowerCase() ?? "";
-  if (normalised.includes("plan") || normalised.includes("calendar") || normalised.includes("schedule")) {
-    return "calendar";
-  }
-  return "tag";
-}
-
 function CardContent({ card }: { card: KanbanCard }) {
   return (
-    <>
-      <div className={styles.cardTitle} title={card.title}>
-        {card.title}
-      </div>
-      <div className={styles.cardMeta}>
-        {card.meta ? (
-          <>
-            <CatalogIcon className={styles.cardMetaIcon} iconName={metaIconName(card.meta)} />
-            <span title={card.meta}>{card.meta}</span>
-          </>
-        ) : (
-          <span aria-hidden="true">&nbsp;</span>
-        )}
-      </div>
-    </>
+    <div className={styles.cardTitle} title={card.title}>
+      {card.title}
+    </div>
   );
 }
 
@@ -351,44 +409,106 @@ function resolveDropLanding(
 }
 
 export function KanbanBoard({
+  addCardLabel = "Add a card",
   addColumnLabel = "Add list",
   cards,
   columnColors = DEFAULT_COLUMN_COLORS,
   columnWidth,
   columns,
   commentsEnabled = true,
+  activeCardId,
   currentUser,
+  defaultActiveCardId = null,
+  defaultTags = [],
+  onActivity,
+  onActiveCardChange,
   onAddComment,
   onCardClick,
+  onCardCreate,
+  onCardMove,
+  onCardTagsChange,
+  onCardUpdate,
+  onColumnChange,
+  onColumnCreate,
+  onColumnReorder,
   onChange,
   onCommentsChange,
+  onTagCreate,
+  onTagDelete,
+  onTagUpdate,
+  onTagsChange,
+  tagManager = true,
+  tags,
+  ticketView = true,
 }: KanbanBoardProps) {
   const [drag, setDrag] = useState<DragState | null>(null);
   const [columnDrag, setColumnDrag] = useState<ColumnDragState | null>(null);
   const [portalReady, setPortalReady] = useState(false);
   const [addingColumn, setAddingColumn] = useState(false);
   const [newColumnTitle, setNewColumnTitle] = useState("");
-  const [selectedCardId, setSelectedCardId] = useState<string | null>(null);
+  const [internalActiveCardId, setInternalActiveCardId] = useState<string | null>(defaultActiveCardId);
   const [commentDraft, setCommentDraft] = useState("");
   const [localComments, setLocalComments] = useState<Record<string, KanbanComment[]>>({});
   const [scrollInfo, setScrollInfo] = useState({ left: 0, max: 0 });
   const [editingColumnId, setEditingColumnId] = useState<string | null>(null);
   const [editingColumnTitle, setEditingColumnTitle] = useState("");
   const [colorMenu, setColorMenu] = useState<{ columnId: string; left: number; top: number } | null>(null);
+  const [internalTags, setInternalTags] = useState<KanbanTag[]>(defaultTags);
+  const resolvedTags = tags ?? internalTags;
+  const [tagManagerOpen, setTagManagerOpen] = useState(false);
+  const [editingTagId, setEditingTagId] = useState<string | null>(null);
+  const [editingTagLabel, setEditingTagLabel] = useState("");
+  const [expandedTagId, setExpandedTagId] = useState<string | null>(null);
+  const [newTagLabel, setNewTagLabel] = useState("");
+  const [newTagColor, setNewTagColor] = useState(columnColors[0] ?? "#64748b");
+  const [customColorOpen, setCustomColorOpen] = useState(false);
+  const [tagColorPicker, setTagColorPicker] = useState<{ left: number; targetId: string; top: number } | null>(null);
+  const [localCardTags, setLocalCardTags] = useState<Record<string, string[]>>({});
+  const [localCards, setLocalCards] = useState<Record<string, KanbanCard>>({});
+  const [cardComposerColumnId, setCardComposerColumnId] = useState<string | null>(null);
+  const [cardDraft, setCardDraft] = useState("");
+  const [ticketTitle, setTicketTitle] = useState("");
+  const [ticketDescription, setTicketDescription] = useState("");
+  const [ticketCustomColorOpen, setTicketCustomColorOpen] = useState(false);
+  const [ticketColorMenu, setTicketColorMenu] = useState<{ left: number; top: number } | null>(null);
+  const [ticketTagPickerOpen, setTicketTagPickerOpen] = useState(false);
+  const [ticketTagSearch, setTicketTagSearch] = useState("");
+  const ticketColorMenuRef = useRef<HTMLDivElement | null>(null);
+  const ticketColorPickerRef = useRef<HTMLDivElement | null>(null);
+  const previousActiveCardRef = useRef<string | null>(null);
   const commentFieldId = useId();
   const columnFieldId = useId();
+  const tagFieldId = useId();
   const didDragRef = useRef(false);
   const dragRef = useRef<DragState | null>(null);
   const columnDragRef = useRef<ColumnDragState | null>(null);
   const rootRef = useRef<HTMLDivElement | null>(null);
   const columnInputRef = useRef<HTMLInputElement | null>(null);
+  const cardComposerRef = useRef<HTMLTextAreaElement | null>(null);
   const colorMenuRef = useRef<HTMLDivElement | null>(null);
+  const colorPickerRef = useRef<HTMLDivElement | null>(null);
+  const tagManagerRef = useRef<HTMLDivElement | null>(null);
   const skipTitleCommitRef = useRef(false);
+  const skipTagCommitRef = useRef(false);
+  const onActivityRef = useRef(onActivity);
+  const onActiveCardChangeRef = useRef(onActiveCardChange);
+  const onTagsChangeRef = useRef(onTagsChange);
+  const onCardTagsChangeRef = useRef(onCardTagsChange);
+  const onCardCreateRef = useRef(onCardCreate);
+  const onCardUpdateRef = useRef(onCardUpdate);
+  const onCardMoveRef = useRef(onCardMove);
+  const onColumnChangeRef = useRef(onColumnChange);
+  const onColumnCreateRef = useRef(onColumnCreate);
+  const onColumnReorderRef = useRef(onColumnReorder);
+  const onTagCreateRef = useRef(onTagCreate);
+  const onTagDeleteRef = useRef(onTagDelete);
+  const onTagUpdateRef = useRef(onTagUpdate);
   const columnsRef = useRef(columns);
   const onChangeRef = useRef(onChange);
   const onAddCommentRef = useRef(onAddComment);
   const onCommentsChangeRef = useRef(onCommentsChange);
-  const cardLookup = useMemo(() => cards, [cards]);
+  const cardLookup = useMemo(() => ({ ...cards, ...localCards }), [cards, localCards]);
+  const resolvedActiveCardId = activeCardId !== undefined ? activeCardId : internalActiveCardId;
 
   useEffect(() => {
     const timeout = window.setTimeout(() => setPortalReady(true), 0);
@@ -400,7 +520,20 @@ export function KanbanBoard({
     onChangeRef.current = onChange;
     onAddCommentRef.current = onAddComment;
     onCommentsChangeRef.current = onCommentsChange;
-  }, [columns, onAddComment, onChange, onCommentsChange]);
+    onActivityRef.current = onActivity;
+    onActiveCardChangeRef.current = onActiveCardChange;
+    onTagsChangeRef.current = onTagsChange;
+    onCardTagsChangeRef.current = onCardTagsChange;
+    onCardCreateRef.current = onCardCreate;
+    onCardUpdateRef.current = onCardUpdate;
+    onCardMoveRef.current = onCardMove;
+    onColumnChangeRef.current = onColumnChange;
+    onColumnCreateRef.current = onColumnCreate;
+    onColumnReorderRef.current = onColumnReorder;
+    onTagCreateRef.current = onTagCreate;
+    onTagDeleteRef.current = onTagDelete;
+    onTagUpdateRef.current = onTagUpdate;
+  }, [columns, onActiveCardChange, onActivity, onAddComment, onCardCreate, onCardMove, onCardTagsChange, onCardUpdate, onColumnChange, onColumnCreate, onColumnReorder, onChange, onCommentsChange, onTagCreate, onTagDelete, onTagUpdate, onTagsChange]);
 
   useEffect(() => {
     dragRef.current = drag;
@@ -411,10 +544,25 @@ export function KanbanBoard({
   }, [columnDrag]);
 
   useEffect(() => {
-    if (selectedCardId && !cards[selectedCardId]) {
-      setSelectedCardId(null);
+    if (resolvedActiveCardId === previousActiveCardRef.current) return;
+    previousActiveCardRef.current = resolvedActiveCardId;
+    const card = resolvedActiveCardId ? cardLookup[resolvedActiveCardId] : null;
+    setTicketTitle(card?.title ?? "");
+    setTicketDescription(card?.description ?? "");
+    setTicketCustomColorOpen(false);
+    setTicketColorMenu(null);
+    setTicketTagPickerOpen(false);
+    setTicketTagSearch("");
+  }, [cardLookup, resolvedActiveCardId]);
+
+  useEffect(() => {
+    if (resolvedActiveCardId && !cards[resolvedActiveCardId]) {
+      if (activeCardId === undefined) {
+        setInternalActiveCardId(null);
+      }
+      onActiveCardChangeRef.current?.(null, null);
     }
-  }, [cards, selectedCardId]);
+  }, [activeCardId, cards, localCards, resolvedActiveCardId]);
 
   useEffect(() => {
     const board = rootRef.current;
@@ -426,42 +574,23 @@ export function KanbanBoard({
       const maxScroll = board.scrollWidth - board.clientWidth;
       if (maxScroll <= 0) return;
 
-      const target = event.target as HTMLElement | null;
-      const cardViewport = target?.closest<HTMLElement>("[data-kanban-cards-viewport]");
-
-      // Let a list scroll its own cards first. Once it reaches the end, the
-      // remaining wheel movement continues across the board.
-      if (cardViewport && !event.shiftKey) {
-        const canScrollUp = event.deltaY < 0 && cardViewport.scrollTop > 1;
-        const canScrollDown =
-          event.deltaY > 0
-          && cardViewport.scrollTop + cardViewport.clientHeight < cardViewport.scrollHeight - 1;
-
-        if (canScrollUp || canScrollDown) return;
-      }
-
       const unit = event.deltaMode === 1 ? 16 : event.deltaMode === 2 ? board.clientWidth : 1;
       const horizontalDelta = event.deltaX * unit;
       const verticalDelta = event.deltaY * unit;
 
-      // Horizontal trackpad and tilt-wheel gestures scroll the board directly.
-      // Handle them here as well because card viewports contain vertical scroll
-      // chaining, which can otherwise swallow the gesture.
-      if (Math.abs(horizontalDelta) > Math.abs(verticalDelta)) {
-        event.preventDefault();
-        board.scrollLeft = Math.min(
-          maxScroll,
-          Math.max(0, board.scrollLeft + horizontalDelta),
-        );
+      // Only horizontal gestures move the board. Vertical wheel input must keep
+      // scrolling the page or the list under the pointer.
+      if (
+        Math.abs(horizontalDelta) <= Math.abs(verticalDelta)
+        || horizontalDelta === 0
+      ) {
         return;
       }
-
-      if (!verticalDelta) return;
 
       event.preventDefault();
       board.scrollLeft = Math.min(
         maxScroll,
-        Math.max(0, board.scrollLeft + verticalDelta),
+        Math.max(0, board.scrollLeft + horizontalDelta),
       );
     };
 
@@ -492,6 +621,59 @@ export function KanbanBoard({
   }, [colorMenu]);
 
   useEffect(() => {
+    if (!tagManagerOpen) return;
+
+    const handlePointerDown = (event: PointerEvent) => {
+      const target = event.target as Node;
+      if (!tagManagerRef.current?.contains(target) && !colorPickerRef.current?.contains(target)) {
+        setTagManagerOpen(false);
+        setTagColorPicker(null);
+      }
+    };
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === "Escape") {
+        setTagManagerOpen(false);
+        setTagColorPicker(null);
+      }
+    };
+
+    document.addEventListener("pointerdown", handlePointerDown);
+    document.addEventListener("keydown", handleKeyDown);
+    return () => {
+      document.removeEventListener("pointerdown", handlePointerDown);
+      document.removeEventListener("keydown", handleKeyDown);
+    };
+  }, [tagManagerOpen]);
+
+  useEffect(() => {
+    if (!ticketColorMenu) return;
+
+    const handlePointerDown = (event: PointerEvent) => {
+      const target = event.target as Node;
+      if (
+        !ticketColorMenuRef.current?.contains(target)
+        && !ticketColorPickerRef.current?.contains(target)
+      ) {
+        setTicketColorMenu(null);
+        setTicketCustomColorOpen(false);
+      }
+    };
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === "Escape") {
+        setTicketColorMenu(null);
+        setTicketCustomColorOpen(false);
+      }
+    };
+
+    document.addEventListener("pointerdown", handlePointerDown);
+    document.addEventListener("keydown", handleKeyDown);
+    return () => {
+      document.removeEventListener("pointerdown", handlePointerDown);
+      document.removeEventListener("keydown", handleKeyDown);
+    };
+  }, [ticketColorMenu]);
+
+  useEffect(() => {
     const board = rootRef.current;
     if (!board) return;
 
@@ -515,44 +697,72 @@ export function KanbanBoard({
     };
   }, [columns.length]);
 
+  function emitActivity(activity: WithoutActivityTimestamp<KanbanActivity>) {
+    onActivityRef.current?.({
+      ...activity,
+      at: new Date().toISOString(),
+    } as KanbanActivity);
+  }
+
   function moveCard(cardId: string, toColumnId: string, toIndex: number) {
     const change = onChangeRef.current;
     if (!change) return;
 
     const currentColumns = columnsRef.current;
+    const fromColumn = currentColumns.find((column) => column.cardIds.includes(cardId));
+    const fromIndex = fromColumn?.cardIds.indexOf(cardId) ?? -1;
     const without = currentColumns.map((column) => ({
       ...column,
       cardIds: column.cardIds.filter((id) => id !== cardId),
     }));
+    let landedIndex = toIndex;
 
-    change(
-      without.map((column) => {
-        if (column.id !== toColumnId) return column;
-        const cardIds = [...column.cardIds];
-        const index = Math.max(0, Math.min(toIndex, cardIds.length));
-        cardIds.splice(index, 0, cardId);
-        return { ...column, cardIds };
-      }),
-    );
+    const nextColumns = without.map((column) => {
+      if (column.id !== toColumnId) return column;
+      const cardIds = [...column.cardIds];
+      const index = Math.max(0, Math.min(toIndex, cardIds.length));
+      landedIndex = index;
+      cardIds.splice(index, 0, cardId);
+      return { ...column, cardIds };
+    });
+
+    change(nextColumns);
+    const move = {
+      cardId,
+      fromColumnId: fromColumn?.id ?? toColumnId,
+      fromIndex,
+      toColumnId,
+      toIndex: landedIndex,
+    };
+    onCardMoveRef.current?.(cardId, move, nextColumns);
+    emitActivity({
+      type: "card-moved",
+      cardId,
+      columns: nextColumns,
+      fromColumnId: fromColumn?.id ?? toColumnId,
+      fromIndex,
+      toColumnId,
+      toIndex: landedIndex,
+    });
   }
 
   function commentsForCard(card: KanbanCard) {
     return localComments[card.id] ?? card.comments ?? [];
   }
 
-  function openComments(card: KanbanCard) {
-    setSelectedCardId(card.id);
+  function openTicket(card: KanbanCard) {
+    setActiveCard(card.id);
     setCommentDraft("");
   }
 
   function addComment(event: { preventDefault: () => void }) {
     event.preventDefault();
-    const card = selectedCardId ? cardLookup[selectedCardId] : null;
+    const card = resolvedActiveCardId ? cardLookup[resolvedActiveCardId] : null;
     const body = commentDraft.trim();
     if (!card || !body) return;
 
     const comment: KanbanComment = {
-      id: `comment-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`,
+      id: createId("comment"),
       author: currentUser?.name ?? "You",
       body,
       createdAt: new Date().toISOString(),
@@ -563,6 +773,7 @@ export function KanbanBoard({
     setCommentDraft("");
     onAddCommentRef.current?.(card.id, comment);
     onCommentsChangeRef.current?.(card.id, next);
+    emitActivity({ type: "comment-added", cardId: card.id, comment, comments: next });
   }
 
   function addColumn(event: { preventDefault: () => void }) {
@@ -571,14 +782,15 @@ export function KanbanBoard({
     const change = onChangeRef.current;
     if (!title || !change) return;
 
-    change([
-      ...columnsRef.current,
-      {
-        id: `column-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`,
-        title,
-        cardIds: [],
-      },
-    ]);
+    const column: KanbanColumn = {
+      id: createId("column"),
+      title,
+      cardIds: [],
+    };
+    const nextColumns = [...columnsRef.current, column];
+    change(nextColumns);
+    onColumnCreateRef.current?.(column, nextColumns);
+    emitActivity({ type: "list-created", column, columns: nextColumns });
     setNewColumnTitle("");
     window.requestAnimationFrame(() => {
       const board = rootRef.current;
@@ -587,12 +799,65 @@ export function KanbanBoard({
     });
   }
 
-  function updateColumn(columnId: string, patch: Partial<KanbanColumn>) {
-    onChangeRef.current?.(
-      columnsRef.current.map((column) =>
-        column.id === columnId ? { ...column, ...patch } : column,
-      ),
+  function createCard(event: { preventDefault: () => void }, columnId: string) {
+    event.preventDefault();
+    const title = cardDraft.trim();
+    if (!title) return;
+
+    const card: KanbanCard = {
+      id: createId("card"),
+      title,
+      tone: "default",
+    };
+    const nextCards = { ...cardLookup, [card.id]: card };
+    const nextColumns = columnsRef.current.map((column) =>
+      column.id === columnId
+        ? { ...column, cardIds: [...column.cardIds, card.id] }
+        : column,
     );
+
+    setLocalCards((current) => ({ ...current, [card.id]: card }));
+    onChangeRef.current?.(nextColumns);
+    onCardCreateRef.current?.(card, columnId, nextColumns, nextCards);
+    emitActivity({ type: "card-created", card, columnId, columns: nextColumns });
+    setCardDraft("");
+    window.requestAnimationFrame(() => cardComposerRef.current?.focus());
+  }
+
+  function updateCard(cardId: string, patch: Partial<KanbanCard>) {
+    const previousCard = cardLookup[cardId];
+    if (!previousCard) return;
+    const card = { ...previousCard, ...patch };
+    setLocalCards((current) => ({ ...current, [cardId]: card }));
+    onCardUpdateRef.current?.(cardId, patch, card);
+    emitActivity({
+      type: "card-updated",
+      card,
+      cardId,
+      changes: Object.keys(patch),
+      previousCard,
+    });
+  }
+
+  function updateColumn(columnId: string, patch: Partial<KanbanColumn>) {
+    const previousColumn = columnsRef.current.find((column) => column.id === columnId);
+    if (!previousColumn) return;
+
+    const nextColumns = columnsRef.current.map((column) =>
+      column.id === columnId ? { ...column, ...patch } : column,
+    );
+    const column = nextColumns.find((entry) => entry.id === columnId);
+    if (!column) return;
+
+    onChangeRef.current?.(nextColumns);
+    onColumnChangeRef.current?.(column, previousColumn, nextColumns);
+    emitActivity({
+      type: "list-updated",
+      changes: Object.keys(patch),
+      column,
+      columns: nextColumns,
+      previousColumn,
+    });
   }
 
   function beginEditingColumn(column: KanbanColumn) {
@@ -622,6 +887,14 @@ export function KanbanBoard({
     const [column] = next.splice(fromIndex, 1);
     next.splice(nextIndex, 0, column);
     change(next);
+    onColumnReorderRef.current?.(next, { columnId, fromIndex, toIndex: nextIndex });
+    emitActivity({
+      type: "list-reordered",
+      columnId,
+      columns: next,
+      fromIndex,
+      toIndex: nextIndex,
+    });
   }
 
   function handleColumnKeyDown(event: ReactKeyboardEvent<HTMLButtonElement>, columnId: string) {
@@ -630,6 +903,89 @@ export function KanbanBoard({
     const index = columnsRef.current.findIndex((column) => column.id === columnId);
     if (index < 0) return;
     moveColumn(columnId, index + (event.key === "ArrowRight" ? 1 : -1));
+  }
+
+  function applyTags(nextTags: KanbanTag[]) {
+    if (tags === undefined) {
+      setInternalTags(nextTags);
+    }
+    onTagsChangeRef.current?.(nextTags);
+  }
+
+  function beginEditingTag(tag: KanbanTag) {
+    setEditingTagId(tag.id);
+    setEditingTagLabel(tag.label);
+    setExpandedTagId(tag.id);
+  }
+
+  function finishEditingTag(save: boolean) {
+    const tag = resolvedTags.find((entry) => entry.id === editingTagId);
+    if (!tag) return;
+    const label = editingTagLabel.trim();
+    if (save && label && label !== tag.label) {
+      updateTag(tag.id, { label });
+    }
+    setEditingTagId(null);
+    setEditingTagLabel("");
+  }
+
+  function updateTag(tagId: string, patch: Partial<KanbanTag>) {
+    const previousTag = resolvedTags.find((tag) => tag.id === tagId);
+    if (!previousTag) return;
+    const tag = { ...previousTag, ...patch };
+    const nextTags = resolvedTags.map((entry) => (entry.id === tagId ? tag : entry));
+    applyTags(nextTags);
+    onTagUpdateRef.current?.(tag, previousTag, nextTags);
+    emitActivity({ type: "tag-updated", tag, previousTag, tags: nextTags });
+  }
+
+  function deleteTag(tagId: string) {
+    const tag = resolvedTags.find((entry) => entry.id === tagId);
+    if (!tag) return;
+    const nextTags = resolvedTags.filter((entry) => entry.id !== tagId);
+    applyTags(nextTags);
+    setTagColorPicker(null);
+    setLocalCardTags((current) =>
+      Object.fromEntries(
+        Object.entries(current).map(([cardId, tagIds]) => [
+          cardId,
+          tagIds.filter((id) => id !== tagId),
+        ]),
+      ),
+    );
+    onTagDeleteRef.current?.(tag, nextTags);
+    emitActivity({ type: "tag-deleted", tag, tags: nextTags });
+  }
+
+  function createTag(event: { preventDefault: () => void }) {
+    event.preventDefault();
+    const label = newTagLabel.trim();
+    if (!label) return;
+
+    const tag: KanbanTag = {
+      id: createId("tag"),
+      label,
+      color: newTagColor,
+    };
+    const nextTags = [...resolvedTags, tag];
+    applyTags(nextTags);
+    setNewTagLabel("");
+    onTagCreateRef.current?.(tag, nextTags);
+    emitActivity({ type: "tag-created", tag, tags: nextTags });
+  }
+
+  function tagsForCard(card: KanbanCard) {
+    return localCardTags[card.id] ?? card.tagIds ?? [];
+  }
+
+  function toggleCardTag(card: KanbanCard, tagId: string) {
+    const current = tagsForCard(card);
+    const tagIds = current.includes(tagId)
+      ? current.filter((id) => id !== tagId)
+      : [...current, tagId];
+    setLocalCardTags((tagsByCard) => ({ ...tagsByCard, [card.id]: tagIds }));
+    onCardTagsChangeRef.current?.(card.id, tagIds, card);
+    emitActivity({ type: "card-tags-changed", card, cardId: card.id, tagIds });
   }
 
   function finishDragSession() {
@@ -910,6 +1266,12 @@ export function KanbanBoard({
       } as CSSProperties)
     : undefined;
 
+  const draggingTags = draggingCard
+    ? tagsForCard(draggingCard)
+        .map((tagId) => resolvedTags.find((tag) => tag.id === tagId))
+        .filter((tag): tag is KanbanTag => Boolean(tag))
+    : [];
+
   const preview =
     drag && draggingCard && portalReady
       ? createPortal(
@@ -943,16 +1305,68 @@ export function KanbanBoard({
               }
             >
               <CardContent card={draggingCard} />
+              {draggingTags.length ? (
+                <div className={styles.cardTagRow}>
+                  {draggingTags.slice(0, 4).map((tag) => (
+                    <span
+                      className={styles.cardTag}
+                      key={tag.id}
+                      style={{ ["--kanban-tag-color" as string]: tag.color }}
+                    >
+                      {tag.label}
+                    </span>
+                  ))}
+                </div>
+              ) : null}
             </article>
           </div>,
           document.body,
         )
       : null;
 
-  const selectedCard = selectedCardId ? cardLookup[selectedCardId] : null;
+  const selectedCard = resolvedActiveCardId ? cardLookup[resolvedActiveCardId] : null;
+  const selectedCardColumn = selectedCard
+    ? columns.find((column) => column.cardIds.includes(selectedCard.id)) ?? null
+    : null;
+  const selectedTicketTagIds = selectedCard ? tagsForCard(selectedCard) : [];
+  const selectedTicketTags = resolvedTags.filter((tag) => selectedTicketTagIds.includes(tag.id));
+  const availableTicketTags = resolvedTags.filter(
+    (tag) =>
+      !selectedTicketTagIds.includes(tag.id)
+      && tag.label.toLowerCase().includes(ticketTagSearch.trim().toLowerCase()),
+  );
+
+  function setActiveCard(cardId: string | null) {
+    if (activeCardId === undefined) {
+      setInternalActiveCardId(cardId);
+    }
+    onActiveCardChangeRef.current?.(cardId, cardId ? cardLookup[cardId] ?? null : null);
+  }
   const colorMenuColumn = colorMenu
     ? columns.find((column) => column.id === colorMenu.columnId) ?? null
     : null;
+
+  function openTagColorPicker(event: React.MouseEvent<HTMLButtonElement>, targetId: string) {
+    if (tagColorPicker?.targetId === targetId) {
+      setTagColorPicker(null);
+      return;
+    }
+
+    const rect = event.currentTarget.getBoundingClientRect();
+    const panelRect = tagManagerRef.current?.getBoundingClientRect();
+    const width = 260;
+    let left = (panelRect?.right ?? rect.right) + 8;
+
+    if (left + width > window.innerWidth - 8) {
+      left = Math.max(8, (panelRect?.left ?? rect.left) - width - 8);
+    }
+
+    setTagColorPicker({
+      left,
+      targetId,
+      top: Math.max(8, Math.min(rect.top, window.innerHeight - 328)),
+    });
+  }
 
   function scrollBoard(direction: -1 | 1) {
     const board = rootRef.current;
@@ -1013,26 +1427,195 @@ export function KanbanBoard({
 
   return (
     <div className={styles.shell}>
-      {scrollInfo.max > 1 ? (
-        <div className={styles.scrollControls}>
-          <button
-            aria-label="Scroll board left"
-            className={styles.scrollButton}
-            disabled={scrollInfo.left <= 1}
-            onClick={() => scrollBoard(-1)}
-            type="button"
-          >
-            <FontAwesomeIcon icon={faChevronLeft} />
-          </button>
-          <button
-            aria-label="Scroll board right"
-            className={styles.scrollButton}
-            disabled={scrollInfo.left >= scrollInfo.max - 1}
-            onClick={() => scrollBoard(1)}
-            type="button"
-          >
-            <FontAwesomeIcon icon={faChevronRight} />
-          </button>
+      {tagManager || scrollInfo.max > 1 ? (
+        <div className={styles.boardToolbar}>
+          {tagManager ? (
+            <div className={styles.tagManagerWrap} ref={tagManagerRef}>
+              <button
+                aria-expanded={tagManagerOpen}
+                aria-haspopup="dialog"
+                className={styles.tagsButton}
+                onClick={() => {
+                  setTagManagerOpen((current) => {
+                    if (current) setTagColorPicker(null);
+                    return !current;
+                  });
+                }}
+                type="button"
+              >
+                <FontAwesomeIcon icon={faTags} />
+                <span>Tags</span>
+                <span className={styles.tagCount}>{resolvedTags.length}</span>
+              </button>
+              {tagManagerOpen ? (
+                <div aria-label="Tag manager" className={styles.tagManager} role="dialog">
+                  <div className={styles.tagManagerHeader}>
+                    <span>Tag manager</span>
+                    <button
+                      aria-label="Close tag manager"
+                      className={styles.tagManagerClose}
+                      onClick={() => {
+                        setTagManagerOpen(false);
+                        setTagColorPicker(null);
+                      }}
+                      type="button"
+                    >
+                      ×
+                    </button>
+                  </div>
+                  {resolvedTags.length ? (
+                    <ul className={styles.tagList}>
+                      {resolvedTags.map((tag) => (
+                        <li className={styles.tagRow} key={tag.id}>
+                          <button
+                            aria-expanded={expandedTagId === tag.id}
+                            aria-label={`Colour for ${tag.label}`}
+                            className={styles.tagColorDot}
+                            onClick={() => {
+                              setTagColorPicker(null);
+                              setExpandedTagId((current) => (current === tag.id ? null : tag.id));
+                            }}
+                            style={{ background: tag.color }}
+                            type="button"
+                          />
+                          {editingTagId === tag.id ? (
+                            <input
+                              aria-label={`Tag name for ${tag.label}`}
+                              autoFocus
+                              className={styles.tagNameInput}
+                              onBlur={() => {
+                                if (skipTagCommitRef.current) {
+                                  skipTagCommitRef.current = false;
+                                  return;
+                                }
+                                finishEditingTag(true);
+                              }}
+                              onChange={(event) => setEditingTagLabel(event.target.value)}
+                              onFocus={(event) => event.currentTarget.select()}
+                              onKeyDown={(event) => {
+                                if (event.key === "Enter") {
+                                  event.preventDefault();
+                                  finishEditingTag(true);
+                                }
+                                if (event.key === "Escape") {
+                                  event.preventDefault();
+                                  skipTagCommitRef.current = true;
+                                  finishEditingTag(false);
+                                  event.currentTarget.blur();
+                                }
+                              }}
+                              value={editingTagLabel}
+                            />
+                          ) : (
+                            <button
+                              className={styles.tagName}
+                              onClick={() => beginEditingTag(tag)}
+                              type="button"
+                            >
+                              {tag.label}
+                            </button>
+                          )}
+                          <button
+                            aria-label={`Delete ${tag.label}`}
+                            className={styles.tagDelete}
+                            onClick={() => deleteTag(tag.id)}
+                            type="button"
+                          >
+                            ×
+                          </button>
+                          {expandedTagId === tag.id ? (
+                            <div className={styles.tagPalette}>
+                              {columnColors.map((color) => (
+                                <button
+                                  aria-label={`Use ${color} for ${tag.label}`}
+                                  aria-pressed={tag.color === color}
+                                  className={styles.tagSwatch}
+                                  key={color}
+                                  onClick={() => updateTag(tag.id, { color })}
+                                  style={{ background: color }}
+                                  type="button"
+                                />
+                              ))}
+                              <button
+                                aria-expanded={tagColorPicker?.targetId === tag.id}
+                                className={styles.tagCustomButton}
+                                onClick={(event) => openTagColorPicker(event, tag.id)}
+                                type="button"
+                              >
+                                Custom…
+                              </button>
+                            </div>
+                          ) : null}
+                        </li>
+                      ))}
+                    </ul>
+                  ) : (
+                    <p className={styles.tagEmpty}>No tags yet. Add one below.</p>
+                  )}
+                  <form className={styles.tagForm} onSubmit={createTag}>
+                    <label className={styles.tagFormLabel} htmlFor={tagFieldId}>
+                      New tag
+                    </label>
+                    <div className={styles.tagFormRow}>
+                      <input
+                        className={styles.tagNameInput}
+                        id={tagFieldId}
+                        onChange={(event) => setNewTagLabel(event.target.value)}
+                        placeholder="e.g. Customer"
+                        value={newTagLabel}
+                      />
+                      <Button disabled={!newTagLabel.trim()} size="sm" type="submit">
+                        Add tag
+                      </Button>
+                    </div>
+                    <div className={styles.tagPalette}>
+                      {columnColors.map((color) => (
+                        <button
+                          aria-label={`New tag colour ${color}`}
+                          aria-pressed={newTagColor === color}
+                          className={styles.tagSwatch}
+                          key={color}
+                          onClick={() => setNewTagColor(color)}
+                          style={{ background: color }}
+                          type="button"
+                        />
+                      ))}
+                      <button
+                        aria-expanded={tagColorPicker?.targetId === "new"}
+                        className={styles.tagCustomButton}
+                        onClick={(event) => openTagColorPicker(event, "new")}
+                        type="button"
+                      >
+                        Custom…
+                      </button>
+                    </div>
+                  </form>
+                </div>
+              ) : null}
+            </div>
+          ) : null}
+          {scrollInfo.max > 1 ? (
+            <div className={styles.scrollControls}>
+              <button
+                aria-label="Scroll board left"
+                className={styles.scrollButton}
+                disabled={scrollInfo.left <= 1}
+                onClick={() => scrollBoard(-1)}
+                type="button"
+              >
+                <FontAwesomeIcon icon={faChevronLeft} />
+              </button>
+              <button
+                aria-label="Scroll board right"
+                className={styles.scrollButton}
+                disabled={scrollInfo.left >= scrollInfo.max - 1}
+                onClick={() => scrollBoard(1)}
+                type="button"
+              >
+                <FontAwesomeIcon icon={faChevronRight} />
+              </button>
+            </div>
+          ) : null}
         </div>
       ) : null}
       <div
@@ -1157,7 +1740,8 @@ export function KanbanBoard({
                       return;
                     }
                     const rect = event.currentTarget.getBoundingClientRect();
-                    const width = 204;
+                    const width = 292;
+                    setCustomColorOpen(false);
                     setColorMenu({
                       columnId: column.id,
                       left: Math.min(
@@ -1207,7 +1791,31 @@ export function KanbanBoard({
                   shouldShift &&
                   dropIndex !== null &&
                   visibleIndex === dropIndex;
-                const body: ReactNode = <CardContent card={card} />;
+                const assignedTags = tagsForCard(card)
+                  .map((tagId) => resolvedTags.find((tag) => tag.id === tagId))
+                  .filter((tag): tag is KanbanTag => Boolean(tag));
+                const body: ReactNode = (
+                  <>
+                    <CardContent card={card} />
+                    {assignedTags.length ? (
+                      <div className={styles.cardTagRow}>
+                        {assignedTags.slice(0, 4).map((tag) => (
+                          <span
+                            className={styles.cardTag}
+                            key={tag.id}
+                            style={{ ["--kanban-tag-color" as string]: tag.color }}
+                            title={tag.label}
+                          >
+                            {tag.label}
+                          </span>
+                        ))}
+                        {assignedTags.length > 4 ? (
+                          <span className={styles.cardTagMore}>+{assignedTags.length - 4}</span>
+                        ) : null}
+                      </div>
+                    ) : null}
+                  </>
+                );
                 const commentCount = commentsForCard(card).length;
                 const sharedProps = {
                   "aria-grabbed": isDragCard || undefined,
@@ -1216,6 +1824,9 @@ export function KanbanBoard({
                   "data-tone": card.tone ?? "default",
                   onPointerDown: (event: ReactPointerEvent<HTMLElement>) =>
                     handleCardPointerDown(event, card.id, column.id),
+                  style: card.color
+                    ? ({ ["--card-accent" as string]: card.color } as CSSProperties)
+                    : undefined,
                 } as const;
 
                 return (
@@ -1257,7 +1868,8 @@ export function KanbanBoard({
                               didDragRef.current = false;
                               return;
                             }
-                            onCardClick(card);
+                            if (onCardClick) onCardClick(card);
+                            else if (ticketView) openTicket(card);
                           }}
                           type="button"
                         >
@@ -1266,13 +1878,13 @@ export function KanbanBoard({
                       ) : (
                         <div className={styles.cardOpenStatic}>{body}</div>
                       )}
-                      {commentsEnabled ? (
+                      {ticketView ? (
                         <button
-                          aria-label={`Comments for ${card.title}${commentCount ? `, ${commentCount === 1 ? "1 comment" : `${commentCount} comments`}` : ""}`}
+                          aria-label={`Open ticket for ${card.title}${commentCount ? `, ${commentCount === 1 ? "1 comment" : `${commentCount} comments`}` : ""}`}
                           className={styles.commentButton}
                           onClick={(event) => {
                             event.stopPropagation();
-                            openComments(card);
+                            openTicket(card);
                           }}
                           onPointerDown={(event) => event.stopPropagation()}
                           type="button"
@@ -1301,6 +1913,64 @@ export function KanbanBoard({
                 </li>
               ) : null}
                 </ul>
+                {onChange ? (
+                  <div className={styles.cardComposerArea}>
+                    {cardComposerColumnId === column.id ? (
+                      <form
+                        className={styles.cardComposer}
+                        onSubmit={(event) => createCard(event, column.id)}
+                      >
+                        <textarea
+                          aria-label={`New card title for ${column.title}`}
+                          className={styles.cardComposerInput}
+                          onChange={(event) => setCardDraft(event.target.value)}
+                          onKeyDown={(event) => {
+                            if (event.key === "Enter" && !event.shiftKey) {
+                              event.preventDefault();
+                              createCard(event, column.id);
+                            }
+                            if (event.key === "Escape") {
+                              event.preventDefault();
+                              setCardComposerColumnId(null);
+                              setCardDraft("");
+                            }
+                          }}
+                          placeholder="Enter a title…"
+                          ref={cardComposerRef}
+                          rows={2}
+                          value={cardDraft}
+                        />
+                        <div className={styles.cardComposerActions}>
+                          <Button disabled={!cardDraft.trim()} size="sm" type="submit">
+                            Add card
+                          </Button>
+                          <Button
+                            size="sm"
+                            variant="secondary"
+                            onClick={() => {
+                              setCardComposerColumnId(null);
+                              setCardDraft("");
+                            }}
+                          >
+                            Cancel
+                          </Button>
+                        </div>
+                      </form>
+                    ) : (
+                      <button
+                        className={styles.addCardButton}
+                        onClick={() => {
+                          setCardComposerColumnId(column.id);
+                          setCardDraft("");
+                          window.requestAnimationFrame(() => cardComposerRef.current?.focus());
+                        }}
+                        type="button"
+                      >
+                        <span aria-hidden="true">+</span> {addCardLabel}
+                      </button>
+                    )}
+                  </div>
+                ) : null}
               </div>
             </CustomScrollbar>
           </section>
@@ -1358,6 +2028,30 @@ export function KanbanBoard({
       </div>
       {preview}
       {columnPreview}
+      {tagColorPicker
+        ? (() => {
+            const tag = tagColorPicker.targetId === "new"
+              ? null
+              : resolvedTags.find((entry) => entry.id === tagColorPicker.targetId) ?? null;
+            return createPortal(
+              <div
+                className={styles.colorPickerPopover}
+                ref={colorPickerRef}
+                style={{ left: tagColorPicker.left, top: tagColorPicker.top }}
+              >
+                <ColorPickerPanel
+                  onClose={() => setTagColorPicker(null)}
+                  onSelect={(color) => {
+                    if (tag) updateTag(tag.id, { color });
+                    else setNewTagColor(color);
+                  }}
+                  value={tag ? tag.color : newTagColor}
+                />
+              </div>,
+              document.body,
+            );
+          })()
+        : null}
       {colorMenu && colorMenuColumn
         ? createPortal(
             <div
@@ -1385,17 +2079,14 @@ export function KanbanBoard({
                 ))}
               </div>
               <div className={styles.colorMenuFooter}>
-                <label className={styles.colorCustom}>
-                  <span>Custom</span>
-                  <input
-                    aria-label="Custom list colour"
-                    onChange={(event) =>
-                      updateColumn(colorMenuColumn.id, { accent: event.target.value })
-                    }
-                    type="color"
-                    value={colorMenuColumn.accent ?? columnColors[0] ?? "#64748b"}
-                  />
-                </label>
+                <button
+                  aria-expanded={customColorOpen}
+                  className={styles.colorCustomButton}
+                  onClick={() => setCustomColorOpen((current) => !current)}
+                  type="button"
+                >
+                  Custom…
+                </button>
                 <button
                   className={styles.colorClear}
                   onClick={() => {
@@ -1407,63 +2098,307 @@ export function KanbanBoard({
                   Clear
                 </button>
               </div>
+              {customColorOpen ? (
+                <div className={styles.colorPickerWrap}>
+                  <ColorPickerPanel
+                    onClose={() => setCustomColorOpen(false)}
+                    onSelect={(color) => updateColumn(colorMenuColumn.id, { accent: color })}
+                    value={colorMenuColumn.accent ?? columnColors[0] ?? "#64748b"}
+                  />
+                </div>
+              ) : null}
             </div>,
             document.body,
           )
         : null}
-      {commentsEnabled && selectedCard ? (
-        <Modal
-          description={selectedCard.meta ?? selectedCard.description}
-          onClose={() => setSelectedCardId(null)}
-          open
-          title={selectedCard.title}
-        >
-          <div className={styles.commentPanel}>
-            {commentsForCard(selectedCard).length ? (
-              <ul aria-label="Comments" className={styles.commentList}>
-                {commentsForCard(selectedCard).map((comment) => (
-                  <li className={styles.comment} key={comment.id}>
-                    <span aria-hidden="true" className={styles.commentAvatar}>
-                      {(comment.author ?? "You").slice(0, 1).toUpperCase()}
-                    </span>
-                    <div className={styles.commentBody}>
-                      <div className={styles.commentMeta}>
-                        <strong>{comment.author ?? "You"}</strong>
-                        {comment.createdAt ? (
-                          <time dateTime={comment.createdAt}>
-                            {new Date(comment.createdAt).toLocaleString()}
-                          </time>
-                        ) : null}
-                      </div>
-                      <p>{comment.body}</p>
-                    </div>
-                  </li>
+      {ticketColorMenu && selectedCard
+        ? createPortal(
+            <div
+              aria-label="Ticket header colour"
+              className={styles.colorMenu}
+              ref={ticketColorMenuRef}
+              role="dialog"
+              style={{ left: ticketColorMenu.left, top: ticketColorMenu.top }}
+            >
+              <span className={styles.colorMenuTitle}>Ticket header</span>
+              <div className={styles.colorGrid}>
+                {columnColors.map((color) => (
+                  <button
+                    aria-label={`Use ${color} for ticket header`}
+                    aria-pressed={selectedCard.color === color}
+                    className={styles.colorSwatch}
+                    key={color}
+                    onClick={() => {
+                      updateCard(selectedCard.id, { color });
+                      setTicketColorMenu(null);
+                    }}
+                    style={{ background: color }}
+                    type="button"
+                  />
                 ))}
-              </ul>
-            ) : (
-              <p className={styles.commentEmpty}>No comments yet. Start the conversation.</p>
-            )}
-            <form className={styles.commentForm} onSubmit={addComment}>
-              <label className={styles.commentLabel} htmlFor={commentFieldId}>
-                Add a comment
-              </label>
-              <textarea
-                className={styles.commentInput}
-                id={commentFieldId}
-                onChange={(event) => setCommentDraft(event.target.value)}
-                placeholder="Write a comment…"
-                rows={3}
-                value={commentDraft}
-              />
-              <div className={styles.commentActions}>
-                <span className={styles.commentAuthor}>
-                  {currentUser?.name ?? "You"}
-                </span>
-                <Button disabled={!commentDraft.trim()} size="sm" type="submit">
-                  <FontAwesomeIcon icon={faPaperPlane} /> Add comment
-                </Button>
               </div>
-            </form>
+              <div className={styles.colorMenuFooter}>
+                <button
+                  aria-expanded={ticketCustomColorOpen}
+                  className={styles.colorCustomButton}
+                  onClick={() => setTicketCustomColorOpen((current) => !current)}
+                  type="button"
+                >
+                  Custom…
+                </button>
+                <button
+                  className={styles.colorClear}
+                  onClick={() => {
+                    updateCard(selectedCard.id, { color: undefined });
+                    setTicketColorMenu(null);
+                  }}
+                  type="button"
+                >
+                  Clear
+                </button>
+              </div>
+              {ticketCustomColorOpen ? (
+                <div className={styles.colorPickerWrap} ref={ticketColorPickerRef}>
+                  <ColorPickerPanel
+                    onClose={() => setTicketCustomColorOpen(false)}
+                    onSelect={(color) => updateCard(selectedCard.id, { color })}
+                    value={selectedCard.color ?? columnColors[0] ?? "#64748b"}
+                  />
+                </div>
+              ) : null}
+            </div>,
+            document.body,
+          )
+        : null}
+      {ticketView && selectedCard ? (
+        <Modal
+          actions={
+            <Button variant="secondary" onClick={() => setActiveCard(null)}>
+              Close
+            </Button>
+          }
+          headerActions={
+            <button
+              aria-expanded={Boolean(ticketColorMenu)}
+              aria-haspopup="dialog"
+              aria-label="Change ticket header colour"
+              className={styles.ticketHeaderColorButton}
+              onClick={(event) => {
+                if (ticketColorMenu) {
+                  setTicketColorMenu(null);
+                  setTicketCustomColorOpen(false);
+                  return;
+                }
+                const rect = event.currentTarget.getBoundingClientRect();
+                const width = 292;
+                setTicketColorMenu({
+                  left: Math.min(
+                    Math.max(8, rect.right - width),
+                    window.innerWidth - width - 8,
+                  ),
+                  top: Math.min(rect.bottom + 6, window.innerHeight - 320),
+                });
+                setTicketCustomColorOpen(false);
+              }}
+              type="button"
+            >
+              <span
+                aria-hidden="true"
+                className={styles.ticketHeaderColorDot}
+                style={{ background: selectedCard.color ?? "var(--opus-accent)" }}
+              />
+              <FontAwesomeIcon icon={faPalette} />
+            </button>
+          }
+          onClose={() => setActiveCard(null)}
+          open
+          size="large"
+          title={selectedCard.title}
+          titleContent={
+            <input
+              aria-label="Ticket title"
+              className={styles.ticketTitleInput}
+              onBlur={() => {
+                const next = ticketTitle.trim();
+                if (next && next !== selectedCard.title) {
+                  updateCard(selectedCard.id, { title: next });
+                }
+              }}
+              onChange={(event) => setTicketTitle(event.target.value)}
+              onKeyDown={(event) => {
+                if (event.key === "Enter") event.currentTarget.blur();
+              }}
+              value={ticketTitle}
+            />
+          }
+        >
+          <div className={styles.ticketLayout} data-single={commentsEnabled ? undefined : "true"}>
+            <section aria-label="Ticket details" className={styles.ticketDetails}>
+              <div className={styles.ticketMetaGrid}>
+                <label className={styles.ticketField}>
+                  <span>List</span>
+                  <select
+                    className={styles.ticketSelect}
+                    disabled={!onChange}
+                    onChange={(event) => {
+                      const target = columns.find((column) => column.id === event.target.value);
+                      if (target && target.id !== selectedCardColumn?.id) {
+                        moveCard(selectedCard.id, target.id, target.cardIds.length);
+                      }
+                    }}
+                    value={selectedCardColumn?.id ?? ""}
+                  >
+                    {columns.map((column) => (
+                      <option key={column.id} value={column.id}>
+                        {column.title}
+                      </option>
+                    ))}
+                  </select>
+                </label>
+              </div>
+
+              <label className={styles.ticketField}>
+                <span>Description</span>
+                <textarea
+                  className={styles.ticketTextarea}
+                  onBlur={() => {
+                    if (ticketDescription !== (selectedCard.description ?? "")) {
+                      updateCard(selectedCard.id, {
+                        description: ticketDescription.trim() || undefined,
+                      });
+                    }
+                  }}
+                  onChange={(event) => setTicketDescription(event.target.value)}
+                  placeholder="Add context, acceptance notes, or links…"
+                  rows={5}
+                  value={ticketDescription}
+                />
+              </label>
+
+              <div className={styles.ticketTags}>
+                <div className={styles.ticketTagsHeader}>
+                  <span className={styles.cardTagPickerLabel}>Tags</span>
+                  <button
+                    aria-expanded={ticketTagPickerOpen}
+                    className={styles.ticketAddTagButton}
+                    onClick={() => {
+                      setTicketTagPickerOpen((current) => !current);
+                      setTicketTagSearch("");
+                    }}
+                    type="button"
+                  >
+                    + Add tag
+                  </button>
+                </div>
+                <div className={styles.ticketSelectedTags}>
+                  {selectedTicketTags.length ? (
+                    selectedTicketTags.map((tag) => (
+                      <span
+                        className={styles.ticketTagChip}
+                        key={tag.id}
+                        style={{ ["--kanban-tag-color" as string]: tag.color }}
+                      >
+                        <span aria-hidden="true" className={styles.cardTagDot} />
+                        <span>{tag.label}</span>
+                        <button
+                          aria-label={`Remove ${tag.label} tag`}
+                          onClick={() => toggleCardTag(selectedCard, tag.id)}
+                          type="button"
+                        >
+                          ×
+                        </button>
+                      </span>
+                    ))
+                  ) : (
+                    <span className={styles.ticketTagsEmpty}>No tags selected.</span>
+                  )}
+                </div>
+                {ticketTagPickerOpen ? (
+                  <div className={styles.ticketTagPicker}>
+                    <input
+                      aria-label="Search tags"
+                      className={styles.ticketInput}
+                      onChange={(event) => setTicketTagSearch(event.target.value)}
+                      placeholder="Search tags…"
+                      value={ticketTagSearch}
+                    />
+                    <div className={styles.ticketTagList}>
+                      {availableTicketTags.length ? (
+                        availableTicketTags.map((tag) => (
+                          <button
+                            className={styles.ticketTagOption}
+                            key={tag.id}
+                            onClick={() => toggleCardTag(selectedCard, tag.id)}
+                            style={{ ["--kanban-tag-color" as string]: tag.color }}
+                            type="button"
+                          >
+                            <span aria-hidden="true" className={styles.cardTagDot} />
+                            {tag.label}
+                          </button>
+                        ))
+                      ) : (
+                        <p className={styles.ticketTagsEmpty}>
+                          {resolvedTags.length ? "All matching tags are selected." : "No tags yet."}
+                        </p>
+                      )}
+                    </div>
+                  </div>
+                ) : null}
+              </div>
+
+            </section>
+
+            {commentsEnabled ? (
+              <section aria-label="Ticket discussion" className={styles.ticketDiscussion}>
+                <div className={styles.ticketSectionHeader}>
+                  <span>Discussion</span>
+                  <small>{commentsForCard(selectedCard).length}</small>
+                </div>
+                {commentsForCard(selectedCard).length ? (
+                  <ul aria-label="Comments" className={styles.commentList}>
+                    {commentsForCard(selectedCard).map((comment) => (
+                      <li className={styles.comment} key={comment.id}>
+                        <span aria-hidden="true" className={styles.commentAvatar}>
+                          {(comment.author ?? "You").slice(0, 1).toUpperCase()}
+                        </span>
+                        <div className={styles.commentBody}>
+                          <div className={styles.commentMeta}>
+                            <strong>{comment.author ?? "You"}</strong>
+                            {comment.createdAt ? (
+                              <time dateTime={comment.createdAt}>
+                                {new Date(comment.createdAt).toLocaleString()}
+                              </time>
+                            ) : null}
+                          </div>
+                          <p>{comment.body}</p>
+                        </div>
+                      </li>
+                    ))}
+                  </ul>
+                ) : (
+                  <p className={styles.commentEmpty}>No comments yet. Start the conversation.</p>
+                )}
+                <form className={styles.commentForm} onSubmit={addComment}>
+                  <label className={styles.commentLabel} htmlFor={commentFieldId}>
+                    Add a comment
+                  </label>
+                  <textarea
+                    className={styles.commentInput}
+                    id={commentFieldId}
+                    onChange={(event) => setCommentDraft(event.target.value)}
+                    placeholder="Write a comment…"
+                    rows={3}
+                    value={commentDraft}
+                  />
+                  <div className={styles.commentActions}>
+                    <span className={styles.commentAuthor}>{currentUser?.name ?? "You"}</span>
+                    <Button disabled={!commentDraft.trim()} size="sm" type="submit">
+                      <FontAwesomeIcon icon={faPaperPlane} /> Add comment
+                    </Button>
+                  </div>
+                </form>
+              </section>
+            ) : null}
           </div>
         </Modal>
       ) : null}
