@@ -635,6 +635,19 @@
   width: 100%;
 }
 
+.kanbanDemoFrame {
+  display: grid;
+  width: 100%;
+  height: 600px;
+  min-height: 420px;
+}
+
+@media (max-width: 760px) {
+  .kanbanDemoFrame {
+    height: 520px;
+  }
+}
+
 .contextMenuTarget {
   display: grid;
   place-items: center;

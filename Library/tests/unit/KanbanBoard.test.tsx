@@ -1,4 +1,4 @@
-import { fireEvent, render, screen, waitFor } from "@testing-library/react";
+import { fireEvent, render, screen, waitFor, within } from "@testing-library/react";
 import { describe, expect, it, vi } from "vitest";
 import {
   KanbanBoard,
@@ -585,6 +585,23 @@ describe("KanbanBoard board chrome", () => {
 
     expect(screen.getByRole("heading", { name: "Product roadmap" })).toBeInTheDocument();
     expect(screen.getByLabelText("Product roadmap")).toBeInTheDocument();
+  });
+
+  it("pins the add-card control outside the scrolling card viewport", () => {
+    const { container } = render(
+      <KanbanBoard cards={cards} columns={columns} onChange={() => undefined} />,
+    );
+    const column = container.querySelector('[data-kanban-column-id="todo"]');
+    const viewport = column?.querySelector('[data-kanban-cards-viewport]');
+
+    expect(column).not.toBeNull();
+    expect(viewport).not.toBeNull();
+    expect(
+      within(viewport as HTMLElement).queryByRole("button", { name: "Add a card" }),
+    ).not.toBeInTheDocument();
+    expect(
+      within(column as HTMLElement).getByRole("button", { name: "Add a card" }),
+    ).toBeInTheDocument();
   });
 
   it("renames an uncontrolled board title inline", () => {

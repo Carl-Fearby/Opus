@@ -1645,5 +1645,17 @@ export const commitLog: CommitEntry[] = [
     shortHash: "c508e55",
     committedAt: "2026-10-23",
     summary: "chore: release opus-react@0.11.5",
+  },
+  {
+    hash: "516d9048a22b7ebbafcf5e18f9b800a8710a4f68",
+    shortHash: "516d904",
+    committedAt: "2026-10-23",
+    summary: "docs: publish opus-react 0.11.5 release notes",
+  },
+  {
+    hash: "fe966be5a7fcf3505b9b25b31379e37ca052e59d",
+    shortHash: "fe966be",
+    committedAt: "2026-10-23",
+    summary: "fix(kanban): show the full board title",
   }
 ].reverse();

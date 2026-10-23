@@ -5191,12 +5191,14 @@ const events = ${formatSchedulerEventsForUsage()};
         state,
         jsx: `(
   <div style={{ display: "grid", gap: 12, width: "100%" }}>
-    <KanbanBoard
-      cards={cards}
-      columns={columns}
-      defaultMembers={members}
-      defaultTags={tags}${s.interactive ? "\n      onChange={setColumns}" : ""}${cardClickAction === "none" ? "\n      ticketView={false}" : ""}${cardClickProp}
-    />
+    <div style={{ height: 600, minHeight: 420 }}>
+      <KanbanBoard
+        cards={cards}
+        columns={columns}
+        defaultMembers={members}
+        defaultTags={tags}${s.interactive ? "\n        onChange={setColumns}" : ""}${cardClickAction === "none" ? "\n        ticketView={false}" : ""}${cardClickProp}
+      />
+    </div>
     <JsonViewer collapsedDepth={2} value={{ cards, columns }} />${callbackStatus}
   </div>
 )`,

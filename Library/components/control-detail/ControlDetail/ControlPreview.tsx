@@ -2866,19 +2866,21 @@ function KanbanBoardPreview({
 
   return (
     <div className={styles.dialogPreview}>
-      <KanbanBoard
-        cards={demoKanbanCards}
-        columns={columns}
-        defaultMembers={demoKanbanMembers}
-        defaultTags={demoKanbanTags}
-        onCardClick={
-          cardClickAction === "callback"
-            ? (card) => setLastAction(`Opened "${card.title}"`)
-            : undefined
-        }
-        onChange={interactive ? setColumns : undefined}
-        ticketView={cardClickAction !== "none"}
-      />
+      <div className={styles.kanbanDemoFrame}>
+        <KanbanBoard
+          cards={demoKanbanCards}
+          columns={columns}
+          defaultMembers={demoKanbanMembers}
+          defaultTags={demoKanbanTags}
+          onCardClick={
+            cardClickAction === "callback"
+              ? (card) => setLastAction(`Opened "${card.title}"`)
+              : undefined
+          }
+          onChange={interactive ? setColumns : undefined}
+          ticketView={cardClickAction !== "none"}
+        />
+      </div>
       <JsonViewer collapsedDepth={2} value={boardData} />
       {cardClickAction === "callback" ? (
         <span className={styles.dialogResult}>{lastAction}</span>

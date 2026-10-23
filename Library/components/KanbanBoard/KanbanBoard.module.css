@@ -1,9 +1,12 @@
 .shell {
   position: relative;
   display: grid;
+  grid-template-rows: auto minmax(0, 1fr);
   gap: 6px;
   width: 100%;
+  height: 100%;
   min-width: 0;
+  min-height: 0;
 }
 
 .boardHeader {
@@ -256,9 +259,12 @@
 }
 
 .tagName {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
   min-width: 0;
+  max-width: 100%;
   padding: 2px 4px;
-  overflow: hidden;
   border: 0;
   border-radius: var(--opus-input-radius-small);
   background: transparent;
@@ -267,9 +273,29 @@
   font-size: 0.78rem;
   font-weight: 600;
   text-align: left;
+  cursor: text;
+}
+
+.tagNameText {
+  min-width: 0;
+  overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
-  cursor: text;
+}
+
+.editPencil {
+  flex: 0 0 auto;
+  color: var(--opus-muted);
+  font-size: 0.6rem;
+  opacity: 0;
+  transition: opacity 140ms ease;
+}
+
+.tagName:hover .editPencil,
+.tagName:focus-visible .editPencil,
+.columnTitleButton:hover .editPencil,
+.columnTitleButton:focus-visible .editPencil {
+  opacity: 0.75;
 }
 
 .tagName:hover {
@@ -442,6 +468,8 @@
   flex-wrap: nowrap;
   gap: 10px;
   width: 100%;
+  height: 100%;
+  min-height: 0;
   align-items: flex-start;
   overflow-x: auto;
   overflow-y: hidden;
@@ -489,6 +517,8 @@
   gap: 0;
   width: var(--kanban-column-width, 280px);
   max-width: min(var(--kanban-column-width, 280px), calc(100vw - 32px));
+  height: auto;
+  max-height: 100%;
   min-height: 0;
   padding: 0;
   border: 1px solid var(--opus-surface-border, var(--dashboard-section-border));
@@ -607,20 +637,26 @@
 }
 
 .columnTitleButton {
-  display: block;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
   max-width: 100%;
   padding: 1px 3px;
   margin-left: -3px;
-  overflow: hidden;
   border: 0;
   border-radius: var(--opus-input-radius-small);
   background: transparent;
   color: inherit;
   font: inherit;
   text-align: left;
+  cursor: text;
+}
+
+.columnTitleText {
+  min-width: 0;
+  overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
-  cursor: text;
 }
 
 .columnTitleButton:hover {
@@ -696,9 +732,29 @@
 .cardsViewport {
   position: relative;
   box-sizing: border-box;
+  flex: 0 1 auto;
   width: 100%;
   min-width: 0;
+  min-height: 0;
+  overflow-x: hidden;
+  overflow-y: auto;
+  overscroll-behavior: contain;
   padding: 10px;
+  scrollbar-width: thin;
+  scrollbar-color: color-mix(in srgb, var(--opus-accent) 34%, transparent) transparent;
+}
+
+.cardsViewport::-webkit-scrollbar {
+  width: 8px;
+}
+
+.cardsViewport::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.cardsViewport::-webkit-scrollbar-thumb {
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--opus-accent) 30%, transparent);
 }
 
 .cards {
@@ -727,7 +783,7 @@
 }
 
 .cardComposerArea {
-  padding-top: 8px;
+  padding: 8px 10px 10px;
 }
 
 .addCardButton {

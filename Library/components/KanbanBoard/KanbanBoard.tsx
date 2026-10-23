@@ -2048,9 +2048,15 @@ export function KanbanBoard({
                             <button
                               className={styles.tagName}
                               onClick={() => beginEditingTag(tag)}
+                              title="Rename tag"
                               type="button"
                             >
-                              {tag.label}
+                              <span className={styles.tagNameText}>{tag.label}</span>
+                              <FontAwesomeIcon
+                                aria-hidden="true"
+                                className={styles.editPencil}
+                                icon={faPen}
+                              />
                             </button>
                           )}
                           <button
@@ -2261,7 +2267,12 @@ export function KanbanBoard({
                     title="Rename list"
                     type="button"
                   >
-                    {column.title}
+                    <span className={styles.columnTitleText}>{column.title}</span>
+                    <FontAwesomeIcon
+                      aria-hidden="true"
+                      className={styles.editPencil}
+                      icon={faPen}
+                    />
                   </button>
                 ) : (
                   column.title
@@ -2492,8 +2503,9 @@ export function KanbanBoard({
                 </li>
               ) : null}
                 </ul>
-                {onChange ? (
-                  <div className={styles.cardComposerArea}>
+              </div>
+              {onChange ? (
+                <div className={styles.cardComposerArea}>
                     {cardComposerColumnId === column.id ? (
                       <form
                         className={styles.cardComposer}
@@ -2548,9 +2560,8 @@ export function KanbanBoard({
                         <span aria-hidden="true">+</span> {addCardLabel}
                       </button>
                     )}
-                  </div>
-                ) : null}
-              </div>
+                </div>
+              ) : null}
           </section>
         );
       })}
