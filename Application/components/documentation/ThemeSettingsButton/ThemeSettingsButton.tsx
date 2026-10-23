@@ -16,11 +16,11 @@ import {
   DEFAULT_TILE_ACCENT,
   DEFAULT_TILE_ACCENT_SECONDARY,
 } from "@/components/AccentColorPicker";
-import { ColourClouds, type ColourCloudsDesignation } from "@/components/ColourClouds";
+import { ColourClouds, type ColourCloudsDesignation } from "opus-react";
 import { useOpusI18n } from "@/components/OpusI18n";
-import { Button, SelectField } from "@/components/fields";
-import type { Theme } from "@/components/fields/types";
-import type { GoogleFontFamily } from "@/components/FontPicker";
+import { Button, SelectField } from "opus-react";
+import type { Theme } from "opus-react";
+import type { GoogleFontFamily } from "opus-react";
 import type { OpusThemeDefaults } from "@/components/OpusThemeProvider";
 import styles from "./ThemeSettingsButton.module.css";
 

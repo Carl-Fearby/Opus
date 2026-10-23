@@ -1,4 +1,4 @@
-import type { BreadcrumbItem } from "@/components/Breadcrumb";
+import type { BreadcrumbItem } from "opus-react";
 import { categoryMessageKey, DEFAULT_LOCALE, translate, type Locale } from "@/lib/i18n";
 import { getControl, getNavigationGroupBySlug } from "@/lib/controls/registry";
 import {
