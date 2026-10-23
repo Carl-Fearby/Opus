@@ -14,7 +14,10 @@
 }
 
 .boardTitle {
+  display: flex;
+  align-items: center;
   min-width: 0;
+  min-height: 30px;
   margin: 0;
   color: var(--opus-text);
   font-size: 1.32rem;
@@ -34,14 +37,18 @@
   display: inline-flex;
   align-items: center;
   gap: 8px;
+  box-sizing: border-box;
   max-width: 100%;
-  padding: 2px 6px 2px 0;
-  border: 0;
+  height: 30px;
+  margin-left: -6px;
+  padding: 0 6px;
+  border: 1px solid transparent;
   border-radius: var(--opus-input-radius-small);
   background: transparent;
   color: inherit;
   font: inherit;
   letter-spacing: inherit;
+  line-height: 1.2;
   text-align: left;
   cursor: text;
 }
@@ -69,9 +76,12 @@
 }
 
 .boardTitleInput {
+  box-sizing: border-box;
   min-width: 0;
   width: min(100%, 360px);
-  padding: 2px 7px;
+  height: 30px;
+  margin-left: -6px;
+  padding: 0 5px;
   border: 1px solid color-mix(in srgb, var(--opus-accent) 48%, var(--opus-border));
   border-radius: var(--opus-input-radius-small);
   background: var(--opus-input-bg);
