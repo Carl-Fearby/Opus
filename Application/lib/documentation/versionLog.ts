@@ -740,6 +740,14 @@ export const versionLog: VersionEntry[] = [
     commitShort: "bdbb222",
     summary: "Rich text ticket descriptions and comments with inline files and screenshots.",
     changes: ["Replace the ticket description and comment textareas with the Opus RichTextField WYSIWYG editor.","Support inline attachments in descriptions and comments: paste, drop, or pick screenshots and files, then embed them as images or download links.","Extend RichTextField with an async onAttachmentUpload adapter, image and file pickers, paste and drop handling, upload status, and onBlur.","Add RichTextContent and sanitisation helpers so rich comments render safely with headings, lists, links, tables, images, and code.","Keep ticket and comment attachment lists and the backend-ready upload and delete callbacks alongside inline content.","Publish opus-react 0.11.0."],
+  },
+  {
+    version: "0.11.1",
+    releasedAt: "2026-10-23",
+    commit: "90d3991384e141cfa8c97cfd221d7ee9b766264a",
+    commitShort: "90d3991",
+    summary: "Focused rich text toolbar and a wider, balanced ticket editor.",
+    changes: ["Reduce the WYSIWYG toolbar to the essentials: undo, redo, bold, italic, underline, strikethrough, code block, bullet and numbered lists, link and unlink, image and file upload, and table.","Give the ticket details and discussion columns equal 50% widths.","Widen the ticket modal to 1120px so the formatting toolbar stays on one line, and align the description editor height with the comment composer.","Publish opus-react 0.11.1."],
   }
 ].reverse();
 

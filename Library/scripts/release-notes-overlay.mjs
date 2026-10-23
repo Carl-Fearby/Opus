@@ -1,6 +1,18 @@
 /** Curated opus-react release notes for npm publishes that only left chore commits in git. */
 export const releaseNotesOverlay = [
   {
+    version: "0.11.1",
+    releasedAt: "2026-10-23",
+    commit: "90d3991384e141cfa8c97cfd221d7ee9b766264a",
+    summary: "Focused rich text toolbar and a wider, balanced ticket editor.",
+    changes: [
+      "Reduce the WYSIWYG toolbar to the essentials: undo, redo, bold, italic, underline, strikethrough, code block, bullet and numbered lists, link and unlink, image and file upload, and table.",
+      "Give the ticket details and discussion columns equal 50% widths.",
+      "Widen the ticket modal to 1120px so the formatting toolbar stays on one line, and align the description editor height with the comment composer.",
+      "Publish opus-react 0.11.1.",
+    ],
+  },
+  {
     version: "0.11.0",
     releasedAt: "2026-10-23",
     commit: "bdbb22240a40a3ac970ab08f753371ab1f7e11cc",

@@ -1573,5 +1573,11 @@ export const commitLog: CommitEntry[] = [
     shortHash: "2c376de",
     committedAt: "2026-10-23",
     summary: "fix(kanban): simplify rich text toolbar and align ticket editors",
+  },
+  {
+    hash: "90d3991384e141cfa8c97cfd221d7ee9b766264a",
+    shortHash: "90d3991",
+    committedAt: "2026-10-23",
+    summary: "chore: release opus-react@0.11.1",
   }
 ].reverse();
