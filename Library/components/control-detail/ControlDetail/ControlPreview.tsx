@@ -2872,6 +2872,7 @@ function KanbanBoardPreview({
           columns={columns}
           defaultMembers={demoKanbanMembers}
           defaultTags={demoKanbanTags}
+          onBoardDelete={() => setColumns([])}
           onCardClick={
             cardClickAction === "callback"
               ? (card) => setLastAction(`Opened "${card.title}"`)

@@ -1,4 +1,5 @@
 export * from "../../../components/fields";
+export * from "../../../components/OpusI18n";
 
 export {
   AccentColorPicker,

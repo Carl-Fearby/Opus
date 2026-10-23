@@ -4,6 +4,7 @@ import { useEffect, useId, useLayoutEffect, useRef, useState, type CSSProperties
 import { FieldShell } from "../fields/FieldShell";
 import { inputControlSizeClassName } from "../fields/shared/inputControlSizes";
 import type { ControlRadius, ControlTransparency, FieldMode, InputControlSize, LabelPosition } from "../fields/types";
+import { useOpusI18n } from "@/components/OpusI18n";
 import styles from "./SearchBox.module.css";
 
 export type SearchBoxCategory = {
@@ -44,7 +45,7 @@ export type SearchBoxProps = {
 
 /** A single search control with an optional category filter and submit button. */
 export function SearchBox({
-  ariaLabel = "Search",
+  ariaLabel,
   categories = [],
   category,
   className,
@@ -55,8 +56,8 @@ export function SearchBox({
   onCategoryChange,
   onSearch,
   onValueChange,
-  placeholder = "Search for anything",
-  label = "Search",
+  placeholder,
+  label,
   labelVisuallyHidden = true,
   labelPosition,
   mode,
@@ -68,9 +69,14 @@ export function SearchBox({
   required,
   size = "md",
   tertiaryAccent,
-  searchLabel = "Search",
+  searchLabel,
   value,
 }: SearchBoxProps) {
+  const { t } = useOpusI18n();
+  const resolvedAriaLabel = ariaLabel ?? t("searchBox.ariaLabel", "Search");
+  const resolvedPlaceholder = placeholder ?? t("searchBox.placeholder", "Search for anything");
+  const resolvedLabel = label ?? t("searchBox.label", "Search");
+  const resolvedSearchLabel = searchLabel ?? t("searchBox.action", "Search");
   const inputId = useId();
   const categoryId = useId();
   const [internalValue, setInternalValue] = useState(defaultValue);
@@ -137,7 +143,7 @@ export function SearchBox({
     };
   }, [categoryOpen]);
 
-  return <FieldShell error={error} help={help} id={inputId} label={label} labelVisuallyHidden={labelVisuallyHidden} labelPosition={labelPosition} mode={mode} radius={radius} transparency={transparency} gradient={gradient} required={required}>
+  return <FieldShell error={error} help={help} id={inputId} label={resolvedLabel} labelVisuallyHidden={labelVisuallyHidden} labelPosition={labelPosition} mode={mode} radius={radius} transparency={transparency} gradient={gradient} required={required}>
     <form
       className={[styles.root, inputControlSizeClassName[size], className].filter(Boolean).join(" ")}
       role="search"
@@ -148,7 +154,7 @@ export function SearchBox({
       }
       onSubmit={submit}
     >
-      <label className={styles.visuallyHidden} htmlFor={inputId}>{ariaLabel}</label>
+      <label className={styles.visuallyHidden} htmlFor={inputId}>{resolvedAriaLabel}</label>
       <span className={styles.inputWrap}>
         <svg aria-hidden="true" className={styles.icon} viewBox="0 0 24 24"><path d="m20 20-4.35-4.35m1.35-5.15a6.5 6.5 0 1 1-13 0 6.5 6.5 0 0 1 13 0Z" /></svg>
         <input
@@ -157,7 +163,7 @@ export function SearchBox({
           autoComplete="off"
           type="search"
           value={query}
-          placeholder={placeholder}
+          placeholder={resolvedPlaceholder}
           disabled={disabled}
           required={required}
           onChange={(event) => { setInternalValue(event.target.value); onValueChange?.(event.target.value); }}
@@ -168,7 +174,7 @@ export function SearchBox({
         <input name="category" type="hidden" value={selectedCategory} />
         {categoryOpen ? <div className={styles.categoryPanel} id={categoryId} role="listbox" style={categoryPanelStyle}>{categories.map((item) => <button aria-selected={item.value === selectedCategory} key={item.value} onClick={() => { setInternalCategory(item.value); onCategoryChange?.(item.value); setCategoryOpen(false); }} role="option" type="button">{item.label}</button>)}</div> : null}
       </span> : null}
-      <button type="submit" disabled={disabled}>{searchLabel}</button>
+      <button type="submit" disabled={disabled}>{resolvedSearchLabel}</button>
     </form>
   </FieldShell>;
 }

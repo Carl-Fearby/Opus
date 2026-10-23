@@ -6,6 +6,7 @@ import type { ModalSize } from "@/components/fields/types";
 import { Button } from "@/components/fields/Button";
 import { Portal } from "@/components/Portal";
 import { useOverlayAccessibility } from "@/lib/a11y/useOverlayAccessibility";
+import { useOpusI18n } from "@/components/OpusI18n";
 import styles from "./Modal.module.css";
 
 type ModalPhase = "opening" | "closing";
@@ -51,6 +52,7 @@ export function Modal({
   title,
   titleContent,
 }: ModalProps) {
+  const { t } = useOpusI18n();
   const titleId = useId();
   const descriptionId = useId();
   const panelRef = useRef<HTMLElement>(null);
@@ -141,7 +143,7 @@ export function Modal({
             {closeButton ? (
               <button
                 ref={closeRef}
-                aria-label="Close modal"
+                aria-label={t("common.closeModal", "Close modal")}
                 className={styles.close}
                 onClick={onClose}
                 type="button"
@@ -173,13 +175,14 @@ export function Modal({
 }
 
 export function ModalDefaultActions({ onClose }: { onClose: () => void }) {
+  const { t } = useOpusI18n();
   return (
     <>
       <Button variant="secondary" onClick={onClose}>
-        Cancel
+        {t("common.cancel", "Cancel")}
       </Button>
       <Button variant="primary" onClick={onClose}>
-        Save changes
+        {t("common.saveChanges", "Save changes")}
       </Button>
     </>
   );

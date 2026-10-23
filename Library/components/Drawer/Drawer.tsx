@@ -6,6 +6,7 @@ import type { DrawerSide } from "@/components/fields/types";
 import { Button } from "@/components/fields/Button";
 import { Portal } from "@/components/Portal";
 import { useOverlayAccessibility } from "@/lib/a11y/useOverlayAccessibility";
+import { useOpusI18n } from "@/components/OpusI18n";
 import styles from "./Drawer.module.css";
 
 type DrawerPhase = "opening" | "closing";
@@ -39,6 +40,7 @@ export function Drawer({
   side = "right",
   title,
 }: DrawerProps) {
+  const { t } = useOpusI18n();
   const titleId = useId();
   const descriptionId = useId();
   const panelRef = useRef<HTMLElement>(null);
@@ -127,7 +129,7 @@ export function Drawer({
             {closeButton ? (
               <button
                 ref={closeRef}
-                aria-label="Close drawer"
+                aria-label={t("common.closeDrawer", "Close drawer")}
                 className={styles.close}
                 onClick={onClose}
                 type="button"
@@ -158,10 +160,11 @@ export function Drawer({
 }
 
 export function DrawerDefaultActions({ onClose }: { onClose: () => void }) {
+  const { t } = useOpusI18n();
   return (
     <>
       <Button variant="secondary" onClick={onClose}>
-        Cancel
+        {t("common.cancel", "Cancel")}
       </Button>
       <Button variant="primary" onClick={onClose}>
         Apply

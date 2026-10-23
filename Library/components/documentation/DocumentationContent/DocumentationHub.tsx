@@ -9,6 +9,7 @@ import { DocumentationTopBar } from "@/components/documentation/DocumentationTop
 import { DocumentationBreadcrumbs } from "@/components/documentation/DocumentationBreadcrumbs";
 import { ThemeSettingsButton } from "@/components/documentation/ThemeSettingsButton";
 import { useStoredTheme } from "@/lib/theme/useStoredTheme";
+import { useLocale } from "@/lib/i18n/LocaleProvider";
 import styles from "./documentation.module.css";
 
 type DocumentationHubProps = {
@@ -16,6 +17,7 @@ type DocumentationHubProps = {
 };
 
 export function DocumentationHub({ catalogueCount }: DocumentationHubProps) {
+  const { t } = useLocale();
   const [theme, setTheme] = useStoredTheme();
   const { accent, accentSecondary, accentStyle, resetAccent, setAccent, setAccentSecondary } =
     useAccentPreference();
@@ -53,29 +55,24 @@ export function DocumentationHub({ catalogueCount }: DocumentationHubProps) {
           }
         />
         <div className={styles.hub}>
-          <DocumentationBreadcrumbs currentLabel="Home" />
-          <p className={styles.hubDescription}>
-            Explore the component library, read the project guide, and copy usage examples for every
-            control.
-          </p>
+          <DocumentationBreadcrumbs currentLabel={t("docs.nav.home")} />
+          <p className={styles.hubDescription}>{t("docs.hub.description")}</p>
           <div className={styles.hubGrid}>
             <Link className={styles.hubCard} href={GUIDE_BASE_PATH}>
-              <h3 className={styles.hubCardTitle}>Guide</h3>
-              <p className={styles.hubCardDescription}>
-                Architecture, theming, development site notes, and how to add new components.
-              </p>
+              <h3 className={styles.hubCardTitle}>{t("docs.hub.guide")}</h3>
+              <p className={styles.hubCardDescription}>{t("docs.hub.guideDescription")}</p>
             </Link>
             <Link className={styles.hubCard} href={COMPONENTS_BASE_PATH}>
-              <h3 className={styles.hubCardTitle}>Components</h3>
+              <h3 className={styles.hubCardTitle}>{t("docs.hub.components")}</h3>
               <p className={styles.hubCardDescription}>
-                Browse all {catalogueCount} controls with live previews, settings, and generated usage code.
+                {t("docs.hub.componentsDescription", { count: catalogueCount })}
               </p>
             </Link>
             <Link className={styles.hubCard} href={VERSION_BASE_PATH}>
-              <h3 className={styles.hubCardTitle}>Version {libraryVersion}</h3>
-              <p className={styles.hubCardDescription}>
-                Release history generated from git commits, with summaries for each shipped change.
-              </p>
+              <h3 className={styles.hubCardTitle}>
+                {t("docs.hub.version", { version: libraryVersion })}
+              </h3>
+              <p className={styles.hubCardDescription}>{t("docs.hub.versionDescription")}</p>
             </Link>
           </div>
         </div>

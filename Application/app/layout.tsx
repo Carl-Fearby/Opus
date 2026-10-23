@@ -7,6 +7,9 @@ import "./preview-theme.css";
 import { ThemeBootstrapScript } from "@/components/theme/ThemeBootstrapScript";
 import { createAccentStyle } from "@/lib/theme/accentThemeStorage";
 import { readServerAccent, readServerPreviewTheme, readServerTheme } from "@/lib/theme/readServerTheme";
+import { localeHtmlLang } from "@/lib/i18n";
+import { LocaleProvider } from "@/lib/i18n/LocaleProvider";
+import { readServerLocale } from "@/lib/i18n/server";
 
 const spaceGrotesk = Space_Grotesk({
   variable: "--font-space-grotesk",
@@ -183,12 +186,13 @@ export default async function RootLayout({
   const theme = await readServerTheme();
   const previewTheme = await readServerPreviewTheme();
   const accent = await readServerAccent();
+  const locale = await readServerLocale();
 
   return (
     <html
       data-preview-theme={previewTheme}
       data-shell-theme={theme}
-      lang="en-GB"
+      lang={localeHtmlLang(locale)}
       style={{ colorScheme: theme, ...createAccentStyle(accent.accent, accent.accentSecondary) }}
       suppressHydrationWarning
     >
@@ -199,8 +203,10 @@ export default async function RootLayout({
         />
         <script dangerouslySetInnerHTML={{ __html: fontBootstrapScript }} />
         <script dangerouslySetInnerHTML={{ __html: performanceMeasureGuardScript }} />
-        <ThemeBootstrapScript />
-        {children}
+        <LocaleProvider initialLocale={locale}>
+          <ThemeBootstrapScript />
+          {children}
+        </LocaleProvider>
       </body>
     </html>
   );

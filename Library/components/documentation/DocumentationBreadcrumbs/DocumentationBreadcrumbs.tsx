@@ -3,6 +3,7 @@
 import { usePathname } from "next/navigation";
 import { Breadcrumb } from "@/components/Breadcrumb";
 import { buildDocumentationBreadcrumbs } from "@/lib/documentation/breadcrumbs";
+import { useLocale } from "@/lib/i18n/LocaleProvider";
 import styles from "./DocumentationBreadcrumbs.module.css";
 
 type DocumentationBreadcrumbsProps = {
@@ -17,7 +18,8 @@ export function DocumentationBreadcrumbs({
   guidePages,
 }: DocumentationBreadcrumbsProps) {
   const pathname = usePathname();
-  const items = buildDocumentationBreadcrumbs(pathname, { currentLabel, guidePages });
+  const { locale } = useLocale();
+  const items = buildDocumentationBreadcrumbs(pathname, { currentLabel, guidePages, locale });
 
   return (
     <div className={[styles.breadcrumbs, className].filter(Boolean).join(" ")}>

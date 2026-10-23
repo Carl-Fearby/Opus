@@ -4,6 +4,7 @@ import Link from "next/link";
 import { generateUsageCode } from "@/lib/controls/generateUsageCode";
 import { buildPlaygroundHref, storePlaygroundSeed } from "@/lib/playground/playgroundNavigation";
 import type { ComponentCategory, ControlSettings, ControlSlug } from "@/lib/controls/types";
+import { useOpusI18n } from "@/components/OpusI18n";
 import styles from "./ControlDetail.module.css";
 
 type OpenInPlaygroundLinkProps = {
@@ -13,6 +14,7 @@ type OpenInPlaygroundLinkProps = {
 };
 
 export function OpenInPlaygroundLink({ category, settings, slug }: OpenInPlaygroundLinkProps) {
+  const { t } = useOpusI18n();
   const seed = {
     category,
     code: generateUsageCode(slug, settings, category).full,
@@ -27,7 +29,7 @@ export function OpenInPlaygroundLink({ category, settings, slug }: OpenInPlaygro
       onMouseDown={() => storePlaygroundSeed(seed)}
       onClick={() => storePlaygroundSeed(seed)}
     >
-      Open in Playground
+      {t("preview.openPlayground", "Open in Playground")}
     </Link>
   );
 }

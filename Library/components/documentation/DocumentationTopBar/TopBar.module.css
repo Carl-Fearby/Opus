@@ -92,6 +92,7 @@
 }
 
 .topBarTrailing {
+  --opus-control-height: 36px;
   display: inline-flex;
   align-items: center;
   justify-content: flex-end;

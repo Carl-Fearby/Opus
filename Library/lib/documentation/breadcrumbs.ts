@@ -1,5 +1,6 @@
 import type { BreadcrumbItem } from "@/components/Breadcrumb";
-import { componentCategories, getControl, getNavigationGroupBySlug } from "@/lib/controls/registry";
+import { categoryMessageKey, DEFAULT_LOCALE, translate, type Locale } from "@/lib/i18n";
+import { getControl, getNavigationGroupBySlug } from "@/lib/controls/registry";
 import {
   CATEGORY_PATHS,
   COMPONENTS_BASE_PATH,
@@ -24,39 +25,41 @@ type GuidePageRef = {
 type BuildDocumentationBreadcrumbsOptions = {
   currentLabel?: string;
   guidePages?: GuidePageRef[];
+  locale?: Locale;
 };
 
 function crumb(id: string, label: string, href?: string): BreadcrumbItem {
   return { id, label, href };
 }
 
-function categoryLabel(category: keyof typeof CATEGORY_PATHS) {
-  return componentCategories.find((entry) => entry.id === category)?.label ?? category;
+function categoryLabel(category: keyof typeof CATEGORY_PATHS, locale: Locale) {
+  return translate(locale, categoryMessageKey(category));
 }
 
 export function buildDocumentationBreadcrumbs(
   pathname: string,
   options: BuildDocumentationBreadcrumbsOptions = {},
 ): BreadcrumbItem[] {
+  const locale = options.locale ?? DEFAULT_LOCALE;
   if (pathname === "/") {
     return [crumb("current", "Opus")];
   }
 
   const items: BreadcrumbItem[] = [
     crumb("home", "Opus", "/"),
-    crumb("documentation", "Documentation", DOCUMENTATION_BASE_PATH),
+    crumb("documentation", translate(locale, "docs.nav.aria"), DOCUMENTATION_BASE_PATH),
   ];
 
   if (pathname === DOCUMENTATION_BASE_PATH) {
-    items.push(crumb("current", options.currentLabel ?? "Home"));
+    items.push(crumb("current", options.currentLabel ?? translate(locale, "docs.nav.home")));
     return items;
   }
 
   if (pathname === GUIDE_BASE_PATH || pathname.startsWith(`${GUIDE_BASE_PATH}/`)) {
-    items.push(crumb("guide", "Guide", GUIDE_BASE_PATH));
+    items.push(crumb("guide", translate(locale, "docs.nav.guide"), GUIDE_BASE_PATH));
 
     if (pathname === GUIDE_BASE_PATH) {
-      items.push(crumb("current", options.currentLabel ?? "Overview"));
+      items.push(crumb("current", options.currentLabel ?? translate(locale, "docs.overview")));
       return items;
     }
 
@@ -64,26 +67,26 @@ export function buildDocumentationBreadcrumbs(
       (entry) => guidePath(entry.slug === "index" ? undefined : entry.slug) === pathname,
     );
 
-    items.push(crumb("current", options.currentLabel ?? page?.title ?? "Guide"));
+    items.push(crumb("current", options.currentLabel ?? page?.title ?? translate(locale, "docs.nav.guide")));
     return items;
   }
 
   if (pathname === VERSION_BASE_PATH) {
-    items.push(crumb("current", options.currentLabel ?? "Version"));
+    items.push(crumb("current", options.currentLabel ?? translate(locale, "docs.nav.version")));
     return items;
   }
 
   if (pathname === SECURITY_BASE_PATH) {
-    items.push(crumb("current", options.currentLabel ?? "Security"));
+    items.push(crumb("current", options.currentLabel ?? translate(locale, "docs.nav.security")));
     return items;
   }
 
   if (pathname.startsWith(COMPONENTS_BASE_PATH)) {
-    items.push(crumb("components", "Components", COMPONENTS_BASE_PATH));
+    items.push(crumb("components", translate(locale, "docs.nav.components"), COMPONENTS_BASE_PATH));
 
     const overviewCategory = getCategoryFromPath(pathname);
     if (overviewCategory) {
-      items.push(crumb("current", options.currentLabel ?? categoryLabel(overviewCategory)));
+      items.push(crumb("current", options.currentLabel ?? categoryLabel(overviewCategory, locale)));
       return items;
     }
 
@@ -92,14 +95,14 @@ export function buildDocumentationBreadcrumbs(
       const groupLabel =
         getNavigationGroupBySlug(subgroup.category, subgroup.groupSlug) ?? subgroup.groupSlug;
       items.push(
-        crumb(subgroup.category, categoryLabel(subgroup.category), CATEGORY_PATHS[subgroup.category]),
+        crumb(subgroup.category, categoryLabel(subgroup.category, locale), CATEGORY_PATHS[subgroup.category]),
       );
       items.push(crumb("current", options.currentLabel ?? groupLabel));
       return items;
     }
 
     if (pathname === COMPONENTS_BASE_PATH) {
-      items.push(crumb("current", options.currentLabel ?? "Overview"));
+      items.push(crumb("current", options.currentLabel ?? translate(locale, "docs.overview")));
       return items;
     }
 
@@ -110,7 +113,7 @@ export function buildDocumentationBreadcrumbs(
       const control = getControl(slug);
       if (control) {
         items.push(
-          crumb(control.category, categoryLabel(control.category), CATEGORY_PATHS[control.category]),
+          crumb(control.category, categoryLabel(control.category, locale), CATEGORY_PATHS[control.category]),
         );
         if (control.navigationGroup) {
           items.push(
@@ -130,7 +133,7 @@ export function buildDocumentationBreadcrumbs(
       const control = getControl(relativePath);
       if (control) {
         items.push(
-          crumb(control.category, categoryLabel(control.category), CATEGORY_PATHS[control.category]),
+          crumb(control.category, categoryLabel(control.category, locale), CATEGORY_PATHS[control.category]),
         );
         if (control.navigationGroup) {
           items.push(
@@ -146,10 +149,10 @@ export function buildDocumentationBreadcrumbs(
       }
     }
 
-    items.push(crumb("current", options.currentLabel ?? "Page"));
+    items.push(crumb("current", options.currentLabel ?? translate(locale, "docs.page")));
     return items;
   }
 
-  items.push(crumb("current", options.currentLabel ?? "Page"));
+  items.push(crumb("current", options.currentLabel ?? translate(locale, "docs.page")));
   return items;
 }

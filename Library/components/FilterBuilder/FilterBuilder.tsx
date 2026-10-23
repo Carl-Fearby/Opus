@@ -1,6 +1,7 @@
 "use client";
 
 import { useMemo } from "react";
+import { useOpusI18n } from "@/components/OpusI18n";
 import styles from "./FilterBuilder.module.css";
 
 export type FilterOperator = "eq" | "neq" | "contains" | "gt" | "lt" | "empty";
@@ -18,13 +19,13 @@ export type FilterBuilderProps = {
   onChange: (conditions: FilterCondition[]) => void;
 };
 
-const operators: { label: string; value: FilterOperator }[] = [
-  { value: "eq", label: "equals" },
-  { value: "neq", label: "not equals" },
-  { value: "contains", label: "contains" },
-  { value: "gt", label: "greater than" },
-  { value: "lt", label: "less than" },
-  { value: "empty", label: "is empty" },
+const operators: { labelKey: string; fallback: string; value: FilterOperator }[] = [
+  { value: "eq", labelKey: "filter.equals", fallback: "equals" },
+  { value: "neq", labelKey: "filter.notEquals", fallback: "not equals" },
+  { value: "contains", labelKey: "filter.contains", fallback: "contains" },
+  { value: "gt", labelKey: "filter.greaterThan", fallback: "greater than" },
+  { value: "lt", labelKey: "filter.lessThan", fallback: "less than" },
+  { value: "empty", labelKey: "filter.isEmpty", fallback: "is empty" },
 ];
 
 const operatorSymbols: Record<FilterOperator, string> = {
@@ -45,23 +46,31 @@ function createCondition(fields: string[]): FilterCondition {
   };
 }
 
-function formatCondition(condition: FilterCondition): string {
+function formatCondition(
+  condition: FilterCondition,
+  t: (key: string, fallback: string) => string,
+): string {
   if (condition.operator === "empty") {
-    return `${condition.field} is empty`;
+    return `${condition.field} ${t("filter.isEmpty", "is empty")}`;
   }
   const value = condition.value.trim() ? `"${condition.value}"` : "…";
-  return `${condition.field} ${operatorSymbols[condition.operator]} ${value}`;
+  const symbol =
+    condition.operator === "contains"
+      ? t("filter.contains", "contains")
+      : operatorSymbols[condition.operator];
+  return `${condition.field} ${symbol} ${value}`;
 }
 
 export function FilterBuilder({ conditions, fields, onChange }: FilterBuilderProps) {
+  const { t } = useOpusI18n();
   function update(id: string, patch: Partial<FilterCondition>) {
     onChange(conditions.map((condition) => (condition.id === id ? { ...condition, ...patch } : condition)));
   }
 
   const expression = useMemo(() => {
-    if (conditions.length === 0) return "No filters applied";
-    return conditions.map(formatCondition).join(" AND ");
-  }, [conditions]);
+    if (conditions.length === 0) return t("filter.noFiltersApplied", "No filters applied");
+    return conditions.map((condition) => formatCondition(condition, t)).join(` ${t("filter.and", "AND")} `);
+  }, [conditions, t]);
 
   const payload = useMemo(
     () =>
@@ -72,22 +81,22 @@ export function FilterBuilder({ conditions, fields, onChange }: FilterBuilderPro
   );
 
   return (
-    <div className={styles.root} aria-label="Filter builder">
+    <div className={styles.root} aria-label={t("filter.builder", "Filter builder")}>
       <div className={styles.header}>
-        <span className={styles.title}>Filters</span>
+        <span className={styles.title}>{t("filter.filters", "Filters")}</span>
         <button className={styles.add} onClick={() => onChange([...conditions, createCondition(fields)])} type="button">
-          Add filter
+          {t("filter.addFilter", "Add filter")}
         </button>
       </div>
       {conditions.length === 0 ? (
-        <p className={styles.empty}>No filters. Add one to narrow results.</p>
+        <p className={styles.empty}>{t("filter.noFilters", "No filters. Add one to narrow results.")}</p>
       ) : (
         <ul className={styles.list}>
           {conditions.map((condition, index) => (
             <li className={styles.row} key={condition.id}>
-              {index > 0 ? <span className={styles.joiner}>AND</span> : <span className={styles.joinerSpacer} />}
+              {index > 0 ? <span className={styles.joiner}>{t("filter.and", "AND")}</span> : <span className={styles.joinerSpacer} />}
               <select
-                aria-label="Field"
+                aria-label={t("filter.field", "Field")}
                 className={styles.select}
                 onChange={(event) => update(condition.id, { field: event.target.value })}
                 value={condition.field}
@@ -99,14 +108,14 @@ export function FilterBuilder({ conditions, fields, onChange }: FilterBuilderPro
                 ))}
               </select>
               <select
-                aria-label="Operator"
+                aria-label={t("filter.operator", "Operator")}
                 className={styles.select}
                 onChange={(event) => update(condition.id, { operator: event.target.value as FilterOperator })}
                 value={condition.operator}
               >
                 {operators.map((operator) => (
                   <option key={operator.value} value={operator.value}>
-                    {operator.label}
+                    {t(operator.labelKey, operator.fallback)}
                   </option>
                 ))}
               </select>
@@ -114,15 +123,15 @@ export function FilterBuilder({ conditions, fields, onChange }: FilterBuilderPro
                 <span className={styles.valuePlaceholder}>—</span>
               ) : (
                 <input
-                  aria-label="Value"
+                  aria-label={t("filter.value", "Value")}
                   className={styles.input}
                   onChange={(event) => update(condition.id, { value: event.target.value })}
-                  placeholder="Value"
+                  placeholder={t("filter.value", "Value")}
                   value={condition.value}
                 />
               )}
               <button
-                aria-label="Remove filter"
+                aria-label={t("filter.removeFilter", "Remove filter")}
                 className={styles.remove}
                 onClick={() => onChange(conditions.filter((entry) => entry.id !== condition.id))}
                 type="button"
@@ -133,8 +142,8 @@ export function FilterBuilder({ conditions, fields, onChange }: FilterBuilderPro
           ))}
         </ul>
       )}
-      <div className={styles.output} aria-label="Filter output">
-        <div className={styles.outputLabel}>Output</div>
+      <div className={styles.output} aria-label={t("filter.output", "Filter output")}>
+        <div className={styles.outputLabel}>{t("filter.output", "Output")}</div>
         <p className={styles.expression}>{expression}</p>
         <pre className={styles.payload} tabIndex={0}>{JSON.stringify(payload, null, 2)}</pre>
       </div>

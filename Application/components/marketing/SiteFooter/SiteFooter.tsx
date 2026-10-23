@@ -1,32 +1,33 @@
 import Link from "next/link";
 import { docsComponentsUrl, docsPlaygroundUrl, npmPackageUrl } from "@/lib/siteLinks";
+import { translate } from "@/lib/i18n";
+import { readServerLocale } from "@/lib/i18n/server";
 import styles from "./SiteFooter.module.css";
 
-const footerLinks = [
-  { href: "/#features", label: "Features", external: false },
-  { href: "/#playground", label: "Playground", external: false },
-  { href: "/#components", label: "Components", external: false },
-  { href: "/why-opus", label: "Why Opus", external: false },
-  { href: "/#contributors", label: "Contribute", external: false },
-  { href: docsComponentsUrl, label: "Component catalogue", external: false },
-  { href: docsPlaygroundUrl, label: "Code Playground", external: false },
-  { href: "/version", label: "Release notes", external: false },
-  { href: "/code-of-conduct", label: "Code of Conduct", external: false },
-  { href: "/license", label: "MIT License", external: false },
-  { href: npmPackageUrl, label: "npm", external: true },
-  { href: "https://github.com/Carl-Fearby/Opus", label: "GitHub", external: true },
-];
+export async function SiteFooter() {
+  const locale = await readServerLocale();
+  const t = (key: Parameters<typeof translate>[1]) => translate(locale, key);
+  const footerLinks = [
+    { href: "/#features", label: t("site.footer.features"), external: false },
+    { href: "/#playground", label: t("site.footer.playground"), external: false },
+    { href: "/#components", label: t("site.footer.components"), external: false },
+    { href: "/why-opus", label: t("site.footer.whyOpus"), external: false },
+    { href: "/#contributors", label: t("site.footer.contribute"), external: false },
+    { href: docsComponentsUrl, label: t("site.footer.catalogue"), external: false },
+    { href: docsPlaygroundUrl, label: t("site.footer.codePlayground"), external: false },
+    { href: "/version", label: t("site.footer.releaseNotes"), external: false },
+    { href: "/code-of-conduct", label: t("site.footer.codeOfConduct"), external: false },
+    { href: "/license", label: t("site.footer.license"), external: false },
+    { href: npmPackageUrl, label: "npm", external: true },
+    { href: "https://github.com/Carl-Fearby/Opus", label: "GitHub", external: true },
+  ];
 
-export function SiteFooter() {
   return (
     <footer className={styles.footer}>
       <div className={styles.inner}>
         <div className={styles.brandBlock}>
           <img alt="Opus" className={styles.logo} src="/opus-logo.png" />
-          <p>
-            Open-source design system and React component library for modern business
-            applications. No paid plans, commercial support, or hosted service.
-          </p>
+          <p>{t("site.footer.description")}</p>
         </div>
 
         <div className={styles.links}>
@@ -47,7 +48,7 @@ export function SiteFooter() {
       <div className={styles.legal}>
         <span>© {new Date().getFullYear()} Opus</span>
         <a className={styles.netlifyLink} href="https://www.netlify.com/" rel="noreferrer" target="_blank">
-          This site is powered by Netlify
+          {t("site.footer.poweredBy")}
         </a>
       </div>
     </footer>

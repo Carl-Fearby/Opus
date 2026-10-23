@@ -34,6 +34,8 @@ import {
   getCategorySubgroupFromPath,
   navigationGroupToSlug,
 } from "@/lib/controls/routes";
+import { useLocale } from "@/lib/i18n/LocaleProvider";
+import { categoryMessageKey } from "@/lib/i18n";
 import { useComponentSettingsContext } from "./ComponentSettingsContext";
 import styles from "./ComponentsShell.module.css";
 
@@ -201,6 +203,7 @@ function NavLink({
   onNavigate?: () => void;
 }) {
   const pathname = usePathname();
+  const { t } = useLocale();
   const isActive = pathname === href;
 
   return (
@@ -215,7 +218,7 @@ function NavLink({
       <ComponentIcon compact={nested} icon={icon} />
       <span className={styles.navLinkLabel}>{label}</span>
       {isNew ? (
-        <span aria-label="New component" className={styles.navNewMarker} title="New component">
+        <span aria-label={t("docs.newComponent")} className={styles.navNewMarker} title={t("docs.newComponent")}>
           *
         </span>
       ) : null}
@@ -245,6 +248,7 @@ function NavGroup({
   onToggle: () => void;
 }) {
   const pathname = usePathname();
+  const { t } = useLocale();
   const listId = navGroupListId(category);
   const sections = filteredSections ?? getControlSectionsByCategory(category);
   const count = sections.reduce((total, section) => total + section.controls.length, 0);
@@ -269,13 +273,13 @@ function NavGroup({
           <ComponentIcon icon={getCategoryIcon(category)} />
           <span className={styles.navHeadingLabel}>
             <span className={styles.navHeadingTitle}>{label}</span>
-            <NavCount count={count} label="components" />
+            <NavCount count={count} label={t("docs.components").toLowerCase()} />
           </span>
         </Link>
         <button
           aria-controls={listId}
           aria-expanded={isOpen}
-          aria-label={`${isOpen ? "Collapse" : "Expand"} ${label}`}
+          aria-label={t(isOpen ? "docs.collapse" : "docs.expand", { label })}
           className={styles.navGroupChevronButton}
           onClick={onToggle}
           type="button"
@@ -342,6 +346,7 @@ function NavSubgroup({
   onToggle: () => void;
 }) {
   const pathname = usePathname();
+  const { t } = useLocale();
   const listId = navSubgroupListId(category, label);
   const subgroupPath = categorySubgroupPath(category, label);
   const isOpen = forceOpen || open;
@@ -363,13 +368,13 @@ function NavSubgroup({
           <ComponentIcon compact icon={getNavigationGroupIcon(label)} />
           <span className={styles.navHeadingLabel}>
             <span className={styles.navHeadingTitle}>{label}</span>
-            <NavCount count={controls.length} label="components" />
+            <NavCount count={controls.length} label={t("docs.components").toLowerCase()} />
           </span>
         </Link>
         <button
           aria-controls={listId}
           aria-expanded={isOpen}
-          aria-label={`${isOpen ? "Collapse" : "Expand"} ${label}`}
+          aria-label={t(isOpen ? "docs.collapse" : "docs.expand", { label })}
           className={styles.navSubsectionChevronButton}
           onClick={onToggle}
           type="button"
@@ -403,6 +408,7 @@ function NavSubgroup({
 export function ComponentsSidebar() {
   const pathname = usePathname();
   const searchParams = useSearchParams();
+  const { t } = useLocale();
   const { isResizing, setIsResizing } = useComponentSettingsContext();
   const isOverview = pathname === COMPONENTS_BASE_PATH;
   const isRelationships = pathname === RELATIONSHIPS_PATH;
@@ -651,14 +657,14 @@ export function ComponentsSidebar() {
                 clearSearch();
               }
             }}
-            placeholder="Search components…"
+            placeholder={t("docs.search")}
             type="search"
             value={query}
           />
         </label>
       </div>
-      <CustomScrollbar className={styles.navScroll} label="Components navigation" orientation="vertical">
-      <nav className={styles.nav} aria-label="Components">
+      <CustomScrollbar className={styles.navScroll} label={t("docs.componentsNavigation")} orientation="vertical">
+      <nav className={styles.nav} aria-label={t("docs.components")}>
         {isSearching ? (
           <div className={styles.sidebarSearchResults} id="components-sidebar-search-results">
             {showOverviewInSearch ? (
@@ -671,7 +677,7 @@ export function ComponentsSidebar() {
               >
                 <ComponentIcon icon={getOverviewIcon()} />
                 <span className={styles.navHeadingLabel}>
-                  <span className={styles.navHeadingTitle}>Overview</span>
+                  <span className={styles.navHeadingTitle}>{t("docs.overview")}</span>
                   <NavCount count={overviewCount} label="components" />
                 </span>
               </Link>
@@ -685,7 +691,7 @@ export function ComponentsSidebar() {
                 href={RELATIONSHIPS_PATH}
               >
                 <ComponentIcon icon={getComponentIcon("tree-view")} />
-                <span className={styles.navHeadingTitle}>Relationships</span>
+                <span className={styles.navHeadingTitle}>{t("docs.relationships")}</span>
               </Link>
             ) : null}
             {searchGroups.map((group) => (
@@ -693,7 +699,7 @@ export function ComponentsSidebar() {
                 key={group.category}
                 category={group.category}
                 forceOpen
-                label={group.label}
+                label={t(categoryMessageKey(group.category))}
                 open
                 openGroups={openGroups}
                 sections={group.sections}
@@ -703,7 +709,7 @@ export function ComponentsSidebar() {
             ))}
             {!showOverviewInSearch && !showRelationshipsInSearch && searchGroups.length === 0 ? (
               <p className={styles.sidebarSearchEmpty} role="status">
-                No components match &ldquo;{query.trim()}&rdquo;.
+                {t("docs.noResults", { query: query.trim() })}
               </p>
             ) : null}
           </div>
@@ -718,20 +724,20 @@ export function ComponentsSidebar() {
             >
               <ComponentIcon icon={getOverviewIcon()} />
               <span className={styles.navHeadingLabel}>
-                <span className={styles.navHeadingTitle}>Overview</span>
+                <span className={styles.navHeadingTitle}>{t("docs.overview")}</span>
                 <NavCount count={overviewCount} label="components" />
               </span>
             </Link>
             <NavLink
               href={RELATIONSHIPS_PATH}
               icon={getComponentIcon("tree-view")}
-              label="Relationships"
+              label={t("docs.relationships")}
             />
             {sidebarMainCategories.map((category) => (
               <NavGroup
                 key={category.id}
                 category={category.id}
-                label={category.label}
+                label={t(categoryMessageKey(category.id))}
                 open={Boolean(openGroups[category.id])}
                 openGroups={openGroups}
                 onToggleSubgroup={toggleSubgroup}
@@ -743,7 +749,7 @@ export function ComponentsSidebar() {
                 <hr className={styles.sidebarDivider} />
                 <NavGroup
                   category={category.id}
-                  label={category.label}
+                  label={t(categoryMessageKey(category.id))}
                   open={Boolean(openGroups[category.id])}
                   openGroups={openGroups}
                   onToggleSubgroup={toggleSubgroup}
@@ -757,7 +763,7 @@ export function ComponentsSidebar() {
       </CustomScrollbar>
     </aside>
       <ResizeHandle
-        aria-label="Resize components sidebar"
+        aria-label={t("docs.resizeSidebar")}
         aria-orientation="vertical"
         aria-valuemax={MAX_SIDEBAR_WIDTH}
         aria-valuemin={MIN_SIDEBAR_WIDTH}

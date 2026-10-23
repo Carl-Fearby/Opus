@@ -3,6 +3,7 @@
 import { useMemo, useState } from "react";
 import { sortEventsByTime } from "./calendarTime";
 import { CalendarDayModal } from "./CalendarDayModal";
+import { useOpusI18n } from "@/components/OpusI18n";
 import styles from "./Calendar.module.css";
 
 export type CalendarEvent = {
@@ -52,6 +53,7 @@ export function Calendar({
   showMonthYearPicker = true,
   year: controlledYear,
 }: CalendarProps) {
+  const { t } = useOpusI18n();
   const today = useMemo(() => new Date(), []);
   const [cursor, setCursor] = useState(() => ({
     year: controlledYear ?? today.getFullYear(),
@@ -128,9 +130,9 @@ export function Calendar({
 
   return (
     <>
-      <div className={styles.root} aria-label="Calendar">
+      <div className={styles.root} aria-label={t("calendar.label", "Calendar")}>
         <div className={styles.toolbar} data-picker={showMonthYearPicker ? "true" : "false"}>
-          <button aria-label="Previous month" className={styles.nav} onClick={() => shiftMonth(-1)} type="button">
+          <button aria-label={t("calendar.previousMonth", "Previous month")} className={styles.nav} onClick={() => shiftMonth(-1)} type="button">
             ‹
           </button>
 
@@ -139,7 +141,7 @@ export function Calendar({
               <label className={styles.pickerField}>
                 <span className={styles.srOnly}>Month</span>
                 <select
-                  aria-label="Month"
+                  aria-label={t("calendar.month", "Month")}
                   className={[styles.select, styles.monthSelect].join(" ")}
                   disabled={isControlled}
                   onChange={(event) => setMonthYear(Number(event.target.value), year)}
@@ -173,7 +175,7 @@ export function Calendar({
             <div className={styles.label}>{label}</div>
           )}
 
-          <button aria-label="Next month" className={styles.nav} onClick={() => shiftMonth(1)} type="button">
+          <button aria-label={t("calendar.nextMonth", "Next month")} className={styles.nav} onClick={() => shiftMonth(1)} type="button">
             ›
           </button>
         </div>

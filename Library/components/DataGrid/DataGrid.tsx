@@ -25,6 +25,7 @@ import {
   type DataGridLayout,
 } from "./dataGridLayout";
 import { buildPivotGrid, type DataGridPivotConfig } from "./dataGridPivot";
+import { useOpusI18n } from "@/components/OpusI18n";
 import styles from "./DataGrid.module.css";
 
 export type DataGridColumn = {
@@ -212,6 +213,7 @@ export function DataGrid({
   viewportHeight = DEFAULT_VIEWPORT,
   virtualized = false,
 }: DataGridProps) {
+  const { t } = useOpusI18n();
   const [columnWidths, setColumnWidths] = useState<Record<string, number>>({});
   const [filters, setFilters] = useState<Record<string, string>>({});
   const [openMenu, setOpenMenu] = useState<OpenMenuState | null>(null);
@@ -923,14 +925,14 @@ export function DataGrid({
           <div className={styles.toolbarActions}>
             {views?.length ? (
               <label className={styles.viewControl}>
-                <span className={styles.visuallyHidden}>Saved view</span>
+                <span className={styles.visuallyHidden}>{t("dataGrid.savedView", "Saved view")}</span>
                 <select
-                  aria-label="Saved view"
+                  aria-label={t("dataGrid.savedView", "Saved view")}
                   className={styles.viewSelect}
                   value={views.some((view) => view.id === selectedViewId) ? selectedViewId : ""}
                   onChange={(event) => applyView(event.target.value)}
                 >
-                  <option value="">All columns</option>
+                  <option value="">{t("dataGrid.allColumns", "All columns")}</option>
                   {views.map((view) => (
                     <option key={view.id} value={view.id}>
                       {view.label}
@@ -948,11 +950,11 @@ export function DataGrid({
                   onClick={() => setColumnMenuOpen((current) => !current)}
                   type="button"
                 >
-                  Columns
+                  {t("dataGrid.columns", "Columns")}
                 </button>
                 {columnMenuOpen ? (
-                  <div aria-label="Column visibility" className={styles.columnsMenu} role="group">
-                    <span className={styles.columnsHeading}>Show columns</span>
+                  <div aria-label={t("dataGrid.columnVisibility", "Column visibility")} className={styles.columnsMenu} role="group">
+                    <span className={styles.columnsHeading}>{t("dataGrid.showColumns", "Show columns")}</span>
                     {dataColumns.map((column) => (
                       <label className={styles.columnOption} key={column.key}>
                         <input
@@ -971,7 +973,7 @@ export function DataGrid({
                       }}
                       type="button"
                     >
-                      Show all
+                      {t("dataGrid.showAll", "Show all")}
                     </button>
                   </div>
                 ) : null}
@@ -1082,10 +1084,10 @@ export function DataGrid({
               {!displayRows.length ? (
                 <tr>
                   <th className={styles.rowHeader} scope="row">
-                    No rows
+                    {t("dataGrid.noRows", "No rows")}
                   </th>
                   <td className={styles.empty} colSpan={Math.max(visibleDataColumns.length, 1)}>
-                    No matching rows.
+                    {t("dataGrid.noMatchingRows", "No matching rows.")}
                   </td>
                 </tr>
               ) : null}
@@ -1093,7 +1095,11 @@ export function DataGrid({
           </table>
           {onLoadMore || hasMore ? (
             <div className={styles.infiniteFooter} ref={sentinelRef}>
-              {loadingMore ? "Loading more…" : hasMore ? "Scroll for more" : "End of results"}
+              {loadingMore
+                ? t("dataGrid.loadingMore", "Loading more…")
+                : hasMore
+                  ? t("dataGrid.scrollForMore", "Scroll for more")
+                  : t("dataGrid.endOfResults", "End of results")}
             </div>
           ) : null}
         </div>

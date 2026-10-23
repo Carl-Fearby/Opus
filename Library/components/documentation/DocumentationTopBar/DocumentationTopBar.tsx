@@ -11,6 +11,8 @@ import {
   resolvePlaygroundHrefFromLocation,
 } from "@/lib/playground/playgroundNavigation";
 import { libraryVersion } from "@/lib/documentation/libraryVersion";
+import { LanguagePicker } from "@/components/LanguagePicker";
+import { useLocale } from "@/lib/i18n/LocaleProvider";
 import styles from "./TopBar.module.css";
 
 type DocumentationSection =
@@ -29,6 +31,7 @@ type DocumentationNavProps = {
 function ComponentsNavLink({ isActive }: { isActive: boolean }) {
   const pathname = usePathname();
   const router = useRouter();
+  const { t } = useLocale();
   const href = useMemo(() => resolveComponentsHrefFromLocation(pathname, null), [pathname]);
 
   return (
@@ -45,7 +48,7 @@ function ComponentsNavLink({ isActive }: { isActive: boolean }) {
         }
       }}
     >
-      Components
+      {t("docs.nav.components")}
     </Link>
   );
 }
@@ -53,6 +56,7 @@ function ComponentsNavLink({ isActive }: { isActive: boolean }) {
 function PlaygroundNavLink({ isActive }: { isActive: boolean }) {
   const pathname = usePathname();
   const router = useRouter();
+  const { t } = useLocale();
   const href = useMemo(() => resolvePlaygroundHrefFromLocation(pathname, null), [pathname]);
 
   return (
@@ -69,13 +73,14 @@ function PlaygroundNavLink({ isActive }: { isActive: boolean }) {
         }
       }}
     >
-      Playground
+      {t("docs.nav.playground")}
     </Link>
   );
 }
 
 export function DocumentationNav({ current }: DocumentationNavProps) {
   const pathname = usePathname();
+  const { t } = useLocale();
   const active =
     current ??
     (pathname.startsWith("/documentation/components")
@@ -95,39 +100,39 @@ export function DocumentationNav({ current }: DocumentationNavProps) {
             : undefined);
 
   return (
-    <nav aria-label="Documentation" className={styles.nav}>
+    <nav aria-label={t("docs.nav.aria")} className={styles.nav}>
       <Link
         aria-current={active === "home" ? "page" : undefined}
         className={active === "home" ? styles.navLinkActive : styles.navLink}
         href={DOCUMENTATION_BASE_PATH}
       >
-        Home
+        {t("docs.nav.home")}
       </Link>
       <Link
         aria-current={active === "guide" ? "page" : undefined}
         className={active === "guide" ? styles.navLinkActive : styles.navLink}
         href="/documentation/guide"
       >
-        Guide
+        {t("docs.nav.guide")}
       </Link>
       <ComponentsNavLink isActive={active === "components"} />
       <PlaygroundNavLink isActive={active === "playground"} />
       <Link aria-current={active === "theme" ? "page" : undefined} className={active === "theme" ? styles.navLinkActive : styles.navLink} href="/theme-designer">
-        Theme designer
+        {t("docs.nav.themeDesigner")}
       </Link>
       <Link
         aria-current={active === "security" ? "page" : undefined}
         className={active === "security" ? styles.navLinkActive : styles.navLink}
         href="/documentation/security"
       >
-        Security
+        {t("docs.nav.security")}
       </Link>
       <Link
         aria-current={active === "version" ? "page" : undefined}
         className={active === "version" ? styles.navLinkActive : styles.navLink}
         href="/documentation/version"
       >
-        Version
+        {t("docs.nav.version")}
       </Link>
     </nav>
   );
@@ -139,6 +144,7 @@ type DocumentationTopBarProps = {
 };
 
 export function DocumentationTopBar({ current, trailing }: DocumentationTopBarProps) {
+  const { t } = useLocale();
   return (
     <header className={styles.topBar} data-opus-tour="top-navigation" data-shell-theme="dark">
       <div className={styles.topBarRow}>
@@ -149,10 +155,11 @@ export function DocumentationTopBar({ current, trailing }: DocumentationTopBarPr
           <DocumentationNav current={current} />
         </div>
         <div className={styles.topBarTrailing}>
+          <LanguagePicker compact />
           <Link
             className={styles.versionBadge}
             href="/documentation/version"
-            title="View library version history"
+            title={t("docs.versionHistory")}
           >
             opus-react v{libraryVersion}
           </Link>

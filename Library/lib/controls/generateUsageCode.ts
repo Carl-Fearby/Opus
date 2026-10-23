@@ -5197,6 +5197,7 @@ const events = ${formatSchedulerEventsForUsage()};
         columns={columns}
         defaultMembers={members}
         defaultTags={tags}${s.interactive ? "\n        onChange={setColumns}" : ""}${cardClickAction === "none" ? "\n        ticketView={false}" : ""}${cardClickProp}
+        onBoardDelete={() => setColumns([])}
       />
     </div>
     <JsonViewer collapsedDepth={2} value={{ cards, columns }} />${callbackStatus}

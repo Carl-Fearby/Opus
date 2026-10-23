@@ -16,10 +16,12 @@ import {
   DEFAULT_TILE_ACCENT,
   DEFAULT_TILE_ACCENT_SECONDARY,
 } from "@/components/AccentColorPicker";
-import { ColourClouds, type ColourCloudsDesignation } from "opus-react";
-import { Button } from "opus-react";
-import type { Theme } from "opus-react";
-import type { GoogleFontFamily } from "opus-react";
+import { ColourClouds, type ColourCloudsDesignation } from "@/components/ColourClouds";
+import { useOpusI18n } from "@/components/OpusI18n";
+import { Button, SelectField } from "@/components/fields";
+import type { Theme } from "@/components/fields/types";
+import type { GoogleFontFamily } from "@/components/FontPicker";
+import type { OpusThemeDefaults } from "@/components/OpusThemeProvider";
 import styles from "./ThemeSettingsButton.module.css";
 
 export type OpusThemeExport = {
@@ -29,12 +31,15 @@ export type OpusThemeExport = {
   base?: string;
   accent: string;
   accentSecondary: string;
+  tertiaryAccent: string;
+  defaults?: OpusThemeDefaults;
   tileAccent: string;
   tileAccentSecondary: string;
 };
 
 type ThemeSettingsButtonProps = {
   base?: string;
+  defaults?: OpusThemeDefaults;
   accent: string;
   accentSecondary: string;
   compact?: boolean;
@@ -43,6 +48,8 @@ type ThemeSettingsButtonProps = {
   onBaseChange?: (value: string) => void;
   onAccentChange: (value: string) => void;
   onAccentSecondaryChange: (value: string) => void;
+  onTertiaryAccentChange?: (value: string) => void;
+  onDefaultsChange?: (defaults: OpusThemeDefaults) => void;
   onFontFamilyChange?: (value: string) => void;
   onResetAccent: () => void;
   onResetTileAccent: () => void;
@@ -54,6 +61,7 @@ type ThemeSettingsButtonProps = {
   themeLabel?: string;
   tileAccent: string;
   tileAccentSecondary: string;
+  tertiaryAccent?: string;
 };
 
 type WindowRect = {
@@ -152,8 +160,10 @@ function persistRect(rect: WindowRect) {
 
 function buildThemeExport({
   base,
+  defaults,
   accent,
   accentSecondary,
+  tertiaryAccent,
   fontFamily,
   theme,
   tileAccent,
@@ -162,7 +172,9 @@ function buildThemeExport({
   ThemeSettingsButtonProps,
   | "accent"
   | "accentSecondary"
+  | "tertiaryAccent"
   | "base"
+  | "defaults"
   | "fontFamily"
   | "theme"
   | "tileAccent"
@@ -173,8 +185,10 @@ function buildThemeExport({
     theme: theme ?? "dark",
     ...(fontFamily ? { fontFamily } : {}),
     base: base ?? "#64748b",
+    ...(defaults ? { defaults } : {}),
     accent,
     accentSecondary,
+    tertiaryAccent: tertiaryAccent ?? "#0ea5e9",
     tileAccent,
     tileAccentSecondary,
   };
@@ -184,12 +198,16 @@ export function ThemeSettingsButton({
   base = "#64748b",
   accent,
   accentSecondary,
+  tertiaryAccent = "#0ea5e9",
   compact = false,
   fontFamily,
   idPrefix,
   onBaseChange,
   onAccentChange,
   onAccentSecondaryChange,
+  onTertiaryAccentChange,
+  onDefaultsChange,
+  defaults = {},
   onResetAccent,
   onResetTileAccent,
   onTileAccentChange,
@@ -213,8 +231,10 @@ export function ThemeSettingsButton({
       JSON.stringify(
         buildThemeExport({
           base,
+          defaults,
           accent,
           accentSecondary,
+          tertiaryAccent,
           fontFamily,
           theme,
           tileAccent,
@@ -223,7 +243,7 @@ export function ThemeSettingsButton({
         null,
         2,
       ),
-    [accent, accentSecondary, base, fontFamily, theme, tileAccent, tileAccentSecondary],
+    [accent, accentSecondary, base, defaults, fontFamily, tertiaryAccent, theme, tileAccent, tileAccentSecondary],
   );
 
   useEffect(() => {
@@ -358,6 +378,7 @@ export function ThemeSettingsButton({
     setJsonPreview(null);
   }, [onResetAccent, onResetTileAccent]);
 
+  const { t } = useOpusI18n();
   const colourClouds = useMemo<ColourCloudsDesignation>(
     () => ({
       clouds: [
@@ -376,9 +397,14 @@ export function ThemeSettingsButton({
           label: "Secondary accent",
           color: accentSecondary,
         },
+        {
+          id: "accent-tertiary",
+          label: "Tertiary accent",
+          color: tertiaryAccent,
+        },
       ],
     }),
-    [accent, accentSecondary, base],
+    [accent, accentSecondary, base, tertiaryAccent],
   );
 
   const handleSaveTheme = useCallback(async () => {
@@ -459,7 +485,7 @@ export function ThemeSettingsButton({
                   Colour settings
                 </h2>
                 <p className={styles.windowDescription} id={descriptionId}>
-                  Drag to move · resize from edges · Save Theme exports JSON
+                  Drag to move · resize from edges · Save Theme copies and downloads portable JSON
                 </p>
               </div>
               <button
@@ -494,6 +520,7 @@ export function ThemeSettingsButton({
                       id={`${idPrefix}-base-picker`}
                       label="Base"
                       primarySectionLabel="Base"
+                      panelDivider
                       showSecondary={false}
                       value={base}
                       variant="panel"
@@ -502,17 +529,41 @@ export function ThemeSettingsButton({
                   ) : null}
                   <AccentColorPicker
                     id={`${idPrefix}-accent-picker`}
-                    label="Base UI"
+                    label="Accent"
                     primarySectionLabel="Accent"
                     secondarySectionLabel="Secondary accent"
                     secondaryValue={accentSecondary}
+                    panelDivider
                     value={accent}
                     variant="panel"
                     onChange={onAccentChange}
                     onReset={onResetAccent}
                     onSecondaryChange={onAccentSecondaryChange}
                   />
+                  {onTertiaryAccentChange ? (
+                    <AccentColorPicker
+                      defaultValue="#0ea5e9"
+                      id={`${idPrefix}-tertiary-accent-picker`}
+                      label="Tertiary accent"
+                      primarySectionLabel="Tertiary accent"
+                      showSecondary={false}
+                      value={tertiaryAccent}
+                      variant="panel"
+                      onChange={onTertiaryAccentChange}
+                    />
+                  ) : null}
                 </section>
+
+                {onDefaultsChange ? (
+                  <section className={styles.section}>
+                    <h3 className={styles.sectionTitle}>Control defaults</h3>
+                    <p className={styles.sectionHint}>Applied across the preview; individual component settings override these defaults.</p>
+                    <SelectField id={`${idPrefix}-theme-appearance`} label="Theme style" options={["Standard", "Neumorphism", "Liquid glass"]} value={defaults.appearance === "liquid-glass" ? "Liquid glass" : defaults.appearance === "neumorphism" ? "Neumorphism" : "Standard"} onChange={(event) => onDefaultsChange({ ...defaults, appearance: event.target.value === "Liquid glass" ? "liquid-glass" : event.target.value === "Neumorphism" ? "neumorphism" : "standard" })} />
+                    <SelectField id={`${idPrefix}-theme-radius`} label="Default radius" options={["None", "Standard", "Medium", "Large", "Full"]} value={{ none: "None", standard: "Standard", medium: "Medium", large: "Large", full: "Full" }[defaults.radius ?? "standard"]!} onChange={(event) => onDefaultsChange({ ...defaults, radius: event.target.value.toLowerCase() as OpusThemeDefaults["radius"] })} />
+                    <SelectField id={`${idPrefix}-theme-background`} label="Default background" options={["Transparent", "Solid", "Glass"]} value={{ none: "Transparent", standard: "Solid", glass: "Glass" }[defaults.transparency ?? "standard"]!} onChange={(event) => onDefaultsChange({ ...defaults, transparency: ({ Transparent: "none", Solid: "standard", Glass: "glass" } as const)[event.target.value as "Transparent" | "Solid" | "Glass"] })} />
+                    <SelectField id={`${idPrefix}-theme-gradient`} label="Default gradient" options={["Off", "On"]} value={defaults.gradient ? "On" : "Off"} onChange={(event) => onDefaultsChange({ ...defaults, gradient: event.target.value === "On" })} />
+                  </section>
+                ) : null}
 
                 <section className={styles.section}>
                   <h3 className={styles.sectionTitle}>Tiles</h3>
@@ -572,10 +623,10 @@ export function ThemeSettingsButton({
       <ColourClouds
         aria-expanded={open}
         aria-haspopup="dialog"
-        aria-label="Colours"
+        aria-label={t("preview.colours", "Colours")}
         compact={compact}
-        label="Colours"
-        title="Colours"
+        label={t("preview.colours", "Colours")}
+        title={t("preview.colours", "Colours")}
         value={colourClouds}
         onClick={() => setOpen(true)}
       />

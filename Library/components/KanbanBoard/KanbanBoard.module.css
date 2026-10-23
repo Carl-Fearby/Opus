@@ -425,6 +425,31 @@
   flex: 1 1 auto;
 }
 
+.settingsButton {
+  display: inline-grid;
+  place-items: center;
+  width: 28px;
+  height: 28px;
+  padding: 0;
+  border: 1px solid var(--opus-surface-border, var(--opus-border-strong));
+  border-radius: 999px;
+  background: var(--opus-surface-fill, var(--opus-input-bg));
+  color: var(--opus-muted);
+  font-size: 0.72rem;
+  cursor: pointer;
+  box-shadow: var(--opus-input-shadow, var(--opus-control-inset-shadow, none));
+}
+
+.settingsButton:hover {
+  border-color: color-mix(in srgb, var(--opus-accent) 42%, var(--opus-border));
+  color: var(--opus-text);
+}
+
+.settingsButton:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--opus-accent) 24%, transparent);
+}
+
 .scrollControls {
   display: flex;
   gap: 4px;
@@ -2567,4 +2592,134 @@
 .commentAttachmentDraft[data-status="error"] > svg,
 .commentAttachmentDraft[data-status="error"] small {
   color: var(--opus-error);
+}
+
+
+.boardSettings {
+  display: grid;
+  gap: 16px;
+}
+
+.boardSettingsSection {
+  display: grid;
+  gap: 10px;
+  padding: 14px;
+  border: 1px solid var(--opus-surface-border, var(--opus-border));
+  border-radius: var(--opus-input-radius);
+  background: var(--opus-surface-fill, color-mix(in srgb, var(--opus-panel) 90%, transparent));
+}
+
+.boardSettingsHeading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.boardSettingsHeading h3 {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  margin: 0;
+  color: var(--opus-text);
+  font-size: 0.86rem;
+  font-weight: 800;
+  line-height: 1.3;
+}
+
+.boardSettingsRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+}
+
+.boardSettingsRow > span {
+  display: grid;
+  gap: 3px;
+  min-width: 0;
+}
+
+.boardSettingsRow strong {
+  overflow: hidden;
+  color: var(--opus-text);
+  font-size: 0.82rem;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.boardSettingsRow small,
+.boardSettingsHint {
+  margin: 0;
+  color: var(--opus-muted);
+  font-size: 0.72rem;
+  line-height: 1.45;
+}
+
+.dangerZone {
+  border-color: color-mix(in srgb, var(--opus-error) 40%, var(--opus-border));
+  background: color-mix(in srgb, var(--opus-error) 5%, var(--opus-panel));
+}
+
+.dangerZone h3 {
+  color: var(--opus-error);
+}
+
+.dangerZone > p {
+  margin: 0;
+  color: var(--opus-muted);
+  font-size: 0.76rem;
+  line-height: 1.5;
+}
+
+.boardDeleteLabel {
+  display: block;
+  color: var(--opus-text);
+  font-size: 0.74rem;
+  font-weight: 650;
+  line-height: 1.45;
+}
+
+.boardDeleteLabel strong {
+  color: var(--opus-error);
+}
+
+.boardDeleteInput {
+  width: 100%;
+  min-height: var(--opus-control-height);
+  box-sizing: border-box;
+  padding: 0 var(--opus-control-padding-x, 10px);
+  border: 1px solid var(--opus-surface-border, var(--opus-border-strong));
+  border-radius: var(--opus-input-radius);
+  background: var(--opus-surface-fill, var(--opus-input-bg));
+  color: var(--opus-text);
+  font: inherit;
+  font-size: var(--opus-control-font-size);
+  box-shadow: var(--opus-input-shadow, var(--opus-control-inset-shadow, none));
+}
+
+.boardDeleteInput:focus {
+  outline: none;
+  border-color: var(--opus-error);
+  box-shadow: 0 0 0 4px color-mix(in srgb, var(--opus-error) 18%, transparent);
+}
+
+.boardDeleteInput:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.boardDeleteError {
+  margin: 0;
+  color: var(--opus-error);
+  font-size: 0.74rem;
+  font-weight: 650;
+}
+
+.boardSettingsHint code {
+  padding: 1px 4px;
+  border-radius: 4px;
+  background: color-mix(in srgb, var(--opus-panel) 82%, transparent);
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
+  font-size: 0.9em;
 }

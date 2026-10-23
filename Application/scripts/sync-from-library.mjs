@@ -82,6 +82,7 @@ console.log("Syncing Application from Library...");
 
 syncDirectory(join(libraryDir, "lib", "controls"), join(appDir, "lib", "controls"), { rewire: true });
 syncDirectory(join(libraryDir, "lib", "auth"), join(appDir, "lib", "auth"), { rewire: true });
+syncDirectory(join(libraryDir, "lib", "i18n"), join(appDir, "lib", "i18n"), { rewire: true });
 
 for (const file of [
   "emojiCatalog.generated.ts",

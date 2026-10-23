@@ -1,37 +1,41 @@
 import Link from "next/link";
 import { controls } from "@/lib/controls/registry";
 import { docsComponentsUrl, docsPlaygroundUrl } from "@/lib/siteLinks";
+import { translate } from "@/lib/i18n";
+import { readServerLocale } from "@/lib/i18n/server";
 import { OpusModelShowcase } from "../OpusModelShowcase";
 import { InstallCommand } from "./InstallCommand";
 import styles from "./Hero.module.css";
 
-export function Hero() {
+export async function Hero() {
+  const locale = await readServerLocale();
+  const t = (key: Parameters<typeof translate>[1], params?: Record<string, string | number>) =>
+    translate(locale, key, params);
+  const catalogueCount = new Intl.NumberFormat(locale).format(controls.length);
+
   return (
     <section className={styles.hero}>
       <div className={styles.inner}>
         <div className={styles.copy}>
-          <p className={styles.eyebrow}>React 19 design system for business apps</p>
-          <h1 className={styles.title}>Ship polished internal tools without rebuilding the foundations.</h1>
-          <p className={styles.lead}>
-            Opus is a themeable component library for CRM, operations, and admin products—forms,
-            dashboards, overlays, and application shells that already work together.
-          </p>
+          <p className={styles.eyebrow}>{t("hero.eyebrow")}</p>
+          <h1 className={styles.title}>{t("hero.title")}</h1>
+          <p className={styles.lead}>{t("hero.lead")}</p>
           <div className={styles.actions}>
             <Link className={styles.primary} href={docsComponentsUrl}>
-              Explore components
+              {t("hero.explore")}
             </Link>
             <Link className={styles.secondary} href={docsPlaygroundUrl}>
-              Try the Playground
+              {t("hero.playground")}
             </Link>
           </div>
           <p>
-            <Link href="/news/neumorphism-theme">New in Opus 0.7.4: explore the Neumorphism theme →</Link>
+            <Link href="/news/neumorphism-theme">{t("hero.newTheme")}</Link>
           </p>
           <InstallCommand />
           <div className={styles.meta}>
-            <span>{controls.length.toLocaleString("en-GB")} catalogue entries</span>
-            <span>MIT licensed</span>
-            <span>Install from npm</span>
+            <span>{t("hero.catalogueEntries", { count: catalogueCount })}</span>
+            <span>{t("hero.mit")}</span>
+            <span>{t("hero.installNpm")}</span>
           </div>
         </div>
 

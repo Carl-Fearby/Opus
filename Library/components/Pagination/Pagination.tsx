@@ -1,5 +1,6 @@
 "use client";
 
+import { useOpusI18n } from "@/components/OpusI18n";
 import styles from "./Pagination.module.css";
 
 export type PaginationProps = {
@@ -30,12 +31,13 @@ function buildPages(page: number, pageCount: number, siblingCount: number) {
 }
 
 export function Pagination({ page, pageCount, onPageChange, siblingCount = 1 }: PaginationProps) {
+  const { t } = useOpusI18n();
   const pages = buildPages(page, Math.max(pageCount, 1), siblingCount);
 
   return (
-    <nav aria-label="Pagination" className={styles.root}>
+    <nav aria-label={t("pagination.label", "Pagination")} className={styles.root}>
       <button
-        aria-label="Previous page"
+        aria-label={t("pagination.previous", "Previous page")}
         className={styles.button}
         disabled={page <= 1}
         onClick={() => onPageChange(page - 1)}
@@ -51,7 +53,7 @@ export function Pagination({ page, pageCount, onPageChange, siblingCount = 1 }: 
         ) : (
           <button
             aria-current={entry === page ? "page" : undefined}
-            aria-label={`Page ${entry}`}
+            aria-label={t("pagination.page", "Page {page}", { page: entry })}
             className={entry === page ? `${styles.button} ${styles.active}` : styles.button}
             key={entry}
             onClick={() => onPageChange(entry)}
@@ -62,7 +64,7 @@ export function Pagination({ page, pageCount, onPageChange, siblingCount = 1 }: 
         ),
       )}
       <button
-        aria-label="Next page"
+        aria-label={t("pagination.next", "Next page")}
         className={styles.button}
         disabled={page >= pageCount}
         onClick={() => onPageChange(page + 1)}

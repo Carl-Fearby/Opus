@@ -264,8 +264,10 @@ Trello-style board with draggable cards and lists on one horizontal track. The b
 
 | Prop | Type | Default | Description |
 | --- | --- | --- | --- |
+| \`boardId\` | \`string\` | — | Optional persistent id included in board deletion callbacks. |
 | \`boardTitle\` | \`string\` | “Kanban board” | Board name shown above the lists. Click it to rename inline. |
 | \`onBoardTitleChange\` | \`(title) => void\` | — | Called when the board name is edited. Omit \`boardTitle\` to let the board manage its own title. |
+| \`onBoardDelete\` | \`({ id, title }) => void \| Promise<void>\` | — | Enables board deletion from Settings → Danger zone. Deleting is blocked until the exact board name is typed. |
 | \`columns\` | \`KanbanColumn[]\` | required | Lists and their card ids. |
 | \`cards\` | \`Record<string, KanbanCard>\` | required | Card lookup. New cards are also held locally until the parent responds. |
 | \`onChange\` | \`(columns: KanbanColumn[]) => void\` | — | Enables card moves, list reordering, list creation and list edits. |
@@ -355,6 +357,12 @@ Use \`url\` for opening and \`downloadUrl\` when the backend provides a Content-
 \`KanbanCard\` supports \`title\`, \`meta\`, rich HTML \`description\`, \`color\`, \`tone\`, \`comments\`, \`tagIds\`, \`assigneeIds\` and \`attachments\`. The \`color\` value is the ticket side-border colour. \`KanbanComment.body\` is also rich HTML.
 
 \`KanbanActivity\` is a discriminated union covering: \`list-created\`, \`list-updated\`, \`list-reordered\`, \`card-created\`, \`card-moved\`, \`card-updated\`, \`comment-added\`, \`tag-created\`, \`tag-updated\`, \`tag-deleted\`, \`card-tags-changed\`, \`card-assignees-changed\` and \`card-attachments-changed\`. Every event includes an ISO \`at\` timestamp and the relevant records or resulting collections.
+
+## Board settings
+
+The settings button sits beside the Tags button. It opens a board-settings modal intended to grow with member access and workspace controls.
+
+The Danger zone requires the exact board name before **Delete board** becomes available. The board does not remove itself; connect \`onBoardDelete\` to delete the board and navigate away. Async handlers keep the modal open and surface an error if deletion fails.
 
 ## Accessibility
 

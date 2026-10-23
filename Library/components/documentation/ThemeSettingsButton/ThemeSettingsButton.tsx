@@ -17,6 +17,7 @@ import {
   DEFAULT_TILE_ACCENT_SECONDARY,
 } from "@/components/AccentColorPicker";
 import { ColourClouds, type ColourCloudsDesignation } from "@/components/ColourClouds";
+import { useOpusI18n } from "@/components/OpusI18n";
 import { Button, SelectField } from "@/components/fields";
 import type { Theme } from "@/components/fields/types";
 import type { GoogleFontFamily } from "@/components/FontPicker";
@@ -377,6 +378,7 @@ export function ThemeSettingsButton({
     setJsonPreview(null);
   }, [onResetAccent, onResetTileAccent]);
 
+  const { t } = useOpusI18n();
   const colourClouds = useMemo<ColourCloudsDesignation>(
     () => ({
       clouds: [
@@ -621,10 +623,10 @@ export function ThemeSettingsButton({
       <ColourClouds
         aria-expanded={open}
         aria-haspopup="dialog"
-        aria-label="Colours"
+        aria-label={t("preview.colours", "Colours")}
         compact={compact}
-        label="Colours"
-        title="Colours"
+        label={t("preview.colours", "Colours")}
+        title={t("preview.colours", "Colours")}
         value={colourClouds}
         onClick={() => setOpen(true)}
       />

@@ -5,6 +5,7 @@ import dynamic from "next/dynamic";
 import { DropdownMenu } from "opus-react";
 import { useComponentsTheme, useSetComponentsPageHeader } from "@/components/development/ComponentsThemeProvider";
 import { useComponentSettings } from "@/components/development/ComponentsShell/ComponentSettingsContext";
+import { useComponentDescription } from "@/lib/i18n/useComponentDescription";
 import { componentRawPath } from "@/lib/controls/routes";
 import { generateUsageCode } from "@/lib/controls/generateUsageCode";
 import { isFullBleedPreview } from "@/lib/controls/previewPresentation";
@@ -12,6 +13,7 @@ import { storeRawPreviewSettings } from "@/lib/controls/rawSettings";
 import { createExternalPreviewPayload } from "@/lib/playground/externalPreviewStorage";
 import { buildPlaygroundHref, storePlaygroundSeed } from "@/lib/playground/playgroundNavigation";
 import type { ControlDefinition, ControlSettings } from "@/lib/controls/types";
+import { useOpusI18n } from "@/components/OpusI18n";
 import { ControlDetailPanel } from "./ControlDetailPanel";
 import { CompositionPartsList } from "./CompositionPartsList";
 import { PreviewStage } from "./PreviewStage";
@@ -39,7 +41,9 @@ type ControlDetailProps = {
 };
 
 export function ControlDetail({ control, defaultSettings, documentation }: ControlDetailProps) {
-  useSetComponentsPageHeader(control.title, control.description);
+  const { t } = useOpusI18n();
+  const describe = useComponentDescription();
+  useSetComponentsPageHeader(control.title, describe(control.slug, control.description));
   const {
     previewAccent,
     previewAccentSecondary,
@@ -110,12 +114,12 @@ export function ControlDetail({ control, defaultSettings, documentation }: Contr
     <>
       <PreviewThemeControls id={`preview-theme-toggle-${control.slug}`} />
       <DropdownMenu
-        label="Open preview options"
+        label={t("preview.options", "Open preview options")}
         placement="bottom-end"
         items={[
           {
             id: "playground",
-            label: "Open in Playground",
+            label: t("preview.openPlayground", "Open in Playground"),
             onSelect: () => {
               storePlaygroundSeed({
                 appearance: previewAppearance,
@@ -129,7 +133,7 @@ export function ControlDetail({ control, defaultSettings, documentation }: Contr
           },
           {
             id: "external",
-            label: "Open External",
+            label: t("preview.openExternal", "Open External"),
             onSelect: () => {
               const previewId = createExternalPreviewPayload({
                 code: generateUsageCode(control.slug, previewSettings, control.category).full,
@@ -145,7 +149,7 @@ export function ControlDetail({ control, defaultSettings, documentation }: Contr
           },
           {
             id: "preview",
-            label: "Open Preview",
+            label: t("preview.openPreview", "Open Preview"),
             onSelect: () => {
               const previewId = storeRawPreviewSettings(previewSettings);
               window.open(componentRawPath(control.slug, previewId), "_blank", "noopener,noreferrer");
@@ -154,7 +158,7 @@ export function ControlDetail({ control, defaultSettings, documentation }: Contr
         ]}
         trigger={(
           <button className={styles.previewOpenButton} type="button">
-            <span>Open</span>
+            <span>{t("preview.open", "Open")}</span>
             <span aria-hidden="true" className={styles.panelActionChevron} />
           </button>
         )}
@@ -167,7 +171,7 @@ export function ControlDetail({ control, defaultSettings, documentation }: Contr
       <ControlDetailPanel
         actions={panelActions}
         className={control.slug === "lab-test-layout" ? styles.testLayoutPreviewPanel : undefined}
-        title="Preview"
+        title={t("preview.label", "Preview")}
         tourTarget="component-preview"
       >
         <div className={styles.previewBody}>

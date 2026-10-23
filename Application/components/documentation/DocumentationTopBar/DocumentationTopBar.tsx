@@ -3,7 +3,6 @@
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { useMemo, type ReactNode } from "react";
-import opusReactPackage from "opus-react/package.json";
 import { DOCUMENTATION_BASE_PATH, PLAYGROUND_BASE_PATH } from "@/lib/documentation/routes";
 import {
   resolveComponentsHref,
@@ -11,9 +10,10 @@ import {
   resolvePlaygroundHref,
   resolvePlaygroundHrefFromLocation,
 } from "@/lib/playground/playgroundNavigation";
+import { libraryVersion } from "@/lib/documentation/libraryVersion";
+import { LanguagePicker } from "@/components/LanguagePicker";
+import { useLocale } from "@/lib/i18n/LocaleProvider";
 import styles from "./TopBar.module.css";
-
-const LIBRARY_VERSION = opusReactPackage.version;
 
 type DocumentationSection =
   | "home"
@@ -21,6 +21,7 @@ type DocumentationSection =
   | "guide"
   | "playground"
   | "security"
+  | "theme"
   | "version";
 
 type DocumentationNavProps = {
@@ -30,6 +31,7 @@ type DocumentationNavProps = {
 function ComponentsNavLink({ isActive }: { isActive: boolean }) {
   const pathname = usePathname();
   const router = useRouter();
+  const { t } = useLocale();
   const href = useMemo(() => resolveComponentsHrefFromLocation(pathname, null), [pathname]);
 
   return (
@@ -46,7 +48,7 @@ function ComponentsNavLink({ isActive }: { isActive: boolean }) {
         }
       }}
     >
-      Components
+      {t("docs.nav.components")}
     </Link>
   );
 }
@@ -54,6 +56,7 @@ function ComponentsNavLink({ isActive }: { isActive: boolean }) {
 function PlaygroundNavLink({ isActive }: { isActive: boolean }) {
   const pathname = usePathname();
   const router = useRouter();
+  const { t } = useLocale();
   const href = useMemo(() => resolvePlaygroundHrefFromLocation(pathname, null), [pathname]);
 
   return (
@@ -70,13 +73,14 @@ function PlaygroundNavLink({ isActive }: { isActive: boolean }) {
         }
       }}
     >
-      Playground
+      {t("docs.nav.playground")}
     </Link>
   );
 }
 
 export function DocumentationNav({ current }: DocumentationNavProps) {
   const pathname = usePathname();
+  const { t } = useLocale();
   const active =
     current ??
     (pathname.startsWith("/documentation/components")
@@ -87,6 +91,8 @@ export function DocumentationNav({ current }: DocumentationNavProps) {
           ? "playground"
           : pathname.startsWith("/documentation/security")
             ? "security"
+            : pathname === "/theme-designer"
+              ? "theme"
           : pathname.startsWith("/documentation/version")
           ? "version"
           : pathname === DOCUMENTATION_BASE_PATH
@@ -94,36 +100,39 @@ export function DocumentationNav({ current }: DocumentationNavProps) {
             : undefined);
 
   return (
-    <nav aria-label="Documentation" className={styles.nav}>
+    <nav aria-label={t("docs.nav.aria")} className={styles.nav}>
       <Link
         aria-current={active === "home" ? "page" : undefined}
         className={active === "home" ? styles.navLinkActive : styles.navLink}
         href={DOCUMENTATION_BASE_PATH}
       >
-        Home
+        {t("docs.nav.home")}
       </Link>
       <Link
         aria-current={active === "guide" ? "page" : undefined}
         className={active === "guide" ? styles.navLinkActive : styles.navLink}
         href="/documentation/guide"
       >
-        Guide
+        {t("docs.nav.guide")}
       </Link>
       <ComponentsNavLink isActive={active === "components"} />
       <PlaygroundNavLink isActive={active === "playground"} />
+      <Link aria-current={active === "theme" ? "page" : undefined} className={active === "theme" ? styles.navLinkActive : styles.navLink} href="/theme-designer">
+        {t("docs.nav.themeDesigner")}
+      </Link>
       <Link
         aria-current={active === "security" ? "page" : undefined}
         className={active === "security" ? styles.navLinkActive : styles.navLink}
         href="/documentation/security"
       >
-        Security
+        {t("docs.nav.security")}
       </Link>
       <Link
         aria-current={active === "version" ? "page" : undefined}
         className={active === "version" ? styles.navLinkActive : styles.navLink}
         href="/documentation/version"
       >
-        Version
+        {t("docs.nav.version")}
       </Link>
     </nav>
   );
@@ -135,8 +144,9 @@ type DocumentationTopBarProps = {
 };
 
 export function DocumentationTopBar({ current, trailing }: DocumentationTopBarProps) {
+  const { t } = useLocale();
   return (
-    <header className={styles.topBar} data-shell-theme="dark">
+    <header className={styles.topBar} data-opus-tour="top-navigation" data-shell-theme="dark">
       <div className={styles.topBarRow}>
         <div className={styles.topBarStart}>
           <Link className={styles.logoLink} href="/">
@@ -145,12 +155,13 @@ export function DocumentationTopBar({ current, trailing }: DocumentationTopBarPr
           <DocumentationNav current={current} />
         </div>
         <div className={styles.topBarTrailing}>
+          <LanguagePicker compact />
           <Link
             className={styles.versionBadge}
             href="/documentation/version"
-            title="View library version history"
+            title={t("docs.versionHistory")}
           >
-            opus-react v{LIBRARY_VERSION}
+            opus-react v{libraryVersion}
           </Link>
           {trailing}
         </div>

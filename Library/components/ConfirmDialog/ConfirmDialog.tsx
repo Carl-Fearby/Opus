@@ -2,6 +2,7 @@
 
 import type { ReactNode } from "react";
 import { Dialog, type DialogAction } from "@/components/Dialog";
+import { useOpusI18n } from "@/components/OpusI18n";
 
 export type ConfirmDialogTone = "default" | "danger";
 
@@ -25,30 +26,34 @@ export type ConfirmDialogProps = {
 };
 
 export function ConfirmDialog({
-  cancelLabel = "Cancel",
+  cancelLabel,
   children,
-  confirmLabel = "Confirm",
+  confirmLabel,
   description,
   dismissOnBackdrop = true,
   dismissOnEscape = true,
   loading = false,
-  loadingLabel = "Working…",
+  loadingLabel,
   onClose,
   onConfirm,
   open,
   tone = "default",
   title,
 }: ConfirmDialogProps) {
+  const { t } = useOpusI18n();
+  const resolvedCancelLabel = cancelLabel ?? t("common.cancel", "Cancel");
+  const resolvedConfirmLabel = confirmLabel ?? t("common.confirm", "Confirm");
+  const resolvedLoadingLabel = loadingLabel ?? t("common.working", "Working…");
   const actions: DialogAction[] = [
     {
       disabled: loading,
-      label: cancelLabel,
+      label: resolvedCancelLabel,
       result: "cancel",
       variant: "secondary",
     },
     {
       disabled: loading,
-      label: loading ? loadingLabel : confirmLabel,
+      label: loading ? resolvedLoadingLabel : resolvedConfirmLabel,
       result: "confirm",
       variant: tone === "danger" ? "danger" : "primary",
     },

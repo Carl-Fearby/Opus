@@ -587,6 +587,43 @@ describe("KanbanBoard board chrome", () => {
     expect(screen.getByLabelText("Product roadmap")).toBeInTheDocument();
   });
 
+  it("requires the board name before deleting from board settings", async () => {
+    const onBoardDelete = vi.fn().mockResolvedValue(undefined);
+    render(
+      <KanbanBoard
+        boardId="board-1"
+        boardTitle="Roadmap"
+        cards={cards}
+        columns={columns}
+        onBoardDelete={onBoardDelete}
+      />,
+    );
+
+    fireEvent.click(screen.getByRole("button", { name: "Board settings" }));
+    expect(screen.getByRole("dialog", { name: "Board settings" })).toBeInTheDocument();
+
+    const deleteButton = screen.getByRole("button", { name: "Delete board" });
+    expect(deleteButton).toBeDisabled();
+
+    fireEvent.change(screen.getByLabelText("Type Roadmap to confirm"), {
+      target: { value: "roadmap" },
+    });
+    expect(deleteButton).toBeDisabled();
+
+    fireEvent.change(screen.getByLabelText("Type Roadmap to confirm"), {
+      target: { value: "Roadmap" },
+    });
+    expect(deleteButton).toBeEnabled();
+    fireEvent.click(deleteButton);
+
+    await waitFor(() => {
+      expect(onBoardDelete).toHaveBeenCalledWith({ id: "board-1", title: "Roadmap" });
+    });
+    await waitFor(() => {
+      expect(screen.queryByRole("dialog", { name: "Board settings" })).not.toBeInTheDocument();
+    });
+  });
+
   it("pins the add-card control outside the scrolling card viewport", () => {
     const { container } = render(
       <KanbanBoard cards={cards} columns={columns} onChange={() => undefined} />,

@@ -3,12 +3,17 @@
 import Link from "next/link";
 import { useSetComponentsPageHeader } from "@/components/development/ComponentsThemeProvider";
 import { getCategoryIcon, getComponentIcon, getNavigationGroupIcon } from "@/lib/controls/componentIcons";
-import { categoryDescriptions, componentCategories, getControlSectionsByCategory, getControlsByCategory } from "@/lib/controls/registry";
+import { componentCategories, getControlSectionsByCategory, getControlsByCategory } from "@/lib/controls/registry";
 import { categoryPath, componentPath, COMPONENTS_BASE_PATH } from "@/lib/controls/routes";
 import { ComponentIcon } from "@/components/development/ComponentIcon";
+import { useComponentDescription } from "@/lib/i18n/useComponentDescription";
+import { categoryDescriptionMessageKey } from "@/lib/i18n";
+import { useLocale } from "@/lib/i18n/LocaleProvider";
 import styles from "./overview.module.css";
 
 export function ComponentsHubOverview() {
+  const describe = useComponentDescription();
+  const { t } = useLocale();
   useSetComponentsPageHeader(
     "Overview",
     "Browse components by category in the sidebar. Expand grouped sections or search the menu to jump straight to any component.",
@@ -50,7 +55,7 @@ export function ComponentsHubOverview() {
                   View all
                 </Link>
               </div>
-              <p className={styles.hubSectionDescription}>{categoryDescriptions[category.id]}</p>
+              <p className={styles.hubSectionDescription}>{t(categoryDescriptionMessageKey(category.id))}</p>
             </header>
 
             {sections.map((section) => (
@@ -72,7 +77,7 @@ export function ComponentsHubOverview() {
                         <ComponentIcon icon={getComponentIcon(control.slug)} />
                         <span className={styles.hubComponentLinkTitle}>{control.title}</span>
                       </span>
-                      <span className={styles.hubComponentLinkDescription}>{control.description}</span>
+                      <span className={styles.hubComponentLinkDescription}>{describe(control.slug, control.description)}</span>
                     </Link>
                   ))}
                 </div>

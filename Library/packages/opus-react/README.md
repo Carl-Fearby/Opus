@@ -143,6 +143,30 @@ Switch `appearance` to `"standard"` to restore normal component styling.
 
 Pass `applyToDocument={false}` if you manage `data-theme` yourself (for example on a scoped container in embedded widgets).
 
+## Internationalisation
+
+Wrap your app with `OpusI18nProvider` to translate built-in component copy. Components fall back to English when a key is not supplied, so translations can be introduced incrementally.
+
+```tsx
+import { OpusI18nProvider } from "opus-react";
+
+const messages = {
+  "pagination.previous": "Page précédente",
+  "pagination.next": "Page suivante",
+  "common.cancel": "Annuler",
+};
+
+export function App() {
+  return (
+    <OpusI18nProvider locale="fr" messages={messages}>
+      <YourApp />
+    </OpusI18nProvider>
+  );
+}
+```
+
+Components use `useOpusI18n()` internally and accept full message dictionaries. The provider ships translated coverage for shared controls such as Kanban, Pagination, DataGrid, FilterBuilder, SearchBox, Calendar, Modal, Drawer and ConfirmDialog; additional component keys can be supplied by the host application.
+
 ## Accent colour
 
 Opus supports runtime accent colours via CSS variables.

@@ -1,20 +1,24 @@
 import { controls } from "@/lib/controls/registry";
+import { translate } from "@/lib/i18n";
+import { readServerLocale } from "@/lib/i18n/server";
 import styles from "./StatBand.module.css";
 
-const stats = [
-  { value: controls.length.toLocaleString("en-GB"), label: "Documented components" },
-  { value: "270", label: "Browser interaction checks" },
-  { value: "npm", label: "Published as opus-react" },
-];
+export async function StatBand() {
+  const locale = await readServerLocale();
+  const t = (key: Parameters<typeof translate>[1]) => translate(locale, key);
+  const stats = [
+    {
+      value: new Intl.NumberFormat(locale).format(controls.length),
+      label: t("stat.documented"),
+    },
+    { value: "270", label: t("stat.browserChecks") },
+    { value: "npm", label: t("stat.published") },
+  ];
 
-export function StatBand() {
   return (
-    <section className={styles.band} aria-label="Who Opus is for">
+    <section className={styles.band} aria-label={t("stat.aria")}>
       <div className={styles.inner}>
-        <p className={styles.audience}>
-          Built for teams shipping internal tools, CRM, and operations apps—not another kit of
-          unstyled primitives.
-        </p>
+        <p className={styles.audience}>{t("stat.audience")}</p>
         <div className={styles.stats}>
           {stats.map((stat) => (
             <div key={stat.label} className={styles.stat}>

@@ -1,25 +1,29 @@
 import Link from "next/link";
 import { docsComponentsUrl, docsPlaygroundUrl, npmPackageUrl } from "@/lib/siteLinks";
+import { translate } from "@/lib/i18n";
+import { readServerLocale } from "@/lib/i18n/server";
 import styles from "./CtaBand.module.css";
 
-export function CtaBand() {
+export async function CtaBand() {
+  const locale = await readServerLocale();
+  const t = (key: Parameters<typeof translate>[1]) => translate(locale, key);
   return (
     <section className={styles.section}>
       <div className={styles.inner}>
         <div>
-          <p className={styles.eyebrow}>Ready when you are</p>
-          <h2>Start with Opus today.</h2>
-          <p>Install the package, browse the catalogue, then try a component in the Playground.</p>
+          <p className={styles.eyebrow}>{t("cta.eyebrow")}</p>
+          <h2>{t("cta.title")}</h2>
+          <p>{t("cta.body")}</p>
         </div>
         <div className={styles.actions}>
           <Link className={styles.primary} href={docsComponentsUrl}>
-            Explore components
+            {t("cta.explore")}
           </Link>
           <Link className={styles.secondary} href={docsPlaygroundUrl}>
-            Open Playground
+            {t("cta.playground")}
           </Link>
           <a className={styles.secondary} href={npmPackageUrl} rel="noreferrer" target="_blank">
-            npm package
+            {t("cta.npm")}
           </a>
         </div>
       </div>
