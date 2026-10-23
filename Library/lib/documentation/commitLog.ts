@@ -1741,5 +1741,11 @@ export const commitLog: CommitEntry[] = [
     shortHash: "672f86b",
     committedAt: "2026-10-23",
     summary: "docs: publish opus-react 0.12.0 release notes",
+  },
+  {
+    hash: "43e883acd8fc1c8972d4eab51c920d871af04a17",
+    shortHash: "43e883a",
+    committedAt: "2026-10-23",
+    summary: "feat(i18n): translate component display titles and docs content",
   }
 ].reverse();
