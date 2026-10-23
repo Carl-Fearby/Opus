@@ -732,6 +732,14 @@ export const versionLog: VersionEntry[] = [
     commitShort: "f8b12cd",
     summary: "Trello-style Kanban board with tickets, tags, members and attachments.",
     changes: ["Add a horizontal Trello-style board with list creation, inline rename and recolour, list reordering, inline card creation, card drag reordering, scroll snapping and wheel scrolling.","Add a two-column ticket view with an editable title, description, tags, members, list movement and a header colour tinted by the ticket accent.","Add a board-level tag manager and searchable tag and member pickers, with removable chips and three demo members.","Add ticket comment threads and attachments on both tickets and comments, with open and download actions.","Add a backend-ready attachment API through onAttachmentUpload and onAttachmentRemove, including uploading and failed states while persisting only final attachments.","Improve drag ghosts, drag locking, text selection behaviour and keyboard-accessible list controls.","Publish opus-react 0.10.0."],
+  },
+  {
+    version: "0.11.0",
+    releasedAt: "2026-10-23",
+    commit: "bdbb22240a40a3ac970ab08f753371ab1f7e11cc",
+    commitShort: "bdbb222",
+    summary: "Rich text ticket descriptions and comments with inline files and screenshots.",
+    changes: ["Replace the ticket description and comment textareas with the Opus RichTextField WYSIWYG editor.","Support inline attachments in descriptions and comments: paste, drop, or pick screenshots and files, then embed them as images or download links.","Extend RichTextField with an async onAttachmentUpload adapter, image and file pickers, paste and drop handling, upload status, and onBlur.","Add RichTextContent and sanitisation helpers so rich comments render safely with headings, lists, links, tables, images, and code.","Keep ticket and comment attachment lists and the backend-ready upload and delete callbacks alongside inline content.","Publish opus-react 0.11.0."],
   }
 ].reverse();
 

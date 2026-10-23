@@ -1,6 +1,20 @@
 /** Curated opus-react release notes for npm publishes that only left chore commits in git. */
 export const releaseNotesOverlay = [
   {
+    version: "0.11.0",
+    releasedAt: "2026-10-23",
+    commit: "bdbb22240a40a3ac970ab08f753371ab1f7e11cc",
+    summary: "Rich text ticket descriptions and comments with inline files and screenshots.",
+    changes: [
+      "Replace the ticket description and comment textareas with the Opus RichTextField WYSIWYG editor.",
+      "Support inline attachments in descriptions and comments: paste, drop, or pick screenshots and files, then embed them as images or download links.",
+      "Extend RichTextField with an async onAttachmentUpload adapter, image and file pickers, paste and drop handling, upload status, and onBlur.",
+      "Add RichTextContent and sanitisation helpers so rich comments render safely with headings, lists, links, tables, images, and code.",
+      "Keep ticket and comment attachment lists and the backend-ready upload and delete callbacks alongside inline content.",
+      "Publish opus-react 0.11.0.",
+    ],
+  },
+  {
     version: "0.10.0",
     releasedAt: "2026-10-23",
     commit: "f8b12cdc81abcb2ced077e2b60f5bc995b77dd8e",
