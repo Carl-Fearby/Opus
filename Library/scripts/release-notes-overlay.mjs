@@ -1,6 +1,28 @@
 /** Curated opus-react release notes for npm publishes that only left chore commits in git. */
 export const releaseNotesOverlay = [
   {
+    version: "0.11.8",
+    releasedAt: "2026-10-23",
+    commit: "2b0ff3b3564404012e72f485ff4855e2f9207420",
+    summary: "Keep the card landing zone visible while dragging.",
+    changes: [
+      "Scroll the target list to reveal the landing zone when dragging a card above, between, or below its visible cards.",
+      "Scroll to the end of the list when dropping below the last card so the landing zone and neighbouring cards stay visible.",
+      "Preserve the container-fitted list height and pinned add-card footer while scrolling.",
+      "Publish opus-react 0.11.8.",
+    ],
+  },
+  {
+    version: "0.11.7",
+    releasedAt: "2026-10-23",
+    commit: "d90791e526601ac0b5b4a348331dbb4aaa2f5571",
+    summary: "Single card landing zone when dropping into an empty list.",
+    changes: [
+      "Prevent the top and end drop ghosts from rendering together in an empty list.",
+      "Publish opus-react 0.11.7.",
+    ],
+  },
+  {
     version: "0.11.6",
     releasedAt: "2026-10-23",
     commit: "d80670f2803f9d970101151cde81325bd07fb5bb",

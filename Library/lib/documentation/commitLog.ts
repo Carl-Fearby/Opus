@@ -1681,5 +1681,23 @@ export const commitLog: CommitEntry[] = [
     shortHash: "0a70639",
     committedAt: "2026-10-23",
     summary: "fix(kanban): remove duplicate drop ghost in empty lists",
+  },
+  {
+    hash: "d90791e526601ac0b5b4a348331dbb4aaa2f5571",
+    shortHash: "d90791e",
+    committedAt: "2026-10-23",
+    summary: "chore: release opus-react@0.11.7",
+  },
+  {
+    hash: "5d679efe856a2c73cfa3d5dc73a022ff6580d4c5",
+    shortHash: "5d679ef",
+    committedAt: "2026-10-23",
+    summary: "fix(kanban): scroll lists to reveal the card landing zone",
+  },
+  {
+    hash: "2b0ff3b3564404012e72f485ff4855e2f9207420",
+    shortHash: "2b0ff3b",
+    committedAt: "2026-10-23",
+    summary: "chore: release opus-react@0.11.8",
   }
 ].reverse();
