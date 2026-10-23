@@ -1729,5 +1729,11 @@ export const commitLog: CommitEntry[] = [
     shortHash: "784a64c",
     committedAt: "2026-10-23",
     summary: "feat: internationalise Opus UI and component labels",
+  },
+  {
+    hash: "380462ae3bba19452018b4306e1fac971b161c68",
+    shortHash: "380462a",
+    committedAt: "2026-10-23",
+    summary: "chore: release opus-react@0.12.0",
   }
 ].reverse();

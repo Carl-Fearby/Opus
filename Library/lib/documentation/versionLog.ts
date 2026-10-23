@@ -812,6 +812,14 @@ export const versionLog: VersionEntry[] = [
     commitShort: "74e10fd",
     summary: "Expand inline drop zones and settle dropped cards instantly.",
     changes: ["Expand a list to fit an inline card drop zone, even when dropping between existing cards.","Keep the list within the available board height once full, scrolling instead of growing beyond the container.","Disable neighbour transitions immediately after a drop so cards snap to their final layout and only the floating preview lands.","Publish opus-react 0.11.9."],
+  },
+  {
+    version: "0.12.0",
+    releasedAt: "2026-10-23",
+    commit: "380462ae3bba19452018b4306e1fac971b161c68",
+    commitShort: "380462a",
+    summary: "Internationalised Opus UI with English, French, Czech and Slovak.",
+    changes: ["Add a persisted language picker with English, French, Czech and Slovak.","Add OpusI18nProvider and useOpusI18n for component-level translations with per-key English fallback.","Translate site navigation, marketing chrome, docs navigation, breadcrumbs, preview controls and board settings.","Translate in-component labels for Kanban, Pagination, DataGrid, FilterBuilder, SearchBox, Calendar, Modal, Drawer and ConfirmDialog.","Ship translated component descriptions while keeping technical component names and code identifiers in English.","Publish opus-react 0.12.0."],
   }
 ].reverse();
 
