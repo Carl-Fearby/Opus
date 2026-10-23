@@ -1,6 +1,19 @@
 /** Curated opus-react release notes for npm publishes that only left chore commits in git. */
 export const releaseNotesOverlay = [
   {
+    version: "0.11.6",
+    releasedAt: "2026-10-23",
+    commit: "d80670f2803f9d970101151cde81325bd07fb5bb",
+    summary: "Container-fitted Kanban board and better editable affordances.",
+    changes: [
+      "Make KanbanBoard fill 100% of its parent's width and height, with a fixed-height 600px documentation demo to show the behaviour.",
+      "Let lists grow with their content up to the available board height, then scroll the card area while keeping the add-card control pinned at the bottom.",
+      "Show the full board title without ellipsis, wrapping when necessary.",
+      "Add a pencil affordance on hover and keyboard focus for editable list names and tag names.",
+      "Publish opus-react 0.11.6.",
+    ],
+  },
+  {
     version: "0.11.5",
     releasedAt: "2026-10-23",
     commit: "c508e558d9d3e9c0a2ba64e0a42d038a43f87218",

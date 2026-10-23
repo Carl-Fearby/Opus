@@ -780,6 +780,14 @@ export const versionLog: VersionEntry[] = [
     commitShort: "c508e55",
     summary: "Stable inline board title editing.",
     changes: ["Match the board title's view and edit boxes in height and padding so clicking the title does not move the header or lists.","Keep the title text aligned between display and edit modes.","Publish opus-react 0.11.5."],
+  },
+  {
+    version: "0.11.6",
+    releasedAt: "2026-10-23",
+    commit: "d80670f2803f9d970101151cde81325bd07fb5bb",
+    commitShort: "d80670f",
+    summary: "Container-fitted Kanban board and better editable affordances.",
+    changes: ["Make KanbanBoard fill 100% of its parent's width and height, with a fixed-height 600px documentation demo to show the behaviour.","Let lists grow with their content up to the available board height, then scroll the card area while keeping the add-card control pinned at the bottom.","Show the full board title without ellipsis, wrapping when necessary.","Add a pencil affordance on hover and keyboard focus for editable list names and tag names.","Publish opus-react 0.11.6."],
   }
 ].reverse();
 
