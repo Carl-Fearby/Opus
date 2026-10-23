@@ -1609,5 +1609,17 @@ export const commitLog: CommitEntry[] = [
     shortHash: "529424a",
     committedAt: "2026-10-23",
     summary: "fix(kanban): grow lists to content and pin board chrome",
+  },
+  {
+    hash: "83d0d21331ca9df1c051a9f1dd366b39c57d70e8",
+    shortHash: "83d0d21",
+    committedAt: "2026-10-23",
+    summary: "chore: release opus-react@0.11.3",
+  },
+  {
+    hash: "fdf9610f7bf5995ee10922b92f813140241a12c3",
+    shortHash: "fdf9610",
+    committedAt: "2026-10-23",
+    summary: "feat(kanban): editable prominent board title",
   }
 ].reverse();
