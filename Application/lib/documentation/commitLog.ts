@@ -1597,5 +1597,17 @@ export const commitLog: CommitEntry[] = [
     shortHash: "56d0838",
     committedAt: "2026-10-23",
     summary: "chore: release opus-react@0.11.2",
+  },
+  {
+    hash: "e3b17ede5173e278adebc1332b4cbf48eedd0eb9",
+    shortHash: "e3b17ed",
+    committedAt: "2026-10-23",
+    summary: "docs: publish opus-react 0.11.2 release notes",
+  },
+  {
+    hash: "529424ac0bc082dd93d397b65159ad34f3b8f795",
+    shortHash: "529424a",
+    committedAt: "2026-10-23",
+    summary: "fix(kanban): grow lists to content and pin board chrome",
   }
 ].reverse();
