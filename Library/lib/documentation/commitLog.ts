@@ -1621,5 +1621,11 @@ export const commitLog: CommitEntry[] = [
     shortHash: "fdf9610",
     committedAt: "2026-10-23",
     summary: "feat(kanban): editable prominent board title",
+  },
+  {
+    hash: "358915ac7448f304998264ad92cda6b1d6f610df",
+    shortHash: "358915a",
+    committedAt: "2026-10-23",
+    summary: "chore: release opus-react@0.11.4",
   }
 ].reverse();

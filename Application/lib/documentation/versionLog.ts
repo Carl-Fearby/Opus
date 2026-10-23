@@ -756,6 +756,22 @@ export const versionLog: VersionEntry[] = [
     commitShort: "56d0838",
     summary: "Pixel alignment for the ticket description and comment editors.",
     changes: ["Reduce the ticket description editor height by 10px so its lower edge aligns with the comment composer.","Publish opus-react 0.11.2."],
+  },
+  {
+    version: "0.11.3",
+    releasedAt: "2026-10-23",
+    commit: "83d0d21331ca9df1c051a9f1dd366b39c57d70e8",
+    commitShort: "83d0d21",
+    summary: "Content-height lists and persistent board controls.",
+    changes: ["Let Kanban lists grow with their cards instead of using a fixed eight-card height.","Move the board name, tag manager, and scroll controls into a persistent header above the lists.","Keep the tags button visible when the board has no tags.","Keep the left and right board scroll buttons visible at all times, disabled when there is nothing to scroll.","Publish opus-react 0.11.3."],
+  },
+  {
+    version: "0.11.4",
+    releasedAt: "2026-10-23",
+    commit: "358915ac7448f304998264ad92cda6b1d6f610df",
+    commitShort: "358915a",
+    summary: "Editable board title with prominent board chrome.",
+    changes: ["Make the board title larger and more prominent above the lists.","Allow the title to be renamed inline by clicking it, with Enter to save, Escape to cancel, and blur to commit.","Add onBoardTitleChange for controlled persistence while keeping an uncontrolled title mode for local boards.","Publish opus-react 0.11.4."],
   }
 ].reverse();
 
