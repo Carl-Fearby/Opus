@@ -43,6 +43,7 @@ const lightThemeTokens = {
   "--opus-glass-surface": "rgba(252, 253, 255, 0.62)",
   "--opus-glass-border": "color-mix(in srgb, var(--opus-accent) 24%, transparent)",
   "--opus-menu-glass-surface": "rgba(252, 253, 255, 0.88)",
+  "--opus-menu-solid": "#fbfcff",
   "--opus-menu-surface-token": "var(--opus-menu-glass-surface)",
   "--opus-menu-glass-border": "color-mix(in srgb, var(--opus-accent) 30%, transparent)",
 } as const satisfies Record<string, string>;
@@ -89,6 +90,7 @@ const darkThemeTokens = {
   "--opus-glass-surface": "rgba(14, 16, 36, 0.52)",
   "--opus-glass-border": "color-mix(in srgb, var(--opus-accent) 22%, transparent)",
   "--opus-menu-glass-surface": "rgba(14, 16, 36, 0.82)",
+  "--opus-menu-solid": "#0f1016",
   "--opus-menu-surface-token": "var(--opus-menu-glass-surface)",
   "--opus-menu-glass-border": "color-mix(in srgb, var(--opus-accent) 28%, transparent)",
 } as const satisfies Record<string, string>;

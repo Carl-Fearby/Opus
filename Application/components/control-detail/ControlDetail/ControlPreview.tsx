@@ -235,6 +235,8 @@ import {
   demoInspectorFields,
   demoKanbanCards,
   demoKanbanColumns,
+  demoKanbanMembers,
+  demoKanbanTags,
   demoPermissionResources,
   demoPermissionRoles,
   demoPermissions,
@@ -2853,7 +2855,6 @@ function KanbanBoardPreview({
   interactive: boolean;
 }) {
   const [columns, setColumns] = useState(demoKanbanColumns);
-  const [selectedCardId, setSelectedCardId] = useState<string | null>(null);
   const [lastAction, setLastAction] = useState("Click a card to fire onCardClick.");
   const boardData = useMemo(
     () => ({
@@ -2862,60 +2863,25 @@ function KanbanBoardPreview({
     }),
     [columns],
   );
-  const selectedCard = selectedCardId ? demoKanbanCards[selectedCardId] : null;
-  const selectedColumn = selectedCardId
-    ? columns.find((column) => column.cardIds.includes(selectedCardId))
-    : null;
 
   return (
     <div className={styles.dialogPreview}>
       <KanbanBoard
         cards={demoKanbanCards}
         columns={columns}
+        defaultMembers={demoKanbanMembers}
+        defaultTags={demoKanbanTags}
         onCardClick={
-          cardClickAction === "none"
-            ? undefined
-            : cardClickAction === "modal"
-              ? (card) => setSelectedCardId(card.id)
-              : (card) => setLastAction(`Opened "${card.title}"`)
+          cardClickAction === "callback"
+            ? (card) => setLastAction(`Opened "${card.title}"`)
+            : undefined
         }
         onChange={interactive ? setColumns : undefined}
+        ticketView={cardClickAction !== "none"}
       />
       <JsonViewer collapsedDepth={2} value={boardData} />
       {cardClickAction === "callback" ? (
         <span className={styles.dialogResult}>{lastAction}</span>
-      ) : null}
-      {cardClickAction === "modal" ? (
-        <Modal
-          actions={<ModalDefaultActions onClose={() => setSelectedCardId(null)} />}
-          description={selectedCard?.meta ?? "Kanban card details"}
-          onClose={() => setSelectedCardId(null)}
-          open={Boolean(selectedCard)}
-          title={selectedCard?.title ?? "Card"}
-        >
-          {selectedCard ? (
-            <dl style={{ display: "grid", gap: 10, margin: 0 }}>
-              <div>
-                <dt style={{ margin: 0, opacity: 0.7, fontSize: "0.75rem" }}>ID</dt>
-                <dd style={{ margin: "2px 0 0" }}>{selectedCard.id}</dd>
-              </div>
-              <div>
-                <dt style={{ margin: 0, opacity: 0.7, fontSize: "0.75rem" }}>Column</dt>
-                <dd style={{ margin: "2px 0 0" }}>{selectedColumn?.title ?? "—"}</dd>
-              </div>
-              <div>
-                <dt style={{ margin: 0, opacity: 0.7, fontSize: "0.75rem" }}>Tone</dt>
-                <dd style={{ margin: "2px 0 0" }}>{selectedCard.tone ?? "default"}</dd>
-              </div>
-              {selectedCard.meta ? (
-                <div>
-                  <dt style={{ margin: 0, opacity: 0.7, fontSize: "0.75rem" }}>Meta</dt>
-                  <dd style={{ margin: "2px 0 0" }}>{selectedCard.meta}</dd>
-                </div>
-              ) : null}
-            </dl>
-          ) : null}
-        </Modal>
       ) : null}
     </div>
   );

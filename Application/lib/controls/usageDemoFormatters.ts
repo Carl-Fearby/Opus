@@ -14,6 +14,8 @@ import {
   demoInspectorFields,
   demoKanbanCards,
   demoKanbanColumns,
+  demoKanbanMembers,
+  demoKanbanTags,
   demoPermissionResources,
   demoPermissionRoles,
   demoPermissions,
@@ -227,6 +229,14 @@ export function formatKanbanCardsForUsage() {
 
 export function formatKanbanColumnsForUsage() {
   return formatObjectLiteral(demoKanbanColumns);
+}
+
+export function formatKanbanTagsForUsage() {
+  return formatObjectLiteral(demoKanbanTags);
+}
+
+export function formatKanbanMembersForUsage() {
+  return formatObjectLiteral(demoKanbanMembers);
 }
 
 export function formatCalendarEventsForUsage() {

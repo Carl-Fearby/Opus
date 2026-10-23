@@ -66,6 +66,8 @@ import {
   formatJsonValueForUsage,
   formatKanbanCardsForUsage,
   formatKanbanColumnsForUsage,
+  formatKanbanMembersForUsage,
+  formatKanbanTagsForUsage,
   formatLayoutTileChildren,
   formatListItemsForUsage,
   formatMasonryItemsForUsage,
@@ -5167,77 +5169,35 @@ const events = ${formatSchedulerEventsForUsage()};
       const s = settings as ControlSettingsBySlug["kanban-board"];
       const cardClickAction = s.cardClickAction ?? "modal";
       const cardClickProp =
-        cardClickAction === "none"
-          ? ""
-          : cardClickAction === "modal"
-            ? "\n      onCardClick={(card) => setSelectedCardId(card.id)}"
-            : '\n      onCardClick={(card) => setLastAction(`Opened "${card.title}"`)}';
+        cardClickAction === "callback"
+          ? '\n      onCardClick={(card) => setLastAction(`Opened "${card.title}"`)}'
+          : "";
       const state = [
         `const cards = ${formatKanbanCardsForUsage()};`,
+        `const tags = ${formatKanbanTagsForUsage()};`,
+        `const members = ${formatKanbanMembersForUsage()};`,
         `const [columns, setColumns] = useState(${formatKanbanColumnsForUsage()});`,
-        ...(cardClickAction === "modal"
-          ? [
-              "const [selectedCardId, setSelectedCardId] = useState(null);",
-              "const selectedCard = selectedCardId ? cards[selectedCardId] : null;",
-              "const selectedColumn = selectedCardId\n  ? columns.find((column) => column.cardIds.includes(selectedCardId))\n  : null;",
-            ]
-          : cardClickAction === "callback"
-            ? ['const [lastAction, setLastAction] = useState("Click a card to fire onCardClick.");']
-            : []),
+        ...(cardClickAction === "callback"
+          ? ['const [lastAction, setLastAction] = useState("Click a card to fire onCardClick.");']
+          : []),
       ];
-      const modalBlock =
-        cardClickAction === "modal"
-          ? `
-    <Modal
-      actions={<ModalDefaultActions onClose={() => setSelectedCardId(null)} />}
-      description={selectedCard?.meta ?? "Kanban card details"}
-      onClose={() => setSelectedCardId(null)}
-      open={Boolean(selectedCard)}
-      title={selectedCard?.title ?? "Card"}
-    >
-      {selectedCard ? (
-        <dl style={{ display: "grid", gap: 10, margin: 0 }}>
-          <div>
-            <dt style={{ margin: 0, opacity: 0.7, fontSize: "0.75rem" }}>ID</dt>
-            <dd style={{ margin: "2px 0 0" }}>{selectedCard.id}</dd>
-          </div>
-          <div>
-            <dt style={{ margin: 0, opacity: 0.7, fontSize: "0.75rem" }}>Column</dt>
-            <dd style={{ margin: "2px 0 0" }}>{selectedColumn?.title ?? "—"}</dd>
-          </div>
-          <div>
-            <dt style={{ margin: 0, opacity: 0.7, fontSize: "0.75rem" }}>Tone</dt>
-            <dd style={{ margin: "2px 0 0" }}>{selectedCard.tone ?? "default"}</dd>
-          </div>
-          {selectedCard.meta ? (
-            <div>
-              <dt style={{ margin: 0, opacity: 0.7, fontSize: "0.75rem" }}>Meta</dt>
-              <dd style={{ margin: "2px 0 0" }}>{selectedCard.meta}</dd>
-            </div>
-          ) : null}
-        </dl>
-      ) : null}
-    </Modal>`
-          : "";
       const callbackStatus =
         cardClickAction === "callback"
           ? `\n    <p style={{ margin: 0, opacity: 0.75 }}>{lastAction}</p>`
           : "";
-      const components =
-        cardClickAction === "modal"
-          ? ["KanbanBoard", "JsonViewer", "Modal", "ModalDefaultActions"]
-          : ["KanbanBoard", "JsonViewer"];
 
       return interactiveUsage({
-        components,
+        components: ["KanbanBoard", "JsonViewer"],
         state,
         jsx: `(
   <div style={{ display: "grid", gap: 12, width: "100%" }}>
     <KanbanBoard
       cards={cards}
-      columns={columns}${s.interactive ? "\n      onChange={setColumns}" : ""}${cardClickProp}
+      columns={columns}
+      defaultMembers={members}
+      defaultTags={tags}${s.interactive ? "\n      onChange={setColumns}" : ""}${cardClickAction === "none" ? "\n      ticketView={false}" : ""}${cardClickProp}
     />
-    <JsonViewer collapsedDepth={2} value={{ cards, columns }} />${callbackStatus}${modalBlock}
+    <JsonViewer collapsedDepth={2} value={{ cards, columns }} />${callbackStatus}
   </div>
 )`,
       });

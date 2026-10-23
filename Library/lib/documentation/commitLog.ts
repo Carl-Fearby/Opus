@@ -1489,5 +1489,53 @@ export const commitLog: CommitEntry[] = [
     shortHash: "a3d36b1",
     committedAt: "2026-10-22",
     summary: "chore: release opus-react@0.9.1",
+  },
+  {
+    hash: "10e7ecb83d42bdc84d1d61041a750d181896af5c",
+    shortHash: "10e7ecb",
+    committedAt: "2026-10-22",
+    summary: "chore: sync version history for opus-react@0.9.1",
+  },
+  {
+    hash: "0c912157cc9f82f6d43febdf44476ea8bf381840",
+    shortHash: "0c91215",
+    committedAt: "2026-10-22",
+    summary: "feat(kanban): add Trello-style lists, comments and horizontal board",
+  },
+  {
+    hash: "9e97805e1b0eb9bd5b1aae87fd59b966a22fe041",
+    shortHash: "9e97805",
+    committedAt: "2026-10-22",
+    summary: "fix(kanban): avoid re-animating lists after a column drop",
+  },
+  {
+    hash: "ca8838d8b87b668e9838f0e1bd4a1a0303ea9aad",
+    shortHash: "ca8838d",
+    committedAt: "2026-10-22",
+    summary: "fix(kanban): remove duplicate origin ghost while dragging cards",
+  },
+  {
+    hash: "653c4c73b0149f09dd0883f39957a70fb7a698db",
+    shortHash: "653c4c7",
+    committedAt: "2026-10-22",
+    summary: "feat(kanban): edit list names and colours",
+  },
+  {
+    hash: "5696c602372b432259d8fb1d2726834c8b9b9168",
+    shortHash: "5696c60",
+    committedAt: "2026-10-22",
+    summary: "feat(kanban): ticket view, tags and complete board API",
+  },
+  {
+    hash: "3bff3ccc52d0eb38dc460b1838a889df611ed559",
+    shortHash: "3bff3cc",
+    committedAt: "2026-10-23",
+    summary: "feat(kanban): ticket members, modal tag picker and snap scrolling",
+  },
+  {
+    hash: "6ea070bba5a030a0f28f73ab8e2c2c22c271a7fa",
+    shortHash: "6ea070b",
+    committedAt: "2026-10-23",
+    summary: "feat(kanban): ticket and comment attachments with backend upload API",
   }
 ].reverse();
