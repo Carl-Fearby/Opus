@@ -1657,5 +1657,11 @@ export const commitLog: CommitEntry[] = [
     shortHash: "fe966be",
     committedAt: "2026-10-23",
     summary: "fix(kanban): show the full board title",
+  },
+  {
+    hash: "bc5b3a88042303d48d9856d732c2fafa614b6ad8",
+    shortHash: "bc5b3a8",
+    committedAt: "2026-10-23",
+    summary: "feat(kanban): fit board to container and refine editable affordances",
   }
 ].reverse();
