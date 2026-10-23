@@ -1,6 +1,19 @@
 /** Curated opus-react release notes for npm publishes that only left chore commits in git. */
 export const releaseNotesOverlay = [
   {
+    version: "0.12.1",
+    releasedAt: "2026-10-23",
+    commit: "b10960498c23651a869c80e182fd0082c1f1f4ac",
+    summary: "Translated component display titles and documentation descriptions.",
+    changes: [
+      "Translate component display titles in the sidebar, overview cards, page headers and breadcrumbs while keeping code identifiers and imports in English.",
+      "Ship French, Czech and Slovak descriptions for all 306 catalogue components.",
+      "Translate category descriptions, preview toolbar controls and the Open menu.",
+      "Align the language picker, release badge and preview controls to a consistent height.",
+      "Publish opus-react 0.12.1.",
+    ],
+  },
+  {
     version: "0.12.0",
     releasedAt: "2026-10-23",
     commit: "380462ae3bba19452018b4306e1fac971b161c68",
