@@ -1,4 +1,4 @@
-import { fireEvent, render, screen } from "@testing-library/react";
+import { fireEvent, render, screen, waitFor } from "@testing-library/react";
 import { describe, expect, it, vi } from "vitest";
 import {
   KanbanBoard,
@@ -343,6 +343,164 @@ describe("KanbanBoard members and ticket activation", () => {
       "alpha",
       [expect.any(String)],
       expect.objectContaining({ id: "alpha" }),
+    );
+  });
+});
+
+describe("KanbanBoard attachments", () => {
+  it("shows ticket attachments and removes them with a persisted callback", () => {
+    const onCardAttachmentsChange = vi.fn();
+    const onActivity = vi.fn();
+    const attachment = {
+      id: "a1",
+      name: "brief.pdf",
+      size: 2048,
+      mimeType: "application/pdf",
+      url: "https://example.com/brief.pdf",
+    };
+
+    render(
+      <KanbanBoard
+        cards={{ ...cards, alpha: { ...cards.alpha, attachments: [attachment] } }}
+        columns={columns}
+        onActivity={onActivity}
+        onCardAttachmentsChange={onCardAttachmentsChange}
+      />,
+    );
+
+    fireEvent.click(screen.getByRole("button", { name: "Open ticket for Alpha ticket, 1 comment" }));
+    expect(screen.getByRole("link", { name: "brief.pdf" })).toHaveAttribute(
+      "href",
+      "https://example.com/brief.pdf",
+    );
+    expect(screen.getByRole("link", { name: "Download brief.pdf" })).toHaveAttribute(
+      "download",
+      "brief.pdf",
+    );
+
+    fireEvent.click(screen.getByRole("button", { name: "Remove brief.pdf" }));
+
+    expect(onCardAttachmentsChange).toHaveBeenCalledWith(
+      "alpha",
+      [],
+      expect.objectContaining({ id: "alpha" }),
+    );
+    expect(onActivity).toHaveBeenCalledWith(
+      expect.objectContaining({ type: "card-attachments-changed", attachments: [] }),
+    );
+    expect(screen.queryByRole("link", { name: "brief.pdf" })).not.toBeInTheDocument();
+  });
+
+  it("uploads a ticket file through the async attachment adapter", async () => {
+    const onAttachmentUpload = vi.fn(async (file: File) => ({
+      id: "server-a1",
+      name: file.name,
+      size: file.size,
+      mimeType: file.type,
+      url: "https://cdn.example.com/notes.txt",
+      downloadUrl: "https://cdn.example.com/notes.txt?download=1",
+    }));
+    const onCardAttachmentsChange = vi.fn();
+
+    render(
+      <KanbanBoard
+        cards={cards}
+        columns={columns}
+        onAttachmentUpload={onAttachmentUpload}
+        onCardAttachmentsChange={onCardAttachmentsChange}
+      />,
+    );
+
+    fireEvent.click(screen.getByRole("button", { name: "Open ticket for Alpha ticket, 1 comment" }));
+    const file = new File(["hello"], "notes.txt", { type: "text/plain" });
+    fireEvent.change(screen.getByLabelText("Attach files to ticket"), {
+      target: { files: [file] },
+    });
+
+    expect(onCardAttachmentsChange).not.toHaveBeenCalled();
+    expect(screen.getByText("Uploading…")).toBeInTheDocument();
+    expect(onAttachmentUpload).toHaveBeenCalledWith(
+      file,
+      expect.objectContaining({ cardId: "alpha", target: "card" }),
+    );
+
+    await waitFor(() => {
+      expect(onCardAttachmentsChange).toHaveBeenCalledWith(
+        "alpha",
+        [
+          expect.objectContaining({
+            id: "server-a1",
+            name: "notes.txt",
+            url: "https://cdn.example.com/notes.txt",
+          }),
+        ],
+        expect.objectContaining({ id: "alpha" }),
+      );
+    });
+    expect(screen.getByRole("link", { name: "Download notes.txt" })).toHaveAttribute(
+      "href",
+      "https://cdn.example.com/notes.txt?download=1",
+    );
+    expect(screen.queryByText("Uploading…")).not.toBeInTheDocument();
+  });
+
+  it("uploads comment files before including them in the comment payload", async () => {
+    const onAddComment = vi.fn();
+    const onAttachmentUpload = vi.fn(async (file: File) => ({
+      id: "server-c1",
+      name: file.name,
+      size: file.size,
+      mimeType: file.type,
+      url: "https://cdn.example.com/screenshot.txt",
+    }));
+
+    render(
+      <KanbanBoard
+        cards={cards}
+        columns={columns}
+        onAddComment={onAddComment}
+        onAttachmentUpload={onAttachmentUpload}
+      />,
+    );
+
+    fireEvent.click(screen.getByRole("button", { name: "Open ticket for Alpha ticket, 1 comment" }));
+    const file = new File(["comment attachment"], "screenshot.txt", { type: "text/plain" });
+    fireEvent.change(screen.getByLabelText("Attach files to comment"), {
+      target: { files: [file] },
+    });
+
+    expect(screen.getByText("Uploading…")).toBeInTheDocument();
+    await waitFor(() => {
+      expect(screen.queryByText("Uploading…")).not.toBeInTheDocument();
+    });
+    expect(onAttachmentUpload).toHaveBeenCalledWith(
+      file,
+      expect.objectContaining({ cardId: "alpha", target: "comment" }),
+    );
+
+    fireEvent.change(screen.getByLabelText("Add a comment"), {
+      target: { value: "See attached." },
+    });
+    fireEvent.click(screen.getByRole("button", { name: "Add comment" }));
+
+    expect(onAddComment).toHaveBeenCalledWith(
+      "alpha",
+      expect.objectContaining({
+        body: "See attached.",
+        attachments: [
+          expect.objectContaining({
+            id: "server-c1",
+            name: "screenshot.txt",
+            size: 18,
+            url: "https://cdn.example.com/screenshot.txt",
+          }),
+        ],
+      }),
+    );
+    expect(screen.getByRole("link", { name: "screenshot.txt" })).toBeInTheDocument();
+    expect(screen.getByRole("link", { name: "Download screenshot.txt" })).toHaveAttribute(
+      "href",
+      "https://cdn.example.com/screenshot.txt",
     );
   });
 });

@@ -1,6 +1,8 @@
 export { KanbanBoard } from "./KanbanBoard";
 export type {
   KanbanActivity,
+  KanbanAttachment,
+  KanbanAttachmentContext,
   KanbanBoardProps,
   KanbanCard,
   KanbanCardMove,

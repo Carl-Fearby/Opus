@@ -3,6 +3,7 @@
 import {
   useEffect,
   useId,
+  useLayoutEffect,
   useMemo,
   useRef,
   useState,
@@ -12,7 +13,7 @@ import {
   type ReactNode,
 } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faChevronLeft, faChevronRight, faComment, faGripVertical, faPalette, faPaperPlane, faTags } from "@fortawesome/free-solid-svg-icons";
+import { faChevronLeft, faChevronRight, faComment, faDownload, faFile, faGripVertical, faPalette, faPaperclip, faPaperPlane, faSpinner, faTags, faUpRightFromSquare } from "@fortawesome/free-solid-svg-icons";
 import { createThemedPortal as createPortal } from "@/lib/theme/createThemedPortal";
 import { Button } from "@/components/fields/Button";
 import { ColorPickerPanel } from "@/components/fields/ColorPickerPanel";
@@ -23,6 +24,8 @@ import styles from "./KanbanBoard.module.css";
 
 export type KanbanComment = {
   id: string;
+  /** Files shared with this comment. */
+  attachments?: KanbanAttachment[];
   author?: string;
   body: string;
   /** ISO timestamp. */
@@ -43,6 +46,33 @@ export type KanbanCard = {
   tagIds?: string[];
   /** Board member ids assigned to this card. */
   assigneeIds?: string[];
+  attachments?: KanbanAttachment[];
+};
+
+export type KanbanAttachment = {
+  /** MIME type when known. */
+  mimeType?: string;
+  /** Dedicated download URL. Falls back to `url`. Use a backend URL with Content-Disposition when possible. */
+  downloadUrl?: string;
+  /** Transient upload state. Parent data should persist only ready attachments. */
+  error?: string;
+  id: string;
+  name: string;
+  /** File size in bytes. */
+  size?: number;
+  /** Transient upload state. Parent data should persist only ready attachments. */
+  status?: "uploading" | "error";
+  /** Open or preview URL. */
+  url: string;
+  uploadedAt?: string;
+  uploadedBy?: string;
+};
+
+export type KanbanAttachmentContext = {
+  card: KanbanCard;
+  cardId: string;
+  /** Whether the file belongs to the ticket itself or a comment draft. */
+  target: "card" | "comment";
 };
 
 export type KanbanMember = {
@@ -73,6 +103,7 @@ export type KanbanActivity =
   | { at: string; tag: KanbanTag; tags: KanbanTag[]; type: "tag-deleted" }
   | { at: string; card: KanbanCard; cardId: string; tagIds: string[]; type: "card-tags-changed" }
   | { at: string; card: KanbanCard; cardId: string; memberIds: string[]; type: "card-assignees-changed" }
+  | { at: string; attachments: KanbanAttachment[]; card: KanbanCard; cardId: string; type: "card-attachments-changed" }
   | { at: string; card: KanbanCard; columnId: string; columns: KanbanColumn[]; type: "card-created" }
   | { at: string; card: KanbanCard; cardId: string; changes: string[]; previousCard: KanbanCard; type: "card-updated" };
 
@@ -137,7 +168,18 @@ export type KanbanBoardProps = {
   ) => void;
   onCardMove?: (cardId: string, move: KanbanCardMove, columns: KanbanColumn[]) => void;
   onCardUpdate?: (cardId: string, patch: Partial<KanbanCard>, card: KanbanCard) => void;
+  /** Delete an attachment from storage. Called after a ticket attachment is removed and when a finished comment draft attachment is discarded. */
+  onAttachmentRemove?: (
+    attachment: KanbanAttachment,
+    context: KanbanAttachmentContext,
+  ) => Promise<void> | void;
+  /** Upload a file to your storage. Return the persisted attachment with its final URL. When omitted, local blob URLs are used for demos. */
+  onAttachmentUpload?: (
+    file: File,
+    context: KanbanAttachmentContext,
+  ) => Promise<KanbanAttachment> | KanbanAttachment;
   onCardAssigneesChange?: (cardId: string, memberIds: string[], card: KanbanCard) => void;
+  onCardAttachmentsChange?: (cardId: string, attachments: KanbanAttachment[], card: KanbanCard) => void;
   onCardTagsChange?: (cardId: string, tagIds: string[], card: KanbanCard) => void;
   onColumnChange?: (column: KanbanColumn, previousColumn: KanbanColumn, columns: KanbanColumn[]) => void;
   onColumnCreate?: (column: KanbanColumn, columns: KanbanColumn[]) => void;
@@ -168,6 +210,7 @@ type ColumnDragState = {
   dropIndex: number | null;
   fromIndex: number;
   headerHeight: number;
+  height: number;
   muted: string;
   offsetX: number;
   offsetY: number;
@@ -227,6 +270,13 @@ const DEFAULT_COLUMN_COLORS = [
   "#6366f1",
 ];
 const DROP_ANIMATION_MS = 220;
+
+function formatFileSize(size?: number) {
+  if (!size || size < 0) return "";
+  if (size < 1024) return `${size} B`;
+  if (size < 1024 * 1024) return `${(size / 1024).toFixed(1)} KB`;
+  return `${(size / (1024 * 1024)).toFixed(1)} MB`;
+}
 
 function memberInitials(name: string) {
   return name
@@ -367,8 +417,10 @@ function getLayoutColumnRect(element: HTMLElement) {
   const rect = element.getBoundingClientRect();
   const translateX = readTranslateX(element);
   return {
+    height: rect.height,
     left: rect.left - translateX,
     right: rect.right - translateX,
+    top: rect.top,
     width: rect.width,
   };
 }
@@ -453,7 +505,10 @@ export function KanbanBoard({
   onActiveCardChange,
   onAddComment,
   onCardClick,
+  onAttachmentRemove,
+  onAttachmentUpload,
   onCardAssigneesChange,
+  onCardAttachmentsChange,
   onCardCreate,
   onCardMove,
   onCardTagsChange,
@@ -474,11 +529,18 @@ export function KanbanBoard({
 }: KanbanBoardProps) {
   const [drag, setDrag] = useState<DragState | null>(null);
   const [columnDrag, setColumnDrag] = useState<ColumnDragState | null>(null);
+  const [columnDropRect, setColumnDropRect] = useState<{
+    height: number;
+    left: number;
+    top: number;
+    width: number;
+  } | null>(null);
   const [portalReady, setPortalReady] = useState(false);
   const [addingColumn, setAddingColumn] = useState(false);
   const [newColumnTitle, setNewColumnTitle] = useState("");
   const [internalActiveCardId, setInternalActiveCardId] = useState<string | null>(defaultActiveCardId);
   const [commentDraft, setCommentDraft] = useState("");
+  const [commentAttachments, setCommentAttachments] = useState<KanbanAttachment[]>([]);
   const [localComments, setLocalComments] = useState<Record<string, KanbanComment[]>>({});
   const [scrollInfo, setScrollInfo] = useState({ left: 0, max: 0 });
   const [editingColumnId, setEditingColumnId] = useState<string | null>(null);
@@ -497,6 +559,8 @@ export function KanbanBoard({
   const [tagColorPicker, setTagColorPicker] = useState<{ left: number; targetId: string; top: number } | null>(null);
   const [localCardTags, setLocalCardTags] = useState<Record<string, string[]>>({});
   const [localCardAssignees, setLocalCardAssignees] = useState<Record<string, string[]>>({});
+  const [localAttachments, setLocalAttachments] = useState<Record<string, KanbanAttachment[]>>({});
+  const localAttachmentsRef = useRef<Record<string, KanbanAttachment[]>>({});
   const [ticketMemberPickerOpen, setTicketMemberPickerOpen] = useState(false);
   const [ticketMemberSearch, setTicketMemberSearch] = useState("");
   const [localCards, setLocalCards] = useState<Record<string, KanbanCard>>({});
@@ -522,6 +586,8 @@ export function KanbanBoard({
   const rootRef = useRef<HTMLDivElement | null>(null);
   const columnInputRef = useRef<HTMLInputElement | null>(null);
   const cardComposerRef = useRef<HTMLTextAreaElement | null>(null);
+  const attachmentInputRef = useRef<HTMLInputElement | null>(null);
+  const commentAttachmentInputRef = useRef<HTMLInputElement | null>(null);
   const wheelSnapTimerRef = useRef<number | null>(null);
   const colorMenuRef = useRef<HTMLDivElement | null>(null);
   const colorPickerRef = useRef<HTMLDivElement | null>(null);
@@ -532,7 +598,10 @@ export function KanbanBoard({
   const onActiveCardChangeRef = useRef(onActiveCardChange);
   const onTagsChangeRef = useRef(onTagsChange);
   const onCardTagsChangeRef = useRef(onCardTagsChange);
+  const onAttachmentRemoveRef = useRef(onAttachmentRemove);
+  const onAttachmentUploadRef = useRef(onAttachmentUpload);
   const onCardAssigneesChangeRef = useRef(onCardAssigneesChange);
+  const onCardAttachmentsChangeRef = useRef(onCardAttachmentsChange);
   const onCardCreateRef = useRef(onCardCreate);
   const onCardUpdateRef = useRef(onCardUpdate);
   const onCardMoveRef = useRef(onCardMove);
@@ -563,7 +632,10 @@ export function KanbanBoard({
     onActiveCardChangeRef.current = onActiveCardChange;
     onTagsChangeRef.current = onTagsChange;
     onCardTagsChangeRef.current = onCardTagsChange;
+    onAttachmentRemoveRef.current = onAttachmentRemove;
+    onAttachmentUploadRef.current = onAttachmentUpload;
     onCardAssigneesChangeRef.current = onCardAssigneesChange;
+    onCardAttachmentsChangeRef.current = onCardAttachmentsChange;
     onCardCreateRef.current = onCardCreate;
     onCardUpdateRef.current = onCardUpdate;
     onCardMoveRef.current = onCardMove;
@@ -573,7 +645,7 @@ export function KanbanBoard({
     onTagCreateRef.current = onTagCreate;
     onTagDeleteRef.current = onTagDelete;
     onTagUpdateRef.current = onTagUpdate;
-  }, [columns, onActiveCardChange, onActivity, onAddComment, onCardAssigneesChange, onCardCreate, onCardMove, onCardTagsChange, onCardUpdate, onColumnChange, onColumnCreate, onColumnReorder, onChange, onCommentsChange, onTagCreate, onTagDelete, onTagUpdate, onTagsChange]);
+  }, [columns, onActiveCardChange, onActivity, onAddComment, onAttachmentRemove, onAttachmentUpload, onCardAssigneesChange, onCardAttachmentsChange, onCardCreate, onCardMove, onCardTagsChange, onCardUpdate, onColumnChange, onColumnCreate, onColumnReorder, onChange, onCommentsChange, onTagCreate, onTagDelete, onTagUpdate, onTagsChange]);
 
   useEffect(() => {
     dragRef.current = drag;
@@ -582,6 +654,96 @@ export function KanbanBoard({
   useEffect(() => {
     columnDragRef.current = columnDrag;
   }, [columnDrag]);
+
+  const dragColumnId = columnDrag?.columnId;
+  const dragColumnHeight = columnDrag?.height;
+  const dragColumnIndex = columnDrag?.fromIndex;
+  const dragColumnWidth = columnDrag?.width;
+  const dragDropIndex = columnDrag?.dropIndex;
+  const dragPhase = columnDrag?.phase;
+
+  useLayoutEffect(() => {
+    if (!dragColumnId || dragPhase !== "dragging" || dragDropIndex === null || dragDropIndex === undefined) {
+      setColumnDropRect(null);
+      return;
+    }
+
+    const board = rootRef.current;
+    if (!board) return;
+
+    const measure = () => {
+      const remaining = Array.from(
+        board.querySelectorAll<HTMLElement>("[data-kanban-column-id]"),
+      ).filter((element) => element.dataset.kanbanColumnId !== dragColumnId);
+      const gap = Number.parseFloat(getComputedStyle(board).columnGap || "10") || 10;
+      const step = (dragColumnWidth ?? 280) + gap;
+
+      if (!remaining.length) {
+        const boardRect = board.getBoundingClientRect();
+        setColumnDropRect({
+          height: dragColumnHeight ?? 0,
+          left: boardRect.left + 10,
+          top: boardRect.top,
+          width: dragColumnWidth ?? 280,
+        });
+        return;
+      }
+
+      if (dragDropIndex === dragColumnIndex) {
+        const source = board.querySelector<HTMLElement>(
+          `[data-kanban-column-id="${CSS.escape(dragColumnId)}"]`,
+        );
+        if (source) {
+          const rect = getLayoutColumnRect(source);
+          setColumnDropRect({
+            height: dragColumnHeight ?? rect.height,
+            left: rect.left,
+            top: rect.top,
+            width: dragColumnWidth ?? rect.width,
+          });
+          return;
+        }
+      }
+
+      if (dragDropIndex > (dragColumnIndex ?? 0)) {
+        if (dragDropIndex < remaining.length) {
+          const rect = getLayoutColumnRect(remaining[dragDropIndex]);
+          setColumnDropRect({
+            height: dragColumnHeight ?? rect.height,
+            left: rect.left - step,
+            top: rect.top,
+            width: dragColumnWidth ?? rect.width,
+          });
+          return;
+        }
+
+        const last = getLayoutColumnRect(remaining[remaining.length - 1]);
+        setColumnDropRect({
+          height: dragColumnHeight ?? last.height,
+          left: last.right + gap - step,
+          top: last.top,
+          width: dragColumnWidth ?? last.width,
+        });
+        return;
+      }
+
+      const target = getLayoutColumnRect(remaining[dragDropIndex]);
+      setColumnDropRect({
+        height: dragColumnHeight ?? target.height,
+        left: target.left,
+        top: target.top,
+        width: dragColumnWidth ?? target.width,
+      });
+    };
+
+    measure();
+    board.addEventListener("scroll", measure, { passive: true });
+    window.addEventListener("resize", measure);
+    return () => {
+      board.removeEventListener("scroll", measure);
+      window.removeEventListener("resize", measure);
+    };
+  }, [dragColumnHeight, dragColumnId, dragColumnIndex, dragColumnWidth, dragDropIndex, dragPhase]);
 
   useEffect(() => {
     if (resolvedActiveCardId === previousActiveCardRef.current) return;
@@ -816,6 +978,7 @@ export function KanbanBoard({
   function openTicket(card: KanbanCard) {
     setActiveCard(card.id);
     setCommentDraft("");
+    setCommentAttachments([]);
   }
 
   function activateCard(card: KanbanCard) {
@@ -831,10 +994,15 @@ export function KanbanBoard({
     event.preventDefault();
     const card = resolvedActiveCardId ? cardLookup[resolvedActiveCardId] : null;
     const body = commentDraft.trim();
-    if (!card || !body) return;
+    const readyAttachments = commentAttachments.filter(
+      (attachment) => attachment.status !== "uploading" && attachment.status !== "error",
+    );
+    if (!card || commentAttachments.length !== readyAttachments.length) return;
+    if (!body && readyAttachments.length === 0) return;
 
     const comment: KanbanComment = {
       id: createId("comment"),
+      attachments: readyAttachments.length ? readyAttachments : undefined,
       author: currentUser?.name ?? "You",
       body,
       createdAt: new Date().toISOString(),
@@ -843,6 +1011,7 @@ export function KanbanBoard({
 
     setLocalComments((current) => ({ ...current, [card.id]: next }));
     setCommentDraft("");
+    setCommentAttachments([]);
     onAddCommentRef.current?.(card.id, comment);
     onCommentsChangeRef.current?.(card.id, next);
     emitActivity({ type: "comment-added", cardId: card.id, comment, comments: next });
@@ -1051,6 +1220,182 @@ export function KanbanBoard({
     return localCardTags[card.id] ?? card.tagIds ?? [];
   }
 
+  function attachmentsForCard(card: KanbanCard) {
+    return localAttachments[card.id] ?? card.attachments ?? [];
+  }
+
+  function currentAttachmentsForCard(card: KanbanCard) {
+    return localAttachmentsRef.current[card.id] ?? card.attachments ?? [];
+  }
+
+  function setCardAttachments(cardId: string, attachments: KanbanAttachment[]) {
+    const next = { ...localAttachmentsRef.current, [cardId]: attachments };
+    localAttachmentsRef.current = next;
+    setLocalAttachments(next);
+  }
+
+  function createAttachments(files: FileList | File[], uploading = false) {
+    return Array.from(files).map((file) => ({
+      id: createId("attachment"),
+      mimeType: file.type || undefined,
+      name: file.name,
+      size: file.size,
+      status: uploading ? ("uploading" as const) : undefined,
+      url: typeof URL !== "undefined" && "createObjectURL" in URL
+        ? URL.createObjectURL(file)
+        : "",
+      uploadedAt: new Date().toISOString(),
+    }));
+  }
+
+  function finalizeAttachment(
+    uploaded: KanbanAttachment,
+    local: KanbanAttachment,
+  ): KanbanAttachment {
+    return {
+      ...local,
+      ...uploaded,
+      error: undefined,
+      id: uploaded.id || local.id,
+      name: uploaded.name || local.name,
+      status: undefined,
+      url: uploaded.url || local.url,
+    };
+  }
+
+  function persistCardAttachments(
+    card: KanbanCard,
+    attachments: KanbanAttachment[],
+  ) {
+    onCardAttachmentsChangeRef.current?.(card.id, attachments, card);
+    emitActivity({ type: "card-attachments-changed", attachments, card, cardId: card.id });
+  }
+
+  async function uploadCardAttachment(
+    card: KanbanCard,
+    local: KanbanAttachment,
+    file: File,
+  ) {
+    const upload = onAttachmentUploadRef.current;
+    if (!upload) return;
+
+    try {
+      const uploaded = await upload(file, { card, cardId: card.id, target: "card" });
+      const current = currentAttachmentsForCard(card);
+      if (!current.some((attachment) => attachment.id === local.id)) return;
+      const next = current.map((attachment) =>
+        attachment.id === local.id ? finalizeAttachment(uploaded, local) : attachment,
+      );
+      setCardAttachments(card.id, next);
+      persistCardAttachments(card, next);
+    } catch (error) {
+      const current = currentAttachmentsForCard(card);
+      if (!current.some((attachment) => attachment.id === local.id)) return;
+      const next = current.map((attachment) =>
+        attachment.id === local.id
+          ? {
+              ...attachment,
+              error: error instanceof Error ? error.message : "Upload failed",
+              status: "error" as const,
+            }
+          : attachment,
+      );
+      setCardAttachments(card.id, next);
+    }
+  }
+
+  function addAttachments(files: FileList | File[], card: KanbanCard) {
+    const list = Array.from(files);
+    if (!list.length) return;
+
+    const upload = onAttachmentUploadRef.current;
+    const attachments = createAttachments(list, Boolean(upload));
+    const next = [...currentAttachmentsForCard(card), ...attachments];
+    setCardAttachments(card.id, next);
+
+    if (!upload) {
+      persistCardAttachments(card, next);
+      return;
+    }
+
+    attachments.forEach((attachment, index) => {
+      void uploadCardAttachment(card, attachment, list[index]);
+    });
+  }
+
+  function removeAttachment(card: KanbanCard, attachmentId: string) {
+    const current = currentAttachmentsForCard(card);
+    const attachment = current.find((entry) => entry.id === attachmentId);
+    if (!attachment) return;
+    const next = current.filter((entry) => entry.id !== attachmentId);
+    setCardAttachments(card.id, next);
+    void onAttachmentRemoveRef.current?.(attachment, {
+      card,
+      cardId: card.id,
+      target: "card",
+    });
+    persistCardAttachments(card, next);
+  }
+
+  async function uploadCommentAttachment(
+    card: KanbanCard,
+    local: KanbanAttachment,
+    file: File,
+  ) {
+    const upload = onAttachmentUploadRef.current;
+    if (!upload) return;
+
+    try {
+      const uploaded = await upload(file, { card, cardId: card.id, target: "comment" });
+      setCommentAttachments((current) =>
+        current.map((attachment) =>
+          attachment.id === local.id ? finalizeAttachment(uploaded, local) : attachment,
+        ),
+      );
+    } catch (error) {
+      setCommentAttachments((current) =>
+        current.map((attachment) =>
+          attachment.id === local.id
+            ? {
+                ...attachment,
+                error: error instanceof Error ? error.message : "Upload failed",
+                status: "error" as const,
+              }
+            : attachment,
+        ),
+      );
+    }
+  }
+
+  function addCommentAttachments(files: FileList | File[], card: KanbanCard) {
+    const list = Array.from(files);
+    if (!list.length) return;
+
+    const upload = onAttachmentUploadRef.current;
+    const attachments = createAttachments(list, Boolean(upload));
+    setCommentAttachments((current) => [...current, ...attachments]);
+
+    if (!upload) return;
+    attachments.forEach((attachment, index) => {
+      void uploadCommentAttachment(card, attachment, list[index]);
+    });
+  }
+
+  function removeCommentAttachment(card: KanbanCard, attachmentId: string) {
+    const attachment = commentAttachments.find((entry) => entry.id === attachmentId);
+    if (!attachment) return;
+    setCommentAttachments((current) =>
+      current.filter((entry) => entry.id !== attachmentId),
+    );
+    if (attachment.status !== "uploading") {
+      void onAttachmentRemoveRef.current?.(attachment, {
+        card,
+        cardId: card.id,
+        target: "comment",
+      });
+    }
+  }
+
   function membersForCard(card: KanbanCard) {
     return localCardAssignees[card.id] ?? card.assigneeIds ?? [];
   }
@@ -1089,7 +1434,9 @@ export function KanbanBoard({
     fromColumnId: string,
   ) {
     if (!onChange || event.button !== 0) return;
+    if (dragRef.current || columnDragRef.current) return;
 
+    window.getSelection()?.removeAllRanges();
     const source = event.currentTarget;
     const startX = event.clientX;
     const startY = event.clientY;
@@ -1229,7 +1576,9 @@ export function KanbanBoard({
     columnId: string,
   ) {
     if (!onChange || event.button !== 0) return;
+    if (dragRef.current || columnDragRef.current) return;
 
+    window.getSelection()?.removeAllRanges();
     const handle = event.currentTarget;
     const sourceColumn = handle.closest("[data-kanban-column-id]") as HTMLElement | null;
     if (!sourceColumn) return;
@@ -1264,6 +1613,7 @@ export function KanbanBoard({
           dropIndex: fromIndex,
           fromIndex,
           headerHeight: headerRect.height,
+          height: rect.height,
           muted: tokens.muted,
           offsetX: startX - rect.left,
           offsetY: startY - rect.top,
@@ -1711,6 +2061,7 @@ export function KanbanBoard({
         data-column-dropping={columnDrag?.phase === "dropping" ? "true" : undefined}
         data-dragging={drag ? "true" : undefined}
         data-dropping={drag?.phase === "dropping" ? "true" : undefined}
+        onDragStart={(event) => event.preventDefault()}
         ref={rootRef}
         style={
           columnWidth
@@ -1766,6 +2117,8 @@ export function KanbanBoard({
               <button
                 aria-label={`Reorder ${column.title}. Use the left and right arrow keys to move this list.`}
                 className={styles.columnDragHandle}
+                draggable={false}
+                onDragStart={(event) => event.preventDefault()}
                 onKeyDown={(event) => handleColumnKeyDown(event, column.id)}
                 onPointerDown={(event) => handleColumnPointerDown(event, column.id)}
                 type="button"
@@ -1855,6 +2208,18 @@ export function KanbanBoard({
             >
               <div className={styles.cardsViewport} data-kanban-cards-viewport="">
                 <ul className={styles.cards} data-kanban-cards="true">
+                  {drag?.phase === "dragging" && !atHome && dropIndex === 0 ? (
+                    <li
+                      aria-hidden="true"
+                      className={styles.dropGhostTopItem}
+                      style={{ height: drag.height }}
+                    >
+                      <div
+                        className={styles.dropGhost}
+                        style={{ ["--card-accent" as string]: drag.accent } as CSSProperties}
+                      />
+                    </li>
+                  ) : null}
                   {column.cardIds.map((cardId) => {
                 const card = cardLookup[cardId];
                 if (!card) return null;
@@ -1871,15 +2236,18 @@ export function KanbanBoard({
                   !isGhost &&
                   !isHomePlaceholder &&
                   dropIndex !== null &&
+                  dropIndex > 0 &&
                   visibleIndex >= dropIndex;
                 const showDropGhost =
                   Boolean(drag) &&
                   shouldShift &&
                   dropIndex !== null &&
+                  dropIndex > 0 &&
                   visibleIndex === dropIndex;
                 const assignedTags = tagsForCard(card)
                   .map((tagId) => resolvedTags.find((tag) => tag.id === tagId))
                   .filter((tag): tag is KanbanTag => Boolean(tag));
+                const attachmentCount = attachmentsForCard(card).length;
                 const assignedMembers = membersForCard(card)
                   .map((memberId) => resolvedMembers.find((member) => member.id === memberId))
                   .filter((member): member is KanbanMember => Boolean(member));
@@ -1966,7 +2334,11 @@ export function KanbanBoard({
                         }
                       />
                     ) : null}
-                    <article {...sharedProps}>
+                    <article
+                      {...sharedProps}
+                      draggable={false}
+                      onDragStart={(event) => event.preventDefault()}
+                    >
                       {onCardClick || ticketView ? (
                         <button
                           className={styles.cardOpen}
@@ -1981,20 +2353,33 @@ export function KanbanBoard({
                       ) : (
                         <div className={styles.cardOpenStatic}>{body}</div>
                       )}
-                      {ticketView ? (
-                        <button
-                          aria-label={`Open ticket for ${card.title}${commentCount ? `, ${commentCount === 1 ? "1 comment" : `${commentCount} comments`}` : ""}`}
-                          className={styles.commentButton}
-                          onClick={(event) => {
-                            event.stopPropagation();
-                            openTicket(card);
-                          }}
-                          onPointerDown={(event) => event.stopPropagation()}
-                          type="button"
-                        >
-                          <FontAwesomeIcon icon={faComment} />
-                          <span>{commentCount || "Comment"}</span>
-                        </button>
+                      {ticketView || attachmentCount > 0 ? (
+                        <div className={styles.cardFooterActions}>
+                          {ticketView ? (
+                            <button
+                              aria-label={`Open ticket for ${card.title}${commentCount ? `, ${commentCount === 1 ? "1 comment" : `${commentCount} comments`}` : ""}`}
+                              className={styles.commentButton}
+                              onClick={(event) => {
+                                event.stopPropagation();
+                                openTicket(card);
+                              }}
+                              onPointerDown={(event) => event.stopPropagation()}
+                              type="button"
+                            >
+                              <FontAwesomeIcon icon={faComment} />
+                              <span>{commentCount || "Comment"}</span>
+                            </button>
+                          ) : null}
+                          {attachmentCount ? (
+                            <span
+                              className={styles.cardAttachmentBadge}
+                              title={`${attachmentCount} attachment${attachmentCount === 1 ? "" : "s"}`}
+                            >
+                              <FontAwesomeIcon icon={faPaperclip} />
+                              {attachmentCount}
+                            </span>
+                          ) : null}
+                        </div>
                       ) : null}
                     </article>
                   </li>
@@ -2130,6 +2515,16 @@ export function KanbanBoard({
       ) : null}
       </div>
       {preview}
+      {columnDropRect && columnDrag?.phase === "dragging"
+        ? createPortal(
+            <div
+              aria-hidden="true"
+              className={styles.columnDropGhost}
+              style={columnDropRect}
+            />,
+            document.body,
+          )
+        : null}
       {columnPreview}
       {tagColorPicker
         ? (() => {
@@ -2444,6 +2839,134 @@ export function KanbanBoard({
                 </div>
               </div>
 
+              <div className={styles.ticketAttachments}>
+                <div className={styles.ticketTagsHeader}>
+                  <span className={styles.cardTagPickerLabel}>
+                    Attachments
+                    {attachmentsForCard(selectedCard).length
+                      ? ` (${attachmentsForCard(selectedCard).length})`
+                      : ""}
+                  </span>
+                  <button
+                    className={styles.ticketAddTagButton}
+                    onClick={() => attachmentInputRef.current?.click()}
+                    type="button"
+                  >
+                    + Add file
+                  </button>
+                </div>
+                <input
+                  aria-label="Attach files to ticket"
+                  className={styles.hiddenFileInput}
+                  multiple
+                  style={{ display: "none" }}
+                  onChange={(event) => {
+                    if (event.target.files) addAttachments(event.target.files, selectedCard);
+                    event.target.value = "";
+                  }}
+                  ref={attachmentInputRef}
+                  type="file"
+                />
+                <div className={styles.attachmentList}>
+                  {attachmentsForCard(selectedCard).length ? (
+                    attachmentsForCard(selectedCard).map((attachment) => {
+                      const uploading = attachment.status === "uploading";
+                      const failed = attachment.status === "error";
+                      const media = attachment.mimeType?.startsWith("image/") ? (
+                        <img
+                          alt=""
+                          className={styles.attachmentThumb}
+                          src={attachment.url}
+                        />
+                      ) : (
+                        <span aria-hidden="true" className={styles.attachmentIcon}>
+                          <FontAwesomeIcon icon={failed ? faFile : faPaperclip} />
+                        </span>
+                      );
+
+                      return (
+                        <div
+                          className={styles.attachmentItem}
+                          data-status={attachment.status}
+                          key={attachment.id}
+                        >
+                          {uploading || failed ? (
+                            media
+                          ) : (
+                            <a
+                              aria-label={`Open ${attachment.name}`}
+                              className={styles.attachmentThumbLink}
+                              href={attachment.url}
+                              rel="noreferrer"
+                              target="_blank"
+                            >
+                              {media}
+                            </a>
+                          )}
+                          <span className={styles.attachmentCopy}>
+                            {uploading || failed ? (
+                              <span className={styles.attachmentName}>{attachment.name}</span>
+                            ) : (
+                              <a href={attachment.url} rel="noreferrer" target="_blank">
+                                {attachment.name}
+                              </a>
+                            )}
+                            <small>
+                              {uploading
+                                ? "Uploading…"
+                                : failed
+                                  ? attachment.error || "Upload failed"
+                                  : [
+                                      formatFileSize(attachment.size),
+                                      attachment.uploadedBy,
+                                    ].filter(Boolean).join(" · ")}
+                            </small>
+                          </span>
+                          {uploading ? (
+                            <span aria-label="Uploading" className={styles.attachmentStatus}>
+                              <FontAwesomeIcon icon={faSpinner} spin />
+                            </span>
+                          ) : failed ? null : (
+                            <span className={styles.attachmentActions}>
+                              <a
+                                aria-label={`Open ${attachment.name}`}
+                                className={styles.attachmentAction}
+                                href={attachment.url}
+                                rel="noreferrer"
+                                target="_blank"
+                                title="Open"
+                              >
+                                <FontAwesomeIcon icon={faUpRightFromSquare} />
+                              </a>
+                              <a
+                                aria-label={`Download ${attachment.name}`}
+                                className={styles.attachmentAction}
+                                download={attachment.name}
+                                href={attachment.downloadUrl ?? attachment.url}
+                                rel="noreferrer"
+                                title="Download"
+                              >
+                                <FontAwesomeIcon icon={faDownload} />
+                              </a>
+                            </span>
+                          )}
+                          <button
+                            aria-label={`Remove ${attachment.name}`}
+                            className={styles.attachmentRemove}
+                            onClick={() => removeAttachment(selectedCard, attachment.id)}
+                            type="button"
+                          >
+                            ×
+                          </button>
+                        </div>
+                      );
+                    })
+                  ) : (
+                    <span className={styles.ticketTagsEmpty}>No attachments yet.</span>
+                  )}
+                </div>
+              </div>
+
               <div className={styles.ticketMetaGrid}>
                 <SelectField
                   disabled={!onChange}
@@ -2490,7 +3013,33 @@ export function KanbanBoard({
                               </time>
                             ) : null}
                           </div>
-                          <p>{comment.body}</p>
+                          {comment.body ? <p>{comment.body}</p> : null}
+                          {comment.attachments?.length ? (
+                            <div className={styles.commentAttachments}>
+                              {comment.attachments.map((attachment) => (
+                                <span className={styles.commentAttachment} key={attachment.id}>
+                                  <FontAwesomeIcon icon={faPaperclip} />
+                                  <a
+                                    href={attachment.url}
+                                    rel="noreferrer"
+                                    target="_blank"
+                                  >
+                                    {attachment.name}
+                                  </a>
+                                  <a
+                                    aria-label={`Download ${attachment.name}`}
+                                    className={styles.commentAttachmentAction}
+                                    download={attachment.name}
+                                    href={attachment.downloadUrl ?? attachment.url}
+                                    rel="noreferrer"
+                                    title="Download"
+                                  >
+                                    <FontAwesomeIcon icon={faDownload} />
+                                  </a>
+                                </span>
+                              ))}
+                            </div>
+                          ) : null}
                         </div>
                       </li>
                     ))}
@@ -2510,11 +3059,80 @@ export function KanbanBoard({
                     rows={3}
                     value={commentDraft}
                   />
+                  {commentAttachments.length ? (
+                    <div className={styles.commentAttachmentDrafts}>
+                      {commentAttachments.map((attachment) => (
+                        <span
+                          className={styles.commentAttachmentDraft}
+                          data-status={attachment.status}
+                          key={attachment.id}
+                        >
+                          <FontAwesomeIcon
+                            icon={attachment.status === "uploading" ? faSpinner : faPaperclip}
+                            spin={attachment.status === "uploading"}
+                          />
+                          <span>{attachment.name}</span>
+                          <small>
+                            {attachment.status === "uploading"
+                              ? "Uploading…"
+                              : attachment.status === "error"
+                                ? attachment.error || "Upload failed"
+                                : formatFileSize(attachment.size)}
+                          </small>
+                          <button
+                            aria-label={`Remove ${attachment.name} from comment`}
+                            onClick={() => removeCommentAttachment(selectedCard, attachment.id)}
+                            type="button"
+                          >
+                            ×
+                          </button>
+                        </span>
+                      ))}
+                    </div>
+                  ) : null}
                   <div className={styles.commentActions}>
                     <span className={styles.commentAuthor}>{currentUser?.name ?? "You"}</span>
-                    <Button disabled={!commentDraft.trim()} size="sm" type="submit">
-                      <FontAwesomeIcon icon={faPaperPlane} /> Add comment
-                    </Button>
+                    <div className={styles.commentActionButtons}>
+                      <input
+                        aria-label="Attach files to comment"
+                        className={styles.hiddenFileInput}
+                        multiple
+                        style={{ display: "none" }}
+                        onChange={(event) => {
+                          if (event.target.files) {
+                            addCommentAttachments(event.target.files, selectedCard);
+                          }
+                          event.target.value = "";
+                        }}
+                        ref={commentAttachmentInputRef}
+                        type="file"
+                      />
+                      <Button
+                        onClick={() => commentAttachmentInputRef.current?.click()}
+                        size="sm"
+                        type="button"
+                        variant="secondary"
+                      >
+                        <FontAwesomeIcon icon={faPaperclip} /> Attach
+                      </Button>
+                      <Button
+                        disabled={
+                          (!commentDraft.trim() && commentAttachments.length === 0) ||
+                          commentAttachments.some((attachment) => attachment.status)
+                        }
+                        size="sm"
+                        title={
+                          commentAttachments.some((attachment) => attachment.status === "uploading")
+                            ? "Wait for attachments to finish uploading"
+                            : commentAttachments.some((attachment) => attachment.status === "error")
+                              ? "Remove failed attachments before commenting"
+                              : undefined
+                        }
+                        type="submit"
+                      >
+                        <FontAwesomeIcon icon={faPaperPlane} /> Add comment
+                      </Button>
+                    </div>
                   </div>
                 </form>
               </section>

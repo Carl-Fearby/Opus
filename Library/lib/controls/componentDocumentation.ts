@@ -288,18 +288,18 @@ Trello-style board with draggable cards and lists on one horizontal track. Lists
 
 The ticket modal uses a two-column layout:
 
-- **Left:** editable title in the modal header, list selector, description, selected tags, assigned members, list selector, and header colour picker.
-- **Right:** the comment thread and composer.
+- **Left:** editable title in the modal header, description, selected tags, assigned members, attachments, list selector, and header colour picker.
+- **Right:** the comment thread, comment composer, and comment attachments.
 
 Selected tags are shown as removable chips; **Add tag** opens a searchable modal where new tags can also be created. **Add member** opens a searchable member picker with assign/unassign toggles.
 
-## Comments and tags
+## Comments, tags, members and attachments
 
 | Prop | Type | Description |
 | --- | --- | --- |
 | \`commentsEnabled\` | \`boolean\` | Shows the comment thread inside the ticket. |
 | \`currentUser\` | \`{ name: string }\` | Author shown in the composer. |
-| \`onAddComment\` | \`(cardId, comment) => void\` | Called when a comment is added. |
+| \`onAddComment\` | \`(cardId, comment) => void\` | Called when a comment is added. The comment includes any \`attachments\`. |
 | \`onCommentsChange\` | \`(cardId, comments) => void\` | Full thread after a change. |
 | \`tags\` / \`defaultTags\` | \`KanbanTag[]\` | Controlled or initial board tags. |
 | \`onTagsChange\` | \`(tags) => void\` | Called after tag create, update or delete. |
@@ -307,12 +307,48 @@ Selected tags are shown as removable chips; **Add tag** opens a searchable modal
 | \`onTagUpdate\` | \`(tag, previousTag, tags) => void\` | Called after a tag rename or recolour. |
 | \`onTagDelete\` | \`(tag, tags) => void\` | Called after a tag is deleted. |
 | \`onCardTagsChange\` | \`(cardId, tagIds, card) => void\` | Called when tags are added or removed from a ticket. |
+| \`members\` / \`defaultMembers\` | \`KanbanMember[]\` | Controlled or initial board members. |
+| \`onCardAssigneesChange\` | \`(cardId, memberIds, card) => void\` | Called when members are assigned or unassigned. |
+| \`onAttachmentUpload\` | \`(file, context) => Promise<KanbanAttachment>\` | Uploads a ticket or comment file. Return the persisted attachment with its final URL. |
+| \`onAttachmentRemove\` | \`(attachment, context) => void \\| Promise<void>\` | Deletes a ticket attachment, or a finished comment-draft attachment, from storage. |
+| \`onCardAttachmentsChange\` | \`(cardId, attachments, card) => void\` | Full ticket attachment list after an attachment is added or removed. Persist this list. When \`onAttachmentUpload\` is supplied it fires after the upload resolves, never with local blob URLs. |
+
+Ticket attachments and comment attachments both use the same \`KanbanAttachment\` shape. Without \`onAttachmentUpload\`, the board uses in-session \`blob:\` previews for demos. In production, provide the adapter and persist only the ready attachments you receive.
+
+\`\`\`tsx
+<KanbanBoard
+  cards={cards}
+  columns={columns}
+  onAttachmentUpload={async (file, { cardId, target }) => {
+    const body = new FormData();
+    body.append("file", file);
+    body.append("cardId", cardId);
+    body.append("target", target);
+    const response = await fetch("/api/attachments", { method: "POST", body });
+    return response.json(); // KanbanAttachment with final id and url
+  }}
+  onAttachmentRemove={(attachment, { cardId, target }) =>
+    fetch(\`/api/attachments/\${attachment.id}\`, { method: "DELETE" })
+  }
+  onCardAttachmentsChange={(cardId, attachments) =>
+    saveTicketAttachments(cardId, attachments)
+  }
+/>
+\`\`\`
+
+\`context.target\` is \`"card"\` for ticket attachments and \`"comment"\` for comment-draft attachments. Comment files upload immediately, so a cancelled draft can leave an orphan until \`onAttachmentRemove\` runs. The board blocks comment submission while files upload or after a failure.
+
+Use \`url\` for opening and \`downloadUrl\` when the backend provides a Content-Disposition download endpoint. If no \`downloadUrl\` is supplied, the board downloads using \`url\`.
+
+\`\`\`ts
+{ id: "attachment-1", name: "brief.pdf", size: 48213, mimeType: "application/pdf", url: "https://…", downloadUrl: "https://…?download=1" }
+\`\`\`
 
 ## Card and activity models
 
-\`KanbanCard\` supports \`title\`, \`meta\`, \`description\`, \`color\`, \`tone\`, \`comments\` and \`tagIds\`. The \`color\` value is the ticket side-border colour.
+\`KanbanCard\` supports \`title\`, \`meta\`, \`description\`, \`color\`, \`tone\`, \`comments\`, \`tagIds\`, \`assigneeIds\` and \`attachments\`. The \`color\` value is the ticket side-border colour.
 
-\`KanbanActivity\` is a discriminated union covering: \`list-created\`, \`list-updated\`, \`list-reordered\`, \`card-created\`, \`card-moved\`, \`card-updated\`, \`comment-added\`, \`tag-created\`, \`tag-updated\`, \`tag-deleted\` and \`card-tags-changed\` and \`card-assignees-changed\`. Every event includes an ISO \`at\` timestamp and the relevant records or resulting collections.
+\`KanbanActivity\` is a discriminated union covering: \`list-created\`, \`list-updated\`, \`list-reordered\`, \`card-created\`, \`card-moved\`, \`card-updated\`, \`comment-added\`, \`tag-created\`, \`tag-updated\`, \`tag-deleted\`, \`card-tags-changed\`, \`card-assignees-changed\` and \`card-attachments-changed\`. Every event includes an ISO \`at\` timestamp and the relevant records or resulting collections.
 
 ## Accessibility
 
