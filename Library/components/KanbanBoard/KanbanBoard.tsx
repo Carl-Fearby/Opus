@@ -2771,7 +2771,7 @@ export function KanbanBoard({
               <RichTextField
                 id={`${selectedCard.id}-ticket-description`}
                 label="Description"
-                minHeight={200}
+                minHeight={190}
                 mode="stacked"
                 onAttachmentUpload={(file) =>
                   uploadInlineAttachment(file, selectedCard, "description")
