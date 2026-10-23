@@ -258,13 +258,14 @@ Use this lab as a reference implementation for JSON-driven desktop applications.
   scheduler: "## Overview\n\nWeek-style timed event grid.\n\n## Props\n\n| Prop | Type | Default | Description |\n| --- | --- | --- | --- |\n| `events` | `SchedulerEvent[]` | \u2014 | Timed events. |\n| `days` | `string[]` | Mon–Fri | Column labels. |\n| `startHour` / `endHour` | `number` | `9` / `17` | Visible hours. |",
   "kanban-board": `## Overview
 
-Trello-style board with draggable cards and lists on one horizontal track. Lists grow to their content, the board title and tag manager sit above the lists, and the left/right scroll controls are always available. Lists can be created, renamed, recoloured and reordered; cards support inline creation, comments, tags and a two-column ticket view.
+Trello-style board with draggable cards and lists on one horizontal track. Lists grow to their content, the prominent board title and tag manager sit above the lists, and the left/right scroll controls are always available. Click the board title to rename it. Lists can be created, renamed, recoloured and reordered; cards support inline creation, comments, tags and a two-column ticket view.
 
 ## Board props
 
 | Prop | Type | Default | Description |
 | --- | --- | --- | --- |
-| \`boardTitle\` | \`string\` | “Kanban board” | Board name shown above the lists. |
+| \`boardTitle\` | \`string\` | “Kanban board” | Board name shown above the lists. Click it to rename inline. |
+| \`onBoardTitleChange\` | \`(title) => void\` | — | Called when the board name is edited. Omit \`boardTitle\` to let the board manage its own title. |
 | \`columns\` | \`KanbanColumn[]\` | required | Lists and their card ids. |
 | \`cards\` | \`Record<string, KanbanCard>\` | required | Card lookup. New cards are also held locally until the parent responds. |
 | \`onChange\` | \`(columns: KanbanColumn[]) => void\` | — | Enables card moves, list reordering, list creation and list edits. |

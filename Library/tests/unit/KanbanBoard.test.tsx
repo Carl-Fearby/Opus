@@ -586,4 +586,37 @@ describe("KanbanBoard board chrome", () => {
     expect(screen.getByRole("heading", { name: "Product roadmap" })).toBeInTheDocument();
     expect(screen.getByLabelText("Product roadmap")).toBeInTheDocument();
   });
+
+  it("renames an uncontrolled board title inline", () => {
+    render(<KanbanBoard cards={cards} columns={columns} />);
+
+    fireEvent.click(screen.getByRole("button", { name: "Kanban board" }));
+    fireEvent.change(screen.getByLabelText("Board name"), {
+      target: { value: "Product roadmap" },
+    });
+    fireEvent.keyDown(screen.getByLabelText("Board name"), { key: "Enter" });
+
+    expect(screen.getByRole("heading", { name: "Product roadmap" })).toBeInTheDocument();
+    expect(screen.getByLabelText("Product roadmap")).toBeInTheDocument();
+  });
+
+  it("reports board title edits through the callback", () => {
+    const onBoardTitleChange = vi.fn();
+    render(
+      <KanbanBoard
+        boardTitle="Roadmap"
+        cards={cards}
+        columns={columns}
+        onBoardTitleChange={onBoardTitleChange}
+      />,
+    );
+
+    fireEvent.click(screen.getByRole("button", { name: "Roadmap" }));
+    fireEvent.change(screen.getByLabelText("Board name"), {
+      target: { value: "2027 roadmap" },
+    });
+    fireEvent.blur(screen.getByLabelText("Board name"));
+
+    expect(onBoardTitleChange).toHaveBeenCalledWith("2027 roadmap");
+  });
 });

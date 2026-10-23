@@ -13,7 +13,7 @@ import {
   type ReactNode,
 } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faChevronLeft, faChevronRight, faComment, faDownload, faFile, faGripVertical, faPalette, faPaperclip, faPaperPlane, faSpinner, faTags, faUpRightFromSquare } from "@fortawesome/free-solid-svg-icons";
+import { faChevronLeft, faChevronRight, faComment, faDownload, faFile, faGripVertical, faPalette, faPaperclip, faPaperPlane, faPen, faSpinner, faTags, faUpRightFromSquare } from "@fortawesome/free-solid-svg-icons";
 import { createThemedPortal as createPortal } from "@/lib/theme/createThemedPortal";
 import { Button } from "@/components/fields/Button";
 import { ColorPickerPanel } from "@/components/fields/ColorPickerPanel";
@@ -136,7 +136,7 @@ export type KanbanColumn = {
 export type KanbanBoardProps = {
   /** Controlled open card/ticket. */
   activeCardId?: string | null;
-  /** Board name shown above the lists. */
+  /** Board name shown above the lists. Omit to let the board own the title. */
   boardTitle?: string;
   /** Board members available for assignment. */
   members?: KanbanMember[];
@@ -162,6 +162,8 @@ export type KanbanBoardProps = {
   defaultTags?: KanbanTag[];
   onChange?: (columns: KanbanColumn[]) => void;
   onActiveCardChange?: (cardId: string | null, card: KanbanCard | null) => void;
+  /** Called when the board title is renamed. */
+  onBoardTitleChange?: (title: string) => void;
   onAddComment?: (cardId: string, comment: KanbanComment) => void;
   onCardClick?: (card: KanbanCard) => void;
   onCardCreate?: (
@@ -495,7 +497,7 @@ function resolveDropLanding(
 export function KanbanBoard({
   addCardLabel = "Add a card",
   addColumnLabel = "Add list",
-  boardTitle = "Kanban board",
+  boardTitle,
   cards,
   columnColors = DEFAULT_COLUMN_COLORS,
   columnWidth,
@@ -509,6 +511,7 @@ export function KanbanBoard({
   onActivity,
   onActiveCardChange,
   onAddComment,
+  onBoardTitleChange,
   onCardClick,
   onAttachmentRemove,
   onAttachmentUpload,
@@ -544,6 +547,10 @@ export function KanbanBoard({
   const [addingColumn, setAddingColumn] = useState(false);
   const [newColumnTitle, setNewColumnTitle] = useState("");
   const [internalActiveCardId, setInternalActiveCardId] = useState<string | null>(defaultActiveCardId);
+  const [internalBoardTitle, setInternalBoardTitle] = useState("Kanban board");
+  const [editingBoardTitle, setEditingBoardTitle] = useState(false);
+  const [boardTitleDraft, setBoardTitleDraft] = useState("");
+  const skipBoardTitleCommitRef = useRef(false);
   const [commentDraft, setCommentDraft] = useState("");
   const [commentAttachments, setCommentAttachments] = useState<KanbanAttachment[]>([]);
   const [localComments, setLocalComments] = useState<Record<string, KanbanComment[]>>({});
@@ -622,6 +629,8 @@ export function KanbanBoard({
   const onCommentsChangeRef = useRef(onCommentsChange);
   const cardLookup = useMemo(() => ({ ...cards, ...localCards }), [cards, localCards]);
   const resolvedActiveCardId = activeCardId !== undefined ? activeCardId : internalActiveCardId;
+  const resolvedBoardTitle = boardTitle ?? internalBoardTitle;
+  const boardTitleEditable = boardTitle === undefined || Boolean(onBoardTitleChange);
 
   useEffect(() => {
     const timeout = window.setTimeout(() => setPortalReady(true), 0);
@@ -1104,6 +1113,24 @@ export function KanbanBoard({
       columns: nextColumns,
       previousColumn,
     });
+  }
+
+  function beginEditingBoardTitle() {
+    if (!boardTitleEditable) return;
+    setBoardTitleDraft(resolvedBoardTitle);
+    setEditingBoardTitle(true);
+  }
+
+  function finishEditingBoardTitle(save: boolean) {
+    if (save) {
+      const title = boardTitleDraft.trim();
+      if (title && title !== resolvedBoardTitle) {
+        if (boardTitle === undefined) setInternalBoardTitle(title);
+        onBoardTitleChange?.(title);
+      }
+    }
+    setEditingBoardTitle(false);
+    setBoardTitleDraft("");
   }
 
   function beginEditingColumn(column: KanbanColumn) {
@@ -1894,7 +1921,51 @@ export function KanbanBoard({
   return (
     <div className={styles.shell}>
       <div className={styles.boardHeader}>
-        <h2 className={styles.boardTitle}>{boardTitle}</h2>
+        {editingBoardTitle ? (
+          <input
+            aria-label="Board name"
+            autoFocus
+            className={styles.boardTitleInput}
+            onBlur={() => {
+              if (skipBoardTitleCommitRef.current) {
+                skipBoardTitleCommitRef.current = false;
+                return;
+              }
+              finishEditingBoardTitle(true);
+            }}
+            onChange={(event) => setBoardTitleDraft(event.target.value)}
+            onFocus={(event) => event.currentTarget.select()}
+            onKeyDown={(event) => {
+              if (event.key === "Enter") {
+                event.preventDefault();
+                finishEditingBoardTitle(true);
+              }
+              if (event.key === "Escape") {
+                event.preventDefault();
+                skipBoardTitleCommitRef.current = true;
+                finishEditingBoardTitle(false);
+                event.currentTarget.blur();
+              }
+            }}
+            value={boardTitleDraft}
+          />
+        ) : (
+          <h2 className={styles.boardTitle}>
+            {boardTitleEditable ? (
+              <button
+                className={styles.boardTitleButton}
+                onClick={beginEditingBoardTitle}
+                title="Rename board"
+                type="button"
+              >
+                <span>{resolvedBoardTitle}</span>
+                <FontAwesomeIcon aria-hidden="true" className={styles.boardTitleIcon} icon={faPen} />
+              </button>
+            ) : (
+              <span className={styles.boardTitleText}>{resolvedBoardTitle}</span>
+            )}
+          </h2>
+        )}
         <div className={styles.boardToolbar}>
           {tagManager ? (
             <div className={styles.tagManagerWrap} ref={tagManagerRef}>
@@ -2085,7 +2156,7 @@ export function KanbanBoard({
       </div>
       <div
         className={styles.root}
-        aria-label={boardTitle}
+        aria-label={resolvedBoardTitle}
         data-column-dragging={columnDrag ? "true" : undefined}
         data-column-dropping={columnDrag?.phase === "dropping" ? "true" : undefined}
         data-dragging={drag ? "true" : undefined}

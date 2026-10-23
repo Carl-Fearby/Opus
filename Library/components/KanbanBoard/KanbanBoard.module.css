@@ -14,14 +14,78 @@
 }
 
 .boardTitle {
-  overflow: hidden;
+  min-width: 0;
   margin: 0;
   color: var(--opus-text);
-  font-size: 0.92rem;
-  font-weight: 800;
-  line-height: 1.25;
+  font-size: 1.32rem;
+  font-weight: 850;
+  letter-spacing: -0.02em;
+  line-height: 1.2;
+}
+
+.boardTitleText,
+.boardTitleButton > span {
+  overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+}
+
+.boardTitleButton {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  max-width: 100%;
+  padding: 2px 6px 2px 0;
+  border: 0;
+  border-radius: var(--opus-input-radius-small);
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  letter-spacing: inherit;
+  text-align: left;
+  cursor: text;
+}
+
+.boardTitleButton:hover {
+  color: var(--opus-accent);
+}
+
+.boardTitleButton:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--opus-accent) 26%, transparent);
+}
+
+.boardTitleIcon {
+  flex: 0 0 auto;
+  color: var(--opus-muted);
+  font-size: 0.7rem;
+  opacity: 0;
+  transition: opacity 140ms ease;
+}
+
+.boardTitleButton:hover .boardTitleIcon,
+.boardTitleButton:focus-visible .boardTitleIcon {
+  opacity: 0.8;
+}
+
+.boardTitleInput {
+  min-width: 0;
+  width: min(100%, 360px);
+  padding: 2px 7px;
+  border: 1px solid color-mix(in srgb, var(--opus-accent) 48%, var(--opus-border));
+  border-radius: var(--opus-input-radius-small);
+  background: var(--opus-input-bg);
+  color: var(--opus-text);
+  font: inherit;
+  font-size: 1.32rem;
+  font-weight: 850;
+  letter-spacing: -0.02em;
+  line-height: 1.2;
+}
+
+.boardTitleInput:focus {
+  outline: none;
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--opus-accent) 24%, transparent);
 }
 
 .boardToolbar {
