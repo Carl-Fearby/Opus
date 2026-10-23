@@ -5,9 +5,11 @@ import { FontPicker } from "opus-react";
 import { DocumentationTopBar } from "@/components/documentation/DocumentationTopBar";
 import { ThemeSettingsButton } from "@/components/documentation/ThemeSettingsButton";
 import { useComponentsTheme } from "@/components/development/ComponentsThemeProvider";
+import { useOpusI18n } from "@/components/OpusI18n";
 import styles from "./ComponentsShell.module.css";
 
 export function ComponentsShellHeader() {
+  const { t } = useOpusI18n();
   const {
     accent,
     accentSecondary,
@@ -40,7 +42,7 @@ export function ComponentsShellHeader() {
           <span className={styles.tourControl} data-opus-tour="ui-theme">
             <ThemeToggleField
               id="global-theme-toggle"
-              label="Theme"
+              label={t("common.theme", "Theme")}
               labelPosition="left"
               labelVisuallyHidden
               mode="flagged"
@@ -57,7 +59,7 @@ export function ComponentsShellHeader() {
               fontFamily={fontFamily}
               idPrefix="global"
               theme={previewTheme}
-              themeLabel="Preview theme"
+              themeLabel={t("preview.theme", "Preview theme")}
               tileAccent={tileAccent}
               tileAccentSecondary={tileAccentSecondary}
               onAccentChange={setAccent}

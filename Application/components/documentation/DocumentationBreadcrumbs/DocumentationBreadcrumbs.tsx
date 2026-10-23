@@ -1,7 +1,7 @@
 "use client";
 
 import { usePathname } from "next/navigation";
-import { Breadcrumb } from "opus-react";
+import { Breadcrumb } from "@/components/Breadcrumb";
 import { buildDocumentationBreadcrumbs } from "@/lib/documentation/breadcrumbs";
 import { useLocale } from "@/lib/i18n/LocaleProvider";
 import styles from "./DocumentationBreadcrumbs.module.css";
