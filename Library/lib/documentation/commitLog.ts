@@ -1591,5 +1591,11 @@ export const commitLog: CommitEntry[] = [
     shortHash: "533f0d8",
     committedAt: "2026-10-23",
     summary: "fix(kanban): align description editor with comment composer",
+  },
+  {
+    hash: "56d0838e6781e59092931a7bff4283d8598433e2",
+    shortHash: "56d0838",
+    committedAt: "2026-10-23",
+    summary: "chore: release opus-react@0.11.2",
   }
 ].reverse();

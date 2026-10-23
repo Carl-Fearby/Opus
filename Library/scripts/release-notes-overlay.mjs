@@ -1,6 +1,16 @@
 /** Curated opus-react release notes for npm publishes that only left chore commits in git. */
 export const releaseNotesOverlay = [
   {
+    version: "0.11.2",
+    releasedAt: "2026-10-23",
+    commit: "56d0838e6781e59092931a7bff4283d8598433e2",
+    summary: "Pixel alignment for the ticket description and comment editors.",
+    changes: [
+      "Reduce the ticket description editor height by 10px so its lower edge aligns with the comment composer.",
+      "Publish opus-react 0.11.2.",
+    ],
+  },
+  {
     version: "0.11.1",
     releasedAt: "2026-10-23",
     commit: "90d3991384e141cfa8c97cfd221d7ee9b766264a",

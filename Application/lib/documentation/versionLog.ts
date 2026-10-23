@@ -748,6 +748,14 @@ export const versionLog: VersionEntry[] = [
     commitShort: "90d3991",
     summary: "Focused rich text toolbar and a wider, balanced ticket editor.",
     changes: ["Reduce the WYSIWYG toolbar to the essentials: undo, redo, bold, italic, underline, strikethrough, code block, bullet and numbered lists, link and unlink, image and file upload, and table.","Give the ticket details and discussion columns equal 50% widths.","Widen the ticket modal to 1120px so the formatting toolbar stays on one line, and align the description editor height with the comment composer.","Publish opus-react 0.11.1."],
+  },
+  {
+    version: "0.11.2",
+    releasedAt: "2026-10-23",
+    commit: "56d0838e6781e59092931a7bff4283d8598433e2",
+    commitShort: "56d0838",
+    summary: "Pixel alignment for the ticket description and comment editors.",
+    changes: ["Reduce the ticket description editor height by 10px so its lower edge aligns with the comment composer.","Publish opus-react 0.11.2."],
   }
 ].reverse();
 
