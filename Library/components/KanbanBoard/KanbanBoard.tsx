@@ -419,6 +419,38 @@ function resolveDropTarget(
   return { columnId, index: slots.length };
 }
 
+function ensureDropTargetVisible(target: DropTarget, cardId: string) {
+  const column = document.querySelector<HTMLElement>(
+    `[data-kanban-column-id="${CSS.escape(target.columnId)}"]`,
+  );
+  const viewport = column?.querySelector<HTMLElement>("[data-kanban-cards-viewport]");
+  if (!viewport) return;
+
+  if (target.index === 0) {
+    viewport.scrollTop = 0;
+    return;
+  }
+
+  const cards = Array.from(
+    viewport.querySelectorAll<HTMLElement>("[data-kanban-card-id]"),
+  ).filter((card) => card.dataset.kanbanCardId !== cardId);
+
+  if (target.index >= cards.length) {
+    viewport.scrollTop = viewport.scrollHeight;
+    return;
+  }
+
+  const card = cards[target.index];
+  if (!card) return;
+  const top = card.offsetTop;
+  const bottom = top + card.offsetHeight + 8;
+  if (top < viewport.scrollTop) {
+    viewport.scrollTop = Math.max(0, top - 8);
+  } else if (bottom > viewport.scrollTop + viewport.clientHeight) {
+    viewport.scrollTop = bottom - viewport.clientHeight;
+  }
+}
+
 function getLayoutColumnRect(element: HTMLElement) {
   const rect = element.getBoundingClientRect();
   const translateX = readTranslateX(element);
@@ -935,6 +967,14 @@ export function KanbanBoard({
       window.removeEventListener("resize", update);
     };
   }, [columns.length]);
+
+  useEffect(() => {
+    if (drag?.phase !== "dragging" || !drag.dropTarget) return;
+    const frame = window.requestAnimationFrame(() => {
+      ensureDropTargetVisible(drag.dropTarget!, drag.cardId);
+    });
+    return () => window.cancelAnimationFrame(frame);
+  }, [drag?.cardId, drag?.dropTarget, drag?.phase]);
 
   function emitActivity(activity: WithoutActivityTimestamp<KanbanActivity>) {
     onActivityRef.current?.({
