@@ -2198,7 +2198,11 @@ export function KanbanBoard({
         });
         const shiftBy = drag?.phase === "dragging" && !atHome ? drag.height + 8 : 0;
         const showEndGhost =
-          dropIndex !== null && !atHome && dropIndex === visibleIds.length && shiftBy > 0;
+          dropIndex !== null &&
+          dropIndex > 0 &&
+          !atHome &&
+          dropIndex === visibleIds.length &&
+          shiftBy > 0;
 
         return (
           <section
