@@ -14,30 +14,18 @@ import {
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import type { IconDefinition } from "@fortawesome/fontawesome-svg-core";
 import {
-  faAlignCenter,
-  faAlignLeft,
-  faAlignRight,
   faBold,
   faCode,
-  faEraser,
-  faHighlighter,
   faImage,
-  faIndent,
   faItalic,
   faLink,
   faLinkSlash,
   faListOl,
   faListUl,
-  faMinus,
-  faOutdent,
-  faPalette,
   faPaperclip,
-  faQuoteRight,
   faRotateLeft,
   faRotateRight,
   faStrikethrough,
-  faSubscript,
-  faSuperscript,
   faTable,
   faUnderline,
 } from "@fortawesome/free-solid-svg-icons";
@@ -63,51 +51,20 @@ const inlineGroup: ToolbarGroup = [
   { id: "italic", command: "italic", icon: faItalic, label: "Italic", shortcut: "⌘I" },
   { id: "underline", command: "underline", icon: faUnderline, label: "Underline", shortcut: "⌘U" },
   { id: "strikeThrough", command: "strikeThrough", icon: faStrikethrough, label: "Strikethrough" },
-  { id: "subscript", command: "subscript", icon: faSubscript, label: "Subscript" },
-  { id: "superscript", command: "superscript", icon: faSuperscript, label: "Superscript" },
 ];
 
 const listGroup: ToolbarGroup = [
   { id: "insertUnorderedList", command: "insertUnorderedList", icon: faListUl, label: "Bullet list" },
   { id: "insertOrderedList", command: "insertOrderedList", icon: faListOl, label: "Numbered list" },
-  { id: "outdent", command: "outdent", icon: faOutdent, label: "Decrease indent" },
-  { id: "indent", command: "indent", icon: faIndent, label: "Increase indent" },
 ];
-
-const alignGroup: ToolbarGroup = [
-  { id: "justifyLeft", command: "justifyLeft", icon: faAlignLeft, label: "Align left" },
-  { id: "justifyCenter", command: "justifyCenter", icon: faAlignCenter, label: "Align centre" },
-  { id: "justifyRight", command: "justifyRight", icon: faAlignRight, label: "Align right" },
-];
-
-const blockFormats = [
-  { label: "Paragraph", value: "p" },
-  { label: "Heading 1", value: "h1" },
-  { label: "Heading 2", value: "h2" },
-  { label: "Heading 3", value: "h3" },
-  { label: "Quote", value: "blockquote" },
-  { label: "Code block", value: "pre" },
-] as const;
-
-const fontSizes = [
-  { label: "Small", value: "2" },
-  { label: "Normal", value: "3" },
-  { label: "Large", value: "5" },
-  { label: "Huge", value: "6" },
-] as const;
 
 const stateCommands = [
   "bold",
   "italic",
   "underline",
   "strikeThrough",
-  "subscript",
-  "superscript",
   "insertUnorderedList",
   "insertOrderedList",
-  "justifyLeft",
-  "justifyCenter",
-  "justifyRight",
 ] as const;
 
 export type RichTextAttachment = {
@@ -139,11 +96,6 @@ type RichTextFieldProps = {
   value: string;
   onChange: (html: string) => void;
 };
-
-function normaliseBlock(value: string) {
-  const cleaned = value.replace(/[<>]/g, "").toLowerCase();
-  return cleaned === "div" || cleaned === "" ? "p" : cleaned;
-}
 
 function escapeHtml(value: string) {
   return value
@@ -201,7 +153,6 @@ export function RichTextField({
   const syncingValueRef = useRef(false);
   const savedRangeRef = useRef<Range | null>(null);
   const [activeCommands, setActiveCommands] = useState<Record<string, boolean>>({});
-  const [blockFormat, setBlockFormat] = useState("p");
   const [canUndo, setCanUndo] = useState(false);
   const [canRedo, setCanRedo] = useState(false);
   const [linkModalOpen, setLinkModalOpen] = useState(false);
@@ -290,13 +241,6 @@ export function RichTextField({
       }
     }
     setActiveCommands(nextActive);
-
-    try {
-      const block = document.queryCommandValue("formatBlock");
-      setBlockFormat(normaliseBlock(block || "p"));
-    } catch {
-      setBlockFormat("p");
-    }
   }, []);
 
   useEffect(() => {
@@ -364,7 +308,6 @@ export function RichTextField({
       }
       focusEditor();
       document.execCommand("formatBlock", false, nextValue);
-      setBlockFormat(normaliseBlock(nextValue));
       syncToolbarState();
       emitChange();
     },
@@ -555,40 +498,6 @@ export function RichTextField({
     );
   }
 
-  function ColorButton({
-    icon,
-    label,
-    command,
-    swatch,
-    defaultColor,
-  }: {
-    icon: IconDefinition;
-    label: string;
-    command: string;
-    swatch: string;
-    defaultColor: string;
-  }) {
-    return (
-      <Tooltip content={label} placement="bottom">
-        <label
-          className={styles.toolbarButton}
-          onMouseDown={() => saveSelection()}
-        >
-          <FontAwesomeIcon aria-hidden="true" className={styles.toolbarIcon} icon={icon} />
-          <span aria-hidden="true" className={styles.colorSwatch} style={{ background: swatch }} />
-          <input
-            aria-label={label}
-            className={styles.colorInput}
-            disabled={readOnly}
-            defaultValue={defaultColor}
-            type="color"
-            onChange={(event) => execWithSelection(command, event.target.value)}
-          />
-        </label>
-      </Tooltip>
-    );
-  }
-
   function renderGroup(group: ToolbarGroup) {
     return group.map((action) => (
       <ToolbarButton
@@ -634,64 +543,14 @@ export function RichTextField({
               onPress={() => exec("redo")}
             />
             <span aria-hidden="true" className={styles.divider} />
-            <select
-              aria-label="Text style"
-              className={styles.blockSelect}
-              disabled={readOnly}
-              value={blockFormat}
-              onChange={(event) => applyBlockFormat(event.target.value)}
-              onMouseDown={(event) => event.stopPropagation()}
-            >
-              {blockFormats.map((format) => (
-                <option key={format.value} value={format.value}>
-                  {format.label}
-                </option>
-              ))}
-            </select>
-            <select
-              aria-label="Font size"
-              className={styles.blockSelect}
-              defaultValue="3"
-              disabled={readOnly}
-              onMouseDown={() => saveSelection()}
-              onChange={(event) => execWithSelection("fontSize", event.target.value)}
-            >
-              {fontSizes.map((size) => (
-                <option key={size.value} value={size.value}>
-                  {size.label}
-                </option>
-              ))}
-            </select>
-            <span aria-hidden="true" className={styles.divider} />
             {renderGroup(inlineGroup)}
-            <ColorButton
-              command="foreColor"
-              defaultColor="#111827"
-              icon={faPalette}
-              label="Text colour"
-              swatch="#111827"
-            />
-            <ColorButton
-              command="hiliteColor"
-              defaultColor="#fde047"
-              icon={faHighlighter}
-              label="Highlight colour"
-              swatch="#fde047"
-            />
             <span aria-hidden="true" className={styles.divider} />
-            {renderGroup(listGroup)}
-            <ToolbarButton
-              icon={faQuoteRight}
-              label="Quote"
-              onPress={() => applyBlockFormat("blockquote")}
-            />
             <ToolbarButton
               icon={faCode}
               label="Code block"
               onPress={() => applyBlockFormat("pre")}
             />
-            <span aria-hidden="true" className={styles.divider} />
-            {renderGroup(alignGroup)}
+            {renderGroup(listGroup)}
             <span aria-hidden="true" className={styles.divider} />
             <ToolbarButton icon={faLink} label="Insert link" onPress={openLinkModal} />
             <ToolbarButton icon={faLinkSlash} label="Remove link" onPress={() => exec("unlink")} />
@@ -708,17 +567,6 @@ export function RichTextField({
               onPress={() => openAttachmentPicker("file")}
             />
             <ToolbarButton icon={faTable} label="Insert table" onPress={openTableModal} />
-            <ToolbarButton
-              icon={faMinus}
-              label="Horizontal rule"
-              onPress={() => exec("insertHorizontalRule")}
-            />
-            <span aria-hidden="true" className={styles.divider} />
-            <ToolbarButton
-              icon={faEraser}
-              label="Clear formatting"
-              onPress={() => exec("removeFormat")}
-            />
           </div>
           <input
             aria-label="Insert images"

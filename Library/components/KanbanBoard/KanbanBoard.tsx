@@ -2741,6 +2741,7 @@ export function KanbanBoard({
           panelClassName={styles.ticketModal}
           panelStyle={
             {
+              ["--modal-width" as string]: "min(1120px, calc(100vw - 48px))",
               ["--ticket-color" as string]:
                 selectedCard.color ?? "var(--opus-accent)",
             } as CSSProperties
@@ -2770,7 +2771,7 @@ export function KanbanBoard({
               <RichTextField
                 id={`${selectedCard.id}-ticket-description`}
                 label="Description"
-                minHeight={110}
+                minHeight={200}
                 mode="stacked"
                 onAttachmentUpload={(file) =>
                   uploadInlineAttachment(file, selectedCard, "description")
