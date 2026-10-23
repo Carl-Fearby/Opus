@@ -7,12 +7,14 @@ import { componentCategories, getControlSectionsByCategory, getControlsByCategor
 import { categoryPath, componentPath, COMPONENTS_BASE_PATH } from "@/lib/controls/routes";
 import { ComponentIcon } from "@/components/development/ComponentIcon";
 import { useComponentDescription } from "@/lib/i18n/useComponentDescription";
+import { useComponentTitle } from "@/lib/i18n/useComponentTitle";
 import { categoryDescriptionMessageKey } from "@/lib/i18n";
 import { useLocale } from "@/lib/i18n/LocaleProvider";
 import styles from "./overview.module.css";
 
 export function ComponentsHubOverview() {
   const describe = useComponentDescription();
+  const titleFor = useComponentTitle();
   const { t } = useLocale();
   useSetComponentsPageHeader(
     "Overview",
@@ -75,7 +77,7 @@ export function ComponentsHubOverview() {
                     >
                       <span className={styles.hubComponentLinkHeading}>
                         <ComponentIcon icon={getComponentIcon(control.slug)} />
-                        <span className={styles.hubComponentLinkTitle}>{control.title}</span>
+                        <span className={styles.hubComponentLinkTitle}>{titleFor(control.slug, control.title)}</span>
                       </span>
                       <span className={styles.hubComponentLinkDescription}>{describe(control.slug, control.description)}</span>
                     </Link>

@@ -6,6 +6,7 @@ import { DropdownMenu } from "opus-react";
 import { useComponentsTheme, useSetComponentsPageHeader } from "@/components/development/ComponentsThemeProvider";
 import { useComponentSettings } from "@/components/development/ComponentsShell/ComponentSettingsContext";
 import { useComponentDescription } from "@/lib/i18n/useComponentDescription";
+import { useComponentTitle } from "@/lib/i18n/useComponentTitle";
 import { componentRawPath } from "@/lib/controls/routes";
 import { generateUsageCode } from "@/lib/controls/generateUsageCode";
 import { isFullBleedPreview } from "@/lib/controls/previewPresentation";
@@ -43,7 +44,8 @@ type ControlDetailProps = {
 export function ControlDetail({ control, defaultSettings, documentation }: ControlDetailProps) {
   const { t } = useOpusI18n();
   const describe = useComponentDescription();
-  useSetComponentsPageHeader(control.title, describe(control.slug, control.description));
+  const titleFor = useComponentTitle();
+  useSetComponentsPageHeader(titleFor(control.slug, control.title), describe(control.slug, control.description));
   const {
     previewAccent,
     previewAccentSecondary,

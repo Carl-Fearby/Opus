@@ -1,5 +1,6 @@
 import type { BreadcrumbItem } from "@/components/Breadcrumb";
 import { categoryMessageKey, DEFAULT_LOCALE, translate, type Locale } from "@/lib/i18n";
+import { localizeComponentTitle } from "@/lib/i18n/componentTitles";
 import { getControl, getNavigationGroupBySlug } from "@/lib/controls/registry";
 import {
   CATEGORY_PATHS,
@@ -125,7 +126,7 @@ export function buildDocumentationBreadcrumbs(
           );
         }
       }
-      items.push(crumb("current", options.currentLabel ?? `${control?.title ?? slug} (raw)`));
+      items.push(crumb("current", options.currentLabel ?? `${localizeComponentTitle(locale, control?.slug ?? slug, control?.title ?? slug)} (raw)`));
       return items;
     }
 
@@ -144,7 +145,7 @@ export function buildDocumentationBreadcrumbs(
             ),
           );
         }
-        items.push(crumb("current", options.currentLabel ?? control.title));
+        items.push(crumb("current", options.currentLabel ?? localizeComponentTitle(locale, control.slug, control.title)));
         return items;
       }
     }

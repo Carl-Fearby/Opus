@@ -10,6 +10,8 @@ import { OpenInPlaygroundLink } from "@/components/control-detail/ControlDetail/
 import previewStyles from "@/components/control-detail/ControlDetail/ControlDetail.module.css";
 import { getDefaultSettings } from "@/lib/controls/defaults";
 import { getControl } from "@/lib/controls/registry";
+import { useComponentTitle } from "@/lib/i18n/useComponentTitle";
+import { useOpusI18n } from "@/components/OpusI18n";
 import { componentPath } from "@/lib/controls/routes";
 import type { ControlSettings, ControlSlug } from "@/lib/controls/types";
 import styles from "./overview.module.css";
@@ -22,6 +24,8 @@ type OverviewDemoCardProps = {
 
 export function OverviewDemoCard({ children, slug, title }: OverviewDemoCardProps) {
   const control = getControl(slug);
+  const titleFor = useComponentTitle();
+  const { t } = useOpusI18n();
   const [settings] = useState<ControlSettings>(() => {
     return getDefaultSettings(slug);
   });
@@ -34,13 +38,13 @@ export function OverviewDemoCard({ children, slug, title }: OverviewDemoCardProp
     <article className={styles.demoCard} data-overview-component={slug}>
       <div className="opus-panel-heading">
         <h3 className={styles.demoCardHeading} data-testid="overview-component-heading">
-          <Link href={componentPath(slug)}>{title ?? control.title}</Link>
+          <Link href={componentPath(slug)}>{title ?? titleFor(control.slug, control.title)}</Link>
         </h3>
         <div className={previewStyles.previewToolbar}>
           <PreviewThemeControls id={`preview-theme-toggle-${slug}`} />
           <OpenInPlaygroundLink category={control.category} settings={settings} slug={slug} />
           <Link className={styles.moreLink} href={componentPath(slug)}>
-            More
+            {t("common.more", "More")}
           </Link>
         </div>
       </div>
@@ -57,7 +61,7 @@ export function OverviewDemoCard({ children, slug, title }: OverviewDemoCardProp
       </div>
       <div className={styles.demoCardFooter}>
         <Link className={styles.demoCardComponentLink} href={componentPath(slug)}>
-          View {control.title} component
+          {t("component.view", "View {name} component", { name: titleFor(control.slug, control.title) })}
         </Link>
       </div>
     </article>

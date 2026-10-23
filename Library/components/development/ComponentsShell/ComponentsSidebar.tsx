@@ -35,6 +35,7 @@ import {
   navigationGroupToSlug,
 } from "@/lib/controls/routes";
 import { useLocale } from "@/lib/i18n/LocaleProvider";
+import { useComponentTitle } from "@/lib/i18n/useComponentTitle";
 import { categoryMessageKey } from "@/lib/i18n";
 import { useComponentSettingsContext } from "./ComponentSettingsContext";
 import styles from "./ComponentsShell.module.css";
@@ -249,6 +250,7 @@ function NavGroup({
 }) {
   const pathname = usePathname();
   const { t } = useLocale();
+  const titleFor = useComponentTitle();
   const listId = navGroupListId(category);
   const sections = filteredSections ?? getControlSectionsByCategory(category);
   const count = sections.reduce((total, section) => total + section.controls.length, 0);
@@ -312,7 +314,7 @@ function NavGroup({
                       key={`${category}:${control.slug}`}
                       href={controlDetailPath(control)}
                       icon={getComponentIcon(control.slug)}
-                      label={control.title}
+                      label={titleFor(control.slug, control.title)}
                       isNew={control.isNew}
                       nested
                       onNavigate={onNavigate}
@@ -347,6 +349,7 @@ function NavSubgroup({
 }) {
   const pathname = usePathname();
   const { t } = useLocale();
+  const titleFor = useComponentTitle();
   const listId = navSubgroupListId(category, label);
   const subgroupPath = categorySubgroupPath(category, label);
   const isOpen = forceOpen || open;
@@ -393,7 +396,7 @@ function NavSubgroup({
               key={`${category}:${control.slug}`}
               href={controlDetailPath(control)}
               icon={getComponentIcon(control.slug)}
-              label={control.title}
+              label={titleFor(control.slug, control.title)}
               isNew={control.isNew}
               nested
               onNavigate={onNavigate}

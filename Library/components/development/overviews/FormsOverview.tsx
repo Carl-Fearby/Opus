@@ -1,6 +1,8 @@
 "use client";
 
 import Link from "next/link";
+import { useComponentTitle } from "@/lib/i18n/useComponentTitle";
+import { useOpusI18n } from "@/components/OpusI18n";
 import type { ReactNode } from "react";
 import { useState } from "react";
 import { useSetComponentsPageHeader } from "@/components/development/ComponentsThemeProvider";
@@ -90,6 +92,8 @@ type SharedFieldOptions = {
 };
 
 export function FormsOverview() {
+  const titleFor = useComponentTitle();
+  const { t } = useOpusI18n();
   useSetComponentsPageHeader(
     "Forms",
     "Live previews of every form component. Adjust shared settings below or open a component for full control.",
@@ -646,10 +650,10 @@ export function FormsOverview() {
             >
               <div className="opus-panel-heading">
                 <h3 className={styles.demoCardHeading} data-testid="overview-component-heading">
-                  <Link href={componentPath(control.slug)}>{control.title}</Link>
+                  <Link href={componentPath(control.slug)}>{titleFor(control.slug, control.title)}</Link>
                 </h3>
                 <Link className={styles.moreLink} href={componentPath(control.slug)}>
-                  More
+                  {t("common.more", "More")}
                 </Link>
               </div>
               <div className={styles.demoCardBody} data-testid="overview-component-preview">
