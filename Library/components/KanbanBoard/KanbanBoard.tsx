@@ -568,6 +568,7 @@ export function KanbanBoard({
   ticketView = true,
 }: KanbanBoardProps) {
   const [drag, setDrag] = useState<DragState | null>(null);
+  const [dropSettling, setDropSettling] = useState(false);
   const [columnDrag, setColumnDrag] = useState<ColumnDragState | null>(null);
   const [columnDropRect, setColumnDropRect] = useState<{
     height: number;
@@ -626,6 +627,7 @@ export function KanbanBoard({
   const tagFieldId = useId();
   const didDragRef = useRef(false);
   const dragRef = useRef<DragState | null>(null);
+  const dropSettlingTimerRef = useRef<number | null>(null);
   const columnDragRef = useRef<ColumnDragState | null>(null);
   const rootRef = useRef<HTMLDivElement | null>(null);
   const columnInputRef = useRef<HTMLInputElement | null>(null);
@@ -967,6 +969,15 @@ export function KanbanBoard({
       window.removeEventListener("resize", update);
     };
   }, [columns.length]);
+
+  useEffect(
+    () => () => {
+      if (dropSettlingTimerRef.current !== null) {
+        window.clearTimeout(dropSettlingTimerRef.current);
+      }
+    },
+    [],
+  );
 
   useEffect(() => {
     if (drag?.phase !== "dragging" || !drag.dropTarget) return;
@@ -1525,6 +1536,17 @@ export function KanbanBoard({
     }, 80);
   }
 
+  function lockDropSettling() {
+    setDropSettling(true);
+    if (dropSettlingTimerRef.current !== null) {
+      window.clearTimeout(dropSettlingTimerRef.current);
+    }
+    dropSettlingTimerRef.current = window.setTimeout(() => {
+      dropSettlingTimerRef.current = null;
+      setDropSettling(false);
+    }, 600);
+  }
+
   function handleCardPointerDown(
     event: ReactPointerEvent<HTMLElement>,
     cardId: string,
@@ -1552,6 +1574,11 @@ export function KanbanBoard({
         const homeIndex = sourceColumn?.cardIds.indexOf(cardId) ?? 0;
         const home = { columnId: fromColumnId, index: homeIndex };
         didDragRef.current = true;
+        if (dropSettlingTimerRef.current !== null) {
+          window.clearTimeout(dropSettlingTimerRef.current);
+          dropSettlingTimerRef.current = null;
+        }
+        setDropSettling(false);
         active = {
           cardId,
           committed: false,
@@ -1626,6 +1653,10 @@ export function KanbanBoard({
             top: current.originTop,
             width: current.width,
           });
+
+      // Disable neighbour transitions before the column update lands, then let
+      // only the floating preview animate into the landing slot.
+      lockDropSettling();
 
       // Commit into the open gap first so neighbours keep their final layout —
       // only the preview animates into place.
@@ -2206,7 +2237,9 @@ export function KanbanBoard({
         data-column-dragging={columnDrag ? "true" : undefined}
         data-column-dropping={columnDrag?.phase === "dropping" ? "true" : undefined}
         data-dragging={drag ? "true" : undefined}
-        data-dropping={drag?.phase === "dropping" ? "true" : undefined}
+        data-dropping={
+          drag?.phase === "dropping" || dropSettling ? "true" : undefined
+        }
         onDragStart={(event) => event.preventDefault()}
         ref={rootRef}
         style={
@@ -2243,6 +2276,13 @@ export function KanbanBoard({
           !atHome &&
           dropIndex === visibleIds.length &&
           shiftBy > 0;
+        const showInlineGhost =
+          Boolean(drag) &&
+          drag!.phase === "dragging" &&
+          !atHome &&
+          dropIndex !== null &&
+          dropIndex > 0 &&
+          dropIndex < visibleIds.length;
 
         return (
           <section
@@ -2353,7 +2393,11 @@ export function KanbanBoard({
               <span className={styles.count}>{column.cardIds.length}</span>
             </header>
             <div className={styles.cardsViewport} data-kanban-cards-viewport="">
-                <ul className={styles.cards} data-kanban-cards="true">
+                <ul
+                  className={styles.cards}
+                  data-kanban-cards="true"
+                  style={showInlineGhost ? { paddingBottom: shiftBy } : undefined}
+                >
                   {drag?.phase === "dragging" && !atHome && dropIndex === 0 ? (
                     <li
                       aria-hidden="true"
