@@ -513,7 +513,7 @@ const formsControls: Record<(typeof formsControlOrder)[number], ControlDefinitio
     title: "Rich text field",
     category: "forms",
     componentName: "RichTextField",
-    description: "WYSIWYG editor with an icon toolbar, headings, lists, alignment, links, and live active-state buttons.",
+    description: "WYSIWYG editor with an icon toolbar, headings, lists, alignment, links, and paste, drop, or picker uploads for inline files and screenshots.",
     sourceFiles: [
       "components/fields/RichTextField/RichTextField.tsx",
       "components/fields/RichTextField/RichTextField.module.css",
