@@ -804,6 +804,14 @@ export const versionLog: VersionEntry[] = [
     commitShort: "2b0ff3b",
     summary: "Keep the card landing zone visible while dragging.",
     changes: ["Scroll the target list to reveal the landing zone when dragging a card above, between, or below its visible cards.","Scroll to the end of the list when dropping below the last card so the landing zone and neighbouring cards stay visible.","Preserve the container-fitted list height and pinned add-card footer while scrolling.","Publish opus-react 0.11.8."],
+  },
+  {
+    version: "0.11.9",
+    releasedAt: "2026-10-23",
+    commit: "74e10fd3b555cc5fcbd4d072204c99cebfe29e5c",
+    commitShort: "74e10fd",
+    summary: "Expand inline drop zones and settle dropped cards instantly.",
+    changes: ["Expand a list to fit an inline card drop zone, even when dropping between existing cards.","Keep the list within the available board height once full, scrolling instead of growing beyond the container.","Disable neighbour transitions immediately after a drop so cards snap to their final layout and only the floating preview lands.","Publish opus-react 0.11.9."],
   }
 ].reverse();
 

@@ -1,6 +1,18 @@
 /** Curated opus-react release notes for npm publishes that only left chore commits in git. */
 export const releaseNotesOverlay = [
   {
+    version: "0.11.9",
+    releasedAt: "2026-10-23",
+    commit: "74e10fd3b555cc5fcbd4d072204c99cebfe29e5c",
+    summary: "Expand inline drop zones and settle dropped cards instantly.",
+    changes: [
+      "Expand a list to fit an inline card drop zone, even when dropping between existing cards.",
+      "Keep the list within the available board height once full, scrolling instead of growing beyond the container.",
+      "Disable neighbour transitions immediately after a drop so cards snap to their final layout and only the floating preview lands.",
+      "Publish opus-react 0.11.9.",
+    ],
+  },
+  {
     version: "0.11.8",
     releasedAt: "2026-10-23",
     commit: "2b0ff3b3564404012e72f485ff4855e2f9207420",
