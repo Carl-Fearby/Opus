@@ -724,6 +724,14 @@ export const versionLog: VersionEntry[] = [
     commitShort: "a3d36b1",
     summary: "Release notes and documentation for Opus 0.8 and 0.9.",
     changes: ["Add public changelog entries for the 0.8.0 component release and the 0.9.0 DataGrid release.","Document DataGrid column management, controlled visibility, and saved views.","Add the enterprise components and DataGrid story to the Opus journal.","Publish opus-react 0.9.1."],
+  },
+  {
+    version: "0.10.0",
+    releasedAt: "2026-10-23",
+    commit: "f8b12cdc81abcb2ced077e2b60f5bc995b77dd8e",
+    commitShort: "f8b12cd",
+    summary: "Trello-style Kanban board with tickets, tags, members and attachments.",
+    changes: ["Add a horizontal Trello-style board with list creation, inline rename and recolour, list reordering, inline card creation, card drag reordering, scroll snapping and wheel scrolling.","Add a two-column ticket view with an editable title, description, tags, members, list movement and a header colour tinted by the ticket accent.","Add a board-level tag manager and searchable tag and member pickers, with removable chips and three demo members.","Add ticket comment threads and attachments on both tickets and comments, with open and download actions.","Add a backend-ready attachment API through onAttachmentUpload and onAttachmentRemove, including uploading and failed states while persisting only final attachments.","Improve drag ghosts, drag locking, text selection behaviour and keyboard-accessible list controls.","Publish opus-react 0.10.0."],
   }
 ].reverse();
 

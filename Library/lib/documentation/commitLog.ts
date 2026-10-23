@@ -1537,5 +1537,11 @@ export const commitLog: CommitEntry[] = [
     shortHash: "6ea070b",
     committedAt: "2026-10-23",
     summary: "feat(kanban): ticket and comment attachments with backend upload API",
+  },
+  {
+    hash: "f8b12cdc81abcb2ced077e2b60f5bc995b77dd8e",
+    shortHash: "f8b12cd",
+    committedAt: "2026-10-23",
+    summary: "chore: release opus-react@0.10.0",
   }
 ].reverse();
