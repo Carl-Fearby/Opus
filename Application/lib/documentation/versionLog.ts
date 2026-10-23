@@ -772,6 +772,14 @@ export const versionLog: VersionEntry[] = [
     commitShort: "358915a",
     summary: "Editable board title with prominent board chrome.",
     changes: ["Make the board title larger and more prominent above the lists.","Allow the title to be renamed inline by clicking it, with Enter to save, Escape to cancel, and blur to commit.","Add onBoardTitleChange for controlled persistence while keeping an uncontrolled title mode for local boards.","Publish opus-react 0.11.4."],
+  },
+  {
+    version: "0.11.5",
+    releasedAt: "2026-10-23",
+    commit: "c508e558d9d3e9c0a2ba64e0a42d038a43f87218",
+    commitShort: "c508e55",
+    summary: "Stable inline board title editing.",
+    changes: ["Match the board title's view and edit boxes in height and padding so clicking the title does not move the header or lists.","Keep the title text aligned between display and edit modes.","Publish opus-react 0.11.5."],
   }
 ].reverse();
 

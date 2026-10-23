@@ -1,6 +1,17 @@
 /** Curated opus-react release notes for npm publishes that only left chore commits in git. */
 export const releaseNotesOverlay = [
   {
+    version: "0.11.5",
+    releasedAt: "2026-10-23",
+    commit: "c508e558d9d3e9c0a2ba64e0a42d038a43f87218",
+    summary: "Stable inline board title editing.",
+    changes: [
+      "Match the board title's view and edit boxes in height and padding so clicking the title does not move the header or lists.",
+      "Keep the title text aligned between display and edit modes.",
+      "Publish opus-react 0.11.5.",
+    ],
+  },
+  {
     version: "0.11.4",
     releasedAt: "2026-10-23",
     commit: "358915ac7448f304998264ad92cda6b1d6f610df",

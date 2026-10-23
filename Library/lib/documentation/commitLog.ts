@@ -1639,5 +1639,11 @@ export const commitLog: CommitEntry[] = [
     shortHash: "b7413a4",
     committedAt: "2026-10-23",
     summary: "fix(kanban): prevent board title edit layout shift",
+  },
+  {
+    hash: "c508e558d9d3e9c0a2ba64e0a42d038a43f87218",
+    shortHash: "c508e55",
+    committedAt: "2026-10-23",
+    summary: "chore: release opus-react@0.11.5",
   }
 ].reverse();
