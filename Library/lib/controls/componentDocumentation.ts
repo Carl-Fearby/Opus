@@ -288,8 +288,10 @@ Trello-style board with draggable cards and lists on one horizontal track. Lists
 
 The ticket modal uses a two-column layout:
 
-- **Left:** editable title in the modal header, description, selected tags, assigned members, attachments, list selector, and header colour picker.
-- **Right:** the comment thread, comment composer, and comment attachments.
+- **Left:** editable title in the modal header, rich-text description, selected tags, assigned members, attachments, list selector, and header colour picker.
+- **Right:** the comment thread, rich-text comment composer, and comment attachments.
+
+Descriptions and comments use Opus \`RichTextField\`. Authors can format text, insert links and tables, and attach files or paste screenshots directly into the content. Inline files are uploaded through the same attachment adapter and embedded as image tags or download links.
 
 Selected tags are shown as removable chips; **Add tag** opens a searchable modal where new tags can also be created. **Add member** opens a searchable member picker with assign/unassign toggles.
 
@@ -309,7 +311,7 @@ Selected tags are shown as removable chips; **Add tag** opens a searchable modal
 | \`onCardTagsChange\` | \`(cardId, tagIds, card) => void\` | Called when tags are added or removed from a ticket. |
 | \`members\` / \`defaultMembers\` | \`KanbanMember[]\` | Controlled or initial board members. |
 | \`onCardAssigneesChange\` | \`(cardId, memberIds, card) => void\` | Called when members are assigned or unassigned. |
-| \`onAttachmentUpload\` | \`(file, context) => Promise<KanbanAttachment>\` | Uploads a ticket or comment file. Return the persisted attachment with its final URL. |
+| \`onAttachmentUpload\` | \`(file, context) => Promise<KanbanAttachment>\` | Uploads a ticket, description, or comment file. Return the persisted attachment with its final URL. Inline editor uploads use the same adapter. |
 | \`onAttachmentRemove\` | \`(attachment, context) => void \\| Promise<void>\` | Deletes a ticket attachment, or a finished comment-draft attachment, from storage. |
 | \`onCardAttachmentsChange\` | \`(cardId, attachments, card) => void\` | Full ticket attachment list after an attachment is added or removed. Persist this list. When \`onAttachmentUpload\` is supplied it fires after the upload resolves, never with local blob URLs. |
 
@@ -336,7 +338,9 @@ Ticket attachments and comment attachments both use the same \`KanbanAttachment\
 />
 \`\`\`
 
-\`context.target\` is \`"card"\` for ticket attachments and \`"comment"\` for comment-draft attachments. Comment files upload immediately, so a cancelled draft can leave an orphan until \`onAttachmentRemove\` runs. The board blocks comment submission while files upload or after a failure.
+\`context.target\` is \`"card"\` for ticket attachments, \`"description"\` for inline description files, and \`"comment"\` for comment composer files. Comment files upload immediately, so a cancelled draft can leave an orphan until \`onAttachmentRemove\` runs. The board blocks comment submission while files upload or after a failure.
+
+Inline images and files are stored inside the rich HTML rather than in \`onCardAttachmentsChange\`. Use the upload adapter to persist the file itself; removing an inline image from the editor does not automatically delete the stored file.
 
 Use \`url\` for opening and \`downloadUrl\` when the backend provides a Content-Disposition download endpoint. If no \`downloadUrl\` is supplied, the board downloads using \`url\`.
 
@@ -346,7 +350,7 @@ Use \`url\` for opening and \`downloadUrl\` when the backend provides a Content-
 
 ## Card and activity models
 
-\`KanbanCard\` supports \`title\`, \`meta\`, \`description\`, \`color\`, \`tone\`, \`comments\`, \`tagIds\`, \`assigneeIds\` and \`attachments\`. The \`color\` value is the ticket side-border colour.
+\`KanbanCard\` supports \`title\`, \`meta\`, rich HTML \`description\`, \`color\`, \`tone\`, \`comments\`, \`tagIds\`, \`assigneeIds\` and \`attachments\`. The \`color\` value is the ticket side-border colour. \`KanbanComment.body\` is also rich HTML.
 
 \`KanbanActivity\` is a discriminated union covering: \`list-created\`, \`list-updated\`, \`list-reordered\`, \`card-created\`, \`card-moved\`, \`card-updated\`, \`comment-added\`, \`tag-created\`, \`tag-updated\`, \`tag-deleted\`, \`card-tags-changed\`, \`card-assignees-changed\` and \`card-attachments-changed\`. Every event includes an ISO \`at\` timestamp and the relevant records or resulting collections.
 

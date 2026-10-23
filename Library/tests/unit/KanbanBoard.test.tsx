@@ -25,6 +25,12 @@ const columns: KanbanColumn[] = [
   { id: "doing", title: "Doing", cardIds: ["beta"] },
 ];
 
+function setRichText(label: string, html: string) {
+  const editor = screen.getByLabelText(label);
+  editor.innerHTML = html;
+  fireEvent.input(editor);
+}
+
 describe("KanbanBoard", () => {
   it("adds a new list through the add list composer", () => {
     const onChange = vi.fn();
@@ -50,16 +56,16 @@ describe("KanbanBoard", () => {
     expect(screen.getByRole("dialog")).toBeInTheDocument();
     expect(screen.getByText("Existing comment")).toBeInTheDocument();
 
-    fireEvent.change(screen.getByLabelText("Add a comment"), {
-      target: { value: "Looks good to me." },
-    });
+    setRichText("Add a comment", "<p>Looks good to me.</p>");
     fireEvent.click(screen.getByRole("button", { name: "Add comment" }));
 
     expect(onAddComment).toHaveBeenCalledWith(
       "alpha",
-      expect.objectContaining({ body: "Looks good to me.", author: "You" }),
+      expect.objectContaining({ body: "<p>Looks good to me.</p>", author: "You" }),
     );
-    expect(screen.getByText("Looks good to me.")).toBeInTheDocument();
+    expect(screen.getByRole("list", { name: "Comments" })).toHaveTextContent(
+      "Looks good to me.",
+    );
     expect(screen.getByRole("button", { name: "Open ticket for Alpha ticket, 2 comments" })).toBeInTheDocument();
   });
 
@@ -235,9 +241,7 @@ describe("KanbanBoard ticket view", () => {
     fireEvent.click(screen.getByRole("button", { name: "Open ticket for Alpha ticket, 1 comment" }));
     fireEvent.change(screen.getByLabelText("Ticket title"), { target: { value: "Alpha ticket revised" } });
     fireEvent.blur(screen.getByLabelText("Ticket title"));
-    fireEvent.change(screen.getByLabelText("Description"), {
-      target: { value: "Add acceptance criteria." },
-    });
+    setRichText("Description", "<p>Add acceptance criteria.</p>");
     fireEvent.blur(screen.getByLabelText("Description"));
 
     expect(onCardUpdate).toHaveBeenCalledWith(
@@ -247,8 +251,8 @@ describe("KanbanBoard ticket view", () => {
     );
     expect(onCardUpdate).toHaveBeenCalledWith(
       "alpha",
-      { description: "Add acceptance criteria." },
-      expect.objectContaining({ description: "Add acceptance criteria." }),
+      { description: "<p>Add acceptance criteria.</p>" },
+      expect.objectContaining({ description: "<p>Add acceptance criteria.</p>" }),
     );
   });
 
@@ -478,15 +482,13 @@ describe("KanbanBoard attachments", () => {
       expect.objectContaining({ cardId: "alpha", target: "comment" }),
     );
 
-    fireEvent.change(screen.getByLabelText("Add a comment"), {
-      target: { value: "See attached." },
-    });
+    setRichText("Add a comment", "<p>See attached.</p>");
     fireEvent.click(screen.getByRole("button", { name: "Add comment" }));
 
     expect(onAddComment).toHaveBeenCalledWith(
       "alpha",
       expect.objectContaining({
-        body: "See attached.",
+        body: "<p>See attached.</p>",
         attachments: [
           expect.objectContaining({
             id: "server-c1",
@@ -502,5 +504,68 @@ describe("KanbanBoard attachments", () => {
       "href",
       "https://cdn.example.com/screenshot.txt",
     );
+  });
+});
+
+describe("KanbanBoard rich text", () => {
+  it("uploads inline images for descriptions and comments", async () => {
+    const onAttachmentUpload = vi.fn(async (file: File) => ({
+      id: "inline-1",
+      mimeType: file.type,
+      name: file.name,
+      size: file.size,
+      url: "https://cdn.example.com/inline.png",
+    }));
+    const onCardUpdate = vi.fn();
+
+    render(
+      <KanbanBoard
+        cards={cards}
+        columns={columns}
+        onAttachmentUpload={onAttachmentUpload}
+        onCardUpdate={onCardUpdate}
+      />,
+    );
+
+    fireEvent.click(screen.getByRole("button", { name: "Open ticket for Alpha ticket, 1 comment" }));
+    const image = new File(["image"], "inline.png", { type: "image/png" });
+    const imageInputs = screen.getAllByLabelText("Insert images");
+
+    fireEvent.change(imageInputs[0], { target: { files: [image] } });
+    await waitFor(() => {
+      expect(onAttachmentUpload).toHaveBeenCalledWith(
+        image,
+        expect.objectContaining({ cardId: "alpha", target: "description" }),
+      );
+    });
+    await waitFor(() => {
+      expect(screen.getByLabelText("Description").querySelector("img")).toHaveAttribute(
+        "src",
+        "https://cdn.example.com/inline.png",
+      );
+    });
+
+    fireEvent.blur(screen.getByLabelText("Description"));
+    expect(onCardUpdate).toHaveBeenCalledWith(
+      "alpha",
+      { description: expect.stringContaining('src="https://cdn.example.com/inline.png"') },
+      expect.objectContaining({ id: "alpha" }),
+    );
+
+    fireEvent.change(screen.getAllByLabelText("Insert images")[1], {
+      target: { files: [image] },
+    });
+    await waitFor(() => {
+      expect(onAttachmentUpload).toHaveBeenCalledWith(
+        image,
+        expect.objectContaining({ cardId: "alpha", target: "comment" }),
+      );
+    });
+    await waitFor(() => {
+      expect(screen.getByLabelText("Add a comment").querySelector("img")).toHaveAttribute(
+        "src",
+        "https://cdn.example.com/inline.png",
+      );
+    });
   });
 });

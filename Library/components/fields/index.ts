@@ -92,7 +92,13 @@ export { RangeField } from "./RangeField";
 export { SelectField } from "./SelectField";
 export { SwitchField } from "./SwitchField";
 export { TextAreaField } from "./TextAreaField";
-export { RichTextField } from "./RichTextField";
+export {
+  isRichTextEmpty,
+  RichTextContent,
+  RichTextField,
+  sanitizeRichTextHtml,
+} from "./RichTextField";
+export type { RichTextAttachment } from "./RichTextField";
 export { TextField } from "./TextField";
 export type { TextFieldProps } from "./TextField";
 export { SearchBox } from "../SearchBox";

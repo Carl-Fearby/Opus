@@ -17,6 +17,7 @@ import { faChevronLeft, faChevronRight, faComment, faDownload, faFile, faGripVer
 import { createThemedPortal as createPortal } from "@/lib/theme/createThemedPortal";
 import { Button } from "@/components/fields/Button";
 import { ColorPickerPanel } from "@/components/fields/ColorPickerPanel";
+import { isRichTextEmpty, RichTextContent, RichTextField } from "@/components/fields/RichTextField";
 import { SelectField } from "@/components/fields/SelectField";
 import { CustomScrollbar } from "@/components/CustomScrollbar";
 import { Modal } from "@/components/Modal";
@@ -27,6 +28,7 @@ export type KanbanComment = {
   /** Files shared with this comment. */
   attachments?: KanbanAttachment[];
   author?: string;
+  /** Rich HTML from RichTextField. Render through RichTextContent or sanitise before display. */
   body: string;
   /** ISO timestamp. */
   createdAt?: string;
@@ -38,6 +40,7 @@ export type KanbanCard = {
   /** Legacy external metadata. Prefer tagIds for visible ticket labels. */
   meta?: string;
   tone?: "default" | "accent" | "success" | "warning" | "danger";
+  /** Rich HTML from RichTextField. Render through RichTextContent or sanitise before display. */
   description?: string;
   /** Optional side-border colour for the ticket. Falls back to the tone accent. */
   color?: string;
@@ -71,8 +74,8 @@ export type KanbanAttachment = {
 export type KanbanAttachmentContext = {
   card: KanbanCard;
   cardId: string;
-  /** Whether the file belongs to the ticket itself or a comment draft. */
-  target: "card" | "comment";
+  /** Whether the file belongs to the ticket itself, its description, or a comment draft. */
+  target: "card" | "comment" | "description";
 };
 
 export type KanbanMember = {
@@ -993,7 +996,7 @@ export function KanbanBoard({
   function addComment(event: { preventDefault: () => void }) {
     event.preventDefault();
     const card = resolvedActiveCardId ? cardLookup[resolvedActiveCardId] : null;
-    const body = commentDraft.trim();
+    const body = isRichTextEmpty(commentDraft) ? "" : commentDraft;
     const readyAttachments = commentAttachments.filter(
       (attachment) => attachment.status !== "uploading" && attachment.status !== "error",
     );
@@ -1269,6 +1272,31 @@ export function KanbanBoard({
   ) {
     onCardAttachmentsChangeRef.current?.(card.id, attachments, card);
     emitActivity({ type: "card-attachments-changed", attachments, card, cardId: card.id });
+  }
+
+  async function uploadInlineAttachment(
+    file: File,
+    card: KanbanCard,
+    target: "comment" | "description",
+  ) {
+    const upload = onAttachmentUploadRef.current;
+    if (upload) {
+      const uploaded = await upload(file, { card, cardId: card.id, target });
+      return {
+        mimeType: uploaded.mimeType,
+        name: uploaded.name,
+        url: uploaded.url,
+      };
+    }
+
+    return {
+      mimeType: file.type || undefined,
+      name: file.name,
+      url:
+        typeof URL !== "undefined" && "createObjectURL" in URL
+          ? URL.createObjectURL(file)
+          : "",
+    };
   }
 
   async function uploadCardAttachment(
@@ -2739,23 +2767,28 @@ export function KanbanBoard({
         >
           <div className={styles.ticketLayout} data-single={commentsEnabled ? undefined : "true"}>
             <section aria-label="Ticket details" className={styles.ticketDetails}>
-              <label className={styles.ticketField}>
-                <span>Description</span>
-                <textarea
-                  className={styles.ticketTextarea}
-                  onBlur={() => {
-                    if (ticketDescription !== (selectedCard.description ?? "")) {
-                      updateCard(selectedCard.id, {
-                        description: ticketDescription.trim() || undefined,
-                      });
-                    }
-                  }}
-                  onChange={(event) => setTicketDescription(event.target.value)}
-                  placeholder="Add context, acceptance notes, or links…"
-                  rows={5}
-                  value={ticketDescription}
-                />
-              </label>
+              <RichTextField
+                id={`${selectedCard.id}-ticket-description`}
+                label="Description"
+                minHeight={110}
+                mode="stacked"
+                onAttachmentUpload={(file) =>
+                  uploadInlineAttachment(file, selectedCard, "description")
+                }
+                onBlur={() => {
+                  if (ticketDescription !== (selectedCard.description ?? "")) {
+                    updateCard(selectedCard.id, {
+                      description: isRichTextEmpty(ticketDescription)
+                        ? undefined
+                        : ticketDescription,
+                    });
+                  }
+                }}
+                onChange={setTicketDescription}
+                placeholder="Add context, acceptance notes, or paste a screenshot…"
+                size="sm"
+                value={ticketDescription}
+              />
 
               <div className={styles.ticketTags}>
                 <div className={styles.ticketTagsHeader}>
@@ -3013,7 +3046,7 @@ export function KanbanBoard({
                               </time>
                             ) : null}
                           </div>
-                          {comment.body ? <p>{comment.body}</p> : null}
+                          {comment.body ? <RichTextContent html={comment.body} /> : null}
                           {comment.attachments?.length ? (
                             <div className={styles.commentAttachments}>
                               {comment.attachments.map((attachment) => (
@@ -3048,15 +3081,17 @@ export function KanbanBoard({
                   <p className={styles.commentEmpty}>No comments yet. Start the conversation.</p>
                 )}
                 <form className={styles.commentForm} onSubmit={addComment}>
-                  <label className={styles.commentLabel} htmlFor={commentFieldId}>
-                    Add a comment
-                  </label>
-                  <textarea
-                    className={styles.commentInput}
+                  <RichTextField
                     id={commentFieldId}
-                    onChange={(event) => setCommentDraft(event.target.value)}
-                    placeholder="Write a comment…"
-                    rows={3}
+                    label="Add a comment"
+                    minHeight={90}
+                    mode="stacked"
+                    onAttachmentUpload={(file) =>
+                      uploadInlineAttachment(file, selectedCard, "comment")
+                    }
+                    onChange={setCommentDraft}
+                    placeholder="Write a comment or paste a screenshot…"
+                    size="sm"
                     value={commentDraft}
                   />
                   {commentAttachments.length ? (
@@ -3117,7 +3152,7 @@ export function KanbanBoard({
                       </Button>
                       <Button
                         disabled={
-                          (!commentDraft.trim() && commentAttachments.length === 0) ||
+                          (isRichTextEmpty(commentDraft) && commentAttachments.length === 0) ||
                           commentAttachments.some((attachment) => attachment.status)
                         }
                         size="sm"

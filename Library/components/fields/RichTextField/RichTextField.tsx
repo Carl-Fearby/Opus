@@ -1,7 +1,16 @@
 "use client";
 
 import "@/lib/fontawesome";
-import { useCallback, useEffect, useLayoutEffect, useRef, useState } from "react";
+import {
+  useCallback,
+  useEffect,
+  useLayoutEffect,
+  useRef,
+  useState,
+  type ClipboardEvent as ReactClipboardEvent,
+  type DragEvent as ReactDragEvent,
+  type ReactNode,
+} from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import type { IconDefinition } from "@fortawesome/fontawesome-svg-core";
 import {
@@ -22,6 +31,7 @@ import {
   faMinus,
   faOutdent,
   faPalette,
+  faPaperclip,
   faQuoteRight,
   faRotateLeft,
   faRotateRight,
@@ -100,7 +110,18 @@ const stateCommands = [
   "justifyRight",
 ] as const;
 
+export type RichTextAttachment = {
+  mimeType?: string;
+  name?: string;
+  url: string;
+};
+
 type RichTextFieldProps = {
+  /** Upload a pasted, dropped or picked file and return the final URL to embed. */
+  onAttachmentUpload?: (
+    file: File,
+  ) => Promise<RichTextAttachment | null> | RichTextAttachment | null;
+  onBlur?: () => void;
   radius?: ControlRadius;
   transparency?: import("../types").ControlTransparency;
   gradient?: boolean;
@@ -124,6 +145,23 @@ function normaliseBlock(value: string) {
   return cleaned === "div" || cleaned === "" ? "p" : cleaned;
 }
 
+function escapeHtml(value: string) {
+  return value
+    .replaceAll("&", "&amp;")
+    .replaceAll("<", "&lt;")
+    .replaceAll(">", "&gt;")
+    .replaceAll('"', "&quot;");
+}
+
+function buildAttachmentHtml(attachment: RichTextAttachment) {
+  const name = escapeHtml(attachment.name ?? "Attachment");
+  const url = escapeHtml(attachment.url);
+  if (attachment.mimeType?.startsWith("image/")) {
+    return `<img src="${url}" alt="${name}" />`;
+  }
+  return `<a href="${url}" rel="noreferrer" target="_blank">${name}</a>`;
+}
+
 function buildTableHtml(rows: number, cols: number) {
   const bodyRows: string[] = [];
   for (let r = 0; r < rows; r += 1) {
@@ -144,6 +182,8 @@ export function RichTextField({
   labelPosition = "left",
   minHeight = 180,
   mode = "stacked",
+  onAttachmentUpload,
+  onBlur,
   placeholder,
   readOnly = false,
   required,
@@ -156,6 +196,8 @@ export function RichTextField({
 }: RichTextFieldProps) {
   const shellAria = useFieldShellAria();
   const editorRef = useRef<HTMLDivElement>(null);
+  const fileInputRef = useRef<HTMLInputElement>(null);
+  const imageInputRef = useRef<HTMLInputElement>(null);
   const syncingValueRef = useRef(false);
   const savedRangeRef = useRef<Range | null>(null);
   const [activeCommands, setActiveCommands] = useState<Record<string, boolean>>({});
@@ -167,6 +209,7 @@ export function RichTextField({
   const [tableModalOpen, setTableModalOpen] = useState(false);
   const [tableRows, setTableRows] = useState(2);
   const [tableCols, setTableCols] = useState(2);
+  const [uploading, setUploading] = useState(0);
 
   const syncHistoryState = useCallback(() => {
     if (typeof document === "undefined") {
@@ -346,16 +389,116 @@ export function RichTextField({
     execWithSelection("createLink", url);
   }, [execWithSelection, linkUrl]);
 
-  const insertImage = useCallback(() => {
-    if (readOnly) {
-      return;
-    }
-    const url = window.prompt("Image URL");
-    if (!url) {
-      return;
-    }
-    exec("insertImage", url);
-  }, [exec, readOnly]);
+  const insertHtmlAtSelection = useCallback(
+    (html: string) => {
+      if (readOnly || !html) {
+        return;
+      }
+      restoreSelection();
+      if (typeof document.execCommand === "function") {
+        document.execCommand("insertHTML", false, html);
+      } else {
+        const editor = editorRef.current;
+        const selection = document.getSelection();
+        if (editor && selection) {
+          const range =
+            selection.rangeCount > 0
+              ? selection.getRangeAt(0)
+              : document.createRange();
+          if (selection.rangeCount === 0) {
+            range.selectNodeContents(editor);
+            range.collapse(false);
+          }
+          range.deleteContents();
+          const template = document.createElement("template");
+          template.innerHTML = html;
+          range.insertNode(template.content.cloneNode(true));
+          const nextRange = document.createRange();
+          nextRange.selectNodeContents(editor);
+          nextRange.collapse(false);
+          selection.removeAllRanges();
+          selection.addRange(nextRange);
+        }
+      }
+      saveSelection();
+      syncToolbarState();
+      emitChange();
+    },
+    [emitChange, readOnly, restoreSelection, saveSelection, syncToolbarState],
+  );
+
+  const uploadFiles = useCallback(
+    async (files: File[]) => {
+      if (readOnly || !onAttachmentUpload || files.length === 0) {
+        return;
+      }
+      saveSelection();
+      setUploading((count) => count + files.length);
+      for (const file of files) {
+        try {
+          const attachment = await onAttachmentUpload(file);
+          if (attachment) {
+            insertHtmlAtSelection(buildAttachmentHtml(attachment));
+          }
+        } catch {
+          // Leave the editor untouched so the author can retry.
+        } finally {
+          setUploading((count) => Math.max(0, count - 1));
+        }
+      }
+    },
+    [insertHtmlAtSelection, onAttachmentUpload, readOnly, saveSelection],
+  );
+
+  const openAttachmentPicker = useCallback(
+    (kind: "file" | "image") => {
+      if (readOnly || !onAttachmentUpload) {
+        return;
+      }
+      saveSelection();
+      if (kind === "image") {
+        imageInputRef.current?.click();
+      } else {
+        fileInputRef.current?.click();
+      }
+    },
+    [onAttachmentUpload, readOnly, saveSelection],
+  );
+
+  const handlePaste = useCallback(
+    (event: ReactClipboardEvent<HTMLDivElement>) => {
+      const files = Array.from(event.clipboardData.files ?? []);
+      if (files.length === 0) {
+        return;
+      }
+      event.preventDefault();
+      saveSelection();
+      void uploadFiles(files);
+    },
+    [saveSelection, uploadFiles],
+  );
+
+  const handleDrop = useCallback(
+    (event: ReactDragEvent<HTMLDivElement>) => {
+      const files = Array.from(event.dataTransfer.files ?? []);
+      if (files.length === 0) {
+        return;
+      }
+      event.preventDefault();
+      const range =
+        typeof document.caretRangeFromPoint === "function"
+          ? document.caretRangeFromPoint(event.clientX, event.clientY)
+          : null;
+      const editor = editorRef.current;
+      if (range && editor?.contains(range.startContainer)) {
+        savedRangeRef.current = range.cloneRange();
+      } else {
+        saveSelection();
+      }
+      void uploadFiles(files);
+    },
+    [saveSelection, uploadFiles],
+  );
 
   const openTableModal = useCallback(() => {
     if (readOnly) {
@@ -553,10 +696,16 @@ export function RichTextField({
             <ToolbarButton icon={faLink} label="Insert link" onPress={openLinkModal} />
             <ToolbarButton icon={faLinkSlash} label="Remove link" onPress={() => exec("unlink")} />
             <ToolbarButton
-              disabled
+              disabled={!onAttachmentUpload}
               icon={faImage}
-              label="Insert image (coming soon)"
-              onPress={insertImage}
+              label="Insert image"
+              onPress={() => openAttachmentPicker("image")}
+            />
+            <ToolbarButton
+              disabled={!onAttachmentUpload}
+              icon={faPaperclip}
+              label="Attach file"
+              onPress={() => openAttachmentPicker("file")}
             />
             <ToolbarButton icon={faTable} label="Insert table" onPress={openTableModal} />
             <ToolbarButton
@@ -571,7 +720,35 @@ export function RichTextField({
               onPress={() => exec("removeFormat")}
             />
           </div>
+          <input
+            aria-label="Insert images"
+            accept="image/*"
+            className={styles.hiddenInput}
+            multiple
+            onChange={(event) => {
+              const files = Array.from(event.target.files ?? []);
+              event.target.value = "";
+              if (files.length) void uploadFiles(files);
+            }}
+            ref={imageInputRef}
+            style={{ display: "none" }}
+            type="file"
+          />
+          <input
+            aria-label="Attach files"
+            className={styles.hiddenInput}
+            multiple
+            onChange={(event) => {
+              const files = Array.from(event.target.files ?? []);
+              event.target.value = "";
+              if (files.length) void uploadFiles(files);
+            }}
+            ref={fileInputRef}
+            style={{ display: "none" }}
+            type="file"
+          />
           <div
+            aria-busy={uploading > 0 || undefined}
             aria-label={label}
             aria-multiline="true"
             aria-readonly={readOnly || undefined}
@@ -583,11 +760,24 @@ export function RichTextField({
             role="textbox"
             style={{ minHeight }}
             suppressContentEditableWarning
+            onBlur={onBlur}
+            onDragOver={(event) => {
+              if (event.dataTransfer.types.includes("Files")) {
+                event.preventDefault();
+              }
+            }}
+            onDrop={handleDrop}
             onInput={emitChange}
             onKeyUp={syncToolbarState}
             onMouseUp={syncToolbarState}
+            onPaste={handlePaste}
             {...fieldInputAriaProps(shellAria, { invalid: Boolean(error) })}
           />
+          {uploading > 0 ? (
+            <span className={styles.uploadStatus} role="status">
+              Uploading {uploading === 1 ? "file" : "files"}…
+            </span>
+          ) : null}
         </div>
 
         {linkModalOpen ? (
@@ -722,5 +912,207 @@ export function RichTextField({
         ) : null}
       </div>
     </FieldShell>
+  );
+}
+
+const RICH_TEXT_ALLOWED_TAGS = new Set([
+  "a",
+  "b",
+  "blockquote",
+  "br",
+  "code",
+  "div",
+  "em",
+  "font",
+  "h1",
+  "h2",
+  "h3",
+  "hr",
+  "i",
+  "img",
+  "li",
+  "ol",
+  "p",
+  "pre",
+  "s",
+  "span",
+  "strike",
+  "strong",
+  "sub",
+  "sup",
+  "table",
+  "tbody",
+  "td",
+  "th",
+  "thead",
+  "tr",
+  "u",
+  "ul",
+]);
+
+const RICH_TEXT_DANGEROUS_TAGS = new Set([
+  "embed",
+  "iframe",
+  "link",
+  "meta",
+  "object",
+  "script",
+  "style",
+]);
+
+const RICH_TEXT_ALLOWED_ATTRIBUTES = new Set([
+  "alt",
+  "color",
+  "colspan",
+  "height",
+  "href",
+  "rel",
+  "rowspan",
+  "size",
+  "src",
+  "style",
+  "target",
+  "title",
+  "width",
+]);
+
+const RICH_TEXT_ALLOWED_STYLE_PROPERTIES = new Set([
+  "background-color",
+  "color",
+  "font-size",
+  "font-style",
+  "font-weight",
+  "text-align",
+  "text-decoration",
+  "text-decoration-line",
+]);
+
+function isSafeRichTextUrl(value: string, allowImageData = false) {
+  const url = value.trim();
+  if (!url) return false;
+  if (/^(javascript|vbscript):/i.test(url)) return false;
+  if (url.startsWith("#") || url.startsWith("/")) return true;
+  if (/^(https?:|mailto:|tel:|blob:)/i.test(url)) return true;
+  return allowImageData && /^data:image\/(png|jpe?g|gif|webp);base64,/i.test(url);
+}
+
+function sanitizeStyleValue(value: string) {
+  return value
+    .split(";")
+    .map((entry) => entry.trim())
+    .filter(Boolean)
+    .filter((entry) => {
+      const [property, rawValue = ""] = entry.split(":");
+      const name = property?.trim().toLowerCase() ?? "";
+      const cssValue = rawValue.trim().toLowerCase();
+      return (
+        RICH_TEXT_ALLOWED_STYLE_PROPERTIES.has(name) &&
+        !cssValue.includes("url(") &&
+        !cssValue.includes("expression(") &&
+        !cssValue.includes("javascript:")
+      );
+    })
+    .join("; ");
+}
+
+/** Sanitises editor HTML before it is rendered outside the editor. */
+export function sanitizeRichTextHtml(html: string) {
+  if (!html || typeof DOMParser === "undefined") {
+    return "";
+  }
+
+  const documentNode = new DOMParser().parseFromString(`<div>${html}</div>`, "text/html");
+  const root = documentNode.body.firstElementChild;
+  if (!root) return "";
+
+  const clean = (node: Node) => {
+    if (node.nodeType === Node.COMMENT_NODE) {
+      node.parentNode?.removeChild(node);
+      return;
+    }
+    if (node.nodeType !== Node.ELEMENT_NODE) {
+      return;
+    }
+
+    const element = node as HTMLElement;
+    const tag = element.tagName.toLowerCase();
+    if (RICH_TEXT_DANGEROUS_TAGS.has(tag)) {
+      element.remove();
+      return;
+    }
+
+    Array.from(element.childNodes).forEach(clean);
+
+    if (!RICH_TEXT_ALLOWED_TAGS.has(tag)) {
+      element.replaceWith(...Array.from(element.childNodes));
+      return;
+    }
+
+    Array.from(element.attributes).forEach((attribute) => {
+      const name = attribute.name.toLowerCase();
+      if (name.startsWith("on") || !RICH_TEXT_ALLOWED_ATTRIBUTES.has(name)) {
+        element.removeAttribute(attribute.name);
+        return;
+      }
+      if (name === "href" && !isSafeRichTextUrl(attribute.value)) {
+        element.removeAttribute(attribute.name);
+      }
+      if (name === "src" && !isSafeRichTextUrl(attribute.value, true)) {
+        element.removeAttribute(attribute.name);
+      }
+      if (name === "style") {
+        const style = sanitizeStyleValue(attribute.value);
+        if (style) element.setAttribute("style", style);
+        else element.removeAttribute("style");
+      }
+    });
+
+    if (tag === "a") {
+      element.setAttribute("rel", "noopener noreferrer");
+    }
+    if (tag === "img") {
+      element.setAttribute("loading", "lazy");
+    }
+  };
+
+  Array.from(root.childNodes).forEach(clean);
+  return root.innerHTML;
+}
+
+/** True when rich content has no visible text, image, rule or table. */
+export function isRichTextEmpty(html: string | null | undefined) {
+  if (!html) return true;
+  const text = html
+    .replace(/<[^>]*>/g, " ")
+    .replace(/&nbsp;|&#160;/gi, " ")
+    .replace(/\s+/g, " ")
+    .trim();
+  return text.length === 0 && !/<(img|hr|table|video|audio)\b/i.test(html);
+}
+
+export function RichTextContent({
+  className,
+  emptyFallback = null,
+  html,
+}: {
+  className?: string;
+  emptyFallback?: ReactNode;
+  html: string;
+}) {
+  const [safeHtml, setSafeHtml] = useState("");
+
+  useEffect(() => {
+    setSafeHtml(sanitizeRichTextHtml(html));
+  }, [html]);
+
+  if (isRichTextEmpty(safeHtml)) {
+    return <>{emptyFallback}</>;
+  }
+
+  return (
+    <div
+      className={[styles.content, className].filter(Boolean).join(" ")}
+      dangerouslySetInnerHTML={{ __html: safeHtml }}
+    />
   );
 }

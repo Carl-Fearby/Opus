@@ -427,3 +427,114 @@
   opacity: 0.5;
   cursor: not-allowed;
 }
+
+.hiddenInput {
+  display: none;
+}
+
+.uploadStatus {
+  padding: 0 12px 8px;
+  color: var(--opus-muted);
+  font-size: 0.7rem;
+  font-weight: 650;
+}
+
+.content {
+  min-width: 0;
+  color: inherit;
+  font: inherit;
+  line-height: 1.55;
+  overflow-wrap: anywhere;
+}
+
+.content > :first-child {
+  margin-top: 0;
+}
+
+.content > :last-child {
+  margin-bottom: 0;
+}
+
+.content p {
+  margin: 0 0 0.65em;
+}
+
+.content h1,
+.content h2,
+.content h3 {
+  margin: 0.8em 0 0.4em;
+  font-size: 1em;
+  line-height: 1.3;
+}
+
+.content h1 {
+  font-size: 1.18em;
+}
+
+.content h2 {
+  font-size: 1.08em;
+}
+
+.content ul,
+.content ol {
+  margin: 0.35em 0 0.7em;
+  padding-left: 1.3em;
+}
+
+.content blockquote {
+  margin: 0.5em 0;
+  padding-left: 0.8em;
+  border-left: 2px solid color-mix(in srgb, var(--opus-accent) 42%, transparent);
+  color: var(--opus-muted);
+}
+
+.content pre {
+  overflow-x: auto;
+  padding: 8px 10px;
+  border-radius: var(--opus-input-radius-small);
+  background: color-mix(in srgb, var(--opus-panel) 82%, transparent);
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
+  font-size: 0.78em;
+}
+
+.content code {
+  padding: 1px 4px;
+  border-radius: 4px;
+  background: color-mix(in srgb, var(--opus-panel) 82%, transparent);
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
+  font-size: 0.86em;
+}
+
+.content a {
+  color: var(--opus-accent);
+  text-underline-offset: 2px;
+}
+
+.content img {
+  display: block;
+  max-width: 100%;
+  height: auto;
+  margin: 0.5em 0;
+  border: 1px solid var(--opus-surface-border, var(--opus-border));
+  border-radius: var(--opus-input-radius-small);
+}
+
+.content table {
+  width: 100%;
+  margin: 0.6em 0;
+  border-collapse: collapse;
+  font-size: 0.92em;
+}
+
+.content td,
+.content th {
+  padding: 5px 7px;
+  border: 1px solid var(--opus-surface-border, var(--opus-border));
+  text-align: left;
+}
+
+.content hr {
+  margin: 0.8em 0;
+  border: 0;
+  border-top: 1px solid var(--opus-surface-border, var(--opus-border));
+}
