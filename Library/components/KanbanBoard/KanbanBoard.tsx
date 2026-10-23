@@ -19,7 +19,6 @@ import { Button } from "@/components/fields/Button";
 import { ColorPickerPanel } from "@/components/fields/ColorPickerPanel";
 import { isRichTextEmpty, RichTextContent, RichTextField } from "@/components/fields/RichTextField";
 import { SelectField } from "@/components/fields/SelectField";
-import { CustomScrollbar } from "@/components/CustomScrollbar";
 import { Modal } from "@/components/Modal";
 import styles from "./KanbanBoard.module.css";
 
@@ -137,6 +136,8 @@ export type KanbanColumn = {
 export type KanbanBoardProps = {
   /** Controlled open card/ticket. */
   activeCardId?: string | null;
+  /** Board name shown above the lists. */
+  boardTitle?: string;
   /** Board members available for assignment. */
   members?: KanbanMember[];
   /** Label for the new-card composer trigger. */
@@ -494,6 +495,7 @@ function resolveDropLanding(
 export function KanbanBoard({
   addCardLabel = "Add a card",
   addColumnLabel = "Add list",
+  boardTitle = "Kanban board",
   cards,
   columnColors = DEFAULT_COLUMN_COLORS,
   columnWidth,
@@ -1891,7 +1893,8 @@ export function KanbanBoard({
 
   return (
     <div className={styles.shell}>
-      {tagManager || scrollInfo.max > 1 ? (
+      <div className={styles.boardHeader}>
+        <h2 className={styles.boardTitle}>{boardTitle}</h2>
         <div className={styles.boardToolbar}>
           {tagManager ? (
             <div className={styles.tagManagerWrap} ref={tagManagerRef}>
@@ -2058,33 +2061,31 @@ export function KanbanBoard({
               ) : null}
             </div>
           ) : null}
-          {scrollInfo.max > 1 ? (
-            <div className={styles.scrollControls}>
-              <button
-                aria-label="Scroll board left"
-                className={styles.scrollButton}
-                disabled={scrollInfo.left <= 1}
-                onClick={() => scrollBoard(-1)}
-                type="button"
-              >
-                <FontAwesomeIcon icon={faChevronLeft} />
-              </button>
-              <button
-                aria-label="Scroll board right"
-                className={styles.scrollButton}
-                disabled={scrollInfo.left >= scrollInfo.max - 1}
-                onClick={() => scrollBoard(1)}
-                type="button"
-              >
-                <FontAwesomeIcon icon={faChevronRight} />
-              </button>
-            </div>
-          ) : null}
+          <div className={styles.scrollControls}>
+            <button
+              aria-label="Scroll board left"
+              className={styles.scrollButton}
+              disabled={scrollInfo.left <= 1}
+              onClick={() => scrollBoard(-1)}
+              type="button"
+            >
+              <FontAwesomeIcon icon={faChevronLeft} />
+            </button>
+            <button
+              aria-label="Scroll board right"
+              className={styles.scrollButton}
+              disabled={scrollInfo.left >= scrollInfo.max - 1}
+              onClick={() => scrollBoard(1)}
+              type="button"
+            >
+              <FontAwesomeIcon icon={faChevronRight} />
+            </button>
+          </div>
         </div>
-      ) : null}
+      </div>
       <div
         className={styles.root}
-        aria-label="Kanban board"
+        aria-label={boardTitle}
         data-column-dragging={columnDrag ? "true" : undefined}
         data-column-dropping={columnDrag?.phase === "dropping" ? "true" : undefined}
         data-dragging={drag ? "true" : undefined}
@@ -2225,16 +2226,7 @@ export function KanbanBoard({
               ) : null}
               <span className={styles.count}>{column.cardIds.length}</span>
             </header>
-            <CustomScrollbar
-              autoHide
-              className={styles.cardsScroll}
-              label={`${column.title} cards`}
-              orientation="vertical"
-              thickness={8}
-              trackInset={4}
-              viewportSelector="[data-kanban-cards-viewport]"
-            >
-              <div className={styles.cardsViewport} data-kanban-cards-viewport="">
+            <div className={styles.cardsViewport} data-kanban-cards-viewport="">
                 <ul className={styles.cards} data-kanban-cards="true">
                   {drag?.phase === "dragging" && !atHome && dropIndex === 0 ? (
                     <li
@@ -2488,7 +2480,6 @@ export function KanbanBoard({
                   </div>
                 ) : null}
               </div>
-            </CustomScrollbar>
           </section>
         );
       })}

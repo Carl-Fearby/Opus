@@ -569,3 +569,21 @@ describe("KanbanBoard rich text", () => {
     });
   });
 });
+
+describe("KanbanBoard board chrome", () => {
+  it("shows the board name, tag manager and scroll controls before any tags exist", () => {
+    render(<KanbanBoard cards={cards} columns={columns} tags={[]} />);
+
+    expect(screen.getByRole("heading", { name: "Kanban board" })).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: /Tags/ })).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "Scroll board left" })).toBeDisabled();
+    expect(screen.getByRole("button", { name: "Scroll board right" })).toBeDisabled();
+  });
+
+  it("supports a custom board title", () => {
+    render(<KanbanBoard boardTitle="Product roadmap" cards={cards} columns={columns} />);
+
+    expect(screen.getByRole("heading", { name: "Product roadmap" })).toBeInTheDocument();
+    expect(screen.getByLabelText("Product roadmap")).toBeInTheDocument();
+  });
+});
