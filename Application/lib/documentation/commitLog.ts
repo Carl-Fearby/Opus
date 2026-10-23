@@ -1699,5 +1699,17 @@ export const commitLog: CommitEntry[] = [
     shortHash: "2b0ff3b",
     committedAt: "2026-10-23",
     summary: "chore: release opus-react@0.11.8",
+  },
+  {
+    hash: "3adf9ef8c8db9a5db6ad6825e74dec205d732d8c",
+    shortHash: "3adf9ef",
+    committedAt: "2026-10-23",
+    summary: "docs: publish opus-react 0.11.7 and 0.11.8 release notes",
+  },
+  {
+    hash: "8e378f939ae62955a9b33d2bae7a9350f9127cf8",
+    shortHash: "8e378f9",
+    committedAt: "2026-10-23",
+    summary: "fix(kanban): expand inline drop zones and settle cards instantly",
   }
 ].reverse();
