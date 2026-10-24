@@ -355,4 +355,12 @@ export const uiMessagesEs: Record<string, string> = {
   "preview.close": "Cerrar",
   "preview.saveTheme": "Guardar tema",
   "preview.full": "Completo",
+  "marketing.version.eyebrow": "Notas de la versión de opus-react",
+  "marketing.version.title": "Todo lo que publicamos, explicado.",
+  "marketing.version.description": "La versión {version} está vigente. Cada versión enumera todos los cambios del producto, seguidos del registro completo de confirmaciones de código fuente del proyecto.",
+  "marketing.version.publishedPackages": "Paquetes publicados",
+  "marketing.version.releaseHistory": "Historial de versiones",
+  "marketing.version.releaseHistoryDescription": "Las notas detalladas describen qué se añadió, cambió, corrigió o mejoró en cada versión.",
+  "marketing.version.commitDescription": "Abre la cronología para ver el registro Git enlazado exacto de cada implementación, prueba, corrección y cambio de versión.",
+  "marketing.version.viewCommits": "Ver las {count} confirmaciones",
 };

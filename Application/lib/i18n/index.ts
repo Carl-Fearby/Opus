@@ -497,6 +497,15 @@ const en = {
   "marketing.whyOpus.title": "Built in the open, because useful work should last.",
   "marketing.whyOpus.body": "Opus is Carl Fearby’s way of sharing decades of interface work with the wider web community—free to use, open to critique, and made without a commercial agenda.",
   "marketing.whyOpus.link": "Read why Opus exists",
+
+  "marketing.version.eyebrow": "opus-react release notes",
+  "marketing.version.title": "Everything we ship, explained.",
+  "marketing.version.description": "Version {version} is current. Each release lists every product change, followed by the complete source-commit record behind the project.",
+  "marketing.version.publishedPackages": "Published packages",
+  "marketing.version.releaseHistory": "Release history",
+  "marketing.version.releaseHistoryDescription": "Detailed notes describe what was added, changed, fixed, or improved in each version.",
+  "marketing.version.commitDescription": "Open the timeline to see the exact linked Git record for every implementation, test, fix, and release change.",
+  "marketing.version.viewCommits": "View all {count} commits",
 } as const;
 
 export type MessageKey = keyof typeof en;

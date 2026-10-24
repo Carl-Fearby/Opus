@@ -355,4 +355,12 @@ export const uiMessagesRu: Record<string, string> = {
   "preview.close": "Закрыть",
   "preview.saveTheme": "Сохранить тему",
   "preview.full": "Полный",
+  "marketing.version.eyebrow": "Примечания к выпуску opus-react",
+  "marketing.version.title": "Всё, что мы выпускаем, с пояснениями.",
+  "marketing.version.description": "Текущая версия — {version}. В каждом выпуске перечислены все изменения продукта, а затем полная история коммитов исходного кода проекта.",
+  "marketing.version.publishedPackages": "Опубликованные пакеты",
+  "marketing.version.releaseHistory": "История выпусков",
+  "marketing.version.releaseHistoryDescription": "Подробные примечания описывают, что было добавлено, изменено, исправлено или улучшено в каждой версии.",
+  "marketing.version.commitDescription": "Откройте хронологию, чтобы увидеть точную связанную запись Git для каждой реализации, теста, исправления и изменения выпуска.",
+  "marketing.version.viewCommits": "Показать все коммиты ({count})",
 };

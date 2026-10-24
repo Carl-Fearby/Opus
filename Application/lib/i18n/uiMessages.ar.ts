@@ -355,4 +355,12 @@ export const uiMessagesAr: Record<string, string> = {
   "preview.close": "إغلاق",
   "preview.saveTheme": "حفظ السمة",
   "preview.full": "كامل",
+  "marketing.version.eyebrow": "ملاحظات إصدار opus-react",
+  "marketing.version.title": "كل ما نطلقه، موضّحًا.",
+  "marketing.version.description": "الإصدار الحالي هو {version}. يسرد كل إصدار جميع تغييرات المنتج، يليه سجل الالتزامات الكامل لكود المصدر الخاص بالمشروع.",
+  "marketing.version.publishedPackages": "الحزم المنشورة",
+  "marketing.version.releaseHistory": "سجل الإصدارات",
+  "marketing.version.releaseHistoryDescription": "تصف الملاحظات التفصيلية ما تمت إضافته أو تغييره أو إصلاحه أو تحسينه في كل إصدار.",
+  "marketing.version.commitDescription": "افتح المخطط الزمني لرؤية سجل Git الدقيق والمرتبط لكل تنفيذ واختبار وإصلاح وتغيير إصدار.",
+  "marketing.version.viewCommits": "عرض جميع الالتزامات ({count})",
 };

@@ -355,4 +355,12 @@ export const uiMessagesBn: Record<string, string> = {
   "preview.close": "বন্ধ করুন",
   "preview.saveTheme": "থিম সংরক্ষণ করুন",
   "preview.full": "পূর্ণ",
+  "marketing.version.eyebrow": "opus-react রিলিজ নোট",
+  "marketing.version.title": "আমরা যা প্রকাশ করি, তার ব্যাখ্যা।",
+  "marketing.version.description": "বর্তমান সংস্করণ {version}। প্রতিটি রিলিজে পণ্যের সব পরিবর্তন তালিকাভুক্ত থাকে, তারপর প্রকল্পের সম্পূর্ণ সোর্স-কমিট রেকর্ড থাকে।",
+  "marketing.version.publishedPackages": "প্রকাশিত প্যাকেজ",
+  "marketing.version.releaseHistory": "রিলিজ ইতিহাস",
+  "marketing.version.releaseHistoryDescription": "বিস্তারিত নোটে বর্ণিত হয় প্রতিটি সংস্করণে কী যোগ, পরিবর্তন, সংশোধন বা উন্নতি করা হয়েছে।",
+  "marketing.version.commitDescription": "প্রতিটি বাস্তবায়ন, পরীক্ষা, সংশোধন ও রিলিজ পরিবর্তনের সঠিক লিঙ্কযুক্ত Git রেকর্ড দেখতে টাইমলাইন খুলুন।",
+  "marketing.version.viewCommits": "সব {count}টি কমিট দেখুন",
 };

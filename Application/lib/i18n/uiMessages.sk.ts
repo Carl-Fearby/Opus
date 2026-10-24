@@ -355,4 +355,12 @@ export const uiMessagesSk: Record<string, string> = {
   "preview.close": "Zavrieť",
   "preview.saveTheme": "Uložiť motív",
   "preview.full": "Úplný",
+  "marketing.version.eyebrow": "Poznámky k vydaniu opus-react",
+  "marketing.version.title": "Všetko, čo vydávame, vysvetlené.",
+  "marketing.version.description": "Aktuálna verzia je {version}. Každé vydanie uvádza všetky zmeny produktu a za nimi kompletný záznam commitov zdrojového kódu projektu.",
+  "marketing.version.publishedPackages": "Publikované balíčky",
+  "marketing.version.releaseHistory": "História vydaní",
+  "marketing.version.releaseHistoryDescription": "Podrobné poznámky opisujú, čo bolo v jednotlivých verziách pridané, zmenené, opravené alebo vylepšené.",
+  "marketing.version.commitDescription": "Otvorte časovú os a zobrazte presný prepojený záznam Git pre každú implementáciu, test, opravu a zmenu vydania.",
+  "marketing.version.viewCommits": "Zobraziť všetkých {count} commitov",
 };

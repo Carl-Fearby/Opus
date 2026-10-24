@@ -1783,5 +1783,17 @@ export const commitLog: CommitEntry[] = [
     shortHash: "14cc6dd",
     committedAt: "2026-10-24",
     summary: "fix(i18n): translate navigation groups and relationships page",
+  },
+  {
+    hash: "1de468015d2660451a6b81a53f2c4e6a2290a7dc",
+    shortHash: "1de4680",
+    committedAt: "2026-10-24",
+    summary: "feat(i18n): add top spoken languages with full translations",
+  },
+  {
+    hash: "fd1cb8c12dcce08000d85ba8d77bbef41e1c7acc",
+    shortHash: "fd1cb8c",
+    committedAt: "2026-10-24",
+    summary: "feat(i18n): translate remaining site pages and UI chrome",
   }
 ].reverse();

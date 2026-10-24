@@ -355,4 +355,12 @@ export const uiMessagesFr: Record<string, string> = {
   "marketing.whyOpus.body": "Opus est la façon dont Carl Fearby partage des décennies de travail d’interface avec l’ensemble de la communauté web — gratuit, ouvert à la critique et créé sans agenda commercial.",
   "marketing.whyOpus.link": "Lire pourquoi Opus existe",
   "preview.full": "Complet",
+  "marketing.version.eyebrow": "Notes de version opus-react",
+  "marketing.version.title": "Tout ce que nous livrons, expliqué.",
+  "marketing.version.description": "La version {version} est actuelle. Chaque version répertorie toutes les évolutions du produit, suivies du relevé complet des commits source du projet.",
+  "marketing.version.publishedPackages": "Paquets publiés",
+  "marketing.version.releaseHistory": "Historique des versions",
+  "marketing.version.releaseHistoryDescription": "Les notes détaillées décrivent ce qui a été ajouté, modifié, corrigé ou amélioré dans chaque version.",
+  "marketing.version.commitDescription": "Ouvrez la chronologie pour voir le relevé Git exact et lié de chaque implémentation, test, correction et changement de version.",
+  "marketing.version.viewCommits": "Voir les {count} commits",
 };

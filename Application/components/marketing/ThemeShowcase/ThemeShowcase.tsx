@@ -30,7 +30,7 @@ export function ThemeShowcase({ componentCount }: ThemeShowcaseProps) {
         </div>
 
         <div className={styles.snapshots}>
-          {themes.map(({ label, name, theme }) => (
+          {themes.map(({ label, theme }) => (
             <OpusThemeProvider applyToDocument={false} key={theme} theme={theme}>
               <article className={styles.snapshot} data-theme={theme}>
                 <header className={styles.snapshotHeader}>

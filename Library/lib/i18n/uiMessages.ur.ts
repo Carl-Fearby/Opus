@@ -355,4 +355,12 @@ export const uiMessagesUr: Record<string, string> = {
   "preview.close": "بند کریں",
   "preview.saveTheme": "تھیم محفوظ کریں",
   "preview.full": "مکمل",
+  "marketing.version.eyebrow": "opus-react ریلیز نوٹس",
+  "marketing.version.title": "ہم جو کچھ جاری کرتے ہیں، اس کی وضاحت۔",
+  "marketing.version.description": "موجودہ ورژن {version} ہے۔ ہر ریلیز میں پروڈکٹ کی تمام تبدیلیاں درج ہوتی ہیں، اس کے بعد پروجیکٹ کے مکمل سورس کمٹ کا ریکارڈ ہوتا ہے۔",
+  "marketing.version.publishedPackages": "شائع شدہ پیکیجز",
+  "marketing.version.releaseHistory": "ریلیز کی تاریخ",
+  "marketing.version.releaseHistoryDescription": "تفصیلی نوٹس بتاتے ہیں کہ ہر ورژن میں کیا شامل، تبدیل، درست یا بہتر کیا گیا۔",
+  "marketing.version.commitDescription": "ہر نفاذ، ٹیسٹ، اصلاح اور ریلیز تبدیلی کے عین مطابق منسلک Git ریکارڈ کو دیکھنے کے لیے ٹائم لائن کھولیں۔",
+  "marketing.version.viewCommits": "تمام {count} کمٹس دیکھیں",
 };

@@ -355,4 +355,12 @@ export const uiMessagesZh: Record<string, string> = {
   "preview.close": "关闭",
   "preview.saveTheme": "保存主题",
   "preview.full": "完整",
+  "marketing.version.eyebrow": "opus-react 发布说明",
+  "marketing.version.title": "我们发布的每一项，都有解释。",
+  "marketing.version.description": "当前版本为 {version}。每个版本都会列出所有产品变更，随后是项目完整的源代码提交记录。",
+  "marketing.version.publishedPackages": "已发布的包",
+  "marketing.version.releaseHistory": "发布历史",
+  "marketing.version.releaseHistoryDescription": "详细说明描述了每个版本中新增、更改、修复或改进的内容。",
+  "marketing.version.commitDescription": "打开时间线，查看每次实现、测试、修复和版本变更对应的精确 Git 记录链接。",
+  "marketing.version.viewCommits": "查看全部 {count} 条提交",
 };

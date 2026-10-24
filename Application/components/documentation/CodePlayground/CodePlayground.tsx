@@ -175,7 +175,7 @@ export function CodePlayground({ initialCategory = null, initialSlug = null }: C
     {
       id: "welcome",
       role: "assistant",
-      content: t("playground.welcome"),
+      content: "",
     },
   ]);
 
@@ -542,7 +542,7 @@ export function CodePlayground({ initialCategory = null, initialSlug = null }: C
                   key={message.id}
                 >
                   <span className={styles.chatRole}>{message.role === "user" ? t("playground.you") : t("playground.chatTitle")}</span>
-                  <p>{message.content}</p>
+                  <p>{message.id === "welcome" ? t("playground.welcome") : message.content}</p>
                 </div>
               ))}
               {chatLoading ? (

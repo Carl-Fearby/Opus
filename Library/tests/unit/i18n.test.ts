@@ -1,10 +1,13 @@
 import { describe, expect, it } from "vitest";
 import {
+  englishSiteMessages,
   localeHtmlLang,
+  locales,
   parseLocale,
   translate,
   type MessageKey,
 } from "../../lib/i18n";
+import { uiMessages } from "../../lib/i18n/uiMessages";
 
 describe("i18n", () => {
   it("parses supported locales and falls back safely", () => {
@@ -35,5 +38,29 @@ describe("i18n", () => {
       translate("fr", "docs.hub.componentsDescription", { count: 306 }),
     ).toContain("306");
     expect(translate("cs", "docs.noResults", { query: "chart" })).toContain("chart");
+  });
+
+  it("provides every extended UI message in every locale", () => {
+    const allKeys = Object.keys(englishSiteMessages);
+    const extendedKeys = allKeys.slice(allKeys.indexOf("docs.home.enter"));
+    const placeholders = (value: string) =>
+      [...value.matchAll(/\{(\w+)\}/g)].map((match) => match[1]).sort();
+
+    expect(extendedKeys.length).toBeGreaterThan(0);
+
+    for (const locale of locales) {
+      if (locale.id === "en") continue;
+      const dictionary = uiMessages[locale.id];
+      expect(dictionary, `${locale.id} dictionary`).toBeDefined();
+
+      for (const key of extendedKeys) {
+        const english = englishSiteMessages[key as keyof typeof englishSiteMessages];
+        const translated = dictionary?.[key];
+        expect(translated, `${locale.id}:${key}`).toBeTruthy();
+        expect(placeholders(translated ?? ""), `${locale.id}:${key}`).toEqual(
+          placeholders(english),
+        );
+      }
+    }
   });
 });

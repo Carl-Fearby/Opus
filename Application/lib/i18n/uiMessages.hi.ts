@@ -355,4 +355,12 @@ export const uiMessagesHi: Record<string, string> = {
   "preview.close": "बंद करें",
   "preview.saveTheme": "थीम सहेजें",
   "preview.full": "पूर्ण",
+  "marketing.version.eyebrow": "opus-react रिलीज़ नोट्स",
+  "marketing.version.title": "हम जो भी जारी करते हैं, उसकी व्याख्या।",
+  "marketing.version.description": "वर्तमान संस्करण {version} है। प्रत्येक रिलीज़ में उत्पाद के सभी परिवर्तन सूचीबद्ध होते हैं, उसके बाद प्रोजेक्ट के स्रोत-कमिट का पूरा रिकॉर्ड होता है।",
+  "marketing.version.publishedPackages": "प्रकाशित पैकेज",
+  "marketing.version.releaseHistory": "रिलीज़ इतिहास",
+  "marketing.version.releaseHistoryDescription": "विस्तृत नोट्स बताते हैं कि प्रत्येक संस्करण में क्या जोड़ा, बदला, ठीक किया या सुधारा गया।",
+  "marketing.version.commitDescription": "प्रत्येक कार्यान्वयन, परीक्षण, सुधार और रिलीज़ परिवर्तन के सटीक लिंक किए गए Git रिकॉर्ड को देखने के लिए टाइमलाइन खोलें।",
+  "marketing.version.viewCommits": "सभी {count} कमिट देखें",
 };
