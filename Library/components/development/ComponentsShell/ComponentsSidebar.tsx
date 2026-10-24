@@ -36,6 +36,7 @@ import {
 } from "@/lib/controls/routes";
 import { useLocale } from "@/lib/i18n/LocaleProvider";
 import { useComponentTitle } from "@/lib/i18n/useComponentTitle";
+import { localizeNavigationGroup } from "@/lib/i18n/navigationGroupLabels";
 import { categoryMessageKey } from "@/lib/i18n";
 import { useComponentSettingsContext } from "./ComponentSettingsContext";
 import styles from "./ComponentsShell.module.css";
@@ -348,8 +349,9 @@ function NavSubgroup({
   onToggle: () => void;
 }) {
   const pathname = usePathname();
-  const { t } = useLocale();
+  const { locale, t } = useLocale();
   const titleFor = useComponentTitle();
+  const displayLabel = localizeNavigationGroup(locale, label);
   const listId = navSubgroupListId(category, label);
   const subgroupPath = categorySubgroupPath(category, label);
   const isOpen = forceOpen || open;
@@ -370,14 +372,14 @@ function NavSubgroup({
         >
           <ComponentIcon compact icon={getNavigationGroupIcon(label)} />
           <span className={styles.navHeadingLabel}>
-            <span className={styles.navHeadingTitle}>{label}</span>
+            <span className={styles.navHeadingTitle}>{displayLabel}</span>
             <NavCount count={controls.length} label={t("docs.components").toLowerCase()} />
           </span>
         </Link>
         <button
           aria-controls={listId}
           aria-expanded={isOpen}
-          aria-label={t(isOpen ? "docs.collapse" : "docs.expand", { label })}
+          aria-label={t(isOpen ? "docs.collapse" : "docs.expand", { label: displayLabel })}
           className={styles.navSubsectionChevronButton}
           onClick={onToggle}
           type="button"

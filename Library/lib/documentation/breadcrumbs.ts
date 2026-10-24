@@ -1,6 +1,7 @@
 import type { BreadcrumbItem } from "@/components/Breadcrumb";
 import { categoryMessageKey, DEFAULT_LOCALE, translate, type Locale } from "@/lib/i18n";
 import { localizeComponentTitle } from "@/lib/i18n/componentTitles";
+import { localizeNavigationGroup } from "@/lib/i18n/navigationGroupLabels";
 import { getControl, getNavigationGroupBySlug } from "@/lib/controls/registry";
 import {
   CATEGORY_PATHS,
@@ -98,7 +99,7 @@ export function buildDocumentationBreadcrumbs(
       items.push(
         crumb(subgroup.category, categoryLabel(subgroup.category, locale), CATEGORY_PATHS[subgroup.category]),
       );
-      items.push(crumb("current", options.currentLabel ?? groupLabel));
+      items.push(crumb("current", options.currentLabel ?? localizeNavigationGroup(locale, groupLabel)));
       return items;
     }
 
@@ -120,7 +121,7 @@ export function buildDocumentationBreadcrumbs(
           items.push(
             crumb(
               `group-${control.category}-${navigationGroupToSlug(control.navigationGroup)}`,
-              control.navigationGroup,
+              localizeNavigationGroup(locale, control.navigationGroup),
               categorySubgroupPath(control.category, control.navigationGroup),
             ),
           );
@@ -140,7 +141,7 @@ export function buildDocumentationBreadcrumbs(
           items.push(
             crumb(
               `group-${control.category}-${navigationGroupToSlug(control.navigationGroup)}`,
-              control.navigationGroup,
+              localizeNavigationGroup(locale, control.navigationGroup),
               categorySubgroupPath(control.category, control.navigationGroup),
             ),
           );

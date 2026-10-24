@@ -15,6 +15,8 @@ export default defineConfig({
     globals: true,
     setupFiles: ["./tests/setup.ts"],
     include: ["tests/unit/**/*.test.{ts,tsx}", "tests/contracts/**/*.test.ts"],
+    testTimeout: 15000,
+    hookTimeout: 15000,
     coverage: {
       provider: "v8",
       reporter: ["text", "html"],

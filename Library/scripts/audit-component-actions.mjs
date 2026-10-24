@@ -10,6 +10,7 @@ const delegatedTriggers = new Map([
   ["NoteComposer/NoteComposer.tsx", "Trigger delegates selection to EmojiPicker."],
   ["NotesActivity/NotesActivity.tsx", "Trigger delegates selection to EmojiPicker."],
   ["UserProfileWidget/UserProfileWidget.tsx", "Trigger delegates selection to DropdownMenu."],
+  ["OverflowToolbar/OverflowToolbar.tsx", "Measurement-only button is aria-hidden and never interactive."],
 ]);
 const delegatedComponentActions = new Map([
   ["CrmWorkspaceLab/CrmWorkspaceLab.tsx:RowOpenButton", "RowOpenButton requires and invokes onOpen."],
@@ -72,11 +73,21 @@ for (const file of collectFiles(root)) {
         }
       } else if (tagName.endsWith("Button")) {
         const names = opening.attributes.properties.map(attributeName);
+        const typeAttribute = opening.attributes.properties.find(
+          (attribute) => attributeName(attribute) === "type",
+        );
+        const typeValue =
+          typeAttribute && ts.isJsxAttribute(typeAttribute) && typeAttribute.initializer
+            && ts.isStringLiteral(typeAttribute.initializer)
+            ? typeAttribute.initializer.text
+            : "";
         const hasAction =
           names.some((name) =>
             ["onClick", "onPress", "onSelect", "onActionSelect", "onOpenChange"].includes(String(name)),
           )
-          || opening.attributes.properties.some(ts.isJsxSpreadAttribute);
+          || opening.attributes.properties.some(ts.isJsxSpreadAttribute)
+          || typeValue === "submit"
+          || typeValue === "reset";
         const delegated = delegatedComponentActions.has(`${relative}:${tagName}`);
 
         if (hasAction || delegated) {
