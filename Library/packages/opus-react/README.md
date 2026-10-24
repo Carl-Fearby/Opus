@@ -145,27 +145,26 @@ Pass `applyToDocument={false}` if you manage `data-theme` yourself (for example 
 
 ## Internationalisation
 
-Wrap your app with `OpusI18nProvider` to translate built-in component copy. Components fall back to English when a key is not supplied, so translations can be introduced incrementally.
+Wrap your app with `OpusI18nProvider` to translate built-in component copy. The package ships built-in translations for 48 languages (English plus 47 others, including right-to-left Arabic, Persian, Hebrew and Urdu).
 
 ```tsx
-import { OpusI18nProvider } from "opus-react";
+import { OpusI18nProvider, getOpusTranslations, opusTranslationLocales } from "opus-react";
 
-const messages = {
-  "pagination.previous": "Page précédente",
-  "pagination.next": "Page suivante",
-  "common.cancel": "Annuler",
-};
+// opusTranslationLocales lists every shipped locale, e.g. "en", "fr", "ja", "ar".
+const locale = "fr";
 
 export function App() {
   return (
-    <OpusI18nProvider locale="fr" messages={messages}>
+    <OpusI18nProvider locale={locale} messages={getOpusTranslations(locale)}>
       <YourApp />
     </OpusI18nProvider>
   );
 }
 ```
 
-Components use `useOpusI18n()` internally and accept full message dictionaries. The provider ships translated coverage for shared controls such as Kanban, Pagination, DataGrid, FilterBuilder, SearchBox, Calendar, Modal, Drawer and ConfirmDialog; additional component keys can be supplied by the host application.
+Components use `useOpusI18n()` internally and accept full message dictionaries. Built-in translations cover shared controls such as Kanban, Pagination, DataGrid, FilterBuilder, SearchBox, Calendar, Modal, Drawer and ConfirmDialog; pass extra keys through `messages` to override or extend any string, and components fall back to English when a key is not supplied.
+
+The translations are machine-assisted and are being proof-read by native speakers. Corrections are welcome — see the contributors section of the Opus site or open an issue on GitHub.
 
 ## Accent colour
 

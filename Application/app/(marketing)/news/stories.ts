@@ -12,6 +12,30 @@ export type NewsStory = {
 
 export const newsStories: NewsStory[] = [
   {
+    slug: "opus-speaks-48-languages",
+    date: "2026-10-25",
+    edition: "Opus 0.13 · Internationalisation",
+    title: "Opus now speaks 48 languages.",
+    standfirst: "Every component in the library has been translated into 47 languages besides English. The translations are live in the docs and ship with the npm package — and we are looking for native speakers to proof-read them.",
+    summary: "Buttons, labels, dialogs, empty states, validation messages, and screen-reader text across Kanban, DataGrid, Calendar, FilterBuilder, forms, charts and overlays are now available in 48 locales, including right-to-left Arabic, Persian, Hebrew and Urdu.",
+    components: [
+      { name: "Localise your app", href: "/documentation/guide/i18n", code: `import { OpusI18nProvider, getOpusTranslations } from "opus-react";
+
+<OpusI18nProvider
+  locale="fr"
+  messages={getOpusTranslations("fr")}
+>
+  <App />
+</OpusI18nProvider>` },
+    ],
+    chapters: [
+      { heading: "What is translated", body: "The component layer only: 796 shared strings per locale covering the controls people actually read — Kanban board actions and dialogs, DataGrid toolbars and filters, the calendar and date pickers, pagination, search, charts, form validation, empty and loading states, and the accessible names behind them. Documentation, navigation, page titles, and marketing pages stay in English so the surrounding site remains consistent." },
+      { heading: "How it works", body: "Wrap your app in OpusI18nProvider and pass getOpusTranslations(locale) — every shipped locale is listed in opusTranslationLocales. The docs site loads each locale's bundle lazily, so the language picker costs nothing until a language is chosen, and English remains the fallback for any key you choose to override." },
+      { heading: "Now we need your eyes", body: "The translations were produced with machine assistance and reviewed against the English source, but a machine can get the word sense wrong: a candlestick chart's Close is a closing price, a Kanban ticket is not an admission ticket, and 3D assets are not financial assets. If you speak one of the 47 languages natively, we would love your corrections — proof a locale, tell us what reads wrong, and send it back to us." },
+      { heading: "How to help", body: "Open an issue on GitHub or use the contact details in the contributors section of the site, and tell us which locale you can review. Even a handful of corrected strings makes the library noticeably better for everyone who reads that language." },
+    ],
+  },
+  {
     slug: "enterprise-components-and-datagrid",
     date: "2026-10-22",
     edition: "Opus 0.8 + 0.9",

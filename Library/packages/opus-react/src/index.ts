@@ -1,4 +1,5 @@
 export * from "../../../components/fields";
+export * from "./i18n";
 export * from "../../../components/OpusI18n";
 
 export {

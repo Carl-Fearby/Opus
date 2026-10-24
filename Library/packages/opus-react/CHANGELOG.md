@@ -4,6 +4,17 @@ All notable public-package changes are recorded here. Opus follows [Semantic Ver
 
 ## Unreleased
 
+## 0.13.0 — 2026-10-25
+
+### Added
+
+- Built-in component translations for 47 languages, exported as `opusTranslations`, `getOpusTranslations(locale)` and `opusTranslationLocales`. Pass a locale's messages to `OpusI18nProvider` to localise shared controls such as Kanban, DataGrid, Calendar, FilterBuilder, Pagination and SearchBox.
+- Right-to-left support for Arabic, Persian, Hebrew and Urdu translations.
+
+### Notes
+
+- Translations are machine-assisted and are being proof-read by native speakers. Corrections and reports are welcome: see the contributors section of the Opus site or open an issue on GitHub.
+
 ## 0.9.1 — 2026-10-22
 
 ### Documentation

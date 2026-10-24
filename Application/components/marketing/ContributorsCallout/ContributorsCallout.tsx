@@ -12,6 +12,7 @@ export async function ContributorsCallout() {
     t("marketing.contributors.area4"),
     t("marketing.contributors.area5"),
     t("marketing.contributors.area6"),
+    t("marketing.contributors.area7"),
   ];
 
   return (
