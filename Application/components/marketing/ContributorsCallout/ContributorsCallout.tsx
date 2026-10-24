@@ -1,36 +1,36 @@
+import { translate } from "@/lib/i18n";
+import { readServerLocale } from "@/lib/i18n/server";
 import styles from "./ContributorsCallout.module.css";
 
-const contributionAreas = [
-  "Component design",
-  "Accessibility",
-  "Interaction testing",
-  "Documentation",
-  "Dashboard patterns",
-  "Web and desktop apps",
-];
+export async function ContributorsCallout() {
+  const locale = await readServerLocale();
+  const t = (key: Parameters<typeof translate>[1]) => translate(locale, key);
+  const contributionAreas = [
+    t("marketing.contributors.area1"),
+    t("marketing.contributors.area2"),
+    t("marketing.contributors.area3"),
+    t("marketing.contributors.area4"),
+    t("marketing.contributors.area5"),
+    t("marketing.contributors.area6"),
+  ];
 
-export function ContributorsCallout() {
   return (
     <section className={styles.section} aria-labelledby="contributors-title" id="contributors">
       <div className={styles.inner}>
         <div className={styles.copy}>
-          <p className={styles.eyebrow}>Help build Opus</p>
-          <h2 id="contributors-title">We’re looking for contributors.</h2>
-          <p>
-            Join us in building an accessible, dependable component system for modern business
-            applications. Small fixes, focused components, tests, examples, and documentation are
-            every bit as valuable as larger features.
-          </p>
-          <ul className={styles.areas} aria-label="Contribution areas">
+          <p className={styles.eyebrow}>{t("marketing.contributors.eyebrow")}</p>
+          <h2 id="contributors-title">{t("marketing.contributors.title")}</h2>
+          <p>{t("marketing.contributors.description")}</p>
+          <ul className={styles.areas} aria-label={t("marketing.contributors.areasAria")}>
             {contributionAreas.map((area) => (
               <li key={area}>{area}</li>
             ))}
           </ul>
         </div>
 
-        <aside className={styles.contact} aria-label="Contributor contact details">
-          <p>Interested in contributing?</p>
-          <span>Tell us what you enjoy working on and where you would like to help.</span>
+        <aside className={styles.contact} aria-label={t("marketing.contributors.contactAria")}>
+          <p>{t("marketing.contributors.interested")}</p>
+          <span>{t("marketing.contributors.tellUs")}</span>
           <div className={styles.actions}>
             <a
               className={styles.primary}
@@ -38,10 +38,10 @@ export function ContributorsCallout() {
               rel="noreferrer"
               target="_blank"
             >
-              View GitHub repository
+              {t("marketing.contributors.viewGithub")}
             </a>
             <a className={styles.secondary} href="mailto:carlfearby@me.com?subject=Contributing%20to%20Opus">
-              Email Carl
+              {t("marketing.contributors.emailCarl")}
             </a>
             <a
               className={styles.secondary}
@@ -49,7 +49,7 @@ export function ContributorsCallout() {
               rel="noreferrer"
               target="_blank"
             >
-              WhatsApp
+              {t("marketing.contributors.whatsapp")}
             </a>
           </div>
           <small>

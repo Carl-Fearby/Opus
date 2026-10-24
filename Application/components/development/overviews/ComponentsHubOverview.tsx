@@ -8,34 +8,27 @@ import { categoryPath, componentPath, COMPONENTS_BASE_PATH } from "@/lib/control
 import { ComponentIcon } from "@/components/development/ComponentIcon";
 import { useComponentDescription } from "@/lib/i18n/useComponentDescription";
 import { useComponentTitle } from "@/lib/i18n/useComponentTitle";
-import { categoryDescriptionMessageKey } from "@/lib/i18n";
+import { categoryDescriptionMessageKey, categoryMessageKey } from "@/lib/i18n";
+import { localizeNavigationGroup } from "@/lib/i18n/navigationGroupLabels";
 import { useLocale } from "@/lib/i18n/LocaleProvider";
 import styles from "./overview.module.css";
 
 export function ComponentsHubOverview() {
   const describe = useComponentDescription();
   const titleFor = useComponentTitle();
-  const { t } = useLocale();
+  const { locale, t } = useLocale();
   useSetComponentsPageHeader(
-    "Overview",
-    "Browse components by category in the sidebar. Expand grouped sections or search the menu to jump straight to any component.",
+    t("docs.overview.title"),
+    t("docs.overview.description"),
   );
 
   return (
     <div className={styles.hubPage}>
-      <section className={styles.hubIntro} aria-label="How to browse">
-        <p>
-          Use the sidebar to explore <strong>Content</strong>, <strong>Dashboard</strong>,{" "}
-          <strong>Forms</strong>, <strong>Graphs</strong>, <strong>Labs</strong>,{" "}
-          <strong>System</strong>, and <strong>Overlays</strong>. Dashboard now has its own
-          section for metric cards, widgets, and summary panels. Labs holds combined compositions
-          built from multiple components. System holds route-level pages such as 404 and 403. The
-          search field above the menu filters the tree while keeping each match inside its parent
-          section.
-        </p>
+      <section className={styles.hubIntro} aria-label={t("docs.overview.howToBrowse")}>
+        <p>{t("docs.overview.intro")}</p>
         <div className={styles.hubIntroActions}>
           <Link className={styles.hubIntroLink} href={`${COMPONENTS_BASE_PATH}/relationships`}>
-            View component relationship tree
+            {t("docs.overview.relationships")}
           </Link>
         </div>
       </section>
@@ -50,11 +43,11 @@ export function ComponentsHubOverview() {
               <div className={styles.hubSectionHeadingRow}>
                 <Link className={styles.hubSectionTitleLink} href={categoryPath(category.id)}>
                   <ComponentIcon icon={getCategoryIcon(category.id)} />
-                  <h2 className={styles.hubSectionTitle}>{category.label}</h2>
+                  <h2 className={styles.hubSectionTitle}>{t(categoryMessageKey(category.id))}</h2>
                   <span className={styles.hubSectionCount}>{controls.length}</span>
                 </Link>
                 <Link className={styles.hubSectionViewAll} href={categoryPath(category.id)}>
-                  View all
+                  {t("docs.overview.viewAll")}
                 </Link>
               </div>
               <p className={styles.hubSectionDescription}>{t(categoryDescriptionMessageKey(category.id))}</p>
@@ -65,7 +58,7 @@ export function ComponentsHubOverview() {
                 {section.label ? (
                   <h3 className={styles.hubSubsectionTitle}>
                     <ComponentIcon compact icon={getNavigationGroupIcon(section.label)} />
-                    <span>{section.label}</span>
+                    <span>{localizeNavigationGroup(locale, section.label)}</span>
                   </h3>
                 ) : null}
                 <div className={styles.hubGrid}>

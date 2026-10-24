@@ -27,6 +27,7 @@ import { PreviewPlatformSelector } from "@/components/control-detail/ControlDeta
 import { useComponentsTheme } from "@/components/development/ComponentsThemeProvider";
 import { DEFAULT_FONT_FAMILY, googleFonts, type GoogleFontFamily } from "@/components/FontPicker";
 import { SyntaxHighlighter } from "@/components/SyntaxHighlighter";
+import { useLocale } from "@/lib/i18n/LocaleProvider";
 import styles from "./ThemeDesignerPage.module.css";
 
 type ColourControlProps = {
@@ -43,6 +44,7 @@ function Blob({ colour, className = styles.blob }: { colour: string; className?:
 }
 
 function ColourControl({ label, value, onChange, open, onToggle, onClose }: ColourControlProps) {
+  const { t } = useLocale();
   const selected = accentPalette.find((colour) => colour.value.toLowerCase() === value.toLowerCase());
 
   return (
@@ -56,12 +58,12 @@ function ColourControl({ label, value, onChange, open, onToggle, onClose }: Colo
         onClick={onToggle}
       >
         <Blob colour={value} />
-        <span>{selected?.label ?? "Custom"}</span>
+        <span>{selected?.label ?? t("themeDesigner.custom")}</span>
         <code>{value.toUpperCase()}</code>
         <span className={styles.chevron} />
       </button>
       {open ? (
-        <div className={styles.blobPalette} role="listbox" aria-label={`${label} colours`}>
+        <div className={styles.blobPalette} role="listbox" aria-label={t("themeDesigner.coloursAria", { label })}>
           {accentPalette.map((colour: AccentColor) => {
             const isSelected = colour.value.toLowerCase() === value.toLowerCase();
             return (
@@ -88,7 +90,25 @@ function ColourControl({ label, value, onChange, open, onToggle, onClose }: Colo
 }
 
 function ThemeDesignerControls() {
+  const { t } = useLocale();
   const [openColour, setOpenColour] = useState<string | null>(null);
+  const appearanceOptions = [
+    { value: "standard", label: t("themeDesigner.standard") },
+    { value: "neumorphism", label: t("themeDesigner.neumorphism") },
+    { value: "liquid-glass", label: t("themeDesigner.liquidGlass") },
+  ] as const;
+  const radiusOptions = [
+    { value: "none", label: t("themeDesigner.square") },
+    { value: "standard", label: t("themeDesigner.standard") },
+    { value: "medium", label: t("themeDesigner.medium") },
+    { value: "large", label: t("themeDesigner.large") },
+    { value: "full", label: t("themeDesigner.pill") },
+  ] as const;
+  const backgroundOptions = [
+    { value: "standard", label: t("themeDesigner.solid") },
+    { value: "none", label: t("themeDesigner.transparent") },
+    { value: "glass", label: t("themeDesigner.glass") },
+  ] as const;
   const {
     previewAccent,
     previewAccentSecondary,
@@ -128,25 +148,28 @@ function ThemeDesignerControls() {
   };
 
   return (
-    <aside className={styles.controls} aria-label="Theme designer controls">
+    <aside className={styles.controls} aria-label={t("themeDesigner.controlsAria")}>
       <div className={styles.controlGroup}>
-        <p className={styles.controlTitle}>Appearance</p>
+        <p className={styles.controlTitle}>{t("themeDesigner.appearance")}</p>
         <SelectField
           id="theme-designer-style"
-          label="Theme style"
-          options={["Standard", "Neumorphism", "Liquid glass"]}
-          value={previewDefaults.appearance === "liquid-glass" ? "Liquid glass" : previewDefaults.appearance === "neumorphism" ? "Neumorphism" : "Standard"}
-          onChange={(event) => updateDefaults({ appearance: event.target.value === "Liquid glass" ? "liquid-glass" : event.target.value === "Neumorphism" ? "neumorphism" : "standard" })}
+          label={t("themeDesigner.themeStyle")}
+          options={appearanceOptions.map((option) => option.label)}
+          value={appearanceOptions.find((option) => option.value === (previewDefaults.appearance ?? "standard"))?.label ?? appearanceOptions[0].label}
+          onChange={(event) => {
+            const option = appearanceOptions.find((entry) => entry.label === event.target.value);
+            if (option) updateDefaults({ appearance: option.value });
+          }}
         />
         <ThemeToggleField
           id="theme-designer-appearance"
-          label="Preview theme"
+          label={t("themeDesigner.previewTheme")}
           value={previewTheme}
           onChange={setPreviewTheme}
         />
         <SelectField
           id="theme-designer-font"
-          label="Font family"
+          label={t("themeDesigner.fontFamily")}
           options={[...googleFonts]}
           value={previewFontFamily}
           onChange={(event) => setPreviewFontFamily(event.target.value as GoogleFontFamily)}
@@ -154,49 +177,56 @@ function ThemeDesignerControls() {
       </div>
 
       <div className={styles.controlGroup}>
-        <p className={styles.controlTitle}>Global defaults</p>
+        <p className={styles.controlTitle}>{t("themeDesigner.globalDefaults")}</p>
         <SelectField
           id="theme-designer-radius"
-          label="Corner radius"
-          options={["Square", "Standard", "Medium", "Large", "Pill"]}
-          value={{ none: "Square", standard: "Standard", medium: "Medium", large: "Large", full: "Pill" }[previewDefaults.radius ?? "standard"]}
-          onChange={(event) => updateDefaults({ radius: ({ Square: "none", Standard: "standard", Medium: "medium", Large: "large", Pill: "full" }[event.target.value] as ControlRadius) })}
+          label={t("themeDesigner.cornerRadius")}
+          options={radiusOptions.map((option) => option.label)}
+          value={radiusOptions.find((option) => option.value === (previewDefaults.radius ?? "standard"))?.label ?? radiusOptions[0].label}
+          onChange={(event) => {
+            const option = radiusOptions.find((entry) => entry.label === event.target.value);
+            if (option) updateDefaults({ radius: option.value as ControlRadius });
+          }}
         />
         <SelectField
           id="theme-designer-transparency"
-          label="Surface background"
-          options={["Solid", "Transparent", "Glass"]}
-          value={{ standard: "Solid", none: "Transparent", glass: "Glass" }[previewDefaults.transparency ?? "standard"]}
-          onChange={(event) => updateDefaults({ transparency: ({ Solid: "standard", Transparent: "none", Glass: "glass" }[event.target.value] as ControlTransparency) })}
+          label={t("themeDesigner.surfaceBackground")}
+          options={backgroundOptions.map((option) => option.label)}
+          value={backgroundOptions.find((option) => option.value === (previewDefaults.transparency ?? "standard"))?.label ?? backgroundOptions[0].label}
+          onChange={(event) => {
+            const option = backgroundOptions.find((entry) => entry.label === event.target.value);
+            if (option) updateDefaults({ transparency: option.value as ControlTransparency });
+          }}
         />
         <CheckboxField
           checked={previewDefaults.gradient ?? false}
           id="theme-designer-gradient"
-          label="Use gradient surfaces"
+          label={t("themeDesigner.useGradient")}
           onChange={(event) => updateDefaults({ gradient: event.target.checked })}
         />
       </div>
 
       <div className={styles.controlGroup}>
-        <p className={styles.controlTitle}>Colours</p>
+        <p className={styles.controlTitle}>{t("themeDesigner.colours")}</p>
         <div className={styles.colourGrid}>
-          <ColourControl label="Base" value={previewBaseColor} onChange={setPreviewBaseColor} open={openColour === "base"} onToggle={() => setOpenColour(openColour === "base" ? null : "base")} onClose={() => setOpenColour(null)} />
-          <ColourControl label="Accent" value={previewAccent} onChange={setPreviewAccent} open={openColour === "accent"} onToggle={() => setOpenColour(openColour === "accent" ? null : "accent")} onClose={() => setOpenColour(null)} />
-          <ColourControl label="Secondary accent" value={previewAccentSecondary} onChange={setPreviewAccentSecondary} open={openColour === "secondary"} onToggle={() => setOpenColour(openColour === "secondary" ? null : "secondary")} onClose={() => setOpenColour(null)} />
-          <ColourControl label="Tertiary accent" value={previewTertiaryAccent} onChange={setPreviewTertiaryAccent} open={openColour === "tertiary"} onToggle={() => setOpenColour(openColour === "tertiary" ? null : "tertiary")} onClose={() => setOpenColour(null)} />
-          <ColourControl label="Tile accent" value={previewTileAccent} onChange={setPreviewTileAccent} open={openColour === "tile"} onToggle={() => setOpenColour(openColour === "tile" ? null : "tile")} onClose={() => setOpenColour(null)} />
-          <ColourControl label="Tile secondary" value={previewTileAccentSecondary} onChange={setPreviewTileAccentSecondary} open={openColour === "tile-secondary"} onToggle={() => setOpenColour(openColour === "tile-secondary" ? null : "tile-secondary")} onClose={() => setOpenColour(null)} />
+          <ColourControl label={t("themeDesigner.base")} value={previewBaseColor} onChange={setPreviewBaseColor} open={openColour === "base"} onToggle={() => setOpenColour(openColour === "base" ? null : "base")} onClose={() => setOpenColour(null)} />
+          <ColourControl label={t("themeDesigner.accent")} value={previewAccent} onChange={setPreviewAccent} open={openColour === "accent"} onToggle={() => setOpenColour(openColour === "accent" ? null : "accent")} onClose={() => setOpenColour(null)} />
+          <ColourControl label={t("themeDesigner.secondaryAccent")} value={previewAccentSecondary} onChange={setPreviewAccentSecondary} open={openColour === "secondary"} onToggle={() => setOpenColour(openColour === "secondary" ? null : "secondary")} onClose={() => setOpenColour(null)} />
+          <ColourControl label={t("themeDesigner.tertiaryAccent")} value={previewTertiaryAccent} onChange={setPreviewTertiaryAccent} open={openColour === "tertiary"} onToggle={() => setOpenColour(openColour === "tertiary" ? null : "tertiary")} onClose={() => setOpenColour(null)} />
+          <ColourControl label={t("themeDesigner.tileAccent")} value={previewTileAccent} onChange={setPreviewTileAccent} open={openColour === "tile"} onToggle={() => setOpenColour(openColour === "tile" ? null : "tile")} onClose={() => setOpenColour(null)} />
+          <ColourControl label={t("themeDesigner.tileSecondary")} value={previewTileAccentSecondary} onChange={setPreviewTileAccentSecondary} open={openColour === "tile-secondary"} onToggle={() => setOpenColour(openColour === "tile-secondary" ? null : "tile-secondary")} onClose={() => setOpenColour(null)} />
         </div>
       </div>
 
       <div className={styles.resetGroup}>
-        <Button variant="secondary" onClick={resetTheme}>Reset theme</Button>
+        <Button variant="secondary" onClick={resetTheme}>{t("themeDesigner.reset")}</Button>
       </div>
     </aside>
   );
 }
 
 export function ThemeDesignerPage() {
+  const { t } = useLocale();
   const [optionsSize, setOptionsSize] = useState(18);
   const {
     previewAccent,
@@ -247,9 +277,9 @@ export function App({ children }) {
       <DocumentationTopBar current="theme" />
       <section className={styles.page}>
         <header className={styles.header}>
-          <p className={styles.eyebrow}>Visual builder</p>
-          <h1>Theme designer</h1>
-          <p>Set global defaults, then inspect a working set of common Opus components. Per-component controls still override this theme.</p>
+          <p className={styles.eyebrow}>{t("themeDesigner.eyebrow")}</p>
+          <h1>{t("themeDesigner.title")}</h1>
+          <p>{t("themeDesigner.description")}</p>
         </header>
 
         <Splitter className={styles.designer} flush minSize={15} onSizeChange={setOptionsSize} size={optionsSize}>
@@ -258,17 +288,17 @@ export function App({ children }) {
           </section>
           <section className={styles.previewPane}>
             <Tabs
-              aria-label="Theme designer demo"
+              aria-label={t("themeDesigner.demoAria")}
               className={styles.previewTabs}
               panelClassName={styles.previewTabPanel}
               panelContentClassName={styles.previewTabContent}
               variant="card"
               items={[{
-                label: "Preview",
+                label: t("themeDesigner.preview"),
                 value: "preview",
                 content: <PreviewThemeBoundary className={styles.canvas}>
             <div className={styles.previewPlatformBar}>
-              <span>{previewDefaults.appearance === "liquid-glass" ? "Liquid glass · Preview platform" : "Preview platform"}</span>
+              <span>{previewDefaults.appearance === "liquid-glass" ? t("themeDesigner.liquidGlassPlatform") : t("themeDesigner.previewPlatform")}</span>
               <PreviewPlatformSelector />
             </div>
             <Tiles
@@ -358,10 +388,10 @@ export function App({ children }) {
             </div>
                 </PreviewThemeBoundary>,
               }, {
-                label: "Theme code",
+                label: t("themeDesigner.themeCode"),
                 value: "code",
                 content: <div className={styles.codePanel}>
-                  <p>Copy this theme wrapper into your application. Component-level props can still override these defaults.</p>
+                  <p>{t("themeDesigner.codeNote")}</p>
                   <SyntaxHighlighter code={themeCode} language="tsx" />
                 </div>,
               }]}

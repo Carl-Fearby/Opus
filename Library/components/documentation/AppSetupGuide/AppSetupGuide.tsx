@@ -1,35 +1,34 @@
 import { DescriptionList, Panel } from "opus-react";
+import { useLocale } from "@/lib/i18n/LocaleProvider";
 import styles from "./AppSetupGuide.module.css";
 
 export function AppSetupGuide() {
+  const { t } = useLocale();
+
   return (
     <div className={styles.root}>
-      <Panel title="App setup boilerplate" description="Copy the Usage tab into a new Next.js app shell.">
+      <Panel title={t("docs.appSetup.title")} description={t("docs.appSetup.description")}>
         <DescriptionList
           items={[
             {
-              term: "Styles",
-              details: "Import opus-react/styles.css and opus-react/index.css in the root layout.",
+              term: t("docs.appSetup.styles"),
+              details: t("docs.appSetup.stylesDetails"),
             },
             {
-              term: "Global theme",
-              details:
-                "Set data-theme on the html element and wrap the app in ThemeProvider so portalled overlays inherit tokens.",
+              term: t("docs.appSetup.globalTheme"),
+              details: t("docs.appSetup.globalThemeDetails"),
             },
             {
-              term: "Global font",
-              details:
-                "Load Space Grotesk with next/font, then pass its CSS stack to ThemeProvider's fontFamily prop. Opus publishes it as --opus-font-family.",
+              term: t("docs.appSetup.globalFont"),
+              details: t("docs.appSetup.globalFontDetails"),
             },
             {
-              term: "Preview controls",
-              details:
-                "The catalogue preview font picker is deliberately scoped to the preview. It never changes the documentation shell font.",
+              term: t("docs.appSetup.previewControls"),
+              details: t("docs.appSetup.previewControlsDetails"),
             },
             {
-              term: "Portal host",
-              details:
-                "Optional PortalHost wrapper for a dedicated mount node. Overlays still portal to document.body when omitted.",
+              term: t("docs.appSetup.portalHost"),
+              details: t("docs.appSetup.portalHostDetails"),
             },
           ]}
         />

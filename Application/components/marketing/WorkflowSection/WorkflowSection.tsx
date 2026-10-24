@@ -1,44 +1,27 @@
+import { translate } from "@/lib/i18n";
+import { readServerLocale } from "@/lib/i18n/server";
 import styles from "./WorkflowSection.module.css";
 
-const steps = [
-  {
-    step: "01",
-    title: "Install the package",
-    description: "Add `opus-react` to your app and import the base styles once in your root layout.",
-  },
-  {
-    step: "02",
-    title: "Wrap with theme context",
-    description: "Use `OpusThemeProvider` to enable light or dark mode and runtime accent colours.",
-  },
-  {
-    step: "03",
-    title: "Compose screens",
-    description: "Drop in field components, overlays, and layout primitives with consistent spacing and states.",
-  },
-  {
-    step: "04",
-    title: "Experiment in the Playground",
-    description:
-      "Open any component page, tune its settings, and edit the generated JSX live. Optionally add your own OpenAI API key and ask ChatGPT to diagnose, explain, or reshape the current example before you paste it into your app.",
-  },
-];
+const stepNumbers = [1, 2, 3, 4] as const;
 
-export function WorkflowSection() {
+export async function WorkflowSection() {
+  const locale = await readServerLocale();
+  const t = (key: Parameters<typeof translate>[1]) => translate(locale, key);
+
   return (
     <section className={styles.section}>
       <div className={styles.inner}>
         <div className={styles.intro}>
-          <p className={styles.eyebrow}>Workflow</p>
-          <h2>From npm install to production UI in four steps.</h2>
+          <p className={styles.eyebrow}>{t("marketing.workflow.eyebrow")}</p>
+          <h2>{t("marketing.workflow.title")}</h2>
         </div>
 
         <div className={styles.steps}>
-          {steps.map((item) => (
-            <article key={item.step} className={styles.step}>
-              <span className={styles.stepNumber}>{item.step}</span>
-              <h3>{item.title}</h3>
-              <p>{item.description}</p>
+          {stepNumbers.map((number) => (
+            <article key={number} className={styles.step}>
+              <span className={styles.stepNumber}>{String(number).padStart(2, "0")}</span>
+              <h3>{t(`marketing.workflow.step${number}.title` as Parameters<typeof translate>[1])}</h3>
+              <p>{t(`marketing.workflow.step${number}.description` as Parameters<typeof translate>[1])}</p>
             </article>
           ))}
         </div>

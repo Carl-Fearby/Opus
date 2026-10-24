@@ -2,26 +2,20 @@
 
 import { useSetComponentsPageHeader } from "@/components/development/ComponentsThemeProvider";
 import { getControlsByCategory } from "@/lib/controls/registry";
+import { useLocale } from "@/lib/i18n/LocaleProvider";
 import { OverviewDemoCard } from "./OverviewDemoCard";
 import styles from "./overview.module.css";
 
 export function LabOverview() {
   const compositions = getControlsByCategory("labs");
+  const { t } = useLocale();
 
-  useSetComponentsPageHeader(
-    "Labs",
-    "Combined compositions built from multiple library components. Use these as reference patterns, not standalone primitives.",
-  );
+  useSetComponentsPageHeader(t("docs.labs.title"), t("docs.labs.description"));
 
   return (
     <div className={styles.page}>
-      <section className={styles.hubIntro} aria-label="About Labs">
-        <p>
-          Labs entries are <strong>compositions</strong> — pre-wired examples that combine layout,
-          containers, and widgets. Browse Authentication for login through password recovery, or CRM
-          groups for company, contact, and sales patterns. Individual building blocks stay in Content,
-          Forms, Graphs, and Overlays.
-        </p>
+      <section className={styles.hubIntro} aria-label={t("docs.labs.aboutAria")}>
+        <p>{t("docs.labs.intro")}</p>
       </section>
       <section className={styles.demoSection}>
         <div className={styles.demoGrid}>

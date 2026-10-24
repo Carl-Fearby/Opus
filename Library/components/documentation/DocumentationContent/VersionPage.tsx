@@ -10,29 +10,19 @@ import { DocumentationTopBar } from "@/components/documentation/DocumentationTop
 import { DocumentationBreadcrumbs } from "@/components/documentation/DocumentationBreadcrumbs";
 import { ThemeSettingsButton } from "@/components/documentation/ThemeSettingsButton";
 import { useStoredTheme } from "@/lib/theme/useStoredTheme";
+import { useLocale } from "@/lib/i18n/LocaleProvider";
 import styles from "./documentation.module.css";
 
-function formatReleasedDate(isoDate: string) {
-  return new Intl.DateTimeFormat("en-GB", {
+function formatReleasedDate(isoDate: string, locale: string) {
+  return new Intl.DateTimeFormat(locale, {
     day: "numeric",
     month: "long",
     year: "numeric",
   }).format(new Date(`${isoDate}T00:00:00`));
 }
 
-function formatAlsoPublished(versions: string[]) {
-  if (versions.length === 0) {
-    return "";
-  }
-
-  if (versions.length === 1) {
-    return `Also published as v${versions[0]}.`;
-  }
-
-  return `Also published as v${versions[0]}–v${versions.at(-1)}.`;
-}
-
 function VersionEntryBody({ entry }: { entry: VersionEntry }) {
+  const { t } = useLocale();
   const changes = entry.changes ?? [];
 
   return (
@@ -46,24 +36,30 @@ function VersionEntryBody({ entry }: { entry: VersionEntry }) {
         </ul>
       ) : null}
       {entry.alsoPublished?.length ? (
-        <p className={styles.versionAlsoPublished}>{formatAlsoPublished(entry.alsoPublished)}</p>
+        <p className={styles.versionAlsoPublished}>
+          {entry.alsoPublished.length === 1
+            ? t("docs.version.alsoPublishedOne", { version: entry.alsoPublished[0] })
+            : t("docs.version.alsoPublishedRange", {
+                first: entry.alsoPublished[0],
+                last: entry.alsoPublished.at(-1) ?? entry.alsoPublished[0],
+              })}
+        </p>
       ) : null}
     </>
   );
 }
 
 function CommitHistory() {
+  const { locale, t } = useLocale();
+
   return (
     <section className={styles.commitHistory} aria-labelledby="commit-history-title">
       <div className={styles.commitHistoryHeading}>
         <div>
-          <p className={styles.versionEyebrow}>Source history</p>
-          <h2 id="commit-history-title">Every commit</h2>
+          <p className={styles.versionEyebrow}>{t("docs.version.sourceHistory")}</p>
+          <h2 id="commit-history-title">{t("docs.version.everyCommit")}</h2>
         </div>
-        <p>
-          Each entry is the exact Git commit behind the release narrative above. Commit subjects
-          record the individual implementation, fix, test, or maintenance change.
-        </p>
+        <p>{t("docs.version.commitDescription")}</p>
       </div>
       <ol className={styles.commitList}>
         {commitLog.map((commit) => (
@@ -76,7 +72,7 @@ function CommitHistory() {
             >
               {commit.shortHash}
             </a>
-            <time dateTime={commit.committedAt}>{formatReleasedDate(commit.committedAt)}</time>
+            <time dateTime={commit.committedAt}>{formatReleasedDate(commit.committedAt, locale)}</time>
             <span>{commit.summary}</span>
           </li>
         ))}
@@ -86,6 +82,7 @@ function CommitHistory() {
 }
 
 export function VersionPage() {
+  const { locale, t } = useLocale();
   const [theme, setTheme] = useStoredTheme();
   const { accent, accentSecondary, accentStyle, resetAccent, setAccent, setAccentSecondary } =
     useAccentPreference();
@@ -109,7 +106,7 @@ export function VersionPage() {
               accentSecondary={accentSecondary}
               idPrefix="version"
               theme={theme}
-              themeLabel="Page theme"
+              themeLabel={t("docs.version.pageTheme")}
               tileAccent={tileAccent}
               tileAccentSecondary={tileAccentSecondary}
               onAccentChange={setAccent}
@@ -128,9 +125,9 @@ export function VersionPage() {
             <p className={styles.versionEyebrow}>opus-react</p>
             <h1 className={styles.versionTitle}>v{libraryVersion}</h1>
             <p className={styles.versionDescription}>
-              Shipped changes grouped by library release. Run{" "}
-              <code className={styles.versionInlineCode}>npm run sync-versions</code> after shipping
-              changes to refresh this log.
+              {t("docs.version.descriptionBefore")}{" "}
+              <code className={styles.versionInlineCode}>npm run sync-versions</code>{" "}
+              {t("docs.version.descriptionAfter")}
             </p>
           </div>
           <ol className={styles.versionList}>
@@ -139,7 +136,7 @@ export function VersionPage() {
                 <div className={styles.versionItemHeader}>
                   <span className={styles.versionBadge}>v{entry.version}</span>
                   <time className={styles.versionDate} dateTime={entry.releasedAt}>
-                    {formatReleasedDate(entry.releasedAt)}
+                    {formatReleasedDate(entry.releasedAt, locale)}
                   </time>
                 </div>
                 <VersionEntryBody entry={entry} />

@@ -23,6 +23,7 @@ import {
 import { readPlaygroundPanelSize, storePlaygroundPanelSize, readPlaygroundChatSplitSize, storePlaygroundChatSplitSize } from "@/lib/playground/playgroundPanelSize";
 import { readPlaygroundSeed } from "@/lib/playground/playgroundNavigation";
 import { usePlaygroundTheme } from "@/lib/playground/playgroundTheme";
+import { useLocale } from "@/lib/i18n/LocaleProvider";
 import styles from "./CodePlayground.module.css";
 import { PlaygroundPreview } from "./PlaygroundPreview";
 
@@ -132,6 +133,7 @@ function resolveInitialCode(
 }
 
 export function CodePlayground({ initialCategory = null, initialSlug = null }: CodePlaygroundProps) {
+  const { t } = useLocale();
   const {
     setPreviewAccent,
     setPreviewAccentSecondary,
@@ -173,8 +175,7 @@ export function CodePlayground({ initialCategory = null, initialSlug = null }: C
     {
       id: "welcome",
       role: "assistant",
-      content:
-        "Enter your key in the OpenAI API key field above, then ask about this source, props, layout, or how to reshape the example. Your key stays on this device.",
+      content: t("playground.welcome"),
     },
   ]);
 
@@ -265,9 +266,7 @@ export function CodePlayground({ initialCategory = null, initialSlug = null }: C
     }
 
     if (!looksLikeOpenAiApiKey(apiKey)) {
-      setChatError(
-        "Enter your key in the OpenAI API key field above to continue. Your key stays on this device.",
-      );
+      setChatError(t("playground.missingKeyError"));
       return;
     }
 
@@ -301,7 +300,7 @@ export function CodePlayground({ initialCategory = null, initialSlug = null }: C
       const payload = (await response.json()) as { error?: string; message?: string };
 
       if (!response.ok) {
-        throw new Error(payload.error ?? "ChatGPT request failed.");
+        throw new Error(payload.error ?? t("playground.requestFailed"));
       }
 
       setChatMessages((current) => [
@@ -309,11 +308,11 @@ export function CodePlayground({ initialCategory = null, initialSlug = null }: C
         {
           id: crypto.randomUUID(),
           role: "assistant",
-          content: payload.message ?? "I could not find a text response.",
+          content: payload.message ?? t("playground.noTextResponse"),
         },
       ]);
     } catch (error) {
-      setChatError(error instanceof Error ? error.message : "ChatGPT request failed.");
+      setChatError(error instanceof Error ? error.message : t("playground.requestFailed"));
     } finally {
       setChatLoading(false);
     }
@@ -328,6 +327,7 @@ export function CodePlayground({ initialCategory = null, initialSlug = null }: C
     previewError,
     seedCode,
     playgroundTheme,
+    t,
   ]);
 
   const resetSplitLayout = useCallback(() => {
@@ -441,8 +441,8 @@ export function CodePlayground({ initialCategory = null, initialSlug = null }: C
     >
       <div className={styles.paneHeader}>
         <div>
-          <h1 className={styles.paneTitle}>Source</h1>
-          <p className={styles.paneHint}>Edit the component, then preview updates on the right.</p>
+          <h1 className={styles.paneTitle}>{t("playground.source")}</h1>
+          <p className={styles.paneHint}>{t("playground.sourceHint")}</p>
         </div>
       </div>
       <div className={`${styles.paneBody} ${styles.sourcePaneBody}`}>
@@ -466,13 +466,11 @@ export function CodePlayground({ initialCategory = null, initialSlug = null }: C
               onChange={updateCode}
             />
           </div>
-          <section className={styles.chatPanel} aria-label="ChatGPT playground assistant">
+          <section className={styles.chatPanel} aria-label={t("playground.chatAria")}>
             <div className={styles.chatHeader}>
               <div>
-                <h2 className={styles.chatTitle}>ChatGPT</h2>
-                <p className={styles.chatHint}>
-                  Add your OpenAI API key to chat. Conversations use the current source as context.
-                </p>
+                <h2 className={styles.chatTitle}>{t("playground.chatTitle")}</h2>
+                <p className={styles.chatHint}>{t("playground.chatHint")}</p>
               </div>
               <button
                 className={styles.clearChatButton}
@@ -482,7 +480,7 @@ export function CodePlayground({ initialCategory = null, initialSlug = null }: C
                   setChatMessages([]);
                 }}
               >
-                Clear
+                {t("playground.clear")}
               </button>
               {previewError ? (
                 <button
@@ -490,18 +488,16 @@ export function CodePlayground({ initialCategory = null, initialSlug = null }: C
                   disabled={chatLoading || !looksLikeOpenAiApiKey(chatApiKey)}
                   type="button"
                   onClick={() => {
-                    void sendChatMessage(
-                      "The playground preview is failing. Diagnose the current preview error and provide the safest corrected complete playground source. Keep the fix scoped to the source code.",
-                    );
+                    void sendChatMessage(t("playground.fixPrompt"));
                   }}
                 >
-                  Fix preview error
+                  {t("playground.fixPreviewError")}
                 </button>
               ) : null}
             </div>
             <div className={styles.chatApiKeyRow}>
               <label className={styles.chatApiKeyLabel} htmlFor="playground-openai-api-key">
-                OpenAI API key
+                {t("playground.apiKey")}
               </label>
               <div className={styles.chatApiKeyControls}>
                 <input
@@ -531,13 +527,11 @@ export function CodePlayground({ initialCategory = null, initialSlug = null }: C
                       storePlaygroundOpenAiApiKey("");
                     }}
                   >
-                    Remove
+                    {t("playground.remove")}
                   </button>
                 ) : null}
               </div>
-              <p className={styles.chatApiKeyHint}>
-                Your key stays on this device and is only used for your ChatGPT requests.
-              </p>
+              <p className={styles.chatApiKeyHint}>{t("playground.apiKeyHint")}</p>
             </div>
             <div className={styles.chatMessages}>
               {chatMessages.map((message) => (
@@ -547,14 +541,14 @@ export function CodePlayground({ initialCategory = null, initialSlug = null }: C
                   }`}
                   key={message.id}
                 >
-                  <span className={styles.chatRole}>{message.role === "user" ? "You" : "ChatGPT"}</span>
+                  <span className={styles.chatRole}>{message.role === "user" ? t("playground.you") : t("playground.chatTitle")}</span>
                   <p>{message.content}</p>
                 </div>
               ))}
               {chatLoading ? (
                 <div className={`${styles.chatMessage} ${styles.chatMessageAssistant}`}>
-                  <span className={styles.chatRole}>ChatGPT</span>
-                  <p>Thinking...</p>
+                  <span className={styles.chatRole}>{t("playground.chatTitle")}</span>
+                  <p>{t("playground.thinking")}</p>
                 </div>
               ) : null}
             </div>
@@ -567,12 +561,12 @@ export function CodePlayground({ initialCategory = null, initialSlug = null }: C
               }}
             >
               <textarea
-                aria-label="Message ChatGPT"
+                aria-label={t("playground.messageAria")}
                 className={styles.chatInput}
                 placeholder={
                   looksLikeOpenAiApiKey(chatApiKey)
-                    ? "Ask ChatGPT about this source..."
-                    : "Add an OpenAI API key above to chat..."
+                    ? t("playground.placeholderWithKey")
+                    : t("playground.placeholderWithoutKey")
                 }
                 rows={2}
                 value={chatInput}
@@ -589,7 +583,7 @@ export function CodePlayground({ initialCategory = null, initialSlug = null }: C
                 disabled={chatLoading || !chatInput.trim() || !looksLikeOpenAiApiKey(chatApiKey)}
                 type="submit"
               >
-                Send
+                {t("playground.send")}
               </button>
             </form>
           </section>
@@ -602,14 +596,14 @@ export function CodePlayground({ initialCategory = null, initialSlug = null }: C
     <section className={`${styles.pane} ${styles.previewPane}`}>
       <div className={styles.paneHeader}>
         <div>
-          <h2 className={styles.paneTitle}>Preview</h2>
-          <p className={styles.paneHint}>Live render of your edited component.</p>
+          <h2 className={styles.paneTitle}>{t("playground.preview")}</h2>
+          <p className={styles.paneHint}>{t("playground.previewHint")}</p>
         </div>
         <div className={styles.previewMenuWrap} ref={previewMenuRef}>
           <button
             aria-expanded={previewMenuOpen}
             aria-haspopup="menu"
-            aria-label="Preview options"
+            aria-label={t("playground.previewOptionsAria")}
             className={styles.previewMenuButton}
             type="button"
             onClick={() => setPreviewMenuOpen((open) => !open)}
@@ -621,11 +615,11 @@ export function CodePlayground({ initialCategory = null, initialSlug = null }: C
           {previewMenuOpen ? (
             <div className={styles.previewMenu} role="menu">
               <div className={styles.previewMenuRow}>
-                <PreviewMenuLabel iconName="border-all" label="Preview Padding" />
+                <PreviewMenuLabel iconName="border-all" label={t("playground.previewPadding")} />
                 <SwitchField
                   checked={previewPadding}
                   id="playground-preview-padding-toggle"
-                  label="Preview Padding"
+                  label={t("playground.previewPadding")}
                   labelVisuallyHidden
                   mode="flagged"
                   size="sm"
@@ -633,10 +627,10 @@ export function CodePlayground({ initialCategory = null, initialSlug = null }: C
                 />
               </div>
               <div className={styles.previewMenuTheme}>
-                <PreviewMenuLabel iconName="circle-half-stroke" label="Preview theme" />
+                <PreviewMenuLabel iconName="circle-half-stroke" label={t("playground.previewTheme")} />
                 <ThemeToggleField
                   id="playground-preview-theme-toggle"
-                  label="Preview theme"
+                  label={t("playground.previewTheme")}
                   labelVisuallyHidden
                   value={playgroundTheme}
                   onChange={setPlaygroundTheme}
@@ -652,7 +646,7 @@ export function CodePlayground({ initialCategory = null, initialSlug = null }: C
                   setPreviewMenuOpen(false);
                 }}
               >
-                <PreviewMenuLabel iconName="rotate-left" label="Reset preview" />
+                <PreviewMenuLabel iconName="rotate-left" label={t("playground.resetPreview")} />
               </button>
               <button
                 className={styles.previewMenuItem}
@@ -663,7 +657,7 @@ export function CodePlayground({ initialCategory = null, initialSlug = null }: C
                   setPreviewMenuOpen(false);
                 }}
               >
-                <PreviewMenuLabel iconName="up-right-from-square" label="Open External" />
+                <PreviewMenuLabel iconName="up-right-from-square" label={t("playground.openExternal")} />
               </button>
               {isFullWidth ? (
                 <button
@@ -675,7 +669,7 @@ export function CodePlayground({ initialCategory = null, initialSlug = null }: C
                     setPreviewMenuOpen(false);
                   }}
                 >
-                  <PreviewMenuLabel iconName="compress" label="Exit full width" />
+                  <PreviewMenuLabel iconName="compress" label={t("playground.exitFullWidth")} />
                 </button>
               ) : (
                 <button
@@ -687,7 +681,7 @@ export function CodePlayground({ initialCategory = null, initialSlug = null }: C
                     setPreviewMenuOpen(false);
                   }}
                 >
-                  <PreviewMenuLabel iconName="expand" label="Full width" />
+                  <PreviewMenuLabel iconName="expand" label={t("playground.fullWidth")} />
                 </button>
               )}
             </div>
@@ -712,14 +706,14 @@ export function CodePlayground({ initialCategory = null, initialSlug = null }: C
         <DocumentationTopBar
           current="playground"
           trailing={
-            <div className={styles.layoutControls} aria-label="Playground layout controls">
+            <div className={styles.layoutControls} aria-label={t("playground.layoutControlsAria")}>
               <button
                 className={styles.layoutButton}
                 data-active={layout === "source" ? "true" : undefined}
                 type="button"
                 onClick={() => setLayout("source")}
               >
-                Source
+                {t("playground.source")}
               </button>
               <button
                 className={styles.layoutButton}
@@ -727,7 +721,7 @@ export function CodePlayground({ initialCategory = null, initialSlug = null }: C
                 type="button"
                 onClick={resetSplitLayout}
               >
-                Split
+                {t("playground.split")}
               </button>
               <button
                 className={styles.layoutButton}
@@ -735,7 +729,7 @@ export function CodePlayground({ initialCategory = null, initialSlug = null }: C
                 type="button"
                 onClick={() => setLayout("preview")}
               >
-                Preview
+                {t("playground.preview")}
               </button>
             </div>
           }

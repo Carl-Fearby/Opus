@@ -13,15 +13,27 @@ const CATEGORY_OVERVIEW_PATHS = new Set([
 ]);
 
 export type PlaygroundSeed = {
+  appearance?: {
+    accent: string;
+    accentSecondary: string;
+    baseColor: string;
+    fontFamily: string;
+    theme: "dark" | "light";
+    tileAccent: string;
+    tileAccentSecondary: string;
+  };
   category?: ComponentCategory;
+  /** Exact source displayed in Usage when the Playground was opened. */
+  code?: string;
   settings: ControlSettings;
   slug: ControlSlug;
 };
 
 export function resolvePlaygroundContextFromLocation(
   pathname: string,
-  categoryParam?: string | null,
+  _categoryParam?: string | null,
 ): Pick<PlaygroundSeed, "category" | "slug"> | null {
+  void _categoryParam;
   if (!pathname.startsWith(`${COMPONENTS_BASE_PATH}/`)) {
     return null;
   }
@@ -31,9 +43,7 @@ export function resolvePlaygroundContextFromLocation(
     return null;
   }
 
-  const category = categoryParam ? (categoryParam as ComponentCategory) : undefined;
-
-  return { category, slug: segment as ControlSlug };
+  return { slug: segment as ControlSlug };
 }
 
 export function resolvePlaygroundHrefFromLocation(pathname: string, categoryParam?: string | null) {
@@ -60,12 +70,8 @@ export function resolvePlaygroundHref(pathname: string, categoryParam?: string |
 }
 
 export function buildComponentHref(slug: ControlSlug, category?: ComponentCategory) {
-  const base = `${COMPONENTS_BASE_PATH}/${slug}`;
-  if (!category) {
-    return base;
-  }
-
-  return `${base}?category=${category}`;
+  void category;
+  return `${COMPONENTS_BASE_PATH}/${slug}`;
 }
 
 export function resolveComponentsHrefFromLocation(pathname: string, categoryParam?: string | null) {
@@ -92,10 +98,8 @@ export function resolveComponentsHref(pathname: string, categoryParam?: string |
 }
 
 export function buildPlaygroundHref(slug: ControlSlug, category?: ComponentCategory) {
+  void category;
   const params = new URLSearchParams({ slug });
-  if (category) {
-    params.set("category", category);
-  }
 
   return `${PLAYGROUND_BASE_PATH}?${params.toString()}`;
 }

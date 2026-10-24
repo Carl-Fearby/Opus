@@ -16,11 +16,12 @@ import {
   DEFAULT_TILE_ACCENT,
   DEFAULT_TILE_ACCENT_SECONDARY,
 } from "@/components/AccentColorPicker";
-import { ColourClouds, type ColourCloudsDesignation } from "opus-react";
+import { ColourClouds, type ColourCloudsDesignation } from "@/components/ColourClouds";
 import { useOpusI18n } from "@/components/OpusI18n";
-import { Button, SelectField } from "opus-react";
-import type { Theme } from "opus-react";
-import type { GoogleFontFamily } from "opus-react";
+import { useLocale } from "@/lib/i18n/LocaleProvider";
+import { Button, SelectField } from "@/components/fields";
+import type { Theme } from "@/components/fields/types";
+import type { GoogleFontFamily } from "@/components/FontPicker";
 import type { OpusThemeDefaults } from "@/components/OpusThemeProvider";
 import styles from "./ThemeSettingsButton.module.css";
 
@@ -379,32 +380,54 @@ export function ThemeSettingsButton({
   }, [onResetAccent, onResetTileAccent]);
 
   const { t } = useOpusI18n();
+  const { t: tSite } = useLocale();
+  const appearanceOptions = [
+    { value: "standard", label: tSite("themeDesigner.standard") },
+    { value: "neumorphism", label: tSite("themeDesigner.neumorphism") },
+    { value: "liquid-glass", label: tSite("themeDesigner.liquidGlass") },
+  ] as const;
+  const radiusOptions = [
+    { value: "none", label: tSite("preview.none") },
+    { value: "standard", label: tSite("themeDesigner.standard") },
+    { value: "medium", label: tSite("themeDesigner.medium") },
+    { value: "large", label: tSite("themeDesigner.large") },
+    { value: "full", label: tSite("preview.full") },
+  ] as const;
+  const backgroundOptions = [
+    { value: "none", label: tSite("themeDesigner.transparent") },
+    { value: "standard", label: tSite("themeDesigner.solid") },
+    { value: "glass", label: tSite("themeDesigner.glass") },
+  ] as const;
+  const gradientOptions = [
+    { value: false, label: tSite("preview.off") },
+    { value: true, label: tSite("preview.on") },
+  ] as const;
   const colourClouds = useMemo<ColourCloudsDesignation>(
     () => ({
       clouds: [
         {
           id: "base",
-          label: "Base",
+          label: tSite("themeDesigner.base"),
           color: base,
         },
         {
           id: "accent",
-          label: "Accent",
+          label: tSite("themeDesigner.accent"),
           color: accent,
         },
         {
           id: "accent-secondary",
-          label: "Secondary accent",
+          label: tSite("themeDesigner.secondaryAccent"),
           color: accentSecondary,
         },
         {
           id: "accent-tertiary",
-          label: "Tertiary accent",
+          label: tSite("themeDesigner.tertiaryAccent"),
           color: tertiaryAccent,
         },
       ],
     }),
-    [accent, accentSecondary, base, tertiaryAccent],
+    [accent, accentSecondary, base, tertiaryAccent, tSite],
   );
 
   const handleSaveTheme = useCallback(async () => {
@@ -412,9 +435,9 @@ export function ThemeSettingsButton({
 
     try {
       await navigator.clipboard.writeText(themeJson);
-      setSaveNotice("Theme JSON copied to clipboard.");
+      setSaveNotice(tSite("preview.themeJsonCopied"));
     } catch {
-      setSaveNotice("Theme JSON ready below — copy it manually.");
+      setSaveNotice(tSite("preview.themeJsonManual"));
     }
 
     const blob = new Blob([themeJson], { type: "application/json" });
@@ -424,7 +447,7 @@ export function ThemeSettingsButton({
     link.download = "opus-theme.json";
     link.click();
     URL.revokeObjectURL(url);
-  }, [themeJson]);
+  }, [themeJson, tSite]);
 
   const startMove = (event: ReactPointerEvent<HTMLElement>) => {
     if (event.button !== 0) {
@@ -482,14 +505,14 @@ export function ThemeSettingsButton({
             <header className={styles.windowHeader} onPointerDown={startMove}>
               <div className={styles.windowHeading}>
                 <h2 className={styles.windowTitle} id={titleId}>
-                  Colour settings
+                  {tSite("preview.colourSettings")}
                 </h2>
                 <p className={styles.windowDescription} id={descriptionId}>
-                  Drag to move · resize from edges · Save Theme copies and downloads portable JSON
+                  {tSite("preview.colourSettingsDescription")}
                 </p>
               </div>
               <button
-                aria-label="Close colour settings"
+                aria-label={tSite("preview.closeColours")}
                 className={styles.windowClose}
                 type="button"
                 onClick={handleClose}
@@ -510,16 +533,14 @@ export function ThemeSettingsButton({
             <div className={styles.windowBody}>
               <div className={styles.panel}>
                 <section className={styles.section}>
-                  <h3 className={styles.sectionTitle}>Base UI</h3>
-                  <p className={styles.sectionHint}>
-                    Surface colour plus primary and secondary accents — not tiles.
-                  </p>
+                  <h3 className={styles.sectionTitle}>{tSite("preview.baseUi")}</h3>
+                  <p className={styles.sectionHint}>{tSite("preview.surfaceColoursHint")}</p>
                   {onBaseChange ? (
                     <AccentColorPicker
                       defaultValue="#64748b"
                       id={`${idPrefix}-base-picker`}
-                      label="Base"
-                      primarySectionLabel="Base"
+                      label={tSite("themeDesigner.base")}
+                      primarySectionLabel={tSite("themeDesigner.base")}
                       panelDivider
                       showSecondary={false}
                       value={base}
@@ -529,9 +550,9 @@ export function ThemeSettingsButton({
                   ) : null}
                   <AccentColorPicker
                     id={`${idPrefix}-accent-picker`}
-                    label="Accent"
-                    primarySectionLabel="Accent"
-                    secondarySectionLabel="Secondary accent"
+                    label={tSite("themeDesigner.accent")}
+                    primarySectionLabel={tSite("themeDesigner.accent")}
+                    secondarySectionLabel={tSite("themeDesigner.secondaryAccent")}
                     secondaryValue={accentSecondary}
                     panelDivider
                     value={accent}
@@ -544,8 +565,8 @@ export function ThemeSettingsButton({
                     <AccentColorPicker
                       defaultValue="#0ea5e9"
                       id={`${idPrefix}-tertiary-accent-picker`}
-                      label="Tertiary accent"
-                      primarySectionLabel="Tertiary accent"
+                      label={tSite("themeDesigner.tertiaryAccent")}
+                      primarySectionLabel={tSite("themeDesigner.tertiaryAccent")}
                       showSecondary={false}
                       value={tertiaryAccent}
                       variant="panel"
@@ -556,25 +577,61 @@ export function ThemeSettingsButton({
 
                 {onDefaultsChange ? (
                   <section className={styles.section}>
-                    <h3 className={styles.sectionTitle}>Control defaults</h3>
-                    <p className={styles.sectionHint}>Applied across the preview; individual component settings override these defaults.</p>
-                    <SelectField id={`${idPrefix}-theme-appearance`} label="Theme style" options={["Standard", "Neumorphism", "Liquid glass"]} value={defaults.appearance === "liquid-glass" ? "Liquid glass" : defaults.appearance === "neumorphism" ? "Neumorphism" : "Standard"} onChange={(event) => onDefaultsChange({ ...defaults, appearance: event.target.value === "Liquid glass" ? "liquid-glass" : event.target.value === "Neumorphism" ? "neumorphism" : "standard" })} />
-                    <SelectField id={`${idPrefix}-theme-radius`} label="Default radius" options={["None", "Standard", "Medium", "Large", "Full"]} value={{ none: "None", standard: "Standard", medium: "Medium", large: "Large", full: "Full" }[defaults.radius ?? "standard"]!} onChange={(event) => onDefaultsChange({ ...defaults, radius: event.target.value.toLowerCase() as OpusThemeDefaults["radius"] })} />
-                    <SelectField id={`${idPrefix}-theme-background`} label="Default background" options={["Transparent", "Solid", "Glass"]} value={{ none: "Transparent", standard: "Solid", glass: "Glass" }[defaults.transparency ?? "standard"]!} onChange={(event) => onDefaultsChange({ ...defaults, transparency: ({ Transparent: "none", Solid: "standard", Glass: "glass" } as const)[event.target.value as "Transparent" | "Solid" | "Glass"] })} />
-                    <SelectField id={`${idPrefix}-theme-gradient`} label="Default gradient" options={["Off", "On"]} value={defaults.gradient ? "On" : "Off"} onChange={(event) => onDefaultsChange({ ...defaults, gradient: event.target.value === "On" })} />
+                    <h3 className={styles.sectionTitle}>{tSite("preview.controlDefaults")}</h3>
+                    <p className={styles.sectionHint}>{tSite("preview.controlDefaultsHint")}</p>
+                    <SelectField
+                      id={`${idPrefix}-theme-appearance`}
+                      label={tSite("themeDesigner.themeStyle")}
+                      options={appearanceOptions.map((option) => option.label)}
+                      value={appearanceOptions.find((option) => option.value === (defaults.appearance ?? "standard"))?.label ?? appearanceOptions[0].label}
+                      onChange={(event) => {
+                        const option = appearanceOptions.find((entry) => entry.label === event.target.value);
+                        if (option) onDefaultsChange({ ...defaults, appearance: option.value });
+                      }}
+                    />
+                    <SelectField
+                      id={`${idPrefix}-theme-radius`}
+                      label={tSite("preview.defaultRadius")}
+                      options={radiusOptions.map((option) => option.label)}
+                      value={radiusOptions.find((option) => option.value === (defaults.radius ?? "standard"))?.label ?? radiusOptions[0].label}
+                      onChange={(event) => {
+                        const option = radiusOptions.find((entry) => entry.label === event.target.value);
+                        if (option) onDefaultsChange({ ...defaults, radius: option.value });
+                      }}
+                    />
+                    <SelectField
+                      id={`${idPrefix}-theme-background`}
+                      label={tSite("preview.defaultBackground")}
+                      options={backgroundOptions.map((option) => option.label)}
+                      value={backgroundOptions.find((option) => option.value === (defaults.transparency ?? "standard"))?.label ?? backgroundOptions[0].label}
+                      onChange={(event) => {
+                        const option = backgroundOptions.find((entry) => entry.label === event.target.value);
+                        if (option) onDefaultsChange({ ...defaults, transparency: option.value });
+                      }}
+                    />
+                    <SelectField
+                      id={`${idPrefix}-theme-gradient`}
+                      label={tSite("preview.defaultGradient")}
+                      options={gradientOptions.map((option) => option.label)}
+                      value={gradientOptions.find((option) => option.value === Boolean(defaults.gradient))?.label ?? gradientOptions[0].label}
+                      onChange={(event) => {
+                        const option = gradientOptions.find((entry) => entry.label === event.target.value);
+                        if (option) onDefaultsChange({ ...defaults, gradient: option.value });
+                      }}
+                    />
                   </section>
                 ) : null}
 
                 <section className={styles.section}>
-                  <h3 className={styles.sectionTitle}>Tiles</h3>
-                  <p className={styles.sectionHint}>Purple and blue tile tones / icon gradients.</p>
+                  <h3 className={styles.sectionTitle}>{tSite("preview.tiles")}</h3>
+                  <p className={styles.sectionHint}>{tSite("preview.tilesHint")}</p>
                   <AccentColorPicker
                     defaultSecondaryValue={DEFAULT_TILE_ACCENT_SECONDARY}
                     defaultValue={DEFAULT_TILE_ACCENT}
                     id={`${idPrefix}-tile-accent-picker`}
-                    label="Tiles"
-                    primarySectionLabel="Tiles accent"
-                    secondarySectionLabel="Tiles second accent"
+                    label={tSite("preview.tiles")}
+                    primarySectionLabel={tSite("preview.tilesAccent")}
+                    secondarySectionLabel={tSite("preview.tilesSecondAccent")}
                     secondaryValue={tileAccentSecondary}
                     value={tileAccent}
                     variant="panel"
@@ -599,14 +656,14 @@ export function ThemeSettingsButton({
 
             <footer className={styles.windowFooter}>
               <Button variant="secondary" onClick={handleResetColours}>
-                Reset
+                {tSite("preview.reset")}
               </Button>
               <span className={styles.footerSpacer} />
               <Button variant="secondary" onClick={handleClose}>
-                Close
+                {tSite("preview.close")}
               </Button>
               <Button variant="primary" onClick={handleSaveTheme}>
-                Save Theme
+                {tSite("preview.saveTheme")}
               </Button>
             </footer>
 

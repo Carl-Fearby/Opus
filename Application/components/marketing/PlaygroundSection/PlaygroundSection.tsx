@@ -1,31 +1,29 @@
 import Link from "next/link";
 import { docsComponentsUrl, docsPlaygroundUrl } from "@/lib/siteLinks";
+import { translate } from "@/lib/i18n";
+import { readServerLocale } from "@/lib/i18n/server";
 import styles from "./PlaygroundSection.module.css";
 
-const highlights = [
-  "Open any catalogue component with its generated JSX and current settings already loaded",
-  "Give ChatGPT the current source, component context, selected theme, and live preview error",
-  "Ask AI to explain, diagnose, adapt, or return corrected production-ready source",
-  "Edit the answer and see the preview update immediately in the same workspace",
-  "Use your own OpenAI API key instead of relying on a shared AI account",
-];
+export async function PlaygroundSection() {
+  const locale = await readServerLocale();
+  const t = (key: Parameters<typeof translate>[1]) => translate(locale, key);
+  const highlights = [
+    t("marketing.playground.highlight1"),
+    t("marketing.playground.highlight2"),
+    t("marketing.playground.highlight3"),
+    t("marketing.playground.highlight4"),
+    t("marketing.playground.highlight5"),
+  ];
 
-export function PlaygroundSection() {
   return (
     <section className={styles.section} id="playground">
       <div className={styles.inner}>
         <div className={styles.copy}>
-          <p className={styles.eyebrow}>AI-assisted Code Playground</p>
-          <h2>Give ChatGPT the working component—not an empty prompt.</h2>
-          <p>
-            Open a catalogue example and ChatGPT can work from the generated JSX, your edits, the
-            active theme, and any runtime preview error—all beside the live result.
-          </p>
+          <p className={styles.eyebrow}>{t("marketing.playground.eyebrow")}</p>
+          <h2>{t("marketing.playground.title")}</h2>
+          <p>{t("marketing.playground.description")}</p>
 
-          <p className={styles.keyNote}>
-            Bring your own OpenAI API key. It stays in your browser for Playground sessions, so you
-            control the account and usage behind every request.
-          </p>
+          <p className={styles.keyNote}>{t("marketing.playground.keyNote")}</p>
 
           <ul className={styles.list}>
             {highlights.map((item) => (
@@ -35,10 +33,10 @@ export function PlaygroundSection() {
 
           <div className={styles.actions}>
             <Link className={styles.primary} href={docsPlaygroundUrl}>
-              Open the Playground
+              {t("marketing.playground.open")}
             </Link>
             <Link className={styles.secondary} href={docsComponentsUrl}>
-              Browse the catalogue
+              {t("marketing.playground.browse")}
             </Link>
           </div>
         </div>

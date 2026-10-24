@@ -6,6 +6,8 @@ import { DocumentationBreadcrumbs } from "@/components/documentation/Documentati
 import { DocumentationTopBar } from "@/components/documentation/DocumentationTopBar";
 import { ThemeSettingsButton } from "@/components/documentation/ThemeSettingsButton";
 import { useStoredTheme } from "@/lib/theme/useStoredTheme";
+import { useLocale } from "@/lib/i18n/LocaleProvider";
+import type { MessageKey } from "@/lib/i18n";
 import shellStyles from "./documentation.module.css";
 import styles from "./security.module.css";
 
@@ -20,48 +22,50 @@ const resolvedFindings = [
     version: "16.3.4",
     advisory: "GHSA-f88m-g3jw-g9cj",
     href: "https://github.com/advisories/GHSA-f88m-g3jw-g9cj",
-    note: "Upgraded from 16.2.12. Optional Sharp range now permits 0.35.4.",
+    noteKey: "docs.security.finding.next",
   },
   {
     dependency: "sharp",
     version: "0.35.4",
     advisory: "GHSA-f88m-g3jw-g9cj",
     href: "https://github.com/advisories/GHSA-f88m-g3jw-g9cj",
-    note: "Patched optional image-processing dependency shipped with Next.js 16.3.4.",
+    noteKey: "docs.security.finding.sharp",
   },
   {
     dependency: "nanoid",
     version: "3.3.18",
     advisory: "GHSA-2v37-7h3g-55p8",
     href: "https://github.com/advisories/GHSA-2v37-7h3g-55p8",
-    note: "Updated through the PostCSS dependency chain.",
+    noteKey: "docs.security.finding.nanoid",
   },
   {
     dependency: "brace-expansion",
     version: "1.1.18 / 5.0.9",
-    advisory: "Three ReDoS advisories",
+    advisoryKey: "docs.security.threeRedos",
     href: "https://github.com/advisories/GHSA-3jxr-9vmj-r5cp",
-    note: "Development dependency paths are patched.",
+    noteKey: "docs.security.finding.brace",
   },
   {
     dependency: "js-yaml",
     version: "4.3.1",
     advisory: "GHSA-5p4m-2wfm-xmqj",
     href: "https://github.com/advisories/GHSA-5p4m-2wfm-xmqj",
-    note: "Development dependency path is patched.",
+    noteKey: "docs.security.finding.jsYaml",
   },
 ] as const;
 
-function Command({ command, label }: { command: string; label: string }) {
+function Command({ command, label }: { command: string; label: MessageKey }) {
+  const { t } = useLocale();
   return (
     <div className={styles.commandRow}>
       <code>{command}</code>
-      <CopyButton label={`Copy ${label}`} value={command} />
+      <CopyButton label={t("docs.security.copyCommand", { label: t(label) })} value={command} />
     </div>
   );
 }
 
 export function SecurityPage() {
+  const { locale, t } = useLocale();
   const [theme, setTheme] = useStoredTheme();
   const { accent, accentSecondary, accentStyle, resetAccent, setAccent, setAccentSecondary } =
     useAccentPreference();
@@ -73,6 +77,11 @@ export function SecurityPage() {
     tileAccentSecondary,
     tileAccentStyle,
   } = useTileAccentPreference();
+  const reviewedDate = new Intl.DateTimeFormat(locale, {
+    day: "numeric",
+    month: "long",
+    year: "numeric",
+  }).format(new Date("2026-09-02T00:00:00"));
 
   return (
     <OpusThemeProvider applyToDocument={false} theme={theme}>
@@ -85,7 +94,7 @@ export function SecurityPage() {
               accentSecondary={accentSecondary}
               idPrefix="security"
               theme={theme}
-              themeLabel="Page theme"
+              themeLabel={t("docs.version.pageTheme")}
               tileAccent={tileAccent}
               tileAccentSecondary={tileAccentSecondary}
               onAccentChange={setAccent}
@@ -99,70 +108,54 @@ export function SecurityPage() {
           }
         />
         <main className={styles.page}>
-          <DocumentationBreadcrumbs currentLabel="Security" />
+          <DocumentationBreadcrumbs currentLabel={t("docs.security.title")} />
 
           <header className={styles.hero}>
             <div>
-              <p className={styles.eyebrow}>Dependency transparency</p>
-              <h1>Security</h1>
-              <p>
-                A lockfile-backed view of known dependency findings, optional runtime paths, and
-                the exact upgrade choices available to Opus consumers.
-              </p>
+              <p className={styles.eyebrow}>{t("docs.security.eyebrow")}</p>
+              <h1>{t("docs.security.title")}</h1>
+              <p>{t("docs.security.description")}</p>
             </div>
-            <div className={styles.auditSummary} aria-label="Current audit summary">
-              <span>0 high</span>
-              <span>0 critical</span>
-              <span>0 development</span>
+            <div className={styles.auditSummary} aria-label={t("docs.security.auditSummaryAria")}>
+              <span>{t("docs.security.noHigh")}</span>
+              <span>{t("docs.security.noCritical")}</span>
+              <span>{t("docs.security.noDevelopment")}</span>
             </div>
           </header>
 
           <section className={styles.panel} aria-labelledby="snapshot-title">
             <div className={styles.panelHeading}>
               <div>
-                <p className={styles.eyebrow}>Application/package-lock.json</p>
-                <h2 id="snapshot-title">Current repository snapshot</h2>
+                <p className={styles.eyebrow}>{t("docs.security.lockfile")}</p>
+                <h2 id="snapshot-title">{t("docs.security.snapshotTitle")}</h2>
               </div>
-              <time dateTime="2026-09-02">Reviewed 2 September 2026</time>
+              <time dateTime="2026-09-02">{t("docs.security.reviewed", { date: reviewedDate })}</time>
             </div>
-            <p className={styles.note}>
-              npm reports no production vulnerabilities in this lockfile. Next.js 16.3.4 permits
-              Sharp 0.35.4, which patches the optional image-processing advisories previously
-              reported through 16.2.12.
-            </p>
+            <p className={styles.note}>{t("docs.security.snapshotNote")}</p>
           </section>
 
           <section className={styles.panel} aria-labelledby="choices-title">
             <div className={styles.panelHeading}>
               <div>
-                <p className={styles.eyebrow}>Consumer choices</p>
-                <h2 id="choices-title">Current baseline and optional installs</h2>
+                <p className={styles.eyebrow}>{t("docs.security.consumerChoices")}</p>
+                <h2 id="choices-title">{t("docs.security.baselineTitle")}</h2>
               </div>
             </div>
             <div className={styles.choiceGrid}>
               <article>
-                <h3>Current baseline</h3>
-                <p>
-                  Stay on Next 16.3.4 and its matching lint configuration. This is the version in
-                  Application/package-lock.json.
-                </p>
-                <Command command={baselineCommand} label="baseline command" />
+                <h3>{t("docs.security.baseline")}</h3>
+                <p>{t("docs.security.baselineNote")}</p>
+                <Command command={baselineCommand} label="docs.security.baselineCommand" />
               </article>
               <article>
-                <h3>Image optimisation runtime</h3>
-                <p>
-                  If your deployment explicitly installs Sharp, pin a patched 0.35 release alongside
-                  Next 16.3.4. Next&apos;s optional range already permits Sharp 0.35.4.
-                </p>
-                <Command command={imageCommand} label="image runtime command" />
+                <h3>{t("docs.security.imageRuntime")}</h3>
+                <p>{t("docs.security.imageRuntimeNote")}</p>
+                <Command command={imageCommand} label="docs.security.imageCommand" />
               </article>
               <article>
-                <h3>No native optional packages</h3>
-                <p>
-                  Install with <code>--omit=optional</code> only if your runtime does not require the
-                  optional native image backend. Confirm image behaviour in your deployment target.
-                </p>
-                <Command command="npm install --omit=optional" label="optional omission command" />
+                <h3>{t("docs.security.noNative")}</h3>
+                <p>{t("docs.security.noNativeNote")}</p>
+                <Command command="npm install --omit=optional" label="docs.security.optionalCommand" />
               </article>
             </div>
           </section>
@@ -170,8 +163,8 @@ export function SecurityPage() {
           <section className={styles.panel} aria-labelledby="resolved-title">
             <div className={styles.panelHeading}>
               <div>
-                <p className={styles.eyebrow}>Recently addressed</p>
-                <h2 id="resolved-title">Resolved findings</h2>
+                <p className={styles.eyebrow}>{t("docs.security.recentlyAddressed")}</p>
+                <h2 id="resolved-title">{t("docs.security.resolvedFindings")}</h2>
               </div>
             </div>
             <div className={styles.resolvedList}>
@@ -181,9 +174,9 @@ export function SecurityPage() {
                     <h3>{finding.dependency}</h3>
                     <code>{finding.version}</code>
                   </div>
-                  <p>{finding.note}</p>
+                  <p>{t(finding.noteKey)}</p>
                   <a href={finding.href} rel="noreferrer" target="_blank">
-                    {finding.advisory}
+                    {"advisoryKey" in finding ? t(finding.advisoryKey) : finding.advisory}
                   </a>
                 </article>
               ))}
@@ -193,17 +186,14 @@ export function SecurityPage() {
           <section className={styles.panel} aria-labelledby="verify-title">
             <div className={styles.panelHeading}>
               <div>
-                <p className={styles.eyebrow}>Reproduce the result</p>
-                <h2 id="verify-title">Audit commands</h2>
+                <p className={styles.eyebrow}>{t("docs.security.reproduce")}</p>
+                <h2 id="verify-title">{t("docs.security.auditCommands")}</h2>
               </div>
             </div>
-            <p className={styles.note}>
-              Run these from <code>Application</code>. The first includes optional production
-              dependencies; the second shows the required production graph only.
-            </p>
+            <p className={styles.note}>{t("docs.security.auditNote")}</p>
             <div className={styles.commands}>
-              <Command command={auditCommand} label="production audit command" />
-              <Command command={requiredOnlyCommand} label="required dependency audit command" />
+              <Command command={auditCommand} label="docs.security.productionAuditCommand" />
+              <Command command={requiredOnlyCommand} label="docs.security.requiredAuditCommand" />
             </div>
           </section>
         </main>

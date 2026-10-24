@@ -8,9 +8,11 @@ import {
   type PlaygroundExternalPreviewPayload,
 } from "@/lib/playground/externalPreviewStorage";
 import { PlaygroundPreview } from "./PlaygroundPreview";
+import { useLocale } from "@/lib/i18n/LocaleProvider";
 import styles from "./CodePlayground.module.css";
 
 export function ExternalPlaygroundPreview() {
+  const { t } = useLocale();
   const searchParams = useSearchParams();
   const [payload, setPayload] = useState<PlaygroundExternalPreviewPayload | null | undefined>(undefined);
 
@@ -42,14 +44,14 @@ export function ExternalPlaygroundPreview() {
   }, [searchParams]);
 
   if (payload === undefined) {
-    return <main className={styles.externalPreviewEmpty}>Loading preview…</main>;
+    return <main className={styles.externalPreviewEmpty}>{t("docs.error.loadingPreview")}</main>;
   }
 
   if (!payload) {
     return (
       <main className={styles.externalPreviewEmpty}>
-        <h1>Preview unavailable</h1>
-        <p>Return to the playground and choose Open External again.</p>
+        <h1>{t("docs.error.previewUnavailable.title")}</h1>
+        <p>{t("docs.error.previewUnavailable.description")}</p>
       </main>
     );
   }

@@ -6,18 +6,20 @@ import {
   useSetComponentsPageHeader,
 } from "@/components/development/ComponentsThemeProvider";
 import { ErrorPage } from "@/components/documentation/ErrorPage";
+import { useLocale } from "@/lib/i18n/LocaleProvider";
 
 function ForbiddenContent() {
+  const { t } = useLocale();
   useSetComponentsPageHeader(
-    "Access denied",
-    "You do not have permission to view this page.",
+    t("docs.error.accessDenied.title"),
+    t("docs.error.accessDenied.header"),
   );
 
   return (
     <ErrorPage
       code="403"
-      description="You do not have permission to view this page. If you believe this is a mistake, contact your administrator or sign in with a different account."
-      title="Access denied"
+      description={t("docs.error.accessDenied.description")}
+      title={t("docs.error.accessDenied.title")}
       titleId="forbidden-title"
     />
   );
@@ -34,11 +36,12 @@ export function ForbiddenPage() {
 }
 
 export function ForbiddenPageContent() {
+  const { t } = useLocale();
   return (
     <ErrorPage
       code="403"
-      description="You do not have permission to view this page. If you believe this is a mistake, contact your administrator or sign in with a different account."
-      title="Access denied"
+      description={t("docs.error.accessDenied.description")}
+      title={t("docs.error.accessDenied.title")}
       titleId="forbidden-title"
     />
   );

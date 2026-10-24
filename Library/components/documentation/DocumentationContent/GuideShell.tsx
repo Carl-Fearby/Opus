@@ -11,6 +11,7 @@ import { DocumentationTopBar } from "@/components/documentation/DocumentationTop
 import { DocumentationBreadcrumbs } from "@/components/documentation/DocumentationBreadcrumbs";
 import { ThemeSettingsButton } from "@/components/documentation/ThemeSettingsButton";
 import { useStoredTheme } from "@/lib/theme/useStoredTheme";
+import { useLocale } from "@/lib/i18n/LocaleProvider";
 import styles from "./documentation.module.css";
 
 type GuideShellProps = {
@@ -19,6 +20,7 @@ type GuideShellProps = {
 };
 
 export function GuideShell({ children, pages }: GuideShellProps) {
+  const { t } = useLocale();
   const pathname = usePathname();
   const [theme, setTheme] = useStoredTheme();
   const { accent, accentSecondary, accentStyle, resetAccent, setAccent, setAccentSecondary } =
@@ -58,7 +60,7 @@ export function GuideShell({ children, pages }: GuideShellProps) {
         />
         <div className={styles.body}>
           <aside className={styles.sidebar}>
-            <nav aria-label="Guide pages">
+            <nav aria-label={t("docs.guide.pagesAria")}>
               <ul className={styles.sidebarList}>
                 {pages.map((page) => {
                   const href = guidePath(page.slug === "index" ? undefined : page.slug);

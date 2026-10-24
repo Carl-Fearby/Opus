@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { useComponentTitle } from "@/lib/i18n/useComponentTitle";
+import { useLocale } from "@/lib/i18n/LocaleProvider";
 import { useOpusI18n } from "@/components/OpusI18n";
 import type { ReactNode } from "react";
 import { useState } from "react";
@@ -94,9 +95,10 @@ type SharedFieldOptions = {
 export function FormsOverview() {
   const titleFor = useComponentTitle();
   const { t } = useOpusI18n();
+  const { t: tSite } = useLocale();
   useSetComponentsPageHeader(
-    "Forms",
-    "Live previews of every form component. Adjust shared settings below or open a component for full control.",
+    tSite("docs.category.forms"),
+    tSite("docs.forms.description"),
   );
 
   const [flagged, setFlagged] = useState(false);

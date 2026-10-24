@@ -1,6 +1,7 @@
 "use client";
 
 import { createElement, useCallback, useEffect, useRef, useState } from "react";
+import { useLocale } from "@/lib/i18n/LocaleProvider";
 import styles from "./OpusModelShowcase.module.css";
 
 const MODEL_SRC = "/models/opus/opus-logo.glb";
@@ -26,6 +27,7 @@ function ensureModelViewer() {
 }
 
 export function OpusModelShowcase() {
+  const { t } = useLocale();
   const viewerRef = useRef<ModelViewerElement | null>(null);
   const [ready, setReady] = useState(false);
   const [failed, setFailed] = useState(false);
@@ -88,13 +90,13 @@ export function OpusModelShowcase() {
 
   return (
     <div className={styles.showcase}>
-      <p className={styles.label}>Interactive 3D asset</p>
+      <p className={styles.label}>{t("marketing.model.label")}</p>
       <div className={styles.stage}>
         {ready
           ? createElement("model-viewer", {
               key: MODEL_SRC,
               ref: setViewerNode,
-              alt: "Three-dimensional Opus cube logo.",
+              alt: t("marketing.model.alt"),
               "auto-rotate": "",
               "camera-controls": "",
               "camera-orbit": "35deg 70deg 55%",
@@ -110,15 +112,15 @@ export function OpusModelShowcase() {
       {showOverlay ? (
         <div className={styles.loading} role="status" aria-live="polite">
           <span className={styles.spinner} aria-hidden="true" />
-          <span>Loading Opus 3D mark…</span>
+          <span>{t("marketing.model.loading")}</span>
         </div>
       ) : null}
       {failed ? (
         <div className={styles.loading} role="alert">
-          3D preview unavailable.
+          {t("marketing.model.unavailable")}
         </div>
       ) : null}
-      <p className={styles.hint}>Drag to explore the Opus mark.</p>
+      <p className={styles.hint}>{t("marketing.model.hint")}</p>
     </div>
   );
 }

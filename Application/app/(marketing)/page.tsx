@@ -13,6 +13,8 @@ import { StatBand } from "@/components/marketing/StatBand";
 import { ThemeShowcase } from "@/components/marketing/ThemeShowcase";
 import { WorkflowSection } from "@/components/marketing/WorkflowSection";
 import { getAllSlugs } from "@/lib/controls/registry";
+import { translate } from "@/lib/i18n";
+import { readServerLocale } from "@/lib/i18n/server";
 import Link from "next/link";
 
 export const metadata: Metadata = {
@@ -28,7 +30,9 @@ export const metadata: Metadata = {
   },
 };
 
-export default function HomePage() {
+export default async function HomePage() {
+  const locale = await readServerLocale();
+  const t = (key: Parameters<typeof translate>[1]) => translate(locale, key);
   const catalogueCount = getAllSlugs().length;
 
   return (
@@ -46,13 +50,12 @@ export default function HomePage() {
       <WorkflowSection />
       <section className="marketingWhyOpus" aria-labelledby="why-opus-home-title">
         <div>
-          <p>Why Opus</p>
-          <h2 id="why-opus-home-title">Built in the open, because useful work should last.</h2>
-          <span>
-            Opus is Carl Fearby’s way of sharing decades of interface work with the wider web
-            community—free to use, open to critique, and made without a commercial agenda.
-          </span>
-          <Link href="/why-opus">Read why Opus exists <span aria-hidden="true">→</span></Link>
+          <p>{t("marketing.whyOpus.eyebrow")}</p>
+          <h2 id="why-opus-home-title">{t("marketing.whyOpus.title")}</h2>
+          <span>{t("marketing.whyOpus.body")}</span>
+          <Link href="/why-opus">
+            {t("marketing.whyOpus.link")} <span aria-hidden="true">→</span>
+          </Link>
         </div>
       </section>
       <ContributorsCallout />

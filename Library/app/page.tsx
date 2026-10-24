@@ -1,9 +1,13 @@
 import Image from "next/image";
 import Link from "next/link";
 import { DOCUMENTATION_BASE_PATH } from "@/lib/documentation/routes";
+import { translate } from "@/lib/i18n";
+import { readServerLocale } from "@/lib/i18n/server";
 import styles from "./page.module.css";
 
-export default function Home() {
+export default async function Home() {
+  const locale = await readServerLocale();
+
   return (
     <main className={styles.page} data-theme="dark">
       <div className={styles.hero}>
@@ -19,7 +23,7 @@ export default function Home() {
           />
         </Link>
         <Link className={styles.link} href={DOCUMENTATION_BASE_PATH}>
-          Enter documentation
+          {translate(locale, "docs.home.enter")}
         </Link>
       </div>
     </main>

@@ -1,37 +1,36 @@
 "use client";
 
 import { Badge, Button, OpusThemeProvider, TextField } from "opus-react";
+import { useLocale } from "@/lib/i18n/LocaleProvider";
 import styles from "./ThemeShowcase.module.css";
-
-const themes = [
-  { name: "Light", theme: "light" as const, status: "Ready for review" },
-  { name: "Dark", theme: "dark" as const, status: "Ready for review" },
-];
 
 type ThemeShowcaseProps = {
   componentCount: number;
 };
 
 export function ThemeShowcase({ componentCount }: ThemeShowcaseProps) {
+  const { t } = useLocale();
+  const themes = [
+    { theme: "light" as const, label: t("marketing.theme.lightTheme") },
+    { theme: "dark" as const, label: t("marketing.theme.darkTheme") },
+  ];
+
   return (
     <section className={styles.section} aria-labelledby="theme-showcase-title">
       <div className={styles.inner}>
         <div className={styles.intro}>
-          <p className={styles.eyebrow}>New in Opus 0.7 · Visual theme designer</p>
-          <h2 id="theme-showcase-title">Build a complete theme visually. Use it everywhere.</h2>
-          <p>
-            Set colours, tile gradients, typography, radius, surface treatment, and light or dark mode in one live workspace.
-            Opus turns those choices into a provider-ready theme that applies across your application while individual components can still opt out.
-          </p>
+          <p className={styles.eyebrow}>{t("marketing.theme.eyebrow")}</p>
+          <h2 id="theme-showcase-title">{t("marketing.theme.title")}</h2>
+          <p>{t("marketing.theme.description")}</p>
           <ul className={styles.featureList}>
-            <li>Live component canvas with controls, tiles, widgets, forms, and actions.</li>
-            <li>Primary, secondary, tertiary, and tile accent tokens with light and dark previews.</li>
-            <li>Desktop and mobile preview modes, plus copy-ready provider code for your parent application.</li>
+            <li>{t("marketing.theme.bullet1")}</li>
+            <li>{t("marketing.theme.bullet2")}</li>
+            <li>{t("marketing.theme.bullet3")}</li>
           </ul>
         </div>
 
         <div className={styles.snapshots}>
-          {themes.map(({ name, status, theme }) => (
+          {themes.map(({ label, name, theme }) => (
             <OpusThemeProvider applyToDocument={false} key={theme} theme={theme}>
               <article className={styles.snapshot} data-theme={theme}>
                 <header className={styles.snapshotHeader}>
@@ -40,29 +39,30 @@ export function ThemeShowcase({ componentCount }: ThemeShowcaseProps) {
                     <i />
                     <i />
                   </span>
-                  <span>{name} theme</span>
+                  <span>{label}</span>
                 </header>
                 <div className={styles.snapshotBody}>
                   <div className={styles.snapshotTitle}>
                     <div>
-                      <p>Shared theme</p>
-                      <strong>Visual system refresh</strong>
+                      <p>{t("marketing.theme.shared")}</p>
+                      <strong>{t("marketing.theme.refresh")}</strong>
                     </div>
-                    <Badge tone="success">{status}</Badge>
+                    <Badge label={t("marketing.theme.readyForReview")} tone="success" />
                   </div>
                   <div className={styles.metrics}>
-                    <div><span>Coverage</span><strong>94%</strong></div>
-                    <div><span>Components</span><strong>{componentCount}</strong></div>
+                    <div><span>{t("marketing.theme.coverage")}</span><strong>94%</strong></div>
+                    <div><span>{t("docs.components")}</span><strong>{componentCount}</strong></div>
                   </div>
                   <TextField
                     id={`theme-preview-${theme}`}
-                    label="Project name"
+                    label={t("marketing.theme.projectName")}
                     onChange={() => undefined}
-                    value="Opus workspace"
+                    type="text"
+                    value={t("marketing.theme.workspace")}
                   />
                   <div className={styles.actions}>
-                    <Button size="sm" type="button">Save changes</Button>
-                    <Button size="sm" type="button" variant="secondary">Preview</Button>
+                    <Button size="sm" type="button">{t("marketing.theme.saveChanges")}</Button>
+                    <Button size="sm" type="button" variant="secondary">{t("marketing.theme.preview")}</Button>
                   </div>
                 </div>
               </article>

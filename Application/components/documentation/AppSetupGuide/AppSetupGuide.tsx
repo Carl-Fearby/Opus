@@ -1,50 +1,34 @@
 import { DescriptionList, Panel } from "opus-react";
+import { useLocale } from "@/lib/i18n/LocaleProvider";
 import styles from "./AppSetupGuide.module.css";
 
-const portalledOverlays = [
-  "Drawer",
-  "Dialog",
-  "Modal",
-  "Command palette",
-  "Lightbox",
-  "Model lightbox",
-];
-
-const portalledFloating = [
-  "Dropdown menu",
-  "Mega menu",
-  "Tooltip",
-  "Context menu",
-  "Emoji picker",
-];
-
 export function AppSetupGuide() {
+  const { t } = useLocale();
+
   return (
     <div className={styles.root}>
-      <Panel title="App setup boilerplate" description="Copy the Usage tab into a new Next.js app shell.">
+      <Panel title={t("docs.appSetup.title")} description={t("docs.appSetup.description")}>
         <DescriptionList
           items={[
             {
-              term: "Styles",
-              description: "Import opus-react/styles.css and opus-react/index.css in the root layout.",
+              term: t("docs.appSetup.styles"),
+              details: t("docs.appSetup.stylesDetails"),
             },
             {
-              term: "Theme",
-              description:
-                "Set data-theme on the html element and wrap the app in ThemeProvider so portalled overlays inherit tokens.",
+              term: t("docs.appSetup.globalTheme"),
+              details: t("docs.appSetup.globalThemeDetails"),
             },
             {
-              term: "Portal host",
-              description:
-                "Optional PortalHost wrapper for a dedicated mount node. Overlays still portal to document.body when omitted.",
+              term: t("docs.appSetup.globalFont"),
+              details: t("docs.appSetup.globalFontDetails"),
             },
             {
-              term: "Portalled overlays",
-              description: portalledOverlays.join(", "),
+              term: t("docs.appSetup.previewControls"),
+              details: t("docs.appSetup.previewControlsDetails"),
             },
             {
-              term: "Portalled floating UI",
-              description: portalledFloating.join(", "),
+              term: t("docs.appSetup.portalHost"),
+              details: t("docs.appSetup.portalHostDetails"),
             },
           ]}
         />

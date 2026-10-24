@@ -11,20 +11,22 @@ import {
 } from "opus-react";
 import { getDealsOverTimeDemoData } from "@/lib/controls/dealsOverTimeDemoData";
 import { demoPipelineStages, demoPipelineTotalValue } from "@/lib/controls/pipelineDemoData";
+import { useLocale } from "@/lib/i18n/LocaleProvider";
 import styles from "./RealWorldShowcase.module.css";
 
-const catalogueLinks = [
-  { href: "/documentation/components/lab-contact-card", label: "Contact card" },
-  { href: "/documentation/components/pipeline-overview", label: "Pipeline overview" },
-  { href: "/documentation/components/deals-over-time", label: "Deals over time" },
-];
-
 export function RealWorldShowcase() {
+  const { t } = useLocale();
   const [chartsReady, setChartsReady] = useState(false);
 
   useEffect(() => {
     setChartsReady(true);
   }, []);
+
+  const catalogueLinks = [
+    { href: "/documentation/components/lab-contact-card", label: t("marketing.real.contact") },
+    { href: "/documentation/components/pipeline-overview", label: t("marketing.real.pipeline") },
+    { href: "/documentation/components/deals-over-time", label: t("marketing.real.deals") },
+  ];
 
   const handleContactAction = (action: ContactDetailsAction) => {
     // The marketing example is deliberately live; applications provide their
@@ -36,19 +38,16 @@ export function RealWorldShowcase() {
     <section className={styles.section} aria-labelledby="real-world-heading">
       <div className={styles.inner}>
         <div className={styles.intro}>
-          <p className={styles.eyebrow}>Real-world compositions</p>
-          <h2 id="real-world-heading">Production UI, not placeholder blocks.</h2>
-          <p>
-            These are live Opus components from the npm package—the same contact and dashboard
-            patterns available in the catalogue and editable Playground.
-          </p>
+          <p className={styles.eyebrow}>{t("marketing.real.eyebrow")}</p>
+          <h2 id="real-world-heading">{t("marketing.real.title")}</h2>
+          <p>{t("marketing.real.description")}</p>
         </div>
 
         <div className={styles.demoShell}>
           <div className={styles.demoBar}>
             <div>
               <span className={styles.liveDot} aria-hidden="true" />
-              Live component composition
+              {t("marketing.real.live")}
             </div>
             <span>opus-react</span>
           </div>
@@ -65,20 +64,20 @@ export function RealWorldShowcase() {
                   totalValue={demoPipelineTotalValue}
                 />
               ) : (
-                <div className={styles.chartLoading}>Loading pipeline preview…</div>
+                <div className={styles.chartLoading}>{t("marketing.real.loadingPipeline")}</div>
               )}
             </div>
             <div className={styles.chartPreview}>
               {chartsReady ? (
                 <DealsOverTime data={getDealsOverTimeDemoData("This Year")} period="This Year" />
               ) : (
-                <div className={styles.chartLoading}>Loading deals preview…</div>
+                <div className={styles.chartLoading}>{t("marketing.real.loadingDeals")}</div>
               )}
             </div>
           </div>
         </div>
 
-        <div className={styles.links} aria-label="View showcased components">
+        <div className={styles.links} aria-label={t("marketing.real.linksAria")}>
           {catalogueLinks.map((item) => (
             <Link href={item.href} key={item.href}>
               {item.label} <span aria-hidden="true">→</span>

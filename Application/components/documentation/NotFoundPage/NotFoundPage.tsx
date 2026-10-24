@@ -6,18 +6,20 @@ import {
   useSetComponentsPageHeader,
 } from "@/components/development/ComponentsThemeProvider";
 import { ErrorPage } from "@/components/documentation/ErrorPage";
+import { useLocale } from "@/lib/i18n/LocaleProvider";
 
 function NotFoundContent() {
+  const { t } = useLocale();
   useSetComponentsPageHeader(
-    "Page not found",
-    "This route is not part of the Opus documentation site.",
+    t("docs.error.pageNotFound.title"),
+    t("docs.error.pageNotFound.header"),
   );
 
   return (
     <ErrorPage
       code="404"
-      description="The page you requested does not exist, may have moved, or the URL may be incorrect. Use the navigation to browse the component library or return to documentation home."
-      title="Page not found"
+      description={t("docs.error.pageNotFound.description")}
+      title={t("docs.error.pageNotFound.title")}
       titleId="not-found-title"
     />
   );
@@ -34,11 +36,12 @@ export function NotFoundPage() {
 }
 
 export function NotFoundPageContent() {
+  const { t } = useLocale();
   return (
     <ErrorPage
       code="404"
-      description="The page you requested does not exist, may have moved, or the URL may be incorrect. Use the navigation to browse the component library or return to documentation home."
-      title="Page not found"
+      description={t("docs.error.pageNotFound.description")}
+      title={t("docs.error.pageNotFound.title")}
       titleId="not-found-title"
     />
   );
