@@ -828,6 +828,14 @@ export const versionLog: VersionEntry[] = [
     commitShort: "b109604",
     summary: "Translated component display titles and documentation descriptions.",
     changes: ["Translate component display titles in the sidebar, overview cards, page headers and breadcrumbs while keeping code identifiers and imports in English.","Ship French, Czech and Slovak descriptions for all 306 catalogue components.","Translate category descriptions, preview toolbar controls and the Open menu.","Align the language picker, release badge and preview controls to a consistent height.","Publish opus-react 0.12.1."],
+  },
+  {
+    version: "0.12.2",
+    releasedAt: "2026-10-24",
+    commit: "1c8ce9903dc1b57be59d989e77be27cb7fa1d2c7",
+    commitShort: "1c8ce99",
+    summary: "Translated component documentation, usage panels and settings labels.",
+    changes: ["Translate the full component documentation for all 306 components into French, Czech and Slovak, while keeping prop names, types, imports and code samples unchanged.","Translate usage-panel controls, settings labels, option labels and the Built from / Used in composition copy.","Share the i18n context across the site and the published package so component previews follow the selected site language.","Localise the BackgroundBlobs preview content without changing the generated code sample.","Publish opus-react 0.12.2."],
   }
 ].reverse();
 

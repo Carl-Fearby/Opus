@@ -1765,5 +1765,11 @@ export const commitLog: CommitEntry[] = [
     shortHash: "e23e28e",
     committedAt: "2026-10-24",
     summary: "fix(i18n): translate component display titles and preview labels",
+  },
+  {
+    hash: "1c8ce9903dc1b57be59d989e77be27cb7fa1d2c7",
+    shortHash: "1c8ce99",
+    committedAt: "2026-10-24",
+    summary: "feat(i18n): translate component documentation, usage and settings",
   }
 ].reverse();
