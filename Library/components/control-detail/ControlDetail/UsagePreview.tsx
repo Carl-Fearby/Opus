@@ -5,6 +5,7 @@ import type { ComponentType } from "react";
 import { compilePlaygroundCode } from "@/lib/playground/compilePlaygroundCode";
 import { JsonViewer } from "@/components/JsonViewer";
 import { CookieConsent } from "@/components/CookieConsent";
+import { useOpusI18n } from "@/components/OpusI18n";
 import { generateUsageCode } from "@/lib/controls/generateUsageCode";
 import type { ComponentCategory, ControlSettings, ControlSettingsBySlug, ControlSlug } from "@/lib/controls/types";
 import styles from "./ControlDetail.module.css";
@@ -126,6 +127,7 @@ export function UsagePreview({
   showActionStatus = true,
   slug,
 }: UsagePreviewProps) {
+  const { t } = useOpusI18n();
   const source = useMemo(
     () => generateUsageCode(slug, settings, category).full,
     [category, settings, slug],
@@ -134,12 +136,24 @@ export function UsagePreview({
   // this browser has already saved a real consent decision. Keep the code
   // shown to consumers unchanged; only the compiled catalogue example is
   // deliberately temporary.
-  const previewSource = useMemo(
-    () => slug === "cookie-consent"
-      ? source.replace("<CookieConsent", "<CookieConsent persist={false}")
-      : source,
-    [slug, source],
-  );
+  const previewSource = useMemo(() => {
+    let code = source;
+    if (slug === "cookie-consent") {
+      code = code.replace("<CookieConsent", "<CookieConsent persist={false}");
+    }
+    if (slug === "background-blobs") {
+      code = code
+        .replace(
+          'title="Content inside the colour field"',
+          `title=${JSON.stringify(t("backgroundBlobs.demoTitle", "Content inside the colour field"))}`,
+        )
+        .replace(
+          "<Text>Place your page content inside BackgroundBlobs.</Text>",
+          `<Text>${t("backgroundBlobs.demoBody", "Place your page content inside BackgroundBlobs.")}</Text>`,
+        );
+    }
+    return code;
+  }, [slug, source, t]);
   const previewRefCache = useRef<{
     Component?: ComponentType;
     error?: string;
@@ -174,14 +188,14 @@ export function UsagePreview({
   const cookieConsentSettings = slug === "cookie-consent"
     ? settings as ControlSettingsBySlug["cookie-consent"]
     : null;
-  const [lastAction, setLastAction] = useState("Waiting for action");
+  const [lastAction, setLastAction] = useState(t("preview.waitingAction", "Waiting for action"));
   const [dataOutput, setDataOutput] = useState<Record<string, unknown> | null>(null);
   const previewRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    setLastAction("Waiting for action");
+    setLastAction(t("preview.waitingAction", "Waiting for action"));
     setDataOutput(null);
-  }, [source]);
+  }, [source, t]);
 
   useEffect(() => {
     const previewElement = previewRef.current;
@@ -190,7 +204,7 @@ export function UsagePreview({
     let actionFrame: number | undefined;
 
     const updateOutput = (label: string | null) => {
-      if (label) setLastAction(`Last action: ${label}`);
+      if (label) setLastAction(t("preview.lastAction", "Last action: {label}", { label }));
       const formOutput = collectPreviewOutput(previewElement);
       const output = showSearchBoxJson && formOutput
         ? { search: formOutput.search ?? "", category: formOutput.category ?? "" }
@@ -225,7 +239,7 @@ export function UsagePreview({
       previewElement.removeEventListener("click", reportAction);
       previewElement.removeEventListener("keydown", reportAction);
     };
-  }, [showActionStatus, slug]);
+  }, [showActionStatus, slug, t]);
 
   return (
     <div
@@ -259,7 +273,7 @@ export function UsagePreview({
           {showActionStatus ? <p data-testid="usage-preview-action">{lastAction}</p> : null}
           {dataOutput ? (
             <div className={styles.globalDataOutput} data-testid="usage-preview-data">
-              {showActionStatus ? <strong>Data output</strong> : null}
+              {showActionStatus ? <strong>{t("preview.dataOutput", "Data output")}</strong> : null}
               <JsonViewer collapsedDepth={2} value={dataOutput} />
             </div>
           ) : null}

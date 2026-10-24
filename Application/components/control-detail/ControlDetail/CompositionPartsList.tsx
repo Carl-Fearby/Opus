@@ -5,6 +5,8 @@ import { ComponentIcon } from "@/components/development/ComponentIcon";
 import { getComponentIcon } from "@/lib/controls/componentIcons";
 import { getCompositionChildren } from "@/lib/controls/compositionGraph";
 import { getControl } from "@/lib/controls/registry";
+import { useComponentTitle } from "@/lib/i18n/useComponentTitle";
+import { useOpusI18n } from "@/components/OpusI18n";
 import { componentPath } from "@/lib/controls/routes";
 import type { ControlDefinition, ControlSlug } from "@/lib/controls/types";
 import styles from "./CompositionPartsList.module.css";
@@ -21,6 +23,7 @@ function controlHref(control: ControlDefinition) {
 }
 
 export function CompositionLinksPanel({ controls: resolvedControls, hint, slugs, title }: CompositionLinksPanelProps) {
+  const titleFor = useComponentTitle();
   const entries =
     resolvedControls ??
     slugs
@@ -42,7 +45,7 @@ export function CompositionLinksPanel({ controls: resolvedControls, hint, slugs,
           <li key={`${control.category}:${control.slug}`}>
             <Link className={styles.link} href={controlHref(control)}>
               <ComponentIcon compact icon={getComponentIcon(control.slug)} />
-              <span className={styles.label}>{control.title}</span>
+              <span className={styles.label}>{titleFor(control.slug, control.title)}</span>
             </Link>
           </li>
         ))}
@@ -52,23 +55,25 @@ export function CompositionLinksPanel({ controls: resolvedControls, hint, slugs,
 }
 
 export function CompositionPartsList({ control, parts }: { control?: ControlDefinition; parts: ControlSlug[] }) {
+  const { t } = useOpusI18n();
   return (
     <CompositionLinksPanel
       controls={control ? getCompositionChildren(control) : undefined}
-      hint="Open a sub-component to view its docs and settings."
+      hint={t("composition.subComponentHint", "Open a sub-component to view its docs and settings.")}
       slugs={parts}
-      title="Built from"
+      title={t("composition.builtFrom", "Built from")}
     />
   );
 }
 
 export function CompositionUsageList({ controls, parents }: { controls?: ControlDefinition[]; parents: ControlSlug[] }) {
+  const { t } = useOpusI18n();
   return (
     <CompositionLinksPanel
       controls={controls}
-      hint="Parent compositions that include this component."
+      hint={t("composition.parentHint", "Parent compositions that include this component.")}
       slugs={parents}
-      title="Used in"
+      title={t("composition.usedIn", "Used in")}
     />
   );
 }

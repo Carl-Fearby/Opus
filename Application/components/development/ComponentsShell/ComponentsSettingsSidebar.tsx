@@ -9,6 +9,7 @@ import { CustomScrollbar } from "opus-react";
 import { ResizeHandle } from "opus-react";
 import { useComponentsTheme } from "@/components/development/ComponentsThemeProvider";
 import { controlHasSettingsPanel } from "@/lib/controls/controlSettingsPanel";
+import { useOpusI18n } from "@/components/OpusI18n";
 import {
   clampSettingsWidth,
   MAX_SETTINGS_WIDTH,
@@ -18,15 +19,21 @@ import {
 } from "./ComponentSettingsContext";
 import styles from "./ComponentsShell.module.css";
 
+function SettingsSidebarLoading() {
+  const { t } = useOpusI18n();
+  return <p className={styles.settingsLoading}>{t("settings.loading", "Loading settings…")}</p>;
+}
+
 const ControlSettingsPanel = dynamic(
   () =>
     import("@/components/control-detail/ControlDetail/ControlSettingsPanel").then(
       (module) => module.ControlSettingsPanel,
     ),
-  { loading: () => <p className={styles.settingsLoading}>Loading settings…</p> },
+  { loading: () => <SettingsSidebarLoading /> },
 );
 
 export function ComponentsSettingsSidebar() {
+  const { t } = useOpusI18n();
   const { theme } = useComponentsTheme();
   const {
     activeSlug,
@@ -126,20 +133,20 @@ export function ComponentsSettingsSidebar() {
     return (
       <div className={styles.settingsSidebarWrap} data-collapsed="true">
         <aside
-          aria-label="Component settings"
+          aria-label={t("settings.componentAria", "Component settings")}
           className={`${styles.sidebar} ${styles.settingsSidebar}`}
           data-opus-tour="component-settings"
           data-collapsed="true"
         >
           <button
             aria-expanded={false}
-            aria-label="Expand settings"
+            aria-label={t("settings.expand", "Expand settings")}
             className={styles.settingsCollapseButton}
             type="button"
             onClick={() => setSettingsCollapsed(false)}
           >
             <FontAwesomeIcon icon={faChevronLeft} />
-            <span className={styles.settingsCollapsedLabel}>Settings</span>
+            <span className={styles.settingsCollapsedLabel}>{t("settings.title", "Settings")}</span>
           </button>
         </aside>
       </div>
@@ -149,7 +156,7 @@ export function ComponentsSettingsSidebar() {
   return (
     <div className={styles.settingsSidebarWrap}>
       <ResizeHandle
-        aria-label="Resize settings sidebar"
+        aria-label={t("settings.resize", "Resize settings sidebar")}
         aria-orientation="vertical"
         aria-valuemax={MAX_SETTINGS_WIDTH}
         aria-valuemin={MIN_SETTINGS_WIDTH}
@@ -163,16 +170,16 @@ export function ComponentsSettingsSidebar() {
         onPointerDown={handleResizePointerDown}
       />
       <aside
-        aria-label="Component settings"
+        aria-label={t("settings.componentAria", "Component settings")}
         className={`${styles.sidebar} ${styles.settingsSidebar}`}
         data-opus-tour="component-settings"
         data-resizing={isResizing ? "true" : undefined}
       >
         <div className={styles.settingsSidebarHeader}>
-          <h2 className={styles.settingsSidebarTitle}>Settings</h2>
+          <h2 className={styles.settingsSidebarTitle}>{t("settings.title", "Settings")}</h2>
           <button
             aria-expanded={true}
-            aria-label="Collapse settings"
+            aria-label={t("settings.collapse", "Collapse settings")}
             className={styles.settingsCollapseButton}
             type="button"
             onClick={() => setSettingsCollapsed(true)}
@@ -180,7 +187,7 @@ export function ComponentsSettingsSidebar() {
             <FontAwesomeIcon icon={faChevronRight} />
           </button>
         </div>
-        <CustomScrollbar className={styles.settingsSidebarBody} label="Component settings" orientation="vertical">
+        <CustomScrollbar className={styles.settingsSidebarBody} label={t("settings.componentAria", "Component settings")} orientation="vertical">
           <div className={styles.settingsSidebarBodyInner}>
             <OpusThemeProvider applyToDocument={false} theme={theme}>
               <ControlSettingsPanel slug={activeSlug} settings={settings} onChange={setSettings} />

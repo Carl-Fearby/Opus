@@ -17,6 +17,7 @@ import {
   type DashboardPreviewLayout,
   type DashboardSectionWidth,
 } from "@/lib/controls/dashboardPreview";
+import { useSettingLabel } from "@/lib/i18n/useSettingLabel";
 
 const panelFieldProps = {
   labelPosition: "left" as const,
@@ -48,13 +49,16 @@ export function SettingInput({
   numberStep = 1,
 }: SettingInputProps) {
   const id = settingFieldId(label);
+  const labelFor = useSettingLabel();
+  const displayLabel = labelFor(label);
+  const displayPlaceholder = placeholder ? labelFor(placeholder) : undefined;
 
   if (type === "number") {
     return (
       <NumberField
         {...panelFieldProps}
         id={id}
-        label={label}
+        label={displayLabel}
         step={numberStep}
         value={Number(value) || 0}
         onChange={(event) => onChange(event.target.value)}
@@ -67,7 +71,7 @@ export function SettingInput({
       <ColorField
         {...panelFieldProps}
         id={id}
-        label={label}
+        label={displayLabel}
         value={value}
         onChange={(event) => onChange(event.target.value)}
       />
@@ -78,8 +82,8 @@ export function SettingInput({
     <TextField
       {...panelFieldProps}
       id={id}
-      label={label}
-      placeholder={placeholder}
+      label={displayLabel}
+      placeholder={displayPlaceholder}
       type={type === "email" || type === "password" ? type : "text"}
       value={value}
       onChange={(event) => onChange(event.target.value)}
@@ -95,12 +99,13 @@ type SettingTextareaProps = {
 
 export function SettingTextarea({ label, value, onChange }: SettingTextareaProps) {
   const id = settingFieldId(label);
+  const labelFor = useSettingLabel();
 
   return (
     <TextAreaField
       {...panelFieldProps}
       id={id}
-      label={label}
+      label={labelFor(label)}
       value={value}
       onChange={(event) => onChange(event.target.value)}
     />
@@ -116,17 +121,20 @@ type SettingSelectProps = {
 
 export function SettingSelect({ label, value, onChange, options }: SettingSelectProps) {
   const id = settingFieldId(label);
-  const selectedLabel = options.find((option) => option.value === value)?.label ?? options[0]?.label ?? "";
+  const labelFor = useSettingLabel();
+  const displayOptions = options.map((option) => ({ ...option, display: labelFor(option.label) }));
+  const selectedLabel =
+    displayOptions.find((option) => option.value === value)?.display ?? displayOptions[0]?.display ?? "";
 
   return (
     <SelectField
       {...panelFieldProps}
       id={id}
-      label={label}
-      options={options.map((option) => option.label)}
+      label={labelFor(label)}
+      options={displayOptions.map((option) => option.display)}
       value={selectedLabel}
       onChange={(event) => {
-        const match = options.find((option) => option.label === event.target.value);
+        const match = displayOptions.find((option) => option.display === event.target.value);
         onChange(match?.value ?? event.target.value);
       }}
     />
@@ -139,14 +147,16 @@ export function SettingSegmented({
   onChange,
   options,
 }: SettingSelectProps) {
+  const labelFor = useSettingLabel();
+  const displayOptions = options.map((option) => ({ ...option, display: labelFor(option.label) }));
   return (
     <SegmentedControlField
       {...panelFieldProps}
       id={settingFieldId(label)}
-      label={label}
-      options={options.map((option) => option.label)}
-      value={options.find((option) => option.value === value)?.label ?? options[0]?.label ?? ""}
-      onChange={(labelValue) => onChange(options.find((option) => option.label === labelValue)?.value ?? labelValue)}
+      label={labelFor(label)}
+      options={displayOptions.map((option) => option.display)}
+      value={displayOptions.find((option) => option.value === value)?.display ?? displayOptions[0]?.display ?? ""}
+      onChange={(labelValue) => onChange(displayOptions.find((option) => option.display === labelValue)?.value ?? labelValue)}
     />
   );
 }
@@ -159,12 +169,13 @@ type SettingToggleProps = {
 
 export function SettingToggle({ label, checked, onChange }: SettingToggleProps) {
   const id = settingFieldId(label);
+  const labelFor = useSettingLabel();
 
   return (
     <SwitchField
       {...panelFieldProps}
       id={id}
-      label={label}
+      label={labelFor(label)}
       checked={Boolean(checked)}
       onChange={(event) => onChange(event.target.checked)}
     />
@@ -179,16 +190,18 @@ export function DashboardPreviewLayoutSetting({
   onChange: (value: DashboardPreviewLayout) => void;
 }) {
   const id = settingFieldId("Preview layout");
+  const labelFor = useSettingLabel();
+  const displayOptions = dashboardPreviewLayoutOptions.map((option) => ({ ...option, display: labelFor(option.label) }));
 
   return (
     <SelectField
       {...panelFieldProps}
       id={id}
-      label="Preview layout"
-      options={dashboardPreviewLayoutOptions.map((option) => option.label)}
-      value={dashboardPreviewLayoutOptions.find((option) => option.value === value)?.label ?? "1 view"}
+      label={labelFor("Preview layout")}
+      options={displayOptions.map((option) => option.display)}
+      value={displayOptions.find((option) => option.value === value)?.display ?? labelFor("1 view")}
       onChange={(event) => {
-        const match = dashboardPreviewLayoutOptions.find((option) => option.label === event.target.value);
+        const match = displayOptions.find((option) => option.display === event.target.value);
         onChange((match?.value ?? "single") as DashboardPreviewLayout);
       }}
     />
@@ -203,16 +216,18 @@ export function DashboardWidthSetting({
   onChange: (value: DashboardSectionWidth) => void;
 }) {
   const id = settingFieldId("Width");
+  const labelFor = useSettingLabel();
+  const displayOptions = dashboardWidthOptions.map((option) => ({ ...option, display: labelFor(option.label) }));
 
   return (
     <SelectField
       {...panelFieldProps}
       id={id}
-      label="Width"
-      options={dashboardWidthOptions.map((option) => option.label)}
-      value={dashboardWidthOptions.find((option) => option.value === value)?.label ?? "Widget"}
+      label={labelFor("Width")}
+      options={displayOptions.map((option) => option.display)}
+      value={displayOptions.find((option) => option.value === value)?.display ?? labelFor("Widget")}
       onChange={(event) => {
-        const match = dashboardWidthOptions.find((option) => option.label === event.target.value);
+        const match = displayOptions.find((option) => option.display === event.target.value);
         onChange((match?.value ?? "widget") as DashboardSectionWidth);
       }}
     />
@@ -227,16 +242,18 @@ export function DashboardHeightSetting({
   onChange: (value: DashboardSectionHeight) => void;
 }) {
   const id = settingFieldId("Height");
+  const labelFor = useSettingLabel();
+  const displayOptions = dashboardHeightOptions.map((option) => ({ ...option, display: labelFor(option.label) }));
 
   return (
     <SelectField
       {...panelFieldProps}
       id={id}
-      label="Height"
-      options={dashboardHeightOptions.map((option) => option.label)}
-      value={dashboardHeightOptions.find((option) => option.value === value)?.label ?? "Auto"}
+      label={labelFor("Height")}
+      options={displayOptions.map((option) => option.display)}
+      value={displayOptions.find((option) => option.value === value)?.display ?? labelFor("Auto")}
       onChange={(event) => {
-        const match = dashboardHeightOptions.find((option) => option.label === event.target.value);
+        const match = displayOptions.find((option) => option.display === event.target.value);
         onChange((match?.value ?? "auto") as DashboardSectionHeight);
       }}
     />

@@ -1,6 +1,7 @@
 "use client";
 
 import styles from "../ControlDetail/ControlDetail.module.css";
+import { useOpusI18n } from "@/components/OpusI18n";
 import { ComponentMarkdown, prepareComponentDocumentation } from "./ComponentMarkdown";
 
 type ComponentDocumentationProps = {
@@ -8,6 +9,7 @@ type ComponentDocumentationProps = {
 };
 
 export function ComponentDocumentation({ content }: ComponentDocumentationProps) {
+  const { t } = useOpusI18n();
   const prepared = prepareComponentDocumentation(content);
 
   if (!prepared) {
@@ -22,7 +24,7 @@ export function ComponentDocumentation({ content }: ComponentDocumentationProps)
     >
       <div className="opus-panel-heading">
         <h2 className="opus-panel-title" id="component-docs-heading">
-          Documentation
+          {t("docs.documentation", "Documentation")}
         </h2>
       </div>
       <ComponentMarkdown content={prepared} />
