@@ -7,7 +7,7 @@ import "./preview-theme.css";
 import { ThemeBootstrapScript } from "@/components/theme/ThemeBootstrapScript";
 import { createAccentStyle } from "@/lib/theme/accentThemeStorage";
 import { readServerAccent, readServerPreviewTheme, readServerTheme } from "@/lib/theme/readServerTheme";
-import { localeHtmlLang } from "@/lib/i18n";
+import { isRtlLocale, localeHtmlLang } from "@/lib/i18n";
 import { LocaleProvider } from "@/lib/i18n/LocaleProvider";
 import { readServerLocale } from "@/lib/i18n/server";
 
@@ -191,6 +191,7 @@ export default async function RootLayout({
   return (
     <html
       data-preview-theme={previewTheme}
+      dir={isRtlLocale(locale) ? "rtl" : "ltr"}
       data-shell-theme={theme}
       lang={localeHtmlLang(locale)}
       style={{ colorScheme: theme, ...createAccentStyle(accent.accent, accent.accentSecondary) }}

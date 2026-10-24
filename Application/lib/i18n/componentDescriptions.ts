@@ -1,3 +1,11 @@
+import { componentDescriptionsEs } from "./componentDescriptions.es";
+import { componentDescriptionsPt } from "./componentDescriptions.pt";
+import { componentDescriptionsRu } from "./componentDescriptions.ru";
+import { componentDescriptionsHi } from "./componentDescriptions.hi";
+import { componentDescriptionsBn } from "./componentDescriptions.bn";
+import { componentDescriptionsZh } from "./componentDescriptions.zh";
+import { componentDescriptionsAr } from "./componentDescriptions.ar";
+import { componentDescriptionsUr } from "./componentDescriptions.ur";
 import type { Locale } from "./index";
 
 export const componentDescriptions: Record<Locale, Record<string, string>> = {
@@ -926,6 +934,14 @@ export const componentDescriptions: Record<Locale, Record<string, string>> = {
   "mega-menu": "Veľký navigačný dropdown so zoskupenými odkazmi, popismi a zvýrazneným calloutom.",
   "top-navigation": "Panel menu aplikácie kombinujúci bežné dropdown menu s jednou položkou MegaMenu."
 },
+  es: componentDescriptionsEs,
+  pt: componentDescriptionsPt,
+  ru: componentDescriptionsRu,
+  hi: componentDescriptionsHi,
+  bn: componentDescriptionsBn,
+  zh: componentDescriptionsZh,
+  ar: componentDescriptionsAr,
+  ur: componentDescriptionsUr,
 };
 
 export function localizeComponentDescription(

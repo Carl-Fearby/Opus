@@ -1,3 +1,11 @@
+import { navigationGroupLabelsEs } from "./navigationGroupLabels.es";
+import { navigationGroupLabelsPt } from "./navigationGroupLabels.pt";
+import { navigationGroupLabelsRu } from "./navigationGroupLabels.ru";
+import { navigationGroupLabelsHi } from "./navigationGroupLabels.hi";
+import { navigationGroupLabelsBn } from "./navigationGroupLabels.bn";
+import { navigationGroupLabelsZh } from "./navigationGroupLabels.zh";
+import { navigationGroupLabelsAr } from "./navigationGroupLabels.ar";
+import { navigationGroupLabelsUr } from "./navigationGroupLabels.ur";
 import type { Locale } from "./index";
 
 const fr: Record<string, string> = {
@@ -140,6 +148,14 @@ export const navigationGroupLabels: Record<Locale, Record<string, string>> = {
   fr,
   cs,
   sk,
+  es: navigationGroupLabelsEs,
+  pt: navigationGroupLabelsPt,
+  ru: navigationGroupLabelsRu,
+  hi: navigationGroupLabelsHi,
+  bn: navigationGroupLabelsBn,
+  zh: navigationGroupLabelsZh,
+  ar: navigationGroupLabelsAr,
+  ur: navigationGroupLabelsUr,
 };
 
 export function localizeNavigationGroup(locale: Locale, label: string) {

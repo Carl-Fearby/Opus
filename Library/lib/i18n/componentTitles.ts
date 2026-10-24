@@ -1,3 +1,11 @@
+import { componentTitlesEs } from "./componentTitles.es";
+import { componentTitlesPt } from "./componentTitles.pt";
+import { componentTitlesRu } from "./componentTitles.ru";
+import { componentTitlesHi } from "./componentTitles.hi";
+import { componentTitlesBn } from "./componentTitles.bn";
+import { componentTitlesZh } from "./componentTitles.zh";
+import { componentTitlesAr } from "./componentTitles.ar";
+import { componentTitlesUr } from "./componentTitles.ur";
 import type { Locale } from "./index";
 
 export const componentTitles: Record<Locale, Record<string, string>> = {
@@ -926,6 +934,14 @@ export const componentTitles: Record<Locale, Record<string, string>> = {
   "mega-menu": "Mega menu",
   "top-navigation": "Horná navigácia"
 },
+  es: componentTitlesEs,
+  pt: componentTitlesPt,
+  ru: componentTitlesRu,
+  hi: componentTitlesHi,
+  bn: componentTitlesBn,
+  zh: componentTitlesZh,
+  ar: componentTitlesAr,
+  ur: componentTitlesUr,
 };
 
 export function localizeComponentTitle(

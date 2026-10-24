@@ -1,9 +1,26 @@
+import { siteMessagesEs } from "./siteMessages.es";
+import { siteMessagesPt } from "./siteMessages.pt";
+import { siteMessagesRu } from "./siteMessages.ru";
+import { siteMessagesHi } from "./siteMessages.hi";
+import { siteMessagesBn } from "./siteMessages.bn";
+import { siteMessagesZh } from "./siteMessages.zh";
+import { siteMessagesAr } from "./siteMessages.ar";
+import { siteMessagesUr } from "./siteMessages.ur";
+
 export const LOCALE_COOKIE = "opus-language";
 export const LOCALE_STORAGE_KEY = "opus-language";
 
 export const locales = [
   { id: "en", label: "English", htmlLang: "en-GB" },
+  { id: "zh", label: "中文（简体）", htmlLang: "zh-CN" },
+  { id: "hi", label: "हिन्दी", htmlLang: "hi-IN" },
+  { id: "es", label: "Español", htmlLang: "es-ES" },
   { id: "fr", label: "Français", htmlLang: "fr-FR" },
+  { id: "ar", label: "العربية", htmlLang: "ar-SA" },
+  { id: "bn", label: "বাংলা", htmlLang: "bn-BD" },
+  { id: "pt", label: "Português", htmlLang: "pt-PT" },
+  { id: "ru", label: "Русский", htmlLang: "ru-RU" },
+  { id: "ur", label: "اردو", htmlLang: "ur-PK" },
   { id: "cs", label: "Čeština", htmlLang: "cs-CZ" },
   { id: "sk", label: "Slovenčina", htmlLang: "sk-SK" },
 ] as const;
@@ -22,6 +39,12 @@ export function parseLocale(value: unknown): Locale {
 
 export function localeHtmlLang(locale: Locale) {
   return locales.find((entry) => entry.id === locale)?.htmlLang ?? "en-GB";
+}
+
+const RTL_LOCALES = new Set<Locale>(["ar", "ur"]);
+
+export function isRtlLocale(locale: Locale) {
+  return RTL_LOCALES.has(locale);
 }
 
 const en = {
@@ -384,7 +407,22 @@ const sk: Record<MessageKey, string> = {
   "docs.hub.versionDescription": "História vydaní generovaná z Git commitov so zhrnutím každej dodanej zmeny.",
 };
 
-const dictionaries: Record<Locale, Record<MessageKey, string>> = { en, fr, cs, sk };
+export const englishSiteMessages = en;
+
+const dictionaries: Partial<Record<Locale, Record<MessageKey, string>>> = {
+  en,
+  fr,
+  cs,
+  sk,
+  es: siteMessagesEs as Record<MessageKey, string>,
+  pt: siteMessagesPt as Record<MessageKey, string>,
+  ru: siteMessagesRu as Record<MessageKey, string>,
+  hi: siteMessagesHi as Record<MessageKey, string>,
+  bn: siteMessagesBn as Record<MessageKey, string>,
+  zh: siteMessagesZh as Record<MessageKey, string>,
+  ar: siteMessagesAr as Record<MessageKey, string>,
+  ur: siteMessagesUr as Record<MessageKey, string>,
+};
 
 export function translate(
   locale: Locale,

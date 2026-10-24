@@ -16,6 +16,7 @@ import {
   DEFAULT_LOCALE,
   LOCALE_COOKIE,
   LOCALE_STORAGE_KEY,
+  isRtlLocale,
   localeHtmlLang,
   parseLocale,
   translate,
@@ -55,6 +56,7 @@ export function LocaleProvider({
       setLocaleState(parsed);
       if (typeof document !== "undefined") {
         document.documentElement.lang = localeHtmlLang(parsed);
+        document.documentElement.dir = isRtlLocale(parsed) ? "rtl" : "ltr";
       }
       try {
         window.localStorage.setItem(LOCALE_STORAGE_KEY, parsed);

@@ -1,3 +1,11 @@
+import { componentMessagesEs } from "./componentMessages.es";
+import { componentMessagesPt } from "./componentMessages.pt";
+import { componentMessagesRu } from "./componentMessages.ru";
+import { componentMessagesHi } from "./componentMessages.hi";
+import { componentMessagesBn } from "./componentMessages.bn";
+import { componentMessagesZh } from "./componentMessages.zh";
+import { componentMessagesAr } from "./componentMessages.ar";
+import { componentMessagesUr } from "./componentMessages.ur";
 import type { Locale } from "./index";
 import type { OpusMessages } from "@/components/OpusI18n";
 
@@ -513,4 +521,12 @@ export const componentMessages: Record<Locale, OpusMessages> = {
   fr,
   cs,
   sk,
+  es: componentMessagesEs,
+  pt: componentMessagesPt,
+  ru: componentMessagesRu,
+  hi: componentMessagesHi,
+  bn: componentMessagesBn,
+  zh: componentMessagesZh,
+  ar: componentMessagesAr,
+  ur: componentMessagesUr,
 };
