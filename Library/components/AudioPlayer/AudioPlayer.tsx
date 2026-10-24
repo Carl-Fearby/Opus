@@ -1,5 +1,6 @@
 "use client";
 
+import { useOpusI18n } from "@/components/OpusI18n";
 import {
   useCallback,
   useEffect,
@@ -85,8 +86,7 @@ function resolveTracks({
   ];
 }
 
-export function AudioPlayer({
-  artist = "Opus Demo",
+export function AudioPlayer({  artist = "Opus Demo",
   artworkSrc,
   autoPlay = false,
   className,
@@ -101,6 +101,7 @@ export function AudioPlayer({
   title = "Audio track",
   tracks,
 }: AudioPlayerProps) {
+  const { t } = useOpusI18n();
   const resolvedTracks = useMemo(
     () => resolveTracks({ artist, artworkSrc, src, title, tracks }),
     [artist, artworkSrc, src, title, tracks],
@@ -344,7 +345,10 @@ export function AudioPlayer({
           <p className={styles.artist}>{activeArtist}</p>
           {canNavigate ? (
             <p className={styles.trackCount}>
-              Track {trackIndex + 1} of {trackCount}
+              {t("audioPlayer.trackCount", "Track {current} of {total}", {
+                current: trackIndex + 1,
+                total: trackCount,
+              })}
             </p>
           ) : null}
         </div>
@@ -381,7 +385,7 @@ export function AudioPlayer({
         <div className={styles.toolbar}>
           {canNavigate ? (
             <button
-              aria-label="Previous track"
+              aria-label={t("audioPlayer.previousTrack", "Previous track")}
               className={styles.iconButton}
               disabled={!canGoPrevious}
               type="button"
@@ -402,7 +406,7 @@ export function AudioPlayer({
           </button>
           {canNavigate ? (
             <button
-              aria-label="Next track"
+              aria-label={t("audioPlayer.nextTrack", "Next track")}
               className={styles.iconButton}
               disabled={!canGoNext}
               type="button"
@@ -427,7 +431,7 @@ export function AudioPlayer({
             />
           </button>
           <input
-            aria-label="Volume"
+            aria-label={t("audioPlayer.volume", "Volume")}
             className={styles.volume}
             max={1}
             min={0}

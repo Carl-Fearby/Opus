@@ -27,12 +27,7 @@ export type CalendarProps = {
   year?: number;
 };
 
-const weekdayLabels = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
 const defaultMaxDayEvents = 3;
-
-const monthLabels = Array.from({ length: 12 }, (_, month) =>
-  new Date(2000, month, 1).toLocaleString(undefined, { month: "long" }),
-);
 
 function pad(value: number) {
   return String(value).padStart(2, "0");
@@ -53,7 +48,21 @@ export function Calendar({
   showMonthYearPicker = true,
   year: controlledYear,
 }: CalendarProps) {
-  const { t } = useOpusI18n();
+  const { locale, t } = useOpusI18n();
+  const weekdayLabels = useMemo(
+    () =>
+      Array.from({ length: 7 }, (_, index) =>
+        new Intl.DateTimeFormat(locale, { weekday: "short" }).format(new Date(2024, 0, 7 + index)),
+      ),
+    [locale],
+  );
+  const monthLabels = useMemo(
+    () =>
+      Array.from({ length: 12 }, (_, month) =>
+        new Intl.DateTimeFormat(locale, { month: "long" }).format(new Date(2000, month, 1)),
+      ),
+    [locale],
+  );
   const today = useMemo(() => new Date(), []);
   const [cursor, setCursor] = useState(() => ({
     year: controlledYear ?? today.getFullYear(),
@@ -139,7 +148,7 @@ export function Calendar({
           {showMonthYearPicker ? (
             <div className={styles.picker}>
               <label className={styles.pickerField}>
-                <span className={styles.srOnly}>Month</span>
+                <span className={styles.srOnly}>{t("calendar.month", "Month")}</span>
                 <select
                   aria-label={t("calendar.month", "Month")}
                   className={[styles.select, styles.monthSelect].join(" ")}
@@ -155,9 +164,9 @@ export function Calendar({
                 </select>
               </label>
               <label className={styles.pickerField}>
-                <span className={styles.srOnly}>Year</span>
+                <span className={styles.srOnly}>{t("calendar.year", "Year")}</span>
                 <select
-                  aria-label="Year"
+                  aria-label={t("calendar.year", "Year")}
                   className={[styles.select, styles.yearSelect].join(" ")}
                   disabled={isControlled}
                   onChange={(event) => setMonthYear(month, Number(event.target.value))}
@@ -201,7 +210,12 @@ export function Calendar({
                 aria-current={isToday ? "date" : undefined}
                 aria-label={
                   hiddenEventCount > 0
-                    ? `${dayEvents.length} events on ${key}, ${hiddenEventCount} more not shown`
+                    ? `${t("calendar.eventsAria", "{count} events on {date}", {
+                        count: dayEvents.length,
+                        date: key,
+                      })}, ${t("calendar.moreEventsAria", "{hidden} more not shown", {
+                        hidden: hiddenEventCount,
+                      })}`
                     : undefined
                 }
                 aria-pressed={isSelected}
@@ -230,7 +244,9 @@ export function Calendar({
                       </span>
                     ))}
                     {hiddenEventCount > 0 ? (
-                      <span className={styles.moreEvents}>+{hiddenEventCount} more</span>
+                      <span className={styles.moreEvents}>
+                        +{hiddenEventCount} {t("calendar.more", "more")}
+                      </span>
                     ) : null}
                   </span>
                 ) : null}

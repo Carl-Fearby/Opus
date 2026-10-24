@@ -1,6 +1,7 @@
 "use client";
 
 import type { MoreActionsMenuItem } from "@/components/MoreActionsMenu";
+import { useOpusI18n } from "@/components/OpusI18n";
 import { ContactCard } from "./ContactCard";
 import { defaultContact } from "./demoData";
 import type { ContactDetailsProps } from "./types";
@@ -20,18 +21,22 @@ export function ContactDetails({
   showStatus = true,
   tabsVariant,
 }: ContactDetailsProps) {
+  const { t } = useOpusI18n();
   const data = resolveContactDetailsContact(contact, defaultContact);
   const moreActions: MoreActionsMenuItem[] = [
-    { callback: () => onAction?.("log-activity"), iconName: "wave-square", id: "log-activity", label: "Log activity" },
-    { callback: () => onAction?.("add-task"), iconName: "list-check", id: "add-task", label: "Add task" },
-    { callback: () => onAction?.("schedule-meeting"), iconName: "calendar", id: "schedule-meeting", label: "Schedule meeting" },
-    { callback: () => onAction?.("add-note"), iconName: "note-sticky", id: "add-note", label: "Add note" },
-    { callback: () => onAction?.("export-contact"), iconName: "download", id: "export-contact", label: "Export contact" },
+    { callback: () => onAction?.("log-activity"), iconName: "wave-square", id: "log-activity", label: t("contactDetails.logActivity", "Log activity") },
+    { callback: () => onAction?.("add-task"), iconName: "list-check", id: "add-task", label: t("contactDetails.addTask", "Add task") },
+    { callback: () => onAction?.("schedule-meeting"), iconName: "calendar", id: "schedule-meeting", label: t("contactDetails.scheduleMeeting", "Schedule meeting") },
+    { callback: () => onAction?.("add-note"), iconName: "note-sticky", id: "add-note", label: t("contactDetails.addNote", "Add note") },
+    { callback: () => onAction?.("export-contact"), iconName: "download", id: "export-contact", label: t("contactDetails.exportContact", "Export contact") },
   ];
 
   return (
     <section
-      aria-label={`${isStaffRecord ? "User" : "Contact"} details for ${data.name}`}
+      aria-label={t("contactDetails.sectionAria", "{kind} details for {name}", {
+        kind: isStaffRecord ? t("contactDetails.user", "User") : t("contactDetails.contact", "Contact"),
+        name: data.name,
+      })}
       className={styles.root}
       data-staff-record={isStaffRecord ? "true" : "false"}
     >

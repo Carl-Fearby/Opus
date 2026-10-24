@@ -1,6 +1,6 @@
 "use client";
 
-
+import { useOpusI18n } from "@/components/OpusI18n";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { faChevronLeft, faChevronRight } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -71,6 +71,7 @@ export function Carousel({
   showCaptions = true,
   showPips = true,
 }: CarouselProps) {
+  const { t } = useOpusI18n();
   const hasMultiple = images.length > 1;
   const loopEnabled = loop && hasMultiple;
   const trackImages = useMemo(
@@ -211,7 +212,7 @@ export function Carousel({
   if (images.length === 0) {
     return (
       <div className={styles.empty} role="status">
-        No carousel images available.
+        {t("carousel.empty", "No carousel images available.")}
       </div>
     );
   }
@@ -275,7 +276,7 @@ export function Carousel({
         {hasMultiple ? (
           <>
             <button
-              aria-label="Previous slide"
+              aria-label={t("carousel.previous", "Previous slide")}
               className={styles.nav}
               data-direction="previous"
               disabled={isAnimating || (!loopEnabled && trackIndex === 0)}
@@ -285,7 +286,7 @@ export function Carousel({
               <FontAwesomeIcon aria-hidden="true" className={styles.navIcon} icon={faChevronLeft} />
             </button>
             <button
-              aria-label="Next slide"
+              aria-label={t("carousel.next", "Next slide")}
               className={styles.nav}
               data-direction="next"
               disabled={isAnimating || (!loopEnabled && trackIndex === trackImages.length - 1)}
@@ -295,11 +296,11 @@ export function Carousel({
               <FontAwesomeIcon aria-hidden="true" className={styles.navIcon} icon={faChevronRight} />
             </button>
             {showPips ? (
-              <div aria-label="Choose slide" className={styles.pips}>
+              <div aria-label={t("carousel.choose", "Choose slide")} className={styles.pips}>
                 {images.map((image, index) => (
                   <button
                     aria-current={index === activeIndex ? "true" : undefined}
-                    aria-label={`Show ${image.caption ?? image.alt}`}
+                    aria-label={t("carousel.show", "Show {caption}", { caption: image.caption ?? image.alt })}
                     className={styles.pip}
                     data-active={index === activeIndex}
                     disabled={isAnimating}

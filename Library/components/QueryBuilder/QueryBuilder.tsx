@@ -1,6 +1,7 @@
 "use client";
 
 import { useMemo } from "react";
+import { useOpusI18n } from "@/components/OpusI18n";
 import styles from "./QueryBuilder.module.css";
 
 export type QueryOperator = "eq" | "neq" | "contains" | "gt" | "lt" | "in";
@@ -62,6 +63,7 @@ function formatRule(rule: QueryRule): string {
 }
 
 export function QueryBuilder({ fields, group, onChange }: QueryBuilderProps) {
+  const { t } = useOpusI18n();
   function updateRule(id: string, patch: Partial<QueryRule>) {
     onChange({
       ...group,
@@ -85,26 +87,26 @@ export function QueryBuilder({ fields, group, onChange }: QueryBuilderProps) {
   );
 
   return (
-    <div className={styles.root} aria-label="Query builder">
+    <div className={styles.root} aria-label={t("queryBuilder.label", "Query builder")}>
       <div className={styles.toolbar}>
         <label className={styles.combinator}>
-          Match
+          {t("queryBuilder.match", "Match")}
           <select
-            aria-label="Combinator"
+            aria-label={t("queryBuilder.combinator", "Combinator")}
             className={styles.select}
             onChange={(event) => onChange({ ...group, combinator: event.target.value as QueryCombinator })}
             value={group.combinator}
           >
-            <option value="and">all rules (AND)</option>
-            <option value="or">any rule (OR)</option>
+            <option value="and">{t("queryBuilder.allRules", "all rules (AND)")}</option>
+            <option value="or">{t("queryBuilder.anyRule", "any rule (OR)")}</option>
           </select>
         </label>
         <button className={styles.add} onClick={() => onChange({ ...group, rules: [...group.rules, createRule(fields)] })} type="button">
-          Add rule
+          {t("queryBuilder.addRule", "Add rule")}
         </button>
       </div>
       {group.rules.length === 0 ? (
-        <p className={styles.empty}>Add at least one rule to build a query.</p>
+        <p className={styles.empty}>{t("queryBuilder.empty", "Add at least one rule to build a query.")}</p>
       ) : (
         <ul className={styles.list}>
           {group.rules.map((rule, index) => (
@@ -115,7 +117,7 @@ export function QueryBuilder({ fields, group, onChange }: QueryBuilderProps) {
                 <span className={styles.chipSpacer} />
               )}
               <select
-                aria-label="Field"
+                aria-label={t("queryBuilder.field", "Field")}
                 className={styles.select}
                 onChange={(event) => updateRule(rule.id, { field: event.target.value })}
                 value={rule.field}
@@ -127,7 +129,7 @@ export function QueryBuilder({ fields, group, onChange }: QueryBuilderProps) {
                 ))}
               </select>
               <select
-                aria-label="Operator"
+                aria-label={t("queryBuilder.operator", "Operator")}
                 className={styles.selectNarrow}
                 onChange={(event) => updateRule(rule.id, { operator: event.target.value as QueryOperator })}
                 value={rule.operator}
@@ -139,14 +141,14 @@ export function QueryBuilder({ fields, group, onChange }: QueryBuilderProps) {
                 ))}
               </select>
               <input
-                aria-label="Value"
+                aria-label={t("queryBuilder.value", "Value")}
                 className={styles.input}
                 onChange={(event) => updateRule(rule.id, { value: event.target.value })}
-                placeholder={rule.operator === "in" ? "a, b, c" : "Value"}
+                placeholder={rule.operator === "in" ? "a, b, c" : t("queryBuilder.valuePlaceholder", "Value")}
                 value={rule.value}
               />
               <button
-                aria-label="Remove rule"
+                aria-label={t("queryBuilder.removeRule", "Remove rule")}
                 className={styles.remove}
                 onClick={() => onChange({ ...group, rules: group.rules.filter((entry) => entry.id !== rule.id) })}
                 type="button"
@@ -157,8 +159,8 @@ export function QueryBuilder({ fields, group, onChange }: QueryBuilderProps) {
           ))}
         </ul>
       )}
-      <div className={styles.output} aria-label="Query output">
-        <div className={styles.outputLabel}>Output</div>
+      <div className={styles.output} aria-label={t("queryBuilder.output", "Query output")}>
+        <div className={styles.outputLabel}>{t("queryBuilder.outputLabel", "Output")}</div>
         <p className={styles.expression}>{expression}</p>
         <pre className={styles.payload} tabIndex={0}>{JSON.stringify(payload, null, 2)}</pre>
       </div>

@@ -1,5 +1,6 @@
 "use client";
 
+import { useOpusI18n } from "@/components/OpusI18n";
 import { useCallback, useEffect, useId, useRef, useState, type CSSProperties, type ReactNode } from "react";
 import { ResizeHandle } from "../ResizeHandle";
 import styles from "./Splitter.module.css";
@@ -29,6 +30,7 @@ export function Splitter({
   size: controlledSize,
   style,
 }: SplitterProps) {
+  const { t } = useOpusI18n();
   const [uncontrolled, setUncontrolled] = useState(defaultSize);
   const size = controlledSize ?? uncontrolled;
   const rootRef = useRef<HTMLDivElement>(null);
@@ -89,13 +91,13 @@ export function Splitter({
       style={style}
     >
       <span className={styles.srOnly} id={labelId}>
-        Splitter
+        {t("splitter.resize", "Resize panes")}
       </span>
       <div className={styles.pane} style={firstStyle}>
         {children[0]}
       </div>
       <ResizeHandle
-        aria-label="Resize panes"
+        aria-label={t("splitter.resize", "Resize panes")}
         aria-valuemax={100 - minSize}
         aria-valuemin={minSize}
         aria-valuenow={Math.round(size)}

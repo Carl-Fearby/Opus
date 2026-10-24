@@ -4,7 +4,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faGlobe } from "@fortawesome/free-solid-svg-icons";
 import { useId } from "react";
 import { useLocale } from "@/lib/i18n/LocaleProvider";
-import { locales, type Locale } from "@/lib/i18n";
+import { languageLabel, sortedLocales, type Locale } from "@/lib/i18n/config";
 import styles from "./LanguagePicker.module.css";
 
 export function LanguagePicker({ compact = false }: { compact?: boolean }) {
@@ -23,9 +23,9 @@ export function LanguagePicker({ compact = false }: { compact?: boolean }) {
         onChange={(event) => setLocale(event.target.value as Locale)}
         value={locale}
       >
-        {locales.map((entry) => (
+        {sortedLocales(locale).map((entry) => (
           <option key={entry.id} value={entry.id}>
-            {entry.label}
+            {entry.flag} {languageLabel(locale, entry.id)}
           </option>
         ))}
       </select>

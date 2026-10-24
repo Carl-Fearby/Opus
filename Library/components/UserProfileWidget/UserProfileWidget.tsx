@@ -4,6 +4,7 @@ import { Avatar } from "@/components/Avatar";
 import { CatalogIcon } from "@/components/CatalogIcon";
 import { DropdownMenu } from "@/components/DropdownMenu";
 import type { AvatarSize } from "@/components/fields/types";
+import { useOpusI18n } from "@/components/OpusI18n";
 import styles from "./UserProfileWidget.module.css";
 
 export type UserProfileMenuItem = {
@@ -34,6 +35,7 @@ export function UserProfileWidget({
   role,
   src,
 }: UserProfileWidgetProps) {
+  const { t } = useOpusI18n();
   const handleMenuSelect = (item: UserProfileMenuItem) => {
     item.onSelect?.();
     onMenuSelect?.(item);
@@ -52,7 +54,7 @@ export function UserProfileWidget({
     <div className={[styles.root, className].filter(Boolean).join(" ")}>
       {onAvatarClick ? (
         <button
-          aria-label={`Open actions for ${name}`}
+          aria-label={t("userProfile.openActions", "Open actions for {name}", { name })}
           className={styles.avatarButton}
           type="button"
           onClick={onAvatarClick}
@@ -73,7 +75,7 @@ export function UserProfileWidget({
           placement="bottom-end"
           trigger={
             <button
-              aria-label={`Open menu for ${name}`}
+              aria-label={t("userProfile.openMenu", "Open menu for {name}", { name })}
               className={styles.chevronButton}
               type="button"
             >

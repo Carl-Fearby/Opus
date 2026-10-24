@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { useOpusI18n } from "@/components/OpusI18n";
 import styles from "./Clock.module.css";
 
 export type ClockSize = "sm" | "md" | "lg";
@@ -18,6 +19,7 @@ export function Clock({
   showDigital = true,
   size = "md",
 }: ClockProps) {
+  const { t } = useOpusI18n();
   const [time, setTime] = useState<Date | null>(null);
 
   useEffect(() => {
@@ -33,7 +35,7 @@ export function Clock({
   if (!time) {
     return (
       <div className={styles.root} data-size={size}>
-        <div className={styles.loading}>Loading clock…</div>
+        <div className={styles.loading}>{t("clock.loading", "Loading clock…")}</div>
       </div>
     );
   }

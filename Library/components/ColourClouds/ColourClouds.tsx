@@ -1,5 +1,6 @@
 "use client";
 
+import { useOpusI18n } from "@/components/OpusI18n";
 import {
   useEffect,
   useId,
@@ -160,8 +161,9 @@ export function serializeColourClouds(clouds: ColourCloud[]): string {
 
 /** Default dropdown body listing each colourable orb. */
 export function ColourCloudsMenu({ clouds }: { clouds: ColourCloud[] }) {
+  const { t } = useOpusI18n();
   if (clouds.length === 0) {
-    return <p className={styles.menuEmpty}>No colours</p>;
+    return <p className={styles.menuEmpty}>{t("colourClouds.empty", "No colours")}</p>;
   }
 
   return (
@@ -215,6 +217,7 @@ export function ColourClouds({
   title,
   value,
 }: ColourCloudsProps) {
+  const { t } = useOpusI18n();
   const menuId = useId();
   const titleId = useId();
   const rootRef = useRef<HTMLDivElement>(null);
@@ -418,10 +421,10 @@ export function ColourClouds({
       {trigger}
       {showReset && onReset ? (
         <button
-          aria-label="Reset colours"
+          aria-label={t("colourClouds.reset", "Reset colours")}
           className={styles.reset}
           disabled={resetDisabled}
-          title="Reset colours"
+          title={t("colourClouds.reset", "Reset colours")}
           type="button"
           onClick={onReset}
         >

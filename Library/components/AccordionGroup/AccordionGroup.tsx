@@ -1,6 +1,7 @@
 "use client";
 
 import { createContext, useCallback, useMemo, useState, type ReactNode } from "react";
+import { useOpusI18n } from "@/components/OpusI18n";
 import type { AccordionGroupType } from "@/components/fields/types";
 import styles from "./AccordionGroup.module.css";
 
@@ -32,6 +33,7 @@ export function AccordionGroup({
   type = "single",
   value,
 }: AccordionGroupProps) {
+  const { t } = useOpusI18n();
   const [internalValue, setInternalValue] = useState<string | string[]>(() => {
     if (defaultValue !== undefined) {
       return defaultValue;
@@ -97,7 +99,7 @@ export function AccordionGroup({
 
   return (
     <AccordionGroupContext.Provider value={contextValue}>
-      <div aria-label="Accordion" className={[styles.group, className].filter(Boolean).join(" ")} role="group">
+      <div aria-label={t("accordion.label", "Accordion")} className={[styles.group, className].filter(Boolean).join(" ")} role="group">
         {children}
       </div>
     </AccordionGroupContext.Provider>

@@ -1,5 +1,6 @@
 "use client";
 
+import { useOpusI18n } from "@/components/OpusI18n";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { CatalogIcon } from "../CatalogIcon";
 import { Tile, type TileTone } from "../Tile";
@@ -26,6 +27,7 @@ export type TilesProps = {
 const defaultToneForIndex = (index: number): TileTone => (index % 2 === 0 ? "purple" : "blue");
 
 export function Tiles({ className, items, layout = "fill" }: TilesProps) {
+  const { t } = useOpusI18n();
   const rowRef = useRef<HTMLDivElement>(null);
   const [hasPrevious, setHasPrevious] = useState(false);
   const [hasMore, setHasMore] = useState(false);
@@ -88,7 +90,7 @@ export function Tiles({ className, items, layout = "fill" }: TilesProps) {
       </div>
       {hasPrevious ? (
         <button
-          aria-label="Show previous tiles"
+          aria-label={t("tiles.previous", "Show previous tiles")}
           className={[styles.moreButton, styles.previousButton].join(" ")}
           onClick={() => scrollTiles(-1)}
           type="button"
@@ -98,7 +100,7 @@ export function Tiles({ className, items, layout = "fill" }: TilesProps) {
       ) : null}
       {hasMore ? (
         <button
-          aria-label="Show more tiles"
+          aria-label={t("tiles.more", "Show more tiles")}
           className={[styles.moreButton, styles.nextButton].join(" ")}
           onClick={() => scrollTiles(1)}
           type="button"

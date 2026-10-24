@@ -1,5 +1,6 @@
 "use client";
 
+import { useOpusI18n } from "@/components/OpusI18n";
 import { useMemo, useState } from "react";
 import styles from "./DualListBuilder.module.css";
 
@@ -23,6 +24,7 @@ export function DualListBuilder({
   selectedIds,
   selectedTitle = "Selected",
 }: DualListBuilderProps) {
+  const { t } = useOpusI18n();
   const [query, setQuery] = useState("");
   const [activeAvailable, setActiveAvailable] = useState<string[]>([]);
   const [activeSelected, setActiveSelected] = useState<string[]>([]);
@@ -77,13 +79,13 @@ export function DualListBuilder({
   }
 
   return (
-    <div className={styles.root} aria-label="Dual list builder">
+    <div className={styles.root} aria-label={t("dualList.label", "Dual list builder")}>
       <div className={styles.searchRow}>
         <input
-          aria-label="Search available items"
+          aria-label={t("dualList.search", "Search available items")}
           className={styles.search}
           onChange={(event) => setQuery(event.target.value)}
-          placeholder="Search available…"
+          placeholder={t("dualList.searchPlaceholder", "Search available…")}
           type="search"
           value={query}
         />
@@ -96,16 +98,16 @@ export function DualListBuilder({
           onToggle={(id) => toggle(id, "available")}
         />
         <div className={styles.controls}>
-          <button className={styles.control} onClick={moveRight} type="button">
+          <button aria-label={t("field.moveToSelected", "Move to selected")} className={styles.control} onClick={moveRight} type="button">
             ›
           </button>
-          <button className={styles.control} onClick={moveAllRight} type="button">
+          <button aria-label={t("field.moveAllToSelected", "Move all to selected")} className={styles.control} onClick={moveAllRight} type="button">
             »
           </button>
-          <button className={styles.control} onClick={moveLeft} type="button">
+          <button aria-label={t("field.moveToAvailable", "Move to available")} className={styles.control} onClick={moveLeft} type="button">
             ‹
           </button>
-          <button className={styles.control} onClick={moveAllLeft} type="button">
+          <button aria-label={t("field.moveAllToAvailable", "Move all to available")} className={styles.control} onClick={moveAllLeft} type="button">
             «
           </button>
         </div>
@@ -116,8 +118,8 @@ export function DualListBuilder({
           onToggle={(id) => toggle(id, "selected")}
         />
       </div>
-      <div className={styles.output} aria-label="Dual list output">
-        <div className={styles.outputLabel}>Output</div>
+      <div className={styles.output} aria-label={t("dualList.output", "Dual list output")}>
+        <div className={styles.outputLabel}>{t("dualList.outputLabel", "Output")}</div>
         <p className={styles.expression}>{expression}</p>
         <pre className={styles.payload} tabIndex={0}>{JSON.stringify(payload, null, 2)}</pre>
       </div>

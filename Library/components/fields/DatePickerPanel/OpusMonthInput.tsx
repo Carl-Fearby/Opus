@@ -1,5 +1,6 @@
 "use client";
 
+import { useOpusI18n } from "@/components/OpusI18n";
 import {
   useEffect,
   useId,
@@ -42,10 +43,6 @@ export type OpusMonthInputProps = {
   value: string;
 };
 
-const monthLabels = Array.from({ length: 12 }, (_, month) =>
-  new Date(2000, month, 1).toLocaleString(undefined, { month: "short" }),
-);
-
 function isMonthDisabled(year: number, month: number, min?: string, max?: string) {
   const key = formatMonthValue(year, month);
   if (min && key < min) return true;
@@ -63,11 +60,20 @@ export function OpusMonthInput({
   min,
   name,
   onChange,
-  placeholder = "Select month",
+  placeholder,
   readOnly,
   required,
   value,
 }: OpusMonthInputProps) {
+  const { locale, t } = useOpusI18n();
+  const monthLabels = useMemo(
+    () =>
+      Array.from({ length: 12 }, (_, month) =>
+        new Intl.DateTimeFormat(locale, { month: "short" }).format(new Date(2000, month, 1)),
+      ),
+    [locale],
+  );
+  const displayPlaceholder = placeholder ?? t("field.selectMonth", "Select month");
   const panelId = useId();
   const rootRef = useRef<HTMLDivElement>(null);
   const panelRef = useRef<HTMLDivElement>(null);
@@ -175,7 +181,7 @@ export function OpusMonthInput({
             <div className={styles.panel} role="dialog" aria-label={label}>
               <div className={styles.toolbar}>
                 <button
-                  aria-label="Previous year"
+                  aria-label={t("field.previousYear", "Previous year")}
                   className={styles.nav}
                   type="button"
                   onClick={() => setCursorYear((year) => year - 1)}
@@ -184,7 +190,7 @@ export function OpusMonthInput({
                 </button>
                 <strong className={styles.year}>{cursorYear}</strong>
                 <button
-                  aria-label="Next year"
+                  aria-label={t("field.nextYear", "Next year")}
                   className={styles.nav}
                   type="button"
                   onClick={() => setCursorYear((year) => year + 1)}
@@ -229,7 +235,7 @@ export function OpusMonthInput({
                     setOpen(false);
                   }}
                 >
-                  Clear
+                  {t("common.clear", "Clear")}
                 </button>
                 <button
                   className={styles.footerAction}
@@ -241,7 +247,7 @@ export function OpusMonthInput({
                     setOpen(false);
                   }}
                 >
-                  This month
+                  {t("calendar.thisMonth", "This month")}
                 </button>
               </div>
             </div>
@@ -271,7 +277,7 @@ export function OpusMonthInput({
         }}
       >
         <span className={display ? triggerStyles.value : triggerStyles.placeholder}>
-          {display || placeholder}
+          {display || displayPlaceholder}
         </span>
         <span aria-hidden="true" className={triggerStyles.icon}>
           <CatalogIcon iconName="calendar" />

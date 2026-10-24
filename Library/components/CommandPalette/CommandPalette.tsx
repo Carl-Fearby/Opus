@@ -1,5 +1,6 @@
 "use client";
 
+import { useOpusI18n } from "@/components/OpusI18n";
 import {
   useEffect,
   useId,
@@ -65,18 +66,22 @@ export function CommandPalette({
   closeOnSelect = true,
   dismissOnBackdrop = true,
   dismissOnEscape = true,
-  emptyMessage = "No commands found.",
+  emptyMessage,
   items,
   onClose,
   onSelect,
   open,
-  placeholder = "Search commands…",
+  placeholder,
   query,
   onQueryChange,
   showDescriptions = true,
   showGroups = true,
   showShortcuts = true,
 }: CommandPaletteProps) {
+  const { t } = useOpusI18n();
+  const resolvedEmptyMessage = emptyMessage ?? t("commandPalette.empty", "No commands found.");
+  const resolvedPlaceholder =
+    placeholder ?? t("commandPalette.searchPlaceholder", "Search commands…");
   const titleId = useId();
   const inputId = useId();
   const listboxId = useId();
@@ -262,7 +267,7 @@ export function CommandPalette({
           role="dialog"
         >
         <h2 className={styles.visuallyHidden} id={titleId}>
-          Command palette
+          {t("commandPalette.title", "Command palette")}
         </h2>
         <label className={styles.searchWrap} htmlFor={inputId}>
           <span aria-hidden="true" className={styles.searchIcon}>
@@ -276,12 +281,12 @@ export function CommandPalette({
             aria-autocomplete="list"
             aria-controls={listboxId}
             aria-expanded={open}
-            aria-label="Search commands"
+            aria-label={t("commandPalette.search", "Search commands")}
             className={styles.searchInput}
             id={inputId}
             onChange={(event) => setQuery(event.target.value)}
             onKeyDown={handleInputKeyDown}
-            placeholder={placeholder}
+            placeholder={resolvedPlaceholder}
             role="combobox"
             type="search"
             value={currentQuery}
@@ -290,14 +295,14 @@ export function CommandPalette({
 
         <div
           ref={resultsRef}
-          aria-label="Command results"
+          aria-label={t("commandPalette.results", "Command results")}
           className={styles.results}
           id={listboxId}
           role="listbox"
         >
           {flatItems.length === 0 ? (
             <p className={styles.empty} role="status">
-              {emptyMessage}
+              {resolvedEmptyMessage}
             </p>
           ) : (
             groupedItems.map(({ group, items: groupItems }) => (
@@ -339,9 +344,9 @@ export function CommandPalette({
         </div>
 
         <footer className={styles.footer}>
-          <span>↑↓ Navigate</span>
-          <span>↵ Select</span>
-          <span>Esc Close</span>
+          <span>{t("commandPalette.navigateHint", "↑↓ Navigate")}</span>
+          <span>{t("commandPalette.selectHint", "↵ Select")}</span>
+          <span>{t("commandPalette.closeHint", "Esc Close")}</span>
         </footer>
       </div>
     </div>

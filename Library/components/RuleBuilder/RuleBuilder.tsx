@@ -1,5 +1,6 @@
 "use client";
 
+import { useOpusI18n } from "@/components/OpusI18n";
 import { useMemo } from "react";
 import styles from "./RuleBuilder.module.css";
 
@@ -33,6 +34,7 @@ function createRule(priority: number): RuleDefinition {
 }
 
 export function RuleBuilder({ onChange, rules }: RuleBuilderProps) {
+  const { t } = useOpusI18n();
   function update(id: string, patch: Partial<RuleDefinition>) {
     onChange(rules.map((rule) => (rule.id === id ? { ...rule, ...patch } : rule)));
   }
@@ -68,22 +70,22 @@ export function RuleBuilder({ onChange, rules }: RuleBuilderProps) {
   );
 
   return (
-    <div className={styles.root} aria-label="Rule builder">
+    <div className={styles.root} aria-label={t("ruleBuilder.label", "Rule builder")}>
       <div className={styles.header}>
         <div>
-          <div className={styles.title}>Rules</div>
-          <p className={styles.subtitle}>Ordered policies evaluated from top to bottom.</p>
+          <div className={styles.title}>{t("ruleBuilder.title", "Rules")}</div>
+          <p className={styles.subtitle}>{t("ruleBuilder.subtitle", "Ordered policies evaluated from top to bottom.")}</p>
         </div>
         <button
           className={styles.add}
           onClick={() => onChange([...rules, createRule(rules.length + 1)])}
           type="button"
         >
-          Add rule
+          {t("ruleBuilder.addRule", "Add rule")}
         </button>
       </div>
       {rules.length === 0 ? (
-        <p className={styles.empty}>No rules yet.</p>
+        <p className={styles.empty}>{t("ruleBuilder.empty", "No rules yet.")}</p>
       ) : (
         <ol className={styles.list}>
           {rules.map((rule, index) => (
@@ -91,7 +93,7 @@ export function RuleBuilder({ onChange, rules }: RuleBuilderProps) {
               <div className={styles.cardTop}>
                 <span className={styles.priority}>#{rule.priority}</span>
                 <input
-                  aria-label="Rule name"
+                  aria-label={t("ruleBuilder.name", "Rule name")}
                   className={styles.name}
                   onChange={(event) => update(rule.id, { name: event.target.value })}
                   value={rule.name}
@@ -102,11 +104,11 @@ export function RuleBuilder({ onChange, rules }: RuleBuilderProps) {
                     onChange={(event) => update(rule.id, { enabled: event.target.checked })}
                     type="checkbox"
                   />
-                  On
+                  {t("ruleBuilder.enabled", "On")}
                 </label>
               </div>
               <label className={styles.field}>
-                When
+                {t("ruleBuilder.when", "When")}
                 <input
                   className={styles.input}
                   onChange={(event) => update(rule.id, { conditions: event.target.value })}
@@ -114,7 +116,7 @@ export function RuleBuilder({ onChange, rules }: RuleBuilderProps) {
                 />
               </label>
               <label className={styles.field}>
-                Then
+                {t("ruleBuilder.then", "Then")}
                 <select
                   className={styles.select}
                   onChange={(event) => update(rule.id, { effect: event.target.value as RuleEffect })}
@@ -150,15 +152,15 @@ export function RuleBuilder({ onChange, rules }: RuleBuilderProps) {
                   }
                   type="button"
                 >
-                  Remove
+                  {t("ruleBuilder.remove", "Remove")}
                 </button>
               </div>
             </li>
           ))}
         </ol>
       )}
-      <div className={styles.output} aria-label="Rule output">
-        <div className={styles.outputLabel}>Output</div>
+      <div className={styles.output} aria-label={t("ruleBuilder.output", "Rule output")}>
+        <div className={styles.outputLabel}>{t("ruleBuilder.outputLabel", "Output")}</div>
         <p className={styles.expression}>{expression}</p>
         <pre className={styles.payload} tabIndex={0}>{JSON.stringify(payload, null, 2)}</pre>
       </div>

@@ -167,7 +167,7 @@ export function DrawerDefaultActions({ onClose }: { onClose: () => void }) {
         {t("common.cancel", "Cancel")}
       </Button>
       <Button variant="primary" onClick={onClose}>
-        Apply
+        {t("common.apply", "Apply")}
       </Button>
     </>
   );

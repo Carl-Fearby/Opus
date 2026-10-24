@@ -1,6 +1,7 @@
 "use client";
 
 import { useMemo, useState } from "react";
+import { useOpusI18n } from "@/components/OpusI18n";
 import styles from "./TreeView.module.css";
 
 export type TreeViewNode = {
@@ -36,6 +37,7 @@ function TreeNode({
   node: TreeViewNode;
   onToggle: (id: string) => void;
 }) {
+  const { t } = useOpusI18n();
   const hasChildren = Boolean(node.children?.length);
   const expanded = expandedIds.has(node.id);
 
@@ -45,7 +47,11 @@ function TreeNode({
         {hasChildren ? (
           <button
             aria-expanded={expanded}
-            aria-label={`${expanded ? "Collapse" : "Expand"} ${node.label}`}
+            aria-label={
+              expanded
+                ? t("treeView.collapse", "Collapse {label}", { label: node.label })
+                : t("treeView.expand", "Expand {label}", { label: node.label })
+            }
             className={styles.toggle}
             onClick={() => onToggle(node.id)}
             type="button"
@@ -75,6 +81,7 @@ function TreeNode({
 }
 
 export function TreeView({ defaultExpandedIds, nodes }: TreeViewProps) {
+  const { t } = useOpusI18n();
   const fallbackIds = useMemo(() => collectExpandableIds(nodes).slice(0, 2), [nodes]);
   const [expandedIds, setExpandedIds] = useState<Set<string>>(
     () => new Set(defaultExpandedIds ?? fallbackIds),
@@ -93,7 +100,7 @@ export function TreeView({ defaultExpandedIds, nodes }: TreeViewProps) {
   }
 
   return (
-    <ul aria-label="Tree" className={styles.tree}>
+    <ul aria-label={t("treeView.label", "Tree")} className={styles.tree}>
       {nodes.map((node) => (
         <TreeNode
           depth={0}

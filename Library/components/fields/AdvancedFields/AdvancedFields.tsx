@@ -1,6 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useId, useMemo, useRef, useState, type ComponentPropsWithoutRef, type ReactNode } from "react";
+import { useOpusI18n } from "@/components/OpusI18n";
 import { FieldShell } from "../FieldShell";
 import { OpusDateRangeInput, type DateRangeValue } from "../DatePickerPanel";
 import type { ControlRadius, FieldMode, LabelPosition } from "../types";
@@ -247,11 +248,20 @@ export function MaskedField({ error, help, id, label, labelPosition, mask, mode,
 export type MultiFileItem = File | { name: string; size: number };
 export type MultiFileFieldProps = ShellProps & { accept?: string; files: MultiFileItem[]; maxFiles?: number; onChange: (files: MultiFileItem[]) => void };
 export function MultiFileField({ accept, error, files, help, id, label, labelPosition, maxFiles = 5, mode, radius, transparency, gradient, required, onChange }: MultiFileFieldProps) {
+  const { t } = useOpusI18n();
   const inputRef = useRef<HTMLInputElement>(null);
   const add = (next: FileList | null) => next && onChange([...files, ...Array.from(next)].slice(0, maxFiles));
   return <FieldShell error={error} help={help} id={id} label={label} labelPosition={labelPosition} labelTag="div" mode={mode} radius={radius} transparency={transparency} gradient={gradient} required={required}>
-    <label className={styles.drop} htmlFor={id}><strong>Choose files</strong><span>{files.length ? `${files.length} of ${maxFiles} selected` : `Up to ${maxFiles} files`}</span><input accept={accept} className={styles.hidden} id={id} multiple ref={inputRef} type="file" onChange={(event) => add(event.target.files)} /></label>
-    {files.length ? <ul className={styles.fileList}>{files.map((file, index) => <li key={`${file.name}-${file.size}-${index}`}><span>{file.name}</span><button aria-label={`Remove ${file.name}`} type="button" onClick={() => onChange(files.filter((_, itemIndex) => itemIndex !== index))}>×</button></li>)}</ul> : null}
+    <label className={styles.drop} htmlFor={id}>
+      <strong>{t("field.chooseFiles", "Choose files")}</strong>
+      <span>
+        {files.length
+          ? t("field.filesSelected", "{selected} of {max} selected", { selected: files.length, max: maxFiles })
+          : t("field.upToFiles", "Up to {max} files", { max: maxFiles })}
+      </span>
+      <input accept={accept} className={styles.hidden} id={id} multiple ref={inputRef} type="file" onChange={(event) => add(event.target.files)} />
+    </label>
+    {files.length ? <ul className={styles.fileList}>{files.map((file, index) => <li key={`${file.name}-${file.size}-${index}`}><span>{file.name}</span><button aria-label={t("field.removeFile", "Remove {name}", { name: file.name })} type="button" onClick={() => onChange(files.filter((_, itemIndex) => itemIndex !== index))}>×</button></li>)}</ul> : null}
   </FieldShell>;
 }
 
@@ -264,9 +274,11 @@ export function CheckboxGroupField({ error, help, id, label, labelPosition, mode
 }
 
 export type FormValidationSummaryProps = { errors: Array<{ fieldId?: string; message: string }>; title?: string };
-export function FormValidationSummary({ errors, title = "Please correct the following" }: FormValidationSummaryProps) {
+export function FormValidationSummary({ errors, title }: FormValidationSummaryProps) {
+  const { t } = useOpusI18n();
+  const displayTitle = title ?? t("field.validationSummary", "Please correct the following");
   if (!errors.length) return null;
-  return <section aria-labelledby="form-validation-title" className={styles.summary} role="alert"><h3 id="form-validation-title">{title}</h3><ul>{errors.map((error, index) => <li key={`${error.fieldId}-${index}`}>{error.fieldId ? <a href={`#${error.fieldId}`}>{error.message}</a> : error.message}</li>)}</ul></section>;
+  return <section aria-labelledby="form-validation-title" className={styles.summary} role="alert"><h3 id="form-validation-title">{displayTitle}</h3><ul>{errors.map((error, index) => <li key={`${error.fieldId}-${index}`}>{error.fieldId ? <a href={`#${error.fieldId}`}>{error.message}</a> : error.message}</li>)}</ul></section>;
 }
 export type FormProps = Omit<ComponentPropsWithoutRef<"form">, "className"> & {
   className?: string;

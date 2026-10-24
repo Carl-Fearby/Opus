@@ -30,6 +30,7 @@ import {
   faUnderline,
 } from "@fortawesome/free-solid-svg-icons";
 import { FieldShell, fieldInputAriaProps, useFieldShellAria } from "@/components/fields/FieldShell";
+import { useOpusI18n } from "@/components/OpusI18n";
 import type { FieldMode, InputControlSize, LabelPosition } from "@/components/fields/types";
 import { inputControlSizeClassName } from "../shared/inputControlSizes";
 import { Tooltip } from "@/components/Tooltip";
@@ -41,21 +42,22 @@ type InlineAction = {
   command: string;
   icon: IconDefinition;
   label: string;
+  labelKey: string;
   shortcut?: string;
 };
 
 type ToolbarGroup = InlineAction[];
 
 const inlineGroup: ToolbarGroup = [
-  { id: "bold", command: "bold", icon: faBold, label: "Bold", shortcut: "⌘B" },
-  { id: "italic", command: "italic", icon: faItalic, label: "Italic", shortcut: "⌘I" },
-  { id: "underline", command: "underline", icon: faUnderline, label: "Underline", shortcut: "⌘U" },
-  { id: "strikeThrough", command: "strikeThrough", icon: faStrikethrough, label: "Strikethrough" },
+  { id: "bold", command: "bold", icon: faBold, label: "Bold", labelKey: "richText.bold", shortcut: "⌘B" },
+  { id: "italic", command: "italic", icon: faItalic, label: "Italic", labelKey: "richText.italic", shortcut: "⌘I" },
+  { id: "underline", command: "underline", icon: faUnderline, label: "Underline", labelKey: "richText.underline", shortcut: "⌘U" },
+  { id: "strikeThrough", command: "strikeThrough", icon: faStrikethrough, label: "Strikethrough", labelKey: "richText.strikethrough" },
 ];
 
 const listGroup: ToolbarGroup = [
-  { id: "insertUnorderedList", command: "insertUnorderedList", icon: faListUl, label: "Bullet list" },
-  { id: "insertOrderedList", command: "insertOrderedList", icon: faListOl, label: "Numbered list" },
+  { id: "insertUnorderedList", command: "insertUnorderedList", icon: faListUl, label: "Bullet list", labelKey: "richText.bulletList" },
+  { id: "insertOrderedList", command: "insertOrderedList", icon: faListOl, label: "Numbered list", labelKey: "richText.numberedList" },
 ];
 
 const stateCommands = [
@@ -146,6 +148,7 @@ export function RichTextField({
   transparency,
   gradient,
 }: RichTextFieldProps) {
+  const { t } = useOpusI18n();
   const shellAria = useFieldShellAria();
   const editorRef = useRef<HTMLDivElement>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -504,8 +507,8 @@ export function RichTextField({
         active={Boolean(activeCommands[action.command])}
         icon={action.icon}
         key={action.id}
-        label={action.label}
-        tooltip={action.shortcut ? `${action.label} (${action.shortcut})` : action.label}
+        label={t(action.labelKey, action.label)}
+        tooltip={action.shortcut ? `${t(action.labelKey, action.label)} (${action.shortcut})` : t(action.labelKey, action.label)}
         onPress={() => exec(action.command)}
       />
     ));
@@ -527,19 +530,19 @@ export function RichTextField({
     >
       <div className={styles.field}>
         <div className={[styles.editorShell, inputControlSizeClassName[size], error ? styles.error : ""].filter(Boolean).join(" ")}>
-          <div aria-label="Formatting toolbar" className={styles.toolbar} role="toolbar">
+          <div aria-label={t("richText.formattingToolbar", "Formatting toolbar")} className={styles.toolbar} role="toolbar">
             <ToolbarButton
               disabled={!canUndo}
               icon={faRotateLeft}
-              label="Undo"
-              tooltip="Undo (⌘Z)"
+              label={t("richText.undo", "Undo")}
+              tooltip={`${t("richText.undo", "Undo")} (⌘Z)`}
               onPress={() => exec("undo")}
             />
             <ToolbarButton
               disabled={!canRedo}
               icon={faRotateRight}
-              label="Redo"
-              tooltip="Redo (⇧⌘Z)"
+              label={t("richText.redo", "Redo")}
+              tooltip={`${t("richText.redo", "Redo")} (⇧⌘Z)`}
               onPress={() => exec("redo")}
             />
             <span aria-hidden="true" className={styles.divider} />
@@ -547,29 +550,29 @@ export function RichTextField({
             <span aria-hidden="true" className={styles.divider} />
             <ToolbarButton
               icon={faCode}
-              label="Code block"
+              label={t("richText.codeBlock", "Code block")}
               onPress={() => applyBlockFormat("pre")}
             />
             {renderGroup(listGroup)}
             <span aria-hidden="true" className={styles.divider} />
-            <ToolbarButton icon={faLink} label="Insert link" onPress={openLinkModal} />
-            <ToolbarButton icon={faLinkSlash} label="Remove link" onPress={() => exec("unlink")} />
+            <ToolbarButton icon={faLink} label={t("richText.insertLink", "Insert link")} onPress={openLinkModal} />
+            <ToolbarButton icon={faLinkSlash} label={t("richText.removeLink", "Remove link")} onPress={() => exec("unlink")} />
             <ToolbarButton
               disabled={!onAttachmentUpload}
               icon={faImage}
-              label="Insert image"
+              label={t("richText.insertImage", "Insert image")}
               onPress={() => openAttachmentPicker("image")}
             />
             <ToolbarButton
               disabled={!onAttachmentUpload}
               icon={faPaperclip}
-              label="Attach file"
+              label={t("richText.attachFile", "Attach file")}
               onPress={() => openAttachmentPicker("file")}
             />
-            <ToolbarButton icon={faTable} label="Insert table" onPress={openTableModal} />
+            <ToolbarButton icon={faTable} label={t("richText.insertTable", "Insert table")} onPress={openTableModal} />
           </div>
           <input
-            aria-label="Insert images"
+            aria-label={t("richText.insertImages", "Insert images")}
             accept="image/*"
             className={styles.hiddenInput}
             multiple
@@ -583,7 +586,7 @@ export function RichTextField({
             type="file"
           />
           <input
-            aria-label="Attach files"
+            aria-label={t("richText.attachFiles", "Attach files")}
             className={styles.hiddenInput}
             multiple
             onChange={(event) => {
@@ -623,7 +626,9 @@ export function RichTextField({
           />
           {uploading > 0 ? (
             <span className={styles.uploadStatus} role="status">
-              Uploading {uploading === 1 ? "file" : "files"}…
+              {uploading === 1
+                ? t("richText.uploadingOne", "Uploading file…")
+                : t("richText.uploadingMany", "Uploading files…")}
             </span>
           ) : null}
         </div>
@@ -635,16 +640,16 @@ export function RichTextField({
             onMouseDown={() => setLinkModalOpen(false)}
           >
             <div
-              aria-label="Insert link"
+              aria-label={t("richText.insertLink", "Insert link")}
               aria-modal="true"
               className={styles.modal}
               role="dialog"
               onMouseDown={(event) => event.stopPropagation()}
             >
-              <h3 className={styles.modalTitle}>Insert link</h3>
+              <h3 className={styles.modalTitle}>{t("richText.insertLink", "Insert link")}</h3>
               <div className={styles.modalField}>
                 <label className={styles.modalLabel} htmlFor={`${id}-link-url`}>
-                  URL
+                  {t("richText.url", "URL")}
                 </label>
                 <input
                   autoFocus
@@ -671,7 +676,7 @@ export function RichTextField({
                   type="button"
                   onClick={() => setLinkModalOpen(false)}
                 >
-                  Cancel
+                  {t("richText.cancel", "Cancel")}
                 </button>
                 <button
                   className={styles.modalConfirm}
@@ -679,7 +684,7 @@ export function RichTextField({
                   type="button"
                   onClick={confirmLink}
                 >
-                  Insert link
+                  {t("richText.insertLink", "Insert link")}
                 </button>
               </div>
             </div>
@@ -693,17 +698,17 @@ export function RichTextField({
             onMouseDown={() => setTableModalOpen(false)}
           >
             <div
-              aria-label="Insert table"
+              aria-label={t("richText.insertTable", "Insert table")}
               aria-modal="true"
               className={styles.modal}
               role="dialog"
               onMouseDown={(event) => event.stopPropagation()}
             >
-              <h3 className={styles.modalTitle}>Insert table</h3>
+              <h3 className={styles.modalTitle}>{t("richText.insertTable", "Insert table")}</h3>
               <div className={styles.modalDimensions}>
                 <div className={styles.modalDimensionField}>
                   <label className={styles.modalLabel} htmlFor={`${id}-table-rows`}>
-                    Rows
+                    {t("richText.rows", "Rows")}
                   </label>
                   <input
                     autoFocus
@@ -721,7 +726,7 @@ export function RichTextField({
                 </span>
                 <div className={styles.modalDimensionField}>
                   <label className={styles.modalLabel} htmlFor={`${id}-table-cols`}>
-                    Columns
+                    {t("richText.columns", "Columns")}
                   </label>
                   <input
                     className={styles.modalNumber}
@@ -749,10 +754,10 @@ export function RichTextField({
                   type="button"
                   onClick={() => setTableModalOpen(false)}
                 >
-                  Cancel
+                  {t("richText.cancel", "Cancel")}
                 </button>
                 <button className={styles.modalConfirm} type="button" onClick={confirmTable}>
-                  Insert table
+                  {t("richText.insertTable", "Insert table")}
                 </button>
               </div>
             </div>

@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { Button } from "@/components/fields/Button";
 import { ImageCropUploadField } from "@/components/fields/ImageCropUploadField";
 import { Modal } from "@/components/Modal";
+import { useOpusI18n } from "@/components/OpusI18n";
 
 export type CompanyLogoUploadModalProps = {
   fieldId?: string;
@@ -28,6 +29,7 @@ export function CompanyLogoUploadModal({
   title = "Update company logo",
   value,
 }: CompanyLogoUploadModalProps) {
+  const { t } = useOpusI18n();
   const [draftLogo, setDraftLogo] = useState(value ?? "");
   const [cropAvailability, setCropAvailability] = useState<CropAvailability | null>(null);
 
@@ -49,7 +51,7 @@ export function CompanyLogoUploadModal({
       actions={
         <>
           <Button type="button" variant="secondary" onClick={handleClose}>
-            Cancel
+            {t("common.cancel", "Cancel")}
           </Button>
           {cropAvailability?.canApply ? (
             <Button

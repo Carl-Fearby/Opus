@@ -1,6 +1,7 @@
 "use client";
 
 import { CatalogIcon } from "@/components/CatalogIcon";
+import { useOpusI18n } from "@/components/OpusI18n";
 import styles from "./DesktopIcon.module.css";
 
 export type DesktopIconTone = "purple" | "blue";
@@ -28,9 +29,10 @@ export function DesktopIcon({
   selected,
   tone = "purple",
 }: DesktopIconProps) {
+  const { t } = useOpusI18n();
   return (
     <button
-      aria-label={`Open ${label}`}
+      aria-label={t("desktopIcon.open", "Open {label}", { label })}
       className={[styles.root, className].filter(Boolean).join(" ")}
       data-active={active || undefined}
       data-selected={selected || undefined}

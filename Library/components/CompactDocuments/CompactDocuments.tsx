@@ -1,5 +1,6 @@
 "use client";
 
+import { useOpusI18n } from "@/components/OpusI18n";
 import { useMemo, useState } from "react";
 import { Badge } from "@/components/Badge";
 import { CatalogIcon } from "@/components/CatalogIcon";
@@ -71,6 +72,7 @@ export function CompactDocuments({
   showSearch = true,
   showViewOptions = true,
 }: CompactDocumentsProps) {
+  const { t } = useOpusI18n();
   const [folderId, setFolderId] = useState<string | null>(null);
   const [query, setQuery] = useState("");
   const [view, setView] = useState<CompactDocumentView>(defaultView);
@@ -117,8 +119,8 @@ export function CompactDocuments({
       data-component="compact-documents"
     >
       <div className={styles.toolbar}>
-        <nav aria-label="Document path" className={styles.breadcrumb}>
-          <button onClick={() => { setFolderId(null); setQuery(""); }} type="button">Documents</button>
+        <nav aria-label={t("compactDocuments.path", "Document path")} className={styles.breadcrumb}>
+          <button onClick={() => { setFolderId(null); setQuery(""); }} type="button">{t("compactDocuments.documents", "Documents")}</button>
           {breadcrumb.map((node) => (
             <span key={node.id}>
               <CatalogIcon iconName="chevron-right" />
@@ -133,13 +135,13 @@ export function CompactDocuments({
               label="Search documents"
               labelVisuallyHidden
               onChange={(event) => setQuery(event.target.value)}
-              placeholder="Search this folder..."
+              placeholder={t("compactDocuments.searchPlaceholder", "Search this folder...")}
               type="search"
               value={query}
             />
           ) : null}
           {showViewOptions ? (
-            <div aria-label="Document view" className={styles.viewOptions} role="group">
+            <div aria-label={t("compactDocuments.view", "Document view")} className={styles.viewOptions} role="group">
               {([
                 ["list", "bars", "List view"],
                 ["grid", "table-cells-large", "Grid view"],
@@ -163,7 +165,7 @@ export function CompactDocuments({
 
       <div className={styles.viewport}>
         {view === "list" ? (
-          <div aria-label="Folder contents" className={styles.list}>
+          <div aria-label={t("compactDocuments.contents", "Folder contents")} className={styles.list}>
             {visible.map((node) => (
               <button className={styles.listRow} key={node.id} onClick={() => openNode(node)} type="button">
                 {nodeIcon(node)}
@@ -179,7 +181,7 @@ export function CompactDocuments({
         ) : null}
 
         {view === "grid" ? (
-          <div aria-label="Folder contents" className={styles.grid}>
+          <div aria-label={t("compactDocuments.contents", "Folder contents")} className={styles.grid}>
             {visible.map((node) => (
               <button className={styles.card} key={node.id} onClick={() => openNode(node)} type="button">
                 <span className={styles.cardTop}>
@@ -195,7 +197,7 @@ export function CompactDocuments({
         ) : null}
 
         {view === "columns" ? (
-          <div aria-label="Folder contents" className={styles.columns}>
+          <div aria-label={t("compactDocuments.contents", "Folder contents")} className={styles.columns}>
             {columnLevels.map((level, index) => (
               <div className={styles.column} key={`${index}-${breadcrumb[index - 1]?.id ?? "root"}`}>
                 <strong className={styles.columnTitle}>{index === 0 ? "Documents" : breadcrumb[index - 1]?.name}</strong>
@@ -216,7 +218,7 @@ export function CompactDocuments({
             ))}
           </div>
         ) : null}
-        {!visible.length ? <Text className={styles.empty}>This folder is empty.</Text> : null}
+        {!visible.length ? <Text className={styles.empty}>{t("compactDocuments.empty", "This folder is empty.")}</Text> : null}
       </div>
     </section>
   );

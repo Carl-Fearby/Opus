@@ -1,5 +1,6 @@
 "use client";
 
+import { useOpusI18n } from "@/components/OpusI18n";
 import { useEffect, useId, useRef, useState, type CSSProperties } from "react";
 import type { ChartPalette, ChartVariant } from "@/components/fields/types";
 import { chartDemoData, chartDemoSeries } from "@/lib/controls/chartDemoData";
@@ -1234,10 +1235,12 @@ function FunnelLike({
 function getLegendItems({
   data,
   series,
+  t,
   variant,
 }: {
   data: ChartDatum[];
   series: ChartSeries[];
+  t: (key: string, fallback: string) => string;
   variant: ChartVariant;
 }) {
   if (variant === "grouped-bar" || variant === "stacked-bar" || variant === "stacked-bar-100" || variant === "multi-line" || variant === "stacked-area") {
@@ -1254,16 +1257,16 @@ function getLegendItems({
 
   if (variant === "candlestick") {
     return [
-      { id: "close", label: "Close" },
+      { id: "close", label: t("chart.close", "Close") },
       { id: "bullish", label: "Up" },
-      { id: "bearish", label: "Down" },
+      { id: "bearish", label: t("chart.down", "Down") },
     ];
   }
 
   if (variant === "waterfall") {
     return [
-      { id: "positive", label: "Increase" },
-      { id: "negative", label: "Decrease" },
+      { id: "positive", label: t("chart.increase", "Increase") },
+      { id: "negative", label: t("chart.decrease", "Decrease") },
     ];
   }
 
@@ -1272,7 +1275,7 @@ function getLegendItems({
   }
 
   if (variant === "heatmap" || variant === "calendar-heatmap") {
-    return [{ id: "activity", label: "Activity" }];
+    return [{ id: "activity", label: t("chart.activity", "Activity") }];
   }
 
   if (variant === "choropleth" || variant === "geo-map" || variant === "bubble-map") {
@@ -1298,6 +1301,7 @@ export function Chart({
   xAxisLabel,
   yAxisLabel,
 }: ChartProps) {
+  const { t } = useOpusI18n();
   const svgRef = useRef<SVGSVGElement>(null);
   const plotClipId = useId();
   const [svgWidth, setSvgWidth] = useState(0);
@@ -1322,7 +1326,7 @@ export function Chart({
     right: timelineEndpointInset,
   };
   const style = { "--chart-height": `${height}px` } as CSSProperties;
-  const legendItems = getLegendItems({ data, series, variant });
+  const legendItems = getLegendItems({ data, series, t, variant });
   const isCartesian = isCartesianVariant(variant);
   const yDomain = isSpecializedChartVariant(variant)
     ? getChartYDomain(variant, data, series, max)
@@ -1550,7 +1554,7 @@ export function Chart({
         ) : null}
       </svg>
       {showLegend ? (
-        <div className={styles.legend} aria-label="Chart legend">
+        <div className={styles.legend} aria-label={t("chart.legend", "Chart legend")}>
           {legendItems.map((item, index) => {
             const swatchIndex =
               variant === "candlestick"

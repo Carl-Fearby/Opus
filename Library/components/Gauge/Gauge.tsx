@@ -1,5 +1,8 @@
+"use client";
+
 import type { CSSProperties } from "react";
 import type { SurfaceDensity } from "@/components/fields/types";
+import { useOpusI18n } from "@/components/OpusI18n";
 import styles from "./Gauge.module.css";
 
 export type GaugeTrend = "up" | "down";
@@ -37,6 +40,7 @@ function GaugeArc({
   valueColor?: string;
   variant: GaugeVariant;
 }) {
+  const { t } = useOpusI18n();
   const clamped = Math.max(0, Math.min(100, value));
   const style = {
     "--gauge-track": trackColor,
@@ -66,7 +70,7 @@ function GaugeArc({
         </svg>
         <div className={styles.gaugeCenter}>
           <strong>{Math.round(clamped)}%</strong>
-          <span>{clamped.toFixed(2)} score</span>
+          <span>{clamped.toFixed(2)} {t("gauge.score", "score")}</span>
         </div>
       </div>
     );
@@ -89,7 +93,7 @@ function GaugeArc({
       </svg>
       <div className={styles.gaugeCenter}>
         <strong>{Math.round(clamped)}%</strong>
-        <span>{clamped.toFixed(2)} score</span>
+        <span>{clamped.toFixed(2)} {t("gauge.score", "score")}</span>
       </div>
     </div>
   );

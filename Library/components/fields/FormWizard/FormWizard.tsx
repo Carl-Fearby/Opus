@@ -1,6 +1,7 @@
 "use client";
 
 import { useId, useState, type ReactNode } from "react";
+import { useOpusI18n } from "@/components/OpusI18n";
 import { Button } from "../Button";
 import styles from "./FormWizard.module.css";
 
@@ -40,14 +41,14 @@ function clampStep(index: number, count: number) {
 
 export function FormWizard({
   steps,
-  ariaLabel = "Form progress",
+  ariaLabel,
   activeStep,
   defaultActiveStep = 0,
   allowStepNavigation = true,
-  backLabel = "Back",
-  cancelLabel = "Cancel",
-  completeLabel = "Complete",
-  nextLabel = "Continue",
+  backLabel,
+  cancelLabel,
+  completeLabel,
+  nextLabel,
   orientation = "horizontal",
   showCancel = true,
   showDescriptions = true,
@@ -57,6 +58,12 @@ export function FormWizard({
   onStepChange,
   onValidationError,
 }: FormWizardProps) {
+  const { t } = useOpusI18n();
+  const displayAriaLabel = ariaLabel ?? t("field.formProgress", "Form progress");
+  const displayBackLabel = backLabel ?? t("field.back", "Back");
+  const displayCancelLabel = cancelLabel ?? t("common.cancel", "Cancel");
+  const displayCompleteLabel = completeLabel ?? t("field.complete", "Complete");
+  const displayNextLabel = nextLabel ?? t("field.continue", "Continue");
   const wizardId = useId();
   const [internalStep, setInternalStep] = useState(() => clampStep(defaultActiveStep, steps.length));
   const currentIndex = clampStep(activeStep ?? internalStep, steps.length);
@@ -91,12 +98,12 @@ export function FormWizard({
 
   return (
     <section
-      aria-label={ariaLabel}
+      aria-label={displayAriaLabel}
       className={styles.wizard}
       data-component="form-wizard"
       data-orientation={orientation}
     >
-      <nav aria-label="Form steps" className={styles.stepNavigation}>
+      <nav aria-label={t("field.formSteps", "Form steps")} className={styles.stepNavigation}>
         <ol className={styles.steps}>
           {steps.map((step, index) => {
             const completed = index < currentIndex;
@@ -123,7 +130,7 @@ export function FormWizard({
                   <span className={styles.stepCopy}>
                     <span className={styles.stepLabel}>
                       {step.label}
-                      {step.optional ? <span className={styles.optional}>Optional</span> : null}
+                      {step.optional ? <span className={styles.optional}>{t("field.optional", "Optional")}</span> : null}
                     </span>
                     {showDescriptions && step.description ? (
                       <span className={styles.stepDescription}>{step.description}</span>
@@ -144,7 +151,7 @@ export function FormWizard({
         role="region"
       >
         <header className={styles.panelHeader}>
-          <p className={styles.progress}>Step {currentIndex + 1} of {steps.length}</p>
+          <p className={styles.progress}>{t("field.stepOf", "Step {current} of {total}", { current: currentIndex + 1, total: steps.length })}</p>
           <h2 id={`${wizardId}-${currentStep.id}-title`}>{currentStep.label}</h2>
           {currentStep.description ? <p>{currentStep.description}</p> : null}
         </header>
@@ -152,11 +159,11 @@ export function FormWizard({
       </div>
 
       <footer className={styles.actions}>
-        <div>{showCancel ? <Button type="button" variant="secondary" onClick={onCancel}>{cancelLabel}</Button> : null}</div>
+        <div>{showCancel ? <Button type="button" variant="secondary" onClick={onCancel}>{displayCancelLabel}</Button> : null}</div>
         <div className={styles.primaryActions}>
-          <Button disabled={currentIndex === 0} type="button" variant="secondary" onClick={previous}>{backLabel}</Button>
+          <Button disabled={currentIndex === 0} type="button" variant="secondary" onClick={previous}>{displayBackLabel}</Button>
           <Button type="button" onClick={next}>
-            {currentIndex === steps.length - 1 ? completeLabel : nextLabel}
+            {currentIndex === steps.length - 1 ? displayCompleteLabel : displayNextLabel}
           </Button>
         </div>
       </footer>

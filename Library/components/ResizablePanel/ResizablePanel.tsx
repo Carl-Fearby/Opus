@@ -1,6 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useRef, useState, type CSSProperties, type ReactNode } from "react";
+import { useOpusI18n } from "@/components/OpusI18n";
 import styles from "./ResizablePanel.module.css";
 
 export type ResizablePanelProps = {
@@ -28,6 +29,7 @@ export function ResizablePanel({
   onResize,
   style,
 }: ResizablePanelProps) {
+  const { t } = useOpusI18n();
   const [size, setSize] = useState({ width: defaultWidth, height: defaultHeight });
   const dragging = useRef(false);
   const origin = useRef({ x: 0, y: 0, width: 0, height: 0 });
@@ -74,7 +76,7 @@ export function ResizablePanel({
     >
       <div className={styles.body}>{children}</div>
       <button
-        aria-label="Resize panel"
+        aria-label={t("resizablePanel.resize", "Resize panel")}
         className={styles.handle}
         onPointerDown={(event) => {
           event.preventDefault();

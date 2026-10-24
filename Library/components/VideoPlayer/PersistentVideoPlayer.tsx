@@ -1,5 +1,6 @@
 "use client";
 
+import { useOpusI18n } from "@/components/OpusI18n";
 import {
   createContext,
   useCallback,
@@ -62,6 +63,7 @@ export function PersistentVideoPlayerProvider({
   miniPlayerOffset = 20,
   miniPlayerWidth = 360,
 }: PersistentVideoPlayerProviderProps) {
+  const { t } = useOpusI18n();
   const [session, setSession] = useState<PlayerSession | null>(null);
   const [anchorRect, setAnchorRect] = useState<DOMRect | null>(null);
   const [expanded, setExpanded] = useState(false);
@@ -159,7 +161,7 @@ export function PersistentVideoPlayerProvider({
               >
                 <FontAwesomeIcon icon={expanded ? faCompress : faExpand} />
               </button>
-              <button aria-label="Close mini player" type="button" onClick={() => setSession(null)}>
+              <button aria-label={t("video.closeMini", "Close mini player")} type="button" onClick={() => setSession(null)}>
                 <FontAwesomeIcon icon={faXmark} />
               </button>
             </div>

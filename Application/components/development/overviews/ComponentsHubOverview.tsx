@@ -8,15 +8,14 @@ import { categoryPath, componentPath, COMPONENTS_BASE_PATH } from "@/lib/control
 import { ComponentIcon } from "@/components/development/ComponentIcon";
 import { useComponentDescription } from "@/lib/i18n/useComponentDescription";
 import { useComponentTitle } from "@/lib/i18n/useComponentTitle";
-import { categoryDescriptionMessageKey, categoryMessageKey } from "@/lib/i18n";
-import { localizeNavigationGroup } from "@/lib/i18n/navigationGroupLabels";
+import { categoryDescriptionMessageKey, categoryMessageKey } from "@/lib/i18n/config";
 import { useLocale } from "@/lib/i18n/LocaleProvider";
 import styles from "./overview.module.css";
 
 export function ComponentsHubOverview() {
   const describe = useComponentDescription();
   const titleFor = useComponentTitle();
-  const { locale, t } = useLocale();
+  const { t } = useLocale();
   useSetComponentsPageHeader(
     t("docs.overview.title"),
     t("docs.overview.description"),
@@ -58,7 +57,7 @@ export function ComponentsHubOverview() {
                 {section.label ? (
                   <h3 className={styles.hubSubsectionTitle}>
                     <ComponentIcon compact icon={getNavigationGroupIcon(section.label)} />
-                    <span>{localizeNavigationGroup(locale, section.label)}</span>
+                    <span>{section.label}</span>
                   </h3>
                 ) : null}
                 <div className={styles.hubGrid}>

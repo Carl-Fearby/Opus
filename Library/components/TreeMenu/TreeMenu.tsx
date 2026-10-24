@@ -2,6 +2,7 @@
 
 import { useMemo, useState } from "react";
 import { CatalogIcon } from "@/components/CatalogIcon";
+import { useOpusI18n } from "@/components/OpusI18n";
 import styles from "./TreeMenu.module.css";
 
 export type TreeMenuNode = {
@@ -46,6 +47,7 @@ function TreeMenuBranch({
   selectedId?: string;
   showMeta: boolean;
 }) {
+  const { t } = useOpusI18n();
   const hasChildren = Boolean(node.children?.length);
   const isExpanded = hasChildren && expanded.has(node.id);
   const selected = selectedId === node.id;
@@ -60,7 +62,11 @@ function TreeMenuBranch({
       <div className={styles.row} data-selected={selected ? "true" : undefined}>
         {hasChildren ? (
           <button
-            aria-label={`${isExpanded ? "Collapse" : "Expand"} ${node.label}`}
+            aria-label={
+              isExpanded
+                ? t("treeMenu.collapse", "Collapse {label}", { label: node.label })
+                : t("treeMenu.expand", "Expand {label}", { label: node.label })
+            }
             className={styles.toggle}
             disabled={node.disabled}
             onClick={() => onToggle(node)}

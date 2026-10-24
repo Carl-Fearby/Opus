@@ -1,6 +1,7 @@
 "use client";
 
 import { useMemo, useState, type ReactNode } from "react";
+import { useOpusI18n } from "@/components/OpusI18n";
 import { Badge } from "@/components/Badge";
 import { CatalogIcon } from "@/components/CatalogIcon";
 import { Heading } from "@/components/Heading";
@@ -367,21 +368,24 @@ function SearchToolbar({
   onQueryChange: (value: string) => void;
   onAction: (action: string) => void;
 }) {
+  const { t } = useOpusI18n();
   return (
     <div className={styles.toolbar}>
       <TextField
         id={`${label}-search`}
-        label={`Search ${label}`}
+        label={t("crm.searchLabel", "Search {label}", { label })}
         labelVisuallyHidden
-        placeholder={`Search ${label.toLowerCase()}...`}
+        placeholder={t("crm.searchPlaceholderFor", "Search {label}...", { label: label.toLowerCase() })}
         type="search"
         value={query}
         onChange={(event) => onQueryChange(event.target.value)}
       />
-      <span className={styles.resultCount}>{count} items</span>
+      <span className={styles.resultCount}>
+        {count} {t("crm.items", "records")}
+      </span>
       {selectedCount ? (
         <Button size="sm" type="button" variant="secondary" onClick={() => onAction(`Bulk actions for ${selectedCount} items`)}>
-          Actions ({selectedCount})
+          {t("crm.actions", "Actions")} ({selectedCount})
         </Button>
       ) : null}
     </div>
@@ -407,6 +411,7 @@ function DirectoryLayout({
   onToggle: (id: string) => void;
   onAction: (action: string) => void;
 }) {
+  const { t } = useOpusI18n();
   const filtered = useMemo(
     () =>
       rows.filter((row) =>
@@ -427,11 +432,11 @@ function DirectoryLayout({
       />
       <div className={styles.table} role="table" aria-label={title}>
         <div className={`${styles.row} ${styles.tableHead}`} role="row">
-          <span aria-label="Selection" role="columnheader" />
+          <span aria-label={t("crm.selection", "Selection")} role="columnheader" />
           <span role="columnheader">{columns[0]}</span>
           <span role="columnheader">{columns[1]}</span>
           <span role="columnheader">{columns[2]}</span>
-          <span aria-label="Actions" role="columnheader" />
+          <span aria-label={t("crm.actions", "Actions")} role="columnheader" />
         </div>
         {filtered.map((row) => {
           const checked = selected.includes(row.id);
@@ -439,7 +444,7 @@ function DirectoryLayout({
             <div className={`${styles.row} ${styles.actionRow}`} role="row" key={row.id}>
               <span className={styles.selectCell} role="cell">
                 <input
-                  aria-label={`Select ${row.primary}`}
+                  aria-label={t("crm.selectRow", "Select {name}", { name: row.primary })}
                   checked={checked}
                   type="checkbox"
                   onChange={() => onToggle(row.id)}
@@ -464,7 +469,7 @@ function DirectoryLayout({
               </span>
               <span className={styles.actionCell} role="cell">
                 <button
-                  aria-label={`Open ${row.primary}`}
+                  aria-label={t("crm.openRow", "Open {name}", { name: row.primary })}
                   className={styles.rowActionOverlay}
                   onClick={() => onAction(`Open ${row.primary}`)}
                   type="button"
@@ -481,8 +486,9 @@ function DirectoryLayout({
 }
 
 function TimelineLayout({ rows, onAction }: { rows: Row[]; onAction: (action: string) => void }) {
+  const { t } = useOpusI18n();
   return (
-    <div className={styles.timeline} aria-label="Appointments">
+    <div className={styles.timeline} aria-label={t("crm.appointments", "Appointments")}>
       {rows.map((row) => (
         <article className={styles.timelineItem} key={row.id}>
           <div className={styles.timelineTime}>
@@ -510,8 +516,9 @@ function TimelineLayout({ rows, onAction }: { rows: Row[]; onAction: (action: st
 }
 
 function FeedLayout({ rows, onAction }: { rows: Row[]; onAction: (action: string) => void }) {
+  const { t } = useOpusI18n();
   return (
-    <div className={styles.feed} aria-label="Notifications">
+    <div className={styles.feed} aria-label={t("crm.notifications", "Notifications")}>
       {rows.map((row) => (
         <button
           className={styles.feedItem}
@@ -539,9 +546,10 @@ function FeedLayout({ rows, onAction }: { rows: Row[]; onAction: (action: string
 }
 
 function BoardLayout({ rows, onAction }: { rows: Row[]; onAction: (action: string) => void }) {
+  const { t } = useOpusI18n();
   const columns = ["Qualification", "Proposal", "Negotiation"];
   return (
-    <div className={styles.board} aria-label="Pipeline board">
+    <div className={styles.board} aria-label={t("crm.pipeline", "Pipeline board")}>
       {columns.map((column) => {
         const cards = rows.filter((row) => row.status === column);
         return (
@@ -575,8 +583,9 @@ function BoardLayout({ rows, onAction }: { rows: Row[]; onAction: (action: strin
 }
 
 function CatalogueLayout({ rows, onAction }: { rows: Row[]; onAction: (action: string) => void }) {
+  const { t } = useOpusI18n();
   return (
-    <div className={styles.catalogue} aria-label="Products">
+    <div className={styles.catalogue} aria-label={t("crm.products", "Products")}>
       {rows.map((row) => (
         <button
           className={styles.catalogueCard}
@@ -603,8 +612,9 @@ function CatalogueLayout({ rows, onAction }: { rows: Row[]; onAction: (action: s
 }
 
 function SettingsLayout({ rows, onAction }: { rows: Row[]; onAction: (action: string) => void }) {
+  const { t } = useOpusI18n();
   return (
-    <div className={styles.settings} aria-label="Configuration">
+    <div className={styles.settings} aria-label={t("crm.configuration", "Configuration")}>
       {rows.map((row) => (
         <button
           className={styles.settingsRow}
@@ -629,6 +639,7 @@ function SettingsLayout({ rows, onAction }: { rows: Row[]; onAction: (action: st
 }
 
 function DocumentsLayout({ tree, onAction }: { tree: DocNode[]; onAction: (action: string) => void }) {
+  const { t } = useOpusI18n();
   const [folderId, setFolderId] = useState<string | null>(null);
   const [query, setQuery] = useState("");
   const [view, setView] = useState<DocumentView>("grid");
@@ -679,8 +690,8 @@ function DocumentsLayout({ tree, onAction }: { tree: DocNode[]; onAction: (actio
 
   return (
     <div className={styles.documents}>
-      <aside className={styles.docTree} aria-label="Folders">
-        <div className={styles.docTreeHeading}>Folders</div>
+      <aside className={styles.docTree} aria-label={t("crm.folders", "Folders")}>
+        <div className={styles.docTreeHeading}>{t("crm.folders", "Folders")}</div>
         <TreeMenu
           ariaLabel="Document folders"
           defaultExpandedIds={folderNodes.map((node) => node.id)}
@@ -698,9 +709,9 @@ function DocumentsLayout({ tree, onAction }: { tree: DocNode[]; onAction: (actio
 
       <div className={styles.docBrowser}>
         <div className={styles.docToolbar}>
-          <nav className={styles.breadcrumb} aria-label="Path">
+          <nav className={styles.breadcrumb} aria-label={t("crm.path", "Path")}>
             <button type="button" onClick={() => { setFolderId(null); onAction("Open Documents"); }}>
-              Documents
+              {t("compactDocuments.documents", "Documents")}
             </button>
             {breadcrumb.map((node) => (
               <span key={node.id}>
@@ -716,12 +727,12 @@ function DocumentsLayout({ tree, onAction }: { tree: DocNode[]; onAction: (actio
               id="documents-search"
               label="Search folder"
               labelVisuallyHidden
-              placeholder="Search this folder..."
+              placeholder={t("crm.searchPlaceholder", "Search this folder...")}
               type="search"
               value={query}
               onChange={(event) => setQuery(event.target.value)}
             />
-            <div className={styles.docViewOptions} role="group" aria-label="Document view">
+            <div className={styles.docViewOptions} role="group" aria-label={t("crm.documentView", "Document view")}>
               {([
                 ["list", "bars", "List view"],
                 ["grid", "table-cells-large", "Grid view"],
@@ -744,7 +755,7 @@ function DocumentsLayout({ tree, onAction }: { tree: DocNode[]; onAction: (actio
         </div>
 
         {view === "grid" ? (
-          <div className={styles.docGrid} aria-label="Folder contents">
+          <div className={styles.docGrid} aria-label={t("crm.folderContents", "Folder contents")}>
             {folders.map((node) => (
               <button
                 className={styles.docCard}
@@ -757,7 +768,7 @@ function DocumentsLayout({ tree, onAction }: { tree: DocNode[]; onAction: (actio
                   <CatalogIcon iconName="folder" />
                 </span>
                 <strong>{node.name}</strong>
-                <small>{node.children?.length ?? 0} items</small>
+                <small>{node.children?.length ?? 0} {t("crm.items", "records")}</small>
               </button>
             ))}
             {files.map((node) => (
@@ -779,16 +790,16 @@ function DocumentsLayout({ tree, onAction }: { tree: DocNode[]; onAction: (actio
                 {node.status ? <Badge label={node.status} size="sm" tone={statusTone(node.status)} /> : null}
               </button>
             ))}
-            {!visible.length ? <div className={styles.docEmpty}>This folder is empty.</div> : null}
+            {!visible.length ? <div className={styles.docEmpty}>{t("crm.emptyFolder", "This folder is empty.")}</div> : null}
           </div>
         ) : null}
 
         {view === "list" ? (
-          <div className={styles.docList} aria-label="Folder contents">
+          <div className={styles.docList} aria-label={t("crm.folderContents", "Folder contents")}>
             <div className={styles.docListHeading} aria-hidden="true">
-              <span>Name</span>
-              <span>Type</span>
-              <span>Details</span>
+              <span>{t("crm.name", "Name")}</span>
+              <span>{t("crm.type", "Type")}</span>
+              <span>{t("crm.details", "Details")}</span>
               <span />
             </div>
             {visible.map((node) => (
@@ -809,12 +820,12 @@ function DocumentsLayout({ tree, onAction }: { tree: DocNode[]; onAction: (actio
                 <RowChevron />
               </button>
             ))}
-            {!visible.length ? <div className={styles.docEmpty}>This folder is empty.</div> : null}
+            {!visible.length ? <div className={styles.docEmpty}>{t("crm.emptyFolder", "This folder is empty.")}</div> : null}
           </div>
         ) : null}
 
         {view === "columns" ? (
-          <div className={styles.docColumns} aria-label="Folder contents">
+          <div className={styles.docColumns} aria-label={t("crm.folderContents", "Folder contents")}>
             {columnLevels.map((level, levelIndex) => (
               <div className={styles.docColumn} key={`${levelIndex}-${breadcrumb[levelIndex - 1]?.id ?? "root"}`}>
                 <div className={styles.docColumnHeading}>
@@ -838,7 +849,7 @@ function DocumentsLayout({ tree, onAction }: { tree: DocNode[]; onAction: (actio
                     </button>
                   );
                 })}
-                {!level.length ? <div className={styles.docColumnEmpty}>Empty folder</div> : null}
+                {!level.length ? <div className={styles.docColumnEmpty}>{t("crm.emptyFolderShort", "Empty folder")}</div> : null}
               </div>
             ))}
           </div>

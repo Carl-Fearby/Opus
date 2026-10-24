@@ -1,5 +1,6 @@
 "use client";
 
+import { useOpusI18n } from "@/components/OpusI18n";
 import { useEffect, useId, useRef, useState, type PointerEvent, type ReactNode } from "react";
 import { Portal } from "@/components/Portal";
 import { useOverlayAccessibility } from "@/lib/a11y/useOverlayAccessibility";
@@ -42,6 +43,7 @@ export function BottomSheet({
   title,
   showHandle = true,
 }: BottomSheetProps) {
+  const { t } = useOpusI18n();
   const titleId = useId();
   const descriptionId = useId();
   const panelRef = useRef<HTMLElement>(null);
@@ -165,7 +167,7 @@ export function BottomSheet({
             {closeButton ? (
               <button
                 ref={closeRef}
-                aria-label="Close sheet"
+                aria-label={t("bottomSheet.close", "Close sheet")}
                 className={styles.close}
                 onClick={onClose}
                 type="button"

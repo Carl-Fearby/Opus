@@ -1,5 +1,6 @@
 "use client";
 
+import { useOpusI18n } from "@/components/OpusI18n";
 import {
   useCallback,
   useEffect,
@@ -136,6 +137,7 @@ export function ThreePaneLayout({
   style,
   transitionsEnabled = true,
 }: ThreePaneLayoutProps) {
+  const { t } = useOpusI18n();
   const leftId = useId();
   const rightId = useId();
   const resolvedStorageKey = persist ? storageKey : undefined;
@@ -390,7 +392,7 @@ export function ThreePaneLayout({
           </aside>
           <ResizeHandle
             aria-controls={leftId}
-            aria-label="Resize left sidebar"
+            aria-label={t("threePane.resizeLeft", "Resize left sidebar")}
             aria-valuemax={maxLeftWidth}
             aria-valuemin={minLeftWidth}
             aria-valuenow={Math.round(leftCollapsed ? leftCollapsedWidth : size.leftWidth)}
@@ -421,7 +423,7 @@ export function ThreePaneLayout({
         <>
           <ResizeHandle
             aria-controls={rightId}
-            aria-label="Resize right sidebar"
+            aria-label={t("threePane.resizeRight", "Resize right sidebar")}
             aria-valuemax={maxRightWidth}
             aria-valuemin={minRightWidth}
             aria-valuenow={Math.round(rightCollapsed ? rightCollapsedWidth : size.rightWidth)}

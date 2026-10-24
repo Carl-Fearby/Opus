@@ -1,5 +1,6 @@
 "use client";
 
+import { useOpusI18n } from "@/components/OpusI18n";
 import { useCallback, useEffect, useRef, useState } from "react";
 import styles from "./Asteroids.module.css";
 
@@ -65,7 +66,9 @@ class ArcadeAudio {
   close() { void this.context?.close(); this.context = null; }
 }
 
-export function Asteroids({ className, title = "Asteroids arcade game" }: AsteroidsProps) {
+export function Asteroids({ className, title }: AsteroidsProps) {
+  const { t } = useOpusI18n();
+  const displayTitle = title ?? t("asteroids.arcadeTitle", "Asteroids arcade game");
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const frameRef = useRef<number | null>(null);
   const audioRef = useRef<ArcadeAudio | null>(null);
@@ -243,27 +246,27 @@ export function Asteroids({ className, title = "Asteroids arcade game" }: Astero
   return (
     <section
       className={`${styles.game}${className ? ` ${className}` : ""}`}
-      aria-label={title}
+      aria-label={displayTitle}
       data-fullscreen={isFullscreen ? "true" : undefined}
     >
       <header className={styles.hud} aria-live="polite">
         <div className={styles.hudStats}>
-          <span>Score <strong>{display.score.toString().padStart(5, "0")}</strong></span>
-          <span>Lives <strong>{display.lives}</strong></span>
-          <span>Level <strong>{display.level}</strong></span>
+          <span>{t("asteroids.score", "Score")} <strong>{display.score.toString().padStart(5, "0")}</strong></span>
+          <span>{t("asteroids.lives", "Lives")} <strong>{display.lives}</strong></span>
+          <span>{t("asteroids.level", "Level")} <strong>{display.level}</strong></span>
         </div>
         <button className={styles.hudButton} type="button" onClick={toggleFullscreen}>
           {isFullscreen ? "Exit full screen" : "Full screen"}
         </button>
       </header>
       <div className={styles.stage}>
-        <canvas ref={canvasRef} className={styles.canvas} aria-label="Asteroids game area" />
-        {status !== "playing" ? <div className={styles.overlay}><h2>{status === "over" ? "Game over" : status === "paused" ? "Paused" : "Asteroids"}</h2><p>Rotate, thrust, and clear the field.</p><button type="button" onClick={startGame}>{status === "ready" ? "Start game" : status === "paused" ? "Restart" : "Play again"}</button></div> : null}
+        <canvas ref={canvasRef} className={styles.canvas} aria-label={t("asteroids.gameArea", "Asteroids game area")} />
+        {status !== "playing" ? <div className={styles.overlay}><h2>{status === "over" ? t("asteroids.gameOver", "Game over") : status === "paused" ? t("asteroids.paused", "Paused") : t("asteroids.title", "Asteroids")}</h2><p>{t("asteroids.instructions", "Rotate, thrust, and clear the field.")}</p><button type="button" onClick={startGame}>{status === "ready" ? t("asteroids.start", "Start game") : status === "paused" ? t("asteroids.restart", "Restart") : t("asteroids.playAgain", "Play again")}</button></div> : null}
       </div>
-      <div className={styles.controls} aria-label="Touch controls">
-        <button type="button" aria-label="Rotate left" {...controlProps("left")}>↺</button><button type="button" aria-label="Thrust" {...controlProps("thrust")}>▲</button><button type="button" aria-label="Rotate right" {...controlProps("right")}>↻</button><button type="button" className={styles.fire} aria-label="Fire" {...controlProps("fire")}>Fire</button>
+      <div className={styles.controls} aria-label={t("asteroids.touchControls", "Touch controls")}>
+        <button type="button" aria-label={t("asteroids.rotateLeft", "Rotate left")} {...controlProps("left")}>↺</button><button type="button" aria-label={t("asteroids.thrust", "Thrust")} {...controlProps("thrust")}>▲</button><button type="button" aria-label={t("asteroids.rotateRight", "Rotate right")} {...controlProps("right")}>↻</button><button type="button" className={styles.fire} aria-label={t("asteroids.fire", "Fire")} {...controlProps("fire")}>{t("asteroids.fire", "Fire")}</button>
       </div>
-      <p className={styles.help}>Arrow keys or WASD to fly · Space to fire · P to pause</p>
+      <p className={styles.help}>{t("asteroids.instructions", "Rotate, thrust, and clear the field.")}</p>
     </section>
   );
 }

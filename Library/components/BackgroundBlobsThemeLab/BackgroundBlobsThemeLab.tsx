@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { useOpusI18n } from "@/components/OpusI18n";
 import { BackgroundBlobs } from "@/components/BackgroundBlobs";
 import { Badge } from "@/components/Badge";
 import { Button } from "@/components/fields/Button";
@@ -72,6 +73,7 @@ export function BackgroundBlobsThemeLab({
 }: {
   settings: BackgroundBlobsLabSettings;
 }) {
+  const { t } = useOpusI18n();
   const controlRadius = settings.controlRadius ?? "standard";
   const transparency = settings.transparency ?? "standard";
   const gradient = settings.gradient ?? false;
@@ -103,7 +105,7 @@ export function BackgroundBlobsThemeLab({
       data-control-transparency={transparency}
     >
       <div className={styles.toolbar}>
-        <span className={styles.toolbarLabel}>UI dark / component light</span>
+        <span className={styles.toolbarLabel}>{t("backgroundBlobs.uiMode", "UI dark / component light")}</span>
       </div>
       <BackgroundBlobs placement="fixed">
         <Container
@@ -112,7 +114,7 @@ export function BackgroundBlobsThemeLab({
           size={settings.containerSize}
         >
           <div className={styles.contextBlock}>
-            <Heading level={2} size={300}>Background Blobs control lab</Heading>
+            <Heading level={2} size={300}>{t("backgroundBlobs.title", "Background Blobs control lab")}</Heading>
             <Text>
               This tests real controls over a moving colour field when the application chrome is
               dark but the component surface is light.
@@ -124,11 +126,11 @@ export function BackgroundBlobsThemeLab({
             </div>
           </div>
           <div className={styles.controlSection}>
-            <Heading level={3} size={200}>Container layouts</Heading>
-            <Text style={{ marginBottom: "16px" }}>These nested examples show how the framework containers constrain and space widget content.</Text>
+            <Heading level={3} size={200}>{t("backgroundBlobs.layouts", "Container layouts")}</Heading>
+            <Text style={{ marginBottom: "16px" }}>{t("backgroundBlobs.layoutsDescription", "These nested examples show how the framework containers constrain and space widget content.")}</Text>
             <div className={styles.containerShowcase}>
               <Container className={styles.containerDemo} size="sm">
-                <LabWidget title="Compact container" radius={controlRadius}>
+                <LabWidget title={t("backgroundBlobs.compact", "Compact container")} radius={controlRadius}>
                   <div className={styles.widgetContent}>
                     <Badge label="sm · 40rem" tone="info" />
                     <TextField
@@ -145,7 +147,7 @@ export function BackgroundBlobsThemeLab({
                 </LabWidget>
               </Container>
               <Container className={styles.containerDemo} size="md">
-                <LabWidget title="Reading container" radius={controlRadius}>
+                <LabWidget title={t("backgroundBlobs.reading", "Reading container")} radius={controlRadius}>
                   <div className={styles.widgetContent}>
                     <Badge label="md · 56rem" tone="success" />
                     <SelectField
@@ -162,7 +164,7 @@ export function BackgroundBlobsThemeLab({
                 </LabWidget>
               </Container>
               <Container className={styles.containerDemo} size="full" padded={false}>
-                <LabWidget title="Full-width container" radius={controlRadius}>
+                <LabWidget title={t("backgroundBlobs.fullWidth", "Full-width container")} radius={controlRadius}>
                   <div className={styles.widgetContent}>
                     <Badge label="full · 100%" tone="warning" />
                     <Button
@@ -177,10 +179,10 @@ export function BackgroundBlobsThemeLab({
               </Container>
             </div>
           </div>
-          <Section title="Framework components" description="Testing nested sections, widgets, and form controls over moving blobs.">
+          <Section title={t("backgroundBlobs.framework", "Framework components")} description={t("backgroundBlobs.frameworkDescription", "Testing nested sections, widgets, and form controls over moving blobs.")}>
             <div style={{ display: "grid", gap: "24px" }}>
               <Container size="full">
-                <LabWidget title="Primary form workflow" radius={controlRadius}>
+                <LabWidget title={t("backgroundBlobs.primaryForm", "Primary form workflow")} radius={controlRadius}>
                   <Grid columns={2} gap={24}>
                     <TextField
                       id="background-blobs-lab-query"
@@ -189,7 +191,7 @@ export function BackgroundBlobsThemeLab({
                       transparency={transparency}
                       gradient={gradient}
                       onChange={(event) => setQuery(event.target.value)}
-                      placeholder="Try typing here"
+                      placeholder={t("backgroundBlobs.placeholder", "Try typing here")}
                       type="search"
                       value={query}
                     />
@@ -226,7 +228,7 @@ export function BackgroundBlobsThemeLab({
               </Container>
 
               <Container size="full">
-                <LabWidget title="Metadata and layout" radius={controlRadius}>
+                <LabWidget title={t("backgroundBlobs.metadata", "Metadata and layout")} radius={controlRadius}>
                   <Grid columns={2} gap={24}>
                     <TextAreaField id="background-blobs-lab-notes" label="Notes" maxChars={120} radius={controlRadius} value={notes} transparency={transparency} gradient={gradient} onChange={(event) => setNotes(event.target.value)} />
                     <MultiSelectField id="background-blobs-lab-categories" label="Categories" options={["Design", "Engineering", "Research", "Marketing"]} radius={controlRadius} transparency={transparency} gradient={gradient} value={categories} onChange={setCategories} />
@@ -237,20 +239,20 @@ export function BackgroundBlobsThemeLab({
               </Container>
 
               <Container size="full">
-                <LabWidget title="Operational priority" radius={controlRadius}>
+                <LabWidget title={t("backgroundBlobs.priority", "Operational priority")} radius={controlRadius}>
                   <RadioGroup id="background-blobs-lab-priority" label="Priority" name="background-blobs-priority" radius={controlRadius} transparency={transparency} gradient={gradient} value={priority} onChange={setPriority} orientation="horizontal">
                     <Radio value="Low">Low</Radio>
-                    <Radio value="Normal">Normal</Radio>
-                    <Radio value="High">High</Radio>
+                    <Radio value="Normal">{t("backgroundBlobs.normal", "Normal")}</Radio>
+                    <Radio value="High">{t("backgroundBlobs.high", "High")}</Radio>
                   </RadioGroup>
                 </LabWidget>
               </Container>
             </div>
           </Section>
 
-          <Section title="Data entry and metrics" description="Testing numeric and range inputs in a widget context.">
+          <Section title={t("backgroundBlobs.entry", "Data entry and metrics")} description={t("backgroundBlobs.entryDescription", "Testing numeric and range inputs in a widget context.")}>
             <Container size="full">
-              <LabWidget title="Value controls and interactive ranges" radius={controlRadius}>
+              <LabWidget title={t("backgroundBlobs.valueControls", "Value controls and interactive ranges")} radius={controlRadius}>
                 <Grid columns={2} gap={24}>
                   <NumberField id="background-blobs-lab-quantity" label="Quantity" min={0} max={20} radius={controlRadius} transparency={transparency} gradient={gradient} value={quantity} onChange={(event) => setQuantity(event.target.valueAsNumber)} />
                   <RangeField id="background-blobs-lab-range" label="Opacity" min={0} max={100} radius={controlRadius} transparency={transparency} gradient={gradient} value={range} onChange={(event) => setRange(Number(event.target.value))} />
@@ -261,9 +263,9 @@ export function BackgroundBlobsThemeLab({
             </Container>
           </Section>
 
-          <Section title="User verification" description="Testing secure entry components.">
+          <Section title={t("backgroundBlobs.verification", "User verification")} description={t("backgroundBlobs.verificationDescription", "Testing secure entry components.")}>
             <Container size="full">
-              <LabWidget title="Identity and MFA Verification" radius={controlRadius}>
+              <LabWidget title={t("backgroundBlobs.identity", "Identity and MFA Verification")} radius={controlRadius}>
                 <Grid columns={2} gap={24}>
                   <PasswordStrengthField id="background-blobs-lab-password" label="Password" radius={controlRadius} transparency={transparency} gradient={gradient} value={password} onChange={setPassword} />
                   <OtpField id="background-blobs-lab-otp" label="Verification code" radius={controlRadius} transparency={transparency} gradient={gradient} value={otp} onChange={setOtp} onComplete={() => setEnabled(true)} />
@@ -272,9 +274,9 @@ export function BackgroundBlobsThemeLab({
             </Container>
           </Section>
 
-          <Section title="Actions and pickers" description="Testing miscellaneous controls.">
+          <Section title={t("backgroundBlobs.actions", "Actions and pickers")} description={t("backgroundBlobs.actionsDescription", "Testing miscellaneous controls.")}>
             <Container size="full">
-              <LabWidget title="Operational components" radius={controlRadius}>
+              <LabWidget title={t("backgroundBlobs.operational", "Operational components")} radius={controlRadius}>
                 <Grid columns={2} gap={24}>
                   <div style={{ display: "grid", gap: "16px" }}>
                     <div style={{ display: "flex", flexWrap: "wrap", gap: "12px" }}>

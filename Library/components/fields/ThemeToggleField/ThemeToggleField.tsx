@@ -1,3 +1,6 @@
+"use client";
+
+import { useOpusI18n } from "@/components/OpusI18n";
 import "@/lib/fontawesome";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faMoon, faSun } from "@fortawesome/free-solid-svg-icons";
@@ -35,6 +38,7 @@ export function ThemeToggleField({
   transparency,
   gradient,
 }: ThemeToggleFieldProps) {
+  const { t } = useOpusI18n();
   const nextTheme: Theme = value === "light" ? "dark" : "light";
 
   return (
@@ -54,7 +58,7 @@ export function ThemeToggleField({
       gradient={gradient}
     >
       <button
-        aria-label={`Switch to ${nextTheme} theme`}
+        aria-label={t("themeToggle.switchTo", "Switch to {theme} theme", { theme: nextTheme })}
         aria-pressed={value === "dark"}
         className={styles.toggle}
         onClick={() => onChange(nextTheme)}

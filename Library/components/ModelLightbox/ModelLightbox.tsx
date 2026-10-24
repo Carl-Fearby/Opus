@@ -1,5 +1,6 @@
 "use client";
 
+import { useOpusI18n } from "@/components/OpusI18n";
 import { useCallback, useEffect, useRef, useState } from "react";
 import type { ReactNode } from "react";
 import { faXmark } from "@fortawesome/free-solid-svg-icons";
@@ -32,6 +33,7 @@ export function ModelLightbox({
   triggerLabel = "Open 3D asset",
   onOpenChange,
 }: ModelLightboxProps) {
+  const { t } = useOpusI18n();
   const [internalOpen, setInternalOpen] = useState(false);
   const isControlled = open !== undefined;
   const isOpen = isControlled ? open : internalOpen;
@@ -126,7 +128,7 @@ export function ModelLightbox({
             >
               <button
                 ref={closeRef}
-                aria-label="Close 3D asset preview"
+                aria-label={t("modelLightbox.close", "Close 3D asset preview")}
                 className={styles.close}
                 type="button"
                 onClick={() => setOpen(false)}

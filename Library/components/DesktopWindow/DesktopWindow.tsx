@@ -1,5 +1,6 @@
 "use client";
 
+import { useOpusI18n } from "@/components/OpusI18n";
 import {
   useEffect,
   useRef,
@@ -63,6 +64,7 @@ export function DesktopWindow({
   tone = "purple",
   zIndex = 1,
 }: DesktopWindowProps) {
+  const { t } = useOpusI18n();
   const [closing, setClosing] = useState(false);
   const [entering, setEntering] = useState(open && !minimized);
   const [internalRect, setInternalRect] = useState(defaultRect);
@@ -279,7 +281,7 @@ export function DesktopWindow({
 
   return (
     <article
-      aria-label={`${title} window`}
+      aria-label={t("desktopWindow.windowAria", "{title} window", { title })}
       className={[styles.root, className].filter(Boolean).join(" ")}
       data-active={active || undefined}
       data-maximized={maximized || undefined}
@@ -295,15 +297,19 @@ export function DesktopWindow({
       style={style}
     >
       <header className={styles.titlebar} onDoubleClick={() => onMaximize?.(!maximized)} onPointerDown={startMove}>
-        <div aria-label="Window controls" className={styles.controls}>
-          <button aria-label={`Close ${title}`} className={styles.close} onClick={onClose} type="button">
+        <div aria-label={t("desktopWindow.controls", "Window controls")} className={styles.controls}>
+          <button aria-label={t("desktopWindow.close", "Close {title}", { title })} className={styles.close} onClick={onClose} type="button">
             <CatalogIcon iconName="xmark" />
           </button>
-          <button aria-label={`Minimize ${title}`} className={styles.minimize} onClick={onMinimize} type="button">
+          <button aria-label={t("desktopWindow.minimize", "Minimize {title}", { title })} className={styles.minimize} onClick={onMinimize} type="button">
             <CatalogIcon iconName="minus" />
           </button>
           <button
-            aria-label={`${maximized ? "Restore" : "Maximize"} ${title}`}
+            aria-label={
+              maximized
+                ? t("desktopWindow.restore", "Restore {title}", { title })
+                : t("desktopWindow.maximize", "Maximize {title}", { title })
+            }
             className={styles.maximize}
             onClick={() => onMaximize?.(!maximized)}
             type="button"

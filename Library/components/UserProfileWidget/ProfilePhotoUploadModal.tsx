@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { Button } from "@/components/fields/Button";
 import { ImageCropUploadField } from "@/components/fields/ImageCropUploadField";
+import { useOpusI18n } from "@/components/OpusI18n";
 import { Modal } from "@/components/Modal";
 
 export type UserProfilePhotoUploadOptions = {
@@ -73,9 +74,12 @@ export function ProfilePhotoUploadModal({
   options,
   value,
 }: ProfilePhotoUploadModalProps) {
+  const { t } = useOpusI18n();
   const [draftPhoto, setDraftPhoto] = useState(value ?? "");
   const [cropAvailability, setCropAvailability] = useState<CropAvailability | null>(null);
   const resolvedOptions = { ...defaultUserProfilePhotoUploadOptions, ...options };
+  const displayLabel = options?.label ?? t("profilePhoto.label", "Profile photo");
+  const displayTitle = options?.title ?? t("profilePhoto.title", "Update profile photo");
 
   useEffect(() => {
     if (open) {
@@ -95,7 +99,7 @@ export function ProfilePhotoUploadModal({
       actions={
         <>
           <Button type="button" variant="secondary" onClick={handleClose}>
-            {options?.cancelButtonLabel ?? "Cancel"}
+            {options?.cancelButtonLabel ?? t("common.cancel", "Cancel")}
           </Button>
           {cropAvailability?.canApply ? (
             <Button
@@ -104,7 +108,9 @@ export function ProfilePhotoUploadModal({
               variant="primary"
               onClick={() => void cropAvailability.applyCrop()}
             >
-              {cropAvailability.isCropping ? "Cropping…" : resolvedOptions.cropButtonLabel}
+              {cropAvailability.isCropping
+                ? t("field.cropping", "Cropping…")
+                : options?.cropButtonLabel ?? t("field.applyCrop", "Apply crop")}
             </Button>
           ) : null}
         </>
@@ -115,24 +121,24 @@ export function ProfilePhotoUploadModal({
       dismissOnEscape
       open={open}
       size="small"
-      title={resolvedOptions.title}
+      title={displayTitle}
       onClose={handleClose}
     >
       <ImageCropUploadField
         embedded
         hideActions
-        changeButtonLabel={resolvedOptions.changeButtonLabel}
-        cropButtonLabel={resolvedOptions.cropButtonLabel}
+        changeButtonLabel={options?.changeButtonLabel}
+        cropButtonLabel={options?.cropButtonLabel}
         id={fieldId}
-        label={resolvedOptions.label}
+        label={displayLabel}
         labelVisuallyHidden
         maxZoom={resolvedOptions.maxZoom}
         minZoom={resolvedOptions.minZoom}
         outputSize={resolvedOptions.outputSize}
-        uploadLabel={resolvedOptions.uploadLabel}
+        uploadLabel={options?.uploadLabel}
         value={draftPhoto || undefined}
         viewportSize={resolvedOptions.viewportSize}
-        zoomLabel={resolvedOptions.zoomLabel}
+        zoomLabel={options?.zoomLabel}
         zoomStep={resolvedOptions.zoomStep}
         onChange={setDraftPhoto}
         onCrop={({ previewUrl }) => {

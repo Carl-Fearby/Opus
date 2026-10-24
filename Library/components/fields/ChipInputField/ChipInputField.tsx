@@ -1,5 +1,6 @@
 "use client";
 
+import { useOpusI18n } from "@/components/OpusI18n";
 import { useId, useRef, useState, type KeyboardEvent } from "react";
 import styles from "./ChipInputField.module.css";
 import { inputControlSizeClassName } from "../shared/inputControlSizes";
@@ -47,6 +48,7 @@ export function ChipInput({
   value,
   variant = "soft",
 }: ChipInputProps) {
+  const { t } = useOpusI18n();
   const autoId = useId();
   const fieldId = id || `chip-input-${autoId}`;
   const shellAria = useFieldShellAria();
@@ -117,7 +119,7 @@ export function ChipInput({
     >
       <div
         aria-disabled={disabled ? "true" : undefined}
-        aria-label={`${label} values`}
+        aria-label={t("chipInput.values", "{label} values", { label })}
         className={[
           styles.field,
           inputControlSizeClassName[size],
@@ -136,7 +138,7 @@ export function ChipInput({
             <span className={styles.chipLabel}>{chip}</span>
             {!readOnly ? (
               <button
-                aria-label={`Remove ${chip}`}
+                aria-label={t("chipInput.remove", "Remove {chip}", { chip })}
                 className={styles.remove}
                 disabled={disabled}
                 type="button"

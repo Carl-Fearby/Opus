@@ -1,6 +1,7 @@
 "use client";
 
 import type { AlertStatus } from "@/components/fields/types";
+import { useOpusI18n } from "@/components/OpusI18n";
 import { AlertStatusIcon } from "@/components/AlertStatusIcon";
 import { useOpusTheme } from "@/components/OpusThemeProvider";
 import styles from "./Alert.module.css";
@@ -22,6 +23,7 @@ export function Alert({
   status = "error",
   title,
 }: AlertProps) {
+  const { t } = useOpusI18n();
   const liveRole = status === "error" || status === "warning" ? "alert" : "status";
   const theme = useOpusTheme();
 
@@ -41,7 +43,7 @@ export function Alert({
       </div>
       {dismissible ? (
         <button
-          aria-label="Dismiss alert"
+          aria-label={t("alert.dismiss", "Dismiss alert")}
           className={styles.dismiss}
           onClick={onDismiss}
           type="button"

@@ -1,6 +1,6 @@
 "use client";
 
-
+import { useOpusI18n } from "@/components/OpusI18n";
 import { useCallback, useEffect, useRef, useState } from "react";
 import type { ReactNode } from "react";
 import { faXmark } from "@fortawesome/free-solid-svg-icons";
@@ -34,6 +34,7 @@ export function Lightbox({
   triggerVariant = "button",
   onOpenChange,
 }: LightboxProps) {
+  const { t } = useOpusI18n();
   const [internalOpen, setInternalOpen] = useState(false);
   const isControlled = open !== undefined;
   const isOpen = isControlled ? open : internalOpen;
@@ -124,7 +125,7 @@ export function Lightbox({
             >
               <button
                 ref={closeRef}
-                aria-label="Close lightbox"
+                aria-label={t("lightbox.close", "Close lightbox")}
                 className={styles.close}
                 type="button"
                 onClick={() => setOpen(false)}

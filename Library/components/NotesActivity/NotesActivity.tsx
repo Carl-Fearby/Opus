@@ -1,5 +1,6 @@
 "use client";
 
+import { useOpusI18n } from "@/components/OpusI18n";
 import {
   useCallback,
   useEffect,
@@ -292,6 +293,7 @@ function InlineReplyComposer({
   tagOptions,
   value,
 }: InlineReplyComposerProps) {
+  const { t } = useOpusI18n();
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const hasTools = showAttach || showEmoji || showMention || showTags;
 
@@ -375,10 +377,10 @@ function InlineReplyComposer({
           value={value}
         />
         {hasTools ? (
-          <div className={styles.replyTools} aria-label="Composer tools">
+          <div className={styles.replyTools} aria-label={t("notes.tools", "Composer tools")}>
             {showAttach ? (
               <button
-                aria-label="Attach file"
+                aria-label={t("notes.attachFile", "Attach file")}
                 className={styles.replyToolButton}
                 onClick={onAttachClick}
                 type="button"
@@ -388,7 +390,7 @@ function InlineReplyComposer({
             ) : null}
             {showMention ? (
               <button
-                aria-label="Mention someone"
+                aria-label={t("notes.mention", "Mention someone")}
                 className={styles.replyToolButton}
                 onClick={onMentionClick}
                 type="button"
@@ -402,7 +404,7 @@ function InlineReplyComposer({
                 placement="top"
                 trigger={
                   <button
-                    aria-label="Add emoji"
+                    aria-label={t("notes.addEmoji", "Add emoji")}
                     className={styles.replyToolButton}
                     type="button"
                   >
@@ -520,8 +522,8 @@ function toTimelineItems(
 
 export function NotesActivity({
   activeTab: controlledActiveTab,
-  addActivityButtonLabel = "Add Activity",
-  addNoteButtonLabel = "Add Note",
+  addActivityButtonLabel,
+  addNoteButtonLabel,
   className,
   composerOpen: controlledComposerOpen,
   composerPlaceholder,
@@ -554,6 +556,9 @@ export function NotesActivity({
   showTabs = true,
   showTags = true,
 }: NotesActivityProps) {
+  const { t } = useOpusI18n();
+  const displayAddNoteButtonLabel = addNoteButtonLabel ?? t("notes.addNote", "Add Note");
+  const displayAddActivityButtonLabel = addActivityButtonLabel ?? t("notes.addActivity", "Add Activity");
   const singleClickTimerRef = useRef<number | null>(null);
   const [internalActiveTab, setInternalActiveTab] =
     useState<NotesActivityTab>(defaultTab);
@@ -584,7 +589,7 @@ export function NotesActivity({
     composerPlaceholder ??
     (activeTab === "activity" ? "Add an activity..." : "Add a note...");
   const composerTriggerLabel =
-    activeTab === "activity" ? addActivityButtonLabel : addNoteButtonLabel;
+    activeTab === "activity" ? displayAddActivityButtonLabel : displayAddNoteButtonLabel;
 
   const setComposerOpen = (open: boolean) => {
     if (controlledComposerOpen === undefined) {
@@ -855,7 +860,7 @@ export function NotesActivity({
       {showTabs ? (
         <div className={styles.tabsRow}>
           <div
-            aria-label="Notes and activity"
+            aria-label={t("notes.label", "Notes and activity")}
             className={styles.tabs}
             role="tablist"
           >

@@ -1,5 +1,6 @@
 "use client";
 
+import { useOpusI18n } from "@/components/OpusI18n";
 import { useEffect, useId, useMemo, useRef, useState, useSyncExternalStore, type CSSProperties } from "react";
 import {
   getDealsOverTimePalette,
@@ -158,13 +159,15 @@ function DealsOverTimeChart({
   data,
   maxValue,
   palette = "purple",
-  valueLabel = "Deals",
+  valueLabel,
 }: {
   data: DealsOverTimePoint[];
   maxValue: number;
   palette?: DealsOverTimePalette;
   valueLabel?: string;
 }) {
+  const { t } = useOpusI18n();
+  const displayValueLabel = valueLabel ?? t("deals.valueLabel", "Deals");
   const areaGradientId = useId();
   const areaMaskGradientId = useId();
   const areaMaskId = useId();
@@ -239,7 +242,7 @@ function DealsOverTimeChart({
   return (
     <div className={styles.chartWrap} data-palette={palette} ref={wrapRef}>
       <svg
-        aria-label="Deals over time chart"
+        aria-label={t("deals.chart", "Deals over time chart")}
         className={styles.chart}
         height={CHART_HEIGHT}
         role="img"
@@ -434,7 +437,7 @@ function DealsOverTimeChart({
             {activePoint.datum.tooltipLabel ?? activePoint.datum.label}
           </span>
           <strong className={styles.tooltipValue}>
-            {activePoint.datum.value} {valueLabel}
+            {activePoint.datum.value} {displayValueLabel}
           </strong>
         </div>
       ) : null}
@@ -450,20 +453,23 @@ export function DealsOverTime({
   palette = "purple",
   period = "This Year",
   periodOptions = ["This Month", "Last Month", "This Quarter", "This Year"],
-  title = "Deals Over Time",
-  valueLabel = "Deals",
+  title,
+  valueLabel,
 }: DealsOverTimeProps) {
+  const { t } = useOpusI18n();
+  const displayTitle = title ?? t("deals.title", "Deals Over Time");
+  const displayValueLabel = valueLabel ?? t("deals.valueLabel", "Deals");
   const periodId = useId();
   const resolvedMax = Math.max(1, maxValue);
 
   return (
     <div className={[styles.root, className].filter(Boolean).join(" ")} data-palette={palette}>
       <header className={styles.header}>
-        <h3 className={styles.title}>{title}</h3>
+        <h3 className={styles.title}>{displayTitle}</h3>
 
         <div className={styles.period}>
           <label className={styles.periodLabel} htmlFor={periodId}>
-            Period
+            {t("deals.period", "Period")}
           </label>
           <select
             className={styles.periodSelect}
@@ -480,7 +486,7 @@ export function DealsOverTime({
         </div>
       </header>
 
-      <DealsOverTimeChart data={data} maxValue={resolvedMax} palette={palette} valueLabel={valueLabel} />
+      <DealsOverTimeChart data={data} maxValue={resolvedMax} palette={palette} valueLabel={displayValueLabel} />
     </div>
   );
 }

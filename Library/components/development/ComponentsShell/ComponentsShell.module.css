@@ -363,7 +363,6 @@ html[data-shell-theme="light"] .settingsSidebar {
   margin-inline-start: auto;
   width: auto;
   flex-shrink: 0;
-  --opus-control-height: 28px;
   --opus-control-font-size: 0.72rem;
 }
 

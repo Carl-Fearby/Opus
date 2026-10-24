@@ -1,5 +1,6 @@
 "use client";
 
+import { useOpusI18n } from "@/components/OpusI18n";
 import {
   useCallback,
   useEffect,
@@ -104,6 +105,7 @@ type FontPickerProps = {
 };
 
 export function FontPicker({ compact = false, id, onChange, value }: FontPickerProps) {
+  const { t } = useOpusI18n();
   const [open, setOpen] = useState(false);
   const [query, setQuery] = useState("");
   const rootRef = useRef<HTMLDivElement>(null);
@@ -136,7 +138,7 @@ export function FontPicker({ compact = false, id, onChange, value }: FontPickerP
 
   return (
     <div className={compact ? `${styles.field} ${styles.fieldCompact}` : styles.field} ref={rootRef}>
-      {compact ? null : <span className={styles.label}>Font</span>}
+      {compact ? null : <span className={styles.label}>{t("fontPicker.label", "Font")}</span>}
       <div className={styles.picker}>
         <button
           aria-controls={`${id}-options`}
@@ -157,9 +159,9 @@ export function FontPicker({ compact = false, id, onChange, value }: FontPickerP
           <div className={styles.dropdown}>
             <div className={styles.searchWrap}>
               <input
-                aria-label="Search Google Fonts"
+                aria-label={t("fontPicker.search", "Search Google Fonts")}
                 className={styles.search}
-                placeholder="Search 100+ fonts…"
+                placeholder={t("fontPicker.searchPlaceholder", "Search 100+ fonts…")}
                 ref={searchRef}
                 type="search"
                 value={query}
@@ -167,9 +169,9 @@ export function FontPicker({ compact = false, id, onChange, value }: FontPickerP
               />
               {value !== DEFAULT_FONT_FAMILY ? (
                 <button
-                  aria-label="Reset font"
+                  aria-label={t("fontPicker.reset", "Reset font")}
                   className={styles.reset}
-                  title="Reset font"
+                  title={t("fontPicker.reset", "Reset font")}
                   type="button"
                   onClick={() => {
                     onChange(DEFAULT_FONT_FAMILY);
@@ -181,7 +183,7 @@ export function FontPicker({ compact = false, id, onChange, value }: FontPickerP
                 </button>
               ) : null}
             </div>
-            <div aria-label="Google Fonts" className={styles.options} id={`${id}-options`} role="listbox">
+            <div aria-label={t("fontPicker.list", "Google Fonts")} className={styles.options} id={`${id}-options`} role="listbox">
               {filteredFonts.map((font) => {
                 const selected = font === value;
                 return (
@@ -200,11 +202,11 @@ export function FontPicker({ compact = false, id, onChange, value }: FontPickerP
                     }}
                   >
                     <span className={styles.optionName}>{font}</span>
-                    <span className={styles.optionPreview}>The quick brown fox</span>
+                    <span className={styles.optionPreview}>{t("fontPicker.sample", "The quick brown fox")}</span>
                   </button>
                 );
               })}
-              {filteredFonts.length === 0 ? <p className={styles.empty}>No matching fonts</p> : null}
+              {filteredFonts.length === 0 ? <p className={styles.empty}>{t("fontPicker.empty", "No matching fonts")}</p> : null}
             </div>
           </div>
         ) : null}

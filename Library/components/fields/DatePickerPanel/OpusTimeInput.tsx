@@ -11,6 +11,7 @@ import {
 } from "react";
 import { createThemedPortal as createPortal } from "@/lib/theme/createThemedPortal";
 import { CatalogIcon } from "@/components/CatalogIcon";
+import { useOpusI18n } from "@/components/OpusI18n";
 import {
   resolveEmojiPickerPortalStyle,
   type FloatingPortalStyle,
@@ -102,6 +103,7 @@ export function OpusTimeInput({
   step = 60,
   value,
 }: OpusTimeInputProps) {
+  const { t } = useOpusI18n();
   const panelId = useId();
   const rootRef = useRef<HTMLDivElement>(null);
   const panelRef = useRef<HTMLDivElement>(null);
@@ -251,10 +253,10 @@ export function OpusTimeInput({
                     setOpen(false);
                   }}
                 >
-                  Clear
+                  {t("common.clear", "Clear")}
                 </button>
                 <button className={styles.footerAction} type="button" onClick={handleNow}>
-                  Now
+                  {t("calendar.now", "Now")}
                 </button>
                 <button
                   className={styles.footerActionPrimary}
@@ -264,7 +266,7 @@ export function OpusTimeInput({
                     setOpen(false);
                   }}
                 >
-                  Done
+                  {t("common.done", "Done")}
                 </button>
               </div>
             </div>

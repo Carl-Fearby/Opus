@@ -1,6 +1,7 @@
 "use client";
 
 import { useMemo } from "react";
+import { useOpusI18n } from "@/components/OpusI18n";
 import { currencyOptions } from "../AdvancedFields";
 import { FilterSelectField } from "../FilterSelectField";
 import type { ControlRadius, FieldMode, InputControlSize, LabelPosition } from "../types";
@@ -47,6 +48,7 @@ export function CurrencySelectField({
   value,
   onChange,
 }: CurrencySelectFieldProps) {
+  const { t } = useOpusI18n();
   const optionByLabel = useMemo(() => new Map(options.map((option) => [option.label, option.value])), [options]);
   const selected = options.find((option) => option.value === value);
 
@@ -56,7 +58,7 @@ export function CurrencySelectField({
       <FilterSelectField
         error={error}
         gradient={gradient}
-        groups={[{ label: "Currencies", options: options.map((option) => option.label) }]}
+        groups={[{ label: t("currencySelect.group", "Currencies"), options: options.map((option) => option.label) }]}
         help={help}
         id={id}
         label={label}

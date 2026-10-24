@@ -1,5 +1,6 @@
 "use client";
 
+import { useOpusI18n } from "@/components/OpusI18n";
 import { useEffect, useId, useMemo, useRef, useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import "@/lib/fontawesome";
@@ -38,6 +39,7 @@ export function IconPicker({
   transparency,
   gradient,
 }: IconPickerProps) {
+  const { t } = useOpusI18n();
   const [open, setOpen] = useState(false);
   const [query, setQuery] = useState("");
   const rootRef = useRef<HTMLDivElement>(null);
@@ -137,7 +139,7 @@ export function IconPicker({
                   </button>
                 ))
               ) : (
-                <p className={styles.empty}>No icons match your search.</p>
+                <p className={styles.empty}>{t("iconPicker.empty", "No icons match your search.")}</p>
               )}
             </div>
           </div>

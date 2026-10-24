@@ -1,6 +1,7 @@
 "use client";
 
 import { useMemo, useState, type CSSProperties, type ReactNode } from "react";
+import { useOpusI18n } from "@/components/OpusI18n";
 import styles from "./TreeTable.module.css";
 
 export type TreeTableNode<T = unknown> = {
@@ -90,6 +91,7 @@ export function TreeTable<T = unknown>({
   onRowClick,
   stickyHeader = false,
 }: TreeTableProps<T>) {
+  const { t } = useOpusI18n();
   const controlled = expandedIds !== undefined;
   const [internalExpanded, setInternalExpanded] = useState(() => new Set(defaultExpandedIds));
   const expanded = useMemo(
@@ -211,7 +213,11 @@ export function TreeTable<T = unknown>({
                               {hasChildren ? (
                                 <button
                                   aria-expanded={isExpanded}
-                                  aria-label={`${isExpanded ? "Collapse" : "Expand"} ${
+                                  aria-label={`${
+                                    isExpanded
+                                      ? t("common.collapse", "Collapse")
+                                      : t("common.expand", "Expand")
+                                  } ${
                                     typeof node.label === "string" ? node.label : node.id
                                   }`}
                                   className={styles.toggle}

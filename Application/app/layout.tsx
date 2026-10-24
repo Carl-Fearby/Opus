@@ -9,6 +9,7 @@ import { createAccentStyle } from "@/lib/theme/accentThemeStorage";
 import { readServerAccent, readServerPreviewTheme, readServerTheme } from "@/lib/theme/readServerTheme";
 import { isRtlLocale, localeHtmlLang } from "@/lib/i18n";
 import { LocaleProvider } from "@/lib/i18n/LocaleProvider";
+import { readLocaleResources } from "@/lib/i18n/resources.server";
 import { readServerLocale } from "@/lib/i18n/server";
 
 const spaceGrotesk = Space_Grotesk({
@@ -187,6 +188,7 @@ export default async function RootLayout({
   const previewTheme = await readServerPreviewTheme();
   const accent = await readServerAccent();
   const locale = await readServerLocale();
+  const localeResources = readLocaleResources(locale);
 
   return (
     <html
@@ -204,7 +206,7 @@ export default async function RootLayout({
         />
         <script dangerouslySetInnerHTML={{ __html: fontBootstrapScript }} />
         <script dangerouslySetInnerHTML={{ __html: performanceMeasureGuardScript }} />
-        <LocaleProvider initialLocale={locale}>
+        <LocaleProvider initialLocale={locale} initialResources={localeResources}>
           <ThemeBootstrapScript />
           {children}
         </LocaleProvider>

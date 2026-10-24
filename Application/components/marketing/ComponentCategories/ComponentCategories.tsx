@@ -11,8 +11,6 @@ import {
   categoryMessageKey,
   translate,
 } from "@/lib/i18n";
-import { localizeComponentTitle } from "@/lib/i18n/componentTitles";
-import { localizeNavigationGroup } from "@/lib/i18n/navigationGroupLabels";
 import { readServerLocale } from "@/lib/i18n/server";
 import styles from "./ComponentCategories.module.css";
 
@@ -66,7 +64,7 @@ export async function ComponentCategories() {
                         {section.controls.map((control) => (
                           <li key={control.slug}>
                             <Link href={componentPath(control.slug)}>
-                              {localizeComponentTitle(locale, control.slug, control.title)}
+                              {control.title}
                             </Link>
                           </li>
                         ))}
@@ -78,12 +76,12 @@ export async function ComponentCategories() {
                     <div className={styles.groupColumns}>
                       {groupedSections.map((section) => (
                         <div className={styles.group} key={section.label}>
-                          <h4>{localizeNavigationGroup(locale, section.label ?? "")}</h4>
+                          <h4>{section.label}</h4>
                           <ul>
                             {section.controls.map((control) => (
                               <li key={control.slug}>
                                 <Link href={componentPath(control.slug)}>
-                                  {localizeComponentTitle(locale, control.slug, control.title)}
+                                  {control.title}
                                 </Link>
                               </li>
                             ))}

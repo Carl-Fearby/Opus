@@ -1,4 +1,5 @@
 'use client';
+import { useOpusI18n } from '@/components/OpusI18n';
 import styles from './Joystick.module.css';
 import { DirectionKey } from './types';
 
@@ -12,6 +13,7 @@ interface JoystickProps {
 }
 
 export default function Joystick({ visible, position, knobPosition, joystickRef, knobRef }: JoystickProps) {
+    const { t } = useOpusI18n();
     if (!visible) return null;
 
     return (
@@ -22,7 +24,7 @@ export default function Joystick({ visible, position, knobPosition, joystickRef,
                 left: `${position.x}px`,
                 top: `${position.y}px`,
             }}
-            aria-label="Joystick control"
+            aria-label={t("pacman.joystick", "Joystick control")}
         >
             <div className={styles.joystickBase}>
                 <div className={styles.joystickRing}></div>

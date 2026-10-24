@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import type { ModelAsset } from "@/components/fields/types";
+import { useOpusI18n } from "@/components/OpusI18n";
 import styles from "./ModelViewer.module.css";
 
 type FireBarrelModelViewerProps = {
@@ -19,6 +20,7 @@ export function FireBarrelModelViewer({
   height = "default",
   showCaption = true,
 }: FireBarrelModelViewerProps) {
+  const { t } = useOpusI18n();
   const canvasHostRef = useRef<HTMLDivElement>(null);
   const [failed, setFailed] = useState(false);
   const [loading, setLoading] = useState(true);
@@ -72,12 +74,12 @@ export function FireBarrelModelViewer({
         <div ref={canvasHostRef} className={styles.canvasHost} />
         {loading && !failed ? (
           <div className={styles.loading} role="status">
-            Loading 3D asset...
+            {t("modelViewer.loading", "Loading 3D asset...")}
           </div>
         ) : null}
         {failed ? (
           <div className={styles.loading} role="alert">
-            Model preview unavailable.
+            {t("modelViewer.unavailable", "Model preview unavailable.")}
           </div>
         ) : null}
       </div>

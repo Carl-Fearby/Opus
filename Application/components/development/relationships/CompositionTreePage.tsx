@@ -4,7 +4,7 @@ import Link from "next/link";
 import { ComponentIcon } from "@/components/development/ComponentIcon";
 import { useSetComponentsPageHeader } from "@/components/development/ComponentsThemeProvider";
 import { useOpusI18n } from "@/components/OpusI18n";
-import { categoryMessageKey } from "@/lib/i18n";
+import { categoryMessageKey } from "@/lib/i18n/config";
 import { useLocale } from "@/lib/i18n/LocaleProvider";
 import { useComponentTitle } from "@/lib/i18n/useComponentTitle";
 import { getComponentIcon } from "@/lib/controls/componentIcons";

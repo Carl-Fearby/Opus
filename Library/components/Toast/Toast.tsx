@@ -1,5 +1,6 @@
 "use client";
 
+import { useOpusI18n } from "@/components/OpusI18n";
 import type { AlertStatus } from "@/components/fields/types";
 import { AlertStatusIcon } from "@/components/AlertStatusIcon";
 import styles from "./Toast.module.css";
@@ -29,6 +30,7 @@ export function Toast({
   status = "success",
   title,
 }: ToastProps) {
+  const { t } = useOpusI18n();
   const showProgress = duration !== undefined && duration > 0;
   const isAssertive = status === "error" || status === "warning";
 
@@ -54,7 +56,7 @@ export function Toast({
           </div>
           {dismissible ? (
             <button
-              aria-label="Dismiss toast"
+              aria-label={t("toast.dismiss", "Dismiss toast")}
               className={styles.dismiss}
               onClick={onDismiss}
               type="button"

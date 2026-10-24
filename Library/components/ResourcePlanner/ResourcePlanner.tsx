@@ -1,5 +1,6 @@
 "use client";
 
+import { useOpusI18n } from "@/components/OpusI18n";
 import { useMemo } from "react";
 import styles from "./ResourcePlanner.module.css";
 
@@ -32,6 +33,7 @@ export function ResourcePlanner({
   resources,
   startHour = 8,
 }: ResourcePlannerProps) {
+  const { t } = useOpusI18n();
   const hours = useMemo(() => {
     const list: number[] = [];
     for (let hour = startHour; hour <= endHour; hour += 1) list.push(hour);
@@ -41,10 +43,10 @@ export function ResourcePlanner({
   const span = Math.max(endHour - startHour, 1);
 
   return (
-    <div className={styles.root} aria-label="Resource planner">
+    <div className={styles.root} aria-label={t("resourcePlanner.label", "Resource planner")}>
       <div className={styles.scroll}>
         <div className={styles.header} style={{ gridTemplateColumns: `9rem repeat(${hours.length}, minmax(48px, 1fr))` }}>
-          <div className={styles.corner}>Resource</div>
+          <div className={styles.corner}>{t("resourcePlanner.resource", "Resource")}</div>
           {hours.map((hour) => (
             <div className={styles.hour} key={hour}>
               {((hour + 11) % 12) + 1}

@@ -1,6 +1,7 @@
 "use client";
 
 import { Button } from "@/components/fields/Button";
+import { useOpusI18n } from "@/components/OpusI18n";
 import { CatalogIcon } from "@/components/CatalogIcon";
 import { FieldShell, fieldInputAriaProps, useFieldShellAria } from "@/components/fields/FieldShell";
 import type { FieldMode, InputControlSize, LabelPosition } from "@/components/fields/types";
@@ -114,8 +115,8 @@ function UploadIcon() {
 
 export function ImageCropUploadField({
   accept = "image/*",
-  changeButtonLabel = "Change photo",
-  cropButtonLabel = "Apply crop",
+  changeButtonLabel,
+  cropButtonLabel,
   embedded = false,
   error,
   fit,
@@ -136,17 +137,22 @@ export function ImageCropUploadField({
   outputWidth,
   shape = "circle",
   size = "md",
-  uploadLabel = "Browse image",
+  uploadLabel,
   value,
   viewportHeight,
   viewportSize = 240,
   viewportWidth,
-  zoomLabel = "Zoom",
+  zoomLabel,
   zoomStep = 0.05,
   radius,
   transparency,
   gradient,
 }: ImageCropUploadFieldProps) {
+  const { t } = useOpusI18n();
+  const displayChangeButtonLabel = changeButtonLabel ?? t("field.changePhoto", "Change photo");
+  const displayCropButtonLabel = cropButtonLabel ?? t("field.applyCrop", "Apply crop");
+  const displayUploadLabel = uploadLabel ?? t("field.browseImage", "Browse image");
+  const displayZoomLabel = zoomLabel ?? t("field.zoom", "Zoom");
   const shellAria = useFieldShellAria();
   const inputId = useId();
   const inputRef = useRef<HTMLInputElement>(null);
@@ -400,11 +406,11 @@ export function ImageCropUploadField({
           <div className={styles.editor}>
             <p className={styles.instruction}>
               {isRect
-                ? "Drag to reposition. Zoom out to fit the full logo; zoom in to crop."
-                : "Drag the image to reposition it inside the circle."}
+                ? t("field.dragRepositionLogo", "Drag to reposition. Zoom out to fit the full logo; zoom in to crop.")
+                : t("field.dragReposition", "Drag the image to reposition it inside the circle.")}
             </p>
             <div
-              aria-label="Image crop viewport"
+              aria-label={t("field.imageCropViewport", "Image crop viewport")}
               className={`${styles.viewport} ${isPointerDragging ? styles.viewportDragging : ""}`}
               onPointerCancel={endPointerDrag}
               onPointerDown={handlePointerDown}
@@ -443,7 +449,7 @@ export function ImageCropUploadField({
 
             <div className={styles.zoomRow}>
               <button
-                aria-label="Zoom out"
+                aria-label={t("field.zoomOut", "Zoom out")}
                 className={styles.zoomButton}
                 disabled={cropState.zoom <= minZoom}
                 type="button"
@@ -452,7 +458,7 @@ export function ImageCropUploadField({
                 −
               </button>
               <input
-                aria-label={zoomLabel}
+                aria-label={displayZoomLabel}
                 className={styles.zoomSlider}
                 max={maxZoom}
                 min={minZoom}
@@ -462,7 +468,7 @@ export function ImageCropUploadField({
                 onChange={(event) => handleZoomChange(Number(event.target.value))}
               />
               <button
-                aria-label="Zoom in"
+                aria-label={t("field.zoomIn", "Zoom in")}
                 className={styles.zoomButton}
                 disabled={cropState.zoom >= maxZoom}
                 type="button"
@@ -472,16 +478,16 @@ export function ImageCropUploadField({
               </button>
             </div>
             <p className={styles.zoomLabel}>
-              {zoomLabel}: {Math.round(cropState.zoom * 100)}%
+              {displayZoomLabel}: {Math.round(cropState.zoom * 100)}%
             </p>
 
             {!hideActions ? (
               <div className={styles.actions}>
                 <Button disabled={isCropping} type="button" onClick={() => void handleApplyCrop()}>
-                  {isCropping ? "Cropping…" : cropButtonLabel}
+                  {isCropping ? t("field.cropping", "Cropping…") : displayCropButtonLabel}
                 </Button>
                 <Button disabled={isCropping} type="button" variant="secondary" onClick={clearSource}>
-                  Cancel
+                  {t("common.cancel", "Cancel")}
                 </Button>
               </div>
             ) : null}
@@ -511,7 +517,7 @@ export function ImageCropUploadField({
                     }
                   />
                   <button
-                    aria-label={changeButtonLabel}
+                    aria-label={displayChangeButtonLabel}
                     className={styles.previewCameraButton}
                     type="button"
                     onClick={() => inputRef.current?.click()}
@@ -523,9 +529,13 @@ export function ImageCropUploadField({
                 <>
                   <img alt="" className={styles.previewImage} src={value} />
                   <div className={styles.previewCopy}>
-                    <span className={styles.previewTitle}>{isRect ? "Logo ready" : "Photo ready"}</span>
+                    <span className={styles.previewTitle}>
+                      {isRect ? t("field.logoReady", "Logo ready") : t("field.photoReady", "Photo ready")}
+                    </span>
                     <span className={styles.previewHint}>
-                      {isRect ? "Cropped to a rectangular company logo." : "Cropped to a circular profile image."}
+                      {isRect
+                        ? t("field.croppedRect", "Cropped to a rectangular company logo.")
+                        : t("field.croppedCircle", "Cropped to a circular profile image.")}
                     </span>
                   </div>
                 </>
@@ -534,7 +544,7 @@ export function ImageCropUploadField({
             {!hideActions ? (
               <div className={styles.actions}>
                 <Button type="button" variant="secondary" onClick={() => inputRef.current?.click()}>
-                  {changeButtonLabel}
+                  {displayChangeButtonLabel}
                 </Button>
               </div>
             ) : null}
@@ -553,10 +563,11 @@ export function ImageCropUploadField({
             </span>
             <div className={styles.dropContent}>
               <div className={styles.dropTitle}>
-                <strong>Drag</strong> and drop {isRect ? "a company logo" : "a profile photo"}
+                <strong>{t("field.drag", "Drag")}</strong>{" "}
+                {isRect ? t("field.andDropLogo", "and drop a company logo") : t("field.andDropPhoto", "and drop a profile photo")}
               </div>
-              <div className={styles.dropHint}>or</div>
-              <span className={styles.dropAction}>{uploadLabel}</span>
+              <div className={styles.dropHint}>{t("field.or", "or")}</div>
+              <span className={styles.dropAction}>{displayUploadLabel}</span>
             </div>
           </label>
         )}

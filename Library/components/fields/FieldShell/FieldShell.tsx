@@ -1,6 +1,7 @@
 "use client";
 
 import { createContext, useContext, useMemo, type ReactNode } from "react";
+import { useOpusI18n } from "@/components/OpusI18n";
 import { Tooltip } from "@/components/Tooltip";
 import styles from "./FieldShell.module.css";
 import type { ControlRadius, ControlTransparency, FieldMode, LabelPosition } from "@/components/fields/types";
@@ -64,10 +65,11 @@ function FieldLabelContent({
   label: string;
   required?: boolean;
 }) {
+  const { t } = useOpusI18n();
   return (
     <>
       <span>{label}</span>
-      {required ? <span className={styles.required}>(required)</span> : null}
+      {required ? <span className={styles.required}>{t("field.required", "(required)")}</span> : null}
       {help ? <Tooltip content={help} label={`Help for ${label}`} /> : null}
     </>
   );

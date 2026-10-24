@@ -1,5 +1,6 @@
 "use client";
 
+import { useOpusI18n } from "@/components/OpusI18n";
 import { useEffect, useId, useRef, useState } from "react";
 import {
   faCheck,
@@ -109,6 +110,7 @@ export function MediaShareCastControl({
   text,
   title,
 }: MediaShareCastControlProps) {
+  const { t } = useOpusI18n();
   const menuId = useId();
   const rootRef = useRef<HTMLDivElement>(null);
   const [open, setOpen] = useState(false);
@@ -302,7 +304,7 @@ export function MediaShareCastControl({
         <div className={styles.menu} id={menuId} role="menu">
           <button className={styles.item} role="menuitem" type="button" onClick={() => void onShare()}>
             <FontAwesomeIcon className={styles.itemIcon} icon={faShareNodes} />
-            <span className={styles.itemLabel}>Share</span>
+            <span className={styles.itemLabel}>{t("media.share", "Share")}</span>
             <span className={styles.itemHint}>AirDrop, apps…</span>
           </button>
           <button
@@ -341,8 +343,8 @@ export function MediaShareCastControl({
             }}
           >
             <FontAwesomeIcon className={styles.itemIcon} icon={faLink} />
-            <span className={styles.itemLabel}>Copy link</span>
-            <span className={styles.itemHint}>Clipboard</span>
+            <span className={styles.itemLabel}>{t("media.copyLink", "Copy link")}</span>
+            <span className={styles.itemHint}>{t("media.clipboard", "Clipboard")}</span>
           </button>
           {showDownload ? (
             <button
@@ -354,8 +356,8 @@ export function MediaShareCastControl({
               }}
             >
               <FontAwesomeIcon className={styles.itemIcon} icon={faDownload} />
-              <span className={styles.itemLabel}>Download</span>
-              <span className={styles.itemHint}>Save file</span>
+              <span className={styles.itemLabel}>{t("media.download", "Download")}</span>
+              <span className={styles.itemHint}>{t("media.saveFile", "Save file")}</span>
             </button>
           ) : null}
         </div>

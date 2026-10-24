@@ -1,5 +1,6 @@
 "use client";
 
+import { useOpusI18n } from "@/components/OpusI18n";
 import type { ReactNode } from "react";
 import { useEffect, useId, useRef, useState } from "react";
 import type { DialogActionSet, AlertStatus } from "@/components/fields/types";
@@ -43,30 +44,36 @@ function statusButtonVariant(status: AlertStatus): ButtonVariant {
   return status;
 }
 
-function getActions(actionSet: DialogActionSet, status: AlertStatus): DialogAction[] {
+function getActions(
+  actionSet: DialogActionSet,
+  status: AlertStatus,
+  t: (key: string, fallback: string) => string,
+): DialogAction[] {
   const confirmVariant = statusButtonVariant(status);
+  const okLabel = t("dialog.ok", "OK");
+  const cancelLabel = t("common.cancel", "Cancel");
 
   if (actionSet === "ok") {
-    return [{ label: "OK", result: "confirm", variant: confirmVariant }];
+    return [{ label: okLabel, result: "confirm", variant: confirmVariant }];
   }
 
   if (actionSet === "yes-no") {
     return [
-      { label: "No", result: "cancel", variant: "secondary" },
-      { label: "Yes", result: "confirm", variant: confirmVariant },
+      { label: t("dialog.no", "No"), result: "cancel", variant: "secondary" },
+      { label: t("dialog.yes", "Yes"), result: "confirm", variant: confirmVariant },
     ];
   }
 
   if (actionSet === "delete") {
     return [
-      { label: "Cancel", result: "cancel", variant: "secondary" },
-      { label: "Delete", result: "confirm", variant: confirmVariant },
+      { label: cancelLabel, result: "cancel", variant: "secondary" },
+      { label: t("dialog.delete", "Delete"), result: "confirm", variant: confirmVariant },
     ];
   }
 
   return [
-    { label: "Cancel", result: "cancel", variant: "secondary" },
-    { label: "OK", result: "confirm", variant: confirmVariant },
+    { label: cancelLabel, result: "cancel", variant: "secondary" },
+    { label: okLabel, result: "confirm", variant: confirmVariant },
   ];
 }
 
@@ -82,6 +89,7 @@ export function Dialog({
   status = "info",
   title,
 }: DialogProps) {
+  const { t } = useOpusI18n();
   const titleId = useId();
   const descriptionId = useId();
   const panelRef = useRef<HTMLElement>(null);
@@ -130,7 +138,7 @@ export function Dialog({
     return null;
   }
 
-  const actions = customActions ?? getActions(actionSet, status);
+  const actions = customActions ?? getActions(actionSet, status, t);
 
   return (
     <Portal>

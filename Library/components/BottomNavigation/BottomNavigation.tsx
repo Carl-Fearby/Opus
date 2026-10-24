@@ -1,6 +1,7 @@
 "use client";
 
 import type { ReactNode } from "react";
+import { useOpusI18n } from "@/components/OpusI18n";
 import styles from "./BottomNavigation.module.css";
 
 export type BottomNavigationItem = {
@@ -17,8 +18,9 @@ export type BottomNavigationProps = {
 };
 
 export function BottomNavigation({ items, onChange, value }: BottomNavigationProps) {
+  const { t } = useOpusI18n();
   return (
-    <nav aria-label="Bottom navigation" className={styles.root}>
+    <nav aria-label={t("bottomNavigation.label", "Bottom navigation")} className={styles.root}>
       {items.map((item) => {
         const active = item.id === value;
         return (

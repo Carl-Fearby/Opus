@@ -1,4 +1,5 @@
 import { useId, type ChangeEventHandler } from "react";
+import { useOpusI18n } from "@/components/OpusI18n";
 import styles from "./TextAreaField.module.css";
 import { inputControlSizeClassName } from "../shared/inputControlSizes";
 import { FieldShell, fieldInputAriaProps, useFieldShellAria } from "@/components/fields/FieldShell";
@@ -51,6 +52,7 @@ export function TextAreaField({
   spellCheck,
   onChange,
 }: TextAreaFieldProps) {
+  const { t } = useOpusI18n();
   const shellAria = useFieldShellAria();
   const charCountId = useId();
   const charCount = value.length;
@@ -122,7 +124,10 @@ export function TextAreaField({
               <span />
             )}
             <span className={styles.externalCount} id={charCountId}>
-              {charCount} / {maxChars} characters
+              {t("field.characters", "{count} / {max} characters", {
+                count: charCount,
+                max: maxChars,
+              })}
             </span>
           </div>
         ) : null}

@@ -1,5 +1,6 @@
 "use client";
 
+import { useOpusI18n } from "@/components/OpusI18n";
 import {
   createContext,
   useCallback,
@@ -122,6 +123,7 @@ export function ContextMenuProvider({
   onOpenChange,
   open,
 }: ContextMenuProviderProps) {
+  const { t } = useOpusI18n();
   const theme = useOpusTheme();
   const menuId = useId();
   const menuRef = useRef<HTMLDivElement>(null);
@@ -320,7 +322,7 @@ export function ContextMenuProvider({
             <div className={styles.layer} data-theme={portalTheme}>
               <button
                 ref={backdropRef}
-                aria-label="Dismiss context menu"
+                aria-label={t("contextMenu.dismiss", "Dismiss context menu")}
                 className={styles.backdrop}
                 type="button"
                 onClick={() => {

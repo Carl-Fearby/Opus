@@ -1,5 +1,6 @@
 "use client";
 
+import { useOpusI18n } from "@/components/OpusI18n";
 import { useState } from "react";
 import { CatalogIcon } from "@/components/CatalogIcon";
 import {
@@ -44,6 +45,7 @@ export function ContactNotesActivity({
   onTabChange,
   tabsVariant = "card",
 }: ContactNotesActivityProps) {
+  const { t } = useOpusI18n();
   const [internalTab, setInternalTab] = useState<ContactNotesWorkspaceTab>(defaultTab);
   const workspaceTab = controlledActiveTab ?? internalTab;
   const [notesComposerOpen, setNotesComposerOpen] = useState(false);
@@ -126,7 +128,7 @@ export function ContactNotesActivity({
   );
 
   const additionalPanel = (
-    <div className={styles.emptyPanel}>No additional details added yet.</div>
+    <div className={styles.emptyPanel}>{t("contactDetails.noDetails", "No additional details added yet.")}</div>
   );
 
   const workspaceTrailing =
@@ -140,7 +142,7 @@ export function ContactNotesActivity({
         type="button"
       >
         <CatalogIcon iconName="plus" />
-        Add Note
+        {t("contactDetails.addNote", "Add note")}
       </button>
     ) : workspaceTab === "activities" ? (
       <button
@@ -152,7 +154,7 @@ export function ContactNotesActivity({
         type="button"
       >
         <CatalogIcon iconName="plus" />
-        Add Activity
+        {t("notes.addActivity", "Add Activity")}
       </button>
     ) : null;
 
@@ -172,13 +174,13 @@ export function ContactNotesActivity({
       width="full"
     >
       <Tabs
-        aria-label="Contact notes and activity"
+        aria-label={t("contactDetails.notesActivity", "Contact notes and activity")}
         className={styles.workspaceTabs}
         items={[
-          { label: "Notes", value: "notes", content: notesPanel },
-          { label: "Activities", value: "activities", content: activityPanel },
-          { label: "Documents", value: "documents", content: documentsPanel },
-          { label: "Other Details", value: "additional", content: additionalPanel },
+          { label: t("contactDetails.notesTab", "Notes"), value: "notes", content: notesPanel },
+          { label: t("contactDetails.activitiesTab", "Activities"), value: "activities", content: activityPanel },
+          { label: t("contactDetails.documentsTab", "Documents"), value: "documents", content: documentsPanel },
+          { label: t("contactDetails.otherTab", "Other Details"), value: "additional", content: additionalPanel },
         ]}
         onValueChange={handleWorkspaceTabChange}
         panelClassName={isCardTabs ? styles.cardNotesPanel : styles.scrollPanel}

@@ -1,6 +1,7 @@
 'use client';
 import { useEffect, useRef, useState } from 'react';
 import Joystick from './Joystick';
+import { useOpusI18n } from '@/components/OpusI18n';
 import styles from './PacMan.module.css';
 import { PacmanEngine } from './PacmanEngine';
 import { DirectionKey } from './types';
@@ -11,6 +12,7 @@ export type PacManProps = {
 };
 
 export function PacMan({ className, title = 'Opus arcade' }: PacManProps) {
+    const { t } = useOpusI18n();
     const canvasRef = useRef<HTMLCanvasElement | null>(null);
     const wrapperRef = useRef<HTMLDivElement | null>(null);
     const gameRef = useRef<PacmanEngine | null>(null);
@@ -394,7 +396,7 @@ export function PacMan({ className, title = 'Opus arcade' }: PacManProps) {
                             onClick={() => gameRef.current?.startGame()}
                             type="button"
                         >
-                            START GAME
+                            {t('pacman.start', 'Start game')}
                         </button>
                     ) : (
                         <button
@@ -402,7 +404,7 @@ export function PacMan({ className, title = 'Opus arcade' }: PacManProps) {
                             onClick={() => gameRef.current?.restart()}
                             type="button"
                         >
-                            NEW GAME
+                            {t('pacman.newGame', 'New game')}
                         </button>
                     )}
                     <button className={styles.fullscreenButton} onClick={toggleFullscreen} type="button">

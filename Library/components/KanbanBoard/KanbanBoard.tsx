@@ -677,8 +677,9 @@ export function KanbanBoard({
   const onCommentsChangeRef = useRef(onCommentsChange);
   const cardLookup = useMemo(() => ({ ...cards, ...localCards }), [cards, localCards]);
   const resolvedActiveCardId = activeCardId !== undefined ? activeCardId : internalActiveCardId;
-  const resolvedBoardTitle =
-    boardTitle ?? internalBoardTitle ?? t("kanban.boardTitle", "Kanban board");
+  // The board title is customer-owned data, so the fallback stays stable
+  // across locale changes instead of being translated.
+  const resolvedBoardTitle = boardTitle ?? internalBoardTitle ?? "Kanban board";
   const resolvedAddCardLabel = addCardLabel ?? t("kanban.addCard", "Add a card");
   const resolvedAddColumnLabel = addColumnLabel ?? t("kanban.addList", "Add list");
   const boardTitleEditable = boardTitle === undefined || Boolean(onBoardTitleChange);
@@ -2083,7 +2084,7 @@ export function KanbanBoard({
               <button
                 className={styles.boardTitleButton}
                 onClick={beginEditingBoardTitle}
-                title="Rename board"
+                title={t("kanban.renameBoard", "Rename board")}
                 type="button"
               >
                 <span>{resolvedBoardTitle}</span>
@@ -2135,7 +2136,7 @@ export function KanbanBoard({
                         <li className={styles.tagRow} key={tag.id}>
                           <button
                             aria-expanded={expandedTagId === tag.id}
-                            aria-label={`Colour for ${tag.label}`}
+                            aria-label={t("kanban.colourFor", "Colour for {label}", { label: tag.label })}
                             className={styles.tagColorDot}
                             onClick={() => {
                               setTagColorPicker(null);
@@ -2146,7 +2147,7 @@ export function KanbanBoard({
                           />
                           {editingTagId === tag.id ? (
                             <input
-                              aria-label={`Tag name for ${tag.label}`}
+                              aria-label={t("kanban.tagNameFor", "Tag name for {label}", { label: tag.label })}
                               autoFocus
                               className={styles.tagNameInput}
                               onBlur={() => {
@@ -2188,7 +2189,7 @@ export function KanbanBoard({
                             </button>
                           )}
                           <button
-                            aria-label={`Delete ${tag.label}`}
+                            aria-label={t("kanban.deleteTag", "Delete {label}", { label: tag.label })}
                             className={styles.tagDelete}
                             onClick={() => deleteTag(tag.id)}
                             type="button"
@@ -2199,7 +2200,7 @@ export function KanbanBoard({
                             <div className={styles.tagPalette}>
                               {columnColors.map((color) => (
                                 <button
-                                  aria-label={`Use ${color} for ${tag.label}`}
+                                  aria-label={t("kanban.useColourFor", "Use {colour} for {label}", { colour: color, label: tag.label })}
                                   aria-pressed={tag.color === color}
                                   className={styles.tagSwatch}
                                   key={color}
@@ -2214,7 +2215,7 @@ export function KanbanBoard({
                                 onClick={(event) => openTagColorPicker(event, tag.id)}
                                 type="button"
                               >
-                                Custom…
+                                {t("kanban.custom", "Custom…")}
                               </button>
                             </div>
                           ) : null}
@@ -2243,7 +2244,7 @@ export function KanbanBoard({
                     <div className={styles.tagPalette}>
                       {columnColors.map((color) => (
                         <button
-                          aria-label={`New tag colour ${color}`}
+                          aria-label={t("kanban.newTagColour", "New tag colour {colour}", { colour: color })}
                           aria-pressed={newTagColor === color}
                           className={styles.tagSwatch}
                           key={color}
@@ -2258,7 +2259,7 @@ export function KanbanBoard({
                         onClick={(event) => openTagColorPicker(event, "new")}
                         type="button"
                       >
-                        Custom…
+                        {t("kanban.custom", "Custom…")}
                       </button>
                     </div>
                   </form>
@@ -2281,7 +2282,7 @@ export function KanbanBoard({
           </button>
           <div className={styles.scrollControls}>
             <button
-              aria-label="Scroll board left"
+              aria-label={t("kanban.scrollLeft", "Scroll board left")}
               className={styles.scrollButton}
               disabled={scrollInfo.left <= 1}
               onClick={() => scrollBoard(-1)}
@@ -2290,7 +2291,7 @@ export function KanbanBoard({
               <FontAwesomeIcon icon={faChevronLeft} />
             </button>
             <button
-              aria-label="Scroll board right"
+              aria-label={t("kanban.scrollRight", "Scroll board right")}
               className={styles.scrollButton}
               disabled={scrollInfo.left >= scrollInfo.max - 1}
               onClick={() => scrollBoard(1)}
@@ -2375,7 +2376,7 @@ export function KanbanBoard({
           >
             <header className={styles.columnHeader} data-kanban-column-header="true">
               <button
-                aria-label={`Reorder ${column.title}. Use the left and right arrow keys to move this list.`}
+                aria-label={t("kanban.reorderList", "Reorder {title}. Use the left and right arrow keys to move this list.", { title: column.title })}
                 className={styles.columnDragHandle}
                 draggable={false}
                 onDragStart={(event) => event.preventDefault()}
@@ -2388,7 +2389,7 @@ export function KanbanBoard({
               <h3 className={styles.columnTitle}>
                 {editingColumnId === column.id ? (
                   <input
-                    aria-label={`List name for ${column.title}`}
+                    aria-label={t("kanban.listNameFor", "List name for {title}", { title: column.title })}
                     autoFocus
                     className={styles.columnTitleInput}
                     onBlur={() => {
@@ -2436,7 +2437,7 @@ export function KanbanBoard({
                 <button
                   aria-expanded={colorMenu?.columnId === column.id}
                   aria-haspopup="dialog"
-                  aria-label={`Change colour for ${column.title}`}
+                  aria-label={t("kanban.changeColourFor", "Change colour for {title}", { title: column.title })}
                   className={styles.columnColorButton}
                   onClick={(event) => {
                     if (colorMenu?.columnId === column.id) {
@@ -2617,7 +2618,15 @@ export function KanbanBoard({
                         <div className={styles.cardFooterActions}>
                           {ticketView ? (
                             <button
-                              aria-label={`Open ticket for ${card.title}${commentCount ? `, ${commentCount === 1 ? "1 comment" : `${commentCount} comments`}` : ""}`}
+                              aria-label={`${t("kanban.openTicket", "Open ticket for {title}", { title: card.title })}${
+                                commentCount
+                                  ? `, ${commentCount} ${
+                                      commentCount === 1
+                                        ? t("kanban.comment", "comment")
+                                        : t("kanban.comments", "comments")
+                                    }`
+                                  : ""
+                              }`}
                               className={styles.commentButton}
                               onClick={(event) => {
                                 event.stopPropagation();
@@ -2633,7 +2642,9 @@ export function KanbanBoard({
                           {attachmentCount ? (
                             <span
                               className={styles.cardAttachmentBadge}
-                              title={`${attachmentCount} attachment${attachmentCount === 1 ? "" : "s"}`}
+                              title={attachmentCount === 1
+                                ? t("kanban.attachmentOne", "1 attachment")
+                                : t("kanban.attachmentMany", "{count} attachments", { count: attachmentCount })}
                             >
                               <FontAwesomeIcon icon={faPaperclip} />
                               {attachmentCount}
@@ -2670,7 +2681,7 @@ export function KanbanBoard({
                         onSubmit={(event) => createCard(event, column.id)}
                       >
                         <textarea
-                          aria-label={`New card title for ${column.title}`}
+                          aria-label={t("kanban.newCardTitleFor", "New card title for {title}", { title: column.title })}
                           className={styles.cardComposerInput}
                           onChange={(event) => setCardDraft(event.target.value)}
                           onKeyDown={(event) => {
@@ -2701,7 +2712,7 @@ export function KanbanBoard({
                               setCardDraft("");
                             }}
                           >
-                            Cancel
+                            {t("kanban.cancel", "Cancel")}
                           </Button>
                         </div>
                       </form>
@@ -2728,7 +2739,7 @@ export function KanbanBoard({
           {addingColumn ? (
             <form className={styles.addColumnForm} onSubmit={addColumn}>
               <label className={styles.addColumnLabel} htmlFor={columnFieldId}>
-                List title
+                {t("kanban.listTitle", "List title")}
               </label>
               <input
                 autoFocus
@@ -2742,7 +2753,7 @@ export function KanbanBoard({
                     setNewColumnTitle("");
                   }
                 }}
-                placeholder="e.g. Ready for review"
+                placeholder={t("kanban.listTitlePlaceholder", "e.g. Ready for review")}
                 value={newColumnTitle}
               />
               <div className={styles.addColumnActions}>
@@ -2812,17 +2823,17 @@ export function KanbanBoard({
       {colorMenu && colorMenuColumn
         ? createPortal(
             <div
-              aria-label={`Colour for ${colorMenuColumn.title}`}
+              aria-label={t("kanban.colourForColumn", "Colour for {title}", { title: colorMenuColumn.title })}
               className={styles.colorMenu}
               ref={colorMenuRef}
               role="dialog"
               style={{ left: colorMenu.left, top: colorMenu.top }}
             >
-              <span className={styles.colorMenuTitle}>List colour</span>
+              <span className={styles.colorMenuTitle}>{t("kanban.listColour", "List colour")}</span>
               <div className={styles.colorGrid}>
                 {columnColors.map((color) => (
                   <button
-                    aria-label={`Use ${color}`}
+                    aria-label={t("kanban.useColour", "Use {colour}", { colour: color })}
                     aria-pressed={colorMenuColumn.accent === color}
                     className={styles.colorSwatch}
                     key={color}
@@ -2842,7 +2853,7 @@ export function KanbanBoard({
                   onClick={() => setCustomColorOpen((current) => !current)}
                   type="button"
                 >
-                  Custom…
+                  {t("kanban.custom", "Custom…")}
                 </button>
                 <button
                   className={styles.colorClear}
@@ -2852,7 +2863,7 @@ export function KanbanBoard({
                   }}
                   type="button"
                 >
-                  Clear
+                  {t("kanban.clear", "Clear")}
                 </button>
               </div>
               {customColorOpen ? (
@@ -2871,17 +2882,17 @@ export function KanbanBoard({
       {ticketColorMenu && selectedCard
         ? createPortal(
             <div
-              aria-label="Ticket header colour"
+              aria-label={t("kanban.ticketHeaderColour", "Ticket header colour")}
               className={styles.colorMenu}
               ref={ticketColorMenuRef}
               role="dialog"
               style={{ left: ticketColorMenu.left, top: ticketColorMenu.top }}
             >
-              <span className={styles.colorMenuTitle}>Ticket header</span>
+              <span className={styles.colorMenuTitle}>{t("kanban.ticketHeader", "Ticket header")}</span>
               <div className={styles.colorGrid}>
                 {columnColors.map((color) => (
                   <button
-                    aria-label={`Use ${color} for ticket header`}
+                    aria-label={t("kanban.useColourForTicket", "Use {colour} for ticket header", { colour: color })}
                     aria-pressed={selectedCard.color === color}
                     className={styles.colorSwatch}
                     key={color}
@@ -2901,7 +2912,7 @@ export function KanbanBoard({
                   onClick={() => setTicketCustomColorOpen((current) => !current)}
                   type="button"
                 >
-                  Custom…
+                  {t("kanban.custom", "Custom…")}
                 </button>
                 <button
                   className={styles.colorClear}
@@ -2911,7 +2922,7 @@ export function KanbanBoard({
                   }}
                   type="button"
                 >
-                  Clear
+                  {t("kanban.clear", "Clear")}
                 </button>
               </div>
               {ticketCustomColorOpen ? (
@@ -2931,7 +2942,7 @@ export function KanbanBoard({
         <Modal
           actions={
             <Button variant="secondary" onClick={() => setActiveCard(null)}>
-              Close
+              {t("kanban.close", "Close")}
             </Button>
           }
           headerActions={
@@ -3048,7 +3059,7 @@ export function KanbanBoard({
                         <span aria-hidden="true" className={styles.cardTagDot} />
                         <span>{tag.label}</span>
                         <button
-                          aria-label={`Remove ${tag.label} tag`}
+                          aria-label={t("kanban.removeTag", "Remove {label} tag", { label: tag.label })}
                           onClick={() => toggleCardTag(selectedCard, tag.id)}
                           type="button"
                         >
@@ -3090,7 +3101,7 @@ export function KanbanBoard({
                         </span>
                         <span>{member.name}</span>
                         <button
-                          aria-label={`Remove ${member.name} from ticket`}
+                          aria-label={t("kanban.removeMember", "Remove {name} from ticket", { name: member.name })}
                           onClick={() => toggleCardMember(selectedCard, member.id)}
                           type="button"
                         >
@@ -3159,7 +3170,7 @@ export function KanbanBoard({
                             media
                           ) : (
                             <a
-                              aria-label={`Open ${attachment.name}`}
+                              aria-label={t("kanban.openAttachment", "Open {name}", { name: attachment.name })}
                               className={styles.attachmentThumbLink}
                               href={attachment.url}
                               rel="noreferrer"
@@ -3194,7 +3205,7 @@ export function KanbanBoard({
                           ) : failed ? null : (
                             <span className={styles.attachmentActions}>
                               <a
-                                aria-label={`Open ${attachment.name}`}
+                                aria-label={t("kanban.openAttachment", "Open {name}", { name: attachment.name })}
                                 className={styles.attachmentAction}
                                 href={attachment.url}
                                 rel="noreferrer"
@@ -3204,7 +3215,7 @@ export function KanbanBoard({
                                 <FontAwesomeIcon icon={faUpRightFromSquare} />
                               </a>
                               <a
-                                aria-label={`Download ${attachment.name}`}
+                                aria-label={t("kanban.downloadAttachment", "Download {name}", { name: attachment.name })}
                                 className={styles.attachmentAction}
                                 download={attachment.name}
                                 href={attachment.downloadUrl ?? attachment.url}
@@ -3216,7 +3227,7 @@ export function KanbanBoard({
                             </span>
                           )}
                           <button
-                            aria-label={`Remove ${attachment.name}`}
+                            aria-label={t("kanban.removeAttachment", "Remove {name}", { name: attachment.name })}
                             className={styles.attachmentRemove}
                             onClick={() => removeAttachment(selectedCard, attachment.id)}
                             type="button"
@@ -3263,7 +3274,7 @@ export function KanbanBoard({
                   <small>{commentsForCard(selectedCard).length}</small>
                 </div>
                 {commentsForCard(selectedCard).length ? (
-                  <ul aria-label="Comments" className={styles.commentList}>
+                  <ul aria-label={t("kanban.comments", "Comments")} className={styles.commentList}>
                     {commentsForCard(selectedCard).map((comment) => (
                       <li className={styles.comment} key={comment.id}>
                         <span aria-hidden="true" className={styles.commentAvatar}>
@@ -3292,7 +3303,7 @@ export function KanbanBoard({
                                     {attachment.name}
                                   </a>
                                   <a
-                                    aria-label={`Download ${attachment.name}`}
+                                    aria-label={t("kanban.downloadAttachment", "Download {name}", { name: attachment.name })}
                                     className={styles.commentAttachmentAction}
                                     download={attachment.name}
                                     href={attachment.downloadUrl ?? attachment.url}
@@ -3347,7 +3358,7 @@ export function KanbanBoard({
                                 : formatFileSize(attachment.size)}
                           </small>
                           <button
-                            aria-label={`Remove ${attachment.name} from comment`}
+                            aria-label={t("kanban.removeAttachmentFromComment", "Remove {name} from comment", { name: attachment.name })}
                             onClick={() => removeCommentAttachment(selectedCard, attachment.id)}
                             type="button"
                           >
@@ -3415,7 +3426,7 @@ export function KanbanBoard({
               disabled={boardDeletePending}
               onClick={closeBoardSettings}
             >
-              Close
+              {t("kanban.close", "Close")}
             </Button>
           }
           onClose={closeBoardSettings}
@@ -3431,7 +3442,7 @@ export function KanbanBoard({
               <div className={styles.boardSettingsRow}>
                 <span>
                   <strong>{resolvedBoardTitle}</strong>
-                  <small>Board settings and access controls will extend from here.</small>
+                  <small>{t("kanban.settingsPlaceholder", "Board settings and access controls will extend from here.")}</small>
                 </span>
                 <Button
                   size="sm"
@@ -3457,14 +3468,18 @@ export function KanbanBoard({
                 </h3>
               </div>
               <p>
-                Deleting this board permanently removes its lists, cards, comments
-                and attachments.
+                {t(
+                  "kanban.deleteDescription",
+                  "Deleting this board permanently removes its lists, cards, comments and attachments.",
+                )}
               </p>
               <label className={styles.boardDeleteLabel} htmlFor={`${boardSettingsId}-delete`}>
-                Type <strong>{resolvedBoardTitle}</strong> to confirm
+                {t("kanban.typeToConfirm", "Type {title} to confirm").split("{title}")[0]}
+                <strong>{resolvedBoardTitle}</strong>
+                {t("kanban.typeToConfirm", "Type {title} to confirm").split("{title}")[1]}
               </label>
               <input
-                aria-label={`Type ${resolvedBoardTitle} to confirm`}
+                aria-label={t("kanban.typeToConfirm", "Type {title} to confirm", { title: resolvedBoardTitle })}
                 className={styles.boardDeleteInput}
                 disabled={boardDeletePending || !onBoardDelete}
                 id={`${boardSettingsId}-delete`}
@@ -3477,7 +3492,15 @@ export function KanbanBoard({
               />
               {!onBoardDelete ? (
                 <p className={styles.boardSettingsHint}>
-                  Connect <code>onBoardDelete</code> to enable board deletion.
+                  {t(
+                    "kanban.deleteEnableHint",
+                    "Connect {prop} to enable deletion.",
+                  ).split("{prop}")[0]}
+                  <code>onBoardDelete</code>
+                  {t(
+                    "kanban.deleteEnableHint",
+                    "Connect {prop} to enable deletion.",
+                  ).split("{prop}")[1]}
                 </p>
               ) : null}
               {boardDeleteError ? (
@@ -3513,7 +3536,7 @@ export function KanbanBoard({
           onClose={() => setTicketTagPickerOpen(false)}
           open
           size="small"
-          title={`Tags for ${selectedCard.title}`}
+          title={t("kanban.tagsFor", "Tags for {title}", { title: selectedCard.title })}
         >
           <div className={styles.ticketTagModal}>
             <input
@@ -3551,7 +3574,7 @@ export function KanbanBoard({
                   );
                 })}
               {resolvedTags.length === 0 ? (
-                <p className={styles.ticketTagsEmpty}>No tags yet. Create one below.</p>
+                <p className={styles.ticketTagsEmpty}>{t("kanban.noTagsYet", "No tags yet. Create one below.")}</p>
               ) : null}
             </div>
             <form
@@ -3561,7 +3584,7 @@ export function KanbanBoard({
                 if (tag) toggleCardTag(selectedCard, tag.id);
               }}
             >
-              <span className={styles.tagFormLabel}>Create a tag</span>
+              <span className={styles.tagFormLabel}>{t("kanban.createTag", "Create a tag")}</span>
               <div className={styles.tagFormRow}>
                 <input
                   aria-label={t("kanban.newTagName", "New tag name")}
@@ -3577,7 +3600,7 @@ export function KanbanBoard({
               <div className={styles.tagPalette}>
                 {columnColors.map((color) => (
                   <button
-                    aria-label={`New tag colour ${color}`}
+                    aria-label={t("kanban.newTagColour", "New tag colour {colour}", { colour: color })}
                     aria-pressed={newTagColor === color}
                     className={styles.tagSwatch}
                     key={color}
@@ -3592,7 +3615,7 @@ export function KanbanBoard({
                   onClick={(event) => openTagColorPicker(event, "new")}
                   type="button"
                 >
-                  Custom…
+                  {t("kanban.custom", "Custom…")}
                 </button>
               </div>
             </form>
@@ -3609,7 +3632,7 @@ export function KanbanBoard({
           onClose={() => setTicketMemberPickerOpen(false)}
           open
           size="small"
-          title={`Members for ${selectedCard.title}`}
+          title={t("kanban.membersFor", "Members for {title}", { title: selectedCard.title })}
         >
           <div className={styles.ticketMemberModal}>
             <input
@@ -3680,32 +3703,35 @@ export function KanbanBoard({
                     setMoveTicketListId(null);
                   }}
                 >
-                  Move
+                  {t("kanban.move", "Move")}
                 </Button>
               </>
             }
             onClose={() => setMoveTicketListId(null)}
             open
             size="small"
-            title={`Move to ${target.title}`}
+            title={t("kanban.moveTo", "Move to {title}", { title: target.title })}
           >
             <div className={styles.ticketMove}>
               {(() => {
+                const topLabel = t("kanban.positionTop", "Top");
                 const positionOptions = [
-                  "Top",
-                  ...remaining.map(
-                    (cardId) => `After ${cardLookup[cardId]?.title ?? cardId}`,
+                  topLabel,
+                  ...remaining.map((cardId) =>
+                    t("kanban.positionAfter", "After {title}", {
+                      title: cardLookup[cardId]?.title ?? cardId,
+                    }),
                   ),
-                  ...(remaining.length > 0 ? ["Bottom"] : []),
+                  ...(remaining.length > 0 ? [t("kanban.positionBottom", "Bottom")] : []),
                 ];
                 return (
                   <SelectField
                     id={`${selectedCard.id}-ticket-position`}
-                    label="Position"
+                    label={t("kanban.position", "Position")}
                     mode="stacked"
                     options={positionOptions}
                     size="sm"
-                    value={positionOptions[moveTicketIndex] ?? positionOptions[0] ?? "Top"}
+                    value={positionOptions[moveTicketIndex] ?? positionOptions[0] ?? topLabel}
                     onChange={(event) => {
                       setMoveTicketIndex(Math.max(0, positionOptions.indexOf(event.target.value)));
                     }}
@@ -3713,7 +3739,9 @@ export function KanbanBoard({
                 );
               })()}
               <p className={styles.ticketMoveHint}>
-                Choose where this ticket should sit in {target.title}.
+                {t("kanban.moveHint", "Choose where this ticket should sit in {title}.", {
+                  title: target.title,
+                })}
               </p>
             </div>
           </Modal>

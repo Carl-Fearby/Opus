@@ -1,5 +1,6 @@
 "use client";
 
+import { useOpusI18n } from "@/components/OpusI18n";
 import {
   useCallback,
   useEffect,
@@ -59,7 +60,7 @@ type ActiveLinePosition = {
 };
 
 export function Tabs({
-  "aria-label": ariaLabel = "Tabs",
+  "aria-label": ariaLabel,
   cardPanelPadding = false,
   className,
   defaultValue,
@@ -74,6 +75,8 @@ export function Tabs({
   value,
   variant = "line",
 }: TabsProps) {
+  const { t } = useOpusI18n();
+  const displayAriaLabel = ariaLabel ?? t("tabs.label", "Tabs");
   const generatedId = useId();
   const rootRef = useRef<HTMLDivElement>(null);
   const panelRef = useRef<HTMLDivElement>(null);
@@ -337,7 +340,7 @@ export function Tabs({
           data-has-previous={hasPrevious ? "true" : "false"}
         >
           <div
-            aria-label={ariaLabel}
+            aria-label={displayAriaLabel}
             aria-orientation={orientation}
             className={styles.list}
             onKeyDown={handleKeyDown}
@@ -393,7 +396,7 @@ export function Tabs({
           </div>
           {hasPrevious ? (
             <button
-              aria-label="Show previous tabs"
+              aria-label={t("tabs.previous", "Show previous tabs")}
               className={[styles.scrollButton, styles.previousButton].join(" ")}
               onClick={() => scrollTabs(-1)}
               type="button"
@@ -403,7 +406,7 @@ export function Tabs({
           ) : null}
           {hasMore ? (
             <button
-              aria-label="Show more tabs"
+              aria-label={t("tabs.more", "Show more tabs")}
               className={[styles.scrollButton, styles.nextButton].join(" ")}
               onClick={() => scrollTabs(1)}
               type="button"

@@ -1,5 +1,6 @@
 "use client";
 
+import { useOpusI18n } from "@/components/OpusI18n";
 import {
   cloneElement,
   isValidElement,
@@ -98,6 +99,7 @@ export function EmojiPicker({
   trigger,
   triggerClassName,
 }: EmojiPickerProps) {
+  const { t } = useOpusI18n();
   const theme = useOpusTheme();
   const panelId = useId();
   const rootRef = useRef<HTMLDivElement>(null);
@@ -267,7 +269,7 @@ export function EmojiPicker({
 
   const panel = visible ? (
     <div
-      aria-label="Emoji picker"
+      aria-label={t("emojiPicker.label", "Emoji picker")}
       className={styles.panel}
       data-opus-emoji-picker="true"
       data-placement={placement}
@@ -279,7 +281,7 @@ export function EmojiPicker({
       style={panelStyle}
     >
       <div
-        aria-label="Emoji categories"
+        aria-label={t("emojiPicker.categories", "Emoji categories")}
         className={styles.categories}
         data-count={categoryTabs.length}
         role="tablist"
@@ -313,7 +315,7 @@ export function EmojiPicker({
         onChange={(event) => setQuery(event.target.value)}
       />
       {searching ? (
-        <p className={styles.searchHint}>Showing results from all categories.</p>
+        <p className={styles.searchHint}>{t("emojiPicker.allCategories", "Showing results from all categories.")}</p>
       ) : null}
       <div className={styles.grid} role="listbox">
         {filteredEmojis.length ? (

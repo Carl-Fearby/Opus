@@ -1,5 +1,6 @@
 "use client";
 
+import { useOpusI18n } from "@/components/OpusI18n";
 import { useRef, type ClipboardEvent, type KeyboardEvent } from "react";
 import { FieldShell } from "../FieldShell";
 import type { FieldMode, LabelPosition } from "../types";
@@ -41,6 +42,7 @@ export function OtpField({
   gradient,
   onComplete,
 }: OtpFieldProps) {
+  const { t } = useOpusI18n();
   const refs = useRef<Array<HTMLInputElement | null>>([]);
   const digits = Array.from({ length }, (_, index) => value[index] ?? "");
   const initialFocusIndex = Math.min(value.length, length - 1);
@@ -81,7 +83,7 @@ export function OtpField({
       >
         {digits.map((digit, index) => (
           <input
-            aria-label={`Digit ${index + 1} of ${length}`}
+            aria-label={t("otp.digit", "Digit {index} of {length}", { index: index + 1, length })}
             aria-invalid={error ? "true" : undefined}
             autoComplete={index === 0 ? "one-time-code" : "off"}
             autoFocus={autoFocus && index === initialFocusIndex}

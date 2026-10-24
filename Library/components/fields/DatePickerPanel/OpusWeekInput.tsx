@@ -1,5 +1,6 @@
 "use client";
 
+import { useOpusI18n } from "@/components/OpusI18n";
 import {
   useEffect,
   useId,
@@ -62,11 +63,13 @@ export function OpusWeekInput({
   min,
   name,
   onChange,
-  placeholder = "Select week",
+  placeholder,
   readOnly,
   required,
   value,
 }: OpusWeekInputProps) {
+  const { t } = useOpusI18n();
+  const displayPlaceholder = placeholder ?? t("field.selectWeek", "Select week");
   const panelId = useId();
   const rootRef = useRef<HTMLDivElement>(null);
   const panelRef = useRef<HTMLDivElement>(null);
@@ -182,7 +185,7 @@ export function OpusWeekInput({
             <div className={styles.panel} role="dialog" aria-label={label}>
               <div className={styles.toolbar}>
                 <button
-                  aria-label="Previous year"
+                  aria-label={t("field.previousYear", "Previous year")}
                   className={styles.nav}
                   type="button"
                   onClick={() => setCursorYear((year) => year - 1)}
@@ -191,7 +194,7 @@ export function OpusWeekInput({
                 </button>
                 <strong className={styles.year}>{cursorYear}</strong>
                 <button
-                  aria-label="Next year"
+                  aria-label={t("field.nextYear", "Next year")}
                   className={styles.nav}
                   type="button"
                   onClick={() => setCursorYear((year) => year + 1)}
@@ -199,7 +202,7 @@ export function OpusWeekInput({
                   ›
                 </button>
               </div>
-              <div className={styles.list} role="listbox" aria-label={`${cursorYear} weeks`}>
+              <div className={styles.list} role="listbox" aria-label={t("field.weeksInYear", "{year} weeks", { year: cursorYear })}>
                 {Array.from({ length: weeksInYear }, (_, index) => {
                   const week = index + 1;
                   const key = formatWeekValue(cursorYear, week);
@@ -239,7 +242,7 @@ export function OpusWeekInput({
                     setOpen(false);
                   }}
                 >
-                  Clear
+                  {t("common.clear", "Clear")}
                 </button>
                 <button
                   className={styles.footerAction}
@@ -251,7 +254,7 @@ export function OpusWeekInput({
                     setOpen(false);
                   }}
                 >
-                  This week
+                  {t("calendar.thisWeek", "This week")}
                 </button>
               </div>
             </div>
@@ -281,7 +284,7 @@ export function OpusWeekInput({
         }}
       >
         <span className={display ? triggerStyles.value : triggerStyles.placeholder}>
-          {display || placeholder}
+          {display || displayPlaceholder}
         </span>
         <span aria-hidden="true" className={triggerStyles.icon}>
           <CatalogIcon iconName="calendar-week" />

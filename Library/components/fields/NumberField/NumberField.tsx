@@ -1,5 +1,6 @@
 "use client";
 
+import { useOpusI18n } from "@/components/OpusI18n";
 import { useEffect, useState, type ChangeEventHandler, type FocusEventHandler } from "react";
 import styles from "./NumberField.module.css";
 import { inputControlSizeClassName } from "../shared/inputControlSizes";
@@ -83,6 +84,7 @@ export function NumberField({
   step = 1,
   value,
 }: NumberFieldProps) {
+  const { t } = useOpusI18n();
   const shellAria = useFieldShellAria();
   const [text, setText] = useState(() => formatByStep(value, step));
 
@@ -159,7 +161,7 @@ export function NumberField({
       >
         <button
           aria-controls={id}
-          aria-label={`Decrease ${label}`}
+          aria-label={t("number.decrease", "Decrease {label}", { label })}
           className={styles.button}
           disabled={disabled || atMin}
           onClick={() => emitValue(value - step)}
@@ -182,7 +184,7 @@ export function NumberField({
         />
         <button
           aria-controls={id}
-          aria-label={`Increase ${label}`}
+          aria-label={t("number.increase", "Increase {label}", { label })}
           className={styles.button}
           disabled={disabled || atMax}
           onClick={() => emitValue(value + step)}

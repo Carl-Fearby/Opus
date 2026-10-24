@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { useOpusI18n } from "@/components/OpusI18n";
 import styles from "./PropertyGrid.module.css";
 
 export type PropertyGridItem = {
@@ -16,6 +17,7 @@ export type PropertyGridProps = {
 };
 
 export function PropertyGrid({ bordered = false, items, onCopy }: PropertyGridProps) {
+  const { t } = useOpusI18n();
   const [copiedIndex, setCopiedIndex] = useState<number | null>(null);
 
   async function copyValue(value: string, index: number) {
@@ -30,7 +32,7 @@ export function PropertyGrid({ bordered = false, items, onCopy }: PropertyGridPr
   }
 
   return (
-    <div className={styles.grid} data-bordered={bordered} role="table" aria-label="Properties">
+    <div className={styles.grid} data-bordered={bordered} role="table" aria-label={t("propertyGrid.label", "Properties")}>
       {items.map((item, index) => (
         <div className={styles.row} key={`${item.label}-${index}`} role="row">
           <div className={styles.label} role="rowheader">
@@ -40,12 +42,14 @@ export function PropertyGrid({ bordered = false, items, onCopy }: PropertyGridPr
             <span className={styles.value}>{item.value}</span>
             {item.copyable ? (
               <button
-                aria-label={`Copy ${item.label}`}
+                aria-label={t("propertyGrid.copy", "Copy {label}", { label: item.label })}
                 className={styles.copy}
                 onClick={() => void copyValue(item.value, index)}
                 type="button"
               >
-                {copiedIndex === index ? "Copied" : "Copy"}
+                {copiedIndex === index
+                  ? t("propertyGrid.copied", "Copied")
+                  : t("propertyGrid.copyAction", "Copy")}
               </button>
             ) : null}
           </div>

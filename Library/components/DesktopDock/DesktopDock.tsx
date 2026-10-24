@@ -1,5 +1,6 @@
 "use client";
 
+import { useOpusI18n } from "@/components/OpusI18n";
 import {
   useEffect,
   useRef,
@@ -44,6 +45,7 @@ export function DesktopDock({
   resizable = true,
   size: controlledSize,
 }: DesktopDockProps) {
+  const { t } = useOpusI18n();
   const [internalSize, setInternalSize] = useState(40);
   const size = controlledSize ?? internalSize;
   const dragRef = useRef<{ origin: number; startX: number; startY: number } | null>(null);
@@ -85,7 +87,7 @@ export function DesktopDock({
 
   return (
     <nav
-      aria-label="Desktop dock"
+      aria-label={t("desktopDock.label", "Desktop dock")}
       className={[styles.root, className].filter(Boolean).join(" ")}
       data-auto-hide={autoHide || undefined}
       data-position={position}
@@ -93,7 +95,7 @@ export function DesktopDock({
     >
       {resizable ? (
         <div
-          aria-label="Resize desktop dock"
+          aria-label={t("desktopDock.resize", "Resize desktop dock")}
           aria-orientation={position === "bottom" ? "horizontal" : "vertical"}
           aria-valuemax={maxSize}
           aria-valuemin={minSize}

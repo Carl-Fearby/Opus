@@ -13,6 +13,7 @@ import {
   type ReactNode,
   type RefObject,
 } from "react";
+import { useOpusI18n } from "@/components/OpusI18n";
 import styles from "./CustomScrollbar.module.css";
 
 export type CustomScrollbarOrientation = "both" | "horizontal" | "vertical";
@@ -92,6 +93,7 @@ export function CustomScrollbar({
   verticalTrackShape = "round",
   viewportSelector,
 }: CustomScrollbarProps) {
+  const { t } = useOpusI18n();
   const generatedId = useId();
   const viewportId = `custom-scrollbar-${generatedId.replaceAll(":", "")}`;
   const rootRef = useRef<HTMLDivElement>(null);
@@ -315,7 +317,11 @@ export function CustomScrollbar({
       >
         {geometry.visible ? <div
           aria-controls={viewportId}
-          aria-label={`${axis === "y" ? "Vertical" : "Horizontal"} scroll position`}
+          aria-label={
+            axis === "y"
+              ? t("scrollbar.verticalPosition", "Vertical scroll position")
+              : t("scrollbar.horizontalPosition", "Horizontal scroll position")
+          }
           aria-orientation={axis === "y" ? "vertical" : "horizontal"}
           aria-valuemax={Math.round(max)}
           aria-valuemin={0}

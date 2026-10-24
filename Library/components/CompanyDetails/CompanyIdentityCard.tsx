@@ -1,5 +1,6 @@
 "use client";
 
+import { useOpusI18n } from "@/components/OpusI18n";
 import { useEffect, useState } from "react";
 import { Avatar } from "@/components/Avatar";
 import { Badge } from "@/components/Badge";
@@ -33,6 +34,7 @@ export function CompanyIdentityCard({
   status,
   type,
 }: CompanyIdentityCardProps) {
+  const { t } = useOpusI18n();
   const [logoUploadOpen, setLogoUploadOpen] = useState(false);
   const [photoSrc, setPhotoSrc] = useState(logoSrc);
 
@@ -50,13 +52,13 @@ export function CompanyIdentityCard({
         <div className={styles.avatarWrap} data-has-logo={photoSrc ? "true" : "false"}>
           {photoSrc ? (
             <div className={styles.logoFrame}>
-              <img alt={`${name} logo`} className={styles.logo} src={photoSrc} />
+              <img alt={t("companyDetails.logoAlt", "{name} logo", { name })} className={styles.logo} src={photoSrc} />
             </div>
           ) : (
             <Avatar name={name} shape="rounded" size="xl" />
           )}
           <button
-            aria-label={`Update logo for ${name}`}
+            aria-label={t("companyDetails.updateLogoFor", "Update logo for {name}", { name })}
             className={styles.avatarEdit}
             onClick={() => setLogoUploadOpen(true)}
             type="button"
@@ -70,7 +72,7 @@ export function CompanyIdentityCard({
           {industry ? <Text size={200}>{industry}</Text> : null}
         </div>
 
-        <ul className={styles.companyList} aria-label="Company summary">
+        <ul className={styles.companyList} aria-label={t("companyDetails.summary", "Company summary")}>
           {type ? (
             <li>
               <span aria-hidden="true" className={styles.companyIcon}>
@@ -78,7 +80,7 @@ export function CompanyIdentityCard({
               </span>
               <span className={styles.companyCopy}>
                 <strong>{type}</strong>
-                <small>Account type</small>
+                <small>{t("companyDetails.accountType", "Account type")}</small>
               </span>
             </li>
           ) : null}
@@ -89,7 +91,7 @@ export function CompanyIdentityCard({
               </span>
               <span className={styles.companyCopy}>
                 <strong>{employees}</strong>
-                <small>Employees</small>
+                <small>{t("companyDetails.employees", "Employees")}</small>
               </span>
             </li>
           ) : null}
@@ -105,7 +107,7 @@ export function CompanyIdentityCard({
       <CompanyLogoUploadModal
         fieldId="company-logo-upload"
         open={logoUploadOpen}
-        title="Update company logo"
+        title={t("companyDetails.updateLogo", "Update company logo")}
         value={photoSrc}
         onClose={() => setLogoUploadOpen(false)}
         onLogoChange={(previewUrl) => {

@@ -1,5 +1,6 @@
 "use client";
 
+import { useOpusI18n } from "@/components/OpusI18n";
 import { Desktop, type DesktopWindowItem } from "@/components/Desktop";
 import { Badge } from "@/components/Badge";
 import { CatalogIcon } from "@/components/CatalogIcon";
@@ -17,6 +18,7 @@ export type DesktopLabProps = {
 };
 
 function ExplorerContent({ onAction }: { onAction?: (action: string) => void }) {
+  const { t } = useOpusI18n();
   return (
     <div className={styles.explorer}>
       <aside>
@@ -25,7 +27,7 @@ function ExplorerContent({ onAction }: { onAction?: (action: string) => void }) 
         ))}
       </aside>
       <main>
-        <Heading level={2} size={200}>Recent documents</Heading>
+        <Heading level={2} size={200}>{t("desktopLab.recentDocuments", "Recent documents")}</Heading>
         <div className={styles.files}>
           {["CRM brief.pdf", "Q3 forecast.xlsx", "Brand assets", "Customer notes.docx"].map((name, index) => (
             <button key={name} onClick={() => onAction?.(`Open ${name}`)} type="button">
@@ -40,9 +42,10 @@ function ExplorerContent({ onAction }: { onAction?: (action: string) => void }) 
 }
 
 function ActivityContent({ onAction }: { onAction?: (action: string) => void }) {
+  const { t } = useOpusI18n();
   return (
     <div className={styles.activity}>
-      <Heading level={2} size={200}>Activity</Heading>
+      <Heading level={2} size={200}>{t("desktopLab.activity", "Activity")}</Heading>
       {[
         ["Emma Davis", "Proposal approved", "success"],
         ["Michael Brown", "New task assigned", "accent"],
@@ -59,6 +62,7 @@ function ActivityContent({ onAction }: { onAction?: (action: string) => void }) 
 }
 
 function SettingsContent({ onAction }: { onAction?: (action: string) => void }) {
+  const { t } = useOpusI18n();
   const settings = [
     { detail: "Appearance, colour and wallpaper", icon: "palette", id: "appearance", label: "Appearance" },
     { detail: "Alerts, sounds and badges", icon: "bell", id: "notifications", label: "Notifications" },
@@ -68,8 +72,8 @@ function SettingsContent({ onAction }: { onAction?: (action: string) => void }) 
 
   return (
     <div className={styles.settings}>
-      <Heading level={2} size={200}>Settings</Heading>
-      <Text>Choose an area to configure your workspace.</Text>
+      <Heading level={2} size={200}>{t("desktopLab.settings", "Settings")}</Heading>
+      <Text>{t("desktopLab.settingsDescription", "Choose an area to configure your workspace.")}</Text>
       <div className={styles.settingsList}>
         {settings.map((setting) => (
           <button
@@ -91,6 +95,7 @@ function SettingsContent({ onAction }: { onAction?: (action: string) => void }) 
 }
 
 function ContactsContent({ onAction }: { onAction?: (action: string) => void }) {
+  const { t } = useOpusI18n();
   const contacts = [
     { company: "Acme Ltd", initials: "ED", name: "Emma Davis", status: "Online" },
     { company: "Initech", initials: "MB", name: "Michael Brown", status: "In a meeting" },
@@ -102,12 +107,12 @@ function ContactsContent({ onAction }: { onAction?: (action: string) => void }) 
     <div className={styles.contacts}>
       <header>
         <div>
-          <Heading level={2} size={200}>Contacts</Heading>
-          <Text>Your recent CRM contacts.</Text>
+          <Heading level={2} size={200}>{t("desktopLab.contacts", "Contacts")}</Heading>
+          <Text>{t("desktopLab.contactsDescription", "Your recent CRM contacts.")}</Text>
         </div>
         <button onClick={() => onAction?.("Add contact")} type="button">
           <CatalogIcon iconName="plus" />
-          Add contact
+          {t("desktopLab.addContact", "Add contact")}
         </button>
       </header>
       <div className={styles.contactList}>

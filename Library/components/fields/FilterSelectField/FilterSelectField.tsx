@@ -2,6 +2,7 @@
 
 import { useEffect, useMemo, useRef, useState } from "react";
 import { FieldShell, fieldInputAriaProps, useFieldShellAria } from "@/components/fields/FieldShell";
+import { useOpusI18n } from "@/components/OpusI18n";
 import type { ControlRadius, FieldMode, InputControlSize, LabelPosition } from "@/components/fields/types";
 import shared from "../shared/fieldControl.module.css";
 import { inputControlSizeClassName } from "../shared/inputControlSizes";
@@ -42,17 +43,20 @@ export function FilterSelectField({
   label,
   labelPosition = "left",
   mode = "stacked",
-  placeholder = "Select filters…",
+  placeholder,
   required,
   radius,
   transparency,
   gradient,
-  searchPlaceholder = "Search…",
+  searchPlaceholder,
   selectionMode = "multiple",
   size = "md",
   value,
   onChange,
 }: FilterSelectFieldProps) {
+  const { t } = useOpusI18n();
+  const displayPlaceholder = placeholder ?? t("field.selectFilters", "Select filters…");
+  const displaySearchPlaceholder = searchPlaceholder ?? t("field.search", "Search…");
   const shellAria = useFieldShellAria();
   const rootRef = useRef<HTMLDivElement>(null);
   const [open, setOpen] = useState(false);
@@ -111,7 +115,11 @@ export function FilterSelectField({
   }, [groups, query]);
 
   const summary =
-    value.length === 0 ? placeholder : value.length === 1 ? value[0] : `${value.length} selected`;
+    value.length === 0
+      ? displayPlaceholder
+      : value.length === 1
+        ? value[0]
+        : t("field.itemsSelected", "{count} selected", { count: value.length });
 
   function toggleOption(option: string) {
     if (selectionMode === "single") {
@@ -183,10 +191,10 @@ export function FilterSelectField({
         {open ? (
           <div className={[shared.panel, openUpward ? styles.panelUpward : ""].filter(Boolean).join(" ")}>
             <input
-              aria-label="Search filters"
+              aria-label={t("field.searchFilters", "Search filters")}
               className={shared.search}
               disabled={disabled}
-              placeholder={searchPlaceholder}
+              placeholder={displaySearchPlaceholder}
               type="search"
               value={query}
               onChange={(event) => setQuery(event.target.value)}
@@ -236,7 +244,7 @@ export function FilterSelectField({
                   setOpen(false);
                 }}
               >
-                Reset
+                {t("common.reset", "Reset")}
               </button>
               <button
                 className={`${shared.actionButton} ${shared.actionButtonPrimary}`}
@@ -246,7 +254,7 @@ export function FilterSelectField({
                   setOpen(false);
                 }}
               >
-                Apply
+                {t("common.apply", "Apply")}
               </button>
             </div> : null}
           </div>

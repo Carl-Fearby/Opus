@@ -1,5 +1,6 @@
 "use client";
 
+import { useOpusI18n } from "@/components/OpusI18n";
 import { useState } from "react";
 import { Avatar } from "@/components/Avatar";
 import { Badge } from "@/components/Badge";
@@ -49,6 +50,7 @@ export function CompanyNotesActivity({
   onTabChange,
   tabsVariant = "card",
 }: CompanyNotesActivityProps) {
+  const { t } = useOpusI18n();
   const [internalTab, setInternalTab] = useState<CompanyNotesWorkspaceTab>(defaultTab);
   const workspaceTab = controlledActiveTab ?? internalTab;
   const [notesComposerOpen, setNotesComposerOpen] = useState(false);
@@ -96,16 +98,16 @@ export function CompanyNotesActivity({
 
   const contactsPanel =
     contacts.length === 0 ? (
-      <div className={styles.emptyPanel}>No company contacts added yet.</div>
+      <div className={styles.emptyPanel}>{t("companyDetails.noContacts", "No company contacts added yet.")}</div>
     ) : (
-      <ul aria-label="Company contacts" className={styles.contactsList}>
+      <ul aria-label={t("companyDetails.contacts", "Company contacts")} className={styles.contactsList}>
         {contacts.map((person) => (
           <li key={person.id} className={styles.contactRow}>
             <Avatar name={person.name} size="md" src={person.avatarSrc} />
             <div className={styles.contactCopy}>
               <div className={styles.contactHeadline}>
                 <strong>{person.name}</strong>
-                {person.primary ? <Badge label="Primary" size="sm" tone="accent" /> : null}
+                {person.primary ? <Badge label={t("companyDetails.primary", "Primary")} size="sm" tone="accent" /> : null}
                 {person.role ? <Badge label={person.role} size="sm" tone="info" /> : null}
               </div>
               {person.jobTitle ? <Text size={200}>{person.jobTitle}</Text> : null}
@@ -167,7 +169,7 @@ export function CompanyNotesActivity({
         type="button"
       >
         <CatalogIcon iconName="plus" />
-        Add Note
+        {t("companyDetails.addNote", "Add note")}
       </button>
     ) : workspaceTab === "activities" ? (
       <button
@@ -179,7 +181,7 @@ export function CompanyNotesActivity({
         type="button"
       >
         <CatalogIcon iconName="plus" />
-        Add Activity
+        {t("notes.addActivity", "Add Activity")}
       </button>
     ) : workspaceTab === "contacts" ? (
       <button
@@ -188,7 +190,7 @@ export function CompanyNotesActivity({
         type="button"
       >
         <CatalogIcon iconName="plus" />
-        Add Contact
+        {t("companyDetails.addContact", "Add contact")}
       </button>
     ) : null;
 
@@ -205,13 +207,13 @@ export function CompanyNotesActivity({
       width="full"
     >
       <Tabs
-        aria-label="Company notes and contacts"
+        aria-label={t("companyDetails.notesActivity", "Company notes and contacts")}
         className={styles.workspaceTabs}
         items={[
-          { label: "Notes", value: "notes", content: notesPanel },
-          { label: "Activities", value: "activities", content: activityPanel },
-          { label: "Company Contacts", value: "contacts", content: contactsPanel },
-          { label: "Documents", value: "documents", content: documentsPanel },
+          { label: t("companyDetails.tabNotes", "Notes"), value: "notes", content: notesPanel },
+          { label: t("companyDetails.tabActivities", "Activities"), value: "activities", content: activityPanel },
+          { label: t("companyDetails.tabContacts", "Company Contacts"), value: "contacts", content: contactsPanel },
+          { label: t("companyDetails.tabDocuments", "Documents"), value: "documents", content: documentsPanel },
         ]}
         onValueChange={handleWorkspaceTabChange}
         panelClassName={isCardTabs ? styles.cardNotesPanel : styles.scrollPanel}

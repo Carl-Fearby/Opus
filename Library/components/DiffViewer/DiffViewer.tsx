@@ -1,5 +1,6 @@
 "use client";
 
+import { useOpusI18n } from "@/components/OpusI18n";
 import { useState } from "react";
 import { CatalogIcon } from "@/components/CatalogIcon";
 import styles from "./DiffViewer.module.css";
@@ -47,11 +48,15 @@ export function DiffViewer({
   defaultView,
   view,
   showViewToggle = true,
-  heading = "Differences",
-  beforeLabel = "Before",
-  afterLabel = "After",
+  heading,
+  beforeLabel,
+  afterLabel,
   onViewChange,
 }: DiffViewerProps) {
+  const { t } = useOpusI18n();
+  const displayHeading = heading ?? t("diffViewer.heading", "Differences");
+  const displayBeforeLabel = beforeLabel ?? t("diffViewer.before", "Before");
+  const displayAfterLabel = afterLabel ?? t("diffViewer.after", "After");
   const lines = diff(before, after);
   const [internalView, setInternalView] = useState<DiffViewerView>(defaultView ?? (split ? "split" : "unified"));
   const activeView = view ?? internalView;
@@ -61,21 +66,21 @@ export function DiffViewer({
     onViewChange?.(nextView);
   }
 
-  return <section aria-label="Difference viewer" className={styles.viewer}>
+  return <section aria-label={t("diffViewer.label", "Difference viewer")} className={styles.viewer}>
     <header className={styles.toolbar}>
-      <span>{heading}</span>
-      {showViewToggle ? <div aria-label="Diff layout" className={styles.viewOptions} role="group">
-        <button aria-label="Unified diff" aria-pressed={activeView === "unified"} onClick={() => changeView("unified")} title="Unified diff" type="button">
+      <span>{displayHeading}</span>
+      {showViewToggle ? <div aria-label={t("diffViewer.layout", "Diff layout")} className={styles.viewOptions} role="group">
+        <button aria-label={t("diffViewer.unified", "Unified diff")} aria-pressed={activeView === "unified"} onClick={() => changeView("unified")} title={t("diffViewer.unified", "Unified diff")} type="button">
           <CatalogIcon iconName="bars" />
         </button>
-        <button aria-label="Side-by-side diff" aria-pressed={activeView === "split"} onClick={() => changeView("split")} title="Side-by-side diff" type="button">
+        <button aria-label={t("diffViewer.split", "Side-by-side diff")} aria-pressed={activeView === "split"} onClick={() => changeView("split")} title={t("diffViewer.split", "Side-by-side diff")} type="button">
           <CatalogIcon iconName="table-columns" />
         </button>
       </div> : null}
     </header>
     {activeView === "split" ? <div className={styles.split}>
-      <section className={styles.root}><header>{beforeLabel}</header><Lines lines={lines} side="before" /></section>
-      <section className={styles.root}><header>{afterLabel}</header><Lines lines={lines} side="after" /></section>
+      <section className={styles.root}><header>{displayBeforeLabel}</header><Lines lines={lines} side="before" /></section>
+      <section className={styles.root}><header>{displayAfterLabel}</header><Lines lines={lines} side="after" /></section>
     </div> : <section className={styles.root}><Lines lines={lines} /></section>}
   </section>;
 }

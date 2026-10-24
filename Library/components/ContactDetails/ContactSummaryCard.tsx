@@ -1,5 +1,6 @@
 "use client";
 
+import { useOpusI18n } from "@/components/OpusI18n";
 import { useEffect, useMemo, useState, type ReactNode } from "react";
 import { Avatar } from "@/components/Avatar";
 import { Badge } from "@/components/Badge";
@@ -97,6 +98,7 @@ export function ContactSummaryCard({
   showActions = true,
   tabsVariant = "card",
 }: ContactSummaryCardProps) {
+  const { t } = useOpusI18n();
   const availableTabs: ContactSummaryTab[] = isStaffRecord
     ? ["basic", "other", "security"]
     : ["basic", "other"];
@@ -117,10 +119,10 @@ export function ContactSummaryCard({
     const overviewContent = (
       <div className={styles.detailsGrid}>
         <DetailsColumn>
-          <DetailItem icon="phone" label="Phone" value={contact.phone} />
-          <DetailItem icon="mobile-screen" label="Mobile" value={contact.mobile} />
-          <DetailItem icon="envelope" label="Email" value={contact.email} />
-          <DetailItem icon="globe" label="Website" value={primaryCompany?.website ?? "—"} />
+          <DetailItem icon="phone" label={t("contactDetails.phone", "Phone")} value={contact.phone} />
+          <DetailItem icon="mobile-screen" label={t("contactDetails.mobile", "Mobile")} value={contact.mobile} />
+          <DetailItem icon="envelope" label={t("contactDetails.email", "Email")} value={contact.email} />
+          <DetailItem icon="globe" label={t("contactDetails.website", "Website")} value={primaryCompany?.website ?? "—"} />
           <DetailItem
             icon="building"
             label={contact.companies.length > 1 ? "Companies" : "Company"}
@@ -139,28 +141,28 @@ export function ContactSummaryCard({
           />
         </DetailsColumn>
         <DetailsColumn>
-          <DetailItem icon="user" label="Job Title" value={primaryCompany?.jobTitle ?? "—"} />
-          <DetailItem icon="building" label="Department" value={primaryCompany?.department ?? "—"} />
-          <DetailItem icon="user-group" label="Role" value={contact.role} />
-          <DetailItem icon="industry" label="Industry" value={primaryCompany?.industry ?? "—"} />
-          <DetailItem icon="users" label="Employees" value={primaryCompany?.employees ?? "—"} />
+          <DetailItem icon="user" label={t("contactDetails.jobTitle", "Job Title")} value={primaryCompany?.jobTitle ?? "—"} />
+          <DetailItem icon="building" label={t("contactDetails.department", "Department")} value={primaryCompany?.department ?? "—"} />
+          <DetailItem icon="user-group" label={t("contactDetails.role", "Role")} value={contact.role} />
+          <DetailItem icon="industry" label={t("contactDetails.industry", "Industry")} value={primaryCompany?.industry ?? "—"} />
+          <DetailItem icon="users" label={t("contactDetails.employees", "Employees")} value={primaryCompany?.employees ?? "—"} />
         </DetailsColumn>
         <DetailsColumn>
           <DetailItem
             icon="user"
-            label="Owner"
+            label={t("contactDetails.owner", "Owner")}
             value={
               <span className={styles.owner}>
                 <Avatar name={contact.owner} size="sm" src={ownerAvatarSrc} /> {contact.owner}
               </span>
             }
           />
-          <DetailItem icon="share-nodes" label="Source" value={contact.source} />
-          <DetailItem icon="flag" label="Lead Status" value={<Badge label={contact.leadStatus} tone="accent" />} />
-          <DetailItem icon="clock" label="Last Contact" value={contact.lastContact} />
+          <DetailItem icon="share-nodes" label={t("contactDetails.source", "Source")} value={contact.source} />
+          <DetailItem icon="flag" label={t("contactDetails.leadStatus", "Lead Status")} value={<Badge label={contact.leadStatus} tone="accent" />} />
+          <DetailItem icon="clock" label={t("contactDetails.lastContact", "Last Contact")} value={contact.lastContact} />
           <DetailItem
             icon="tag"
-            label="Tags"
+            label={t("contactDetails.tags", "Tags")}
             value={
               <span className={styles.tags}>
                 {contact.tags.map((tag) => (
@@ -176,36 +178,36 @@ export function ContactSummaryCard({
     const personalContent = (
       <div className={styles.detailsGrid}>
         <DetailsColumn>
-          <DetailItem icon="house" label="Address Line 1" value="24 Willow Crescent" />
-          <DetailItem icon="house" label="Address Line 2" value="Earlsdon" />
-          <DetailItem icon="landmark" label="Town / City" value="Coventry" />
-          <DetailItem icon="map" label="County" value="West Midlands" />
-          <DetailItem icon="hashtag" label="Postcode" value="CV5 6NR" />
-          <DetailItem icon="globe" label="Country" value="United Kingdom" />
+          <DetailItem icon="house" label={t("contactDetails.addressLine1", "Address Line 1")} value="24 Willow Crescent" />
+          <DetailItem icon="house" label={t("contactDetails.addressLine2", "Address Line 2")} value="Earlsdon" />
+          <DetailItem icon="landmark" label={t("contactDetails.townCity", "Town / City")} value="Coventry" />
+          <DetailItem icon="map" label={t("contactDetails.county", "County")} value="West Midlands" />
+          <DetailItem icon="hashtag" label={t("contactDetails.postcode", "Postcode")} value="CV5 6NR" />
+          <DetailItem icon="globe" label={t("contactDetails.country", "Country")} value="United Kingdom" />
         </DetailsColumn>
         <DetailsColumn>
-          <DetailItem icon="envelope" label="Personal Email" value="emma.davis@gmail.com" />
-          <DetailItem icon="envelope" label="Work Email" value="emma.davis@acme.com" />
-          <DetailItem icon="mobile-screen" label="Personal Mobile" value="+44 7700 900123" />
-          <DetailItem icon="mobile-screen" label="Work Mobile" value="+44 7700 555321" />
-          <DetailItem icon="comment-dots" label="Preferred Contact Method" value="Email" />
+          <DetailItem icon="envelope" label={t("contactDetails.personalEmail", "Personal Email")} value="emma.davis@gmail.com" />
+          <DetailItem icon="envelope" label={t("contactDetails.workEmail", "Work Email")} value="emma.davis@acme.com" />
+          <DetailItem icon="mobile-screen" label={t("contactDetails.personalMobile", "Personal Mobile")} value="+44 7700 900123" />
+          <DetailItem icon="mobile-screen" label={t("contactDetails.workMobile", "Work Mobile")} value="+44 7700 555321" />
+          <DetailItem icon="comment-dots" label={t("contactDetails.preferredContactMethod", "Preferred Contact Method")} value="Email" />
         </DetailsColumn>
         <DetailsColumn>
           <DetailItem
             icon="circle-check"
-            label="Active Status"
+            label={t("contactDetails.activeStatus", "Active Status")}
             value={<strong className={styles.statusValue}>{contact.status}</strong>}
           />
-          <DetailItem icon="calendar-plus" label="Date Created" value={contact.dateCreated} />
-          <DetailItem icon="pen-to-square" label="Date Last Edited" value={contact.dateLastEdited} />
-          <DetailItem icon="calendar-days" label="Date of Birth" value="14 Feb 1988" />
-          <DetailItem icon="language" label="Preferred Language" value="English" />
-          <DetailItem icon="clock" label="Time Zone" value="GMT / London" />
+          <DetailItem icon="calendar-plus" label={t("contactDetails.dateCreated", "Date Created")} value={contact.dateCreated} />
+          <DetailItem icon="pen-to-square" label={t("contactDetails.dateLastEdited", "Date Last Edited")} value={contact.dateLastEdited} />
+          <DetailItem icon="calendar-days" label={t("contactDetails.dateOfBirth", "Date of Birth")} value="14 Feb 1988" />
+          <DetailItem icon="language" label={t("contactDetails.preferredLanguage", "Preferred Language")} value="English" />
+          <DetailItem icon="clock" label={t("contactDetails.timeZone", "Time Zone")} value="GMT / London" />
           {additionalCompanies.map((company) => (
             <DetailItem
               key={company.name}
               icon="building"
-              label="Additional Company"
+              label={t("contactDetails.additionalCompany", "Additional Company")}
               value={
                 <span className={styles.companyEmployment}>
                   <strong>{company.name}</strong>
@@ -224,23 +226,23 @@ export function ContactSummaryCard({
           <SecurityField
             icon="lock"
             id="contact-staff-password"
-            label="Password"
+            label={t("contactDetails.password", "Password")}
             onChange={setPassword}
             value={password}
           />
           <SecurityField
             icon="lock"
             id="contact-staff-confirm-password"
-            label="Confirm password"
+            label={t("contactDetails.confirmPassword", "Confirm password")}
             onChange={setConfirmPassword}
             value={confirmPassword}
           />
           <DetailItem
             icon="key"
-            label="Password reset"
+            label={t("contactDetails.passwordReset", "Password reset")}
             value={
               <button className={styles.securityAction} onClick={onPasswordReset} type="button">
-                Reset password
+                {t("contactDetails.resetPassword", "Reset password")}
               </button>
             }
           />
@@ -267,6 +269,7 @@ export function ContactSummaryCard({
     ownerAvatarSrc,
     password,
     primaryCompany,
+    t,
   ]);
 
   return (
@@ -281,7 +284,7 @@ export function ContactSummaryCard({
       width="full"
     >
       <Tabs
-        aria-label="Contact detail sections"
+        aria-label={t("contactDetails.detailSections", "Contact detail sections")}
         className={styles.summaryTabs}
         items={tabItems}
         onValueChange={(value) => setDetailsTab(value as ContactSummaryTab)}
@@ -289,7 +292,7 @@ export function ContactSummaryCard({
         panelMode="active"
         trailing={
           showActions && moreActions?.length ? (
-            <MoreActionsMenu items={moreActions} label="More contact actions" />
+            <MoreActionsMenu items={moreActions} label={t("contactDetails.moreActions", "More contact actions")} />
           ) : null
         }
         value={detailsTab}

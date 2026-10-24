@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { FieldShell, fieldInputAriaProps, useFieldShellAria } from "@/components/fields/FieldShell";
+import { useOpusI18n } from "@/components/OpusI18n";
 import type { FieldMode, InputControlSize, LabelPosition } from "@/components/fields/types";
 import { inputControlSizeClassName } from "../shared/inputControlSizes";
 import styles from "./TransferListField.module.css";
@@ -40,6 +41,7 @@ export function TransferListField({
   transparency,
   gradient,
 }: TransferListFieldProps) {
+  const { t } = useOpusI18n();
   const shellAria = useFieldShellAria();
   const [activeAvailable, setActiveAvailable] = useState<string[]>([]);
   const [activeSelected, setActiveSelected] = useState<string[]>([]);
@@ -99,27 +101,47 @@ export function TransferListField({
         <ListColumn
           active={activeAvailable}
           items={availableItems}
-          title="Available"
+          title={t("field.available", "Available")}
           onToggle={(item) => toggleItem(item, "available")}
         />
         <div className={styles.controls}>
-          <button className={styles.controlButton} type="button" onClick={moveToSelected}>
+          <button
+            aria-label={t("field.moveToSelected", "Move to selected")}
+            className={styles.controlButton}
+            type="button"
+            onClick={moveToSelected}
+          >
             ›
           </button>
-          <button className={styles.controlButton} type="button" onClick={moveAllToSelected}>
+          <button
+            aria-label={t("field.moveAllToSelected", "Move all to selected")}
+            className={styles.controlButton}
+            type="button"
+            onClick={moveAllToSelected}
+          >
             »
           </button>
-          <button className={styles.controlButton} type="button" onClick={moveToAvailable}>
+          <button
+            aria-label={t("field.moveToAvailable", "Move to available")}
+            className={styles.controlButton}
+            type="button"
+            onClick={moveToAvailable}
+          >
             ‹
           </button>
-          <button className={styles.controlButton} type="button" onClick={moveAllToAvailable}>
+          <button
+            aria-label={t("field.moveAllToAvailable", "Move all to available")}
+            className={styles.controlButton}
+            type="button"
+            onClick={moveAllToAvailable}
+          >
             «
           </button>
         </div>
         <ListColumn
           active={activeSelected}
           items={selected}
-          title="Selected"
+          title={t("field.selected", "Selected")}
           onToggle={(item) => toggleItem(item, "selected")}
         />
       </div>

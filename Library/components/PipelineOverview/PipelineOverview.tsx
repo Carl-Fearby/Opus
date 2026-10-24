@@ -1,5 +1,6 @@
 "use client";
 
+import { useOpusI18n } from "@/components/OpusI18n";
 import { useId, useMemo, type CSSProperties } from "react";
 import { CatalogIcon } from "@/components/CatalogIcon";
 import styles from "./PipelineOverview.module.css";
@@ -309,6 +310,7 @@ export function PipelineOverview({
   totalLabel = "Total Pipeline Value",
   totalValue,
 }: PipelineOverviewProps) {
+  const { t } = useOpusI18n();
   return (
     <div className={[styles.root, className].filter(Boolean).join(" ")}>
       <div className={styles.body} style={{ gridTemplateRows: `repeat(${stages.length}, minmax(0, 1fr))` }}>
@@ -346,7 +348,7 @@ export function PipelineOverview({
         </div>
 
         <label className={styles.period}>
-          <span className={styles.periodLabel}>Period</span>
+          <span className={styles.periodLabel}>{t("pipeline.period", "Period")}</span>
           <select
             className={styles.periodSelect}
             onChange={(event) => onPeriodChange?.(event.target.value)}

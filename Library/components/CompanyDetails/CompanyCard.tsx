@@ -5,6 +5,7 @@ import { CompanySummaryCard } from "./CompanySummaryCard";
 import type { CompanyDetailsAction, CompanyDetailsCompany } from "./types";
 import type { MoreActionsMenuItem } from "@/components/MoreActionsMenu";
 import type { TabsVariant } from "@/components/fields/types";
+import { useOpusI18n } from "@/components/OpusI18n";
 import styles from "./CompanyCard.module.css";
 
 export type CompanyCardProps = {
@@ -30,9 +31,10 @@ export function CompanyCard({
   showStatus = true,
   tabsVariant,
 }: CompanyCardProps) {
+  const { t } = useOpusI18n();
   return (
     <div
-      aria-label={`Company card for ${company.name}`}
+      aria-label={t("companyDetails.cardAria", "Company card for {company}", { company: company.name })}
       className={[styles.summaryLayout, className].filter(Boolean).join(" ")}
     >
       <CompanyIdentityCard

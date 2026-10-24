@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useMemo, useRef, useState } from "react";
+import { useOpusI18n } from "@/components/OpusI18n";
 import { FieldShell, fieldInputAriaProps, useFieldShellAria } from "@/components/fields/FieldShell";
 import type { FieldMode, InputControlSize, LabelPosition } from "@/components/fields/types";
 import shared from "../shared/fieldControl.module.css";
@@ -40,9 +41,9 @@ export function CountryPickerField({
   label,
   labelPosition = "left",
   mode = "stacked",
-  placeholder = "Select country…",
+  placeholder,
   required,
-  searchPlaceholder = "Search countries…",
+  searchPlaceholder,
   size = "md",
   value,
   onChange,
@@ -50,6 +51,9 @@ export function CountryPickerField({
   transparency,
   gradient,
 }: CountryPickerFieldProps) {
+  const { t } = useOpusI18n();
+  const displayPlaceholder = placeholder ?? t("field.selectCountry", "Select country…");
+  const displaySearchPlaceholder = searchPlaceholder ?? t("field.searchCountriesPlaceholder", "Search countries…");
   const shellAria = useFieldShellAria();
   const rootRef = useRef<HTMLDivElement>(null);
   const [open, setOpen] = useState(false);
@@ -119,7 +123,7 @@ export function CountryPickerField({
         <button
           aria-expanded={open}
           aria-haspopup="listbox"
-          aria-label={activeCountry ? `Country: ${activeCountry.label}` : placeholder}
+          aria-label={activeCountry ? t("field.countryAria", "Country: {country}", { country: activeCountry.label }) : displayPlaceholder}
           className={[
             inputControlSizeClassName[size],
             shared.trigger,
@@ -142,17 +146,17 @@ export function CountryPickerField({
               <span>{activeCountry.label}</span>
             </span>
           ) : (
-            <span className={shared.placeholder}>{placeholder}</span>
+            <span className={shared.placeholder}>{displayPlaceholder}</span>
           )}
           <span aria-hidden="true" className={shared.chevron} />
         </button>
         {open ? (
           <div className={shared.panel}>
             <input
-              aria-label="Search countries"
+              aria-label={t("field.searchCountries", "Search countries")}
               autoFocus
               className={shared.search}
-              placeholder={searchPlaceholder}
+              placeholder={displaySearchPlaceholder}
               type="search"
               value={query}
               onChange={(event) => setQuery(event.target.value)}
@@ -184,7 +188,7 @@ export function CountryPickerField({
                 </button>
               ))}
               {filteredCountries.length === 0 ? (
-                <p className={styles.empty}>No countries match.</p>
+                <p className={styles.empty}>{t("field.noCountriesMatch", "No countries match.")}</p>
               ) : null}
             </div>
           </div>

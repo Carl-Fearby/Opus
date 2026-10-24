@@ -1,5 +1,6 @@
 "use client";
 
+import { useOpusI18n } from "@/components/OpusI18n";
 import { useMemo, type CSSProperties } from "react";
 import { FieldShell, fieldInputAriaProps, useFieldShellAria } from "@/components/fields/FieldShell";
 import type { FieldMode, InputControlSize, LabelPosition } from "@/components/fields/types";
@@ -48,6 +49,7 @@ export function SliderRangeField({
   transparency,
   gradient,
 }: SliderRangeFieldProps) {
+  const { t } = useOpusI18n();
   const shellAria = useFieldShellAria();
   const [start, end] = value;
   const range = max - min || 1;
@@ -93,7 +95,7 @@ export function SliderRangeField({
         <div className={styles.trackWrap} style={trackStyle}>
           <div className={styles.track} />
           <input
-            aria-label={`${label} minimum`}
+            aria-label={t("field.minimum", "{label} minimum", { label })}
             className={styles.slider}
             max={max}
             min={min}
@@ -103,7 +105,7 @@ export function SliderRangeField({
             onChange={(event) => updateStart(Number(event.target.value))}
           />
           <input
-            aria-label={`${label} maximum`}
+            aria-label={t("field.maximum", "{label} maximum", { label })}
             className={styles.slider}
             max={max}
             min={min}

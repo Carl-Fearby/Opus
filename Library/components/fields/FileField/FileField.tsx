@@ -3,6 +3,7 @@
 import styles from "./FileField.module.css";
 import { inputControlSizeClassName } from "../shared/inputControlSizes";
 import { FieldShell, fieldInputAriaProps, useFieldShellAria } from "@/components/fields/FieldShell";
+import { useOpusI18n } from "@/components/OpusI18n";
 import type { ControlRadius, FieldMode, InputControlSize, LabelPosition } from "@/components/fields/types";
 import {
   useRef,
@@ -65,6 +66,7 @@ export function FileField({
   gradient,
   size = "md",
 }: FileFieldProps) {
+  const { t } = useOpusI18n();
   const shellAria = useFieldShellAria();
   const inputRef = useRef<HTMLInputElement>(null);
   const [isDragging, setIsDragging] = useState(false);
@@ -140,15 +142,15 @@ export function FileField({
           <div className={styles.content}>
             <div className={styles.title}>
               {fileName ? (
-                <>Selected: {fileName}</>
+                <>{t("fileField.selected", "Selected: {name}", { name: fileName })}</>
               ) : (
                 <>
-                  <strong>Drag</strong> and drop a file here
+                  <strong>{t("field.drag", "Drag")}</strong> {t("fileField.dragDrop", "and drop a file here")}
                 </>
               )}
             </div>
-            {!fileName ? <div className={styles.hint}>or</div> : null}
-            <span className={styles.action}>{fileName ? "Upload" : "Browse files"}</span>
+            {!fileName ? <div className={styles.hint}>{t("field.or", "or")}</div> : null}
+            <span className={styles.action}>{fileName ? t("fileField.upload", "Upload") : t("fileField.browse", "Browse files")}</span>
           </div>
           <input
             ref={inputRef}

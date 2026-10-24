@@ -1,5 +1,6 @@
 "use client";
 
+import { useOpusI18n } from "@/components/OpusI18n";
 import { useEffect, useId, useRef, useState } from "react";
 import type { Map as MapLibreMap, Marker as MapLibreMarker, StyleSpecification } from "maplibre-gl";
 import { TextField } from "@/components/fields/TextField";
@@ -189,7 +190,7 @@ function applyOpusDarkPalette(map: MapLibreMap, accent: string) {
 }
 
 export function Map({
-  ariaLabel = "Interactive map",
+  ariaLabel,
   center = [-1.55, 52.48],
   className,
   darkStyleUrl = DEFAULT_DARK_STYLE,
@@ -213,6 +214,8 @@ export function Map({
   reverseGeocode = nominatimReverseGeocode,
   searchPlaces = nominatimPlaceSearch,
 }: MapProps) {
+  const { t } = useOpusI18n();
+  const displayAriaLabel = ariaLabel ?? t("map.label", "Interactive map");
   const shellRef = useRef<HTMLDivElement>(null);
   const searchInputId = useId();
   const containerRef = useRef<HTMLDivElement>(null);
@@ -460,7 +463,7 @@ export function Map({
 
   return (
     <div
-      aria-label={ariaLabel}
+      aria-label={displayAriaLabel}
       className={[styles.shell, className].filter(Boolean).join(" ")}
       data-map-theme={resolvedTheme}
       data-show-coordinates={showCoordinates ? "true" : "false"}
@@ -469,14 +472,14 @@ export function Map({
       style={{ height }}
     >
       {showCoordinates ? (
-        <dl className={styles.coordinates} aria-label="Map centre coordinates">
-          <div><dt>Longitude</dt><dd>{viewCenter[0].toFixed(4)}</dd></div>
-          <div><dt>Latitude</dt><dd>{viewCenter[1].toFixed(4)}</dd></div>
+        <dl className={styles.coordinates} aria-label={t("map.centre", "Map centre coordinates")}>
+          <div><dt>{t("map.longitude", "Longitude")}</dt><dd>{viewCenter[0].toFixed(4)}</dd></div>
+          <div><dt>{t("map.latitude", "Latitude")}</dt><dd>{viewCenter[1].toFixed(4)}</dd></div>
           {showAddress ? (
             <div className={styles.address}>
-              <dt>Address</dt>
+              <dt>{t("map.address", "Address")}</dt>
               <dd title={address ?? undefined}>
-                {addressStatus === "loading" ? "Resolving…" : address ?? "Address unavailable"}
+                {addressStatus === "loading" ? t("map.resolving", "Resolving…") : address ?? t("map.addressUnavailable", "Address unavailable")}
               </dd>
             </div>
           ) : null}
@@ -495,14 +498,14 @@ export function Map({
               >
                 <TextField
                   id={searchInputId}
-                  label="Search for a place"
+                  label={t("map.searchLabel", "Search for a place")}
                   labelVisuallyHidden
                   onChange={(event) => {
                     setSearchQuery(event.target.value);
                     setSearchResults([]);
                     setSearchStatus("idle");
                   }}
-                  placeholder="Search places…"
+                  placeholder={t("map.searchPlaceholder", "Search places…")}
                   size="md"
                   type="search"
                   value={searchQuery}
@@ -511,18 +514,18 @@ export function Map({
               {searchResults.length || searchStatus === "unavailable" ? (
                 <div className={styles.searchResults} aria-live="polite">
                   {searchResults.length ? (
-                    <ul aria-label="Place search results">
+                    <ul aria-label={t("map.results", "Place search results")}>
                       {searchResults.map((result) => (
                         <li key={result.id}>
                           <button type="button" onClick={() => selectSearchResult(result)}>{result.label}</button>
                         </li>
                       ))}
                     </ul>
-                  ) : <p>No places found</p>}
+                  ) : <p>{t("map.noPlaces", "No places found")}</p>}
                 </div>
               ) : null}
               {searchStatus === "loading" ? (
-                <span aria-live="polite" className={styles.searchStatus}>Searching…</span>
+                <span aria-live="polite" className={styles.searchStatus}>{t("map.searching", "Searching…")}</span>
               ) : null}
             </div>
           ) : null}
@@ -530,8 +533,8 @@ export function Map({
           <div aria-hidden="true" className={styles.atmosphere} />
         </div>
         {showHotspots && markers.length ? (
-          <aside className={styles.hotspots} aria-label="Map hotspots">
-            <h3>Hotspots</h3>
+          <aside className={styles.hotspots} aria-label={t("map.hotspots", "Map hotspots")}>
+            <h3>{t("map.hotspotsTitle", "Hotspots")}</h3>
             <ul>
               {markers.map((marker) => (
                 <li key={marker.id}>

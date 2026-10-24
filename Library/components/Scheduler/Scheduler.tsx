@@ -1,5 +1,6 @@
 "use client";
 
+import { useOpusI18n } from "@/components/OpusI18n";
 import { useMemo } from "react";
 import styles from "./Scheduler.module.css";
 
@@ -27,6 +28,7 @@ export function Scheduler({
   events,
   startHour = 9,
 }: SchedulerProps) {
+  const { t } = useOpusI18n();
   const hours = useMemo(() => {
     const list: number[] = [];
     for (let hour = startHour; hour <= endHour; hour += 1) list.push(hour);
@@ -34,7 +36,7 @@ export function Scheduler({
   }, [endHour, startHour]);
 
   return (
-    <div className={styles.root} aria-label="Scheduler">
+    <div className={styles.root} aria-label={t("scheduler.label", "Scheduler")}>
       <div
         className={styles.grid}
         style={{

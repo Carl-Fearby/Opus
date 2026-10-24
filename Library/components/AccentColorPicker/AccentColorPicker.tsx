@@ -1,5 +1,6 @@
 "use client";
 
+import { useOpusI18n } from "@/components/OpusI18n";
 import {
   useCallback,
   useEffect,
@@ -412,6 +413,7 @@ function AccentSwatchGrid({
   selectedValue: string;
   showSelectedValue?: boolean;
 }) {
+  const { t } = useOpusI18n();
   return (
     <div className={styles.section}>
       {panelTitle ? (
@@ -424,10 +426,10 @@ function AccentSwatchGrid({
           <p>{panelTitle}</p>
           {onReset ? (
             <button
-              aria-label={`Reset ${panelTitle.toLowerCase()}`}
+              aria-label={t("accentPicker.reset", "Reset {label}", { label: panelTitle.toLowerCase() })}
               className={styles.reset}
               disabled={resetDisabled}
-              title={`Reset ${panelTitle.toLowerCase()}`}
+              title={t("accentPicker.reset", "Reset {label}", { label: panelTitle.toLowerCase() })}
               type="button"
               onClick={onReset}
             >
@@ -444,13 +446,13 @@ function AccentSwatchGrid({
           return (
             <button
               aria-checked={selected}
-              aria-label={`${option.label} ${label.toLowerCase()}`}
+              aria-label={t("accentPicker.option", "{option} {label}", { option: option.label, label: label.toLowerCase() })}
               className={styles.swatch}
               data-selected={selected ? "true" : undefined}
               key={`${label}-${option.value}`}
               role="radio"
               style={{ "--accent-option": option.value } as CSSProperties}
-              title={`${option.label} (${label.toLowerCase()})`}
+              title={t("accentPicker.optionTitle", "{option} ({label})", { option: option.label, label: label.toLowerCase() })}
               type="button"
               onClick={() => onSelect(option.value)}
             />
@@ -475,14 +477,14 @@ function AccentSwatchGrid({
 export function AccentColorPicker({
   help,
   id,
-  label = "Accent",
+  label: labelProp,
   labelPosition = "left",
   mode = "flagged",
   onChange,
   onSecondaryChange,
   onReset,
-  primarySectionLabel = "Accent",
-  secondarySectionLabel = "Second accent",
+  primarySectionLabel: primarySectionLabelProp,
+  secondarySectionLabel: secondarySectionLabelProp,
   defaultValue = DEFAULT_ACCENT_COLOR,
   defaultSecondaryValue = DEFAULT_ACCENT_SECONDARY,
   secondaryValue,
@@ -495,6 +497,10 @@ export function AccentColorPicker({
   transparency,
   gradient,
 }: AccentColorPickerProps) {
+  const { t } = useOpusI18n();
+  const label = labelProp ?? t("accentPicker.accent", "Accent");
+  const primarySectionLabel = primarySectionLabelProp ?? t("accentPicker.accent", "Accent");
+  const secondarySectionLabel = secondarySectionLabelProp ?? t("accentPicker.secondAccent", "Second accent");
   const resolvedSecondary = secondaryValue ?? companionForPrimary(value);
   const [open, setOpen] = useState(false);
   const [portalReady, setPortalReady] = useState(false);
@@ -616,10 +622,10 @@ export function AccentColorPicker({
           />
           <p className={styles.summary}>{label}</p>
           <button
-            aria-label={`Reset ${label.toLowerCase()} colours`}
+            aria-label={t("accentPicker.resetColours", "Reset {label} colours", { label: label.toLowerCase() })}
             className={styles.reset}
             disabled={isDefault}
-            title={`Reset ${label.toLowerCase()}`}
+            title={t("accentPicker.reset", "Reset {label}", { label: label.toLowerCase() })}
             type="button"
             onClick={handleReset}
           >
@@ -678,7 +684,7 @@ export function AccentColorPicker({
           aria-controls={menuId}
           aria-expanded={open}
           aria-haspopup="dialog"
-          aria-label={`${label}, ${selectedLabel}`}
+          aria-label={t("accentPicker.selected", "{label}, {selected}", { label, selected: selectedLabel })}
           className={styles.trigger}
           style={
             {
@@ -686,7 +692,7 @@ export function AccentColorPicker({
               "--accent-option-secondary": resolvedSecondary,
             } as CSSProperties
           }
-          title={`${label} · ${selectedLabel}`}
+          title={t("accentPicker.selectedTitle", "{label} · {selected}", { label, selected: selectedLabel })}
           type="button"
           onClick={() => setOpen((current) => !current)}
         >
@@ -696,9 +702,9 @@ export function AccentColorPicker({
 
         {!isDefault ? (
           <button
-            aria-label={`Reset ${label.toLowerCase()} colours`}
+            aria-label={t("accentPicker.resetColours", "Reset {label} colours", { label: label.toLowerCase() })}
             className={styles.reset}
-            title={`Reset ${label.toLowerCase()}`}
+            title={t("accentPicker.reset", "Reset {label}", { label: label.toLowerCase() })}
             type="button"
             onClick={handleReset}
           >
@@ -709,7 +715,7 @@ export function AccentColorPicker({
         {open && portalReady && portalStyle
           ? createPortal(
               <div
-                aria-label={`${label} colours`}
+                aria-label={t("accentPicker.colours", "{label} colours", { label })}
                 className={styles.dropdown}
                 data-portaled="true"
                 id={menuId}
@@ -727,7 +733,7 @@ export function AccentColorPicker({
                   <p className={styles.summary}>{selectedLabel}</p>
                   {!isDefault ? (
                     <button className={styles.resetText} type="button" onClick={handleReset}>
-                      Reset
+                      {t("common.reset", "Reset")}
                     </button>
                   ) : null}
                 </div>

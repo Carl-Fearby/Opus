@@ -5,6 +5,7 @@ import { ContactSummaryCard } from "./ContactSummaryCard";
 import type { ContactDetailsAction, ContactDetailsContact } from "./types";
 import type { MoreActionsMenuItem } from "@/components/MoreActionsMenu";
 import type { TabsVariant } from "@/components/fields/types";
+import { useOpusI18n } from "@/components/OpusI18n";
 import styles from "./ContactCard.module.css";
 
 export type ContactCardProps = {
@@ -34,9 +35,13 @@ export function ContactCard({
   showStatus = true,
   tabsVariant,
 }: ContactCardProps) {
+  const { t } = useOpusI18n();
   return (
     <div
-      aria-label={`${isStaffRecord ? "User" : "Contact"} card for ${contact.name}`}
+      aria-label={t("contactDetails.cardAria", "{kind} card for {name}", {
+        kind: isStaffRecord ? t("contactDetails.user", "User") : t("contactDetails.contact", "Contact"),
+        name: contact.name,
+      })}
       className={[styles.summaryLayout, className].filter(Boolean).join(" ")}
       data-staff-record={isStaffRecord ? "true" : "false"}
     >

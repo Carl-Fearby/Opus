@@ -1,5 +1,6 @@
 "use client";
 
+import { useOpusI18n } from "@/components/OpusI18n";
 import {
   useEffect,
   useId,
@@ -79,6 +80,7 @@ export function AsyncMultiSelectField({
   transparency,
   value,
 }: AsyncMultiSelectFieldProps) {
+  const { t } = useOpusI18n();
   const shellAria = useFieldShellAria();
   const listId = useId();
   const rootRef = useRef<HTMLDivElement>(null);
@@ -325,7 +327,7 @@ export function AsyncMultiSelectField({
             <span className={styles.chip} key={option.value}>
               <span className={styles.chipLabel}>{option.label}</span>
               <button
-                aria-label={`Remove ${option.label}`}
+                aria-label={t("asyncMultiSelect.remove", "Remove {label}", { label: option.label })}
                 className={styles.remove}
                 disabled={disabled}
                 onClick={(event) => {

@@ -2,6 +2,7 @@
 
 import { useMemo, useState, type ReactNode } from "react";
 import { DatePickerSelect } from "./DatePickerSelect";
+import { useOpusI18n } from "@/components/OpusI18n";
 import type { DateRangeValue } from "./datePickerUtils";
 import styles from "./DatePickerPanel.module.css";
 import type { ControlTransparency } from "../types";
@@ -29,11 +30,6 @@ export type DatePickerPanelRangeProps = DatePickerPanelBaseProps & {
 };
 
 export type DatePickerPanelProps = DatePickerPanelSingleProps | DatePickerPanelRangeProps;
-
-const weekdayLabels = ["Mo", "Tu", "We", "Th", "Fr", "Sa", "Su"];
-const monthLabels = Array.from({ length: 12 }, (_, month) =>
-  new Date(2000, month, 1).toLocaleString(undefined, { month: "long" }),
-);
 
 function pad(value: number) {
   return String(value).padStart(2, "0");
@@ -76,6 +72,21 @@ type Cell = {
 };
 
 export function DatePickerPanel(props: DatePickerPanelProps) {
+  const { locale, t } = useOpusI18n();
+  const monthLabels = useMemo(
+    () =>
+      Array.from({ length: 12 }, (_, month) =>
+        new Intl.DateTimeFormat(locale, { month: "long" }).format(new Date(2000, month, 1)),
+      ),
+    [locale],
+  );
+  const weekdayLabels = useMemo(
+    () =>
+      Array.from({ length: 7 }, (_, index) =>
+        new Intl.DateTimeFormat(locale, { weekday: "short" }).format(new Date(2024, 0, 1 + index)),
+      ),
+    [locale],
+  );
   const { closeOnSelect = true, extra, max, min, onClose, showFooter = true, transparency } = props;
   const isRange = props.selectionMode === "range";
   const singleValue = !isRange ? props.value : undefined;
@@ -270,11 +281,11 @@ export function DatePickerPanel(props: DatePickerPanelProps) {
       className={styles.panel}
       data-control-transparency={transparency}
       role="dialog"
-      aria-label={isRange ? "Choose date range" : "Choose date"}
+      aria-label={isRange ? t("field.chooseDateRange", "Choose date range") : t("field.chooseDate", "Choose date")}
     >
       <div className={styles.toolbar}>
         <button
-          aria-label="Previous month"
+          aria-label={t("field.previousMonth", "Previous month")}
           className={styles.nav}
           type="button"
           onClick={() => shiftMonth(-1)}
@@ -283,14 +294,14 @@ export function DatePickerPanel(props: DatePickerPanelProps) {
         </button>
         <div className={styles.picker}>
           <DatePickerSelect
-            aria-label="Month"
+            aria-label={t("field.month", "Month")}
             className={styles.monthSelect}
             options={monthLabels.map((name, index) => ({ label: name, value: index }))}
             value={month}
             onChange={(nextMonth) => setCursor({ year, month: nextMonth })}
           />
           <DatePickerSelect
-            aria-label="Year"
+            aria-label={t("field.year", "Year")}
             className={styles.yearSelect}
             options={yearOptions.map((optionYear) => ({
               label: String(optionYear),
@@ -301,7 +312,7 @@ export function DatePickerPanel(props: DatePickerPanelProps) {
           />
         </div>
         <button
-          aria-label="Next month"
+          aria-label={t("field.nextMonth", "Next month")}
           className={styles.nav}
           type="button"
           onClick={() => shiftMonth(1)}
@@ -313,8 +324,8 @@ export function DatePickerPanel(props: DatePickerPanelProps) {
       {isRange ? (
         <p className={styles.hint}>
           {pickingEnd && rangeValue.from
-            ? "Select the end date"
-            : "Select the start date"}
+            ? t("field.selectEndDate", "Select the end date")
+            : t("field.selectStartDate", "Select the start date")}
         </p>
       ) : null}
 
@@ -368,7 +379,7 @@ export function DatePickerPanel(props: DatePickerPanelProps) {
       {showFooter ? (
         <div className={styles.footer}>
           <button className={styles.footerAction} type="button" onClick={handleClear}>
-            Clear
+            {t("common.clear", "Clear")}
           </button>
           <button
             className={styles.footerAction}
@@ -376,7 +387,7 @@ export function DatePickerPanel(props: DatePickerPanelProps) {
             type="button"
             onClick={handleToday}
           >
-            Today
+            {t("calendar.today", "Today")}
           </button>
         </div>
       ) : null}

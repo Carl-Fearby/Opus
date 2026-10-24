@@ -1,5 +1,6 @@
 "use client";
 
+import { useOpusI18n } from "@/components/OpusI18n";
 import { useEffect, useMemo, useState } from "react";
 import { Button } from "@/components/fields/Button";
 import { DateField } from "@/components/fields/DateField";
@@ -37,6 +38,7 @@ function formatDayLabel(dateKey: string) {
 }
 
 export function CalendarDayModal({ dateKey, events, onBookEvent, onClose }: CalendarDayModalProps) {
+  const { t } = useOpusI18n();
   const [title, setTitle] = useState("");
   const [startTime, setStartTime] = useState("09:00");
   const [endTime, setEndTime] = useState("10:00");
@@ -67,7 +69,9 @@ export function CalendarDayModal({ dateKey, events, onBookEvent, onClose }: Cale
       tone: toneByLabel[toneLabel],
     });
     setTitle("");
-    setNotice(`"${nextTitle}" was added to this day.`);
+    setNotice(
+      t("calendar.eventAdded", '"{title}" was added to this day.', { title: nextTitle }),
+    );
   }
 
   return (
@@ -75,22 +79,25 @@ export function CalendarDayModal({ dateKey, events, onBookEvent, onClose }: Cale
       actions={
         <>
           <Button variant="secondary" onClick={onClose}>
-            Close
+            {t("common.close", "Close")}
           </Button>
           <Button disabled={!title.trim()} variant="primary" onClick={handleBook}>
-            Add event
+            {t("calendar.addEvent", "Add event")}
           </Button>
         </>
       }
-      description="Review scheduled items or book a new event."
+      description={t(
+        "calendar.dayModalDescription",
+        "Review scheduled items or book a new event.",
+      )}
       onClose={onClose}
       open={Boolean(dateKey)}
       size="medium"
-      title={dateKey ? formatDayLabel(dateKey) : "Day details"}
+      title={dateKey ? formatDayLabel(dateKey) : t("calendar.dayDetails", "Day details")}
     >
       <div className={styles.dayModal}>
         <section className={styles.dayModalSection}>
-          <h3 className={styles.dayModalHeading}>Scheduled</h3>
+          <h3 className={styles.dayModalHeading}>{t("calendarDay.scheduled", "Scheduled")}</h3>
           {scheduledEvents.length > 0 ? (
             <ul className={styles.dayModalList}>
               {scheduledEvents.map((event) => {
@@ -107,18 +114,18 @@ export function CalendarDayModal({ dateKey, events, onBookEvent, onClose }: Cale
               })}
             </ul>
           ) : (
-            <p className={styles.dayModalEmpty}>No events scheduled for this day.</p>
+            <p className={styles.dayModalEmpty}>{t("calendarDay.noEvents", "No events scheduled for this day.")}</p>
           )}
         </section>
 
         <section className={styles.dayModalSection}>
-          <h3 className={styles.dayModalHeading}>Book an event</h3>
+          <h3 className={styles.dayModalHeading}>{t("calendarDay.book", "Book an event")}</h3>
           <div className={styles.dayModalForm}>
             <TextField
               id="calendar-day-event-title"
               label="Title"
               mode="stacked"
-              placeholder="Team sync, incident review…"
+              placeholder={t("calendarDay.placeholder", "Team sync, incident review…")}
               type="text"
               value={title}
               onChange={(event) => setTitle(event.target.value)}

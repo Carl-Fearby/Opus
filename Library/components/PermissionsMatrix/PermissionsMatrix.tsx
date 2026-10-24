@@ -1,5 +1,6 @@
 "use client";
 
+import { useOpusI18n } from "@/components/OpusI18n";
 import styles from "./PermissionsMatrix.module.css";
 
 export type PermissionLevel = "none" | "read" | "write" | "admin";
@@ -14,13 +15,14 @@ export type PermissionsMatrixProps = {
 const levels: PermissionLevel[] = ["none", "read", "write", "admin"];
 
 export function PermissionsMatrix({ onChange, permissions, resources, roles }: PermissionsMatrixProps) {
+  const { t } = useOpusI18n();
   return (
-    <div className={styles.root} aria-label="Permissions matrix">
+    <div className={styles.root} aria-label={t("permissions.label", "Permissions matrix")}>
       <div className={styles.scroll}>
         <table className={styles.table}>
           <thead>
             <tr>
-              <th className={styles.corner}>Role / Resource</th>
+              <th className={styles.corner}>{t("permissions.roleResource", "Role / Resource")}</th>
               {resources.map((resource) => (
                 <th className={styles.head} key={resource}>
                   {resource}
@@ -39,7 +41,7 @@ export function PermissionsMatrix({ onChange, permissions, resources, roles }: P
                   return (
                     <td className={styles.cell} key={`${role}-${resource}`}>
                       <select
-                        aria-label={`${role} access to ${resource}`}
+                        aria-label={t("permissions.access", "{role} access to {resource}", { role, resource })}
                         className={styles.select}
                         data-level={level}
                         onChange={(event) => onChange(role, resource, event.target.value as PermissionLevel)}

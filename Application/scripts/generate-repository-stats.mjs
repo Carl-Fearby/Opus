@@ -1,5 +1,5 @@
 import { execFileSync } from "node:child_process";
-import { mkdirSync, readFileSync, writeFileSync } from "node:fs";
+import { existsSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 
@@ -34,7 +34,10 @@ const languages = languageDefinitions.map(({ label, extensions }) => {
   for (const relativePath of trackedFiles) {
     if (!extensions.has(path.extname(relativePath).toLowerCase())) continue;
 
-    const contents = readFileSync(path.join(repositoryDirectory, relativePath), "utf8");
+    const absolutePath = path.join(repositoryDirectory, relativePath);
+    if (!existsSync(absolutePath)) continue;
+
+    const contents = readFileSync(absolutePath, "utf8");
     files += 1;
     lines += contents.length === 0 ? 0 : contents.split(/\r?\n/).length;
   }

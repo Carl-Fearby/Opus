@@ -1,5 +1,6 @@
 "use client";
 
+import { useOpusI18n } from "@/components/OpusI18n";
 import { useMemo, useState } from "react";
 import styles from "./PropertyInspector.module.css";
 
@@ -36,6 +37,7 @@ function formatDisplay(value: PropertyInspectorValue): string {
 }
 
 export function PropertyInspector({ items, onChange, searchable = false }: PropertyInspectorProps) {
+  const { t } = useOpusI18n();
   const [query, setQuery] = useState("");
   const [collapsed, setCollapsed] = useState<Set<string>>(new Set());
 
@@ -71,14 +73,14 @@ export function PropertyInspector({ items, onChange, searchable = false }: Prope
   }
 
   return (
-    <div className={styles.root} aria-label="Property inspector">
+    <div className={styles.root} aria-label={t("propertyInspector.label", "Property inspector")}>
       {searchable ? (
         <div className={styles.searchRow}>
           <input
-            aria-label="Filter properties"
+            aria-label={t("propertyInspector.filter", "Filter properties")}
             className={styles.search}
             onChange={(event) => setQuery(event.target.value)}
-            placeholder="Filter properties…"
+            placeholder={t("propertyInspector.filterPlaceholder", "Filter properties…")}
             type="search"
             value={query}
           />

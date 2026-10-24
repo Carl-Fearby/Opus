@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import { useOpusI18n } from "@/components/OpusI18n";
 import { JetSetWillyEngine } from "./JetSetWillyEngine";
 import styles from "./JetSetWilly.module.css";
 
@@ -11,6 +12,7 @@ export type JetSetWillyProps = {
 };
 
 export function JetSetWilly({ className, title = "Jet Set Willy", autoFocus = false }: JetSetWillyProps) {
+  const { t } = useOpusI18n();
   const componentRef = useRef<HTMLElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const engineRef = useRef<JetSetWillyEngine | null>(null);
@@ -42,7 +44,7 @@ export function JetSetWilly({ className, title = "Jet Set Willy", autoFocus = fa
     <section ref={componentRef} className={`${styles.component}${className ? ` ${className}` : ""}`} aria-label={title}>
       <header className={styles.header}>
         <div>
-          <span className={styles.kicker}>Native TypeScript edition</span>
+          <span className={styles.kicker}>{t("jetset.kicker", "Native TypeScript edition")}</span>
           <h2>{title}</h2>
         </div>
         <div className={styles.actions}>
@@ -57,20 +59,20 @@ export function JetSetWilly({ className, title = "Jet Set Willy", autoFocus = fa
           >
             {muted ? "Sound on" : "Mute"}
           </button>
-          <button type="button" onClick={() => engineRef.current?.reset()}>Restart</button>
-          <button type="button" onClick={enterFullscreen}>Full screen</button>
+          <button type="button" onClick={() => engineRef.current?.reset()}>{t("jetset.restart", "Restart")}</button>
+          <button type="button" onClick={enterFullscreen}>{t("jetset.fullscreen", "Full screen")}</button>
         </div>
       </header>
 
       <div className={styles.screenShell}>
         <canvas
-          aria-label={`${title}. Current room: ${room}. Items collected: ${items}.`}
+          aria-label={t("jetset.aria", "{title}. Current room: {room}. Items collected: {items}.", { title, room, items })}
           className={styles.canvas}
           ref={canvasRef}
           role="application"
           tabIndex={0}
         />
-        <span className={styles.focusHint}>Click the game to play</span>
+        <span className={styles.focusHint}>{t("jetset.focusHint", "Click the game to play")}</span>
       </div>
 
       <div className={styles.instructions}>
@@ -80,7 +82,7 @@ export function JetSetWilly({ className, title = "Jet Set Willy", autoFocus = fa
         <span>Jump: Space / ↑</span>
         <span>Items: {items}</span>
       </div>
-      <p className={styles.notice}>Native canvas implementation using level and graphic data extracted from the supplied licensed TZX.</p>
+      <p className={styles.notice}>{t("jetset.notice", "Native canvas implementation using level and graphic data extracted from the supplied licensed TZX.")}</p>
     </section>
   );
 }

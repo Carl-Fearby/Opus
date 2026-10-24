@@ -1,5 +1,6 @@
 "use client";
 
+import { useOpusI18n } from "@/components/OpusI18n";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { CatalogIcon } from "../CatalogIcon";
 import { StatTile, type StatTileTone, type StatTileTrend, type StatTileTrendTone } from "../StatTile";
@@ -28,6 +29,7 @@ export type StatTilesProps = {
 const defaultToneForIndex = (index: number): StatTileTone => (index % 2 === 0 ? "purple" : "blue");
 
 export function StatTiles({ className, items, layout = "fill" }: StatTilesProps) {
+  const { t } = useOpusI18n();
   const rowRef = useRef<HTMLDivElement>(null);
   const [hasPrevious, setHasPrevious] = useState(false);
   const [hasMore, setHasMore] = useState(false);
@@ -104,12 +106,12 @@ export function StatTiles({ className, items, layout = "fill" }: StatTilesProps)
         })}
       </div>
       {hasPrevious ? (
-        <button aria-label="Show previous metrics" className={[styles.moreButton, styles.previousButton].join(" ")} onClick={() => scrollTiles(-1)} type="button">
+        <button aria-label={t("statTiles.previous", "Show previous metrics")} className={[styles.moreButton, styles.previousButton].join(" ")} onClick={() => scrollTiles(-1)} type="button">
           <CatalogIcon iconName="chevron-left" />
         </button>
       ) : null}
       {hasMore ? (
-        <button aria-label="Show more metrics" className={[styles.moreButton, styles.nextButton].join(" ")} onClick={() => scrollTiles(1)} type="button">
+        <button aria-label={t("statTiles.more", "Show more metrics")} className={[styles.moreButton, styles.nextButton].join(" ")} onClick={() => scrollTiles(1)} type="button">
           <CatalogIcon iconName="chevron-right" />
         </button>
       ) : null}

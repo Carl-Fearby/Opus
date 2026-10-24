@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useLayoutEffect, useRef, useState, type CSSProperties } from "react";
+import { useOpusI18n } from "@/components/OpusI18n";
 import styles from "./FlipClock.module.css";
 
 export type FlipClockSize = "sm" | "md" | "lg";
@@ -240,6 +241,7 @@ export function FlipClock({
   showFrames = false,
   size = "md",
 }: FlipClockProps) {
+  const { t } = useOpusI18n();
   const [time, setTime] = useState<Date | null>(null);
   const includeSeconds = showSeconds || showFrames;
   const durationMs = showFrames ? 120 : 650;
@@ -292,7 +294,7 @@ export function FlipClock({
       </span>
 
       {!time ? (
-        <div className={styles.loading}>Loading flip clock…</div>
+        <div className={styles.loading}>{t("flipClock.loading", "Loading flip clock…")}</div>
       ) : (
         <>
           <div className={styles.board} role="img" aria-label={digitalTime}>

@@ -266,8 +266,8 @@ export function DataGrid({
     () =>
       hasTeamColumn
         ? activeColumns
-        : [{ key: "team", label: "Team", align: "left" as const }, ...activeColumns],
-    [activeColumns, hasTeamColumn],
+        : [{ key: "team", label: t("dataGrid.teamColumn", "Team"), align: "left" as const }, ...activeColumns],
+    [activeColumns, hasTeamColumn, t],
   );
   const dataColumns = useMemo(
     () => gridColumns.filter((column) => column.key !== "team"),
@@ -1254,6 +1254,7 @@ const GridHeaderMenu = forwardRef(function GridHeaderMenu(
   },
   ref: Ref<HTMLSpanElement>,
 ) {
+  const { t } = useOpusI18n();
   return (
     <span
       ref={ref}
@@ -1261,18 +1262,18 @@ const GridHeaderMenu = forwardRef(function GridHeaderMenu(
       id={`data-grid-menu-${menuId}`}
       role="dialog"
       tabIndex={-1}
-      aria-label={`${label} column options`}
+      aria-label={t("dataGrid.columnOptions", "{label} column options", { label })}
     >
       {sortable ? (
         <span className={styles.menuSection}>
-          <span className={styles.menuLabel}>Sort</span>
+          <span className={styles.menuLabel}>{t("dataGrid.sort", "Sort")}</span>
           <button
             aria-pressed={sortDirection === "ascending"}
             className={styles.menuAction}
             type="button"
             onClick={() => onSortDirection("ascending")}
           >
-            Ascending
+            {t("dataGrid.ascending", "Ascending")}
           </button>
           <button
             aria-pressed={sortDirection === "descending"}
@@ -1280,7 +1281,7 @@ const GridHeaderMenu = forwardRef(function GridHeaderMenu(
             type="button"
             onClick={() => onSortDirection("descending")}
           >
-            Descending
+            {t("dataGrid.descending", "Descending")}
           </button>
           <button
             aria-pressed={sortDirection ? false : undefined}
@@ -1288,17 +1289,17 @@ const GridHeaderMenu = forwardRef(function GridHeaderMenu(
             type="button"
             onClick={() => onSortDirection(null)}
           >
-            Clear sort
+            {t("dataGrid.clearSort", "Clear sort")}
           </button>
         </span>
       ) : null}
       {filterable ? (
         <span className={styles.menuSection}>
-          <span className={styles.menuLabel}>Filter</span>
+          <span className={styles.menuLabel}>{t("dataGrid.filter", "Filter")}</span>
           <input
-            aria-label={`Filter ${label}`}
+            aria-label={t("dataGrid.filterAria", "Filter {label}", { label })}
             className={styles.filterInput}
-            placeholder={`Search ${label}`}
+            placeholder={t("dataGrid.searchAria", "Search {label}", { label })}
             value={filter}
             onChange={(event) => onFilterChange(event.target.value)}
             onClick={(event) => event.stopPropagation()}
@@ -1311,7 +1312,7 @@ const GridHeaderMenu = forwardRef(function GridHeaderMenu(
           />
           {filter ? (
             <button className={styles.menuAction} type="button" onClick={() => onFilterChange("")}>
-              Clear filter
+              {t("dataGrid.clearFilter", "Clear filter")}
             </button>
           ) : null}
         </span>

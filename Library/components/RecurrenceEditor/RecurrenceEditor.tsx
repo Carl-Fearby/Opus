@@ -7,6 +7,7 @@ import { ChoiceChips } from "../fields/ChoiceChipsField";
 import { SelectField } from "../fields/SelectField";
 import { HiddenField } from "../fields/HiddenField";
 import { DashboardContentContainer } from "../DashboardContentContainer";
+import { useOpusI18n } from "@/components/OpusI18n";
 import styles from "./RecurrenceEditor.module.css";
 
 export type RecurrenceFrequency = "daily" | "weekly" | "monthly" | "yearly";
@@ -30,27 +31,35 @@ export type RecurrenceEditorProps = {
   onChange: (value: RecurrenceValue) => void;
 };
 
-const days = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
-const frequencyOptions = ["day(s)", "week(s)", "month(s)", "year(s)"];
-const frequencyLabels: Record<RecurrenceFrequency, string> = {
-  daily: "day(s)",
-  weekly: "week(s)",
-  monthly: "month(s)",
-  yearly: "year(s)",
-};
-const frequenciesByLabel: Record<string, RecurrenceFrequency> = {
-  "day(s)": "daily",
-  "week(s)": "weekly",
-  "month(s)": "monthly",
-  "year(s)": "yearly",
-};
-const endOptions = [
-  { label: "Never", value: "never" },
-  { label: "On date", value: "on" },
-  { label: "After occurrences", value: "after" },
-] as const;
-
 export function RecurrenceEditor({ value, onChange }: RecurrenceEditorProps) {
+  const { locale, t } = useOpusI18n();
+  const weekdayFormatter = new Intl.DateTimeFormat(locale, { weekday: "short" });
+  const days = Array.from({ length: 7 }, (_, index) =>
+    weekdayFormatter.format(new Date(Date.UTC(2024, 0, 7 + index))),
+  );
+  const frequencyOptions = [
+    t("recurrence.day", "day(s)"),
+    t("recurrence.week", "week(s)"),
+    t("recurrence.month", "month(s)"),
+    t("recurrence.year", "year(s)"),
+  ];
+  const frequencyLabels: Record<RecurrenceFrequency, string> = {
+    daily: frequencyOptions[0],
+    weekly: frequencyOptions[1],
+    monthly: frequencyOptions[2],
+    yearly: frequencyOptions[3],
+  };
+  const frequenciesByLabel: Record<string, RecurrenceFrequency> = {
+    [frequencyOptions[0]]: "daily",
+    [frequencyOptions[1]]: "weekly",
+    [frequencyOptions[2]]: "monthly",
+    [frequencyOptions[3]]: "yearly",
+  };
+  const endOptions = [
+    { label: t("recurrence.never", "Never"), value: "never" },
+    { label: t("recurrence.onDate", "On date"), value: "on" },
+    { label: t("recurrence.afterOccurrences", "After occurrences"), value: "after" },
+  ] as const;
   const mode = value.mode === "date-range" ? "date-range" : "recurrence";
   const commit = (nextValue: RecurrenceValue) => {
     if (nextValue.mode === "date-range") {
@@ -66,21 +75,21 @@ export function RecurrenceEditor({ value, onChange }: RecurrenceEditorProps) {
 
   return (
     <DashboardContentContainer className={styles.root} data-component="recurrence-editor" width="full">
-      <section className={styles.content} aria-label="Recurrence">
+      <section className={styles.content} aria-label={t("recurrence.label", "Recurrence")}>
         <HiddenField
           id="recurrence-mode-value"
-          label="Recurrence mode"
+          label={t("recurrence.mode", "Recurrence mode")}
           name="recurrence.mode"
           showPreview={false}
           value={mode}
         />
         <ChoiceChips
           id="recurrence-mode"
-          label="Schedule type"
+          label={t("recurrence.scheduleType", "Schedule type")}
           labelVisuallyHidden
           options={[
-            { label: "Repeating", value: "recurrence" },
-            { label: "Date range", value: "date-range" },
+            { label: t("recurrence.repeating", "Repeating"), value: "recurrence" },
+            { label: t("recurrence.dateRange", "Date range"), value: "date-range" },
           ]}
           selectionMode="single"
           size="sm"
@@ -99,14 +108,14 @@ export function RecurrenceEditor({ value, onChange }: RecurrenceEditorProps) {
           <div className={styles.dateRange}>
             <DateField
               id="recurrence-date-from"
-              label="From"
+              label={t("recurrence.from", "From")}
               name="recurrence.dateFrom"
               value={value.dateFrom}
               onChange={(event) => commit({ ...value, dateFrom: event.target.value })}
             />
             <DateField
               id="recurrence-date-to"
-              label="To"
+              label={t("recurrence.to", "To")}
               min={value.dateFrom || undefined}
               name="recurrence.dateTo"
               value={value.dateTo}
@@ -117,17 +126,17 @@ export function RecurrenceEditor({ value, onChange }: RecurrenceEditorProps) {
           <>
             <HiddenField
               id="recurrence-frequency-value"
-              label="Recurrence frequency value"
+              label={t("recurrence.frequencyValue", "Recurrence frequency value")}
               name="recurrence.frequency"
               showPreview={false}
               value={value.frequency}
             />
             <div className={styles.line}>
-              <span>Every</span>
+              <span>{t("recurrence.every", "Every")}</span>
               <div className={styles.intervalField}>
                 <NumberField
                   id="recurrence-interval"
-                  label="Interval"
+                  label={t("recurrence.interval", "Interval")}
                   labelVisuallyHidden
                   min={1}
                   name="recurrence.interval"
@@ -139,7 +148,7 @@ export function RecurrenceEditor({ value, onChange }: RecurrenceEditorProps) {
               <div className={styles.frequencyField}>
                 <SelectField
                   id="recurrence-frequency"
-                  label="Frequency"
+                  label={t("recurrence.frequency", "Frequency")}
                   labelVisuallyHidden
                   options={frequencyOptions}
                   size="sm"
@@ -157,7 +166,7 @@ export function RecurrenceEditor({ value, onChange }: RecurrenceEditorProps) {
             {value.frequency === "weekly" ? (
               <ChoiceChips
                 id="recurrence-weekdays"
-                label="Repeat on"
+                label={t("recurrence.repeatOn", "Repeat on")}
                 labelVisuallyHidden
                 name="recurrence.weekdays"
                 options={days.map((day, index) => ({ label: day, value: String(index) }))}
@@ -177,7 +186,7 @@ export function RecurrenceEditor({ value, onChange }: RecurrenceEditorProps) {
             ) : null}
 
             <RadioGroup
-              label="Ends"
+              label={t("recurrence.ends", "Ends")}
               mode="stacked"
               name="recurrence.ends"
               orientation="horizontal"
@@ -192,7 +201,7 @@ export function RecurrenceEditor({ value, onChange }: RecurrenceEditorProps) {
             {value.ends === "on" ? (
               <DateField
                 id="recurrence-end-date"
-                label="End date"
+                label={t("recurrence.endDate", "End date")}
                 name="recurrence.endDate"
                 value={value.endDate ?? ""}
                 onChange={(event) => commit({ ...value, endDate: event.target.value })}
@@ -201,7 +210,7 @@ export function RecurrenceEditor({ value, onChange }: RecurrenceEditorProps) {
             {value.ends === "after" ? (
               <NumberField
                 id="recurrence-occurrences"
-                label="Occurrences"
+                label={t("recurrence.occurrences", "Occurrences")}
                 min={1}
                 name="recurrence.occurrences"
                 value={value.occurrences ?? 1}

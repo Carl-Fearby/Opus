@@ -1,5 +1,6 @@
 "use client";
 
+import { useOpusI18n } from "@/components/OpusI18n";
 import "@/lib/fontawesome";
 import { useMemo, useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -18,11 +19,11 @@ export type PasswordRequirement = {
   test: (value: string) => boolean;
 };
 
-const defaultRequirements: PasswordRequirement[] = [
-  { id: "length", label: "At least 8 characters", test: (value) => value.length >= 8 },
-  { id: "upper", label: "One uppercase letter", test: (value) => /[A-Z]/.test(value) },
-  { id: "lower", label: "One lowercase letter", test: (value) => /[a-z]/.test(value) },
-  { id: "number", label: "One number", test: (value) => /\d/.test(value) },
+const defaultRequirements: Array<PasswordRequirement & { labelKey: string }> = [
+  { id: "length", label: "At least 8 characters", labelKey: "passwordStrength.length", test: (value) => value.length >= 8 },
+  { id: "upper", label: "One uppercase letter", labelKey: "passwordStrength.upper", test: (value) => /[A-Z]/.test(value) },
+  { id: "lower", label: "One lowercase letter", labelKey: "passwordStrength.lower", test: (value) => /[a-z]/.test(value) },
+  { id: "number", label: "One number", labelKey: "passwordStrength.number", test: (value) => /\d/.test(value) },
 ];
 
 function scorePassword(value: string, requirements: PasswordRequirement[]) {
@@ -75,9 +76,16 @@ export function PasswordStrengthField({
   value,
   onChange,
 }: PasswordStrengthFieldProps) {
+  const { t } = useOpusI18n();
+  const displayRequirements = requirements.map((requirement) => ({
+    ...requirement,
+    label: (requirement as PasswordRequirement & { labelKey?: string }).labelKey
+      ? t((requirement as PasswordRequirement & { labelKey: string }).labelKey, requirement.label)
+      : requirement.label,
+  }));
   const shellAria = useFieldShellAria();
   const [revealed, setRevealed] = useState(false);
-  const score = useMemo(() => scorePassword(value, requirements), [requirements, value]);
+  const score = useMemo(() => scorePassword(value, displayRequirements), [displayRequirements, value]);
   const strengthLevel =
     score >= 100 ? "strong" : score >= 66 ? "good" : score >= 33 ? "fair" : value ? "weak" : "empty";
   const strengthLabel =
@@ -137,7 +145,7 @@ export function PasswordStrengthField({
         </div>
         {showRequirements ? (
           <ul className={styles.requirements}>
-            {requirements.map((requirement) => {
+            {displayRequirements.map((requirement) => {
               const met = requirement.test(value);
               return (
                 <li

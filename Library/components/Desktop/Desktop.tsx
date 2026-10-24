@@ -1,5 +1,6 @@
 "use client";
 
+import { useOpusI18n } from "@/components/OpusI18n";
 import {
   useEffect,
   useRef,
@@ -62,6 +63,7 @@ export function Desktop({
   wallpaper = "aurora",
   windows = [],
 }: DesktopProps) {
+  const { t } = useOpusI18n();
   const [items, setItems] = useState(windows);
   const [selectedShortcut, setSelectedShortcut] = useState<string | null>(null);
   const [shortcutPositions, setShortcutPositions] = useState<Record<string, { x: number; y: number }>>(
@@ -177,7 +179,7 @@ export function Desktop({
 
   return (
     <section
-      aria-label="Desktop"
+      aria-label={t("desktop.label", "Desktop")}
       className={[styles.root, className].filter(Boolean).join(" ")}
       data-component="desktop"
       data-edge-to-edge={edgeToEdge ? "true" : "false"}
@@ -187,7 +189,7 @@ export function Desktop({
       }}
       ref={rootRef}
     >
-      <div className={styles.shortcuts} aria-label="Desktop shortcuts">
+      <div className={styles.shortcuts} aria-label={t("desktop.shortcuts", "Desktop shortcuts")}>
         {shortcuts.map((shortcut) => {
           const position = shortcutPositions[shortcut.id] ?? { x: 14, y: 18 };
           return (

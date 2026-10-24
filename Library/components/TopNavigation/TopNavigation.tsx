@@ -1,5 +1,6 @@
 "use client";
 
+import { useOpusI18n } from "@/components/OpusI18n";
 import {
   useCallback,
   useContext,
@@ -318,6 +319,7 @@ export function TopNavigation({
   onSelect,
   showShortcuts = true,
 }: TopNavigationProps) {
+  const { t } = useOpusI18n();
   const closeTimeoutRef = useRef<number | null>(null);
   const [presentMenus, setPresentMenus] = useState<Set<string>>(() => new Set());
 
@@ -405,7 +407,7 @@ export function TopNavigation({
         onMouseEnter={clearCloseTimeout}
         onMouseLeave={scheduleClose}
       >
-        <nav aria-label="Application" className={styles.nav}>
+        <nav aria-label={t("topNavigation.label", "Application")} className={styles.nav}>
           {children ?? (
             <TopNavigationBarMenus
               density={density}

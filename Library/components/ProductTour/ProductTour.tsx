@@ -2,6 +2,7 @@
 
 import { useEffect, useLayoutEffect, useRef, useState, type CSSProperties } from "react";
 import { createThemedPortal as createPortal } from "@/lib/theme/createThemedPortal";
+import { useOpusI18n } from "@/components/OpusI18n";
 import { Button } from "@/components/fields";
 import styles from "./ProductTour.module.css";
 
@@ -74,6 +75,7 @@ export function ProductTour({
   onComplete,
   onDismiss,
 }: ProductTourProps) {
+  const { t } = useOpusI18n();
   const [internalStep, setInternalStep] = useState(0);
   const [renderedStep, setRenderedStep] = useState(step ?? 0);
   const [present, setPresent] = useState(open);
@@ -210,24 +212,26 @@ export function ProductTour({
         style={{ left: rect.left - 6, top: rect.top - 6, width: rect.width + 12, height: rect.height + 12 }}
       />
       <section
-        aria-label="Product tour"
+        aria-label={t("productTour.label", "Product tour")}
         aria-live="polite"
         className={`${styles.card} ${cardVisible ? styles.cardVisible : styles.cardHidden}`}
         ref={cardRef}
         style={cardPosition(rect, current.placement, cardSize)}
       >
-        <small>Step {renderedStep + 1} of {steps.length}</small>
+        <small>{t("productTour.stepOf", "Step {current} of {total}", { current: renderedStep + 1, total: steps.length })}</small>
         <h2>{current.title}</h2>
         <p>{current.description}</p>
         <footer>
-          <Button size="sm" variant="ghost" onClick={onDismiss}>Skip</Button>
+          <Button size="sm" variant="ghost" onClick={onDismiss}>{t("productTour.skip", "Skip")}</Button>
           <span />
-          {renderedStep > 0 ? <Button size="sm" variant="secondary" onClick={() => move(renderedStep - 1)}>Back</Button> : null}
+          {renderedStep > 0 ? <Button size="sm" variant="secondary" onClick={() => move(renderedStep - 1)}>{t("productTour.back", "Back")}</Button> : null}
           <Button
             size="sm"
             onClick={() => (renderedStep === steps.length - 1 ? onComplete?.() : move(renderedStep + 1))}
           >
-            {renderedStep === steps.length - 1 ? "Finish" : "Next"}
+            {renderedStep === steps.length - 1
+              ? t("productTour.finish", "Finish")
+              : t("productTour.next", "Next")}
           </Button>
         </footer>
       </section>

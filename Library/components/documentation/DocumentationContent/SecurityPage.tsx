@@ -7,7 +7,7 @@ import { DocumentationTopBar } from "@/components/documentation/DocumentationTop
 import { ThemeSettingsButton } from "@/components/documentation/ThemeSettingsButton";
 import { useStoredTheme } from "@/lib/theme/useStoredTheme";
 import { useLocale } from "@/lib/i18n/LocaleProvider";
-import type { MessageKey } from "@/lib/i18n";
+import type { MessageKey } from "@/lib/i18n/config";
 import shellStyles from "./documentation.module.css";
 import styles from "./security.module.css";
 

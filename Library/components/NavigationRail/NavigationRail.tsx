@@ -1,6 +1,7 @@
 "use client";
 
 import type { ReactNode } from "react";
+import { useOpusI18n } from "@/components/OpusI18n";
 import styles from "./NavigationRail.module.css";
 
 export type NavigationRailItem = {
@@ -18,9 +19,10 @@ export type NavigationRailProps = {
 };
 
 export function NavigationRail({ collapsed = false, items, onChange, value }: NavigationRailProps) {
+  const { t } = useOpusI18n();
   return (
     <nav
-      aria-label="Navigation rail"
+      aria-label={t("navigationRail.label", "Navigation rail")}
       className={styles.root}
       data-collapsed={collapsed || undefined}
     >

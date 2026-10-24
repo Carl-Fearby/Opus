@@ -1,5 +1,6 @@
 "use client";
 
+import { useOpusI18n } from "@/components/OpusI18n";
 import type { GalleryImage, ImageThumbnailSize } from "@/components/fields/types";
 import { ImageThumbnail } from "@/components/ImageThumbnail";
 import styles from "./ImageGallery.module.css";
@@ -17,16 +18,17 @@ export function ImageGallery({
   showCaptions = true,
   thumbnailSize = "small",
 }: ImageGalleryProps) {
+  const { t } = useOpusI18n();
   if (!images.length) {
     return (
       <div className={styles.empty} role="status">
-        No gallery images available.
+        {t("imageGallery.empty", "No gallery images available.")}
       </div>
     );
   }
 
   return (
-    <div aria-label="Image gallery" className={styles.gallery} data-columns={columns}>
+    <div aria-label={t("imageGallery.label", "Image gallery")} className={styles.gallery} data-columns={columns}>
       {images.map((image) => (
         <ImageThumbnail
           ellipsisCaption

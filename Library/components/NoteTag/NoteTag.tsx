@@ -1,5 +1,6 @@
 "use client";
 
+import { useOpusI18n } from "@/components/OpusI18n";
 import { useEffect, useMemo, useRef, useState, type ReactNode } from "react";
 import styles from "./NoteTag.module.css";
 
@@ -72,6 +73,7 @@ export function NoteTag({
   size = "md",
   tone,
 }: NoteTagProps) {
+  const { t } = useOpusI18n();
   const tag = { id, label, tone };
 
   return (
@@ -84,7 +86,7 @@ export function NoteTag({
       <span>{label}</span>
       {removable ? (
         <button
-          aria-label={`Remove ${label} tag`}
+          aria-label={t("noteTag.remove", "Remove {label} tag", { label })}
           className={styles.removeButton}
           onClick={(event) => {
             event.stopPropagation();
@@ -129,6 +131,7 @@ export function NoteTagPicker({
   options = DEFAULT_NOTE_TAG_OPTIONS,
   selectedTags,
 }: NoteTagPickerProps) {
+  const { t } = useOpusI18n();
   const rootRef = useRef<HTMLDivElement>(null);
   const [isOpen, setIsOpen] = useState(false);
   const selectedKeys = useMemo(() => new Set(selectedTags.map(getTagKey)), [selectedTags]);
@@ -183,7 +186,7 @@ export function NoteTagPicker({
       </button>
       {isOpen ? (
         <div className={styles.menu} role="listbox" aria-label={label}>
-          <div className={styles.menuHeader}>Tags</div>
+          <div className={styles.menuHeader}>{t("noteTag.tags", "Tags")}</div>
           <div className={styles.options}>
             {options.map((tag) => {
               const selected = selectedKeys.has(getTagKey(tag));

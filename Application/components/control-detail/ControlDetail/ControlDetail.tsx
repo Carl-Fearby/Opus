@@ -7,7 +7,6 @@ import { useComponentsTheme, useSetComponentsPageHeader } from "@/components/dev
 import { useComponentSettings } from "@/components/development/ComponentsShell/ComponentSettingsContext";
 import { useComponentDescription } from "@/lib/i18n/useComponentDescription";
 import { useComponentTitle } from "@/lib/i18n/useComponentTitle";
-import { useComponentDocumentation } from "@/lib/i18n/useComponentDocumentation";
 import { componentRawPath } from "@/lib/controls/routes";
 import { generateUsageCode } from "@/lib/controls/generateUsageCode";
 import { isFullBleedPreview } from "@/lib/controls/previewPresentation";
@@ -46,7 +45,6 @@ export function ControlDetail({ control, defaultSettings, documentation }: Contr
   const { t } = useOpusI18n();
   const describe = useComponentDescription();
   const titleFor = useComponentTitle();
-  const localizeDocs = useComponentDocumentation();
   useSetComponentsPageHeader(titleFor(control.slug, control.title), describe(control.slug, control.description));
   const {
     previewAccent,
@@ -78,7 +76,7 @@ export function ControlDetail({ control, defaultSettings, documentation }: Contr
       previewTileAccentSecondary,
     ],
   );
-  const localizedDocumentation = documentation ? localizeDocs(control.slug, documentation) : undefined;
+  const localizedDocumentation = documentation;
   const previewSettings = useMemo(
     () => control.slug === "app-setup"
       ? {

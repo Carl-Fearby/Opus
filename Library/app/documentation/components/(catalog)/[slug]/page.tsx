@@ -4,6 +4,8 @@ import { getDefaultSettings } from "@/lib/controls/defaults";
 import { getAllSlugs, getControl } from "@/lib/controls/registry";
 import type { ControlSlug } from "@/lib/controls/types";
 import { getComponentDocumentation } from "@/lib/documentation/componentDocs";
+import { localizeComponentDocumentation } from "@/lib/i18n/componentDocumentation";
+import { readServerLocale } from "@/lib/i18n/server";
 
 type ControlPageProps = {
   params: Promise<{ slug: string }>;
@@ -36,12 +38,14 @@ export default async function ControlPage({ params }: ControlPageProps) {
   }
 
   const defaultSettings = getDefaultSettings(slug as ControlSlug);
+  const locale = await readServerLocale();
+  const docs = getComponentDocumentation(slug as ControlSlug)?.content;
 
   return (
     <ControlDetail
       control={control}
       defaultSettings={defaultSettings}
-      documentation={getComponentDocumentation(slug as ControlSlug)?.content}
+      documentation={docs ? localizeComponentDocumentation(locale, slug, docs) : undefined}
     />
   );
 }

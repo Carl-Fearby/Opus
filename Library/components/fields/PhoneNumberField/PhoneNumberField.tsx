@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useMemo, useRef, useState } from "react";
+import { useOpusI18n } from "@/components/OpusI18n";
 import { FieldShell, fieldInputAriaProps, useFieldShellAria } from "@/components/fields/FieldShell";
 import type { FieldMode, InputControlSize, LabelPosition } from "@/components/fields/types";
 import shared from "../shared/fieldControl.module.css";
@@ -58,6 +59,7 @@ export function PhoneNumberField({
   onChange,
   onCountryCodeChange,
 }: PhoneNumberFieldProps) {
+  const { t } = useOpusI18n();
   const shellAria = useFieldShellAria();
   const rootRef = useRef<HTMLDivElement>(null);
   const [open, setOpen] = useState(false);
@@ -129,7 +131,10 @@ export function PhoneNumberField({
           <button
             aria-expanded={open}
             aria-haspopup="listbox"
-            aria-label={`Country code: ${activeCountry.label} ${activeCountry.dialCode}`}
+            aria-label={t("field.countryCodeAria", "Country code: {country} {code}", {
+              country: activeCountry.label,
+              code: activeCountry.dialCode,
+            })}
             className={[inputControlSizeClassName[size], shared.trigger, styles.country, open ? shared.triggerOpen : ""]
               .filter(Boolean)
               .join(" ")}
@@ -146,10 +151,10 @@ export function PhoneNumberField({
           {open ? (
             <div className={`${shared.panel} ${styles.panel}`}>
               <input
-                aria-label="Search countries"
+                aria-label={t("field.searchCountries", "Search countries")}
                 autoFocus
                 className={shared.search}
-                placeholder="Search countries…"
+                placeholder={t("field.searchCountriesPlaceholder", "Search countries…")}
                 type="search"
                 value={query}
                 onChange={(event) => setQuery(event.target.value)}
@@ -178,7 +183,7 @@ export function PhoneNumberField({
                   </button>
                 ))}
                 {filteredCountries.length === 0 ? (
-                  <p className={styles.empty}>No countries match.</p>
+                  <p className={styles.empty}>{t("field.noCountriesMatch", "No countries match.")}</p>
                 ) : null}
               </div>
             </div>

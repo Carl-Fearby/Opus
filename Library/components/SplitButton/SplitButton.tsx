@@ -1,5 +1,6 @@
 "use client";
 
+import { useOpusI18n } from "@/components/OpusI18n";
 import { useEffect, useId, useRef, useState, type ReactNode } from "react";
 import type { ButtonVariant } from "@/components/fields/Button";
 import styles from "./SplitButton.module.css";
@@ -27,6 +28,7 @@ export function SplitButton({
   onClick,
   variant = "primary",
 }: SplitButtonProps) {
+  const { t } = useOpusI18n();
   const [open, setOpen] = useState(false);
   const rootRef = useRef<HTMLDivElement>(null);
   const menuId = useId();
@@ -56,7 +58,7 @@ export function SplitButton({
         aria-controls={menuId}
         aria-expanded={open}
         aria-haspopup="menu"
-        aria-label="More actions"
+        aria-label={t("splitButton.more", "More actions")}
         className={styles.caret}
         disabled={disabled || actions.length === 0}
         onClick={() => setOpen((current) => !current)}

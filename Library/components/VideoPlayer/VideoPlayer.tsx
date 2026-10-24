@@ -1,5 +1,6 @@
 "use client";
 
+import { useOpusI18n } from "@/components/OpusI18n";
 import {
   useCallback,
   useEffect,
@@ -173,6 +174,7 @@ export function VideoPlayer({
   title = "Video",
   tracks,
 }: VideoPlayerProps) {
+  const { t } = useOpusI18n();
   const resolvedTracks = useMemo(
     () => resolveTracks({ src, title, tracks }),
     [src, title, tracks],
@@ -647,7 +649,7 @@ export function VideoPlayer({
         <div className={styles.toolbar}>
           {canNavigate ? (
             <button
-              aria-label="Previous video"
+              aria-label={t("video.previous", "Previous video")}
               className={styles.iconButton}
               disabled={!canGoPrevious}
               type="button"
@@ -668,7 +670,7 @@ export function VideoPlayer({
           </button>
           {canNavigate ? (
             <button
-              aria-label="Next video"
+              aria-label={t("video.next", "Next video")}
               className={styles.iconButton}
               disabled={!canGoNext}
               type="button"
@@ -693,7 +695,7 @@ export function VideoPlayer({
             />
           </button>
           <input
-            aria-label="Volume"
+            aria-label={t("video.volume", "Volume")}
             className={styles.volume}
             max={1}
             min={0}

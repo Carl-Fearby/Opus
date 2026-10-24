@@ -1,6 +1,7 @@
 "use client";
 
 import { DateField } from "../DateField";
+import { useOpusI18n } from "@/components/OpusI18n";
 import styles from "./TimeRangeField.module.css";
 import type { ControlRadius } from "../types";
 
@@ -27,18 +28,19 @@ export function TimeRangeField({
   onChange,
   radius,
 }: TimeRangeFieldProps) {
+  const { t } = useOpusI18n();
   const invalid = Boolean(value.start && value.end && value.end <= value.start);
 
   return (
     <fieldset className={styles.root} data-component="time-range-field">
       <legend className={styles.legend}>
-        {label}{required ? <span className={styles.required}> (required)</span> : null}
+        {label}{required ? <span className={styles.required}> {t("field.required", "(required)")}</span> : null}
       </legend>
       <div className={styles.row}>
         <DateField
           id={`${id}-start`}
           inputProps={{ step }}
-          label="Start time"
+          label={t("field.startTime", "Start time")}
           radius={radius}
           name={`${name}.start`}
           required={required}
@@ -46,11 +48,11 @@ export function TimeRangeField({
           value={value.start}
           onChange={(event) => onChange({ ...value, start: event.target.value })}
         />
-        <span className={styles.separator} aria-hidden="true">to</span>
+        <span className={styles.separator} aria-hidden="true">{t("field.to", "to")}</span>
         <DateField
           id={`${id}-end`}
           inputProps={{ step }}
-          label="End time"
+          label={t("field.endTime", "End time")}
           radius={radius}
           name={`${name}.end`}
           required={required}
@@ -59,7 +61,7 @@ export function TimeRangeField({
           onChange={(event) => onChange({ ...value, end: event.target.value })}
         />
       </div>
-      {invalid ? <p className={styles.error} role="alert">End time must be after start time</p> : null}
+      {invalid ? <p className={styles.error} role="alert">{t("field.endTimeAfterStart", "End time must be after start time")}</p> : null}
     </fieldset>
   );
 }

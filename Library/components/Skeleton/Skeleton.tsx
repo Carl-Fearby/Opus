@@ -1,3 +1,6 @@
+"use client";
+
+import { useOpusI18n } from "@/components/OpusI18n";
 import type { SkeletonAnimation, SkeletonVariant } from "@/components/fields/types";
 import styles from "./Skeleton.module.css";
 
@@ -24,12 +27,13 @@ export function Skeleton({
   lines = 3,
   variant = "text",
 }: SkeletonProps) {
+  const { t } = useOpusI18n();
   const safeLines = clampLines(lines);
   const lineItems = Array.from({ length: safeLines }, (_, index) => index);
 
   if (variant === "avatar") {
     return (
-      <div aria-busy="true" aria-label="Loading content" className={styles.skeleton} data-animation={animation} data-variant={variant} role="status">
+      <div aria-busy="true" aria-label={t("skeleton.loadingContent", "Loading content")} className={styles.skeleton} data-animation={animation} data-variant={variant} role="status">
         <span aria-hidden="true" className={styles.avatar} />
         <span className={styles.avatarContent}>
           {lineItems.map((index) => (
@@ -42,7 +46,7 @@ export function Skeleton({
 
   if (variant === "card") {
     return (
-      <div aria-busy="true" aria-label="Loading content" className={styles.skeleton} data-animation={animation} data-variant={variant} role="status">
+      <div aria-busy="true" aria-label={t("skeleton.loadingContent", "Loading content")} className={styles.skeleton} data-animation={animation} data-variant={variant} role="status">
         <span aria-hidden="true" className={styles.media} />
         <span className={styles.stack}>
           {lineItems.map((index) => (
@@ -55,7 +59,7 @@ export function Skeleton({
 
   if (variant === "table") {
     return (
-      <div aria-busy="true" aria-label="Loading table" className={styles.skeleton} data-animation={animation} data-variant={variant} role="status">
+      <div aria-busy="true" aria-label={t("skeleton.loadingTable", "Loading table")} className={styles.skeleton} data-animation={animation} data-variant={variant} role="status">
         {Array.from({ length: 4 }, (_, rowIndex) => (
           <span className={styles.tableRow} key={rowIndex}>
             {Array.from({ length: 4 }, (_, cellIndex) => (
@@ -68,7 +72,7 @@ export function Skeleton({
   }
 
   return (
-    <div aria-busy="true" aria-label="Loading content" className={styles.skeleton} data-animation={animation} data-variant={variant} role="status">
+    <div aria-busy="true" aria-label={t("skeleton.loadingContent", "Loading content")} className={styles.skeleton} data-animation={animation} data-variant={variant} role="status">
       {lineItems.map((index) => (
         <SkeletonLine index={index} key={index} />
       ))}

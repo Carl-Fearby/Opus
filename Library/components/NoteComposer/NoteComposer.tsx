@@ -1,5 +1,6 @@
 "use client";
 
+import { useOpusI18n } from "@/components/OpusI18n";
 import { useLayoutEffect, useRef, useState, type ChangeEvent, type KeyboardEvent } from "react";
 import { CatalogIcon } from "@/components/CatalogIcon";
 import { EmojiPicker } from "@/components/EmojiPicker";
@@ -58,6 +59,7 @@ export function NoteComposer({
   tagOptions = DEFAULT_NOTE_TAG_OPTIONS,
   value,
 }: NoteComposerProps) {
+  const { t } = useOpusI18n();
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const selectionRef = useRef({ end: 0, start: 0 });
   const pendingCaretRef = useRef<number | null>(null);
@@ -188,7 +190,7 @@ export function NoteComposer({
         <div className={styles.tools}>
           {showAttach ? (
             <button
-              aria-label="Attach file"
+              aria-label={t("notes.attachFile", "Attach file")}
               className={styles.toolButton}
               onClick={onAttachClick}
               type="button"
@@ -198,7 +200,7 @@ export function NoteComposer({
           ) : null}
           {showMention ? (
             <button
-              aria-label="Mention someone"
+              aria-label={t("notes.mention", "Mention someone")}
               className={styles.toolButton}
               onClick={onMentionClick}
               type="button"
@@ -212,7 +214,7 @@ export function NoteComposer({
               placement="top"
               trigger={
                 <button
-                  aria-label="Add emoji"
+                  aria-label={t("notes.addEmoji", "Add emoji")}
                   className={styles.toolButton}
                   type="button"
                   onMouseDown={(event) => {

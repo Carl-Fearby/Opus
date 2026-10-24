@@ -1,5 +1,6 @@
 "use client";
 
+import { useOpusI18n } from "@/components/OpusI18n";
 import {
   createContext,
   useCallback,
@@ -201,7 +202,7 @@ export function Sidebar({
   footerPaddingTop = false,
   header,
   menu,
-  navLabel = "Sidebar navigation",
+  navLabel,
   onCollapsedGroupSelect,
   onSelect,
   paddingBottom = false,
@@ -213,10 +214,12 @@ export function Sidebar({
   side = "left",
   storageKey,
 }: SidebarProps) {
+  const { t } = useOpusI18n();
+  const displayNavLabel = navLabel ?? t("sidebar.navigation", "Sidebar navigation");
   const resolvedStorageKey = useMemo(
     () =>
-      `${SIDEBAR_STORAGE_PREFIX}:${storageKey ?? hashString(`${navLabel}:${serialiseSidebarMenu(menu)}`)}`,
-    [menu, navLabel, storageKey],
+      `${SIDEBAR_STORAGE_PREFIX}:${storageKey ?? hashString(`${displayNavLabel}:${serialiseSidebarMenu(menu)}`)}`,
+    [displayNavLabel, menu, storageKey],
   );
   const [persistedState, setPersistedState] = useState<SidebarPersistedState>(
     {},
@@ -327,7 +330,7 @@ export function Sidebar({
       }}
     >
       <aside
-        aria-label="Sidebar"
+        aria-label={t("sidebar.label", "Sidebar")}
         className={styles.sidebar}
         data-collapsed={collapsed ? "true" : "false"}
         data-density={density}
@@ -345,12 +348,12 @@ export function Sidebar({
         {header ? <div className={styles.header}>{header}</div> : null}
         <CustomScrollbar
           className={styles.body}
-          label={navLabel}
+          label={displayNavLabel}
           orientation="vertical"
         >
           <div className={styles.bodyContent}>
             {menu ? (
-              <SidebarNav aria-label={navLabel}>
+              <SidebarNav aria-label={displayNavLabel}>
                 {menu.map((item) =>
                   renderSidebarMenuItem({
                     depth: 0,
@@ -609,6 +612,7 @@ export function SidebarGroup({
   id,
   label,
 }: SidebarGroupProps) {
+  const { t } = useOpusI18n();
   const {
     collapsed,
     getGroupOpenState,
@@ -647,7 +651,11 @@ export function SidebarGroup({
           >
             <button
               aria-expanded={collapsedOpen}
-              aria-label={`${collapsedOpen ? "Close" : "Open"} ${label}`}
+              aria-label={
+                collapsedOpen
+                  ? t("sidebar.close", "Close {label}", { label })
+                  : t("sidebar.open", "Open {label}", { label })
+              }
               className={styles.collapsedGroup}
               onClick={() => {
                 setCollapsedOpen((current) => !current);

@@ -2,6 +2,7 @@
 
 import type { ModelAsset, ModelThumbnailSize } from "@/components/fields/types";
 import { ModelThumbnail } from "@/components/ModelThumbnail";
+import { useOpusI18n } from "@/components/OpusI18n";
 import styles from "./ModelGallery.module.css";
 
 type ModelGalleryProps = {
@@ -17,16 +18,21 @@ export function ModelGallery({
   showCaptions = true,
   thumbnailSize = "small",
 }: ModelGalleryProps) {
+  const { t } = useOpusI18n();
   if (!assets.length) {
     return (
       <div className={styles.empty} role="status">
-        No 3D assets available.
+        {t("modelGallery.empty", "No 3D assets available.")}
       </div>
     );
   }
 
   return (
-    <div aria-label="3D asset gallery" className={styles.gallery} data-columns={columns}>
+    <div
+      aria-label={t("modelGallery.label", "3D asset gallery")}
+      className={styles.gallery}
+      data-columns={columns}
+    >
       {assets.map((asset) => (
         <ModelThumbnail
           asset={asset}

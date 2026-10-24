@@ -1,5 +1,6 @@
 "use client";
 
+import { useOpusI18n } from "@/components/OpusI18n";
 import {
   useEffect,
   useId,
@@ -55,11 +56,13 @@ export function OpusDateTimeInput({
   min,
   name,
   onChange,
-  placeholder = "Select date and time",
+  placeholder,
   readOnly,
   required,
   value,
 }: OpusDateTimeInputProps) {
+  const { t } = useOpusI18n();
+  const displayPlaceholder = placeholder ?? t("field.selectDateTime", "Select date and time");
   const panelId = useId();
   const rootRef = useRef<HTMLDivElement>(null);
   const panelRef = useRef<HTMLDivElement>(null);
@@ -189,9 +192,9 @@ export function OpusDateTimeInput({
                 <>
                   <div className={styles.timeRow}>
                     <label className={styles.timeField}>
-                      <span>Hour</span>
+                      <span>{t("field.hour", "Hour")}</span>
                       <select
-                        aria-label="Hour"
+                        aria-label={t("field.hour", "Hour")}
                         className={styles.timeSelect}
                         value={draftHours}
                         onChange={(event) => {
@@ -208,9 +211,9 @@ export function OpusDateTimeInput({
                       </select>
                     </label>
                     <label className={styles.timeField}>
-                      <span>Minute</span>
+                      <span>{t("field.minute", "Minute")}</span>
                       <select
-                        aria-label="Minute"
+                        aria-label={t("field.minute", "Minute")}
                         className={styles.timeSelect}
                         value={draftMinutes}
                         onChange={(event) => {
@@ -239,10 +242,10 @@ export function OpusDateTimeInput({
                         setOpen(false);
                       }}
                     >
-                      Clear
+                      {t("common.clear", "Clear")}
                     </button>
                     <button className={styles.footerAction} type="button" onClick={handleNow}>
-                      Now
+                      {t("calendar.now", "Now")}
                     </button>
                     <button
                       className={styles.footerActionPrimary}
@@ -252,7 +255,7 @@ export function OpusDateTimeInput({
                         setOpen(false);
                       }}
                     >
-                      Done
+                      {t("common.done", "Done")}
                     </button>
                   </div>
                 </>
@@ -284,7 +287,7 @@ export function OpusDateTimeInput({
         }}
       >
         <span className={display ? triggerStyles.value : triggerStyles.placeholder}>
-          {display || placeholder}
+          {display || displayPlaceholder}
         </span>
         <span aria-hidden="true" className={triggerStyles.icon}>
           <CatalogIcon iconName="calendar" />

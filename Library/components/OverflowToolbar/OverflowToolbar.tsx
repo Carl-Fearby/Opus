@@ -13,6 +13,7 @@ import {
   type ReactNode,
 } from "react";
 import { Button } from "@/components/fields/Button";
+import { useOpusI18n } from "@/components/OpusI18n";
 import styles from "./OverflowToolbar.module.css";
 
 function withoutIds(children: ReactNode): ReactNode[] {
@@ -42,6 +43,7 @@ export function OverflowToolbar({
   label = "Toolbar",
   moreLabel = "More",
 }: OverflowToolbarProps) {
+  const { t } = useOpusI18n();
   const menuId = useId();
   const rootRef = useRef<HTMLDivElement>(null);
   const measureRef = useRef<HTMLDivElement>(null);
@@ -163,7 +165,7 @@ export function OverflowToolbar({
           </Button>
           {open ? (
             <div
-              aria-label={`${moreLabel} actions`}
+              aria-label={t("overflowToolbar.actions", "{label} actions", { label: moreLabel })}
               className={styles.panel}
               id={menuId}
               onClick={() => setOpen(false)}

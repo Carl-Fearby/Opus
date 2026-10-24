@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState, type PointerEvent as ReactPointerEvent } from "react";
+import { useOpusI18n } from "@/components/OpusI18n";
 import {
   COLOR_QUICK_SWATCHES,
   hexToHsv,
@@ -17,6 +18,7 @@ export type ColorPickerPanelProps = {
 };
 
 export function ColorPickerPanel({ onClose, onSelect, value }: ColorPickerPanelProps) {
+  const { t } = useOpusI18n();
   const initial = hexToHsv(value || "#8f6cff");
   const [hue, setHue] = useState(initial.h);
   const [saturation, setSaturation] = useState(initial.s);
@@ -86,9 +88,9 @@ export function ColorPickerPanel({ onClose, onSelect, value }: ColorPickerPanelP
   }
 
   return (
-    <div className={styles.panel} role="dialog" aria-label="Choose colour">
+    <div className={styles.panel} role="dialog" aria-label={t("field.chooseColour", "Choose colour")}>
       <div
-        aria-label="Saturation and brightness"
+        aria-label={t("field.saturationBrightness", "Saturation and brightness")}
         className={styles.square}
         ref={squareRef}
         style={{ backgroundColor: hueToHex(hue) }}
@@ -108,7 +110,7 @@ export function ColorPickerPanel({ onClose, onSelect, value }: ColorPickerPanelP
       </div>
 
       <div
-        aria-label="Hue"
+        aria-label={t("field.hue", "Hue")}
         className={styles.hue}
         ref={hueRef}
         onPointerDown={(event) => bindDrag(event, readHue)}
@@ -123,9 +125,9 @@ export function ColorPickerPanel({ onClose, onSelect, value }: ColorPickerPanelP
       <div className={styles.hexRow}>
         <span aria-hidden="true" className={styles.preview} style={{ background: hex }} />
         <label className={styles.hexField}>
-          <span className={styles.srOnly}>Hex colour</span>
+          <span className={styles.srOnly}>{t("field.hexColour", "Hex colour")}</span>
           <input
-            aria-label="Hex colour"
+            aria-label={t("field.hexColour", "Hex colour")}
             className={styles.hexInput}
             spellCheck={false}
             value={hexDraft}
@@ -148,7 +150,7 @@ export function ColorPickerPanel({ onClose, onSelect, value }: ColorPickerPanelP
         </label>
       </div>
 
-      <div className={styles.swatches} role="listbox" aria-label="Quick colours">
+      <div className={styles.swatches} role="listbox" aria-label={t("field.quickColours", "Quick colours")}>
         {COLOR_QUICK_SWATCHES.map((swatch) => (
           <button
             aria-label={swatch}

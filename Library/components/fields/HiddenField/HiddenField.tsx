@@ -2,6 +2,7 @@ import styles from "./HiddenField.module.css";
 import type { ControlRadius } from "../types";
 import { inputControlSizeClassName } from "../shared/inputControlSizes";
 import { FieldShell } from "@/components/fields/FieldShell";
+import { useOpusI18n } from "@/components/OpusI18n";
 import type { FieldMode, InputControlSize, LabelPosition } from "@/components/fields/types";
 
 type HiddenFieldProps = {
@@ -35,6 +36,7 @@ export function HiddenField({
   transparency,
   gradient,
 }: HiddenFieldProps) {
+  const { t } = useOpusI18n();
   const fieldName = name ?? id;
 
   if (!showPreview) {
@@ -43,7 +45,7 @@ export function HiddenField({
 
   return (
     <FieldShell
-      help={help ?? "Hidden fields are not visible to users but submit with the form."}
+      help={help ?? t("field.hiddenHelp", "Hidden fields are not visible to users but submit with the form.")}
       id={id}
       label={label}
       radius={radius}
@@ -60,7 +62,7 @@ export function HiddenField({
           type="hidden"
           value={value}
         />
-        <p className={styles.note}>Not visible in the UI</p>
+        <p className={styles.note}>{t("field.notVisibleInUi", "Not visible in the UI")}</p>
         <code className={styles.meta}>
           name=&quot;{fieldName}&quot; value=&quot;{value}&quot;
         </code>

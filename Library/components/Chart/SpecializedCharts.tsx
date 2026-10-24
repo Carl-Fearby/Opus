@@ -1,4 +1,7 @@
+"use client";
+
 import type { ChartDatum, ChartSeries } from "@/components/Chart";
+import { useOpusI18n } from "@/components/OpusI18n";
 import type { ChartVariant } from "@/components/fields";
 import {
   fitWorldMapToPlot,
@@ -714,6 +717,7 @@ function ParallelCoordinates({ data, plot, showValues, styles }: SpecializedChar
 }
 
 function ContourPlot({ data, plot, showValues, styles }: SpecializedChartProps) {
+  const { t } = useOpusI18n();
   const cols = Math.max(4, Math.ceil(Math.sqrt(Math.max(data.length, 1))));
   const rows = Math.max(3, Math.ceil(data.length / cols));
   const values = data.length
@@ -770,7 +774,7 @@ function ContourPlot({ data, plot, showValues, styles }: SpecializedChartProps) 
           x={(plot.gridLeft + plot.gridRight) / 2}
           y={plot.top + 14}
         >
-          {formatValue(max)} peak
+          {formatValue(max)} {t("chart.peak", "peak")}
         </text>
       ) : null}
     </g>
@@ -778,6 +782,7 @@ function ContourPlot({ data, plot, showValues, styles }: SpecializedChartProps) 
 }
 
 function SurfacePlot({ data, plot, showValues, styles }: SpecializedChartProps) {
+  const { t } = useOpusI18n();
   const cols = 8;
   const rows = 6;
   const values = data.length
@@ -827,7 +832,7 @@ function SurfacePlot({ data, plot, showValues, styles }: SpecializedChartProps) 
           x={(plot.gridLeft + plot.gridRight) / 2}
           y={plot.top + 14}
         >
-          Surface 2D projection
+          {t("chart.surfaceProjection", "Surface 2D projection")}
         </text>
       ) : null}
     </g>

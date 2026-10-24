@@ -2,6 +2,7 @@
 
 import { Component, type ErrorInfo, type ReactNode } from "react";
 import { Button } from "@/components/fields/Button";
+import { useOpusI18n } from "@/components/OpusI18n";
 import { ErrorState } from "./ErrorState";
 
 export type ErrorBoundaryProps = {
@@ -61,14 +62,19 @@ export class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundarySt
 
     return (
       <ErrorState
-        actions={
-          <Button variant="secondary" onClick={this.reset}>
-            Try again
-          </Button>
-        }
+        actions={<TryAgainButton onReset={this.reset} />}
         description={error.message || undefined}
         status="error"
       />
     );
   }
+}
+
+function TryAgainButton({ onReset }: { onReset: () => void }) {
+  const { t } = useOpusI18n();
+  return (
+    <Button variant="secondary" onClick={onReset}>
+      {t("common.tryAgain", "Try again")}
+    </Button>
+  );
 }

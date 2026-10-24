@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, type ChangeEvent } from "react";
+import { useOpusI18n } from "@/components/OpusI18n";
 import { CatalogIcon } from "@/components/CatalogIcon";
 import { Divider } from "@/components/Divider";
 import { DropdownMenu, type DropdownMenuItemData } from "@/components/DropdownMenu";
@@ -74,6 +75,7 @@ export function ApplicationHeader({
   searchValue = "",
   showSearch = true,
 }: ApplicationHeaderProps) {
+  const { t } = useOpusI18n();
   const searchInputRef = useRef<HTMLInputElement>(null);
   const notificationActions = actions.filter((action) => action.group === "notification" || action.count !== undefined);
   const utilityActions = actions.filter((action) => action.group === "utility" || (action.group === undefined && action.count === undefined));
@@ -141,7 +143,7 @@ export function ApplicationHeader({
           />
         </div> : <span />}
 
-        <nav aria-label="Application actions" className={styles.actions}>
+        <nav aria-label={t("applicationHeader.actions", "Application actions")} className={styles.actions}>
         {createItems.length ? (
           <DropdownMenu
             items={createMenuItems}

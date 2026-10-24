@@ -36,8 +36,7 @@ import {
 } from "@/lib/controls/routes";
 import { useLocale } from "@/lib/i18n/LocaleProvider";
 import { useComponentTitle } from "@/lib/i18n/useComponentTitle";
-import { localizeNavigationGroup } from "@/lib/i18n/navigationGroupLabels";
-import { categoryMessageKey } from "@/lib/i18n";
+import { categoryMessageKey } from "@/lib/i18n/config";
 import { useComponentSettingsContext } from "./ComponentSettingsContext";
 import styles from "./ComponentsShell.module.css";
 
@@ -349,9 +348,9 @@ function NavSubgroup({
   onToggle: () => void;
 }) {
   const pathname = usePathname();
-  const { locale, t } = useLocale();
+  const { t } = useLocale();
   const titleFor = useComponentTitle();
-  const displayLabel = localizeNavigationGroup(locale, label);
+  const displayLabel = label;
   const listId = navSubgroupListId(category, label);
   const subgroupPath = categorySubgroupPath(category, label);
   const isOpen = forceOpen || open;

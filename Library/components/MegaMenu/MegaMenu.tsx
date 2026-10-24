@@ -10,6 +10,7 @@ import {
   resolveMegaMenuPortalStyle,
   type FloatingPortalStyle,
 } from "@/lib/ui/floatingPortalPosition";
+import { useOpusI18n } from "@/components/OpusI18n";
 import styles from "./MegaMenu.module.css";
 
 const MEGA_MENU_EXIT_MS = 280;
@@ -271,6 +272,7 @@ export function MegaMenu({
   staticPanel = false,
   triggerLabel = "Resources",
 }: MegaMenuProps) {
+  const { t } = useOpusI18n();
   const menuId = useId();
   const theme = useOpusTheme();
   const rootRef = useRef<HTMLDivElement>(null);
@@ -483,7 +485,7 @@ export function MegaMenu({
         data-portaled={isStaticPanel ? undefined : "true"}
         data-theme={isStaticPanel ? undefined : theme}
         id={menuId}
-        aria-label={`${activeConfig.label} navigation`}
+        aria-label={t("megaMenu.navigation", "{label} navigation", { label: activeConfig.label })}
         role="region"
         style={portaledPanelStyle}
       >

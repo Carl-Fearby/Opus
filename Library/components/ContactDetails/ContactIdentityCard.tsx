@@ -1,5 +1,6 @@
 "use client";
 
+import { useOpusI18n } from "@/components/OpusI18n";
 import { useEffect, useState } from "react";
 import { Avatar } from "@/components/Avatar";
 import { Badge } from "@/components/Badge";
@@ -35,6 +36,7 @@ export function ContactIdentityCard({
   showStatus = true,
   status,
 }: ContactIdentityCardProps) {
+  const { t } = useOpusI18n();
   const primary = getPrimaryCompany(companies);
   const [photoUploadOpen, setPhotoUploadOpen] = useState(false);
   const [photoSrc, setPhotoSrc] = useState(avatarSrc);
@@ -54,7 +56,7 @@ export function ContactIdentityCard({
         <div className={styles.avatarWrap}>
           <Avatar name={name} size="xl" src={photoSrc} />
           <button
-            aria-label={`Update photo for ${name}`}
+            aria-label={t("contactDetails.updatePhoto", "Update photo for {name}", { name })}
             className={styles.avatarEdit}
             onClick={() => setPhotoUploadOpen(true)}
             type="button"
@@ -69,7 +71,7 @@ export function ContactIdentityCard({
         </div>
 
         {companies.length ? (
-          <ul className={styles.companyList} aria-label="Companies">
+          <ul className={styles.companyList} aria-label={t("contactDetails.companies", "Companies")}>
             {companies.map((company) => (
               <li key={company.name}>
                 <span aria-hidden="true" className={styles.companyIcon}>
@@ -78,7 +80,7 @@ export function ContactIdentityCard({
                 <span className={styles.companyCopy}>
                   <strong>
                     {company.name}
-                    {company.primary ? <span className={styles.primaryMark}>Primary</span> : null}
+                    {company.primary ? <span className={styles.primaryMark}>{t("contactDetails.primary", "Primary")}</span> : null}
                   </strong>
                   {company.jobTitle && company !== primary ? <small>{company.jobTitle}</small> : null}
                 </span>

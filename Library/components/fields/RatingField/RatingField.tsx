@@ -1,5 +1,6 @@
 "use client";
 
+import { useOpusI18n } from "@/components/OpusI18n";
 import { FieldShell, fieldInputAriaProps, useFieldShellAria } from "@/components/fields/FieldShell";
 import type { FieldMode, InputControlSize, LabelPosition } from "@/components/fields/types";
 import { inputControlSizeClassName } from "../shared/inputControlSizes";
@@ -53,6 +54,7 @@ export function RatingField({
   transparency,
   gradient,
 }: RatingFieldProps) {
+  const { t } = useOpusI18n();
   const shellAria = useFieldShellAria();
   const items = Array.from({ length: max }, (_, index) => index + 1);
 
@@ -70,7 +72,7 @@ export function RatingField({
       required={required}
     >
       <div
-        aria-label={`${label}: ${value} of ${max}`}
+        aria-label={t("rating.label", "{label}: {value} of {max}", { label, value, max })}
         className={`${styles.root} ${inputControlSizeClassName[size]}`}
         role={variant === "numeric" ? "radiogroup" : "group"}
         {...fieldInputAriaProps(shellAria, { invalid: Boolean(error) })}
@@ -92,7 +94,7 @@ export function RatingField({
             ))
           : items.map((item) => (
               <button
-                aria-label={`${item} of ${max}`}
+                aria-label={t("rating.option", "{value} of {max}", { value: item, max })}
                 aria-pressed={value >= item}
                 className={[styles.symbol, value >= item ? styles.symbolActive : ""]
                   .filter(Boolean)

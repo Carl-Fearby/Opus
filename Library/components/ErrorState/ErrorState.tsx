@@ -7,6 +7,7 @@ import {
   faTriangleExclamation,
   faWifi,
 } from "@fortawesome/free-solid-svg-icons";
+import { useOpusI18n } from "@/components/OpusI18n";
 import styles from "./ErrorState.module.css";
 
 export type ErrorStateStatus = "error" | "warning" | "offline" | "forbidden" | "not-found";
@@ -72,7 +73,12 @@ export function ErrorState({
   status = "error",
   title,
 }: ErrorStateProps) {
-  const copy = defaultCopy[status];
+  const { t } = useOpusI18n();
+  const copyKey = status === "not-found" ? "notFound" : status;
+  const copy = {
+    title: t(`errorState.${copyKey}.title`, defaultCopy[status].title),
+    description: t(`errorState.${copyKey}.description`, defaultCopy[status].description),
+  };
 
   return (
     <section

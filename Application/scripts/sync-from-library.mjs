@@ -147,6 +147,10 @@ syncTextFile(
 cpSync(join(libraryDir, "app", "preview-theme.css"), join(appDir, "app", "preview-theme.css"), {
   force: true,
 });
+cpSync(join(libraryDir, "public", "i18n"), join(appDir, "public", "i18n"), {
+  force: true,
+  recursive: true,
+});
 syncTextFile(
   join(libraryDir, "app", "documentation", "components", "raw", "[slug]", "page.tsx"),
   join(appDir, "app", "documentation", "components", "raw", "[slug]", "page.tsx"),
