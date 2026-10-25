@@ -57,6 +57,8 @@ export const en = {
   "docs.nav.version": "Version",
   "docs.versionHistory": "View library version history",
   "docs.search": "Search components…",
+  "docs.browseComponents": "Browse components",
+  "docs.closeNavigation": "Close navigation",
   "docs.overview": "Overview",
   "docs.relationships": "Relationships",
   "docs.componentsNavigation": "Components navigation",

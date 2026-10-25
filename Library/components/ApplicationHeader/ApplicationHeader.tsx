@@ -119,104 +119,106 @@ export function ApplicationHeader({
   }, [searchShortcut, showSearch]);
 
   return (
-    <header
-      className={[styles.root, className].filter(Boolean).join(" ")}
-      data-connected={connected ? "true" : "false"}
-    >
-      <a aria-label={brandAlt} className={styles.brand} href={brandHref}>
-        <OpusBrand alt={brandAlt} className={styles.logo} src={brandSrc} />
-      </a>
+    <div className={styles.frame}>
+      <header
+        className={[styles.root, className].filter(Boolean).join(" ")}
+        data-connected={connected ? "true" : "false"}
+      >
+        <a aria-label={brandAlt} className={styles.brand} href={brandHref}>
+          <OpusBrand alt={brandAlt} className={styles.logo} src={brandSrc} />
+        </a>
 
-      <div className={styles.content}>
-        {showSearch ? <div className={styles.search}>
-          <TextField
-            endAdornment={<KeyboardShortcut keys={searchShortcut} size="sm" />}
-            id="application-header-search"
-            inputRef={searchInputRef}
-            label="Search"
-            labelVisuallyHidden
-            placeholder={searchPlaceholder}
-            size="lg"
-            type="search"
-            value={searchValue}
-            onChange={handleSearchChange}
-          />
-        </div> : <span />}
+        <div className={styles.content}>
+          {showSearch ? <div className={styles.search}>
+            <TextField
+              endAdornment={<KeyboardShortcut keys={searchShortcut} size="sm" />}
+              id="application-header-search"
+              inputRef={searchInputRef}
+              label="Search"
+              labelVisuallyHidden
+              placeholder={searchPlaceholder}
+              size="lg"
+              type="search"
+              value={searchValue}
+              onChange={handleSearchChange}
+            />
+          </div> : <span />}
 
-        <nav aria-label={t("applicationHeader.actions", "Application actions")} className={styles.actions}>
-        {createItems.length ? (
-          <DropdownMenu
-            items={createMenuItems}
-            label={createLabel}
-            onSelect={(selectedItem) => {
-              const item = createItems.find((candidate) => candidate.id === selectedItem.id);
-              if (item) {
-                onCreateSelect?.(item);
-              }
-            }}
-            placement="bottom-end"
-            trigger={(
-              <button aria-label={createLabel} className={styles.createButton} type="button">
+          <nav aria-label={t("applicationHeader.actions", "Application actions")} className={styles.actions}>
+          {createItems.length ? (
+            <DropdownMenu
+              items={createMenuItems}
+              label={createLabel}
+              onSelect={(selectedItem) => {
+                const item = createItems.find((candidate) => candidate.id === selectedItem.id);
+                if (item) {
+                  onCreateSelect?.(item);
+                }
+              }}
+              placement="bottom-end"
+              trigger={(
+                <button aria-label={createLabel} className={styles.createButton} type="button">
+                  <CatalogIcon iconName="plus" />
+                </button>
+              )}
+            />
+          ) : onCreate ? (
+            <Tooltip content={createLabel} placement="bottom">
+              <button aria-label={createLabel} className={styles.createButton} onClick={onCreate} type="button">
                 <CatalogIcon iconName="plus" />
               </button>
-            )}
-          />
-        ) : onCreate ? (
-          <Tooltip content={createLabel} placement="bottom">
-            <button aria-label={createLabel} className={styles.createButton} onClick={onCreate} type="button">
-              <CatalogIcon iconName="plus" />
-            </button>
-          </Tooltip>
-        ) : null}
+            </Tooltip>
+          ) : null}
 
-        {(createItems.length || onCreate) && actions.length ? <Divider orientation="vertical" tone="muted" /> : null}
+          {(createItems.length || onCreate) && actions.length ? <Divider orientation="vertical" tone="muted" /> : null}
 
-        <div className={styles.actionGroup}>
-        {notificationActions.map((action) => (
-          <Tooltip content={action.label} key={action.id} placement="bottom">
-            <IconBadge
-              count={action.count}
-              iconName={action.iconName}
-              label={action.label}
-              onClick={action.onClick}
-              urgency={action.urgency}
-            />
-          </Tooltip>
-        ))}
-        </div>
-
-        {notificationActions.length && utilityActions.length ? <Divider orientation="vertical" tone="muted" /> : null}
-
-        <div className={styles.actionGroup}>
-        {utilityActions.map((action) => (
-          <Tooltip content={action.label} key={action.id} placement="bottom">
-            <IconBadge
-              count={action.count}
-              iconName={action.iconName}
-              label={action.label}
-              onClick={action.onClick}
-              urgency={action.urgency}
-            />
-          </Tooltip>
-        ))}
-        </div>
-
-        {profile ? (
-          <>
-            <Divider orientation="vertical" tone="muted" />
-            <div className={styles.profile}>
-              <UserProfileWidget
-                avatarSize="md"
-                menuItems={profile.menuItems}
-                name={profile.name}
-                role={profile.role}
-                src={profile.src}
+          <div className={styles.actionGroup}>
+          {notificationActions.map((action) => (
+            <Tooltip content={action.label} key={action.id} placement="bottom">
+              <IconBadge
+                count={action.count}
+                iconName={action.iconName}
+                label={action.label}
+                onClick={action.onClick}
+                urgency={action.urgency}
               />
-            </div>
-          </>
-        ) : null}
-        </nav>
-      </div>
-    </header>
+            </Tooltip>
+          ))}
+          </div>
+
+          {notificationActions.length && utilityActions.length ? <Divider orientation="vertical" tone="muted" /> : null}
+
+          <div className={styles.actionGroup}>
+          {utilityActions.map((action) => (
+            <Tooltip content={action.label} key={action.id} placement="bottom">
+              <IconBadge
+                count={action.count}
+                iconName={action.iconName}
+                label={action.label}
+                onClick={action.onClick}
+                urgency={action.urgency}
+              />
+            </Tooltip>
+          ))}
+          </div>
+
+          {profile ? (
+            <>
+              <Divider orientation="vertical" tone="muted" />
+              <div className={styles.profile}>
+                <UserProfileWidget
+                  avatarSize="md"
+                  menuItems={profile.menuItems}
+                  name={profile.name}
+                  role={profile.role}
+                  src={profile.src}
+                />
+              </div>
+            </>
+          ) : null}
+          </nav>
+        </div>
+      </header>
+    </div>
   );
 }

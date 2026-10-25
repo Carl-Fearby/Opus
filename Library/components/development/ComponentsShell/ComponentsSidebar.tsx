@@ -10,7 +10,7 @@ import {
   useState,
   type CSSProperties,
 } from "react";
-import { faMagnifyingGlass } from "@fortawesome/free-solid-svg-icons";
+import { faMagnifyingGlass, faXmark } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import type { IconDefinition } from "@fortawesome/fontawesome-svg-core";
 import { ComponentIcon } from "@/components/development/ComponentIcon";
@@ -409,7 +409,13 @@ function NavSubgroup({
   );
 }
 
-export function ComponentsSidebar() {
+export function ComponentsSidebar({
+  onNavigate,
+  onRequestClose,
+}: {
+  onNavigate?: () => void;
+  onRequestClose?: () => void;
+} = {}) {
   const pathname = usePathname();
   const searchParams = useSearchParams();
   const { t } = useLocale();
@@ -644,7 +650,18 @@ export function ComponentsSidebar() {
       className={styles.sidebarWrap}
       style={{ "--components-sidebar-width": `${sidebarWidth}px` } as CSSProperties}
     >
-    <aside className={styles.sidebar} data-opus-tour="component-navigation">
+    <aside className={styles.sidebar} data-opus-tour="component-navigation" id="components-navigation-drawer">
+      <div className={styles.sidebarMobileHeader}>
+        <span className={styles.sidebarMobileTitle}>{t("docs.components")}</span>
+        <button
+          aria-label={t("docs.closeNavigation")}
+          className={styles.sidebarMobileClose}
+          onClick={onRequestClose}
+          type="button"
+        >
+          <FontAwesomeIcon aria-hidden="true" icon={faXmark} />
+        </button>
+      </div>
       <div className={styles.sidebarSearch} role="search">
         <label className={styles.sidebarSearchWrap} htmlFor={SIDEBAR_SEARCH_ID}>
           <span aria-hidden="true" className={styles.sidebarSearchIcon}>
@@ -678,6 +695,7 @@ export function ComponentsSidebar() {
                   .filter(Boolean)
                   .join(" ")}
                 href={componentPath()}
+                onClick={onNavigate}
               >
                 <ComponentIcon icon={getOverviewIcon()} />
                 <span className={styles.navHeadingLabel}>
@@ -693,6 +711,7 @@ export function ComponentsSidebar() {
                   .filter(Boolean)
                   .join(" ")}
                 href={RELATIONSHIPS_PATH}
+                onClick={onNavigate}
               >
                 <ComponentIcon icon={getComponentIcon("tree-view")} />
                 <span className={styles.navHeadingTitle}>{t("docs.relationships")}</span>
@@ -707,6 +726,7 @@ export function ComponentsSidebar() {
                 open
                 openGroups={openGroups}
                 sections={group.sections}
+                onNavigate={onNavigate}
                 onToggleSubgroup={toggleSubgroup}
                 onToggle={() => toggleGroup(group.category)}
               />
@@ -725,6 +745,7 @@ export function ComponentsSidebar() {
                 .filter(Boolean)
                 .join(" ")}
               href={componentPath()}
+              onClick={onNavigate}
             >
               <ComponentIcon icon={getOverviewIcon()} />
               <span className={styles.navHeadingLabel}>
@@ -736,6 +757,7 @@ export function ComponentsSidebar() {
               href={RELATIONSHIPS_PATH}
               icon={getComponentIcon("tree-view")}
               label={t("docs.relationships")}
+              onNavigate={onNavigate}
             />
             {sidebarMainCategories.map((category) => (
               <NavGroup
@@ -744,6 +766,7 @@ export function ComponentsSidebar() {
                 label={t(categoryMessageKey(category.id))}
                 open={Boolean(openGroups[category.id])}
                 openGroups={openGroups}
+                onNavigate={onNavigate}
                 onToggleSubgroup={toggleSubgroup}
                 onToggle={() => toggleGroup(category.id)}
               />
@@ -756,6 +779,7 @@ export function ComponentsSidebar() {
                   label={t(categoryMessageKey(category.id))}
                   open={Boolean(openGroups[category.id])}
                   openGroups={openGroups}
+                  onNavigate={onNavigate}
                   onToggleSubgroup={toggleSubgroup}
                   onToggle={() => toggleGroup(category.id)}
                 />

@@ -1,10 +1,16 @@
+.frame {
+  container: application-header / inline-size;
+  display: block;
+  width: 100%;
+  min-width: 0;
+}
+
 .root {
   --application-header-bg: var(--dashboard-section-bg, #070d18);
   --application-header-border: var(
     --dashboard-section-border,
     color-mix(in srgb, var(--opus-accent-secondary, var(--opus-accent)) 20%, transparent)
   );
-  container-type: inline-size;
   display: grid;
   grid-template-columns: 242px minmax(0, 1fr);
   align-items: center;
@@ -135,7 +141,7 @@
   min-width: 150px;
 }
 
-@container (max-width: 1200px) {
+@container application-header (max-width: 1200px) {
   .profile {
     width: 46px;
     min-width: 46px;
@@ -308,7 +314,7 @@
     ));
 }
 
-@media (max-width: 1100px) {
+@container application-header (max-width: 1100px) {
   .root {
     grid-template-columns: 150px minmax(0, 1fr);
   }
@@ -330,7 +336,7 @@
   }
 }
 
-@media (max-width: 780px) {
+@container application-header (max-width: 780px) {
   .root {
     grid-template-columns: 120px minmax(0, 1fr);
     min-height: 64px;
@@ -354,7 +360,7 @@
   }
 }
 
-@media (max-width: 520px) {
+@container application-header (max-width: 520px) {
   .root {
     padding: 10px 12px;
   }
@@ -365,5 +371,39 @@
 
   .profile {
     display: none;
+  }
+}
+
+@container application-header (max-width: 420px) {
+  .root,
+  .root[data-connected="true"] {
+    grid-template-columns: 76px minmax(0, 1fr);
+    min-height: 56px;
+    padding: 8px 10px;
+  }
+
+  .brand {
+    padding: 4px 6px;
+  }
+
+  .logo {
+    width: 68px;
+    max-width: 68px;
+    height: 40px;
+  }
+
+  .content,
+  .root[data-connected="true"] .content {
+    min-height: 54px;
+    padding: 0 10px;
+    gap: 8px;
+  }
+
+  .actions {
+    gap: 4px;
+  }
+
+  .actions > [role="separator"] {
+    min-height: 22px;
   }
 }

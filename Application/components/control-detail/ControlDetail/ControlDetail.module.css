@@ -39,15 +39,26 @@
 
 .previewToolbar {
   display: inline-flex;
+  flex-wrap: wrap;
   align-items: center;
   gap: 10px;
+  min-width: 0;
+  max-width: 100%;
   flex-shrink: 0;
+}
+
+.panel :global(.opus-panel-heading) {
+  flex-wrap: wrap;
+  row-gap: 8px;
 }
 
 .previewThemeControls {
   display: inline-flex;
+  flex-wrap: wrap;
   align-items: center;
   gap: 10px;
+  min-width: 0;
+  max-width: 100%;
   flex-shrink: 0;
 }
 

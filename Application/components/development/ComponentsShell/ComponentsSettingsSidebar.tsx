@@ -32,7 +32,15 @@ const ControlSettingsPanel = dynamic(
   { loading: () => <SettingsSidebarLoading /> },
 );
 
-export function ComponentsSettingsSidebar() {
+export function ComponentsSettingsSidebar({
+  compact = false,
+  mobileOpen = false,
+  onRequestClose,
+}: {
+  compact?: boolean;
+  mobileOpen?: boolean;
+  onRequestClose?: () => void;
+} = {}) {
   const { t } = useOpusI18n();
   const { theme } = useComponentsTheme();
   const {
@@ -129,7 +137,9 @@ export function ComponentsSettingsSidebar() {
     return null;
   }
 
-  if (settingsCollapsed) {
+  const collapsed = compact ? !mobileOpen : settingsCollapsed;
+
+  if (collapsed) {
     return (
       <div className={styles.settingsSidebarWrap} data-collapsed="true">
         <aside
@@ -174,15 +184,23 @@ export function ComponentsSettingsSidebar() {
         className={`${styles.sidebar} ${styles.settingsSidebar}`}
         data-opus-tour="component-settings"
         data-resizing={isResizing ? "true" : undefined}
+        id="components-settings-drawer"
       >
         <div className={styles.settingsSidebarHeader}>
           <h2 className={styles.settingsSidebarTitle}>{t("settings.title", "Settings")}</h2>
           <button
             aria-expanded={true}
-            aria-label={t("settings.collapse", "Collapse settings")}
+            aria-label={compact ? t("settings.close", "Close settings") : t("settings.collapse", "Collapse settings")}
             className={styles.settingsCollapseButton}
             type="button"
-            onClick={() => setSettingsCollapsed(true)}
+            onClick={() => {
+              if (compact) {
+                onRequestClose?.();
+                return;
+              }
+
+              setSettingsCollapsed(true);
+            }}
           >
             <FontAwesomeIcon icon={faChevronRight} />
           </button>
