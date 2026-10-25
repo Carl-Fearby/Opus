@@ -1837,5 +1837,29 @@ export const commitLog: CommitEntry[] = [
     shortHash: "9e4d005",
     committedAt: "2026-10-25",
     summary: "chore: release opus-react@0.14.0",
+  },
+  {
+    hash: "5e75bffd8b63014052989f9c8a8b870574619e77",
+    shortHash: "5e75bff",
+    committedAt: "2026-10-25",
+    summary: "fix(audit): register TryAgainButton as a delegated action trigger",
+  },
+  {
+    hash: "7cf79cba9131226e4ce1fe8a2cf002eea2d9a10d",
+    shortHash: "7cf79cb",
+    committedAt: "2026-10-25",
+    summary: "docs: publish opus-react 0.14.0 release notes",
+  },
+  {
+    hash: "b63d6530d6b1c35e9bb0f6784c3fd2db834d42a8",
+    shortHash: "b63d653",
+    committedAt: "2026-10-25",
+    summary: "feat(sidebar): open menu links in a new browsing context",
+  },
+  {
+    hash: "dec4c646bd905fcab3d39be746e8f714a4cb72a7",
+    shortHash: "dec4c64",
+    committedAt: "2026-10-25",
+    summary: "chore: release opus-react@0.14.1",
   }
 ].reverse();

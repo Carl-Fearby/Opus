@@ -1,6 +1,17 @@
 /** Curated opus-react release notes for npm publishes that only left chore commits in git. */
 export const releaseNotesOverlay = [
   {
+    version: "0.14.1",
+    releasedAt: "2026-10-25",
+    commit: "dec4c646bd905fcab3d39be746e8f714a4cb72a7",
+    summary: "Sidebar links can open in a new tab.",
+    changes: [
+      "Add target to Sidebar menu items and SidebarLink so a navigation link can open in a new browsing context.",
+      "Default rel to noopener noreferrer when target is _blank, while an explicit rel replaces that default.",
+      "Publish opus-react 0.14.1.",
+    ],
+  },
+  {
     version: "0.14.0",
     releasedAt: "2026-10-25",
     commit: "9e4d005313e1cd5d85298efdc14b31139ef70e48",

@@ -852,6 +852,14 @@ export const versionLog: VersionEntry[] = [
     commitShort: "9e4d005",
     summary: "Kanban member search now runs against an API.",
     changes: ["Add onSearchMembers(query, card) to KanbanBoard so the member picker searches a remote source, such as an API of active users, instead of only filtering the members already on the board.","Add memberSearchDebounceMs (default 250 ms) with a loading row and stale-response protection while typing.","Keep assigned members listed so they can be removed, and cache search results so card avatars and member chips keep resolving.","Ship a mock member directory route (GET /api/members?q=) powering the Kanban documentation preview.","Publish opus-react 0.14.0."],
+  },
+  {
+    version: "0.14.1",
+    releasedAt: "2026-10-25",
+    commit: "dec4c646bd905fcab3d39be746e8f714a4cb72a7",
+    commitShort: "dec4c64",
+    summary: "Sidebar links can open in a new tab.",
+    changes: ["Add target to Sidebar menu items and SidebarLink so a navigation link can open in a new browsing context.","Default rel to noopener noreferrer when target is _blank, while an explicit rel replaces that default.","Publish opus-react 0.14.1."],
   }
 ].reverse();
 
