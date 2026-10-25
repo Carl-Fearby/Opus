@@ -9,6 +9,7 @@ import {
   useMemo,
   useRef,
   useState,
+  type HTMLAttributeAnchorTarget,
   type MouseEvent,
   type ReactNode,
 } from "react";
@@ -39,6 +40,10 @@ export type SidebarMenuLinkItem = {
   id: string;
   label: ReactNode;
   onSelect?: (item: SidebarMenuLinkItem) => void;
+  /** `rel` on the anchor. Defaults to `noopener noreferrer` when `target` contains `_blank`. */
+  rel?: string;
+  /** Opens `href` items in a new browsing context. */
+  target?: HTMLAttributeAnchorTarget;
   type?: "item";
 };
 
@@ -416,6 +421,10 @@ type SidebarLinkProps = {
   itemId?: string;
   onClick?: (event: MouseEvent<HTMLAnchorElement | HTMLButtonElement>) => void;
   onSelect?: (item: SidebarMenuLinkItem) => void;
+  /** `rel` on the anchor. Defaults to `noopener noreferrer` when `target` contains `_blank`. */
+  rel?: string;
+  /** Opens `href` in a new browsing context. Ignored when `href` is omitted (button mode). */
+  target?: HTMLAttributeAnchorTarget;
 };
 
 export function SidebarLink({
@@ -426,6 +435,8 @@ export function SidebarLink({
   itemId,
   onClick,
   onSelect,
+  rel,
+  target,
 }: SidebarLinkProps) {
   const {
     activeItem,
@@ -475,12 +486,19 @@ export function SidebarLink({
     </>
   );
 
+  // Opening a link in a new browsing context must not hand the opener over;
+  // an explicit `rel` always wins so callers can add/remove tokens.
+  const resolvedRel =
+    rel ?? (target?.includes("_blank") ? "noopener noreferrer" : undefined);
+
   const control = href ? (
     <a
       aria-current={isActive ? "page" : undefined}
       className={className}
       href={href}
       onClick={handleClick}
+      rel={resolvedRel}
+      target={target}
     >
       {content}
     </a>
@@ -575,6 +593,8 @@ function renderSidebarMenuItem({
       key={item.id}
       onClick={handleClick}
       onSelect={item.onSelect}
+      rel={item.rel}
+      target={item.target}
     >
       {item.label}
     </SidebarLink>
