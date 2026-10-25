@@ -836,6 +836,22 @@ export const versionLog: VersionEntry[] = [
     commitShort: "1c8ce99",
     summary: "Translated component documentation, usage panels and settings labels.",
     changes: ["Translate the full component documentation for all 306 components into French, Czech and Slovak, while keeping prop names, types, imports and code samples unchanged.","Translate usage-panel controls, settings labels, option labels and the Built from / Used in composition copy.","Share the i18n context across the site and the published package so component previews follow the selected site language.","Localise the BackgroundBlobs preview content without changing the generated code sample.","Publish opus-react 0.12.2."],
+  },
+  {
+    version: "0.13.0",
+    releasedAt: "2026-10-25",
+    commit: "d29255861162da50802559c7399d2230108cba9a",
+    commitShort: "d292558",
+    summary: "Built-in component translations and RTL support.",
+    changes: ["Export built-in component translations for 47 languages as opusTranslations, getOpusTranslations(locale) and opusTranslationLocales, so OpusI18nProvider localises shared controls such as Kanban, DataGrid, Calendar, FilterBuilder, Pagination and SearchBox.","Add right-to-left support for Arabic, Persian, Hebrew and Urdu translations.","Translate the component library into 48 locales across the site and the published package.","Publish opus-react 0.13.0."],
+  },
+  {
+    version: "0.14.0",
+    releasedAt: "2026-10-25",
+    commit: "9e4d005313e1cd5d85298efdc14b31139ef70e48",
+    commitShort: "9e4d005",
+    summary: "Kanban member search now runs against an API.",
+    changes: ["Add onSearchMembers(query, card) to KanbanBoard so the member picker searches a remote source, such as an API of active users, instead of only filtering the members already on the board.","Add memberSearchDebounceMs (default 250 ms) with a loading row and stale-response protection while typing.","Keep assigned members listed so they can be removed, and cache search results so card avatars and member chips keep resolving.","Ship a mock member directory route (GET /api/members?q=) powering the Kanban documentation preview.","Publish opus-react 0.14.0."],
   }
 ].reverse();
 

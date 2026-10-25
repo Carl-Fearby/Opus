@@ -1795,5 +1795,47 @@ export const commitLog: CommitEntry[] = [
     shortHash: "fd1cb8c",
     committedAt: "2026-10-24",
     summary: "feat(i18n): translate remaining site pages and UI chrome",
+  },
+  {
+    hash: "9384d1aa874b0039483a07832dc9e997689eca84",
+    shortHash: "9384d1a",
+    committedAt: "2026-10-24",
+    summary: "chore: release opus-react@0.12.3",
+  },
+  {
+    hash: "08134e813a6218a167daae18508102988b9ba97f",
+    shortHash: "08134e8",
+    committedAt: "2026-10-24",
+    summary: "fix(i18n): translate version page and playground welcome copy",
+  },
+  {
+    hash: "22e67cf37deddca5ceb156d5761e0715db4537ce",
+    shortHash: "22e67cf",
+    committedAt: "2026-10-25",
+    summary: "feat(i18n): translate component library into 48 locales",
+  },
+  {
+    hash: "fe49682ab670b35e0fbf614b69ddc3f3c6bba137",
+    shortHash: "fe49682",
+    committedAt: "2026-10-25",
+    summary: "feat(i18n): export built-in translations from opus-react and announce them",
+  },
+  {
+    hash: "d29255861162da50802559c7399d2230108cba9a",
+    shortHash: "d292558",
+    committedAt: "2026-10-25",
+    summary: "chore: release opus-react@0.13.0",
+  },
+  {
+    hash: "e00467d125382757629e0eb5a377e7980235db63",
+    shortHash: "e00467d",
+    committedAt: "2026-10-25",
+    summary: "feat(kanban): search members through an API in the member picker",
+  },
+  {
+    hash: "9e4d005313e1cd5d85298efdc14b31139ef70e48",
+    shortHash: "9e4d005",
+    committedAt: "2026-10-25",
+    summary: "chore: release opus-react@0.14.0",
   }
 ].reverse();

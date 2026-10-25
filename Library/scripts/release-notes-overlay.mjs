@@ -1,6 +1,31 @@
 /** Curated opus-react release notes for npm publishes that only left chore commits in git. */
 export const releaseNotesOverlay = [
   {
+    version: "0.14.0",
+    releasedAt: "2026-10-25",
+    commit: "9e4d005313e1cd5d85298efdc14b31139ef70e48",
+    summary: "Kanban member search now runs against an API.",
+    changes: [
+      "Add onSearchMembers(query, card) to KanbanBoard so the member picker searches a remote source, such as an API of active users, instead of only filtering the members already on the board.",
+      "Add memberSearchDebounceMs (default 250 ms) with a loading row and stale-response protection while typing.",
+      "Keep assigned members listed so they can be removed, and cache search results so card avatars and member chips keep resolving.",
+      "Ship a mock member directory route (GET /api/members?q=) powering the Kanban documentation preview.",
+      "Publish opus-react 0.14.0.",
+    ],
+  },
+  {
+    version: "0.13.0",
+    releasedAt: "2026-10-25",
+    commit: "d29255861162da50802559c7399d2230108cba9a",
+    summary: "Built-in component translations and RTL support.",
+    changes: [
+      "Export built-in component translations for 47 languages as opusTranslations, getOpusTranslations(locale) and opusTranslationLocales, so OpusI18nProvider localises shared controls such as Kanban, DataGrid, Calendar, FilterBuilder, Pagination and SearchBox.",
+      "Add right-to-left support for Arabic, Persian, Hebrew and Urdu translations.",
+      "Translate the component library into 48 locales across the site and the published package.",
+      "Publish opus-react 0.13.0.",
+    ],
+  },
+  {
     version: "0.12.2",
     releasedAt: "2026-10-24",
     commit: "1c8ce9903dc1b57be59d989e77be27cb7fa1d2c7",
