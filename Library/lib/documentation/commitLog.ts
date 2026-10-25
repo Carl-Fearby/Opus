@@ -1861,5 +1861,17 @@ export const commitLog: CommitEntry[] = [
     shortHash: "dec4c64",
     committedAt: "2026-10-25",
     summary: "chore: release opus-react@0.14.1",
+  },
+  {
+    hash: "36dc1aa0518b2caf6f2b2be7f4e49ba17ebe8ccf",
+    shortHash: "36dc1aa",
+    committedAt: "2026-10-25",
+    summary: "docs: publish opus-react 0.14.1 release notes",
+  },
+  {
+    hash: "5cb28405a9d303101ce9b31c0713adbdc050f45e",
+    shortHash: "5cb2840",
+    committedAt: "2026-10-25",
+    summary: "fix(docs): make the component documentation usable at every viewport",
   }
 ].reverse();

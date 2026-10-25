@@ -143,7 +143,7 @@
   color: var(--topbar-text);
 }
 
-@media (max-width: 1400px) {
+@media (max-width: 1560px) {
   .topBarRow {
     flex-wrap: wrap;
     gap: 8px;
