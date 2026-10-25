@@ -321,6 +321,54 @@ describe("KanbanBoard members and ticket activation", () => {
     );
   });
 
+  it("searches members through onSearchMembers and assigns from the results", async () => {
+    const onCardAssigneesChange = vi.fn();
+    const onSearchMembers = vi.fn().mockResolvedValue([
+      { id: "remote-1", name: "Remote User", role: "Engineering", color: "#123456" },
+    ]);
+    render(
+      <KanbanBoard
+        cards={{ ...cards, alpha: { ...cards.alpha, assigneeIds: [] } }}
+        columns={columns}
+        memberSearchDebounceMs={0}
+        onCardAssigneesChange={onCardAssigneesChange}
+        onSearchMembers={onSearchMembers}
+      />,
+    );
+
+    fireEvent.click(screen.getByText("Alpha ticket"));
+    fireEvent.click(screen.getByRole("button", { name: "+ Add member" }));
+
+    // The empty query arrives when the picker opens, so the API can return a
+    // default page of active users.
+    await waitFor(() => {
+      expect(onSearchMembers).toHaveBeenCalledWith(
+        "",
+        expect.objectContaining({ id: "alpha" }),
+      );
+    });
+    expect(await screen.findByRole("button", { name: /Remote User/ })).toBeInTheDocument();
+
+    fireEvent.change(screen.getByLabelText("Search members"), {
+      target: { value: "remote" },
+    });
+    await waitFor(() => {
+      expect(onSearchMembers).toHaveBeenCalledWith(
+        "remote",
+        expect.objectContaining({ id: "alpha" }),
+      );
+    });
+
+    fireEvent.click(await screen.findByRole("button", { name: /Remote User/ }));
+    await waitFor(() => {
+      expect(onCardAssigneesChange).toHaveBeenCalledWith(
+        "alpha",
+        ["remote-1"],
+        expect.objectContaining({ id: "alpha" }),
+      );
+    });
+  });
+
   it("creates and assigns a new tag from the ticket picker", () => {
     const onTagsChange = vi.fn();
     const onCardTagsChange = vi.fn();

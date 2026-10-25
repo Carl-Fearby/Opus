@@ -297,7 +297,7 @@ The ticket modal uses a two-column layout:
 
 Descriptions and comments use Opus \`RichTextField\`. Authors can format text, insert links and tables, and attach files or paste screenshots directly into the content. Inline files are uploaded through the same attachment adapter and embedded as image tags or download links.
 
-Selected tags are shown as removable chips; **Add tag** opens a searchable modal where new tags can also be created. **Add member** opens a searchable member picker with assign/unassign toggles.
+Selected tags are shown as removable chips; **Add tag** opens a searchable modal where new tags can also be created. **Add member** opens a searchable member picker with assign/unassign toggles. Pass \`onSearchMembers\` to search an API for active users while typing; without it the picker filters the members already on the board.
 
 ## Comments, tags, members and attachments
 
@@ -314,6 +314,8 @@ Selected tags are shown as removable chips; **Add tag** opens a searchable modal
 | \`onTagDelete\` | \`(tag, tags) => void\` | Called after a tag is deleted. |
 | \`onCardTagsChange\` | \`(cardId, tagIds, card) => void\` | Called when tags are added or removed from a ticket. |
 | \`members\` / \`defaultMembers\` | \`KanbanMember[]\` | Controlled or initial board members. |
+| \`onSearchMembers\` | \`(query, card) => Promise<KanbanMember[]> \\| KanbanMember[]\` | Searches members remotely while the picker search changes, replacing the local name and role filter. Use it to query active users from your API: the empty query arrives when the picker opens, so return a default page of people. Members returned by a search stay available for avatar and chip rendering. |
+| \`memberSearchDebounceMs\` | \`number\` | Delay after typing before \`onSearchMembers\` runs. Defaults to 250. |
 | \`onCardAssigneesChange\` | \`(cardId, memberIds, card) => void\` | Called when members are assigned or unassigned. |
 | \`onAttachmentUpload\` | \`(file, context) => Promise<KanbanAttachment>\` | Uploads a ticket, description, or comment file. Return the persisted attachment with its final URL. Inline editor uploads use the same adapter. |
 | \`onAttachmentRemove\` | \`(attachment, context) => void \\| Promise<void>\` | Deletes a ticket attachment, or a finished comment-draft attachment, from storage. |

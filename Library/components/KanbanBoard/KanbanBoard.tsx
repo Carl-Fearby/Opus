@@ -143,6 +143,8 @@ export type KanbanBoardProps = {
   boardTitle?: string;
   /** Board members available for assignment. */
   members?: KanbanMember[];
+  /** Milliseconds to wait after typing before calling onSearchMembers. Defaults to 250. */
+  memberSearchDebounceMs?: number;
   /** Label for the new-card composer trigger. */
   addCardLabel?: string;
   /** Label for the new-list button. */
@@ -202,6 +204,13 @@ export type KanbanBoardProps = {
   onTagDelete?: (tag: KanbanTag, tags: KanbanTag[]) => void;
   onTagUpdate?: (tag: KanbanTag, previousTag: KanbanTag, tags: KanbanTag[]) => void;
   onTagsChange?: (tags: KanbanTag[]) => void;
+  /**
+   * Searches members remotely while the picker search changes, e.g. an API
+   * endpoint returning active users. Called with the trimmed query (empty when
+   * the picker opens) and the card being edited; results replace the local
+   * name and role filter.
+   */
+  onSearchMembers?: (query: string, card: KanbanCard) => Promise<KanbanMember[]> | KanbanMember[];
   /** Shows the board-level tag manager. Defaults to true. */
   tagManager?: boolean;
   /** Controlled tags. */
@@ -296,6 +305,14 @@ function memberInitials(name: string) {
     .slice(0, 2)
     .map((part) => part[0]?.toUpperCase())
     .join("");
+}
+
+function mergeMembersById(...lists: KanbanMember[][]) {
+  const byId = new Map<string, KanbanMember>();
+  for (const list of lists) {
+    for (const member of list) byId.set(member.id, member);
+  }
+  return [...byId.values()];
 }
 
 function CardContent({ card }: { card: KanbanCard }) {
@@ -569,6 +586,8 @@ export function KanbanBoard({
   onTagDelete,
   onTagUpdate,
   onTagsChange,
+  onSearchMembers,
+  memberSearchDebounceMs,
   tagManager = true,
   members,
   tags,
@@ -606,7 +625,13 @@ export function KanbanBoard({
   const [colorMenu, setColorMenu] = useState<{ columnId: string; left: number; top: number } | null>(null);
   const [internalTags, setInternalTags] = useState<KanbanTag[]>(defaultTags);
   const resolvedTags = tags ?? internalTags;
-  const resolvedMembers = members ?? defaultMembers;
+  const baseMembers = members ?? defaultMembers;
+  // Members discovered through onSearchMembers stay cached so assigned cards
+  // keep resolving avatars after a search result is no longer on screen.
+  const [searchedMembers, setSearchedMembers] = useState<KanbanMember[]>([]);
+  const resolvedMembers = searchedMembers.length
+    ? mergeMembersById(baseMembers, searchedMembers)
+    : baseMembers;
   const [tagManagerOpen, setTagManagerOpen] = useState(false);
   const [editingTagId, setEditingTagId] = useState<string | null>(null);
   const [editingTagLabel, setEditingTagLabel] = useState("");
@@ -621,6 +646,11 @@ export function KanbanBoard({
   const localAttachmentsRef = useRef<Record<string, KanbanAttachment[]>>({});
   const [ticketMemberPickerOpen, setTicketMemberPickerOpen] = useState(false);
   const [ticketMemberSearch, setTicketMemberSearch] = useState("");
+  const [debouncedMemberSearch, setDebouncedMemberSearch] = useState("");
+  const [memberSearchResults, setMemberSearchResults] = useState<KanbanMember[] | null>(null);
+  const [memberSearchLoading, setMemberSearchLoading] = useState(false);
+  const memberSearchRequestRef = useRef(0);
+  const onSearchMembersRef = useRef(onSearchMembers);
   const [localCards, setLocalCards] = useState<Record<string, KanbanCard>>({});
   const [cardComposerColumnId, setCardComposerColumnId] = useState<string | null>(null);
   const [cardDraft, setCardDraft] = useState("");
@@ -711,7 +741,8 @@ export function KanbanBoard({
     onTagCreateRef.current = onTagCreate;
     onTagDeleteRef.current = onTagDelete;
     onTagUpdateRef.current = onTagUpdate;
-  }, [columns, onActiveCardChange, onActivity, onAddComment, onAttachmentRemove, onAttachmentUpload, onCardAssigneesChange, onCardAttachmentsChange, onCardCreate, onCardMove, onCardTagsChange, onCardUpdate, onColumnChange, onColumnCreate, onColumnReorder, onChange, onCommentsChange, onTagCreate, onTagDelete, onTagUpdate, onTagsChange]);
+    onSearchMembersRef.current = onSearchMembers;
+  }, [columns, onActiveCardChange, onActivity, onAddComment, onAttachmentRemove, onAttachmentUpload, onCardAssigneesChange, onCardAttachmentsChange, onCardCreate, onCardMove, onCardTagsChange, onCardUpdate, onColumnChange, onColumnCreate, onColumnReorder, onChange, onCommentsChange, onSearchMembers, onTagCreate, onTagDelete, onTagUpdate, onTagsChange]);
 
   useEffect(() => {
     dragRef.current = drag;
@@ -826,6 +857,56 @@ export function KanbanBoard({
     setMoveTicketListId(null);
     setMoveTicketIndex(0);
   }, [cardLookup, resolvedActiveCardId]);
+
+  const remoteMemberSearch = Boolean(onSearchMembers);
+
+  // Debounce remote lookups so typing does not fire a request per keystroke.
+  useEffect(() => {
+    if (!remoteMemberSearch) return;
+    const timeout = window.setTimeout(
+      () => setDebouncedMemberSearch(ticketMemberSearch.trim()),
+      memberSearchDebounceMs ?? 250,
+    );
+    return () => window.clearTimeout(timeout);
+  }, [memberSearchDebounceMs, remoteMemberSearch, ticketMemberSearch]);
+
+  // Query the remote member source when the picker opens or the debounced
+  // query changes. The request id guards against out-of-order responses.
+  useEffect(() => {
+    const handler = onSearchMembersRef.current;
+    const card = resolvedActiveCardId ? cardLookup[resolvedActiveCardId] : null;
+    if (!remoteMemberSearch || !handler || !ticketMemberPickerOpen || !card) return;
+    const requestId = ++memberSearchRequestRef.current;
+    let stale = false;
+    setMemberSearchLoading(true);
+    Promise.resolve()
+      .then(() => handler(debouncedMemberSearch, card))
+      .then((results) => {
+        if (stale || requestId !== memberSearchRequestRef.current) return;
+        const list = Array.isArray(results) ? results : [];
+        setMemberSearchResults(list);
+        setSearchedMembers((previous) => mergeMembersById(previous, list));
+        setMemberSearchLoading(false);
+      })
+      .catch(() => {
+        if (stale || requestId !== memberSearchRequestRef.current) return;
+        setMemberSearchResults([]);
+        setMemberSearchLoading(false);
+      });
+    return () => {
+      stale = true;
+    };
+  }, [cardLookup, debouncedMemberSearch, remoteMemberSearch, resolvedActiveCardId, ticketMemberPickerOpen]);
+
+  // Search state resets when the picker closes so reopening starts clean.
+  useEffect(() => {
+    if (ticketMemberPickerOpen) return;
+    memberSearchRequestRef.current += 1;
+    setMemberSearchResults(null);
+    setMemberSearchLoading(false);
+    setTicketMemberSearch("");
+    setDebouncedMemberSearch("");
+  }, [ticketMemberPickerOpen]);
 
   useEffect(() => {
     if (resolvedActiveCardId && !cards[resolvedActiveCardId]) {
@@ -1954,6 +2035,21 @@ export function KanbanBoard({
   const selectedTicketMembers = resolvedMembers.filter((member) =>
     selectedTicketMemberIds.includes(member.id),
   );
+  const pickerAssignedMembers = selectedTicketMemberIds
+    .map((memberId) => resolvedMembers.find((member) => member.id === memberId))
+    .filter((member): member is KanbanMember => Boolean(member));
+  // Remote mode lists the latest query results, keeping assigned members
+  // visible so they can be removed. Local mode filters the board members.
+  const memberPickerOptions = remoteMemberSearch
+    ? memberSearchResults
+      ? mergeMembersById(memberSearchResults, pickerAssignedMembers)
+      : []
+    : resolvedMembers.filter((member) =>
+        [member.name, member.role ?? ""]
+          .join(" ")
+          .toLowerCase()
+          .includes(ticketMemberSearch.trim().toLowerCase()),
+      );
 
   function setActiveCard(cardId: string | null) {
     if (activeCardId === undefined) {
@@ -3644,41 +3740,39 @@ export function KanbanBoard({
               value={ticketMemberSearch}
             />
             <div className={styles.ticketMemberList}>
-              {resolvedMembers
-                .filter((member) =>
-                  [member.name, member.role ?? ""]
-                    .join(" ")
-                    .toLowerCase()
-                    .includes(ticketMemberSearch.trim().toLowerCase()),
-                )
-                .map((member) => {
-                  const active = membersForCard(selectedCard).includes(member.id);
-                  return (
-                    <button
-                      aria-pressed={active}
-                      className={styles.ticketMemberOption}
-                      key={member.id}
-                      onClick={() => toggleCardMember(selectedCard, member.id)}
-                      type="button"
+              {memberSearchLoading ? (
+                <p className={styles.ticketTagsEmpty} role="status">
+                  {t("common.working", "Working…")}
+                </p>
+              ) : null}
+              {memberPickerOptions.map((member) => {
+                const active = membersForCard(selectedCard).includes(member.id);
+                return (
+                  <button
+                    aria-pressed={active}
+                    className={styles.ticketMemberOption}
+                    key={member.id}
+                    onClick={() => toggleCardMember(selectedCard, member.id)}
+                    type="button"
+                  >
+                    <span
+                      aria-hidden="true"
+                      className={styles.ticketMemberAvatar}
+                      style={{ background: member.color ?? "var(--opus-accent)" }}
                     >
-                      <span
-                        aria-hidden="true"
-                        className={styles.ticketMemberAvatar}
-                        style={{ background: member.color ?? "var(--opus-accent)" }}
-                      >
-                        {memberInitials(member.name)}
-                      </span>
-                      <span className={styles.ticketMemberCopy}>
-                        <strong>{member.name}</strong>
-                        {member.role ? <small>{member.role}</small> : null}
-                      </span>
-                      <span aria-hidden="true" className={styles.ticketTagCheck}>
-                        {active ? "✓" : ""}
-                      </span>
-                    </button>
-                  );
-                })}
-              {resolvedMembers.length === 0 ? (
+                      {memberInitials(member.name)}
+                    </span>
+                    <span className={styles.ticketMemberCopy}>
+                      <strong>{member.name}</strong>
+                      {member.role ? <small>{member.role}</small> : null}
+                    </span>
+                    <span aria-hidden="true" className={styles.ticketTagCheck}>
+                      {active ? "✓" : ""}
+                    </span>
+                  </button>
+                );
+              })}
+              {!memberSearchLoading && memberPickerOptions.length === 0 ? (
                 <p className={styles.ticketTagsEmpty}>{t("kanban.noMembersAvailable", "No members available.")}</p>
               ) : null}
             </div>

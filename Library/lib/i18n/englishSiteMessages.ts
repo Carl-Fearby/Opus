@@ -375,6 +375,7 @@ export const en = {
   "marketing.contributors.area4": "Documentation",
   "marketing.contributors.area5": "Dashboard patterns",
   "marketing.contributors.area6": "Web and desktop apps",
+  "marketing.contributors.area7": "Translation proofreading",
   "marketing.contributors.areasAria": "Contribution areas",
   "marketing.contributors.contactAria": "Contributor contact details",
   "marketing.contributors.interested": "Interested in contributing?",

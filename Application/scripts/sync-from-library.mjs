@@ -167,6 +167,11 @@ syncTextFile(
   { rewire: true },
 );
 syncTextFile(
+  join(libraryDir, "app", "api", "members", "route.ts"),
+  join(appDir, "app", "api", "members", "route.ts"),
+  { rewire: true },
+);
+syncTextFile(
   join(libraryDir, "app", "documentation", "playground", "external", "page.tsx"),
   join(appDir, "app", "documentation", "playground", "external", "page.tsx"),
   { rewire: true },

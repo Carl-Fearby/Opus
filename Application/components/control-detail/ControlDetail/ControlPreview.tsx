@@ -2879,6 +2879,13 @@ function KanbanBoardPreview({
               : undefined
           }
           onChange={interactive ? setColumns : undefined}
+          // Member search runs against the mock directory API, the same way a
+          // real board would query its active users.
+          onSearchMembers={async (query) => {
+            const response = await fetch(`/api/members?q=${encodeURIComponent(query)}`);
+            if (!response.ok) throw new Error("Member search failed");
+            return response.json();
+          }}
           ticketView={cardClickAction !== "none"}
         />
       </div>
