@@ -4,6 +4,17 @@ All notable public-package changes are recorded here. Opus follows [Semantic Ver
 
 ## Unreleased
 
+## 0.14.0 — 2026-10-25
+
+### Added
+
+- `onSearchMembers(query, card)` on `KanbanBoard` to search members remotely while the picker search changes (for example against an API of active users), replacing the local name and role filter. The empty query arrives when the picker opens so the API can return a default page of people.
+- `memberSearchDebounceMs` on `KanbanBoard` to control the delay before `onSearchMembers` runs (defaults to 250 ms).
+
+### Notes
+
+- Members returned by a remote search stay available to the board, so card avatars and member chips keep resolving, and currently assigned members remain listed so they can be removed.
+
 ## 0.13.0 — 2026-10-25
 
 ### Added
