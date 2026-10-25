@@ -4,6 +4,8 @@ All notable public-package changes are recorded here. Opus follows [Semantic Ver
 
 ## Unreleased
 
+## 0.14.1 — 2026-10-25
+
 ### Added
 
 - `target` on `Sidebar` menu items and `SidebarLink` so a navigation link can open in a new browsing context. `rel` defaults to `noopener noreferrer` when `target` is `_blank`, and an explicit `rel` replaces that default.
