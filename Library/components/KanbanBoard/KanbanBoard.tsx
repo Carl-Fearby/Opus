@@ -2718,8 +2718,8 @@ export function KanbanBoard({
                                 commentCount
                                   ? `, ${commentCount} ${
                                       commentCount === 1
-                                        ? t("kanban.comment", "comment")
-                                        : t("kanban.comments", "comments")
+                                        ? t("kanban.comment", "Comment")
+                                        : t("kanban.comments", "Comments")
                                     }`
                                   : ""
                               }`}
@@ -3295,7 +3295,7 @@ export function KanbanBoard({
                             </small>
                           </span>
                           {uploading ? (
-                            <span aria-label={t("kanban.uploading", "Uploading")} className={styles.attachmentStatus}>
+                            <span aria-label={t("kanban.uploading", "Uploading…")} className={styles.attachmentStatus}>
                               <FontAwesomeIcon icon={faSpinner} spin />
                             </span>
                           ) : failed ? null : (
@@ -3690,7 +3690,7 @@ export function KanbanBoard({
                   value={newTagLabel}
                 />
                 <Button disabled={!newTagLabel.trim()} size="sm" type="submit">
-                  {t("kanban.createTag", "Create tag")}
+                  {t("kanban.createTag", "Create a tag")}
                 </Button>
               </div>
               <div className={styles.tagPalette}>

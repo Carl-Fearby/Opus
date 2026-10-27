@@ -202,7 +202,7 @@ export function OpusWeekInput({
                   ›
                 </button>
               </div>
-              <div className={styles.list} role="listbox" aria-label={t("field.weeksInYear", "{year} weeks", { year: cursorYear })}>
+              <div className={styles.list} role="listbox" aria-label={t("field.weeksInYear", "Weeks in {year}", { year: cursorYear })}>
                 {Array.from({ length: weeksInYear }, (_, index) => {
                   const week = index + 1;
                   const key = formatWeekValue(cursorYear, week);

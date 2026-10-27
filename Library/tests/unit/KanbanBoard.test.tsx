@@ -52,7 +52,7 @@ describe("KanbanBoard", () => {
     const onAddComment = vi.fn();
     render(<KanbanBoard cards={cards} columns={columns} onAddComment={onAddComment} />);
 
-    fireEvent.click(screen.getByRole("button", { name: "Open ticket for Alpha ticket, 1 comment" }));
+    fireEvent.click(screen.getByRole("button", { name: "Open ticket for Alpha ticket, 1 Comment" }));
     expect(screen.getByRole("dialog")).toBeInTheDocument();
     expect(screen.getByText("Existing comment")).toBeInTheDocument();
 
@@ -66,7 +66,7 @@ describe("KanbanBoard", () => {
     expect(screen.getByRole("list", { name: "Comments" })).toHaveTextContent(
       "Looks good to me.",
     );
-    expect(screen.getByRole("button", { name: "Open ticket for Alpha ticket, 2 comments" })).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "Open ticket for Alpha ticket, 2 Comments" })).toBeInTheDocument();
   });
 
   it("reorders lists with the keyboard handle", () => {
@@ -182,7 +182,7 @@ describe("KanbanBoard tags", () => {
       />,
     );
 
-    fireEvent.click(screen.getByRole("button", { name: "Open ticket for Alpha ticket, 1 comment" }));
+    fireEvent.click(screen.getByRole("button", { name: "Open ticket for Alpha ticket, 1 Comment" }));
     fireEvent.click(screen.getByRole("button", { name: "+ Add tag" }));
     fireEvent.click(screen.getByRole("button", { name: "VIP" }));
 
@@ -238,7 +238,7 @@ describe("KanbanBoard ticket view", () => {
       <KanbanBoard cards={cards} columns={columns} onCardUpdate={onCardUpdate} />,
     );
 
-    fireEvent.click(screen.getByRole("button", { name: "Open ticket for Alpha ticket, 1 comment" }));
+    fireEvent.click(screen.getByRole("button", { name: "Open ticket for Alpha ticket, 1 Comment" }));
     fireEvent.change(screen.getByLabelText("Ticket title"), { target: { value: "Alpha ticket revised" } });
     fireEvent.blur(screen.getByLabelText("Ticket title"));
     setRichText("Description", "<p>Add acceptance criteria.</p>");
@@ -262,7 +262,7 @@ describe("KanbanBoard ticket view", () => {
       <KanbanBoard cards={cards} columns={columns} onCardUpdate={onCardUpdate} />,
     );
 
-    fireEvent.click(screen.getByRole("button", { name: "Open ticket for Alpha ticket, 1 comment" }));
+    fireEvent.click(screen.getByRole("button", { name: "Open ticket for Alpha ticket, 1 Comment" }));
     fireEvent.click(screen.getByRole("button", { name: "Change ticket header colour" }));
     fireEvent.click(
       screen.getByRole("button", { name: "Use #f59e0b for ticket header" }),
@@ -386,7 +386,7 @@ describe("KanbanBoard members and ticket activation", () => {
     fireEvent.change(screen.getByLabelText("New tag name"), {
       target: { value: "Needs review" },
     });
-    fireEvent.click(screen.getByRole("button", { name: "Create tag" }));
+    fireEvent.click(screen.getByRole("button", { name: "Create a tag" }));
 
     expect(onTagsChange).toHaveBeenCalledWith([
       expect.objectContaining({ label: "Needs review" }),
@@ -420,7 +420,7 @@ describe("KanbanBoard attachments", () => {
       />,
     );
 
-    fireEvent.click(screen.getByRole("button", { name: "Open ticket for Alpha ticket, 1 comment" }));
+    fireEvent.click(screen.getByRole("button", { name: "Open ticket for Alpha ticket, 1 Comment" }));
     expect(screen.getByRole("link", { name: "brief.pdf" })).toHaveAttribute(
       "href",
       "https://example.com/brief.pdf",
@@ -463,7 +463,7 @@ describe("KanbanBoard attachments", () => {
       />,
     );
 
-    fireEvent.click(screen.getByRole("button", { name: "Open ticket for Alpha ticket, 1 comment" }));
+    fireEvent.click(screen.getByRole("button", { name: "Open ticket for Alpha ticket, 1 Comment" }));
     const file = new File(["hello"], "notes.txt", { type: "text/plain" });
     fireEvent.change(screen.getByLabelText("Attach files to ticket"), {
       target: { files: [file] },
@@ -515,7 +515,7 @@ describe("KanbanBoard attachments", () => {
       />,
     );
 
-    fireEvent.click(screen.getByRole("button", { name: "Open ticket for Alpha ticket, 1 comment" }));
+    fireEvent.click(screen.getByRole("button", { name: "Open ticket for Alpha ticket, 1 Comment" }));
     const file = new File(["comment attachment"], "screenshot.txt", { type: "text/plain" });
     fireEvent.change(screen.getByLabelText("Attach files to comment"), {
       target: { files: [file] },
@@ -575,7 +575,7 @@ describe("KanbanBoard rich text", () => {
       />,
     );
 
-    fireEvent.click(screen.getByRole("button", { name: "Open ticket for Alpha ticket, 1 comment" }));
+    fireEvent.click(screen.getByRole("button", { name: "Open ticket for Alpha ticket, 1 Comment" }));
     const image = new File(["image"], "inline.png", { type: "image/png" });
     const imageInputs = screen.getAllByLabelText("Insert images");
 

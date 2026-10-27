@@ -788,7 +788,7 @@ export const componentUiMessagesEn: Record<string, string> = {
   "kanban.ticketDiscussion": "Ticket discussion",
   "kanban.ticketTitle": "Ticket title",
   "kanban.uploadFailed": "Upload failed",
-  "kanban.uploading": "Uploading",
+  "kanban.uploading": "Uploading…",
   "kanban.writeComment": "Write a comment or paste a screenshot…",
   "pagination.label": "Pagination",
   "pagination.next": "Next page",

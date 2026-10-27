@@ -143,7 +143,7 @@ export function FilterBuilder({ conditions, fields, onChange }: FilterBuilderPro
         </ul>
       )}
       <div className={styles.output} aria-label={t("filter.output", "Filter output")}>
-        <div className={styles.outputLabel}>{t("filter.output", "Output")}</div>
+        <div className={styles.outputLabel}>{t("filter.output", "Filter output")}</div>
         <p className={styles.expression}>{expression}</p>
         <pre className={styles.payload} tabIndex={0}>{JSON.stringify(payload, null, 2)}</pre>
       </div>
