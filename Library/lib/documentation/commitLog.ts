@@ -1879,5 +1879,23 @@ export const commitLog: CommitEntry[] = [
     shortHash: "c5c2c93",
     committedAt: "2026-10-25",
     summary: "chore: release opus-react@0.14.2",
+  },
+  {
+    hash: "da98d4121596c4223f432e39e997dec876443734",
+    shortHash: "da98d41",
+    committedAt: "2026-10-26",
+    summary: "chore: refresh commit log after the 0.14.2 release",
+  },
+  {
+    hash: "93a820725b30afd239e690da5c21f88e04ec8c1d",
+    shortHash: "93a8207",
+    committedAt: "2026-10-27",
+    summary: "fix(i18n): align component fallbacks with the translated dictionaries",
+  },
+  {
+    hash: "7a174c624c29fe8cbf1a89fdc4101a24c49b0673",
+    shortHash: "7a174c6",
+    committedAt: "2026-10-27",
+    summary: "chore: release opus-react@0.14.3",
   }
 ].reverse();
