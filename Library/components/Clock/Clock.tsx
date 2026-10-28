@@ -19,7 +19,7 @@ export function Clock({
   showDigital = true,
   size = "md",
 }: ClockProps) {
-  const { t } = useOpusI18n();
+  const { locale, t } = useOpusI18n();
   const [time, setTime] = useState<Date | null>(null);
 
   useEffect(() => {
@@ -48,14 +48,14 @@ export function Clock({
   const minuteRotation = minutes * 6 + seconds * 0.1;
   const hourRotation = (hours % 12) * 30 + minutes * 0.5;
 
-  const digitalTime = time.toLocaleTimeString("en-GB", {
+  const digitalTime = time.toLocaleTimeString(locale, {
     hour: "2-digit",
     minute: "2-digit",
     second: "2-digit",
     hour12: false,
   });
 
-  const date = time.toLocaleDateString("en-GB", {
+  const date = time.toLocaleDateString(locale, {
     weekday: "long",
     day: "numeric",
     month: "long",

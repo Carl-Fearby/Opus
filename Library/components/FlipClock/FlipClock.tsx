@@ -241,7 +241,7 @@ export function FlipClock({
   showFrames = false,
   size = "md",
 }: FlipClockProps) {
-  const { t } = useOpusI18n();
+  const { locale, t } = useOpusI18n();
   const [time, setTime] = useState<Date | null>(null);
   const includeSeconds = showSeconds || showFrames;
   const durationMs = showFrames ? 120 : 650;
@@ -266,7 +266,7 @@ export function FlipClock({
       : `${hours}:${minutes}`;
 
   const date = time
-    ? time.toLocaleDateString("en-GB", {
+    ? time.toLocaleDateString(locale, {
         weekday: "long",
         day: "numeric",
         month: "long",
