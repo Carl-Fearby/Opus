@@ -892,6 +892,14 @@ export const versionLog: VersionEntry[] = [
     commitShort: "899737f",
     summary: "Language picker flags and search, with refreshed dictionaries.",
     changes: ["LanguagePicker options show a flag: pass country (an ISO 3166-1 alpha-2 code) for the bundled flag-icons SVG or flag for an emoji fallback, with a tick on the current language.","Longer lists gain a search field that matches the active-language name, the language's own name and its English name; searchable forces the field on or off.","CountryPickerField, the component registry, usage samples and the UI dictionaries are updated alongside.","Publish opus-react 0.15.1."],
+  },
+  {
+    version: "0.15.2",
+    releasedAt: "2026-10-28",
+    commit: "899737f21550dda9dcf9984bdf030c29d50362aa",
+    commitShort: "899737f",
+    summary: "Language picker becomes a full field with help, error and sizing.",
+    changes: ["LanguagePicker accepts help, error, required, mode, labelPosition and size, so it behaves like the other fields in a form.","The compact variant renders the small top-bar pill instead of the labelled field, truncating the current language name.","Publish opus-react 0.15.2."],
   }
 ].reverse();
 

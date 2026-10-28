@@ -1921,5 +1921,11 @@ export const commitLog: CommitEntry[] = [
     shortHash: "899737f",
     committedAt: "2026-10-28",
     summary: "chore: refresh commit log after the 0.15.0 release",
+  },
+  {
+    hash: "492be74be272e1b855c14b9c58c100eb329140e8",
+    shortHash: "492be74",
+    committedAt: "2026-10-28",
+    summary: "feat(i18n): ship the language picker as a country-picker field",
   }
 ].reverse();

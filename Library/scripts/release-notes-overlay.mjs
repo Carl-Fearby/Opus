@@ -1,6 +1,17 @@
 /** Curated opus-react release notes for npm publishes that only left chore commits in git. */
 export const releaseNotesOverlay = [
   {
+    version: "0.15.2",
+    releasedAt: "2026-10-28",
+    commit: "899737f21550dda9dcf9984bdf030c29d50362aa",
+    summary: "Language picker becomes a full field with help, error and sizing.",
+    changes: [
+      "LanguagePicker accepts help, error, required, mode, labelPosition and size, so it behaves like the other fields in a form.",
+      "The compact variant renders the small top-bar pill instead of the labelled field, truncating the current language name.",
+      "Publish opus-react 0.15.2.",
+    ],
+  },
+  {
     version: "0.15.1",
     releasedAt: "2026-10-28",
     commit: "899737f21550dda9dcf9984bdf030c29d50362aa",
