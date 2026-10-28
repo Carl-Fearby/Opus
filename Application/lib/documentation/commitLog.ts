@@ -1897,5 +1897,23 @@ export const commitLog: CommitEntry[] = [
     shortHash: "7a174c6",
     committedAt: "2026-10-27",
     summary: "chore: release opus-react@0.14.3",
+  },
+  {
+    hash: "6f052f7dcd4fcfd6486bc706bbd005319ce06341",
+    shortHash: "6f052f7",
+    committedAt: "2026-10-27",
+    summary: "chore: refresh commit log after the 0.14.3 release",
+  },
+  {
+    hash: "2419be5c6edca1bb15123a6000bdf563ae41d3ce",
+    shortHash: "2419be5",
+    committedAt: "2026-10-28",
+    summary: "feat(i18n): make translation engine-agnostic and publish a key manifest",
+  },
+  {
+    hash: "375437512fb9e4f5158c3fdc5d46aac7dd94d68b",
+    shortHash: "3754375",
+    committedAt: "2026-10-28",
+    summary: "chore: release opus-react@0.15.0",
   }
 ].reverse();
