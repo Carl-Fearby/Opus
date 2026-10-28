@@ -1,25 +1,14 @@
-import { readFileSync } from "node:fs";
-import { join } from "node:path";
 import { DEFAULT_LOCALE, type Locale } from "./config";
+import { componentMessages } from "./componentMessages";
 import type { LocaleResources } from "./resources";
 
-const cache = new Map<Locale, LocaleResources>();
-
+/**
+ * Server-side resources come from the bundled dictionaries, not the public JSON.
+ * Serverless hosts do not ship `public/` into the server function's filesystem,
+ * so reading it there failed silently and every component rendered in English
+ * until the visitor switched language and the client fetched the JSON.
+ */
 export function readLocaleResources(locale: Locale): LocaleResources {
-  const cached = cache.get(locale);
-  if (cached) return cached;
-
-  try {
-    const file = join(process.cwd(), "public", "i18n", `${locale}.json`);
-    const resources = JSON.parse(readFileSync(file, "utf8")) as LocaleResources;
-    const normalized: LocaleResources = { component: resources.component ?? {} };
-    cache.set(locale, normalized);
-    return normalized;
-  } catch {
-    if (locale !== DEFAULT_LOCALE) {
-      return readLocaleResources(DEFAULT_LOCALE);
-    }
-
-    return { component: {} };
-  }
+  const dictionary = componentMessages[locale] ?? componentMessages[DEFAULT_LOCALE];
+  return { component: { ...dictionary } };
 }
