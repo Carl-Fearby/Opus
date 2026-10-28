@@ -2,6 +2,9 @@ import { componentMessages } from "../../../lib/i18n/componentMessages";
 import { locales, type Locale } from "../../../lib/i18n/config";
 import type { OpusMessages } from "../../../components/OpusI18n";
 
+export * from "./i18nManifest";
+export * from "./i18nAudit";
+
 export type OpusTranslationLocale = Locale;
 
 /** Locale codes with shipped component translations, e.g. "fr", "ja", "ar". */

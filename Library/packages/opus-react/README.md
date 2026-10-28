@@ -145,7 +145,11 @@ Pass `applyToDocument={false}` if you manage `data-theme` yourself (for example 
 
 ## Internationalisation
 
-Wrap your app with `OpusI18nProvider` to translate built-in component copy. The package ships built-in translations for 48 languages (English plus 47 others, including right-to-left Arabic, Persian, Hebrew and Urdu).
+Components ask for text by key and carry an English fallback, so you can translate them with whatever engine your app already uses. Nothing in the library requires a particular translation library.
+
+### Use the shipped translations
+
+The package ships built-in translations for 48 languages (English plus 47 others, including right-to-left Arabic, Persian, Hebrew and Urdu).
 
 ```tsx
 import { OpusI18nProvider, getOpusTranslations, opusTranslationLocales } from "opus-react";
@@ -162,7 +166,50 @@ export function App() {
 }
 ```
 
-Components use `useOpusI18n()` internally and accept full message dictionaries. Built-in translations cover shared controls such as Kanban, Pagination, DataGrid, FilterBuilder, SearchBox, Calendar, Modal, Drawer and ConfirmDialog; pass extra keys through `messages` to override or extend any string, and components fall back to English when a key is not supplied.
+Built-in translations cover shared controls such as Kanban, Pagination, DataGrid, FilterBuilder, SearchBox, Calendar, Modal, Drawer and ConfirmDialog; pass extra keys through `messages` to override or extend any string, and components fall back to English when a key is not supplied.
+
+### Or resolve keys with your own engine
+
+Pass `translate` and Opus asks your app first, then any `messages` dictionary, then the English copy shipped with the component. Return `undefined`, `null` or an empty string to decline a key.
+
+```tsx
+import { useTranslation } from "react-i18next";
+import { LanguagePicker, OpusI18nProvider } from "opus-react";
+
+export function AppRoot() {
+  const { i18n } = useTranslation();
+
+  return (
+    <OpusI18nProvider
+      availableLocales={["en", "fr", "de"]}
+      locale={i18n.resolvedLanguage ?? "en"}
+      onLocaleChange={(locale) => void i18n.changeLanguage(locale)}
+      translate={(key, params) => i18n.t(key, { ns: "opus", ...params })}
+    >
+      <LanguagePicker />
+      <YourApp />
+    </OpusI18nProvider>
+  );
+}
+```
+
+Your app stays in charge of state, persistence and the document language: `onLocaleChange` reports a selection, and `locale` comes back in. `availableLocales` accepts bare codes or `{ id, label, flag, htmlLang }`. `LanguagePicker` reads locale, options and handler from the provider, names each choice in the active language, and can be overridden per instance with the same props.
+
+### Find keys your dictionary is missing
+
+The package exports its key contract, so an upgrade can be checked without guesswork:
+
+```tsx
+import { auditOpusTranslations } from "opus-react";
+
+const report = auditOpusTranslations(myFrenchDictionary);
+// report.missing  — built-in keys this dictionary does not translate
+// report.unknown  — keys this version of the library no longer resolves
+// report.drifted  — English copy that changed (audit with { english: true })
+// report.optional — resolved keys that ship no built-in translation
+```
+
+`opusTranslationManifest` maps every key to its English fallback and whether the package translates it in every locale, and `opusDynamicTranslationPrefixes` lists the namespaces Opus assembles at runtime (such as `errorState.`) whose keys cannot be enumerated.
 
 The translations are machine-assisted and are being proof-read by native speakers. Corrections are welcome — see the contributors section of the Opus site or open an issue on GitHub.
 

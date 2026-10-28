@@ -2,6 +2,9 @@ export * from "../../../components/fields";
 export * from "./i18n";
 export * from "../../../components/OpusI18n";
 
+export { LanguagePicker } from "../../../components/LanguagePicker";
+export type { LanguagePickerProps } from "../../../components/LanguagePicker";
+
 export {
   AccentColorPicker,
   accentColors,

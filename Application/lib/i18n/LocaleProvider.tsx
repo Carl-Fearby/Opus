@@ -18,11 +18,16 @@ import {
   LOCALE_STORAGE_KEY,
   isRtlLocale,
   localeHtmlLang,
+  locales,
   parseLocale,
   type Locale,
   type MessageKey,
 } from "./config";
 import type { LocaleResources } from "./resources";
+import type { OpusLocale } from "@/components/OpusI18n";
+
+/** The site hands its own locale list to the picker, which owns no list of its own. */
+const LOCALE_OPTIONS = locales.map(({ id, flag, htmlLang }) => ({ id, flag, htmlLang }));
 
 type LocaleContextValue = {
   locale: Locale;
@@ -119,9 +124,19 @@ export function LocaleProvider({
     [setLocale, state.locale, state.resources],
   );
 
+  const handleLocaleChange = useCallback(
+    (next: OpusLocale) => setLocale(parseLocale(next)),
+    [setLocale],
+  );
+
   return (
     <LocaleContext.Provider value={value}>
-      <OpusI18nProvider locale={state.locale} messages={state.resources.component}>
+      <OpusI18nProvider
+        availableLocales={LOCALE_OPTIONS}
+        locale={state.locale}
+        messages={state.resources.component}
+        onLocaleChange={handleLocaleChange}
+      >
         {children}
       </OpusI18nProvider>
     </LocaleContext.Provider>
