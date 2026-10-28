@@ -690,4 +690,8 @@ export const componentUiMessagesPa: Record<string, string> = {
   "common.collapse": "ਸਮੇਟੋ",
   "common.expand": "ਫੈਲਾਓ",
   "kanban.openTicket": "{title} ਲਈ ਟਿਕਟ ਖੋਲ੍ਹੋ",
+  "language.label": "ਭਾਸ਼ਾ",
+  "language.search": "ਭਾਸ਼ਾਵਾਂ ਖੋਜੋ",
+  "language.searchPlaceholder": "ਭਾਸ਼ਾਵਾਂ ਖੋਜੋ…",
+  "language.noResults": "ਕੋਈ ਭਾਸ਼ਾ ਨਹੀਂ ਮਿਲੀ।",
 };

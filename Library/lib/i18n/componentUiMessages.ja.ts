@@ -690,4 +690,8 @@ export const componentUiMessagesJa: Record<string, string> = {
   "common.collapse": "折りたたむ",
   "common.expand": "展開",
   "kanban.openTicket": "{title}のチケットを開く",
+  "language.label": "言語",
+  "language.search": "言語を検索",
+  "language.searchPlaceholder": "言語を検索…",
+  "language.noResults": "一致する言語がありません。",
 };

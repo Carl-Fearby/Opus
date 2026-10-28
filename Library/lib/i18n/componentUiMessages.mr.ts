@@ -690,4 +690,8 @@ export const componentUiMessagesMr: Record<string, string> = {
   "common.collapse": "संकुचित करा",
   "common.expand": "विस्तृत करा",
   "kanban.openTicket": "{title} साठी तिकीट उघडा",
+  "language.label": "भाषा",
+  "language.search": "भाषा शोधा",
+  "language.searchPlaceholder": "भाषा शोधा…",
+  "language.noResults": "जुळणारी भाषा नाही.",
 };

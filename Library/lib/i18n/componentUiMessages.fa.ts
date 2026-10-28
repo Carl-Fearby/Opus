@@ -690,4 +690,8 @@ export const componentUiMessagesFa: Record<string, string> = {
   "common.collapse": "جمع کردن",
   "common.expand": "باز کردن",
   "kanban.openTicket": "باز کردن تیکت {title}",
+  "language.label": "زبان",
+  "language.search": "جستجوی زبان‌ها",
+  "language.searchPlaceholder": "جستجوی زبان‌ها…",
+  "language.noResults": "زبانی مطابقت ندارد.",
 };

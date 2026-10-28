@@ -193,7 +193,9 @@ export function AppRoot() {
 }
 ```
 
-Your app stays in charge of state, persistence and the document language: `onLocaleChange` reports a selection, and `locale` comes back in. `availableLocales` accepts bare codes or `{ id, label, flag, htmlLang }`. `LanguagePicker` reads locale, options and handler from the provider, names each choice in the active language, and can be overridden per instance with the same props.
+Your app stays in charge of state, persistence and the document language: `onLocaleChange` reports a selection, and `locale` comes back in. `availableLocales` accepts bare codes or `{ id, label, flag, country, htmlLang }`. `LanguagePicker` reads locale, options and handler from the provider, names each choice in the active language, and can be overridden per instance with the same props.
+
+`LanguagePicker` opens a list of languages with a flag, the active name and a tick on the current one. Pass `country` (an ISO 3166-1 alpha-2 code such as `"fr"`) to render the bundled flag-icons SVG, or `flag` for an emoji fallback. Longer lists gain a search field that matches the name shown in the active language, the language's own name and its English name, so someone browsing in Urdu can still find a language by typing "English". Set `searchable` to force the field on or off.
 
 ### Find keys your dictionary is missing
 

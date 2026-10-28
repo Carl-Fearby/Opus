@@ -689,4 +689,8 @@ export const componentUiMessagesUr: Record<string, string> = {
   "common.collapse": "سمیٹیں",
   "common.expand": "پھیلائیں",
   "kanban.openTicket": "{title} کا ٹکٹ کھولیں",
+  "language.label": "زبان",
+  "language.search": "زبانیں تلاش کریں",
+  "language.searchPlaceholder": "زبانیں تلاش کریں…",
+  "language.noResults": "کوئی زبان نہیں ملی۔",
 };

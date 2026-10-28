@@ -690,4 +690,8 @@ export const componentUiMessagesPt: Record<string, string> = {
   "common.collapse": "Recolher",
   "common.expand": "Expandir",
   "kanban.openTicket": "Abrir ticket de {title}",
+  "language.label": "Idioma",
+  "language.search": "Pesquisar idiomas",
+  "language.searchPlaceholder": "Pesquisar idiomas…",
+  "language.noResults": "Nenhum idioma corresponde.",
 };

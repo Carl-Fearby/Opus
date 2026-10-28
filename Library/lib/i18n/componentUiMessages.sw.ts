@@ -687,4 +687,8 @@ export const componentUiMessagesSw: Record<string, string> = {
   "common.collapse": "Kunja",
   "common.expand": "Panua",
   "kanban.openTicket": "Fungua tiketi ya {title}",
+  "language.label": "Lugha",
+  "language.search": "Tafuta lugha",
+  "language.searchPlaceholder": "Tafuta lugha…",
+  "language.noResults": "Hakuna lugha inayolingana.",
 };

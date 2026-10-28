@@ -690,4 +690,8 @@ export const componentUiMessagesDe: Record<string, string> = {
   "common.collapse": "Einklappen",
   "common.expand": "Ausklappen",
   "kanban.openTicket": "Ticket für {title} öffnen",
+  "language.label": "Sprache",
+  "language.search": "Sprachen suchen",
+  "language.searchPlaceholder": "Sprachen suchen…",
+  "language.noResults": "Keine Sprachen gefunden.",
 };

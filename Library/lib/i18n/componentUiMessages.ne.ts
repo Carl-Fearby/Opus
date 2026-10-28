@@ -690,4 +690,8 @@ export const componentUiMessagesNe: Record<string, string> = {
   "common.collapse": "संक्षिप्त गर्नुहोस्",
   "common.expand": "विस्तार गर्नुहोस्",
   "kanban.openTicket": "{title} को टिकट खोल्नुहोस्",
+  "language.label": "भाषा",
+  "language.search": "भाषाहरू खोज्नुहोस्",
+  "language.searchPlaceholder": "भाषाहरू खोज्नुहोस्…",
+  "language.noResults": "कुनै भाषा मिलेन।",
 };

@@ -690,4 +690,8 @@ export const componentUiMessagesVi: Record<string, string> = {
   "common.collapse": "Thu gọn",
   "common.expand": "Mở rộng",
   "kanban.openTicket": "Mở phiếu công việc {title}",
+  "language.label": "Ngôn ngữ",
+  "language.search": "Tìm ngôn ngữ",
+  "language.searchPlaceholder": "Tìm ngôn ngữ…",
+  "language.noResults": "Không có ngôn ngữ phù hợp.",
 };

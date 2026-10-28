@@ -690,4 +690,8 @@ export const componentUiMessagesTa: Record<string, string> = {
   "common.collapse": "சுருக்கு",
   "common.expand": "விரிவாக்கு",
   "kanban.openTicket": "{title}க்கான டிக்கெட்டைத் திறக்கவும்",
+  "language.label": "மொழி",
+  "language.search": "மொழிகளைத் தேடு",
+  "language.searchPlaceholder": "மொழிகளைத் தேடு…",
+  "language.noResults": "பொருந்தும் மொழிகள் இல்லை.",
 };

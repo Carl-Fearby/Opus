@@ -690,4 +690,8 @@ export const componentUiMessagesHe: Record<string, string> = {
   "common.collapse": "כיווץ",
   "common.expand": "הרחבה",
   "kanban.openTicket": "פתיחת הכרטיס של {title}",
+  "language.label": "שפה",
+  "language.search": "חיפוש שפות",
+  "language.searchPlaceholder": "חיפוש שפות…",
+  "language.noResults": "אין שפות תואמות.",
 };

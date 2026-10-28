@@ -690,4 +690,8 @@ export const componentUiMessagesTe: Record<string, string> = {
   "common.collapse": "కుదించు",
   "common.expand": "విస్తరించు",
   "kanban.openTicket": "{title} కోసం టికెట్‌ను తెరవండి",
+  "language.label": "భాష",
+  "language.search": "భాషలను వెతకండి",
+  "language.searchPlaceholder": "భాషలను వెతకండి…",
+  "language.noResults": "సరిపోలే భాషలు లేవు.",
 };

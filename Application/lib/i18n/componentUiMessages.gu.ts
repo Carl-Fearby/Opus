@@ -690,4 +690,8 @@ export const componentUiMessagesGu: Record<string, string> = {
   "common.collapse": "સંકુચિત કરો",
   "common.expand": "વિસ્તૃત કરો",
   "kanban.openTicket": "{title} માટે ટિકિટ ખોલો",
+  "language.label": "ભાષા",
+  "language.search": "ભાષાઓ શોધો",
+  "language.searchPlaceholder": "ભાષાઓ શોધો…",
+  "language.noResults": "કોઈ ભાષા મળતી નથી.",
 };

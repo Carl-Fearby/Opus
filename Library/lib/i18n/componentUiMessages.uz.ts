@@ -690,4 +690,8 @@ export const componentUiMessagesUz: Record<string, string> = {
   "common.collapse": "Yig‘ish",
   "common.expand": "Kengaytirish",
   "kanban.openTicket": "{title} topshirig‘ini ochish",
+  "language.label": "Til",
+  "language.search": "Tillarni qidirish",
+  "language.searchPlaceholder": "Tillarni qidirish…",
+  "language.noResults": "Mos til topilmadi.",
 };

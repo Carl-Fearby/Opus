@@ -690,4 +690,8 @@ export const componentUiMessagesSr: Record<string, string> = {
   "common.collapse": "Скупи",
   "common.expand": "Прошири",
   "kanban.openTicket": "Отвори задатак {title}",
+  "language.label": "Језик",
+  "language.search": "Претражи језике",
+  "language.searchPlaceholder": "Претражи језике…",
+  "language.noResults": "Нема језика који се подударају.",
 };

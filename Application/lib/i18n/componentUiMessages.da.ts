@@ -690,4 +690,8 @@ export const componentUiMessagesDa: Record<string, string> = {
   "common.collapse": "Fold sammen",
   "common.expand": "Udvid",
   "kanban.openTicket": "Åbn opgaven {title}",
+  "language.label": "Sprog",
+  "language.search": "Søg sprog",
+  "language.searchPlaceholder": "Søg sprog…",
+  "language.noResults": "Ingen sprog matcher.",
 };

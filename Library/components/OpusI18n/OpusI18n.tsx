@@ -10,8 +10,13 @@ export type OpusLocaleOption = {
   id: OpusLocale;
   /** Display name. Omit to derive one with `Intl.DisplayNames`. */
   label?: string;
-  /** Optional emoji or icon shown before the label. */
+  /** Optional emoji flag shown before the label. */
   flag?: string;
+  /**
+   * ISO 3166-1 alpha-2 country code for the flag icon, e.g. "gb" or "fr".
+   * Renders the bundled flag-icons SVG and takes precedence over `flag`.
+   */
+  country?: string;
   /** BCP 47 tag for the document, e.g. "fr-FR". */
   htmlLang?: string;
 };

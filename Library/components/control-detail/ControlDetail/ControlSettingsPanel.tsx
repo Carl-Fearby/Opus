@@ -1132,6 +1132,28 @@ export function ControlSettingsPanel({
         </div>
       );
     }
+    case "language-picker": {
+      const s = settings as ControlSettingsBySlug["language-picker"];
+      return (
+        <div className={shellStyles.settingsGrid}>
+          <SettingInput
+            label="Label"
+            value={s.label}
+            onChange={(label) => onChange({ ...s, label } as ControlSettings)}
+          />
+          <SettingToggle
+            label="Compact"
+            checked={s.compact}
+            onChange={(compact) => onChange({ ...s, compact } as ControlSettings)}
+          />
+          <SettingToggle
+            label="Search field"
+            checked={s.searchable}
+            onChange={(searchable) => onChange({ ...s, searchable } as ControlSettings)}
+          />
+        </div>
+      );
+    }
     case "country-picker": {
       const s = settings as ControlSettingsBySlug["country-picker"];
       return (

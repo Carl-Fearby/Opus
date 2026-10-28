@@ -688,4 +688,8 @@ export const componentUiMessagesBn: Record<string, string> = {
   "common.collapse": "সংকুচিত করুন",
   "common.expand": "প্রসারিত করুন",
   "kanban.openTicket": "{title} এর টিকিট খুলুন",
+  "language.label": "ভাষা",
+  "language.search": "ভাষা খুঁজুন",
+  "language.searchPlaceholder": "ভাষা খুঁজুন…",
+  "language.noResults": "কোনো ভাষা মেলেনি।",
 };

@@ -26,8 +26,17 @@ import {
 import type { LocaleResources } from "./resources";
 import type { OpusLocale } from "@/components/OpusI18n";
 
-/** The site hands its own locale list to the picker, which owns no list of its own. */
-const LOCALE_OPTIONS = locales.map(({ id, flag, htmlLang }) => ({ id, flag, htmlLang }));
+/**
+ * The site hands its own locale list to the picker, which owns no list of its
+ * own. `country` makes the picker draw the same flag-icons SVGs the country
+ * picker uses; `flag` stays as the emoji fallback.
+ */
+const LOCALE_OPTIONS = locales.map(({ id, flag, htmlLang, country }) => ({
+  id,
+  flag,
+  htmlLang,
+  country,
+}));
 
 type LocaleContextValue = {
   locale: Locale;

@@ -690,4 +690,8 @@ export const componentUiMessagesHu: Record<string, string> = {
   "common.collapse": "Összecsukás",
   "common.expand": "Kibontás",
   "kanban.openTicket": "A(z) {title} feladat megnyitása",
+  "language.label": "Nyelv",
+  "language.search": "Nyelvek keresése",
+  "language.searchPlaceholder": "Nyelvek keresése…",
+  "language.noResults": "Nincs egyező nyelv.",
 };

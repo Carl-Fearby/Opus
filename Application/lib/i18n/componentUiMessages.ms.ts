@@ -690,4 +690,8 @@ export const componentUiMessagesMs: Record<string, string> = {
   "common.collapse": "Kuncupkan",
   "common.expand": "Kembangkan",
   "kanban.openTicket": "Buka tiket untuk {title}",
+  "language.label": "Bahasa",
+  "language.search": "Cari bahasa",
+  "language.searchPlaceholder": "Cari bahasa…",
+  "language.noResults": "Tiada bahasa yang sepadan.",
 };

@@ -690,4 +690,8 @@ export const componentUiMessagesRo: Record<string, string> = {
   "common.collapse": "Restrânge",
   "common.expand": "Extinde",
   "kanban.openTicket": "Deschide tichetul pentru {title}",
+  "language.label": "Limbă",
+  "language.search": "Căutați limbi",
+  "language.searchPlaceholder": "Căutați limbi…",
+  "language.noResults": "Nicio limbă nu corespunde.",
 };

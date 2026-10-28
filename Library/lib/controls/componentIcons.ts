@@ -337,6 +337,7 @@ const componentIcons: Record<string, IconDefinition> = {
   "form-validation-summary": faTriangleExclamation,
   "phone-number-input": faPhone,
   "country-picker": faGlobe,
+  "language-picker": faGlobe,
   "tree-select": faSitemap,
   cascader: faLayerGroup,
   "theme-toggle": faSun,

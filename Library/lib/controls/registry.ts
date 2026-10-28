@@ -681,6 +681,20 @@ const formsControls: Record<(typeof formsControlOrder)[number], ControlDefinitio
     ],
     usesFieldShell: true,
   },
+  "language-picker": {
+    slug: "language-picker",
+    title: "Language picker",
+    category: "forms",
+    componentName: "LanguagePicker",
+    description:
+      "Language selector with flags, names in the active language, and search that also matches each language's own and English names.",
+    isNew: true,
+    sourceFiles: [
+      "components/LanguagePicker/LanguagePicker.tsx",
+      "components/LanguagePicker/LanguagePicker.module.css",
+    ],
+    usesFieldShell: false,
+  },
   "tree-select": {
     slug: "tree-select",
     title: "Tree select",

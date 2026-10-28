@@ -130,6 +130,7 @@ export type ControlSlug =
   | "form-validation-summary"
   | "phone-number-input"
   | "country-picker"
+  | "language-picker"
   | "tree-select"
   | "cascader"
   | "theme-toggle"
@@ -428,6 +429,12 @@ export type CountryPickerSettings = BaseFieldSettings & {
   placeholder: string;
   placeholderEnabled: boolean;
   searchPlaceholder: string;
+};
+
+export type LanguagePickerSettings = {
+  label: string;
+  compact: boolean;
+  searchable: boolean;
 };
 
 export type TreeSelectSettings = BaseFieldSettings & {
@@ -1816,6 +1823,7 @@ export type ControlSettingsBySlug = {
   "form-validation-summary": FormValidationSettings;
   "phone-number-input": PhoneNumberInputSettings;
   "country-picker": CountryPickerSettings;
+  "language-picker": LanguagePickerSettings;
   "tree-select": TreeSelectSettings;
   cascader: CascaderSettings;
   "theme-toggle": ThemeToggleSettings;
@@ -2071,6 +2079,7 @@ export const formsControlOrder = [
   "form-validation-summary",
   "phone-number-input",
   "country-picker",
+  "language-picker",
   "tree-select",
   "cascader",
 ] as const satisfies readonly ControlSlug[];

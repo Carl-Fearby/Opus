@@ -970,6 +970,24 @@ return (
         },
       );
     }
+    case "language-picker": {
+      const s = settings as ControlSettingsBySlug["language-picker"];
+      const props = [
+        formatStringProp("label", s.label),
+        ...(s.compact ? [formatBoolProp("compact", true)] : []),
+        ...(s.searchable ? [] : [formatBoolProp("searchable", false)]),
+      ];
+      // The host owns the locale, the locale list and the change handler, so
+      // the picker renders inside the provider the page already supplies. That
+      // keeps the example behaving exactly like the documentation header
+      // picker, and stops it pinning itself to English inside a nested provider.
+      return `${usageClientPrefix(false)}\n${importLine([
+        "LanguagePicker",
+      ])}\n\n// OpusI18nProvider owns the locale, the available locales and onLocaleChange.\n${formatSelfClosingElement(
+        "LanguagePicker",
+        props,
+      )}`;
+    }
     case "currency-select": {
       const s = settings as ControlSettingsBySlug["currency-select"];
       const state = toStateName(s.label);

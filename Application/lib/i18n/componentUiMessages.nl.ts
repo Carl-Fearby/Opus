@@ -690,4 +690,8 @@ export const componentUiMessagesNl: Record<string, string> = {
   "common.collapse": "Samenvouwen",
   "common.expand": "Uitvouwen",
   "kanban.openTicket": "Ticket voor {title} openen",
+  "language.label": "Taal",
+  "language.search": "Talen zoeken",
+  "language.searchPlaceholder": "Talen zoeken…",
+  "language.noResults": "Geen talen gevonden.",
 };

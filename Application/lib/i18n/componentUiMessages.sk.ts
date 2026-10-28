@@ -689,4 +689,8 @@ export const componentUiMessagesSk: Record<string, string> = {
   "common.collapse": "Zbaliť",
   "common.expand": "Rozbaliť",
   "kanban.openTicket": "Otvoriť úlohu {title}",
+  "language.label": "Jazyk",
+  "language.search": "Hľadať jazyky",
+  "language.searchPlaceholder": "Hľadať jazyky…",
+  "language.noResults": "Žiadny jazyk nezodpovedá.",
 };

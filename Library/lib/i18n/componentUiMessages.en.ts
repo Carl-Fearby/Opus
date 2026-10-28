@@ -798,4 +798,8 @@ export const componentUiMessagesEn: Record<string, string> = {
   "searchBox.ariaLabel": "Search",
   "searchBox.label": "Search",
   "searchBox.placeholder": "Search for anything",
+  "language.label": "Language",
+  "language.search": "Search languages",
+  "language.searchPlaceholder": "Search languages…",
+  "language.noResults": "No languages match.",
 };

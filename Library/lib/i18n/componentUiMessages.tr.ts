@@ -690,4 +690,8 @@ export const componentUiMessagesTr: Record<string, string> = {
   "common.collapse": "Daralt",
   "common.expand": "Genişlet",
   "kanban.openTicket": "{title} için iş kaydını aç",
+  "language.label": "Dil",
+  "language.search": "Dil ara",
+  "language.searchPlaceholder": "Dil ara…",
+  "language.noResults": "Eşleşen dil yok.",
 };

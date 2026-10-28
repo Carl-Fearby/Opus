@@ -1,6 +1,50 @@
 /** Curated opus-react release notes for npm publishes that only left chore commits in git. */
 export const releaseNotesOverlay = [
   {
+    version: "0.15.1",
+    releasedAt: "2026-10-28",
+    commit: "899737f21550dda9dcf9984bdf030c29d50362aa",
+    summary: "Language picker flags and search, with refreshed dictionaries.",
+    changes: [
+      "LanguagePicker options show a flag: pass country (an ISO 3166-1 alpha-2 code) for the bundled flag-icons SVG or flag for an emoji fallback, with a tick on the current language.",
+      "Longer lists gain a search field that matches the active-language name, the language's own name and its English name; searchable forces the field on or off.",
+      "CountryPickerField, the component registry, usage samples and the UI dictionaries are updated alongside.",
+      "Publish opus-react 0.15.1.",
+    ],
+  },
+  {
+    version: "0.15.0",
+    releasedAt: "2026-10-28",
+    commit: "375437512fb9e4f5158c3fdc5d46aac7dd94d68b",
+    summary: "Engine-agnostic translation with a published key manifest.",
+    changes: [
+      "OpusI18nProvider accepts a host translate function, onLocaleChange and availableLocales; resolution runs host, then bundled messages, then the component's English fallback, so dictionaries can live in JSON, i18next, next-intl or an API.",
+      "Add useOpusTranslation and publish a manifest of every message key the library ships.",
+      "LanguagePicker reads locale, options and handler from the provider instead of the host site's locale config.",
+      "Publish opus-react 0.15.0.",
+    ],
+  },
+  {
+    version: "0.14.3",
+    releasedAt: "2026-10-27",
+    commit: "7a174c624c29fe8cbf1a89fdc4101a24c49b0673",
+    summary: "Component fallbacks aligned with the translated dictionaries.",
+    changes: [
+      "Align six component fallback strings with the dictionary entries they share (FilterBuilder output label, week-of-year aria label, Kanban comment count, tag button and uploading status) so the no-provider fallback matches all 48 locales.",
+      "Publish opus-react 0.14.3.",
+    ],
+  },
+  {
+    version: "0.14.2",
+    releasedAt: "2026-10-25",
+    commit: "c5c2c932ac080f627ce50944e7797d147e49dca6",
+    summary: "Component documentation usable at every viewport.",
+    changes: [
+      "Stack the docs top bar, collapse navigation and settings into drawers, and let the header respond to its own width with container queries so the shell adapts at any resolution.",
+      "Publish opus-react 0.14.2.",
+    ],
+  },
+  {
     version: "0.14.1",
     releasedAt: "2026-10-25",
     commit: "dec4c646bd905fcab3d39be746e8f714a4cb72a7",

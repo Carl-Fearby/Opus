@@ -690,4 +690,8 @@ export const componentUiMessagesAz: Record<string, string> = {
   "common.collapse": "Yığcamlaşdır",
   "common.expand": "Genişləndir",
   "kanban.openTicket": "{title} üçün tapşırığı aç",
+  "language.label": "Dil",
+  "language.search": "Dilləri axtar",
+  "language.searchPlaceholder": "Dilləri axtar…",
+  "language.noResults": "Uyğun dil yoxdur.",
 };

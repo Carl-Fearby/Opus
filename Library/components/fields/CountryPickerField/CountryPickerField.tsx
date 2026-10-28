@@ -14,6 +14,14 @@ function flagClassName(code: string) {
   return `fi fi-${code.toLowerCase()}`;
 }
 
+/** Case and diacritic insensitive, so "curacao" finds "Curaçao". */
+function fold(value: string) {
+  return value
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .toLowerCase();
+}
+
 type CountryPickerFieldProps = {
   radius?: ControlRadius;
   transparency?: import("../types").ControlTransparency;
@@ -51,7 +59,7 @@ export function CountryPickerField({
   transparency,
   gradient,
 }: CountryPickerFieldProps) {
-  const { t } = useOpusI18n();
+  const { locale, t } = useOpusI18n();
   const displayPlaceholder = placeholder ?? t("field.selectCountry", "Select country…");
   const displaySearchPlaceholder = searchPlaceholder ?? t("field.searchCountriesPlaceholder", "Search countries…");
   const shellAria = useFieldShellAria();
@@ -92,19 +100,65 @@ export function CountryPickerField({
     };
   }, [open]);
 
-  const filteredCountries = useMemo(() => {
-    const normalised = query.trim().toLowerCase();
-    if (!normalised) {
-      return countries;
+  // Country names follow the interface language the same way component labels do,
+  // so a French page lists "Royaume-Uni" rather than "United Kingdom".
+  const countryNames = useMemo(() => {
+    let names: Intl.DisplayNames | null = null;
+    try {
+      names = new Intl.DisplayNames([locale], { type: "region" });
+    } catch {
+      names = null;
     }
 
-    return countries.filter(
-      (country) =>
-        country.label.toLowerCase().includes(normalised) ||
-        country.code.toLowerCase().includes(normalised) ||
-        country.dialCode.includes(normalised),
+    const map = new Map<string, string>();
+    for (const country of countries) {
+      const localized = names?.of(country.code) ?? undefined;
+      const name =
+        localized && localized !== country.code
+          ? localized.charAt(0).toLocaleUpperCase(locale) + localized.slice(1)
+          : country.label;
+      map.set(country.code, name);
+    }
+
+    return map;
+  }, [countries, locale]);
+
+  const nameOf = (country: PhoneCountry) => countryNames.get(country.code) ?? country.label;
+
+  const sortedCountries = useMemo(() => {
+    let collator: Intl.Collator | null = null;
+    try {
+      collator = new Intl.Collator(locale, { sensitivity: "base" });
+    } catch {
+      collator = null;
+    }
+
+    return [...countries].sort((left, right) => {
+      const leftName = countryNames.get(left.code) ?? left.label;
+      const rightName = countryNames.get(right.code) ?? right.label;
+      return collator ? collator.compare(leftName, rightName) : leftName.localeCompare(rightName);
+    });
+  }, [countries, countryNames, locale]);
+
+  // Search covers the displayed name, the English name, the code and the dial code,
+  // so someone browsing in French can still find a country by typing "Netherlands".
+  const filteredCountries = useMemo(() => {
+    const needle = fold(query.trim());
+    if (!needle) {
+      return sortedCountries;
+    }
+
+    return sortedCountries.filter((country) =>
+      fold(
+        [
+          countryNames.get(country.code) ?? country.label,
+          country.label,
+          country.code,
+          country.dialCode,
+        ].join(" "),
+      ).includes(needle),
     );
-  }, [countries, query]);
+  }, [countryNames, query, sortedCountries]);
 
   return (
     <FieldShell
@@ -123,7 +177,11 @@ export function CountryPickerField({
         <button
           aria-expanded={open}
           aria-haspopup="listbox"
-          aria-label={activeCountry ? t("field.countryAria", "Country: {country}", { country: activeCountry.label }) : displayPlaceholder}
+          aria-label={
+            activeCountry
+              ? t("field.countryAria", "Country: {country}", { country: nameOf(activeCountry) })
+              : displayPlaceholder
+          }
           className={[
             inputControlSizeClassName[size],
             shared.trigger,
@@ -143,7 +201,7 @@ export function CountryPickerField({
                 aria-hidden="true"
                 className={`${flagClassName(activeCountry.code)} ${styles.flag}`}
               />
-              <span>{activeCountry.label}</span>
+              <span>{nameOf(activeCountry)}</span>
             </span>
           ) : (
             <span className={shared.placeholder}>{displayPlaceholder}</span>
@@ -183,7 +241,7 @@ export function CountryPickerField({
                     aria-hidden="true"
                     className={`${flagClassName(country.code)} ${styles.flag}`}
                   />
-                  <span className={styles.optionLabel}>{country.label}</span>
+                  <span className={styles.optionLabel}>{nameOf(country)}</span>
                   <span className={styles.optionCode}>{country.code}</span>
                 </button>
               ))}

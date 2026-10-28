@@ -690,4 +690,8 @@ export const componentUiMessagesFil: Record<string, string> = {
   "common.collapse": "I-collapse",
   "common.expand": "Palawakin",
   "kanban.openTicket": "Buksan ang ticket para sa {title}",
+  "language.label": "Wika",
+  "language.search": "Maghanap ng mga wika",
+  "language.searchPlaceholder": "Maghanap ng mga wika…",
+  "language.noResults": "Walang tugmang wika.",
 };

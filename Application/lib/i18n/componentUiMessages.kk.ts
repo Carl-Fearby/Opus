@@ -690,4 +690,8 @@ export const componentUiMessagesKk: Record<string, string> = {
   "common.collapse": "Жию",
   "common.expand": "Жаю",
   "kanban.openTicket": "{title} тапсырмасын ашу",
+  "language.label": "Тіл",
+  "language.search": "Тілдерді іздеу",
+  "language.searchPlaceholder": "Тілдерді іздеу…",
+  "language.noResults": "Сәйкес тілдер жоқ.",
 };

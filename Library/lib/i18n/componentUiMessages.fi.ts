@@ -690,4 +690,8 @@ export const componentUiMessagesFi: Record<string, string> = {
   "common.collapse": "Kutista",
   "common.expand": "Laajenna",
   "kanban.openTicket": "Avaa tehtävä {title}",
+  "language.label": "Kieli",
+  "language.search": "Hae kieliä",
+  "language.searchPlaceholder": "Hae kieliä…",
+  "language.noResults": "Ei vastaavia kieliä.",
 };

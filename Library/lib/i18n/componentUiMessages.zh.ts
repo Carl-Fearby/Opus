@@ -689,4 +689,8 @@ export const componentUiMessagesZh: Record<string, string> = {
   "common.collapse": "折叠",
   "common.expand": "展开",
   "kanban.openTicket": "打开 {title} 的工单",
+  "language.label": "语言",
+  "language.search": "搜索语言",
+  "language.searchPlaceholder": "搜索语言…",
+  "language.noResults": "没有匹配的语言。",
 };

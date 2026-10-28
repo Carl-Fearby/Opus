@@ -690,4 +690,8 @@ export const componentUiMessagesEl: Record<string, string> = {
   "common.collapse": "Κατάρρευση",
   "common.expand": "Επέκταση",
   "kanban.openTicket": "Άνοιγμα ticket για {title}",
+  "language.label": "Γλώσσα",
+  "language.search": "Αναζήτηση γλωσσών",
+  "language.searchPlaceholder": "Αναζήτηση γλωσσών…",
+  "language.noResults": "Καμία γλώσσα δεν ταιριάζει.",
 };

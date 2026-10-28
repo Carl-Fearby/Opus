@@ -690,4 +690,8 @@ export const componentUiMessagesTh: Record<string, string> = {
   "common.collapse": "ยุบ",
   "common.expand": "ขยาย",
   "kanban.openTicket": "เปิดทิกเก็ตสำหรับ {title}",
+  "language.label": "ภาษา",
+  "language.search": "ค้นหาภาษา",
+  "language.searchPlaceholder": "ค้นหาภาษา…",
+  "language.noResults": "ไม่พบภาษาที่ตรงกัน",
 };

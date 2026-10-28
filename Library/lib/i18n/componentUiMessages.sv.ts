@@ -690,4 +690,8 @@ export const componentUiMessagesSv: Record<string, string> = {
   "common.collapse": "Fäll ihop",
   "common.expand": "Fäll ut",
   "kanban.openTicket": "Öppna ärendet {title}",
+  "language.label": "Språk",
+  "language.search": "Sök språk",
+  "language.searchPlaceholder": "Sök språk…",
+  "language.noResults": "Inga språk matchar.",
 };

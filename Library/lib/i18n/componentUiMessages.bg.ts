@@ -690,4 +690,8 @@ export const componentUiMessagesBg: Record<string, string> = {
   "common.collapse": "Свий",
   "common.expand": "Разгъни",
   "kanban.openTicket": "Отвори задачата за {title}",
+  "language.label": "Език",
+  "language.search": "Търсене на езици",
+  "language.searchPlaceholder": "Търсене на езици…",
+  "language.noResults": "Няма съвпадащи езици.",
 };

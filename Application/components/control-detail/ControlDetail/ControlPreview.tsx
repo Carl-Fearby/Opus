@@ -200,6 +200,7 @@ import {
 } from "opus-react";
 import { Tabs } from "@/components/Tabs";
 import { MoreActionsMenu } from "opus-react";
+import { LanguagePicker } from "@/components/LanguagePicker";
 import { ImageCropUploadWidget } from "opus-react";
 import { IconPicker } from "opus-react";
 import { AccentColorPicker, accentPairs, createAccentStyle } from "@/components/AccentColorPicker";
@@ -3565,6 +3566,19 @@ function ControlPreviewContent({
           onChange={(value) =>
             onSettingsChange({ ...s, value } as ControlSettings)
           }
+        />
+      );
+    }
+    case "language-picker": {
+      const s = settings as ControlSettingsBySlug["language-picker"];
+      // Mirrors the documentation header: the provider owns the locale, the
+      // list and the change handler, so the demo behaves exactly like the site
+      // picker and switching here switches the whole documentation language.
+      return (
+        <LanguagePicker
+          compact={s.compact}
+          label={s.label}
+          searchable={s.searchable}
         />
       );
     }

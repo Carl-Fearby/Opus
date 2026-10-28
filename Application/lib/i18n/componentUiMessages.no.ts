@@ -690,4 +690,8 @@ export const componentUiMessagesNo: Record<string, string> = {
   "common.collapse": "Skjul",
   "common.expand": "Utvid",
   "kanban.openTicket": "Åpne oppgaven {title}",
+  "language.label": "Språk",
+  "language.search": "Søk språk",
+  "language.searchPlaceholder": "Søk språk…",
+  "language.noResults": "Ingen språk samsvarer.",
 };

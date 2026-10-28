@@ -516,6 +516,11 @@ export const defaultSettings: ControlSettingsBySlug = {
     placeholderEnabled: true,
     searchPlaceholder: "Search countries…",
   },
+  "language-picker": {
+    label: "Language",
+    compact: false,
+    searchable: true,
+  },
   "tree-select": {
     ...baseFieldDefaults,
     label: "Department",

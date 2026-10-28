@@ -690,4 +690,8 @@ export const componentUiMessagesUk: Record<string, string> = {
   "common.collapse": "Згорнути",
   "common.expand": "Розгорнути",
   "kanban.openTicket": "Відкрити завдання {title}",
+  "language.label": "Мова",
+  "language.search": "Пошук мов",
+  "language.searchPlaceholder": "Пошук мов…",
+  "language.noResults": "Немає відповідних мов.",
 };

@@ -689,4 +689,8 @@ export const componentUiMessagesAr: Record<string, string> = {
   "common.collapse": "طي",
   "common.expand": "توسيع",
   "kanban.openTicket": "افتح تذكرة {title}",
+  "language.label": "اللغة",
+  "language.search": "البحث عن اللغات",
+  "language.searchPlaceholder": "البحث عن اللغات…",
+  "language.noResults": "لا توجد لغات مطابقة.",
 };

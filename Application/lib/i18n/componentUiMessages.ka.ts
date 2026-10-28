@@ -690,4 +690,8 @@ export const componentUiMessagesKa: Record<string, string> = {
   "common.collapse": "ჩაკეცვა",
   "common.expand": "გაფართოება",
   "kanban.openTicket": "გახსენით {title}-ის დავალება",
+  "language.label": "ენა",
+  "language.search": "ენების ძიება",
+  "language.searchPlaceholder": "ენების ძიება…",
+  "language.noResults": "შესატყვისი ენა არ არის.",
 };

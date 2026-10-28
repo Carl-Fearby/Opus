@@ -690,4 +690,8 @@ export const componentUiMessagesKo: Record<string, string> = {
   "common.collapse": "접기",
   "common.expand": "펼치기",
   "kanban.openTicket": "{title} 티켓 열기",
+  "language.label": "언어",
+  "language.search": "언어 검색",
+  "language.searchPlaceholder": "언어 검색…",
+  "language.noResults": "일치하는 언어가 없습니다.",
 };
