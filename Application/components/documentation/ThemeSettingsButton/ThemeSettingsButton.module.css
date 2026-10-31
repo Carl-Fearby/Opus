@@ -14,6 +14,12 @@
   pointer-events: auto;
 }
 
+[data-opus-appearance="neumorphism"] .themeWindow {
+  border-color: transparent;
+  background: var(--opus-panel);
+  box-shadow: var(--opus-shadow, 6px 6px 14px rgba(0, 0, 0, 0.25), -6px -6px 14px rgba(255, 255, 255, 0.55));
+}
+
 .themeWindow[data-interaction="move"],
 .themeWindow[data-interaction="resize"] {
   user-select: none;

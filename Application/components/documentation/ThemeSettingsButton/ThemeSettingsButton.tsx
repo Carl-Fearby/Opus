@@ -10,7 +10,7 @@ import {
   type CSSProperties,
   type PointerEvent as ReactPointerEvent,
 } from "react";
-import { createPortal } from "react-dom";
+import { createThemedPortal as createPortal } from "@/lib/theme/createThemedPortal";
 import {
   AccentColorPicker,
   DEFAULT_TILE_ACCENT,
