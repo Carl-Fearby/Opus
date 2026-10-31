@@ -466,7 +466,7 @@ export function ComponentsThemeProvider({ children }: { children: ReactNode }) {
 
   return (
     <ComponentsThemeContext.Provider value={contextValue}>
-      <OpusThemeProvider applyToDocument={false} theme={theme}>
+      <OpusThemeProvider applyToDocument={false} defaults={previewDefaults} theme={theme}>
         <DocsShellThemeIsolation />
         <div style={combinedStyle}>
           <ToastProvider>

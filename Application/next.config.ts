@@ -80,6 +80,11 @@ const nextConfig: NextConfig = {
         destination: "/documentation/components/:path*",
         permanent: true,
       },
+      {
+        source: "/documentation/theme",
+        destination: "/theme-designer",
+        permanent: true,
+      },
     ];
   },
 };

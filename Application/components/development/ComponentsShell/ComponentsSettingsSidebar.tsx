@@ -42,7 +42,7 @@ export function ComponentsSettingsSidebar({
   onRequestClose?: () => void;
 } = {}) {
   const { t } = useOpusI18n();
-  const { theme } = useComponentsTheme();
+  const { previewDefaults, theme } = useComponentsTheme();
   const {
     activeSlug,
     isResizing,
@@ -207,7 +207,7 @@ export function ComponentsSettingsSidebar({
         </div>
         <CustomScrollbar className={styles.settingsSidebarBody} label={t("settings.componentAria", "Component settings")} orientation="vertical">
           <div className={styles.settingsSidebarBodyInner}>
-            <OpusThemeProvider applyToDocument={false} theme={theme}>
+            <OpusThemeProvider applyToDocument={false} defaults={previewDefaults} theme={theme}>
               <ControlSettingsPanel slug={activeSlug} settings={settings} onChange={setSettings} />
             </OpusThemeProvider>
           </div>

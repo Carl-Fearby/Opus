@@ -26,6 +26,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     entry("/documentation/components", 0.9),
     entry("/documentation/guide", 0.7),
     entry("/documentation/playground", 0.8),
+    entry("/theme-designer", 0.7),
     entry("/documentation/security", 0.6),
     entry("/documentation/version", 0.5),
     entry("/news", 0.8),

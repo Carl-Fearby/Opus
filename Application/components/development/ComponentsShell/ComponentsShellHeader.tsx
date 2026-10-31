@@ -15,6 +15,7 @@ export function ComponentsShellHeader() {
     accentSecondary,
     baseColor,
     fontFamily,
+    previewDefaults,
     previewTheme,
     resetAccent,
     resetTileAccent,
@@ -22,6 +23,7 @@ export function ComponentsShellHeader() {
     setAccentSecondary,
     setBaseColor,
     setFontFamily,
+    setPreviewDefaults,
     setPreviewTheme,
     setTheme,
     setTileAccent,
@@ -56,6 +58,7 @@ export function ComponentsShellHeader() {
               accent={accent}
               accentSecondary={accentSecondary}
               compact
+              defaults={previewDefaults}
               fontFamily={fontFamily}
               idPrefix="global"
               theme={previewTheme}
@@ -65,6 +68,7 @@ export function ComponentsShellHeader() {
               onAccentChange={setAccent}
               onAccentSecondaryChange={setAccentSecondary}
               onBaseChange={setBaseColor}
+              onDefaultsChange={setPreviewDefaults}
               onFontFamilyChange={setFontFamily}
               onResetAccent={resetAccent}
               onResetTileAccent={resetTileAccent}
