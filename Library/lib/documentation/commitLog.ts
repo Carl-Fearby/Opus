@@ -1927,5 +1927,47 @@ export const commitLog: CommitEntry[] = [
     shortHash: "492be74",
     committedAt: "2026-10-28",
     summary: "feat(i18n): ship the language picker as a country-picker field",
+  },
+  {
+    hash: "a14145eb25f3e59f46d4fe4a7598b9607911d865",
+    shortHash: "a14145e",
+    committedAt: "2026-10-28",
+    summary: "docs: publish opus-react 0.15.2 release notes",
+  },
+  {
+    hash: "f03f6e0287daa29de39c1302b7894febc3be9be7",
+    shortHash: "f03f6e0",
+    committedAt: "2026-10-28",
+    summary: "fix(i18n): read SSR messages from bundled dictionaries",
+  },
+  {
+    hash: "c1b390bb9f9f00b88ec671fff85270b46cbb34fe",
+    shortHash: "c1b390b",
+    committedAt: "2026-10-28",
+    summary: "feat(i18n): add a translation audit and localise clock dates",
+  },
+  {
+    hash: "3d0cc16030fae819cbfd8d5eb464e5707f3aefcc",
+    shortHash: "3d0cc16",
+    committedAt: "2026-10-31",
+    summary: "fix(site): serve the theme designer in the public app",
+  },
+  {
+    hash: "36fa0307f782d6bd53fe6b5f3e7d3aa00cd6efc5",
+    shortHash: "36fa030",
+    committedAt: "2026-10-31",
+    summary: "fix(theme): theme portalled controls through the package provider",
+  },
+  {
+    hash: "418ed3893b3305dad827ae5c9bfbbdfbcad613c7",
+    shortHash: "418ed38",
+    committedAt: "2026-11-01",
+    summary: "fix(theme): apply the appearance setting across every surface",
+  },
+  {
+    hash: "5a37f7631ab9e0b0e929476b678ff67d12151ae3",
+    shortHash: "5a37f76",
+    committedAt: "2026-11-01",
+    summary: "chore: release opus-react@0.15.3",
   }
 ].reverse();
