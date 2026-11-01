@@ -466,6 +466,8 @@ export function ComponentsThemeProvider({ children }: { children: ReactNode }) {
 
   return (
     <ComponentsThemeContext.Provider value={contextValue}>
+      {/* Pass the appearance defaults so the boundary carries data-opus-appearance
+          and portalled menus/dialogs inherit the selected style. */}
       <OpusThemeProvider applyToDocument={false} defaults={previewDefaults} theme={theme}>
         <DocsShellThemeIsolation />
         <div style={combinedStyle}>

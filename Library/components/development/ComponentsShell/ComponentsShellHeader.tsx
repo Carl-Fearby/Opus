@@ -6,6 +6,7 @@ import { DocumentationTopBar } from "@/components/documentation/DocumentationTop
 import { ThemeSettingsButton } from "@/components/documentation/ThemeSettingsButton";
 import { useComponentsTheme } from "@/components/development/ComponentsThemeProvider";
 import { useOpusI18n } from "@/components/OpusI18n";
+import { ThemeStylePicker } from "./ThemeStylePicker";
 import styles from "./ComponentsShell.module.css";
 
 export function ComponentsShellHeader() {
@@ -36,6 +37,9 @@ export function ComponentsShellHeader() {
       current="components"
       trailing={
         <div className={styles.themeControl}>
+          <span className={styles.tourControl}>
+            <ThemeStylePicker />
+          </span>
           <span className={styles.tourControl} data-opus-tour="ui-font">
             <FontPicker compact id="global-font-picker" value={fontFamily} onChange={setFontFamily} />
           </span>

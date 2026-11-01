@@ -88,6 +88,17 @@
   height: 0.9rem;
 }
 
+/* Neumorphism: the knob and the track share one material, so the selected icon
+   must follow the surface text instead of staying white, and the knob shadow
+   has to stay inside the track instead of blooming around the control. */
+:global([data-opus-appearance="neumorphism"]) .toggle {
+  overflow: hidden;
+}
+
+:global([data-opus-appearance="neumorphism"]) .option.active {
+  color: var(--opus-text);
+}
+
 @media (prefers-reduced-motion: reduce) {
   .indicator {
     transition: none;

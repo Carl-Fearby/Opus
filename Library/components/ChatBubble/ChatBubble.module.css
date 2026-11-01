@@ -7,6 +7,7 @@
 .group[data-alignment="left"] .bubble { justify-self:start; }
 .group[data-alignment="right"] .bubble { justify-self:end; }
 .group[data-alignment="right"] .bubble { border-color:var(--opus-surface-border, var(--chat-bubble-border-active, color-mix(in srgb, var(--opus-accent) 70%, var(--opus-border)))); }
+:global([data-opus-appearance="neumorphism"]) .bubble { box-shadow:var(--opus-control-shadow, none); }
 :global([data-preview-root][data-theme="light"]) .group,
 :global([data-theme="light"]) .group { --chat-bubble-background-active:var(--chat-bubble-background-light); --chat-bubble-foreground-active:var(--chat-bubble-foreground-light); --chat-bubble-border-active:var(--chat-bubble-border-light); }
 :global([data-preview-root][data-theme="dark"]) .group,

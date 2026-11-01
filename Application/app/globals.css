@@ -185,6 +185,16 @@ textarea {
   --opus-menu-glass-border: color-mix(in srgb, var(--opus-accent) 28%, transparent);
 }
 
+/*
+ * ChatBubble is rendered from the prebuilt opus-react bundle, which predates its
+ * neumorphic surface rule. Library source already carries
+ * `[data-opus-appearance="neumorphism"] .bubble`; mirror it here for the
+ * installed package until the next opus-react release ships that rule.
+ */
+[data-opus-appearance="neumorphism"] [class*="_bubble"] {
+  box-shadow: var(--opus-control-shadow, none);
+}
+
 .opus-panel-title {
   display: block;
   margin: 0;

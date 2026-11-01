@@ -37,7 +37,7 @@ describe("translation key manifest", () => {
 
     // Keys only reachable from application surfaces ship no translation.
     expect(opusTranslationManifest["preview.desktop"]?.shipped).toBe(false);
-    expect(opusTranslationManifest["language.label"]?.shipped).toBe(false);
+    expect(opusTranslationManifest["settings.title"]?.shipped).toBe(false);
     expect(opusTranslationKeys.length).toBeGreaterThan(opusTranslatedKeys.length);
   });
 });

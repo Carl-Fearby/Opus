@@ -77,9 +77,17 @@
   box-shadow: 0 8px 24px color-mix(in srgb, var(--opus-accent) 10%, transparent);
 }
 
+.demoCard > :global(.opus-panel-heading) {
+  align-items: flex-start;
+  flex-wrap: wrap;
+  row-gap: 8px;
+}
+
 .demoCardHeading {
+  flex: 1 1 auto;
   min-width: 0;
   margin: 0;
+  padding-top: 4px;
   font: inherit;
 }
 

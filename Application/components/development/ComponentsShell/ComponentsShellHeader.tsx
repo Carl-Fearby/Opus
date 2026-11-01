@@ -6,6 +6,7 @@ import { DocumentationTopBar } from "@/components/documentation/DocumentationTop
 import { ThemeSettingsButton } from "@/components/documentation/ThemeSettingsButton";
 import { useComponentsTheme } from "@/components/development/ComponentsThemeProvider";
 import { useOpusI18n } from "@/components/OpusI18n";
+import { ThemeStylePicker } from "./ThemeStylePicker";
 import styles from "./ComponentsShell.module.css";
 
 export function ComponentsShellHeader() {
@@ -15,7 +16,6 @@ export function ComponentsShellHeader() {
     accentSecondary,
     baseColor,
     fontFamily,
-    previewDefaults,
     previewTheme,
     resetAccent,
     resetTileAccent,
@@ -23,7 +23,6 @@ export function ComponentsShellHeader() {
     setAccentSecondary,
     setBaseColor,
     setFontFamily,
-    setPreviewDefaults,
     setPreviewTheme,
     setTheme,
     setTileAccent,
@@ -38,6 +37,9 @@ export function ComponentsShellHeader() {
       current="components"
       trailing={
         <div className={styles.themeControl}>
+          <span className={styles.tourControl}>
+            <ThemeStylePicker />
+          </span>
           <span className={styles.tourControl} data-opus-tour="ui-font">
             <FontPicker compact id="global-font-picker" value={fontFamily} onChange={setFontFamily} />
           </span>
@@ -58,7 +60,6 @@ export function ComponentsShellHeader() {
               accent={accent}
               accentSecondary={accentSecondary}
               compact
-              defaults={previewDefaults}
               fontFamily={fontFamily}
               idPrefix="global"
               theme={previewTheme}
@@ -68,7 +69,6 @@ export function ComponentsShellHeader() {
               onAccentChange={setAccent}
               onAccentSecondaryChange={setAccentSecondary}
               onBaseChange={setBaseColor}
-              onDefaultsChange={setPreviewDefaults}
               onFontFamilyChange={setFontFamily}
               onResetAccent={resetAccent}
               onResetTileAccent={resetTileAccent}

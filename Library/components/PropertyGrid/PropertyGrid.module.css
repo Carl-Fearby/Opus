@@ -68,6 +68,49 @@
   box-shadow: 0 0 0 3px color-mix(in srgb, var(--opus-accent) 24%, transparent);
 }
 
+/* Neumorphism: replace hairline rules with soft grooves, recess the labels and
+   give the copy action the same raised material as other controls. The card
+   treatment only applies to the bordered variant, so an embedded grid keeps
+   sitting flush inside its parent surface. */
+:global([data-opus-appearance="neumorphism"]) .grid {
+  padding: 4px 8px;
+  border-radius: var(--opus-input-radius, 16px);
+}
+
+:global([data-opus-appearance="neumorphism"]) .grid[data-bordered="true"] {
+  border-color: transparent;
+  background: var(--opus-surface-fill);
+  box-shadow: var(--opus-shadow, var(--opus-control-shadow));
+}
+
+:global([data-opus-appearance="neumorphism"]) .row {
+  border-bottom: 0;
+  box-shadow: var(--opus-divider-shadow, none);
+}
+
+:global([data-opus-appearance="neumorphism"]) .row:last-child {
+  box-shadow: none;
+}
+
+:global([data-opus-appearance="neumorphism"]) .label {
+  background: transparent;
+  color: var(--opus-muted);
+}
+
+:global([data-opus-appearance="neumorphism"]) .copy {
+  padding: 5px 12px;
+  border-color: transparent;
+  border-radius: 999px;
+  background: var(--opus-surface-fill);
+  box-shadow: var(--opus-control-shadow, none);
+  color: var(--opus-text);
+}
+
+:global([data-opus-appearance="neumorphism"]) .copy:hover {
+  box-shadow: var(--opus-control-inset-shadow, none);
+  color: var(--opus-accent);
+}
+
 @media (max-width: 560px) {
   .row {
     grid-template-columns: 1fr;

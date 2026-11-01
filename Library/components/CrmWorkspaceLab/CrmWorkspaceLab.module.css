@@ -45,8 +45,8 @@
 
 .heading {
   display: flex;
-  align-items: center;
-  gap: 8px;
+  align-items: flex-start;
+  gap: 10px;
   min-width: 0;
 }
 
@@ -78,9 +78,11 @@
 }
 
 .headingIcon {
-  width: 1.35rem;
-  height: 1.35rem;
-  font-size: 1.35rem;
+  width: 2.25rem;
+  height: 2.25rem;
+  font-size: 1.45rem;
+  border-radius: 10px;
+  background: color-mix(in srgb, var(--opus-accent) 12%, transparent);
 }
 
 .openChevron {
@@ -677,6 +679,7 @@ button:focus-visible .openChevron {
 }
 
 .docToolbar {
+  flex-wrap: wrap;
   justify-content: space-between;
   gap: 12px;
   padding: 6px 8px;
@@ -735,7 +738,7 @@ button:focus-visible .openChevron {
 }
 
 :global([data-opus-appearance="neumorphism"]) .docViewButton[aria-pressed="true"] {
-  box-shadow: var(--opus-control-inset-shadow, none);
+  box-shadow: var(--opus-control-shadow, none);
 }
 
 .docViewButton:focus-visible {
@@ -903,6 +906,40 @@ button:focus-visible .openChevron {
 :global([data-opus-appearance="neumorphism"]) .docColumnItem:hover,
 :global([data-opus-appearance="neumorphism"]) .docColumnItem[data-active="true"] {
   box-shadow: var(--opus-control-inset-shadow, none);
+}
+
+/* Neumorphism: the filesystem borders go transparent and every surface matches
+   the panel, so raised chrome and a recessed browser carry the hierarchy. */
+:global([data-opus-appearance="neumorphism"]) .docTree,
+:global([data-opus-appearance="neumorphism"]) .docToolbar {
+  border-color: transparent;
+  box-shadow: var(--opus-control-shadow, none);
+}
+
+:global([data-opus-appearance="neumorphism"]) .docGrid,
+:global([data-opus-appearance="neumorphism"]) .docList,
+:global([data-opus-appearance="neumorphism"]) .docColumns {
+  border-color: transparent;
+  box-shadow: var(--opus-control-inset-shadow, none);
+}
+
+:global([data-opus-appearance="neumorphism"]) .docCard {
+  border-color: transparent;
+  box-shadow: var(--opus-control-shadow, none);
+}
+
+:global([data-opus-appearance="neumorphism"]) .docCard:hover {
+  box-shadow: var(--opus-shadow, var(--opus-control-shadow, none));
+}
+
+:global([data-opus-appearance="neumorphism"]) .docViewOptions {
+  border-color: transparent;
+  box-shadow: var(--opus-control-inset-shadow, none);
+}
+
+:global([data-opus-appearance="neumorphism"]) .docListRow {
+  border-top-color: transparent;
+  box-shadow: var(--opus-divider-shadow, none);
 }
 
 .docColumnItem > span:nth-child(2) {

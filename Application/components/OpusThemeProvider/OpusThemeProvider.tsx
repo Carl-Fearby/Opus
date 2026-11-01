@@ -12,7 +12,7 @@
  */
 import { createContext, useContext, type CSSProperties, type ReactNode } from "react";
 import { OpusThemeProvider as PackageOpusThemeProvider } from "opus-react";
-import type { ControlRadius, ControlTransparency, Theme } from "@/components/fields/types";
+import type { ControlRadius, ControlTransparency, Theme } from "opus-react";
 
 const OpusPortalAppearanceContext = createContext<{ theme: Theme; appearance: NonNullable<OpusThemeDefaults["appearance"]>; style: CSSProperties } | null>(null);
 

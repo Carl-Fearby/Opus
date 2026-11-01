@@ -23,6 +23,26 @@ type ShowMoreProps = {
   staticLayout?: boolean;
 };
 
+function readLineHeight(element: HTMLElement) {
+  const computed = getComputedStyle(element);
+  const declared = Number.parseFloat(computed.lineHeight);
+  if (Number.isFinite(declared) && declared > 0) {
+    return declared;
+  }
+
+  // `line-height: normal` has no numeric computed value, so resolve it by
+  // measuring a hidden single-line probe with the element's inherited metrics.
+  const probe = document.createElement("div");
+  probe.setAttribute("aria-hidden", "true");
+  probe.style.cssText =
+    "position:absolute;visibility:hidden;pointer-events:none;white-space:nowrap;";
+  probe.textContent = "M";
+  element.appendChild(probe);
+  const { height } = probe.getBoundingClientRect();
+  probe.remove();
+  return height;
+}
+
 function ChevronIcon() {
   return (
     <svg aria-hidden="true" className={styles.chevron} viewBox="0 0 16 16">
@@ -66,14 +86,14 @@ export function ShowMore({
       return;
     }
 
-    const lineHeight = Number.parseFloat(getComputedStyle(inner).lineHeight);
+    const lineHeight = readLineHeight(inner);
     const innerRect = inner.getBoundingClientRect();
     const range = document.createRange();
     range.selectNodeContents(inner);
     const contentRect = range.getBoundingClientRect();
     const rangeHeight = Math.max(0, contentRect.bottom - innerRect.top);
     const full = Math.ceil(Math.max(inner.scrollHeight, innerRect.height, rangeHeight));
-    const collapsed = Number.isFinite(lineHeight) ? Math.ceil(lineHeight * clampLines) : full;
+    const collapsed = lineHeight > 0 ? Math.ceil(lineHeight * clampLines) : full;
 
     setHeights((current) =>
       current?.collapsed === collapsed && current.full === full

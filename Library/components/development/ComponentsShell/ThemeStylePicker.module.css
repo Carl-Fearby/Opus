@@ -1,0 +1,100 @@
+.root {
+  position: relative;
+  display: inline-flex;
+}
+
+.trigger {
+  box-sizing: border-box;
+  display: inline-flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 6px;
+  width: 128px;
+  height: var(--opus-control-height, 28px);
+  min-height: var(--opus-control-height, 28px);
+  padding: 0 10px;
+  border: 1px solid var(--opus-surface-border, var(--opus-border-strong));
+  border-radius: 999px;
+  background: var(--opus-surface-fill, color-mix(in srgb, var(--opus-input-bg) 88%, transparent));
+  color: var(--opus-surface-text, var(--opus-text));
+  font: inherit;
+  font-size: 0.72rem;
+  font-weight: 600;
+  line-height: 1;
+  cursor: pointer;
+}
+
+:global([data-opus-appearance="neumorphism"]) .trigger {
+  box-shadow: var(--opus-control-shadow, none);
+}
+
+.trigger:hover,
+.trigger:focus-visible,
+.trigger[aria-expanded="true"] {
+  border-color: color-mix(in srgb, var(--opus-accent) 65%, var(--opus-border));
+  outline: none;
+  box-shadow: 0 0 0 2px color-mix(in srgb, var(--opus-accent) 14%, transparent);
+}
+
+.triggerText {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.chevron {
+  flex: 0 0 auto;
+  width: 7px;
+  height: 7px;
+  border-right: 2px solid currentColor;
+  border-bottom: 2px solid currentColor;
+  opacity: 0.72;
+  transform: translateY(-2px) rotate(45deg);
+}
+
+.menu {
+  position: fixed;
+  top: 0;
+  right: 0;
+  z-index: 1300;
+  display: grid;
+  gap: 2px;
+  min-width: 168px;
+  padding: 6px;
+  border: 1px solid var(--opus-surface-border, var(--opus-menu-glass-border));
+  border-radius: var(--opus-menu-radius, 12px);
+  background: var(--opus-menu-solid, var(--opus-menu-glass-surface));
+  box-shadow: var(--opus-shadow, 0 18px 44px color-mix(in srgb, #020617 38%, transparent));
+}
+
+.option {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  min-height: 34px;
+  padding: 0 10px;
+  border: 0;
+  border-radius: calc(var(--opus-menu-radius, 12px) - 6px);
+  background: transparent;
+  color: var(--opus-text);
+  font: inherit;
+  font-size: 0.78rem;
+  font-weight: 600;
+  text-align: left;
+  cursor: pointer;
+}
+
+.option:hover,
+.option:focus-visible {
+  background: var(--opus-surface-fill, var(--opus-accent-soft));
+  outline: none;
+}
+
+.optionActive {
+  color: var(--opus-accent);
+}
+
+:global([data-opus-appearance="neumorphism"]) .optionActive {
+  background: var(--opus-surface-fill);
+  box-shadow: var(--opus-control-inset-shadow);
+}

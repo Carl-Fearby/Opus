@@ -1,3 +1,34 @@
+/*
+ * The bar is dark chrome in every theme. Without a pinned material its controls
+ * take their surfaces from the page appearance while their labels come from the
+ * dark chrome tokens, so neumorphism and liquid glass render light menus with
+ * near-white text. Re-declare a self-contained dark surface for those modes.
+ */
+:global([data-opus-appearance="neumorphism"]) .topBar,
+:global([data-opus-appearance="liquid-glass"]) .topBar {
+  --opus-panel: #12131b;
+  --opus-text: var(--topbar-text);
+  --opus-muted: var(--topbar-muted);
+  --opus-border: var(--topbar-border);
+  --opus-border-strong: color-mix(in srgb, var(--topbar-accent) 42%, transparent);
+  --opus-surface-fill: color-mix(in srgb, var(--topbar-accent) 10%, #0d0e15);
+  --opus-surface-text: var(--topbar-text);
+  --opus-surface-border: var(--topbar-border);
+  --opus-surface-shadow: 0 18px 40px rgba(3, 4, 10, 0.5);
+  --opus-shadow: 0 24px 60px rgba(3, 4, 10, 0.55);
+  --opus-control-shadow: 0 10px 24px rgba(3, 4, 10, 0.38);
+  --opus-control-inset-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.05);
+  --opus-input-bg: color-mix(in srgb, var(--topbar-accent) 9%, #0e0f17);
+  --opus-input-fill: color-mix(in srgb, var(--topbar-accent) 7%, #101119);
+  --opus-input-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.05);
+  --opus-menu-solid: #14151d;
+  --opus-menu-glass-surface: rgba(18, 19, 27, 0.94);
+  --opus-menu-glass-border: var(--topbar-border);
+  --opus-menu-surface-token: var(--opus-menu-solid);
+  --opus-neu-dark: #07080c;
+  --opus-neu-light: #23252f;
+}
+
 .topBar {
   --topbar-text: #f5f7ff;
   --topbar-muted: rgba(223, 226, 255, 0.72);
