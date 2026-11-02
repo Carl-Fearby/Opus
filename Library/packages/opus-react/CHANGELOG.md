@@ -4,6 +4,18 @@ All notable public-package changes are recorded here. Opus follows [Semantic Ver
 
 ## Unreleased
 
+## 0.16.0 — 2026-11-02
+
+### Added
+
+- The published bundle now starts with a `"use client"` directive, so an app can render Opus components directly from a server component without wrapping every route in a pass-through client component. The directive is applied by `scripts/add-use-client.mjs` as the last build step, because tsup's banner and esbuild's re-bundling both drop module-level directives.
+- `Text` and `Heading`: `tone` prop (`default`, `muted`, `accent`, `danger`, `success`, `warning`) for semantic colour without inline styles.
+- `Text`: `truncate` and `lineClamp` for single-line and multi-line ellipsis, plus named `size` values `2xs`, `xs` and `sm` (11px, 13px, 15px) with matching `--opus-font-size-*` tokens.
+- `Stack`: `maxWidth` and `padding`. `Container`: `maxWidth`, which overrides the `size` preset. Numeric values are pixels.
+- `Grid`: `columns` accepts a breakpoint map, e.g. `{ base: 1, sm: 2, lg: 3 }`, backed by `--grid-cols-*` variables and 640/768/1024/1280px media queries.
+- `Card`: `href`, `linkLabel` and `interactive`. The card renders an overlay anchor instead of nesting links around its controls, and raises `footer`/`actions` above it automatically.
+- Layering tokens `--opus-z-base`, `--opus-z-raised`, `--opus-z-sticky`, `--opus-z-dropdown`, `--opus-z-overlay`, `--opus-z-modal`, `--opus-z-toast` and `--opus-z-tooltip`, now used by `ToastProvider` and `Drawer` in place of hard-coded z-index values.
+
 ## 0.15.5 — 2026-11-02
 
 ### Added

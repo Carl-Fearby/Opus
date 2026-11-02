@@ -5,6 +5,7 @@ export type HeadingSize = 100 | 200 | 300 | 400 | 500;
 export type HeadingPadding = "snug" | "compact" | "comfortable" | "relaxed" | "cozy";
 export type HeadingLevel = 1 | 2 | 3 | 4 | 5 | 6;
 export type HeadingWeight = 300 | 400 | 500 | 600 | 700;
+export type HeadingTone = "default" | "muted" | "accent" | "danger" | "success" | "warning";
 
 export type HeadingProps = HTMLAttributes<HTMLHeadingElement> & {
   children: ReactNode;
@@ -14,11 +15,33 @@ export type HeadingProps = HTMLAttributes<HTMLHeadingElement> & {
   padding?: HeadingPadding;
   /** Type scale token from 100 (smallest) to 500 (largest). */
   size?: HeadingSize;
+  /** Semantic text colour. */
+  tone?: HeadingTone;
   /** Available font weight token. */
   weight?: HeadingWeight;
 };
 
-export function Heading({ children, className, level = 2, padding = "snug", size = 300, weight = 700, ...props }: HeadingProps) {
+export function Heading({
+  children,
+  className,
+  level = 2,
+  padding = "snug",
+  size = 300,
+  tone = "default",
+  weight = 700,
+  ...props
+}: HeadingProps) {
   const Element = `h${level}` as const;
-  return <Element {...props} className={[styles.heading, className].filter(Boolean).join(" ")} data-padding={padding} data-size={size} data-weight={weight}>{children}</Element>;
+  return (
+    <Element
+      {...props}
+      className={[styles.heading, className].filter(Boolean).join(" ")}
+      data-padding={padding}
+      data-size={size}
+      data-tone={tone}
+      data-weight={weight}
+    >
+      {children}
+    </Element>
+  );
 }

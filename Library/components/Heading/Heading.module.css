@@ -14,3 +14,9 @@
 .heading[data-padding="comfortable"] { padding-block: 0.5rem; }
 .heading[data-padding="relaxed"] { padding-block: 1rem; }
 .heading[data-padding="cozy"] { padding-block: 1.5rem; }
+.heading[data-tone="default"] { color: var(--opus-text); }
+.heading[data-tone="muted"] { color: var(--opus-muted); }
+.heading[data-tone="accent"] { color: var(--opus-accent); }
+.heading[data-tone="danger"] { color: var(--opus-danger, #eb2434); }
+.heading[data-tone="success"] { color: var(--opus-success, #22c55e); }
+.heading[data-tone="warning"] { color: var(--opus-warning, #d97706); }

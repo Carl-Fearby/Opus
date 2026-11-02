@@ -61,7 +61,7 @@
     "access": "public"
   },
   "scripts": {
-    "build": "tsup && node scripts/patch-css-exports.mjs && node scripts/copy-flag-icons.mjs",
+    "build": "tsup && node scripts/patch-css-exports.mjs && node scripts/copy-flag-icons.mjs && node scripts/add-use-client.mjs",
     "dev": "tsup --watch",
     "prepublishOnly": "npm run build"
   },

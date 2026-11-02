@@ -1,6 +1,17 @@
 /** Curated opus-react release notes for npm publishes that only left chore commits in git. */
 export const releaseNotesOverlay = [
   {
+    version: "0.16.0",
+    releasedAt: "2026-11-02",
+    summary: "Opus ships as a client boundary, with tones, clamping and responsive layout primitives.",
+    changes: [
+      "The package now declares \"use client\", so server components can render Opus directly instead of wrapping every route in a pass-through client component.",
+      "Text and Heading take a tone, Text can truncate or clamp to a line count and offers 11/13/15px sizes, Stack and Container accept a numeric maxWidth, and Grid columns take a breakpoint map such as { base: 1, sm: 2, lg: 3 }.",
+      "Card takes href and interactive, rendering an overlay anchor rather than wrapping its rename and delete controls in a link, and a documented --opus-z-* scale now drives toasts and drawers.",
+      "Publish opus-react 0.16.0.",
+    ],
+  },
+  {
     version: "0.15.5",
     releasedAt: "2026-11-02",
     summary: "New ListField for building, scrolling and reordering free-text lists.",

@@ -4,6 +4,9 @@
 .text[data-size="300"] { font-size: 1rem; }
 .text[data-size="400"] { font-size: 1.125rem; }
 .text[data-size="500"] { font-size: 1.25rem; }
+.text[data-size="2xs"] { font-size: var(--opus-font-size-2xs, 11px); }
+.text[data-size="xs"] { font-size: var(--opus-font-size-xs, 13px); }
+.text[data-size="sm"] { font-size: var(--opus-font-size-sm, 15px); }
 .text[data-weight="300"] { font-weight: 300; }
 .text[data-weight="400"] { font-weight: 400; }
 .text[data-weight="500"] { font-weight: 500; }
@@ -14,3 +17,11 @@
 .text[data-padding="comfortable"] { padding-block: 0.5rem; }
 .text[data-padding="relaxed"] { padding-block: 1rem; }
 .text[data-padding="cozy"] { padding-block: 1.5rem; }
+.text[data-tone="default"] { color: var(--opus-text); }
+.text[data-tone="muted"] { color: var(--opus-muted); }
+.text[data-tone="accent"] { color: var(--opus-accent); }
+.text[data-tone="danger"] { color: var(--opus-danger, #eb2434); }
+.text[data-tone="success"] { color: var(--opus-success, #22c55e); }
+.text[data-tone="warning"] { color: var(--opus-warning, #d97706); }
+.text[data-truncate="true"] { display: block; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.text[data-clamp="true"] { display: -webkit-box; overflow: hidden; -webkit-box-orient: vertical; }

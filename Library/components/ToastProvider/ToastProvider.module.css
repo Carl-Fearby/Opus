@@ -1,6 +1,6 @@
 .viewport {
   position: fixed;
-  z-index: 100;
+  z-index: var(--opus-z-toast, 600);
   width: min(380px, calc(100vw - 30px));
   pointer-events: none;
   transform: translate3d(0, 0, 0);

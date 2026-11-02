@@ -11,6 +11,9 @@ export default defineConfig({
     styles: "src/styles.css",
   },
   format: ["esm", "cjs"],
+  // The "use client" directive is added by scripts/add-use-client.mjs at the
+  // end of the build: tsup's banner is dropped when the CSS-module mapper
+  // re-bundles dist, so prepending here would look right and ship nothing.
   dts: {
     resolve: true,
   },

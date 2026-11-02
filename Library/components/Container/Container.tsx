@@ -6,6 +6,8 @@ export type ContainerSize = "sm" | "md" | "lg" | "xl" | "full";
 export type ContainerProps = {
   children: ReactNode;
   className?: string;
+  /** Overrides `size` when supplied. Numbers are pixels, strings are any CSS length. */
+  maxWidth?: number | string;
   padded?: boolean;
   size?: ContainerSize;
   style?: CSSProperties;
@@ -22,6 +24,7 @@ const maxWidths: Record<ContainerSize, string> = {
 export function Container({
   children,
   className,
+  maxWidth,
   padded = true,
   size = "lg",
   style,
@@ -30,7 +33,10 @@ export function Container({
     <div
       className={[styles.container, className].filter(Boolean).join(" ")}
       data-padded={padded || undefined}
-      style={{ ...style, maxWidth: maxWidths[size] }}
+      style={{
+        ...style,
+        maxWidth: typeof maxWidth === "number" ? `${maxWidth}px` : (maxWidth ?? maxWidths[size]),
+      }}
     >
       {children}
     </div>

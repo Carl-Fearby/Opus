@@ -3,3 +3,44 @@
   width: 100%;
   min-width: 0;
 }
+
+/* Breakpoint maps set --grid-cols-* inline; each step falls back to the previous. */
+.grid[data-responsive="true"] {
+  grid-template-columns: repeat(var(--grid-cols-base, 1), minmax(0, 1fr));
+}
+
+@media (min-width: 640px) {
+  .grid[data-responsive="true"] {
+    grid-template-columns: repeat(var(--grid-cols-sm, var(--grid-cols-base, 1)), minmax(0, 1fr));
+  }
+}
+
+@media (min-width: 768px) {
+  .grid[data-responsive="true"] {
+    grid-template-columns: repeat(
+      var(--grid-cols-md, var(--grid-cols-sm, var(--grid-cols-base, 1))),
+      minmax(0, 1fr)
+    );
+  }
+}
+
+@media (min-width: 1024px) {
+  .grid[data-responsive="true"] {
+    grid-template-columns: repeat(
+      var(--grid-cols-lg, var(--grid-cols-md, var(--grid-cols-sm, var(--grid-cols-base, 1)))),
+      minmax(0, 1fr)
+    );
+  }
+}
+
+@media (min-width: 1280px) {
+  .grid[data-responsive="true"] {
+    grid-template-columns: repeat(
+      var(
+        --grid-cols-xl,
+        var(--grid-cols-lg, var(--grid-cols-md, var(--grid-cols-sm, var(--grid-cols-base, 1))))
+      ),
+      minmax(0, 1fr)
+    );
+  }
+}

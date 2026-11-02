@@ -1,3 +1,25 @@
+:root {
+  /*
+   * Layering scale. Every overlay, menu, drawer and toast uses these tokens so
+   * apps never have to patch a component's z-index from globals.css.
+   */
+  --opus-z-base: 0;
+  --opus-z-raised: 10;
+  --opus-z-sticky: 100;
+  --opus-z-dropdown: 200;
+  --opus-z-overlay: 400;
+  --opus-z-modal: 500;
+  --opus-z-toast: 600;
+  --opus-z-tooltip: 700;
+
+  /* Pixel-exact UI sizes the 100–500 type scale cannot express. */
+  --opus-font-size-2xs: 11px;
+  --opus-font-size-xs: 13px;
+  --opus-font-size-sm: 15px;
+
+  --opus-warning: #d97706;
+}
+
 [data-shell-theme="light"],
 [data-theme="light"] {
   --opus-control-font-size: 0.86rem;
