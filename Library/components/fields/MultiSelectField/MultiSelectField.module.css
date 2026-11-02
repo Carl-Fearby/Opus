@@ -1,3 +1,19 @@
 .root {
   position: relative;
 }
+
+.option {
+  border-radius: var(--opus-menu-item-radius, var(--opus-input-radius));
+  scroll-margin: 4px;
+}
+
+.option:focus-within,
+.optionHighlighted {
+  background: var(--opus-surface-fill, color-mix(in srgb, var(--opus-accent) 14%, transparent));
+  box-shadow: inset 0 0 0 2px color-mix(in srgb, var(--opus-accent) 38%, transparent);
+}
+
+.option:focus-within input:focus-visible,
+.optionHighlighted input:focus-visible {
+  outline: none;
+}

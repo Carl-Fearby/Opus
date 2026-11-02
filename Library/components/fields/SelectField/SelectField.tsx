@@ -19,6 +19,7 @@ import {
 } from "@/lib/ui/floatingPortalPosition";
 import shared from "../shared/fieldControl.module.css";
 import { inputControlSizeClassName } from "../shared/inputControlSizes";
+import { createTypeaheadState, resolveTypeaheadIndex } from "../shared/typeahead";
 import styles from "./SelectField.module.css";
 
 type SelectFieldProps = {
@@ -80,6 +81,7 @@ export function SelectField({
   const listboxId = useId();
   const rootRef = useRef<HTMLDivElement>(null);
   const panelRef = useRef<HTMLDivElement>(null);
+  const typeaheadRef = useRef(createTypeaheadState());
   const [open, setOpen] = useState(false);
   const [highlight, setHighlight] = useState(Math.max(options.indexOf(value), 0));
   const [portalStyle, setPortalStyle] = useState<FloatingPortalStyle | null>(null);
@@ -119,6 +121,11 @@ export function SelectField({
 
   useEffect(() => {
     if (!open) return;
+    document.getElementById(`${listboxId}-option-${highlight}`)?.scrollIntoView?.({ block: "nearest" });
+  }, [highlight, listboxId, open]);
+
+  useEffect(() => {
+    if (!open) return;
 
     function handlePointerDown(event: PointerEvent) {
       const target = event.target as Node;
@@ -142,8 +149,18 @@ export function SelectField({
   }, [open]);
 
   function selectOption(option: string) {
+    setHighlight(Math.max(options.indexOf(option), 0));
     emitSelectChange(onChange, option, name);
     setOpen(false);
+  }
+
+  function toggleOpen() {
+    if (open) {
+      setOpen(false);
+      return;
+    }
+    setHighlight(Math.max(options.indexOf(value), 0));
+    setOpen(true);
   }
 
   function handleKeyDown(event: React.KeyboardEvent<HTMLButtonElement>) {
@@ -168,6 +185,24 @@ export function SelectField({
       setOpen(true);
       setHighlight(event.key === "Home" ? 0 : Math.max(options.length - 1, 0));
       return;
+    }
+    if (!event.ctrlKey && !event.metaKey && !event.altKey) {
+      const index = resolveTypeaheadIndex(
+        options,
+        event.key,
+        typeaheadRef.current,
+        open ? highlight : Math.max(options.indexOf(value), 0),
+      );
+      if (index !== null) {
+        event.preventDefault();
+        if (open) {
+          setHighlight(index);
+        } else {
+          // Native selects commit the matching option as soon as you type.
+          selectOption(options[index]);
+        }
+        return;
+      }
     }
     if ((event.key === "Enter" || event.key === " ") && open) {
       event.preventDefault();
@@ -269,7 +304,7 @@ export function SelectField({
           disabled={disabled}
           id={id}
           type="button"
-          onClick={() => setOpen((current) => !current)}
+          onClick={toggleOpen}
           onKeyDown={handleKeyDown}
           {...fieldInputAriaProps(shellAria, { invalid: Boolean(error) })}
         >
