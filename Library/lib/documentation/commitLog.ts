@@ -1969,5 +1969,29 @@ export const commitLog: CommitEntry[] = [
     shortHash: "5a37f76",
     committedAt: "2026-11-01",
     summary: "chore: release opus-react@0.15.3",
+  },
+  {
+    hash: "abc6fa8539db504bf4ea212cdc00d61a6a9186d0",
+    shortHash: "abc6fa8",
+    committedAt: "2026-11-01",
+    summary: "chore: refresh the commit log through 0.15.3",
+  },
+  {
+    hash: "405c86dd0dd3316a01f2977504205f7144a06311",
+    shortHash: "405c86d",
+    committedAt: "2026-11-02",
+    summary: "feat(fields): add native-style keyboard typeahead to selects",
+  },
+  {
+    hash: "a9a4cbc68f5cb5ffeb1a00b71d3c2ca08ad2fa52",
+    shortHash: "a9a4cbc",
+    committedAt: "2026-11-02",
+    summary: "docs: add 0.15.4 release notes for the field typeahead",
+  },
+  {
+    hash: "28af449e8ce493795fbaaaf7b9b96506b12f9473",
+    shortHash: "28af449",
+    committedAt: "2026-11-02",
+    summary: "chore: release opus-react@0.15.4",
   }
 ].reverse();

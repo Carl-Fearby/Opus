@@ -900,6 +900,14 @@ export const versionLog: VersionEntry[] = [
     commitShort: "899737f",
     summary: "Language picker becomes a full field with help, error and sizing.",
     changes: ["LanguagePicker accepts help, error, required, mode, labelPosition and size, so it behaves like the other fields in a form.","The compact variant renders the small top-bar pill instead of the labelled field, truncating the current language name.","Publish opus-react 0.15.2."],
+  },
+  {
+    version: "0.15.4",
+    releasedAt: "2026-11-02",
+    commit: "28af449e8ce493795fbaaaf7b9b96506b12f9473",
+    commitShort: "28af449",
+    summary: "Native-style keyboard type-ahead for selects and multi-selects.",
+    changes: ["SelectField and MultiSelectField match options as you type: pressing C jumps to the first option starting with C, and repeating the letter cycles through every match while letters typed in quick succession build a prefix.","A closed SelectField commits the match immediately like a native dropdown; with the list open, typing only moves the highlight.","MultiSelectField gains full keyboard navigation: type-ahead opens the list on the match, arrow keys, Home and End move a visible row highlight, Enter toggles it, and Escape closes the panel and returns focus to the trigger.","Publish opus-react 0.15.4."],
   }
 ].reverse();
 
