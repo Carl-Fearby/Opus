@@ -2029,5 +2029,23 @@ export const commitLog: CommitEntry[] = [
     shortHash: "fc27c60",
     committedAt: "2026-11-02",
     summary: "chore: release opus-react@0.16.0",
+  },
+  {
+    hash: "00b33f1cab672d5ed14c1085319f88cb1eeae00d",
+    shortHash: "00b33f1",
+    committedAt: "2026-11-02",
+    summary: "chore: refresh the version log through 0.16.0",
+  },
+  {
+    hash: "e99724271f5518c8274e0b7caa362905ac344561",
+    shortHash: "e997242",
+    committedAt: "2026-11-02",
+    summary: "fix: put every overlay surface on the same modal layer",
+  },
+  {
+    hash: "766d2a7d33ed0ff0dd2f0f4b0cc49aa15758da23",
+    shortHash: "766d2a7",
+    committedAt: "2026-11-02",
+    summary: "chore: release opus-react@0.16.1",
   }
 ].reverse();

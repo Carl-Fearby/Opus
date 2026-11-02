@@ -924,6 +924,14 @@ export const versionLog: VersionEntry[] = [
     commitShort: "fc27c60",
     summary: "Opus ships as a client boundary, with tones, clamping and responsive layout primitives.",
     changes: ["The package now declares \"use client\", so server components can render Opus directly instead of wrapping every route in a pass-through client component.","Text and Heading take a tone, Text can truncate or clamp to a line count and offers 11/13/15px sizes, Stack and Container accept a numeric maxWidth, and Grid columns take a breakpoint map such as { base: 1, sm: 2, lg: 3 }.","Card takes href and interactive, rendering an overlay anchor rather than wrapping its rename and delete controls in a link, and a documented --opus-z-* scale now drives toasts and drawers.","Publish opus-react 0.16.0."],
+  },
+  {
+    version: "0.16.1",
+    releasedAt: "2026-11-02",
+    commit: "766d2a7d33ed0ff0dd2f0f4b0cc49aa15758da23",
+    commitShort: "766d2a7",
+    summary: "One modal layer, so toasts stay above dialogs.",
+    changes: ["Dialog, Modal, CommandPalette and BottomSheet now use var(--opus-z-modal) instead of hard-coded 1100 and 1120, joining Drawer and both lightboxes.","A toast raised from inside a modal now paints above it, so apps can remove the globals.css override that raised the toast viewport by hand.","Publish opus-react 0.16.1."],
   }
 ].reverse();
 
