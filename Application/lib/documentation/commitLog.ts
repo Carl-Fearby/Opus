@@ -2011,5 +2011,23 @@ export const commitLog: CommitEntry[] = [
     shortHash: "cc2efae",
     committedAt: "2026-11-02",
     summary: "chore: release opus-react@0.15.5",
+  },
+  {
+    hash: "3a7f95f6c2d16b52cfde300090bfbfe65ba420d5",
+    shortHash: "3a7f95f",
+    committedAt: "2026-11-02",
+    summary: "chore: refresh the version log through 0.15.5",
+  },
+  {
+    hash: "ede1b9ab4a3f6522967ced9cf8b790ced4370613",
+    shortHash: "ede1b9a",
+    committedAt: "2026-11-02",
+    summary: "feat: ship a client boundary with tones, clamping and responsive layout",
+  },
+  {
+    hash: "fc27c60abec8c14770d412151a44de31bdf81070",
+    shortHash: "fc27c60",
+    committedAt: "2026-11-02",
+    summary: "chore: release opus-react@0.16.0",
   }
 ].reverse();
