@@ -71,6 +71,7 @@ export type ControlSlug =
   | "switch"
   | "radio-group"
   | "chip-input"
+  | "list-field"
   | "choice-chips"
   | "color-picker"
   | "date-picker"
@@ -314,6 +315,14 @@ export type ChipInputSettings = BaseFieldSettings & {
   placeholderEnabled: boolean;
   variant: ChipInputVariant;
   preset: ChipInputPreset;
+  disabled: boolean;
+  readOnly: boolean;
+};
+
+export type ListFieldSettings = BaseFieldSettings & {
+  value: string[];
+  placeholder: string;
+  placeholderEnabled: boolean;
   disabled: boolean;
   readOnly: boolean;
 };
@@ -1775,6 +1784,7 @@ export type ControlSettingsBySlug = {
   switch: SwitchSettings;
   "radio-group": RadioGroupSettings;
   "chip-input": ChipInputSettings;
+  "list-field": ListFieldSettings;
   "choice-chips": ChoiceChipsSettings;
   "color-picker": ColorPickerSettings;
   "date-picker": ValueFieldSettings;
@@ -2036,6 +2046,7 @@ export const formsControlOrder = [
   "switch",
   "radio-group",
   "chip-input",
+  "list-field",
   "choice-chips",
   "color-picker",
   "date-picker",

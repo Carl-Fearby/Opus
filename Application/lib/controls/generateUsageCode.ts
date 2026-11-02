@@ -1088,6 +1088,31 @@ return (
         initial: `[${chips.map((chip) => quote(chip)).join(", ")}]`,
       });
     }
+    case "list-field": {
+      const s = settings as ControlSettingsBySlug["list-field"];
+      const state = toStateName(s.label);
+      const entries = Array.isArray(s.value)
+        ? s.value
+        : String(s.value)
+            .split("\n")
+            .map((entry) => entry.trim())
+            .filter(Boolean);
+      const props = [
+        formatStringProp("id", id),
+        ...fieldProps(s),
+        ...(s.placeholderEnabled
+          ? [formatStringProp("placeholder", s.placeholder)]
+          : []),
+        ...(s.disabled ? [formatBoolProp("disabled", true)] : []),
+        ...(s.readOnly ? [formatBoolProp("readOnly", true)] : []),
+        formatExpressionProp("value", state),
+        formatExpressionProp("onChange", toSetter(state)),
+      ];
+
+      return controlledFieldUsage(["ListField"], "ListField", state, props, {
+        initial: `[${entries.map((entry) => quote(entry)).join(", ")}]`,
+      });
+    }
     case "choice-chips": {
       const s = settings as ControlSettingsBySlug["choice-chips"];
       const state = toStateName(s.label);

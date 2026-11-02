@@ -280,6 +280,18 @@ const formsControls: Record<(typeof formsControlOrder)[number], ControlDefinitio
     ],
     usesFieldShell: true,
   },
+  "list-field": {
+    slug: "list-field",
+    title: "List field",
+    category: "forms",
+    componentName: "ListField",
+    description: "Text input that appends entries to a deletable list beneath it.",
+    sourceFiles: [
+      "components/fields/ListField/ListField.tsx",
+      "components/fields/ListField/ListField.module.css",
+    ],
+    usesFieldShell: true,
+  },
   "choice-chips": {
     slug: "choice-chips",
     title: "Choice chips",
