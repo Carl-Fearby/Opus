@@ -1993,5 +1993,23 @@ export const commitLog: CommitEntry[] = [
     shortHash: "28af449",
     committedAt: "2026-11-02",
     summary: "chore: release opus-react@0.15.4",
+  },
+  {
+    hash: "257b9b3af2cdce7bc20f97e6c402ca325f988d58",
+    shortHash: "257b9b3",
+    committedAt: "2026-11-02",
+    summary: "chore: refresh the version log through 0.15.4",
+  },
+  {
+    hash: "7bc91e7cda33cb7d69862f89e9f0cf85e6f58712",
+    shortHash: "7bc91e7",
+    committedAt: "2026-11-02",
+    summary: "feat(fields): add ListField for building reorderable lists",
+  },
+  {
+    hash: "cc2efae2c3d169ffb06877f73b17056f341330fc",
+    shortHash: "cc2efae",
+    committedAt: "2026-11-02",
+    summary: "chore: release opus-react@0.15.5",
   }
 ].reverse();

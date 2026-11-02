@@ -912,8 +912,8 @@ export const versionLog: VersionEntry[] = [
   {
     version: "0.15.5",
     releasedAt: "2026-11-02",
-    commit: "overlay-0.15.5",
-    commitShort: "overlay",
+    commit: "cc2efae2c3d169ffb06877f73b17056f341330fc",
+    commitShort: "cc2efae",
     summary: "New ListField for building, scrolling and reordering free-text lists.",
     changes: ["ListField pairs a standard text input and Add button with a fixed-height, scrollable list of removable entries, so several list fields stack in one form without the layout shifting.","Rows can be dragged into a new order, with a grip handle, a top or bottom drop indicator, and edge auto-scroll so entries beyond the visible rows stay reachable.","The list renders inside CustomScrollbar for the always-visible Opus scrollbar, and the field supports disabled, readOnly, error, help, required, size, mode, radius and transparency.","Publish opus-react 0.15.5."],
   }
