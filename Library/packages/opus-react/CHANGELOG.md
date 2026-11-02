@@ -4,6 +4,12 @@ All notable public-package changes are recorded here. Opus follows [Semantic Ver
 
 ## Unreleased
 
+## 0.16.1 — 2026-11-02
+
+### Fixed
+
+- Dialog, Modal, CommandPalette and BottomSheet no longer hard-code `z-index: 1100`/`1120`; they use `var(--opus-z-modal)` like Drawer, Lightbox and ModelLightbox. Opus now has a single modal layer, so a toast raised from inside a modal — or any other overlay — paints above it instead of behind it, and apps can delete the `globals.css` toast override they needed to work around the split.
+
 ## 0.16.0 — 2026-11-02
 
 ### Added

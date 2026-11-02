@@ -2,6 +2,10 @@
   /*
    * Layering scale. Every overlay, menu, drawer and toast uses these tokens so
    * apps never have to patch a component's z-index from globals.css.
+   *
+   * Dialog, Modal, CommandPalette, Drawer, BottomSheet, Lightbox and
+   * ModelLightbox all paint at --opus-z-modal, so there is one modal layer:
+   * a toast raised inside any of them (--opus-z-toast) stays visible.
    */
   --opus-z-base: 0;
   --opus-z-raised: 10;

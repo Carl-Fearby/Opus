@@ -1,6 +1,16 @@
 /** Curated opus-react release notes for npm publishes that only left chore commits in git. */
 export const releaseNotesOverlay = [
   {
+    version: "0.16.1",
+    releasedAt: "2026-11-02",
+    summary: "One modal layer, so toasts stay above dialogs.",
+    changes: [
+      "Dialog, Modal, CommandPalette and BottomSheet now use var(--opus-z-modal) instead of hard-coded 1100 and 1120, joining Drawer and both lightboxes.",
+      "A toast raised from inside a modal now paints above it, so apps can remove the globals.css override that raised the toast viewport by hand.",
+      "Publish opus-react 0.16.1.",
+    ],
+  },
+  {
     version: "0.16.0",
     releasedAt: "2026-11-02",
     summary: "Opus ships as a client boundary, with tones, clamping and responsive layout primitives.",
