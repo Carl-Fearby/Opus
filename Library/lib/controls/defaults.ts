@@ -245,6 +245,15 @@ export const defaultSettings: ControlSettingsBySlug = {
     disabled: false,
     readOnly: false,
   },
+  "list-field": {
+    ...baseFieldDefaults,
+    label: "Team members",
+    value: ["Ana", "Carl", "Dana"],
+    placeholder: "Add an entry…",
+    placeholderEnabled: true,
+    disabled: false,
+    readOnly: false,
+  },
   "choice-chips": {
     ...baseFieldDefaults,
     label: "Interests",

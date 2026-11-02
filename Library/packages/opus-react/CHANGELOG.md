@@ -4,6 +4,14 @@ All notable public-package changes are recorded here. Opus follows [Semantic Ver
 
 ## Unreleased
 
+## 0.15.5 — 2026-11-02
+
+### Added
+
+- `ListField`: a standard text input with an Add button and a fixed-height, scrollable list of removable entries beneath it. Entries are trimmed, exact duplicates are skipped, the empty state centres inside the list, and the list scrolls inside a 200px box (overridable with `--opus-list-field-height`) so several fields stack in one form with predictable spacing.
+- Drag-to-reorder on `ListField` rows with a grip handle, a top-edge or bottom-edge drop indicator, pointer-based insertion (including the space past the last row) and edge auto-scroll so entries outside the visible rows stay reachable. Pass `reorderable={false}` to opt out.
+- `ListField` composes the shared field input styling, `Button` and `CustomScrollbar`, and supports `disabled`, `readOnly`, `error`, `help`, `required`, `size`, `mode`, `labelPosition`, `radius`, `transparency` and `gradient`.
+
 ## 0.15.4 — 2026-11-02
 
 ### Added

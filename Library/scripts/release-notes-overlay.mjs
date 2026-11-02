@@ -1,6 +1,17 @@
 /** Curated opus-react release notes for npm publishes that only left chore commits in git. */
 export const releaseNotesOverlay = [
   {
+    version: "0.15.5",
+    releasedAt: "2026-11-02",
+    summary: "New ListField for building, scrolling and reordering free-text lists.",
+    changes: [
+      "ListField pairs a standard text input and Add button with a fixed-height, scrollable list of removable entries, so several list fields stack in one form without the layout shifting.",
+      "Rows can be dragged into a new order, with a grip handle, a top or bottom drop indicator, and edge auto-scroll so entries beyond the visible rows stay reachable.",
+      "The list renders inside CustomScrollbar for the always-visible Opus scrollbar, and the field supports disabled, readOnly, error, help, required, size, mode, radius and transparency.",
+      "Publish opus-react 0.15.5.",
+    ],
+  },
+  {
     version: "0.15.4",
     releasedAt: "2026-11-02",
     summary: "Native-style keyboard type-ahead for selects and multi-selects.",

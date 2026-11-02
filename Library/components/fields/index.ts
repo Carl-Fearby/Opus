@@ -87,6 +87,8 @@ export type {
 export { NumberField } from "./NumberField";
 export { Radio, RadioGroup } from "./RadioGroup";
 export { ChipInputField, ChipInput } from "./ChipInputField";
+export { ListField } from "./ListField";
+export type { ListFieldProps } from "./ListField";
 export { ChoiceChips, ChoiceChipsField } from "./ChoiceChipsField";
 export { RangeField } from "./RangeField";
 export { SelectField } from "./SelectField";

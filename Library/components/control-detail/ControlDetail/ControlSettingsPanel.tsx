@@ -1397,6 +1397,39 @@ export function ControlSettingsPanel({
         </div>
       );
     }
+    case "list-field": {
+      const s = settings as ControlSettingsBySlug["list-field"];
+
+      return (
+        <div className={shellStyles.settingsGrid}>
+          <CommonFieldSettings
+            includeValue={false}
+            settings={s}
+            onChange={(next) => onChange({ ...s, ...next })}
+          />
+          <SettingInput
+            label="Placeholder"
+            value={s.placeholder}
+            onChange={(placeholder) => onChange({ ...s, placeholder } as ControlSettings)}
+          />
+          <div className={shellStyles.settingsFullWidth}>
+            <SettingTextarea
+              label="Entries (one per line)"
+              value={s.value.join("\n")}
+              onChange={(next) =>
+                onChange({
+                  ...s,
+                  value: next
+                    .split("\n")
+                    .map((entry) => entry.trim())
+                    .filter(Boolean),
+                } as ControlSettings)
+              }
+            />
+          </div>
+        </div>
+      );
+    }
     case "choice-chips": {
       const s = settings as ControlSettingsBySlug["choice-chips"];
 

@@ -38,6 +38,7 @@ import {
   Chart,
   CheckboxField,
   ChipInput,
+  ListField,
   ChoiceChips,
   ColorField,
   CommandPalette,
@@ -3691,6 +3692,26 @@ function ControlPreviewContent({
           readOnly={s.readOnly}
           value={parseChipValues(s.value)}
           variant={s.variant}
+          onChange={(value) =>
+            onSettingsChange({
+              ...s,
+              value,
+            } as ControlSettings)
+          }
+        />
+      );
+    }
+    case "list-field": {
+      const s = settings as ControlSettingsBySlug["list-field"];
+
+      return (
+        <ListField
+          {...fieldProps(s)}
+          disabled={s.disabled}
+          id="preview-list-field"
+          placeholder={s.placeholderEnabled ? s.placeholder : undefined}
+          readOnly={s.readOnly}
+          value={parseChipValues(s.value)}
           onChange={(value) =>
             onSettingsChange({
               ...s,

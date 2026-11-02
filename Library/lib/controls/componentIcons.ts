@@ -297,6 +297,7 @@ const componentIcons: Record<string, IconDefinition> = {
   popover: faMessage,
   "radio-group": faCircleDot,
   "chip-input": faTags,
+  "list-field": faListCheck,
   "choice-chips": faTags,
   "range-slider": faSliders,
   "reset-button": faRotateLeft,

@@ -2,6 +2,58 @@ import type { ControlSlug } from "./types";
 import { getControl } from "./registry";
 
 const componentDocumentation: Partial<Record<ControlSlug, string>> = {
+  "list-field": `## Overview
+
+Text input with an **Add** button that appends each entry to a list beneath it, where every row can be deleted individually. Use it when users build up their own list of free-text values rather than picking from a fixed set.
+
+The entry list has a fixed height (\`--opus-list-field-height\`, 200px by default) and scrolls inside it, so several of these stack in one form with predictable spacing no matter how many entries each one holds.
+
+## When to use
+
+- Building a list of names, labels, or notes that grows one entry at a time.
+- Editing an ordered set of free-text values where any single row must be removable.
+- Situations where chip-style inline tokens would be too compact to read or edit.
+
+Prefer [Chip input](/documentation/components/chip-input) when the values are short and should stay inside the input box, and [Dual list builder](/documentation/components/dual-list-builder) when users choose from predefined options instead of typing their own.
+
+## Props
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| \`value\` | \`string[]\` | — | Entries rendered in the list. |
+| \`onChange\` | \`(value: string[]) => void\` | — | Called with the next entry list. |
+| \`placeholder\` | \`string\` | \`"Add an entry…"\` | Input placeholder. |
+| \`addLabel\` | \`string\` | \`"Add"\` | Label for the add button. |
+| \`emptyMessage\` | \`string\` | \`"No entries yet"\` | Shown when the list is empty. |
+| \`disabled\` | \`boolean\` | \`false\` | Disables the input, add button, and row deletion. |
+| \`readOnly\` | \`boolean\` | \`false\` | Shows the entries without the composer or remove buttons. |
+| \`reorderable\` | \`boolean\` | \`true\` | Enables dragging rows into a new order. |
+| \`size\` | \`"sm" \\| "md" \\| "lg"\` | \`"md"\` | Control height and font size. |
+| \`mode\` | \`"stacked" \\| "flagged"\` | \`"stacked"\` | Label and control layout. |
+| \`labelPosition\` | \`"left" \\| "right"\` | \`"left"\` | Label placement in flagged mode. |
+| \`error\` | \`string\` | — | Validation message; sets \`aria-invalid\`. |
+| \`help\` | \`string\` | — | Help text linked through \`aria-describedby\`. |
+| \`required\` | \`boolean\` | \`false\` | Marks the field required for assistive tech. |
+
+## Interaction
+
+- Type an entry, then press **Enter** or click **Add** to append it.
+- Entries are trimmed, and an exact duplicate is skipped rather than added twice.
+- Click **×** on a row to remove just that entry.
+- Drag a row onto another to move it to that position, or drop it below the last row to send it to the end; the entries scroll inside a fixed-height list with an always-visible scrollbar.
+- The add button is disabled while the draft is blank.
+
+## Accessibility
+
+- Wrapped in \`FieldShell\` for label, help, error, and required wiring.
+- The entry list is a \`ul\` with its own accessible name, and remove controls are real buttons labelled \`Remove {entry}\`.
+
+## Related
+
+- [Chip input](/documentation/components/chip-input)
+- [Dual list builder](/documentation/components/dual-list-builder)
+- [Transfer list](/documentation/components/transfer-list)`,
+
   text: `## Overview
 
 Semantic body copy with an explicit type scale and vertical rhythm. Text has no default browser margin, so spacing stays predictable inside cards, panels, and layouts.

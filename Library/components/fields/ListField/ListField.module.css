@@ -1,0 +1,117 @@
+.shell {
+  width: 100%;
+}
+
+.body {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  width: 100%;
+  min-width: 0;
+}
+
+.composer {
+  display: flex;
+  align-items: stretch;
+  gap: 8px;
+  width: 100%;
+  min-width: 0;
+}
+
+.scrollArea {
+  height: var(--opus-list-field-height, 200px);
+  overflow: hidden;
+  border: 1px solid var(--opus-surface-border, var(--opus-border));
+  border-radius: var(--opus-input-radius);
+  background: var(--opus-surface-fill, var(--opus-input-bg));
+}
+
+.list {
+  display: flex;
+  flex: 0 0 auto;
+  flex-direction: column;
+  min-height: 100%;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.row {
+  display: flex;
+  flex: 0 0 auto;
+  align-items: center;
+  gap: 8px;
+  min-height: calc(var(--opus-control-height) + 4px);
+  padding: 0 4px 0 6px;
+  border-bottom: 1px solid var(--opus-surface-border, var(--opus-border));
+  color: var(--opus-surface-text, var(--opus-text));
+  font-size: var(--opus-control-font-size);
+  transition:
+    background 160ms ease,
+    opacity 160ms ease;
+}
+
+.row:hover {
+  background: var(--opus-surface-fill, color-mix(in srgb, var(--opus-accent) 8%, transparent));
+}
+
+.body[data-read-only="true"] .row:hover {
+  background: transparent;
+}
+
+.rowDragging {
+  opacity: 0.55;
+}
+
+.rowOver {
+  box-shadow: inset 0 2px 0 var(--opus-accent);
+}
+
+.rowOverEnd {
+  box-shadow: inset 0 -2px 0 var(--opus-accent);
+}
+
+.handle {
+  display: inline-flex;
+  flex: 0 0 auto;
+  align-items: center;
+  justify-content: center;
+  width: 14px;
+  color: color-mix(in srgb, var(--opus-muted) 70%, transparent);
+  font-size: 0.72em;
+  cursor: grab;
+}
+
+.rowLabel {
+  flex: 1 1 auto;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  padding-left: 2px;
+}
+
+.removeButton {
+  flex: 0 0 auto;
+  min-height: 22px;
+  padding: 0 6px;
+}
+
+.empty {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  margin: 0;
+  padding: 12px var(--opus-control-padding-x, 10px);
+  color: color-mix(in srgb, var(--opus-muted) 88%, transparent);
+  font-size: calc(var(--opus-control-font-size) + 2px);
+  font-weight: 500;
+  text-align: center;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .row {
+    transition: none;
+  }
+}
