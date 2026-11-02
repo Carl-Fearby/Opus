@@ -916,6 +916,14 @@ export const versionLog: VersionEntry[] = [
     commitShort: "cc2efae",
     summary: "New ListField for building, scrolling and reordering free-text lists.",
     changes: ["ListField pairs a standard text input and Add button with a fixed-height, scrollable list of removable entries, so several list fields stack in one form without the layout shifting.","Rows can be dragged into a new order, with a grip handle, a top or bottom drop indicator, and edge auto-scroll so entries beyond the visible rows stay reachable.","The list renders inside CustomScrollbar for the always-visible Opus scrollbar, and the field supports disabled, readOnly, error, help, required, size, mode, radius and transparency.","Publish opus-react 0.15.5."],
+  },
+  {
+    version: "0.16.0",
+    releasedAt: "2026-11-02",
+    commit: "overlay-0.16.0",
+    commitShort: "overlay",
+    summary: "Opus ships as a client boundary, with tones, clamping and responsive layout primitives.",
+    changes: ["The package now declares \"use client\", so server components can render Opus directly instead of wrapping every route in a pass-through client component.","Text and Heading take a tone, Text can truncate or clamp to a line count and offers 11/13/15px sizes, Stack and Container accept a numeric maxWidth, and Grid columns take a breakpoint map such as { base: 1, sm: 2, lg: 3 }.","Card takes href and interactive, rendering an overlay anchor rather than wrapping its rename and delete controls in a link, and a documented --opus-z-* scale now drives toasts and drawers.","Publish opus-react 0.16.0."],
   }
 ].reverse();
 
