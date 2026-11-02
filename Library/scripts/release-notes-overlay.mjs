@@ -1,6 +1,17 @@
 /** Curated opus-react release notes for npm publishes that only left chore commits in git. */
 export const releaseNotesOverlay = [
   {
+    version: "0.15.4",
+    releasedAt: "2026-11-02",
+    summary: "Native-style keyboard type-ahead for selects and multi-selects.",
+    changes: [
+      "SelectField and MultiSelectField match options as you type: pressing C jumps to the first option starting with C, and repeating the letter cycles through every match while letters typed in quick succession build a prefix.",
+      "A closed SelectField commits the match immediately like a native dropdown; with the list open, typing only moves the highlight.",
+      "MultiSelectField gains full keyboard navigation: type-ahead opens the list on the match, arrow keys, Home and End move a visible row highlight, Enter toggles it, and Escape closes the panel and returns focus to the trigger.",
+      "Publish opus-react 0.15.4.",
+    ],
+  },
+  {
     version: "0.15.2",
     releasedAt: "2026-10-28",
     commit: "899737f21550dda9dcf9984bdf030c29d50362aa",

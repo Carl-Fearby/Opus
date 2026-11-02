@@ -4,6 +4,13 @@ All notable public-package changes are recorded here. Opus follows [Semantic Ver
 
 ## Unreleased
 
+## 0.15.4 — 2026-11-02
+
+### Added
+
+- Native-style type-ahead on `SelectField`: a printable key selects the first option that starts with it while the dropdown is closed, repeating the letter cycles through the matches, and letters typed within 500 ms accumulate into a prefix. With the list open, typing moves the highlight instead of committing.
+- Keyboard navigation on `MultiSelectField`: type-ahead opens the list on the matching option, arrow keys, Home and End move a visible highlight, Enter toggles the highlighted option, and Escape closes the panel and returns focus to the trigger.
+
 ## 0.14.1 — 2026-10-25
 
 ### Added
