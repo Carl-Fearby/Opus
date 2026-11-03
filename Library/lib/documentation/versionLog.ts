@@ -932,6 +932,14 @@ export const versionLog: VersionEntry[] = [
     commitShort: "766d2a7",
     summary: "One modal layer, so toasts stay above dialogs.",
     changes: ["Dialog, Modal, CommandPalette and BottomSheet now use var(--opus-z-modal) instead of hard-coded 1100 and 1120, joining Drawer and both lightboxes.","A toast raised from inside a modal now paints above it, so apps can remove the globals.css override that raised the toast viewport by hand.","Publish opus-react 0.16.1."],
+  },
+  {
+    version: "0.17.0",
+    releasedAt: "2026-11-03",
+    commit: "41dc3f7e79f53099aef3a697395cdfc568c59712",
+    commitShort: "41dc3f7",
+    summary: "A Surface primitive, fuller Text typography and fields that work without state.",
+    changes: ["Surface is a children-only box with border, radius, background, padding, shadow and tone, so the rounded bordered panel shape no longer needs a hand-written class on every screen.","Text gains uppercase, tracking, leading and align, and size accepts raw pixels below 100 for the one-off sizes the scale could not express.","Text, TextArea and Select fields accept a name and defaultValue with no value or onChange, so server-action forms can use Opus fields instead of native controls.","Publish opus-react 0.17.0."],
   }
 ].reverse();
 

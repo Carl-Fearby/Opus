@@ -2047,5 +2047,23 @@ export const commitLog: CommitEntry[] = [
     shortHash: "766d2a7",
     committedAt: "2026-11-02",
     summary: "chore: release opus-react@0.16.1",
+  },
+  {
+    hash: "e5e1f975871c30588d8945d2a171d3e75fc99ba2",
+    shortHash: "e5e1f97",
+    committedAt: "2026-11-02",
+    summary: "chore: refresh the version log through 0.16.1",
+  },
+  {
+    hash: "90dd267b63eb31b70bd90df418f340d7a7f20db5",
+    shortHash: "90dd267",
+    committedAt: "2026-11-03",
+    summary: "feat: add a Surface primitive, richer Text typography and uncontrolled fields",
+  },
+  {
+    hash: "41dc3f7e79f53099aef3a697395cdfc568c59712",
+    shortHash: "41dc3f7",
+    committedAt: "2026-11-03",
+    summary: "chore: release opus-react@0.17.0",
   }
 ].reverse();
