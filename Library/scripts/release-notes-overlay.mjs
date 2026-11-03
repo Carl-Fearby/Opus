@@ -1,6 +1,17 @@
 /** Curated opus-react release notes for npm publishes that only left chore commits in git. */
 export const releaseNotesOverlay = [
   {
+    version: "0.17.0",
+    releasedAt: "2026-11-03",
+    summary: "A Surface primitive, fuller Text typography and fields that work without state.",
+    changes: [
+      "Surface is a children-only box with border, radius, background, padding, shadow and tone, so the rounded bordered panel shape no longer needs a hand-written class on every screen.",
+      "Text gains uppercase, tracking, leading and align, and size accepts raw pixels below 100 for the one-off sizes the scale could not express.",
+      "Text, TextArea and Select fields accept a name and defaultValue with no value or onChange, so server-action forms can use Opus fields instead of native controls.",
+      "Publish opus-react 0.17.0.",
+    ],
+  },
+  {
     version: "0.16.1",
     releasedAt: "2026-11-02",
     summary: "One modal layer, so toasts stay above dialogs.",

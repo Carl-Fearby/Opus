@@ -38,7 +38,29 @@ export { ChatBubble } from "../../../components/ChatBubble";
 export { Heading } from "../../../components/Heading";
 export type { HeadingLevel, HeadingPadding, HeadingProps, HeadingSize, HeadingWeight } from "../../../components/Heading";
 export { Text } from "../../../components/Text";
-export type { TextElement, TextPadding, TextProps, TextSize, TextWeight } from "../../../components/Text";
+export type {
+  TextAlign,
+  TextElement,
+  TextLeading,
+  TextNamedSize,
+  TextPadding,
+  TextProps,
+  TextSize,
+  TextSizeValue,
+  TextTracking,
+  TextWeight,
+} from "../../../components/Text";
+export { Surface } from "../../../components/Surface";
+export type {
+  SurfaceBackground,
+  SurfaceBorder,
+  SurfaceElement,
+  SurfaceOverflow,
+  SurfacePadding,
+  SurfaceProps,
+  SurfaceRadius,
+  SurfaceShadow,
+} from "../../../components/Surface";
 export type {
   ChatBubbleAlignment,
   ChatBubbleAvatar,

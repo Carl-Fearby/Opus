@@ -4,6 +4,14 @@ All notable public-package changes are recorded here. Opus follows [Semantic Ver
 
 ## Unreleased
 
+## 0.17.0 — 2026-11-03
+
+### Added
+
+- `Surface`: a children-only box for the `rounded border bg-panel p-*` shape that previously had to be hand-written on every screen. It takes `border` (`subtle`/`default`/`strong`/`accent`, or `true`), `borderAlpha` to mix `tone` into the border, `radius`, `background`, `padding` (preset or an explicit length in pixels), `shadow`, `overflow` and `as`. It has no title or header of its own, so it wraps arbitrary content the way `Panel` and `Card` cannot.
+- `Text`: `uppercase`, `tracking` (`tighter`–`widest`), `leading` (`none`–`loose`) and `align`. `size` also accepts pixel numbers below 100, so `size={11}` renders 11px rather than needing a one-off class.
+- `TextField`, `TextAreaField` and `SelectField`: `value` and `onChange` are optional and `defaultValue` is accepted, so a form backed by a server action can use Opus fields without becoming a client component. `SelectField` owns and updates its value in that mode.
+
 ## 0.16.1 — 2026-11-02
 
 ### Fixed

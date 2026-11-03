@@ -19,8 +19,11 @@ export type TextAreaFieldProps = TextEntryBehaviourProps & {
   placeholder?: string;
   required?: boolean;
   size?: InputControlSize;
-  value: string;
-  onChange: ChangeEventHandler<HTMLTextAreaElement>;
+  /** Controlled value. Omit this and `onChange` to let the browser own the field. */
+  value?: string;
+  /** Starting value for an uncontrolled field. */
+  defaultValue?: string;
+  onChange?: ChangeEventHandler<HTMLTextAreaElement>;
 };
 
 export function TextAreaField({
@@ -28,6 +31,7 @@ export function TextAreaField({
   autoComplete,
   autoCorrect,
   autoFocus,
+  defaultValue,
   disabled,
   enterKeyHint,
   error,
@@ -55,8 +59,9 @@ export function TextAreaField({
   const { t } = useOpusI18n();
   const shellAria = useFieldShellAria();
   const charCountId = useId();
-  const charCount = value.length;
-  const showCharCount = maxChars !== undefined;
+  const charCount = (value ?? "").length;
+  // A default value never changes, so the live count only makes sense when controlled.
+  const showCharCount = maxChars !== undefined && value !== undefined;
   const describedBy = [shellAria?.describedBy, showCharCount ? charCountId : undefined]
     .filter(Boolean)
     .join(" ");
@@ -104,7 +109,7 @@ export function TextAreaField({
             readOnly={readOnly}
             required={required}
             spellCheck={spellCheck}
-            value={value}
+            {...(value === undefined ? { defaultValue } : { value })}
             {...fieldInputAriaProps(shellAria, { invalid: Boolean(error) })}
             aria-describedby={describedBy || undefined}
           />

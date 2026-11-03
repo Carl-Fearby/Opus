@@ -38,8 +38,11 @@ type SelectFieldProps = {
   transparency?: ControlTransparency;
   gradient?: boolean;
   size?: InputControlSize;
-  value: string;
-  onChange: ChangeEventHandler<HTMLSelectElement>;
+  /** Controlled value. Omit this and `onChange` to let the field own its value. */
+  value?: string;
+  /** Starting value for an uncontrolled field. */
+  defaultValue?: string;
+  onChange?: ChangeEventHandler<HTMLSelectElement>;
 };
 
 function emitSelectChange(
@@ -59,6 +62,7 @@ function emitSelectChange(
 }
 
 export function SelectField({
+  defaultValue,
   disabled = false,
   error,
   help,
@@ -83,9 +87,11 @@ export function SelectField({
   const panelRef = useRef<HTMLDivElement>(null);
   const typeaheadRef = useRef(createTypeaheadState());
   const [open, setOpen] = useState(false);
-  const [highlight, setHighlight] = useState(Math.max(options.indexOf(value), 0));
+  const [uncontrolledValue, setUncontrolledValue] = useState(defaultValue ?? "");
+  const current = value ?? uncontrolledValue;
+  const [highlight, setHighlight] = useState(Math.max(options.indexOf(current), 0));
   const [portalStyle, setPortalStyle] = useState<FloatingPortalStyle | null>(null);
-  const display = value || options[0] || "";
+  const display = current || options[0] || "";
 
   useLayoutEffect(() => {
     if (!open || !rootRef.current) {
@@ -150,7 +156,8 @@ export function SelectField({
 
   function selectOption(option: string) {
     setHighlight(Math.max(options.indexOf(option), 0));
-    emitSelectChange(onChange, option, name);
+    setUncontrolledValue(option);
+    if (onChange) emitSelectChange(onChange, option, name);
     setOpen(false);
   }
 
@@ -159,7 +166,7 @@ export function SelectField({
       setOpen(false);
       return;
     }
-    setHighlight(Math.max(options.indexOf(value), 0));
+    setHighlight(Math.max(options.indexOf(current), 0));
     setOpen(true);
   }
 
@@ -191,7 +198,7 @@ export function SelectField({
         options,
         event.key,
         typeaheadRef.current,
-        open ? highlight : Math.max(options.indexOf(value), 0),
+        open ? highlight : Math.max(options.indexOf(current), 0),
       );
       if (index !== null) {
         event.preventDefault();
@@ -211,7 +218,7 @@ export function SelectField({
     }
     if (event.key === "Enter" || event.key === " ") {
       event.preventDefault();
-      setHighlight(Math.max(options.indexOf(value), 0));
+      setHighlight(Math.max(options.indexOf(current), 0));
       setOpen(true);
     }
   }
@@ -240,7 +247,7 @@ export function SelectField({
             >
               {options.map((option) => {
                 const index = options.indexOf(option);
-                const selected = option === value || (!value && option === options[0]);
+                const selected = option === current || (!current && option === options[0]);
                 return (
                   <button
                     aria-selected={selected}
@@ -320,7 +327,7 @@ export function SelectField({
           name={name}
           required={required}
           tabIndex={-1}
-          value={value}
+          value={current}
           onChange={() => undefined}
         >
           {options.map((option) => (

@@ -26,9 +26,12 @@ export type TextFieldProps = TextEntryBehaviourProps & {
   required?: boolean;
   size?: InputControlSize;
   type: "email" | "password" | "search" | "tel" | "text" | "url";
-  value: string;
+  /** Controlled value. Omit this and `onChange` to let the browser own the field. */
+  value?: string;
+  /** Starting value for an uncontrolled field. */
+  defaultValue?: string;
   endAdornment?: ReactNode;
-  onChange: ChangeEventHandler<HTMLInputElement>;
+  onChange?: ChangeEventHandler<HTMLInputElement>;
 };
 
 export function TextField({
@@ -36,6 +39,7 @@ export function TextField({
   autoComplete,
   autoCorrect,
   autoFocus,
+  defaultValue,
   disabled,
   enterKeyHint,
   error,
@@ -100,7 +104,7 @@ export function TextField({
       placeholder={placeholder}
       onChange={onChange}
       type={inputType}
-      value={value}
+      {...(value === undefined ? { defaultValue } : { value })}
       required={required}
       spellCheck={spellCheck}
       {...fieldInputAriaProps(shellAria, { invalid: Boolean(error) })}

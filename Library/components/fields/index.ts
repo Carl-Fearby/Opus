@@ -167,6 +167,17 @@ export type { ShowToastOptions } from "../ToastProvider";
 export { Tabs } from "../Tabs";
 export type { TabItem } from "../Tabs";
 export { Card } from "../Card";
+export { Surface } from "../Surface";
+export type {
+  SurfaceBackground,
+  SurfaceBorder,
+  SurfaceElement,
+  SurfaceOverflow,
+  SurfacePadding,
+  SurfaceProps,
+  SurfaceRadius,
+  SurfaceShadow,
+} from "../Surface";
 export { StatCard } from "../StatCard";
 export type { StatCardTrend } from "../StatCard";
 export { Gauge } from "../Gauge";
