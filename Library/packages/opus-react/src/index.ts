@@ -118,6 +118,13 @@ export {
   serializeColourClouds,
 } from "../../../components/ColourClouds";
 export * from "../../../components/CookieConsent";
+export { LiquidGlass } from "../../../components/LiquidGlass";
+export type {
+  LiquidGlassHandle,
+  LiquidGlassProps,
+  LiquidGlassShape,
+  LiquidGlassTuning,
+} from "../../../components/LiquidGlass";
 export type {
   ColourCloud,
   ColourCloudsDesignation,
