@@ -5,11 +5,12 @@
   "scripts": {
     "dev": "next dev --webpack",
     "dev:turbo": "next dev --turbo",
-    "build": "npm run generate:repository-stats && next build --webpack",
+    "build": "npm run sync-library-version && npm run generate:repository-stats && next build --webpack",
     "generate:repository-stats": "node scripts/generate-repository-stats.mjs",
+    "sync-library-version": "node scripts/sync-library-version.mjs",
     "start": "next start",
     "lint": "eslint",
-    "sync-versions": "npm run sync-versions --prefix ../Library && cp ../Library/lib/documentation/versionLog.ts lib/documentation/versionLog.ts && cp ../Library/lib/documentation/commitLog.ts lib/documentation/commitLog.ts",
+    "sync-versions": "npm run sync-library-version && npm run sync-versions --prefix ../Library && cp ../Library/lib/documentation/versionLog.ts lib/documentation/versionLog.ts && cp ../Library/lib/documentation/commitLog.ts lib/documentation/commitLog.ts",
     "sync-from-library": "node scripts/sync-from-library.mjs"
   },
   "dependencies": {
@@ -22,7 +23,7 @@
     "@uiw/codemirror-theme-vscode": "^4.25.10",
     "@uiw/react-codemirror": "^4.25.10",
     "next": "16.3.4",
-    "opus-react": "^0.17.0",
+    "opus-react": "^0.18.1",
     "react": "19.2.3",
     "react-dom": "19.2.3",
     "react-markdown": "^10.1.0",

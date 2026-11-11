@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { controls } from "@/lib/controls/registry";
+import { libraryVersion } from "@/lib/documentation/libraryVersion";
 import { docsComponentsUrl, docsPlaygroundUrl } from "@/lib/siteLinks";
 import { translate } from "@/lib/i18n";
 import { readServerLocale } from "@/lib/i18n/server";
@@ -29,7 +30,7 @@ export async function Hero() {
             </Link>
           </div>
           <p>
-            <Link href="/news/neumorphism-theme">{t("hero.newTheme")}</Link>
+            <Link href="/version">{t("hero.newRelease", { version: libraryVersion })}</Link>
           </p>
           <InstallCommand />
           <div className={styles.meta}>

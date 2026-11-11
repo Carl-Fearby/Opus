@@ -1,6 +1,40 @@
 /** Curated opus-react release notes for npm publishes that only left chore commits in git. */
 export const releaseNotesOverlay = [
   {
+    version: "0.18.1",
+    releasedAt: "2026-11-11",
+    summary: "Kanban lists drag from their header, and the grip handle is gone.",
+    changes: [
+      "KanbanBoard starts a list drag from anywhere on the list header instead of only the narrow grip icon, which has been removed.",
+      "Arrow-key list reordering moves onto the focusable header, so keyboard users keep the same control without a pointer.",
+      "Header controls such as inline rename and the colour menu keep their click behaviour when a click becomes a drag, and the rename field still selects text natively.",
+      "Publish opus-react 0.18.1.",
+    ],
+  },
+  {
+    version: "0.18.0",
+    releasedAt: "2026-11-11",
+    summary: "Data Grid remembers its column widths, and LiquidGlass brings real refraction to Opus.",
+    changes: [
+      "DataGrid gains saveState: user-resized column widths are stored per grid and restored on the next visit, either under an explicit key or one derived from the grid's shape so two grids never share a layout.",
+      "Saved widths are treated as intent, so a narrower window scales the visible columns instead of overwriting them: columns stop at their measured minimum and the saved layout returns as soon as there is room. When even the minimums do not fit, the grid scrolls rather than crushing every column.",
+      "onColumnWidthsChange reports the committed widths for apps that keep layout state themselves, and widths are written once per drag rather than on every pointer move. Dragging is never compressed mid-gesture; the fit reapplies on release.",
+      "LiquidGlass renders a refractive glass surface from a WebGL height field, with analytic normals, Snell's-law refraction, chromatic dispersion, rim highlights and grain, in orb and surface shapes, with theme-aware pigment and a reset handle.",
+      "Publish opus-react 0.18.0.",
+    ],
+  },
+  {
+    version: "0.17.1",
+    releasedAt: "2026-11-05",
+    summary: "Data Grid sorts on the text inside rich cells — found by the app consuming the package.",
+    changes: [
+      "Data Grid sorting and filtering now read the text inside rich cell content instead of the React node structure, so a cell built from Badge, pills or nested elements sorts by the words a person actually sees.",
+      "Cell text is extracted from element children first, then falls back to label, aria-label, title, alt, count and value, which covers components such as Badge that render their text through a prop, and whitespace is normalised before comparing.",
+      "The defect surfaced because the Opus application consumes the published package: a real Data Grid with status pills and badges exposed the sorting bug that the plain-string component demo never showed.",
+      "Publish opus-react 0.17.1.",
+    ],
+  },
+  {
     version: "0.17.0",
     releasedAt: "2026-11-03",
     summary: "A Surface primitive, fuller Text typography and fields that work without state.",

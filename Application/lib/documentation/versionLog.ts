@@ -940,6 +940,30 @@ export const versionLog: VersionEntry[] = [
     commitShort: "41dc3f7",
     summary: "A Surface primitive, fuller Text typography and fields that work without state.",
     changes: ["Surface is a children-only box with border, radius, background, padding, shadow and tone, so the rounded bordered panel shape no longer needs a hand-written class on every screen.","Text gains uppercase, tracking, leading and align, and size accepts raw pixels below 100 for the one-off sizes the scale could not express.","Text, TextArea and Select fields accept a name and defaultValue with no value or onChange, so server-action forms can use Opus fields instead of native controls.","Publish opus-react 0.17.0."],
+  },
+  {
+    version: "0.17.1",
+    releasedAt: "2026-11-05",
+    commit: "overlay-0.17.1",
+    commitShort: "overlay",
+    summary: "Data Grid sorts on the text inside rich cells — found by the app consuming the package.",
+    changes: ["Data Grid sorting and filtering now read the text inside rich cell content instead of the React node structure, so a cell built from Badge, pills or nested elements sorts by the words a person actually sees.","Cell text is extracted from element children first, then falls back to label, aria-label, title, alt, count and value, which covers components such as Badge that render their text through a prop, and whitespace is normalised before comparing.","The defect surfaced because the Opus application consumes the published package: a real Data Grid with status pills and badges exposed the sorting bug that the plain-string component demo never showed.","Publish opus-react 0.17.1."],
+  },
+  {
+    version: "0.18.0",
+    releasedAt: "2026-11-11",
+    commit: "overlay-0.18.0",
+    commitShort: "overlay",
+    summary: "Data Grid remembers its column widths, and LiquidGlass brings real refraction to Opus.",
+    changes: ["DataGrid gains saveState: user-resized column widths are stored per grid and restored on the next visit, either under an explicit key or one derived from the grid's shape so two grids never share a layout.","Saved widths are treated as intent, so a narrower window scales the visible columns instead of overwriting them: columns stop at their measured minimum and the saved layout returns as soon as there is room. When even the minimums do not fit, the grid scrolls rather than crushing every column.","onColumnWidthsChange reports the committed widths for apps that keep layout state themselves, and widths are written once per drag rather than on every pointer move. Dragging is never compressed mid-gesture; the fit reapplies on release.","LiquidGlass renders a refractive glass surface from a WebGL height field, with analytic normals, Snell's-law refraction, chromatic dispersion, rim highlights and grain, in orb and surface shapes, with theme-aware pigment and a reset handle.","Publish opus-react 0.18.0."],
+  },
+  {
+    version: "0.18.1",
+    releasedAt: "2026-11-11",
+    commit: "3181aee590e33f60a11698c96e64a16e29de11d6",
+    commitShort: "3181aee",
+    summary: "Kanban lists drag from their header, and the grip handle is gone.",
+    changes: ["KanbanBoard starts a list drag from anywhere on the list header instead of only the narrow grip icon, which has been removed.","Arrow-key list reordering moves onto the focusable header, so keyboard users keep the same control without a pointer.","Header controls such as inline rename and the colour menu keep their click behaviour when a click becomes a drag, and the rename field still selects text natively.","Publish opus-react 0.18.1."],
   }
 ].reverse();
 

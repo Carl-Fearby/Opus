@@ -2065,5 +2065,35 @@ export const commitLog: CommitEntry[] = [
     shortHash: "41dc3f7",
     committedAt: "2026-11-03",
     summary: "chore: release opus-react@0.17.0",
+  },
+  {
+    hash: "634084b16dcd1929daefb1d8592cd4038c070575",
+    shortHash: "634084b",
+    committedAt: "2026-11-03",
+    summary: "chore: refresh the version log through 0.17.0",
+  },
+  {
+    hash: "b113b5dc610ac38c84de3a82a3c2efdecb7fd803",
+    shortHash: "b113b5d",
+    committedAt: "2026-11-11",
+    summary: "feat: add saveState column-width persistence to DataGrid",
+  },
+  {
+    hash: "626f1270408b2d849a8e2ae4188ca0ede0a98285",
+    shortHash: "626f127",
+    committedAt: "2026-11-11",
+    summary: "feat: add LiquidGlass, a refractive glass surface",
+  },
+  {
+    hash: "056e028bcc5095162032449ce824488cbe786b6e",
+    shortHash: "056e028",
+    committedAt: "2026-11-11",
+    summary: "feat: drag kanban lists by their header and drop the grip handle",
+  },
+  {
+    hash: "3181aee590e33f60a11698c96e64a16e29de11d6",
+    shortHash: "3181aee",
+    committedAt: "2026-11-11",
+    summary: "chore: release opus-react@0.18.1",
   }
 ].reverse();
