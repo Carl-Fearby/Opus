@@ -5105,6 +5105,13 @@ export function ControlSettingsPanel({
             }
           />
           <SettingToggle
+            label="Save column widths"
+            checked={s.saveState}
+            onChange={(saveState) =>
+              onChange({ ...s, saveState } as ControlSettings)
+            }
+          />
+          <SettingToggle
             label="Saved views"
             checked={s.savedViews}
             onChange={(savedViews) =>

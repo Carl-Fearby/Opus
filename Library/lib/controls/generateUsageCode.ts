@@ -3909,6 +3909,7 @@ const rows = ${rows};
           ? []
           : [formatBoolProp("stickyFirstColumn", false)]),
         ...(s.columnManager ? [formatBoolProp("columnManager", true)] : []),
+        ...(s.saveState ? [formatBoolProp("saveState", true)] : []),
         ...(s.savedViews ? [formatExpressionProp("views", "views")] : []),
       ];
       return `${importLine(["DataGrid"])}

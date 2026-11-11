@@ -753,6 +753,7 @@ export type DataGridSettings = {
   masterDetail: boolean;
   virtualized: boolean;
   infiniteScroll: boolean;
+  saveState: boolean;
 };
 
 export type SkeletonSettings = {

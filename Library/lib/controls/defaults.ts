@@ -1371,6 +1371,7 @@ export const defaultSettings: ControlSettingsBySlug = {
     masterDetail: false,
     virtualized: false,
     infiniteScroll: false,
+    saveState: true,
   },
   skeleton: {
     animation: "shimmer",

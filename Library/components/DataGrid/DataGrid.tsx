@@ -25,6 +25,17 @@ import {
   type DataGridLayout,
 } from "./dataGridLayout";
 import { buildPivotGrid, type DataGridPivotConfig } from "./dataGridPivot";
+import {
+  DATA_GRID_DEFAULT_COLUMN_WIDTH,
+  DATA_GRID_TEAM_COLUMN_WIDTH,
+  fitDataGridColumnWidths,
+  readDataGridState,
+  resolveDataGridStateKey,
+  resolveDataGridStorage,
+  writeDataGridState,
+  type DataGridColumnWidths,
+  type DataGridSaveState,
+} from "./dataGridState";
 import { useOpusI18n } from "@/components/OpusI18n";
 import styles from "./DataGrid.module.css";
 
@@ -60,6 +71,12 @@ export type DataGridView = {
 };
 
 export type { DataGridLayout, DataGridPivotConfig };
+export type {
+  DataGridColumnWidths,
+  DataGridSaveState,
+  DataGridSaveStateOptions,
+  DataGridSavedState,
+} from "./dataGridState";
 
 type DataGridProps = {
   activeViewId?: string;
@@ -81,12 +98,20 @@ type DataGridProps = {
   loadingMore?: boolean;
   onActiveViewChange?: (viewId: string) => void;
   onColumnVisibilityChange?: (visibility: DataGridColumnVisibility) => void;
+  /** Fired when a user resize commits new column widths. */
+  onColumnWidthsChange?: (widths: DataGridColumnWidths) => void;
   onExpandedChange?: (ids: string[]) => void;
   onLoadMore?: () => void;
   pivot?: DataGridPivotConfig;
   rowHeader?: DataGridRowHeaderColumn;
   rowHeight?: number;
   rows: DataGridRow[];
+  /**
+   * Persists and restores user-resized column widths, per grid. `true` derives
+   * a key from the grid's shape; pass a string or `{ key, storage }` for an
+   * explicit slot.
+   */
+  saveState?: DataGridSaveState;
   stickyFirstColumn?: boolean;
   stickyHeader?: boolean;
   striped?: boolean;
@@ -98,6 +123,7 @@ type DataGridProps = {
 
 type ResizeState = {
   key: string;
+  latest?: number;
   startWidth: number;
   startX: number;
 };
@@ -200,12 +226,14 @@ export function DataGrid({
   loadingMore = false,
   onActiveViewChange,
   onColumnVisibilityChange,
+  onColumnWidthsChange,
   onExpandedChange,
   onLoadMore,
   pivot,
   rowHeader,
   rowHeight,
   rows,
+  saveState,
   stickyFirstColumn = true,
   stickyHeader = true,
   striped = true,
@@ -214,7 +242,19 @@ export function DataGrid({
   virtualized = false,
 }: DataGridProps) {
   const { t } = useOpusI18n();
-  const [columnWidths, setColumnWidths] = useState<Record<string, number>>({});
+  const saveStateKey = useMemo(
+    () =>
+      resolveDataGridStateKey(
+        saveState,
+        `${caption ?? ""}|${layout}|${columns.map((column) => column.key).join(",")}`,
+      ),
+    [caption, columns, layout, saveState],
+  );
+  const saveStateStorage = useMemo(() => resolveDataGridStorage(saveState), [saveState]);
+  const [columnWidths, setColumnWidths] = useState<DataGridColumnWidths>(
+    () => readDataGridState(saveStateStorage, saveStateKey)?.widths ?? {},
+  );
+  const [availableWidth, setAvailableWidth] = useState(0);
   const [filters, setFilters] = useState<Record<string, string>>({});
   const [openMenu, setOpenMenu] = useState<OpenMenuState | null>(null);
   const [resizing, setResizing] = useState<ResizeState | null>(null);
@@ -246,6 +286,11 @@ export function DataGrid({
   const resizeDragRef = useRef<ResizeState | null>(null);
   const wrapRef = useRef<HTMLDivElement | null>(null);
   const sentinelRef = useRef<HTMLDivElement | null>(null);
+  const columnWidthsRef = useRef<DataGridColumnWidths>(columnWidths);
+
+  useEffect(() => {
+    columnWidthsRef.current = columnWidths;
+  }, [columnWidths]);
 
   const resolvedRowHeight = rowHeight ?? defaultRowHeight(density);
   const detailIds = detailExpandedIds ? new Set(detailExpandedIds) : uncontrolledDetailIds;
@@ -297,6 +342,112 @@ export function DataGrid({
 
     return features;
   }, [gridColumns, hasTeamColumn, rowHeader]);
+
+  const columnWidthDefaults = useMemo(() => {
+    const defaults: Record<string, number> = {};
+
+    for (const column of visibleGridColumns) {
+      defaults[column.key] = column.key === "team"
+        ? DATA_GRID_TEAM_COLUMN_WIDTH
+        : DATA_GRID_DEFAULT_COLUMN_WIDTH;
+    }
+
+    return defaults;
+  }, [visibleGridColumns]);
+
+  const columnMinWidths = useMemo(() => {
+    const mins: Record<string, number> = {};
+
+    for (const column of visibleGridColumns) {
+      const features = columnFeatures[column.key];
+      mins[column.key] = getMinColumnWidth(
+        features.sortable,
+        features.sortable || features.filterable,
+        density,
+      );
+    }
+
+    return mins;
+  }, [columnFeatures, density, visibleGridColumns]);
+
+  const renderedColumnWidths = useMemo(() => {
+    // While a column is being dragged the pointer wins, so the handle tracks
+    // the cursor exactly; the fit runs again when the drag is released.
+    if (resizing) {
+      return columnWidths;
+    }
+
+    const fitted = fitDataGridColumnWidths({
+      available: availableWidth,
+      columns: visibleGridColumns.map((column) => column.key),
+      defaultWidths: columnWidthDefaults,
+      minWidths: columnMinWidths,
+      widths: columnWidths,
+    });
+
+    return Object.keys(fitted).length ? fitted : columnWidths;
+  }, [
+    availableWidth,
+    columnMinWidths,
+    columnWidthDefaults,
+    columnWidths,
+    resizing,
+    visibleGridColumns,
+  ]);
+
+  useLayoutEffect(() => {
+    if (!saveStateKey) {
+      return;
+    }
+
+    const wrap = wrapRef.current;
+
+    if (!wrap) {
+      return;
+    }
+
+    const commitWidth = (width: number) => {
+      if (!Number.isFinite(width) || width <= 0) {
+        // A hidden or unmeasured grid reports 0; keep the last known width so
+        // columns are not collapsed to their minimums.
+        return;
+      }
+
+      const next = Math.round(width);
+      setAvailableWidth((current) => (current === next ? current : next));
+    };
+
+    // Layout width, not the painted rect: a scaled or transformed preview would
+    // otherwise report a different width than the observer later does.
+    commitWidth(wrap.clientWidth);
+
+    if (typeof ResizeObserver === "undefined") {
+      return;
+    }
+
+    const observer = new ResizeObserver((entries) => {
+      const entry = entries[0];
+
+      if (entry) {
+        commitWidth(entry.contentRect.width);
+      }
+    });
+
+    observer.observe(wrap);
+    return () => observer.disconnect();
+  }, [saveStateKey]);
+
+  const commitColumnWidths = useCallback(
+    (next: DataGridColumnWidths) => {
+      columnWidthsRef.current = next;
+      onColumnWidthsChange?.(next);
+
+      if (saveStateKey) {
+        writeDataGridState(saveStateStorage, saveStateKey, next);
+      }
+    },
+    [onColumnWidthsChange, saveStateKey, saveStateStorage],
+  );
 
   const filterSortRows = useCallback(
     (source: DataGridRow[]) => {
@@ -568,7 +719,7 @@ export function DataGrid({
     }
 
     scheduleMenuPosition();
-  }, [columnWidths, openMenu, scheduleMenuPosition]);
+  }, [openMenu, renderedColumnWidths, scheduleMenuPosition]);
 
   useEffect(() => {
     if (!onLoadMore || !hasMore) {
@@ -680,7 +831,10 @@ export function DataGrid({
       : null;
     const widthFromCell = cell?.getBoundingClientRect().width;
     const currentWidth =
-      columnWidths[key] ?? measuredWidth ?? widthFromCell ?? (key === "team" ? 180 : 130);
+      columnWidths[key]
+      ?? measuredWidth
+      ?? widthFromCell
+      ?? (key === "team" ? DATA_GRID_TEAM_COLUMN_WIDTH : DATA_GRID_DEFAULT_COLUMN_WIDTH);
 
     const dragState: ResizeState = {
       key,
@@ -712,6 +866,7 @@ export function DataGrid({
         drag.startWidth + moveEvent.clientX - drag.startX,
       );
 
+      drag.latest = nextWidth;
       setColumnWidths((current) => ({ ...current, [drag.key]: nextWidth }));
     };
 
@@ -719,14 +874,25 @@ export function DataGrid({
       window.removeEventListener("pointermove", onPointerMove);
       window.removeEventListener("pointerup", finishResize);
       window.removeEventListener("pointercancel", finishResize);
+
+      const finished = resizeDragRef.current;
       resizeDragRef.current = null;
       setResizing(null);
+
+      if (!finished || finished.latest === undefined) {
+        return;
+      }
+
+      commitColumnWidths({
+        ...columnWidthsRef.current,
+        [finished.key]: finished.latest,
+      });
     };
 
     window.addEventListener("pointermove", onPointerMove);
     window.addEventListener("pointerup", finishResize);
     window.addEventListener("pointercancel", finishResize);
-  }, [closeHeaderMenu, columnFeatures, columnWidths, density]);
+  }, [closeHeaderMenu, columnFeatures, columnWidths, commitColumnWidths, density]);
 
   const handleBodyPointerDown = useCallback((event: PointerEvent<HTMLTableSectionElement>) => {
     const cell = (event.target as HTMLElement).closest<HTMLTableCellElement>(
@@ -834,8 +1000,8 @@ export function DataGrid({
             className={styles.rowHeader}
             scope="row"
             style={
-              columnWidths.team
-                ? { width: columnWidths.team, minWidth: columnWidths.team }
+              renderedColumnWidths.team
+                ? { width: renderedColumnWidths.team, minWidth: renderedColumnWidths.team }
                 : undefined
             }
           >
@@ -874,8 +1040,8 @@ export function DataGrid({
               data-column-resizable={columnFeatures[column.key].resizable}
               key={column.key}
               style={
-                columnWidths[column.key]
-                  ? { width: columnWidths[column.key], minWidth: columnWidths[column.key] }
+                renderedColumnWidths[column.key]
+                  ? { width: renderedColumnWidths[column.key], minWidth: renderedColumnWidths[column.key] }
                   : undefined
               }
             >
@@ -1010,7 +1176,7 @@ export function DataGrid({
               {visibleGridColumns.map((column) => (
                 <col
                   key={column.key}
-                  style={{ width: columnWidths[column.key] ?? (column.key === "team" ? 180 : 130) }}
+                  style={{ width: renderedColumnWidths[column.key] ?? columnWidthDefaults[column.key] }}
                 />
               ))}
             </colgroup>
@@ -1032,8 +1198,8 @@ export function DataGrid({
                     key={column.key}
                     scope="col"
                     style={
-                      columnWidths[column.key]
-                        ? { width: columnWidths[column.key], minWidth: columnWidths[column.key] }
+                      renderedColumnWidths[column.key]
+                        ? { width: renderedColumnWidths[column.key], minWidth: renderedColumnWidths[column.key] }
                         : undefined
                     }
                   >

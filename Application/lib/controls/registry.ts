@@ -998,7 +998,11 @@ const rawControls: ControlDefinition[] = [
     componentName: "DataGrid",
     description: "Scrollable data grid with fixed top header and fixed left row header.",
     navigationGroup: "Data",
-    sourceFiles: ["components/DataGrid/DataGrid.tsx", "components/DataGrid/DataGrid.module.css"],
+    sourceFiles: [
+      "components/DataGrid/DataGrid.tsx",
+      "components/DataGrid/DataGrid.module.css",
+      "components/DataGrid/dataGridState.ts",
+    ],
     usesFieldShell: false,
   },
   {
