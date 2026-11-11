@@ -12,6 +12,23 @@ export type NewsStory = {
 
 export const newsStories: NewsStory[] = [
   {
+    slug: "opus-0-17-1-consumption",
+    date: "2026-11-05",
+    edition: "Opus 0.17.1 · Consumption",
+    title: "The app writes the release notes.",
+    standfirst: "Opus 0.17.1 fixes Data Grid sorting on pills, badges and nested cell content — a defect that only appeared once the published package was consumed by a real application, which is how this project finds its changes.",
+    summary: "The component demo sorted correctly. The application did not. That gap is the method behind Opus: the library is installed from npm and consumed by the product it comes from, and whatever breaks in that product becomes the next release.",
+    components: [
+      { name: "Data grid", href: "/documentation/components/data-grid", code: `<DataGrid\n  columns={columns}\n  rows={rows}\n/>` },
+    ],
+    chapters: [
+      { heading: "What actually broke", body: "Sorting a column of status pills ordered the rows by the shape of the markup, not by the words in the pills. A Badge renders its text through a label prop rather than a child node, and a cell assembled from pills has no plain string to compare, so the comparator fell back to whatever it could see in the node tree and produced an order no reader could explain." },
+      { heading: "Why consuming the package found it", body: "The documentation demo used plain strings in its cells, so it sorted perfectly and said nothing. The application runs the same Data Grid with real CRM records — status badges, priority pills, counts inside chips — and that is where the ordering visibly disagreed with the labels. The published package is not a snapshot we ship and forget; it is installed into this application, upgraded on release, and used to build the screens the site itself shows. Defects like this surface there first." },
+      { heading: "What changed in 0.17.1", body: "Cell text is now read from the rendered content instead of the node structure: element children are walked first, then label, aria-label, title, alt, count and value, so components that pass their text as a prop are covered too. Whitespace is normalised before comparison. Sorting, filtering, grouping and pivot all read through the same helper, so a pill column now orders by the text a person reads. It ships in opus-react 0.17.1 on npm." },
+      { heading: "Why that is the whole project", body: "Opus exists to be consumed. The library and the application that uses it are the same codebase, released on the same day, so every real screen is also a test of the published package. When something reads wrong in the product, the fix belongs in the library, and the version that carries it is the version the application upgrades to. Release notes here are not a marketing list bolted onto a release; they are the record of what consumption raised." },
+    ],
+  },
+  {
     slug: "opus-speaks-48-languages",
     date: "2026-10-25",
     edition: "Opus 0.13 · Internationalisation",

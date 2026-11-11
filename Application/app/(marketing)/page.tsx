@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { ComponentCategories } from "@/components/marketing/ComponentCategories";
+import { ConsumptionLedger } from "@/components/marketing/ConsumptionLedger";
 import { CtaBand } from "@/components/marketing/CtaBand";
 import { ContributorsCallout } from "@/components/marketing/ContributorsCallout";
 import { DesktopShowcase } from "@/components/marketing/DesktopShowcase";
@@ -39,6 +40,7 @@ export default async function HomePage() {
     <>
       <Hero />
       <StatBand />
+      <ConsumptionLedger />
       <RealWorldShowcase />
       <FeatureGrid />
       <ThemeShowcase componentCount={catalogueCount} />

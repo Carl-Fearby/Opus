@@ -1,3 +1,4 @@
+import { isValidElement } from "react";
 import type { ReactNode } from "react";
 import type { DataGridRow } from "./DataGrid";
 
@@ -20,28 +21,55 @@ export type DataGridDisplayRow =
       label: string;
     };
 
-function cellText(value: ReactNode): string {
-  if (value === null || value === undefined || typeof value === "boolean") {
+const MAX_CELL_TEXT_DEPTH = 8;
+
+/** Props that render visible text without children, such as Badge's `label`. */
+const CELL_TEXT_PROPS = ["label", "aria-label", "title", "alt", "count", "value"] as const;
+
+type CellTextProps = {
+  children?: ReactNode;
+} & Partial<Record<(typeof CELL_TEXT_PROPS)[number], unknown>>;
+
+/**
+ * Resolves the readable text of a cell, including cells that render elements
+ * such as badges, pills, or icons with a label.
+ */
+function cellText(value: ReactNode, depth = 0): string {
+  if (depth > MAX_CELL_TEXT_DEPTH || value === null || value === undefined || typeof value === "boolean") {
     return "";
   }
 
-  if (typeof value === "number" || typeof value === "string") {
+  if (typeof value === "number" || typeof value === "string" || typeof value === "bigint") {
     return String(value);
   }
 
   if (Array.isArray(value)) {
-    return value.map(cellText).join(" ");
+    return value.map((item) => cellText(item, depth + 1)).join(" ");
+  }
+
+  if (isValidElement(value)) {
+    const props = value.props as CellTextProps;
+    const childText = cellText(props.children, depth + 1).trim();
+
+    if (childText) {
+      return childText;
+    }
+
+    for (const key of CELL_TEXT_PROPS) {
+      const propText = cellText(props[key] as ReactNode, depth + 1).trim();
+
+      if (propText) {
+        return propText;
+      }
+    }
   }
 
   return "";
 }
 
 export function getRowCellText(row: DataGridRow, key: string): string {
-  if (key === "team") {
-    return cellText(row.values.team ?? row.label);
-  }
-
-  return cellText(row.values[key]);
+  const value = key === "team" ? (row.values.team ?? row.label) : row.values[key];
+  return cellText(value).replace(/\s+/g, " ").trim();
 }
 
 export function buildGroupedDisplayRows(
