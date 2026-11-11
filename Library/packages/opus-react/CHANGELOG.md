@@ -4,6 +4,21 @@ All notable public-package changes are recorded here. Opus follows [Semantic Ver
 
 ## Unreleased
 
+## 0.18.1 — 2026-11-11
+
+### Changed
+
+- `KanbanBoard`: a list can be dragged from anywhere on its header instead of only the grip icon, and the grip handle is gone. A focused list header still reorders with the left and right arrow keys, and header controls keep their click behaviour when a click turns into a drag.
+
+## 0.18.0 — 2026-11-11
+
+### Added
+
+- `DataGrid`: `saveState` remembers user-resized column widths per grid. Pass a string key or `{ key, storage }` for an explicit slot, or `saveState` alone to derive one from the grid's shape (caption, layout and column keys), so two grids never share a layout.
+- Saved widths are treated as the user's intent. When the container is narrower than the saved total the visible columns scale down proportionally without overwriting the stored values, so the widths the user chose return as soon as there is room. Columns never go below their measured minimum, and when even the minimums do not fit the grid scrolls horizontally rather than crushing every column into an unreadable strip.
+- `DataGrid`: `onColumnWidthsChange`, fired when a resize commits, for apps that keep layout state themselves. Widths are written once per drag rather than on every pointer move, and a drag is never compressed mid-gesture — the fit reapplies on release.
+- `LiquidGlass`: a refractive glass surface rendered as a WebGL height field instead of `backdrop-filter`, with analytic normals, Snell's-law refraction, chromatic dispersion, rim highlights and film grain. It takes `orb` and `surface` shapes, theme-aware pigment from `--opus-accent`, tuning props (`relief`, `refraction`, `dispersion`, `roughness`, `reflection`, `grain`, `scale`, `speed`, `flow`, `seed`), `paused`, and a handle exposing `reset` and the canvas element.
+
 ## 0.17.0 — 2026-11-03
 
 ### Added
