@@ -13,7 +13,7 @@ import {
   type ReactNode,
 } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faChevronLeft, faChevronRight, faComment, faDownload, faFile, faGear, faGripVertical, faPalette, faPaperclip, faPaperPlane, faPen, faSpinner, faTags, faTriangleExclamation, faUpRightFromSquare } from "@fortawesome/free-solid-svg-icons";
+import { faChevronLeft, faChevronRight, faComment, faDownload, faFile, faGear, faPalette, faPaperclip, faPaperPlane, faPen, faSpinner, faTags, faTriangleExclamation, faUpRightFromSquare } from "@fortawesome/free-solid-svg-icons";
 import { createThemedPortal as createPortal } from "@/lib/theme/createThemedPortal";
 import { Button } from "@/components/fields/Button";
 import { ColorPickerPanel } from "@/components/fields/ColorPickerPanel";
@@ -1357,7 +1357,9 @@ export function KanbanBoard({
     });
   }
 
-  function handleColumnKeyDown(event: ReactKeyboardEvent<HTMLButtonElement>, columnId: string) {
+  function handleColumnKeyDown(event: ReactKeyboardEvent<HTMLElement>, columnId: string) {
+    // Only the bar itself reorders; keys typed inside the rename input keep their meaning.
+    if (event.target !== event.currentTarget) return;
     if (event.key !== "ArrowLeft" && event.key !== "ArrowRight") return;
     event.preventDefault();
     const index = columnsRef.current.findIndex((column) => column.id === columnId);
@@ -1836,13 +1838,20 @@ export function KanbanBoard({
   }
 
   function handleColumnPointerDown(
-    event: ReactPointerEvent<HTMLButtonElement>,
+    event: ReactPointerEvent<HTMLElement>,
     columnId: string,
   ) {
     if (!onChange || event.button !== 0) return;
     if (dragRef.current || columnDragRef.current) return;
+    // Inline editors inside the header keep native caret placement and text selection.
+    if (
+      (event.target as HTMLElement | null)?.closest(
+        "input, textarea, select, [contenteditable='true']",
+      )
+    ) {
+      return;
+    }
 
-    window.getSelection()?.removeAllRanges();
     const handle = event.currentTarget;
     const sourceColumn = handle.closest("[data-kanban-column-id]") as HTMLElement | null;
     if (!sourceColumn) return;
@@ -1860,6 +1869,7 @@ export function KanbanBoard({
           return;
         }
 
+        window.getSelection()?.removeAllRanges();
         const rect = columnElement.getBoundingClientRect();
         const header = columnElement.querySelector<HTMLElement>("[data-kanban-column-header]");
         const headerRect = header?.getBoundingClientRect() ?? rect;
@@ -1929,6 +1939,18 @@ export function KanbanBoard({
         setColumnDrag(null);
         return;
       }
+
+      // The header's buttons are part of the drag surface, so a completed drag
+      // must not also fire their click (rename, palette) on pointer release.
+      function swallowClick(clickEvent: MouseEvent) {
+        clickEvent.preventDefault();
+        clickEvent.stopPropagation();
+        window.removeEventListener("click", swallowClick, true);
+      }
+      window.addEventListener("click", swallowClick, true);
+      window.setTimeout(() => {
+        window.removeEventListener("click", swallowClick, true);
+      }, 0);
 
       const dropIndex = resolveColumnDropIndex(upEvent.clientX, columnId);
 
@@ -2132,7 +2154,6 @@ export function KanbanBoard({
                 } as CSSProperties
               }
             >
-              <FontAwesomeIcon className={styles.columnDragGrip} icon={faGripVertical} />
               <span>{columnDrag.title}</span>
             </div>
           </div>,
@@ -2470,18 +2491,19 @@ export function KanbanBoard({
               } as CSSProperties
             }
           >
-            <header className={styles.columnHeader} data-kanban-column-header="true">
-              <button
-                aria-label={t("kanban.reorderList", "Reorder {title}. Use the left and right arrow keys to move this list.", { title: column.title })}
-                className={styles.columnDragHandle}
-                draggable={false}
-                onDragStart={(event) => event.preventDefault()}
-                onKeyDown={(event) => handleColumnKeyDown(event, column.id)}
-                onPointerDown={(event) => handleColumnPointerDown(event, column.id)}
-                type="button"
-              >
-                <FontAwesomeIcon icon={faGripVertical} />
-              </button>
+            <header
+              aria-label={
+                onChange
+                  ? t("kanban.reorderList", "Reorder {title}. Use the left and right arrow keys to move this list.", { title: column.title })
+                  : undefined
+              }
+              className={styles.columnHeader}
+              data-kanban-column-header="true"
+              onKeyDown={(event) => handleColumnKeyDown(event, column.id)}
+              onPointerDown={(event) => handleColumnPointerDown(event, column.id)}
+              role="group"
+              tabIndex={onChange ? 0 : undefined}
+            >
               <h3 className={styles.columnTitle}>
                 {editingColumnId === column.id ? (
                   <input

@@ -69,12 +69,12 @@ describe("KanbanBoard", () => {
     expect(screen.getByRole("button", { name: "Open ticket for Alpha ticket, 2 Comments" })).toBeInTheDocument();
   });
 
-  it("reorders lists with the keyboard handle", () => {
+  it("reorders lists from the keyboard-modifier header", () => {
     const onChange = vi.fn();
     render(<KanbanBoard cards={cards} columns={columns} onChange={onChange} />);
 
     fireEvent.keyDown(
-      screen.getByRole("button", { name: /Reorder To do/ }),
+      screen.getByRole("group", { name: /Reorder To do/ }),
       { key: "ArrowRight" },
     );
 

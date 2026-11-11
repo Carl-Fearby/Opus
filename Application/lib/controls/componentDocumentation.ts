@@ -420,7 +420,7 @@ The Danger zone requires the exact board name before **Delete board** becomes av
 
 ## Accessibility
 
-- List grips are keyboard reorderable with the left and right arrow keys.
+- Dragging a list header reorders the board, and a focused list header moves with the left and right arrow keys.
 - Ticket titles are labelled inputs inside the modal heading.
 - Tag pickers use labelled search fields and buttons; selected tags expose individual remove actions.`,
   calendar: "## Overview\n\nMonth calendar with selectable days, labelled timed events, and a day-detail overlay built on the shared `Modal` component.\n\n## Props\n\n| Prop | Type | Default | Description |\n| --- | --- | --- | --- |\n| `events` | `CalendarEvent[]` | `[]` | Day markers with optional `startTime`, `endTime`, tone, and title. |\n| `maxDayEvents` | `number` | `3` | Maximum events shown in a month cell; extra events collapse to `+N more`. |\n| `selectedDate` | `string` | \u2014 | `YYYY-MM-DD`. |\n| `onSelectDate` | `(date) => void` | \u2014 | Day click handler. |\n| `openDayOnSelect` | `boolean` | `true` | Open the shared Opus modal with schedule and booking form. |\n| `onBookEvent` | `(event) => void` | \u2014 | Called when a fake booking is added in the modal. |\n| `showMonthYearPicker` | `boolean` | `true` | Show month and year dropdowns in the header. |\n| `month` / `year` | `number` | \u2014 | Controlled visible month. |\n\n## CalendarEvent\n\n| Field | Type | Description |\n| --- | --- | --- |\n| `date` | `string` | `YYYY-MM-DD` day key. |\n| `title` | `string` | Event label. |\n| `startTime` | `string` | Optional `HH:mm` from time. |\n| `endTime` | `string` | Optional `HH:mm` to time. |\n| `tone` | `\"accent\" \\| \"success\" \\| \"warning\" \\| \"danger\"` | Marker colour. |",

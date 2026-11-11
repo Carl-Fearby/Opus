@@ -618,36 +618,29 @@
   padding: 10px 12px;
   border-bottom: 1px solid var(--opus-surface-border, var(--kanban-header-border));
   background: var(--opus-surface-fill, var(--kanban-header-bg));
-}
-
-.columnDragHandle {
-  display: inline-grid;
-  place-items: center;
-  flex-shrink: 0;
-  width: 20px;
-  height: 24px;
-  padding: 0;
-  border: 0;
-  border-radius: var(--opus-input-radius-small);
-  background: transparent;
-  color: var(--dashboard-section-muted);
-  font-size: 0.72rem;
+  /* The whole bar is the drag surface. */
   cursor: grab;
+  user-select: none;
+  -webkit-user-select: none;
 }
 
-.columnDragHandle:hover {
-  background: var(--opus-surface-fill, color-mix(in srgb, var(--kanban-header-accent) 14%, transparent));
-  color: var(--dashboard-section-text);
-}
-
-.columnDragHandle:focus-visible {
-  outline: none;
-  color: var(--dashboard-section-text);
-  box-shadow: 0 0 0 3px color-mix(in srgb, var(--kanban-header-accent) 30%, transparent);
-}
-
-.columnDragHandle:active {
+.columnHeader:active {
   cursor: grabbing;
+}
+
+.columnHeader :is(input, textarea, select, [contenteditable="true"]) {
+  cursor: auto;
+  user-select: text;
+  -webkit-user-select: text;
+}
+
+.column[data-column-dragging="true"] .columnHeader {
+  cursor: grabbing;
+}
+
+.columnHeader:focus-visible {
+  outline: 2px solid color-mix(in srgb, var(--kanban-header-accent) 62%, transparent);
+  outline-offset: -3px;
 }
 
 .columnTitle {
@@ -1117,12 +1110,6 @@
   font-size: 0.875rem;
   font-weight: 700;
   transform: rotate(0.6deg);
-}
-
-.columnDragGrip {
-  flex-shrink: 0;
-  color: var(--opus-muted);
-  font-size: 0.72rem;
 }
 
 .addColumn {
