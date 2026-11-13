@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useId, useRef, useState, type ChangeEvent, type KeyboardEvent } from "react";
+import { useOpusI18n } from "../../OpusI18n";
 import { FieldShell } from "../FieldShell";
 import type { ControlRadius, InputControlSize } from "../types";
 import { inputControlSizeClassName } from "../shared/inputControlSizes";
@@ -30,8 +31,10 @@ export type AsyncSelectFieldProps = {
 };
 
 export function AsyncSelectField({ id, label, value, defaultOptions = [], loadOptions, debounceMs = 250, minQueryLength = 0, placeholder = "Search…", loadingMessage = "Loading options…", emptyMessage = "No options found", disabled, required, size = "md", error, help, radius, transparency, gradient, onChange }: AsyncSelectFieldProps) {
+  const { t } = useOpusI18n();
   const listId = useId();
   const requestRef = useRef(0);
+  const inputRef = useRef<HTMLInputElement>(null);
   const [query, setQuery] = useState(value?.label ?? "");
   const [options, setOptions] = useState(defaultOptions);
   const [open, setOpen] = useState(false);
@@ -65,6 +68,16 @@ export function AsyncSelectField({ id, label, value, defaultOptions = [], loadOp
       onChange(null);
     }
   };
+  const clear = () => {
+    requestRef.current += 1;
+    setQuery("");
+    setOptions([]);
+    setHighlight(0);
+    setLoading(false);
+    setOpen(false);
+    onChange(null);
+    inputRef.current?.focus();
+  };
   const handleKeyDown = (event: KeyboardEvent<HTMLInputElement>) => {
     if (event.key === "ArrowDown") { event.preventDefault(); setOpen(true); setHighlight((value) => Math.min(value + 1, Math.max(options.length - 1, 0))); }
     if (event.key === "ArrowUp") { event.preventDefault(); setHighlight((value) => Math.max(value - 1, 0)); }
@@ -72,9 +85,12 @@ export function AsyncSelectField({ id, label, value, defaultOptions = [], loadOp
     if (event.key === "Escape") { event.preventDefault(); setOpen(false); }
   };
 
+  const showClear = !disabled && (query.length > 0 || Boolean(value));
+
   return <FieldShell id={id} label={label} required={required} error={error} help={help} radius={radius} transparency={transparency} gradient={gradient}>
     <div className={styles.root}>
-      <input id={id} role="combobox" aria-autocomplete="list" aria-expanded={open} aria-controls={listId} aria-activedescendant={open && options[highlight] ? `${listId}-${highlight}` : undefined} className={[inputControlSizeClassName[size], styles.input].filter(Boolean).join(" ")} disabled={disabled} placeholder={placeholder} value={query} onChange={handleChange} onFocus={() => setOpen(true)} onKeyDown={handleKeyDown} />
+      <input id={id} role="combobox" aria-autocomplete="list" aria-expanded={open} aria-controls={listId} aria-activedescendant={open && options[highlight] ? `${listId}-${highlight}` : undefined} className={[inputControlSizeClassName[size], styles.input, showClear ? styles.inputWithClear : ""].filter(Boolean).join(" ")} disabled={disabled} placeholder={placeholder} ref={inputRef} value={query} onChange={handleChange} onFocus={() => setOpen(true)} onKeyDown={handleKeyDown} />
+      {showClear ? <button aria-label={t("common.clear", "Clear")} className={styles.clear} onMouseDown={(event) => event.preventDefault()} onClick={clear} type="button">×</button> : null}
       {open ? <div className={styles.list} id={listId} role="listbox">
         {loading ? <p role="status">{loadingMessage}</p> : options.length ? options.map((option, index) => <button aria-selected={value?.value === option.value} className={styles.option} data-highlighted={index === highlight} id={`${listId}-${index}`} key={option.value} role="option" type="button" onMouseDown={(event) => event.preventDefault()} onClick={() => select(option)}><strong>{option.label}</strong>{option.description ? <small>{option.description}</small> : null}</button>) : <p role="status">{emptyMessage}</p>}
       </div> : null}
