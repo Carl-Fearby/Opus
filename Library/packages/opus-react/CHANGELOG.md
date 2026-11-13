@@ -2,7 +2,25 @@
 
 All notable public-package changes are recorded here. Opus follows [Semantic Versioning](https://semver.org/).
 
-## Unreleased
+## 0.20.0 — 2026-11-13
+
+### Added
+
+- `ControlRadius`: a `minimal` step (6px) between `none` and `standard`, supported by fields, buttons, menus, the colour-picker panel and `OpusThemeProvider` defaults.
+- Every component surface now reads `--opus-control-radius` (with its own value as the fallback), so a single radius setting restyles any rounded corner without a bespoke prop.
+- `AsyncSelectField`: `mode` and `labelPosition` props so the field follows the same layout settings as other Opus fields.
+- `AsyncMultiSelectField`: the radius and menu-radius tokens now follow the `radius` prop, including the portalled option list.
+- `MentionInputField`: `mode`, `labelPosition`, `required`, `error` and `help` props so it matches the other fields.
+- `ApplicationFooter`: `showBrand`, `showVersion` and `showActions` props.
+- `ProfilePhotoUploadModal`: every photo-upload option (title, description, labels, crop and zoom settings) is reachable from the catalogue example.
+
+### Fixed
+
+- `AsyncSelectField` and `AsyncMultiSelectField`: the clear control and option list no longer ignore the field radius.
+- `StatCard`/`KpiCard` catalogue example no longer emits a duplicate self-closing tag after the component.
+- Catalogue examples now start from their configured value: every text, numeric, range, select and radio field seeds its state from **Value**, `CheckboxField`/`SwitchField` from **Checked**, `Clipboard` from its value, `ProfilePhotoUpload` from its photo, and `Sidebar` honours **Height** even when it is not wrapped.
+- `IconBadge` toolbar demo now reflects its icon, label, count, max and show-zero settings on the first badge.
+- The docs preview now applies every settings-pane control. `ProductTour`, `MentionInputField`, `RecurrenceEditor`, `TimeRangeField`, `SignaturePad`, `DiffViewer`, `Markdown`, `CodeEditor`, `TreeTable`, `ErrorState`, `ConfirmDialog`, `BottomSheet` and `OverflowToolbar` previously had no settings, and the dashboard widgets' preview layout now lays out the configured number of previews.
 
 ## 0.19.0 — 2026-11-13
 
