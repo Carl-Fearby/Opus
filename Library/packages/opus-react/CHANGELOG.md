@@ -4,6 +4,12 @@ All notable public-package changes are recorded here. Opus follows [Semantic Ver
 
 ## Unreleased
 
+## 0.19.0 — 2026-11-13
+
+### Added
+
+- `AsyncSelectField`: a clear button inside the control empties the search text and the selected option in one click, returns focus to the input and reports `onChange(null)`. It appears whenever the field has text or a value and stays hidden while the field is disabled.
+
 ## 0.18.1 — 2026-11-11
 
 ### Changed
