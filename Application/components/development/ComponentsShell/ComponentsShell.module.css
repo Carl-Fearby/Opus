@@ -152,7 +152,7 @@ html[data-shell-theme="light"] .settingsSidebar {
   margin: 0;
   padding: 0;
   border: 1px solid color-mix(in srgb, var(--opus-border) 88%, transparent);
-  border-radius: 8px;
+  border-radius: var(--opus-control-radius, 8px);
   background: color-mix(in srgb, var(--opus-pane-fill) 80%, transparent);
   color: var(--opus-muted);
   font-size: 0.72rem;
@@ -498,7 +498,7 @@ html[data-shell-theme="light"] .pageHeader {
   margin: 10px;
   overflow: hidden;
   border: 1px solid var(--opus-border, rgba(168, 131, 255, 0.18));
-  border-radius: 14px;
+  border-radius: var(--opus-control-radius, 14px);
   background: var(--opus-pane-fill);
   color: var(--opus-text);
   transition:
@@ -533,7 +533,7 @@ html[data-shell-theme="light"] .shell .content {
   left: 12px;
   z-index: 100;
   padding: 10px 14px;
-  border-radius: 8px;
+  border-radius: var(--opus-control-radius, 8px);
   background: var(--opus-panel);
   border: 1px solid var(--opus-border);
   color: var(--opus-text);
@@ -1034,7 +1034,7 @@ html[data-shell-theme="light"] .shell .content {
     grid-column: 1;
     grid-row: 1;
     margin: 8px;
-    border-radius: 12px;
+    border-radius: var(--opus-control-radius, 12px);
   }
 
   .sidebarWrap {

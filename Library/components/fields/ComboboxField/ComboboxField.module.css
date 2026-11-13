@@ -1,3 +1,7 @@
+.portal[data-control-radius="minimal"] {
+  --opus-input-radius: 6px;
+}
+
 .portal[data-control-radius="medium"] {
   --opus-input-radius: 12px;
 }

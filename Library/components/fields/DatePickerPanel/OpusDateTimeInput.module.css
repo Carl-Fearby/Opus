@@ -65,7 +65,7 @@
 .footerAction:focus-visible,
 .footerActionPrimary:focus-visible {
   outline: none;
-  border-radius: 4px;
+  border-radius: var(--opus-control-radius, 4px);
   box-shadow: 0 0 0 3px color-mix(in srgb, var(--opus-accent) 22%, transparent);
 }
 

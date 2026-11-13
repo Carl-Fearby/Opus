@@ -15,7 +15,7 @@
 }
 
 .avatar[data-shape="circle"] {
-  border-radius: 999px;
+  border-radius: var(--opus-control-radius, 999px);
 }
 
 .avatar[data-shape="rounded"] {

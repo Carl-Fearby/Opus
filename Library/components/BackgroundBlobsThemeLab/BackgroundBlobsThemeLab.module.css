@@ -27,6 +27,11 @@
   --opus-glass-surface: rgba(255, 255, 255, 0.42);
 }
 
+.lab[data-control-radius="minimal"] {
+  --opus-input-radius: 6px;
+  --opus-input-radius-large: 8px;
+}
+
 .lab[data-control-radius="standard"] {
   --opus-input-radius: 10px;
   --opus-input-radius-large: 14px;

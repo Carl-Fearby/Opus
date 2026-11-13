@@ -4,7 +4,7 @@
   gap: 5px;
   min-height: 1.35rem;
   padding: 0 8px;
-  border-radius: 999px;
+  border-radius: var(--opus-control-radius, 999px);
   font-size: 0.62rem;
   font-weight: 700;
   letter-spacing: 0.01em;
@@ -121,7 +121,7 @@
   margin-right: -3px;
   padding: 0;
   border: 0;
-  border-radius: 999px;
+  border-radius: var(--opus-control-radius, 999px);
   background: var(--opus-surface-fill, color-mix(in srgb, currentColor 12%, transparent));
   color: var(--opus-surface-text, inherit);
   font: inherit;
@@ -161,7 +161,7 @@
   max-width: min(20rem, 80vw);
   padding: 10px;
   border: 1px solid var(--opus-surface-border, color-mix(in srgb, var(--opus-accent) 28%, var(--dashboard-section-border, var(--opus-border))));
-  border-radius: 12px;
+  border-radius: var(--opus-control-radius, 12px);
   background: var(--opus-surface-fill, color-mix(in srgb, var(--dashboard-section-bg, var(--opus-bg)) 86%, transparent));
   box-shadow: var(--opus-control-shadow, 0 16px 40px color-mix(in srgb, #020617 32%, transparent));
   backdrop-filter: var(--opus-surface-backdrop-filter, blur(12px));
@@ -186,7 +186,7 @@
   min-width: 0;
   padding: 2px;
   border: 0;
-  border-radius: 999px;
+  border-radius: var(--opus-control-radius, 999px);
   background: transparent;
   cursor: pointer;
 }

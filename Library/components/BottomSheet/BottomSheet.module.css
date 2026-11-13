@@ -81,7 +81,7 @@
 .handleBar {
   width: 42px;
   height: 5px;
-  border-radius: 999px;
+  border-radius: var(--opus-control-radius, 999px);
   background: color-mix(in srgb, var(--opus-muted) 42%, transparent);
 }
 
@@ -123,7 +123,7 @@
   height: 28px;
   padding: 0;
   border: 1px solid var(--opus-surface-border, color-mix(in srgb, var(--opus-border) 80%, transparent));
-  border-radius: 999px;
+  border-radius: var(--opus-control-radius, 999px);
   background: var(--opus-surface-fill, color-mix(in srgb, var(--opus-input-bg) 72%, transparent));
   color: var(--opus-surface-text, var(--opus-muted));
   cursor: pointer;

@@ -20,7 +20,7 @@
   max-height: var(--opus-control-height, 28px);
   padding: 0 7px;
   border: 1px solid color-mix(in srgb, var(--opus-accent, #8f6cff) 42%, var(--opus-border, rgba(168, 131, 255, 0.28)));
-  border-radius: 999px;
+  border-radius: var(--opus-control-radius, 999px);
   background: color-mix(in srgb, var(--opus-accent-soft, rgba(143, 108, 255, 0.16)) 70%, var(--opus-input-bg, transparent));
   box-shadow: 0 1px 0 rgba(255, 255, 255, 0.04) inset;
   color: var(--opus-text, #f5f7ff);
@@ -99,7 +99,7 @@
   margin: 0;
   padding: 0;
   border: 1px solid color-mix(in srgb, var(--opus-accent, #8f6cff) 42%, var(--opus-border, rgba(168, 131, 255, 0.28)));
-  border-radius: 999px;
+  border-radius: var(--opus-control-radius, 999px);
   background: color-mix(in srgb, var(--opus-accent-soft, rgba(143, 108, 255, 0.16)) 70%, var(--opus-input-bg, transparent));
   color: var(--opus-text, #f5f7ff);
   cursor: pointer;
@@ -134,7 +134,7 @@
   overscroll-behavior: contain;
   padding: 12px;
   border: 1px solid color-mix(in srgb, var(--opus-accent, #8f6cff) 24%, var(--opus-border, rgba(168, 131, 255, 0.28)));
-  border-radius: 12px;
+  border-radius: var(--opus-control-radius, 12px);
   background: color-mix(in srgb, var(--opus-panel, #121528) 97%, transparent);
   box-shadow:
     0 24px 70px rgba(2, 6, 23, 0.45),

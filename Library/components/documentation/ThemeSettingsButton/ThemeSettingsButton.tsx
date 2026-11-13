@@ -388,6 +388,7 @@ export function ThemeSettingsButton({
   ] as const;
   const radiusOptions = [
     { value: "none", label: tSite("preview.none") },
+    { value: "minimal", label: tSite("preview.minimal") },
     { value: "standard", label: tSite("themeDesigner.standard") },
     { value: "medium", label: tSite("themeDesigner.medium") },
     { value: "large", label: tSite("themeDesigner.large") },

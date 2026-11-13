@@ -33,7 +33,7 @@
 }
 
 .row:focus-visible {
-  border-radius: 12px;
+  border-radius: var(--opus-control-radius, 12px);
   outline: 2px solid color-mix(in srgb, var(--opus-accent) 70%, transparent);
   outline-offset: 2px;
 }

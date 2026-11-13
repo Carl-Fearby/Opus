@@ -43,7 +43,7 @@
   padding: 12px;
   overflow: hidden;
   border: 1px solid var(--opus-surface-border, color-mix(in srgb, var(--opus-border) 78%, transparent));
-  border-radius: 16px;
+  border-radius: var(--opus-control-radius, 16px);
   background: var(--opus-surface-fill, #ffffff);
 }
 
@@ -164,7 +164,7 @@
 .primaryMark {
   padding: 1px 6px;
   border: 1px solid var(--opus-surface-border, color-mix(in srgb, var(--opus-accent) 34%, var(--opus-border)));
-  border-radius: 999px;
+  border-radius: var(--opus-control-radius, 999px);
   background: var(--opus-surface-fill, color-mix(in srgb, var(--opus-accent) 14%, transparent));
   color: var(--opus-surface-text, color-mix(in srgb, var(--opus-accent) 72%, var(--opus-text)));
   font-size: 0.62rem;

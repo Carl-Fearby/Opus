@@ -45,7 +45,7 @@
 .handle::after {
   content: "";
   position: absolute;
-  border-radius: 999px;
+  border-radius: var(--opus-control-radius, 999px);
   transition:
     background 160ms ease,
     inset 160ms ease;
@@ -136,7 +136,7 @@
   justify-content: center;
   gap: 2px;
   border: 1px solid var(--opus-surface-border, color-mix(in srgb, var(--opus-accent) 52%, #070912));
-  border-radius: 999px;
+  border-radius: var(--opus-control-radius, 999px);
   background-color: var(--opus-surface-fill, color-mix(in srgb, var(--opus-accent) 52%, #070912));
   box-shadow:
     var(--opus-control-shadow, 0 1px 3px color-mix(in srgb, #000 28%, transparent),

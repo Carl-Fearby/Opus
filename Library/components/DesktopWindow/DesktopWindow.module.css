@@ -8,7 +8,7 @@
   min-height: 0;
   overflow: hidden;
   border: 1px solid var(--opus-surface-border, color-mix(in srgb, var(--opus-accent) 28%, var(--opus-border)));
-  border-radius: 10px;
+  border-radius: var(--opus-control-radius, 10px);
   background:
     var(--opus-surface-fill, radial-gradient(90% 80% at 10% 0%, color-mix(in srgb, var(--opus-accent) 11%, transparent), transparent 62%),
     linear-gradient(

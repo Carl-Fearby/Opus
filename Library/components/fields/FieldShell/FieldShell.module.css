@@ -1,5 +1,13 @@
+.root[data-control-radius="minimal"] {
+  --opus-input-radius: 6px;
+  --opus-input-radius-large: 6px;
+  --opus-input-radius-small: 5px;
+}
+
 .root[data-control-radius="medium"] {
   --opus-input-radius: 12px;
+  --opus-input-radius-large: 12px;
+  --opus-input-radius-small: 10px;
 }
 
 .root[data-control-radius="large"] {

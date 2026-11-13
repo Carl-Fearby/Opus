@@ -6,7 +6,9 @@ import { compilePlaygroundCode } from "@/lib/playground/compilePlaygroundCode";
 import { JsonViewer } from "opus-react";
 import { CookieConsent } from "opus-react";
 import { useOpusI18n } from "@/components/OpusI18n";
+import { dashboardPreviewCount, type DashboardPreviewLayout } from "@/lib/controls/dashboardPreview";
 import { generateUsageCode } from "@/lib/controls/generateUsageCode";
+import { DashboardPreviewGrid } from "./DashboardPreviewGrid";
 import type { ComponentCategory, ControlSettings, ControlSettingsBySlug, ControlSlug } from "@/lib/controls/types";
 import styles from "./ControlDetail.module.css";
 
@@ -185,6 +187,14 @@ export function UsagePreview({
     }
   }
   const preview = previewRefCache.current;
+  const PreviewComponent = preview.Component;
+  // Dashboard widgets expose a preview-layout setting; it belongs to the
+  // catalogue surface, so apply it here instead of inside the generated source.
+  const previewLayout = (settings as { previewLayout?: DashboardPreviewLayout }).previewLayout;
+  // Components without a radius of their own drive the shared corner scale,
+  // which every rounded surface reads through --opus-control-radius.
+  const sharedRadius = (settings as { radius?: string }).radius;
+  const previewLayoutCount = previewLayout ? dashboardPreviewCount(previewLayout) : 1;
   const cookieConsentSettings = slug === "cookie-consent"
     ? settings as ControlSettingsBySlug["cookie-consent"]
     : null;
@@ -244,6 +254,7 @@ export function UsagePreview({
   return (
     <div
       className={styles.globalActionPreview}
+      data-control-radius={sharedRadius || undefined}
       data-hydrated="true"
       data-testid="usage-preview"
       ref={previewRef}
@@ -261,8 +272,15 @@ export function UsagePreview({
           showRejectButton={cookieConsentSettings.showRejectButton}
           title={cookieConsentSettings.title}
         />
-      ) : preview.Component ? (
-        <CompiledPreview component={preview.Component} />
+      ) : PreviewComponent ? (
+        previewLayout && previewLayoutCount > 1 ? (
+          <DashboardPreviewGrid
+            layout={previewLayout}
+            renderItem={() => <CompiledPreview component={PreviewComponent} />}
+          />
+        ) : (
+          <CompiledPreview component={PreviewComponent} />
+        )
       ) : (
         <p className={styles.globalActionStatus} role="alert">
           {preview.error}

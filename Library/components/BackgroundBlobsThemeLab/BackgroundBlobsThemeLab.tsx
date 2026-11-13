@@ -76,7 +76,6 @@ export function BackgroundBlobsThemeLab({
   const { t } = useOpusI18n();
   const controlRadius = settings.controlRadius ?? "standard";
   const transparency = settings.transparency ?? "standard";
-  const gradient = settings.gradient ?? false;
   const [query, setQuery] = useState("");
   const [enabled, setEnabled] = useState(true);
   const [selected, setSelected] = useState("All components");
@@ -138,7 +137,7 @@ export function BackgroundBlobsThemeLab({
                       label="Search"
                       radius={controlRadius}
                       transparency={transparency}
-                      gradient={gradient}
+                     
                       onChange={(event) => setQuery(event.target.value)}
                       type="search"
                       value={query}
@@ -155,7 +154,7 @@ export function BackgroundBlobsThemeLab({
                       label="Workflow"
                       radius={controlRadius}
                       transparency={transparency}
-                      gradient={gradient}
+                     
                       onChange={(event) => setSelected(event.target.value)}
                       options={["All components", "Forms", "Actions", "Status"]}
                       value={selected}
@@ -189,7 +188,7 @@ export function BackgroundBlobsThemeLab({
                       label="Search content"
                       radius={controlRadius}
                       transparency={transparency}
-                      gradient={gradient}
+                     
                       onChange={(event) => setQuery(event.target.value)}
                       placeholder={t("backgroundBlobs.placeholder", "Try typing here")}
                       type="search"
@@ -200,7 +199,7 @@ export function BackgroundBlobsThemeLab({
                       label="Filter"
                       radius={controlRadius}
                       transparency={transparency}
-                      gradient={gradient}
+                     
                       onChange={(event) => setSelected(event.target.value)}
                       options={["All components", "Forms", "Actions", "Status"]}
                       value={selected}
@@ -211,7 +210,7 @@ export function BackgroundBlobsThemeLab({
                       label="Enable live samples"
                       radius={controlRadius}
                       transparency={transparency}
-                      gradient={gradient}
+                     
                       onChange={(event) => setEnabled(event.target.checked)}
                     />
                     <SwitchField
@@ -220,7 +219,7 @@ export function BackgroundBlobsThemeLab({
                       label="Light component surface"
                       radius={controlRadius}
                       transparency={transparency}
-                      gradient={gradient}
+                     
                       onChange={(event) => setSurfaceLight(event.target.checked)}
                     />
                   </Grid>
@@ -230,17 +229,17 @@ export function BackgroundBlobsThemeLab({
               <Container size="full">
                 <LabWidget title={t("backgroundBlobs.metadata", "Metadata and layout")} radius={controlRadius}>
                   <Grid columns={2} gap={24}>
-                    <TextAreaField id="background-blobs-lab-notes" label="Notes" maxChars={120} radius={controlRadius} value={notes} transparency={transparency} gradient={gradient} onChange={(event) => setNotes(event.target.value)} />
-                    <MultiSelectField id="background-blobs-lab-categories" label="Categories" options={["Design", "Engineering", "Research", "Marketing"]} radius={controlRadius} transparency={transparency} gradient={gradient} value={categories} onChange={setCategories} />
-                    <ChoiceChipsField id="background-blobs-lab-chips" label="Tags" options={[{ label: "React", value: "React" }, { label: "CSS", value: "CSS" }, { label: "A11y", value: "A11y" }]} radius={controlRadius} transparency={transparency} gradient={gradient} selectionMode="multiple" value={chips} onChange={setChips} />
-                    <SegmentedControlField id="background-blobs-lab-layout" label="Density" options={["Compact", "Comfortable", "Spacious"]} radius={controlRadius} transparency={transparency} gradient={gradient} value={layout} onChange={setLayout} />
+                    <TextAreaField id="background-blobs-lab-notes" label="Notes" maxChars={120} radius={controlRadius} value={notes} transparency={transparency} onChange={(event) => setNotes(event.target.value)} />
+                    <MultiSelectField id="background-blobs-lab-categories" label="Categories" options={["Design", "Engineering", "Research", "Marketing"]} radius={controlRadius} transparency={transparency} value={categories} onChange={setCategories} />
+                    <ChoiceChipsField id="background-blobs-lab-chips" label="Tags" options={[{ label: "React", value: "React" }, { label: "CSS", value: "CSS" }, { label: "A11y", value: "A11y" }]} radius={controlRadius} transparency={transparency} selectionMode="multiple" value={chips} onChange={setChips} />
+                    <SegmentedControlField id="background-blobs-lab-layout" label="Density" options={["Compact", "Comfortable", "Spacious"]} radius={controlRadius} transparency={transparency} value={layout} onChange={setLayout} />
                   </Grid>
                 </LabWidget>
               </Container>
 
               <Container size="full">
                 <LabWidget title={t("backgroundBlobs.priority", "Operational priority")} radius={controlRadius}>
-                  <RadioGroup id="background-blobs-lab-priority" label="Priority" name="background-blobs-priority" radius={controlRadius} transparency={transparency} gradient={gradient} value={priority} onChange={setPriority} orientation="horizontal">
+                  <RadioGroup id="background-blobs-lab-priority" label="Priority" name="background-blobs-priority" radius={controlRadius} transparency={transparency} value={priority} onChange={setPriority} orientation="horizontal">
                     <Radio value="Low">Low</Radio>
                     <Radio value="Normal">{t("backgroundBlobs.normal", "Normal")}</Radio>
                     <Radio value="High">{t("backgroundBlobs.high", "High")}</Radio>
@@ -254,10 +253,10 @@ export function BackgroundBlobsThemeLab({
             <Container size="full">
               <LabWidget title={t("backgroundBlobs.valueControls", "Value controls and interactive ranges")} radius={controlRadius}>
                 <Grid columns={2} gap={24}>
-                  <NumberField id="background-blobs-lab-quantity" label="Quantity" min={0} max={20} radius={controlRadius} transparency={transparency} gradient={gradient} value={quantity} onChange={(event) => setQuantity(event.target.valueAsNumber)} />
-                  <RangeField id="background-blobs-lab-range" label="Opacity" min={0} max={100} radius={controlRadius} transparency={transparency} gradient={gradient} value={range} onChange={(event) => setRange(Number(event.target.value))} />
-                  <SliderRangeField id="background-blobs-lab-price" label="Price range" min={0} max={100} radius={controlRadius} transparency={transparency} gradient={gradient} value={priceRange} onChange={setPriceRange} />
-                  <RatingField id="background-blobs-lab-rating" label="Rating" radius={controlRadius} transparency={transparency} gradient={gradient} value={rating} onChange={setRating} variant="hearts" />
+                  <NumberField id="background-blobs-lab-quantity" label="Quantity" min={0} max={20} radius={controlRadius} transparency={transparency} value={quantity} onChange={(event) => setQuantity(event.target.valueAsNumber)} />
+                  <RangeField id="background-blobs-lab-range" label="Opacity" min={0} max={100} radius={controlRadius} transparency={transparency} value={range} onChange={(event) => setRange(Number(event.target.value))} />
+                  <SliderRangeField id="background-blobs-lab-price" label="Price range" min={0} max={100} radius={controlRadius} transparency={transparency} value={priceRange} onChange={setPriceRange} />
+                  <RatingField id="background-blobs-lab-rating" label="Rating" radius={controlRadius} transparency={transparency} value={rating} onChange={setRating} variant="hearts" />
                 </Grid>
               </LabWidget>
             </Container>
@@ -267,8 +266,8 @@ export function BackgroundBlobsThemeLab({
             <Container size="full">
               <LabWidget title={t("backgroundBlobs.identity", "Identity and MFA Verification")} radius={controlRadius}>
                 <Grid columns={2} gap={24}>
-                  <PasswordStrengthField id="background-blobs-lab-password" label="Password" radius={controlRadius} transparency={transparency} gradient={gradient} value={password} onChange={setPassword} />
-                  <OtpField id="background-blobs-lab-otp" label="Verification code" radius={controlRadius} transparency={transparency} gradient={gradient} value={otp} onChange={setOtp} onComplete={() => setEnabled(true)} />
+                  <PasswordStrengthField id="background-blobs-lab-password" label="Password" radius={controlRadius} transparency={transparency} value={password} onChange={setPassword} />
+                  <OtpField id="background-blobs-lab-otp" label="Verification code" radius={controlRadius} transparency={transparency} value={otp} onChange={setOtp} onComplete={() => setEnabled(true)} />
                 </Grid>
               </LabWidget>
             </Container>
@@ -305,7 +304,7 @@ export function BackgroundBlobsThemeLab({
                       label="Date picker"
                       radius={controlRadius}
                       transparency={transparency}
-                      gradient={gradient}
+                     
                       onChange={(event) => setDate(event.target.value)}
                       type="date"
                       value={date}
@@ -315,7 +314,7 @@ export function BackgroundBlobsThemeLab({
                       label="Colour picker"
                       radius={controlRadius}
                       transparency={transparency}
-                      gradient={gradient}
+                     
                       onChange={(event) => setColour(event.target.value)}
                       value={colour}
                     />

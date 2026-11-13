@@ -24,11 +24,12 @@ export type OpusThemeDefaults = {
 };
 
 const radiusTokens: Record<ControlRadius, Record<string, string>> = {
-  none: { "--opus-input-radius": "0", "--opus-input-radius-large": "0", "--opus-input-radius-small": "0" },
+  none: { "--opus-input-radius": "0", "--opus-input-radius-large": "0", "--opus-input-radius-small": "0", "--opus-radius": "0", "--opus-radius-md": "0", "--opus-radius-lg": "0" },
+  minimal: { "--opus-input-radius": "6px", "--opus-input-radius-large": "6px", "--opus-input-radius-small": "5px", "--opus-radius": "6px", "--opus-radius-md": "6px", "--opus-radius-lg": "6px" },
   standard: {},
-  medium: { "--opus-input-radius": "12px", "--opus-input-radius-large": "12px", "--opus-input-radius-small": "12px" },
-  large: { "--opus-input-radius": "15px", "--opus-input-radius-large": "15px", "--opus-input-radius-small": "15px" },
-  full: { "--opus-input-radius": "999px", "--opus-input-radius-large": "20px", "--opus-input-radius-small": "999px" },
+  medium: { "--opus-input-radius": "12px", "--opus-input-radius-large": "12px", "--opus-input-radius-small": "12px", "--opus-radius": "12px", "--opus-radius-md": "12px", "--opus-radius-lg": "12px" },
+  large: { "--opus-input-radius": "15px", "--opus-input-radius-large": "15px", "--opus-input-radius-small": "15px", "--opus-radius": "15px", "--opus-radius-md": "15px", "--opus-radius-lg": "18px" },
+  full: { "--opus-input-radius": "999px", "--opus-input-radius-large": "20px", "--opus-input-radius-small": "999px", "--opus-radius": "999px", "--opus-radius-md": "999px", "--opus-radius-lg": "999px" },
 };
 
 /** Create CSS variables for a library-wide control surface. */

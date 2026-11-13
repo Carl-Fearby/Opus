@@ -3,7 +3,7 @@
 import { useEffect, useId, useRef, useState, type ChangeEvent, type KeyboardEvent } from "react";
 import { useOpusI18n } from "../../OpusI18n";
 import { FieldShell } from "../FieldShell";
-import type { ControlRadius, InputControlSize } from "../types";
+import type { ControlRadius, FieldMode, InputControlSize, LabelPosition } from "../types";
 import { inputControlSizeClassName } from "../shared/inputControlSizes";
 import styles from "./AsyncSelectField.module.css";
 
@@ -14,6 +14,8 @@ export type AsyncSelectFieldProps = {
   gradient?: boolean;
   id: string;
   label: string;
+  labelPosition?: LabelPosition;
+  mode?: FieldMode;
   value?: AsyncSelectOption | null;
   defaultOptions?: AsyncSelectOption[];
   loadOptions: (query: string) => Promise<AsyncSelectOption[]>;
@@ -30,7 +32,7 @@ export type AsyncSelectFieldProps = {
   onChange: (option: AsyncSelectOption | null) => void;
 };
 
-export function AsyncSelectField({ id, label, value, defaultOptions = [], loadOptions, debounceMs = 250, minQueryLength = 0, placeholder = "Search…", loadingMessage = "Loading options…", emptyMessage = "No options found", disabled, required, size = "md", error, help, radius, transparency, gradient, onChange }: AsyncSelectFieldProps) {
+export function AsyncSelectField({ id, label, labelPosition, mode, value, defaultOptions = [], loadOptions, debounceMs = 250, minQueryLength = 0, placeholder = "Search…", loadingMessage = "Loading options…", emptyMessage = "No options found", disabled, required, size = "md", error, help, radius, transparency, gradient, onChange }: AsyncSelectFieldProps) {
   const { t } = useOpusI18n();
   const listId = useId();
   const requestRef = useRef(0);
@@ -87,7 +89,7 @@ export function AsyncSelectField({ id, label, value, defaultOptions = [], loadOp
 
   const showClear = !disabled && (query.length > 0 || Boolean(value));
 
-  return <FieldShell id={id} label={label} required={required} error={error} help={help} radius={radius} transparency={transparency} gradient={gradient}>
+  return <FieldShell id={id} label={label} labelPosition={labelPosition} mode={mode} required={required} error={error} help={help} radius={radius} transparency={transparency} gradient={gradient}>
     <div className={styles.root}>
       <input id={id} role="combobox" aria-autocomplete="list" aria-expanded={open} aria-controls={listId} aria-activedescendant={open && options[highlight] ? `${listId}-${highlight}` : undefined} className={[inputControlSizeClassName[size], styles.input, showClear ? styles.inputWithClear : ""].filter(Boolean).join(" ")} disabled={disabled} placeholder={placeholder} ref={inputRef} value={query} onChange={handleChange} onFocus={() => setOpen(true)} onKeyDown={handleKeyDown} />
       {showClear ? <button aria-label={t("common.clear", "Clear")} className={styles.clear} onMouseDown={(event) => event.preventDefault()} onClick={clear} type="button">×</button> : null}

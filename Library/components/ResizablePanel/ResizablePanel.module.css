@@ -18,7 +18,7 @@
   height: 14px;
   padding: 0;
   border: 0;
-  border-radius: 3px;
+  border-radius: var(--opus-control-radius, 3px);
   background:
     var(--opus-surface-fill, linear-gradient(
       135deg,

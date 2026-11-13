@@ -13,7 +13,7 @@
   min-height: var(--opus-control-height, 28px);
   padding: 6px 8px;
   border: 1px solid var(--opus-border-strong);
-  border-radius: 999px;
+  border-radius: var(--opus-control-radius, 999px);
   background: color-mix(in srgb, var(--opus-input-bg) 88%, transparent);
   box-shadow:
     0 1px 0 rgba(255, 255, 255, 0.05) inset,
@@ -27,7 +27,7 @@
   min-height: var(--opus-control-height, 28px);
   padding: 4px 8px 4px 4px;
   border: 1px solid var(--opus-surface-border, var(--opus-border-strong));
-  border-radius: 999px;
+  border-radius: var(--opus-control-radius, 999px);
   background: var(--opus-surface-fill, color-mix(in srgb, var(--opus-input-bg) 88%, transparent));
   box-shadow:
     var(--opus-control-shadow, 0 1px 0 rgba(255, 255, 255, 0.05) inset,
@@ -83,7 +83,7 @@
   margin: 0;
   padding: 0;
   border: 1px solid var(--opus-surface-border, color-mix(in srgb, var(--opus-accent) 42%, var(--opus-border)));
-  border-radius: 999px;
+  border-radius: var(--opus-control-radius, 999px);
   background: var(--opus-surface-fill, color-mix(in srgb, var(--opus-accent) 12%, transparent));
   color: var(--opus-surface-text, var(--opus-text));
   cursor: pointer;
@@ -178,7 +178,7 @@
   margin-left: auto;
   padding: 3px 5px;
   border: 1px solid var(--opus-surface-border, color-mix(in srgb, var(--opus-border) 82%, transparent));
-  border-radius: 5px;
+  border-radius: var(--opus-control-radius, 5px);
   background: var(--opus-surface-fill, color-mix(in srgb, var(--opus-input-bg) 76%, transparent));
   color: var(--opus-surface-text, var(--opus-muted));
   font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
@@ -213,7 +213,7 @@
   overflow: auto;
   padding: 12px;
   border: 1px solid var(--opus-surface-border, var(--opus-border-strong));
-  border-radius: 12px;
+  border-radius: var(--opus-control-radius, 12px);
   background: var(--opus-surface-fill, color-mix(in srgb, var(--opus-panel) 97%, transparent));
   box-shadow: var(--opus-control-shadow, var(--opus-shadow), 0 18px 48px rgba(0, 0, 0, 0.32));
   backdrop-filter: var(--opus-surface-backdrop-filter, blur(18px));
@@ -246,7 +246,7 @@
   margin: 0;
   padding: 8px 10px;
   border: 1px solid var(--opus-surface-border, var(--opus-border));
-  border-radius: 10px;
+  border-radius: var(--opus-control-radius, 10px);
   background: var(--opus-surface-fill, color-mix(in srgb, var(--opus-input-bg) 70%, transparent));
   color: var(--opus-surface-text, var(--opus-text));
   cursor: pointer;
@@ -317,7 +317,7 @@
   margin: 0;
   padding: 4px 8px;
   border: 1px solid var(--opus-surface-border, color-mix(in srgb, var(--opus-accent) 42%, var(--opus-border)));
-  border-radius: 999px;
+  border-radius: var(--opus-control-radius, 999px);
   background: var(--opus-surface-fill, color-mix(in srgb, var(--opus-accent) 12%, transparent));
   color: var(--opus-surface-text, var(--opus-text));
   cursor: pointer;

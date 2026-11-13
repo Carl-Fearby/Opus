@@ -70,9 +70,16 @@ export function formatUserProfileUsageAfterState(
 
 export function formatUserProfilePhotoUploadModalUsage(
   fieldId: string,
-  photoUploadTitle?: string,
+  photoUploadOptions: Record<string, string | number | undefined> = {},
 ): string {
-  const options = photoUploadTitle ? `\n    options={{ title: ${JSON.stringify(photoUploadTitle)} }}\n` : "\n";
+  const entries = Object.entries(photoUploadOptions).filter(
+    (entry): entry is [string, string | number] => entry[1] !== undefined && entry[1] !== "",
+  );
+  const options = entries.length
+    ? `\n    options={{\n${entries
+        .map(([key, value]) => `      ${key}: ${JSON.stringify(value)},`)
+        .join("\n")}\n    }}\n`
+    : "\n";
   return `<ProfilePhotoUploadModal
     fieldId=${JSON.stringify(fieldId)}
     open={photoUploadOpen}

@@ -10,7 +10,7 @@ import {
 } from "react";
 import { FieldShell } from "../FieldShell";
 import styles from "./MentionInputField.module.css";
-import type { ControlRadius, InputControlSize } from "../types";
+import type { ControlRadius, FieldMode, InputControlSize, LabelPosition } from "../types";
 import { inputControlSizeClassName } from "../shared/inputControlSizes";
 
 export type MentionOption = { id: string; label: string; description?: string };
@@ -21,9 +21,14 @@ export type MentionInputFieldProps = {
   autoCapitalize?: string;
   autoComplete?: string;
   autoCorrect?: "off" | "on";
+  error?: string;
+  help?: string;
   id: string;
   label: string;
+  labelPosition?: LabelPosition;
+  mode?: FieldMode;
   name?: string;
+  required?: boolean;
   value: string;
   options: MentionOption[];
   disabled?: boolean;
@@ -39,8 +44,13 @@ export function MentionInputField({
   autoCapitalize = "none",
   autoComplete = "off",
   autoCorrect = "off",
+  error,
+  help,
   id,
   label,
+  labelPosition,
+  mode,
+  required,
   name = id,
   value,
   options,
@@ -108,7 +118,7 @@ export function MentionInputField({
   };
 
   return (
-    <FieldShell id={id} label={label} radius={radius} transparency={transparency} gradient={gradient}>
+    <FieldShell id={id} label={label} labelPosition={labelPosition} mode={mode} radius={radius} transparency={transparency} gradient={gradient} required={required} error={error} help={help}>
       <div className={styles.root}>
         <input
           aria-activedescendant={shown.length ? `${id}-mention-${active}` : undefined}

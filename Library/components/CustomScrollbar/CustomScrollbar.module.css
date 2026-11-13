@@ -51,7 +51,7 @@
 .track {
   position: absolute;
   z-index: 2;
-  border-radius: 999px;
+  border-radius: var(--opus-control-radius, 999px);
   border: 1px solid var(--opus-surface-border, color-mix(in srgb, var(--opus-accent) 22%, transparent));
   background:
     var(--opus-surface-fill, linear-gradient(180deg, color-mix(in srgb, var(--opus-accent) 8%, transparent), transparent),
@@ -101,7 +101,7 @@
 .thumb {
   position: relative;
   border: 2px solid transparent;
-  border-radius: 999px;
+  border-radius: var(--opus-control-radius, 999px);
   background-clip: padding-box;
   background-image: var(--opus-surface-background-image, linear-gradient(
     180deg,

@@ -52,7 +52,7 @@
   min-height: calc(var(--opus-control-height) - 2px);
   padding: 0 var(--opus-control-padding-x, 6px);
   border: 1px solid var(--opus-surface-border, var(--opus-border-strong));
-  border-radius: 5px;
+  border-radius: var(--opus-control-radius, 5px);
   background: var(--opus-surface-fill, var(--opus-input-bg));
   color: var(--opus-surface-text, var(--opus-text));
   font-size: calc(var(--opus-control-font-size) - 0.14rem);
@@ -78,7 +78,7 @@
   width: calc(var(--opus-control-height) - 4px);
   height: calc(var(--opus-control-height) - 4px);
   border: 1px solid transparent;
-  border-radius: 5px;
+  border-radius: var(--opus-control-radius, 5px);
   background: transparent;
   color: var(--opus-text);
   line-height: 1;
@@ -140,7 +140,7 @@
   right: 3px;
   bottom: 2px;
   height: 3px;
-  border-radius: 2px;
+  border-radius: var(--opus-control-radius, 2px);
 }
 
 .colorInput {
@@ -229,7 +229,7 @@
 .editor pre {
   margin: 0 0 0.75em;
   padding: 12px 14px;
-  border-radius: 8px;
+  border-radius: var(--opus-control-radius, 8px);
   background: var(--opus-surface-fill, color-mix(in srgb, var(--opus-surface-sunken, #0b0b0f) 92%, transparent));
   color: var(--opus-surface-text, var(--opus-text));
   font-family: var(--opus-font-mono, ui-monospace, monospace);
@@ -245,7 +245,7 @@
 .editor img {
   max-width: 100%;
   height: auto;
-  border-radius: 6px;
+  border-radius: var(--opus-control-radius, 6px);
 }
 
 .editor hr {
@@ -307,7 +307,7 @@
   gap: 14px;
   padding: 18px;
   border: 1px solid var(--opus-surface-border, var(--opus-border-strong));
-  border-radius: 14px;
+  border-radius: var(--opus-control-radius, 14px);
   background: var(--opus-surface-fill, var(--opus-panel));
   color: var(--opus-surface-text, var(--opus-text));
   box-shadow: var(--opus-control-shadow, var(--opus-shadow, 0 24px 60px rgba(0, 0, 0, 0.4)));
@@ -338,7 +338,7 @@
   min-height: 34px;
   padding: 0 10px;
   border: 1px solid var(--opus-surface-border, var(--opus-border-strong));
-  border-radius: 8px;
+  border-radius: var(--opus-control-radius, 8px);
   background: var(--opus-surface-fill, var(--opus-input-fill));
   color: var(--opus-surface-text, var(--opus-text));
   font-size: 0.85rem;
@@ -385,7 +385,7 @@
 .modalConfirm {
   min-height: 34px;
   padding: 0 14px;
-  border-radius: 8px;
+  border-radius: var(--opus-control-radius, 8px);
   font-size: 0.8rem;
   font-weight: 600;
   cursor: pointer;
@@ -499,7 +499,7 @@
 
 .content code {
   padding: 1px 4px;
-  border-radius: 4px;
+  border-radius: var(--opus-control-radius, 4px);
   background: color-mix(in srgb, var(--opus-panel) 82%, transparent);
   font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
   font-size: 0.86em;

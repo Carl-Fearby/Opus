@@ -41,7 +41,7 @@
   overflow: hidden;
   width: 100%;
   height: 10px;
-  border-radius: 999px;
+  border-radius: var(--opus-control-radius, 999px);
   background: var(--opus-surface-fill, color-mix(in srgb, var(--dashboard-section-text, var(--opus-border)) 14%, transparent));
 }
 

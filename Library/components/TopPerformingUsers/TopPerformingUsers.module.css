@@ -60,7 +60,7 @@
 
 .barTrack {
   height: 0.42rem;
-  border-radius: 999px;
+  border-radius: var(--opus-control-radius, 999px);
   background: var(--opus-surface-fill, color-mix(in srgb, var(--dashboard-section-text) 8%, transparent));
   overflow: hidden;
   min-width: 0;

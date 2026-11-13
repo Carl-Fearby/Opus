@@ -352,7 +352,7 @@
   max-height: var(--opus-control-height, 28px);
   padding: 0 8px;
   border: 1px solid var(--opus-border-strong);
-  border-radius: 999px;
+  border-radius: var(--opus-control-radius, 999px);
   background: color-mix(in srgb, var(--opus-input-bg) 88%, transparent);
   color: var(--opus-text);
   font-family: inherit;
@@ -1135,7 +1135,7 @@
   min-width: 0;
   aspect-ratio: 1;
   border: 1px solid var(--opus-border);
-  border-radius: 10px;
+  border-radius: var(--opus-control-radius, 10px);
   color: var(--opus-text);
   background: var(--opus-input-bg);
   box-sizing: border-box;
@@ -1193,7 +1193,7 @@
   display: flex;
   width: 100%;
   min-height: 44px;
-  border-radius: 4px;
+  border-radius: var(--opus-control-radius, 4px);
   align-items: center;
   justify-content: center;
   gap: 12px;
@@ -1299,7 +1299,7 @@
   min-width: 0;
   padding: 12px;
   border: 1px solid var(--dashboard-section-border, var(--opus-border));
-  border-radius: 14px;
+  border-radius: var(--opus-control-radius, 14px);
   background: color-mix(in srgb, var(--dashboard-section-panel, var(--opus-panel)) 68%, transparent);
 }
 
@@ -1353,7 +1353,7 @@
   min-height: 44px;
   padding: 0 16px;
   border: 1px solid var(--dashboard-section-border, var(--opus-border));
-  border-radius: 10px;
+  border-radius: var(--opus-control-radius, 10px);
   background: color-mix(in srgb, var(--dashboard-section-panel, var(--opus-panel)) 88%, transparent);
   color: var(--dashboard-section-muted, var(--opus-muted));
   font-size: 0.84rem;

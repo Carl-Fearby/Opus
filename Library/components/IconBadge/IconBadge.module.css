@@ -12,7 +12,7 @@
 }
 
 button.root {
-  border-radius: 10px;
+  border-radius: var(--opus-control-radius, 10px);
   cursor: pointer;
 }
 
@@ -97,7 +97,7 @@ button.root:focus-visible {
   min-width: 0.86rem;
   height: 0.86rem;
   padding: 0 0.2rem;
-  border-radius: 999px;
+  border-radius: var(--opus-control-radius, 999px);
   background: var(--opus-surface-fill, var(--icon-badge-bg, #8b5cf6));
   color: var(--opus-surface-text, var(--icon-badge-fg, #f8fafc));
   font-size: 0.62rem;

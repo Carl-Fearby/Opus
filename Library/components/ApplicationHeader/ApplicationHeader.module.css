@@ -33,7 +33,7 @@
 .root[data-connected="true"] {
   min-height: 82px;
   border-bottom-color: var(--opus-surface-border, var(--application-header-border));
-  border-radius: 14px;
+  border-radius: var(--opus-control-radius, 14px);
 }
 
 .brand {
@@ -43,7 +43,7 @@
   max-width: none;
   height: 100%;
   padding: 6px 18px;
-  border-radius: 8px;
+  border-radius: var(--opus-control-radius, 8px);
 }
 
 .brand:focus-visible {
@@ -95,7 +95,7 @@
   height: 2.1rem;
   padding: 0;
   border: 1px solid var(--opus-surface-border, color-mix(in srgb, var(--opus-accent) 34%, var(--opus-border)));
-  border-radius: 10px;
+  border-radius: var(--opus-control-radius, 10px);
   background: var(--opus-surface-fill, color-mix(in srgb, var(--opus-accent) 10%, var(--opus-panel)));
   color: var(--opus-surface-text, color-mix(in srgb, var(--opus-accent) 78%, white));
   font-size: 1rem;

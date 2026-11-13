@@ -563,7 +563,7 @@
 }
 
 .root[data-variant="card"] .panel::-webkit-scrollbar-thumb {
-  border-radius: 999px;
+  border-radius: var(--opus-control-radius, 999px);
   background: var(--opus-surface-fill, color-mix(in srgb, var(--opus-accent) 42%, var(--opus-border)));
 }
 
@@ -618,7 +618,7 @@
 }
 
 .root[data-variant="card"] .panelContent::-webkit-scrollbar-thumb {
-  border-radius: 999px;
+  border-radius: var(--opus-control-radius, 999px);
   background: var(--opus-surface-fill, color-mix(in srgb, var(--opus-accent) 42%, var(--opus-border)));
 }
 

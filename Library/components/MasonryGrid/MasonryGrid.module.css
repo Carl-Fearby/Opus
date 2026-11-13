@@ -11,7 +11,7 @@
   page-break-inside: avoid;
   padding: 16px;
   border: 1px solid var(--opus-surface-border, color-mix(in srgb, var(--opus-border) 88%, transparent));
-  border-radius: 14px;
+  border-radius: var(--opus-control-radius, 14px);
   background:
     var(--opus-surface-fill, linear-gradient(180deg, color-mix(in srgb, var(--opus-accent) 10%, transparent), transparent 52%),
     color-mix(in srgb, var(--opus-panel) 96%, transparent));

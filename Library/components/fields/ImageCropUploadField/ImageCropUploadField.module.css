@@ -116,7 +116,7 @@
 .previewImage {
   width: 72px;
   height: 72px;
-  border-radius: 999px;
+  border-radius: var(--opus-control-radius, 999px);
   object-fit: cover;
   border: 1px solid color-mix(in srgb, var(--opus-border) 80%, transparent);
 }
@@ -143,7 +143,7 @@
   position: relative;
   margin: 0 auto;
   overflow: hidden;
-  border-radius: 999px;
+  border-radius: var(--opus-control-radius, 999px);
   border: 1px solid var(--opus-surface-border, color-mix(in srgb, var(--opus-border) 80%, transparent));
   background:
     var(--opus-surface-fill, linear-gradient(45deg, color-mix(in srgb, var(--opus-muted) 16%, transparent) 25%, transparent 25%, transparent 75%, color-mix(in srgb, var(--opus-muted) 16%, transparent) 75%),
@@ -157,7 +157,7 @@
 }
 
 .root[data-shape="rect"] .viewport {
-  border-radius: 16px;
+  border-radius: var(--opus-control-radius, 16px);
   background: var(--opus-surface-fill, #ffffff);
 }
 
@@ -166,7 +166,7 @@
 }
 
 .root[data-shape="rect"] .previewImage {
-  border-radius: 16px;
+  border-radius: var(--opus-control-radius, 16px);
   object-fit: contain;
   background: #ffffff;
 }

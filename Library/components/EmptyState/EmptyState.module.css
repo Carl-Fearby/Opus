@@ -19,7 +19,7 @@
   place-items: center;
   width: 56px;
   height: 56px;
-  border-radius: 999px;
+  border-radius: var(--opus-control-radius, 999px);
   border: 1px solid var(--opus-surface-border, color-mix(in srgb, var(--opus-accent) 24%, var(--opus-border)));
   background:
     var(--opus-surface-fill, radial-gradient(circle at 30% 30%, color-mix(in srgb, var(--opus-accent) 18%, transparent), transparent 55%),

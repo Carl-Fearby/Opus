@@ -5,6 +5,7 @@ export type IconBadgeToolbarDemoItem = {
   count?: number;
   iconName: string;
   label: string;
+  showZero?: boolean;
   urgency?: IconBadgeUrgency;
 };
 
@@ -44,14 +45,41 @@ function formatBadgeProps(
     size !== "md" ? `size=${quote(size)}` : "",
     tone !== "muted" ? `tone=${quote(tone)}` : "",
     item.urgency && item.urgency !== "standard" ? `urgency=${quote(item.urgency)}` : "",
+    item.showZero ? "showZero={true}" : "",
     `onClick={() => ${reportAction}(${quote(item.actionLabel)})}`,
   ].filter(Boolean);
 
   return `      <IconBadge\n        ${props.join("\n        ")}\n      />`;
 }
 
-export function formatIconBadgeToolbarUsage(size: string, tone: string): string {
-  const badges = iconBadgeToolbarDemoItems.map((item) => formatBadgeProps(item, size, tone, "console.log")).join("\n");
+export function formatIconBadgeToolbarUsage(
+  size: string,
+  tone: string,
+  firstBadge?: {
+    count?: number;
+    iconName?: string;
+    label?: string;
+    max?: number;
+    showZero?: boolean;
+  },
+): string {
+  const items = iconBadgeToolbarDemoItems.map((item, index) =>
+    index === 0 && firstBadge
+      ? {
+          ...item,
+          ...(firstBadge.iconName ? { iconName: firstBadge.iconName } : {}),
+          ...(firstBadge.label
+            ? { label: firstBadge.label, actionLabel: firstBadge.label }
+            : {}),
+          ...(firstBadge.count !== undefined ? { count: firstBadge.count } : {}),
+          ...(firstBadge.max !== undefined
+            ? { count: Math.min(firstBadge.count ?? item.count ?? 0, firstBadge.max) }
+            : {}),
+          ...(firstBadge.showZero ? { showZero: true } : {}),
+        }
+      : item,
+  );
+  const badges = items.map((item) => formatBadgeProps(item, size, tone, "console.log")).join("\n");
   const themeBadge = formatBadgeProps(iconBadgeToolbarThemeItem, size, tone, "console.log");
 
   return `<div

@@ -323,7 +323,7 @@ html[data-shell-theme="light"] .shell {
   display: inline-flex;
   align-items: center;
   padding: 4px 8px;
-  border-radius: 999px;
+  border-radius: var(--opus-control-radius, 999px);
   background: color-mix(in srgb, var(--opus-accent-soft) 80%, transparent);
   color: var(--opus-accent);
   font-size: 0.78rem;

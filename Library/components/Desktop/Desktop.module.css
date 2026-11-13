@@ -6,7 +6,7 @@
   min-height: 580px;
   overflow: hidden;
   border: 1px solid var(--opus-surface-border, color-mix(in srgb, var(--opus-accent) 24%, var(--opus-border)));
-  border-radius: 18px;
+  border-radius: var(--opus-control-radius, 18px);
   background-color: var(--opus-surface-fill, #060914);
   isolation: isolate;
 }

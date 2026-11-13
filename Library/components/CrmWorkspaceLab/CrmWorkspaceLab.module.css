@@ -81,7 +81,7 @@
   width: 2.25rem;
   height: 2.25rem;
   font-size: 1.45rem;
-  border-radius: 10px;
+  border-radius: var(--opus-control-radius, 10px);
   background: color-mix(in srgb, var(--opus-accent) 12%, transparent);
 }
 
@@ -211,7 +211,7 @@ button:focus-visible .openChevron {
 }
 
 .rowActionOverlay:focus-visible {
-  border-radius: 4px;
+  border-radius: var(--opus-control-radius, 4px);
   outline: 2px solid color-mix(in srgb, var(--opus-accent) 72%, transparent);
   outline-offset: -3px;
 }
@@ -315,7 +315,7 @@ button:focus-visible .openChevron {
   align-items: flex-start;
   padding: 6px 8px;
   border: 1px solid var(--opus-surface-border, color-mix(in srgb, var(--opus-accent) 22%, var(--opus-border)));
-  border-radius: 8px;
+  border-radius: var(--opus-control-radius, 8px);
   background:
     var(--opus-surface-fill, linear-gradient(90deg, color-mix(in srgb, var(--opus-accent) 10%, transparent), transparent 42%),
     color-mix(in srgb, var(--opus-panel) 92%, transparent));
@@ -371,7 +371,7 @@ button:focus-visible .openChevron {
   row-gap: 0;
   padding: 6px 8px;
   border: 1px solid var(--opus-surface-border, var(--opus-border));
-  border-radius: 8px;
+  border-radius: var(--opus-control-radius, 8px);
   background: var(--opus-surface-fill, color-mix(in srgb, var(--opus-panel) 94%, transparent));
   color: var(--opus-surface-text, inherit);
   cursor: pointer;
@@ -426,7 +426,7 @@ button:focus-visible .openChevron {
   min-width: 0;
   padding: 10px;
   border: 1px solid var(--opus-surface-border, var(--opus-border));
-  border-radius: 12px;
+  border-radius: var(--opus-control-radius, 12px);
   background: var(--opus-surface-fill, color-mix(in srgb, var(--opus-surface, var(--opus-panel)) 80%, transparent));
 }
 
@@ -463,7 +463,7 @@ button:focus-visible .openChevron {
   gap: 2px;
   padding: 6px 8px;
   border: 1px solid var(--opus-surface-border, var(--opus-border));
-  border-radius: 10px;
+  border-radius: var(--opus-control-radius, 10px);
   background: var(--opus-surface-fill, color-mix(in srgb, var(--opus-panel) 96%, transparent));
   color: var(--opus-surface-text, inherit);
   cursor: pointer;
@@ -496,7 +496,7 @@ button:focus-visible .openChevron {
   gap: 8px;
   padding: 10px;
   border: 1px solid var(--opus-surface-border, var(--opus-border));
-  border-radius: 12px;
+  border-radius: var(--opus-control-radius, 12px);
   background:
     var(--opus-surface-fill, radial-gradient(80% 70% at 0% 0%, color-mix(in srgb, var(--opus-accent) 12%, transparent), transparent 55%),
     color-mix(in srgb, var(--opus-panel) 94%, transparent));
@@ -543,7 +543,7 @@ button:focus-visible .openChevron {
   width: 100%;
   padding: 6px 8px;
   border: 1px solid var(--opus-surface-border, var(--opus-border));
-  border-radius: 12px;
+  border-radius: var(--opus-control-radius, 12px);
   background: var(--opus-surface-fill, color-mix(in srgb, var(--opus-panel) 94%, transparent));
   color: var(--opus-surface-text, inherit);
   text-align: left;
@@ -597,7 +597,7 @@ button:focus-visible .openChevron {
 .docTree {
   padding: 10px;
   border: 1px solid var(--opus-surface-border, var(--opus-border));
-  border-radius: 12px;
+  border-radius: var(--opus-control-radius, 12px);
   background: var(--opus-surface-fill, color-mix(in srgb, var(--opus-surface, var(--opus-panel)) 84%, transparent));
 }
 
@@ -627,7 +627,7 @@ button:focus-visible .openChevron {
   width: 100%;
   padding: 7px 8px;
   border: 0;
-  border-radius: 8px;
+  border-radius: var(--opus-control-radius, 8px);
   background: transparent;
   color: var(--opus-text);
   font: inherit;
@@ -684,7 +684,7 @@ button:focus-visible .openChevron {
   gap: 12px;
   padding: 6px 8px;
   border: 1px solid var(--opus-surface-border, var(--opus-border));
-  border-radius: 12px;
+  border-radius: var(--opus-control-radius, 12px);
   background: var(--opus-surface-fill, color-mix(in srgb, var(--opus-panel) 94%, transparent));
 }
 
@@ -705,7 +705,7 @@ button:focus-visible .openChevron {
   align-items: center;
   background: var(--opus-surface-fill, color-mix(in srgb, var(--opus-input-bg, var(--opus-panel)) 88%, transparent));
   border: 1px solid var(--opus-surface-border, var(--opus-border));
-  border-radius: 9px;
+  border-radius: var(--opus-control-radius, 9px);
   display: inline-flex;
   flex: 0 0 auto;
   gap: 2px;
@@ -716,7 +716,7 @@ button:focus-visible .openChevron {
   align-items: center;
   background: transparent;
   border: 0;
-  border-radius: 6px;
+  border-radius: var(--opus-control-radius, 6px);
   color: var(--opus-accent);
   cursor: pointer;
   display: inline-flex;
@@ -788,7 +788,7 @@ button:focus-visible .openChevron {
   min-height: 0;
   padding: 12px;
   border: 1px solid var(--opus-surface-border, var(--opus-border));
-  border-radius: 12px;
+  border-radius: var(--opus-control-radius, 12px);
   background: var(--opus-surface-fill, color-mix(in srgb, var(--opus-panel) 92%, transparent));
 }
 
@@ -796,7 +796,7 @@ button:focus-visible .openChevron {
 .docColumns {
   min-height: 0;
   border: 1px solid var(--opus-surface-border, var(--opus-border));
-  border-radius: 12px;
+  border-radius: var(--opus-control-radius, 12px);
   background: var(--opus-surface-fill, color-mix(in srgb, var(--opus-panel) 92%, transparent));
 }
 
@@ -884,7 +884,7 @@ button:focus-visible .openChevron {
   align-items: center;
   background: transparent;
   border: 0;
-  border-radius: 7px;
+  border-radius: var(--opus-control-radius, 7px);
   color: var(--opus-text);
   cursor: pointer;
   display: grid;
@@ -966,7 +966,7 @@ button:focus-visible .openChevron {
   align-content: start;
   padding: 12px;
   border: 1px solid var(--opus-surface-border, var(--opus-border));
-  border-radius: 12px;
+  border-radius: var(--opus-control-radius, 12px);
   background: var(--opus-surface-fill, color-mix(in srgb, var(--opus-surface, var(--opus-panel)) 70%, transparent));
   color: var(--opus-surface-text, inherit);
   text-align: left;

@@ -17,7 +17,7 @@
   height: var(--tile-size, 96px);
   aspect-ratio: 1 / 1;
   padding: 12px 8px 9px;
-  border-radius: 14px;
+  border-radius: var(--opus-control-radius, 14px);
   border: 1px solid var(--opus-surface-border, color-mix(in srgb, var(--tile-accent) 22%, transparent));
   background: var(--opus-surface-fill, radial-gradient(70% 55% at 50% 38%, color-mix(in srgb, var(--tile-glow) 18%, transparent), transparent 70%),
     linear-gradient(165deg, var(--tile-sheen), var(--tile-fill) 52%, var(--tile-depth)));

@@ -44,7 +44,7 @@
   margin: 0;
   padding: 0;
   border: 0;
-  border-radius: 6px;
+  border-radius: var(--opus-control-radius, 6px);
   background: transparent;
   color: color-mix(in srgb, var(--dashboard-section-text) 82%, transparent);
   cursor: pointer;
@@ -75,7 +75,7 @@
   margin: 0;
   padding: 0;
   border: 0;
-  border-radius: 999px;
+  border-radius: var(--opus-control-radius, 999px);
   background: transparent;
   cursor: pointer;
   transition: box-shadow 160ms ease;

@@ -6,7 +6,7 @@
   color: var(--opus-surface-text, #f8fafc);
   background: var(--opus-surface-fill, #080808);
   border: 1px solid var(--opus-surface-border, #3f3f46);
-  border-radius: 18px;
+  border-radius: var(--opus-control-radius, 18px);
   box-shadow: var(--opus-control-shadow, 0 25px 80px rgba(0, 0, 0, 0.5));
 }
 .header {
@@ -43,7 +43,7 @@
 .header button {
   padding: 9px 13px;
   border: 1px solid var(--opus-surface-border, #71717a);
-  border-radius: 8px;
+  border-radius: var(--opus-control-radius, 8px);
   color: var(--opus-surface-text, #fafafa);
   background: var(--opus-surface-fill, #27272a);
   cursor: pointer;

@@ -153,7 +153,7 @@
   height: 36px;
   padding: 0 14px;
   border: 1px solid var(--topbar-border);
-  border-radius: 999px;
+  border-radius: var(--opus-control-radius, 999px);
   background: color-mix(in srgb, var(--topbar-accent-soft) 55%, transparent);
   color: var(--topbar-muted);
   font-size: 0.78rem;

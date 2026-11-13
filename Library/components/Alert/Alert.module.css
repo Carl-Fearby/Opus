@@ -97,7 +97,7 @@
   justify-content: center;
   width: 40px;
   height: 40px;
-  border-radius: 999px;
+  border-radius: var(--opus-control-radius, 999px);
   background: var(--status-icon-bg);
   color: var(--status-icon-fg);
   flex-shrink: 0;
@@ -144,7 +144,7 @@
   height: 28px;
   padding: 0;
   border: 0;
-  border-radius: 999px;
+  border-radius: var(--opus-control-radius, 999px);
   background: transparent;
   color: var(--status-dismiss);
   cursor: pointer;

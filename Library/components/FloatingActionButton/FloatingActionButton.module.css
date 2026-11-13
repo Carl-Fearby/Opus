@@ -4,7 +4,7 @@
   justify-content: center;
   gap: 8px;
   border: 0;
-  border-radius: 999px;
+  border-radius: var(--opus-control-radius, 999px);
   background: var(--opus-surface-fill, var(--opus-accent));
   color: var(--opus-surface-text, #fff);
   font: inherit;
@@ -36,7 +36,7 @@
 
 .root:not([data-extended="true"]) {
   padding-inline: 0;
-  border-radius: 999px;
+  border-radius: var(--opus-control-radius, 999px);
 }
 
 .root[data-position="end"],

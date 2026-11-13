@@ -47,7 +47,7 @@
 .link:focus-visible {
   outline: none;
   box-shadow: 0 0 0 3px color-mix(in srgb, var(--opus-accent) 24%, transparent);
-  border-radius: 4px;
+  border-radius: var(--opus-control-radius, 4px);
 }
 
 .current {

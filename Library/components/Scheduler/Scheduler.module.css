@@ -52,7 +52,7 @@
   display: grid;
   gap: 2px;
   padding: 6px 8px;
-  border-radius: 6px;
+  border-radius: var(--opus-control-radius, 6px);
   border: 1px solid transparent;
   overflow: hidden;
 }

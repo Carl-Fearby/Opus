@@ -272,7 +272,7 @@
   width: 100%;
   padding: 1px;
   border: 0;
-  border-radius: 999px;
+  border-radius: var(--opus-control-radius, 999px);
   background: transparent;
   cursor: pointer;
 }
@@ -305,7 +305,7 @@
   height: auto;
   padding: 22px;
   border: 1px solid var(--opus-border);
-  border-radius: 14px;
+  border-radius: var(--opus-control-radius, 14px);
   background: var(--opus-panel);
 }
 

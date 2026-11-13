@@ -50,7 +50,7 @@
   flex-shrink: 0;
   padding: 4px 8px;
   border: 1px solid var(--opus-surface-border, var(--opus-border));
-  border-radius: 999px;
+  border-radius: var(--opus-control-radius, 999px);
   background: transparent;
   color: var(--opus-muted);
   font-size: 0.7rem;
@@ -100,7 +100,7 @@
 :global([data-opus-appearance="neumorphism"]) .copy {
   padding: 5px 12px;
   border-color: transparent;
-  border-radius: 999px;
+  border-radius: var(--opus-control-radius, 999px);
   background: var(--opus-surface-fill);
   box-shadow: var(--opus-control-shadow, none);
   color: var(--opus-text);

@@ -13,7 +13,7 @@
   height: 30px;
   padding: 0 8px 0 8px;
   border: 1px solid var(--opus-surface-border, color-mix(in srgb, var(--opus-border) 88%, transparent));
-  border-radius: 8px;
+  border-radius: var(--opus-control-radius, 8px);
   background: var(--opus-surface-fill, var(--opus-input-bg));
   color: var(--opus-surface-text, var(--opus-text));
   font: inherit;

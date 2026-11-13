@@ -10,7 +10,7 @@
   min-width: 0;
   padding: 14px 16px 12px;
   border: 1px solid var(--opus-surface-border, var(--dashboard-section-border));
-  border-radius: 14px;
+  border-radius: var(--opus-control-radius, 14px);
   background: var(--opus-surface-fill,
     radial-gradient(85% 65% at 14% 0%, color-mix(in srgb, var(--opus-accent) 16%, transparent), transparent 58%),
     radial-gradient(72% 58% at 100% 100%, color-mix(in srgb, var(--opus-accent-secondary, #0284c7) 12%, transparent), transparent 62%),

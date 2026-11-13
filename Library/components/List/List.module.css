@@ -75,7 +75,7 @@
   justify-content: center;
   width: 24px;
   height: 24px;
-  border-radius: 999px;
+  border-radius: var(--opus-control-radius, 999px);
   background: color-mix(in srgb, var(--opus-accent) 14%, transparent);
   color: var(--opus-accent);
   font-size: 0.72rem;
@@ -89,7 +89,7 @@
 .list[data-ordered="true"] .itemAction:not(:has(.icon))::before {
   align-items: center;
   background: color-mix(in srgb, var(--opus-accent) 14%, transparent);
-  border-radius: 999px;
+  border-radius: var(--opus-control-radius, 999px);
   color: var(--opus-accent);
   content: counter(opus-list);
   display: inline-flex;
@@ -106,7 +106,7 @@
   justify-content: center;
   width: 28px;
   height: 28px;
-  border-radius: 8px;
+  border-radius: var(--opus-control-radius, 8px);
   background: var(--opus-surface-fill, color-mix(in srgb, var(--opus-accent) 12%, transparent));
   color: var(--opus-surface-text, var(--opus-accent));
   font-size: 0.82rem;

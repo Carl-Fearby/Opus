@@ -27,7 +27,7 @@
   width: 30px;
   height: 30px;
   border: 1px solid var(--opus-surface-border, color-mix(in srgb, var(--opus-border) 88%, transparent));
-  border-radius: 8px;
+  border-radius: var(--opus-control-radius, 8px);
   background: var(--opus-surface-fill, var(--opus-input-bg));
   color: var(--opus-surface-text, var(--opus-text));
   font-size: 1.1rem;
@@ -102,7 +102,7 @@
   place-items: center;
   height: 32px;
   border: 1px solid transparent;
-  border-radius: 8px;
+  border-radius: var(--opus-control-radius, 8px);
   background: transparent;
   color: var(--opus-text);
   font: inherit;
@@ -176,7 +176,7 @@
 }
 
 .rangeStart.rangeEnd {
-  border-radius: 8px;
+  border-radius: var(--opus-control-radius, 8px);
 }
 
 .footer {
@@ -210,6 +210,6 @@
 
 .footerAction:focus-visible {
   outline: none;
-  border-radius: 4px;
+  border-radius: var(--opus-control-radius, 4px);
   box-shadow: 0 0 0 3px color-mix(in srgb, var(--opus-accent) 22%, transparent);
 }

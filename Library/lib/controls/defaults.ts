@@ -177,12 +177,42 @@ export const defaultSettings: ControlSettingsBySlug = {
     scrollbarSizing: "loaded",
     virtualItemCount: 10000,
   },
-  "product-tour": {},
-  "mention-input": {},
-  "recurrence-editor": {},
-  "time-range-picker": {},
-  "signature-pad": {},
-  "diff-viewer": {},
+  "product-tour": {
+    startOpen: false,
+    startStep: 0,
+  },
+  "mention-input": {
+    ...baseFieldDefaults,
+    label: "Comment",
+    placeholder: "Type @ to mention someone",
+    placeholderEnabled: true,
+    disabled: false,
+  },
+  "recurrence-editor": {
+    frequency: "weekly",
+    interval: 1,
+  },
+  "time-range-picker": {
+    label: "Working hours",
+    start: "09:00",
+    end: "17:30",
+    step: 900,
+    radius: "standard",
+    transparency: "standard",
+    required: false,
+  },
+  "signature-pad": {
+    width: 640,
+    height: 220,
+    disabled: false,
+  },
+  "diff-viewer": {
+    defaultView: "unified",
+    heading: "Code changes",
+    showViewToggle: true,
+    beforeLabel: "Original code",
+    afterLabel: "Corrected code",
+  },
   desktop: {},
   "desktop-window": {},
   "desktop-dock": {
@@ -352,10 +382,12 @@ export const defaultSettings: ControlSettingsBySlug = {
     zoomStep: 0.05,
   },
   "hidden-input": {
-    ...baseFieldDefaults,
+    mode: "stacked",
+    labelPosition: "left",
     label: "Campaign ID",
     name: "campaignId",
     value: "campaign-id-42",
+    required: false,
     helpEnabled: true,
     help: "Hidden fields are not visible to users but submit with the form.",
   },
@@ -680,7 +712,6 @@ export const defaultSettings: ControlSettingsBySlug = {
     description: "Please correct the errors below and try again.",
     dismissible: true,
     iconFlagged: true,
-    visible: true,
   },
   toast: {
     status: "success",
@@ -703,7 +734,6 @@ export const defaultSettings: ControlSettingsBySlug = {
     dismissible: true,
     showRejectButton: true,
     showPolicyLink: false,
-    visible: true,
   },
   tabs: {
     activeValue: "overview",
@@ -1519,7 +1549,6 @@ export const defaultSettings: ControlSettingsBySlug = {
   "lab-background-blobs": {
     controlRadius: "standard",
     transparency: "standard",
-    gradient: false,
     containerSize: "xl",
     containerPadded: true,
   },
@@ -1735,9 +1764,7 @@ export const defaultSettings: ControlSettingsBySlug = {
   "rule-builder": {
     showDisabled: true,
   },
-  "permissions-matrix": {
-    compact: false,
-  },
+  "permissions-matrix": {},
   "dual-list-builder": {
     selectedCount: 2,
   },
@@ -1834,7 +1861,6 @@ export const defaultSettings: ControlSettingsBySlug = {
   },
   "visually-hidden": {
     text: "Screen reader only announcement",
-    showHint: true,
   },
   "focus-trap": {
     active: true,
@@ -1911,14 +1937,57 @@ export const defaultSettings: ControlSettingsBySlug = {
     density: "comfortable",
     showShortcuts: true,
   },
-  "async-multi-select": {},
-  markdown: {},
-  "code-editor": {},
-  "confirm-dialog": {},
-  "bottom-sheet": {},
-  "tree-table": {},
-  "error-state": {},
-  "overflow-toolbar": {},
+  "async-multi-select": {
+    ...baseFieldDefaults,
+    label: "Reviewers",
+    placeholder: "Search people…",
+    debounceMs: 250,
+    minQueryLength: 1,
+    maxEnabled: false,
+    max: 3,
+  },
+  markdown: {
+    content:
+      "# Release notes\n\n- Confirm dialogs\n- Bottom sheets\n- Tree tables\n",
+    externalLinksInNewTab: true,
+  },
+  "code-editor": {
+    code: "const answer = 42;",
+    height: 260,
+    language: "typescript",
+    readOnly: false,
+    showLineNumbers: true,
+  },
+  "confirm-dialog": {
+    title: "Delete workspace?",
+    description: "This permanently removes the workspace, its members, and all saved views.",
+    confirmLabel: "Delete workspace",
+    cancelLabel: "Cancel",
+    tone: "danger",
+    loading: false,
+  },
+  "bottom-sheet": {
+    title: "Filter results",
+    description: "Choose which records are included in this view.",
+    size: "content",
+    showHandle: true,
+  },
+  "tree-table": {
+    density: "comfortable",
+    expandedByDefault: true,
+    stickyHeader: false,
+  },
+  "error-state": {
+    status: "error",
+    title: "We couldn't load this workspace",
+    description: "Check your connection and try again.",
+    compact: false,
+  },
+  "overflow-toolbar": {
+    label: "Document actions",
+    moreLabel: "More",
+    gap: 8,
+  },
 };
 
 export function getDefaultSettings<S extends ControlSlug>(

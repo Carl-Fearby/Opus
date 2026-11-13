@@ -99,6 +99,7 @@ function ThemeDesignerControls() {
   ] as const;
   const radiusOptions = [
     { value: "none", label: t("themeDesigner.square") },
+    { value: "minimal", label: t("themeDesigner.minimal") },
     { value: "standard", label: t("themeDesigner.standard") },
     { value: "medium", label: t("themeDesigner.medium") },
     { value: "large", label: t("themeDesigner.large") },

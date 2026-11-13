@@ -4,6 +4,7 @@ import type {
   ControlSettingsBySlug,
   ControlSlug,
 } from "./types";
+import { getDefaultSettings } from "./defaults";
 import {
   getSectionDemoSlots,
   getSectionLayoutConfigFromSettings,
@@ -328,7 +329,10 @@ function formatJsxRichContent(content: string, indent = "  "): string {
     .join("\n");
 }
 
-function fieldProps(settings: FieldUsageSettings) {
+function fieldProps(
+  settings: FieldUsageSettings,
+  options?: { includeSize?: boolean },
+) {
   const props = [
     formatStringProp("label", settings.label),
     formatStringProp("mode", settings.mode),
@@ -350,7 +354,7 @@ function fieldProps(settings: FieldUsageSettings) {
     props.push(formatStringProp("help", settings.help ?? ""));
   }
 
-  if (settings.size && settings.size !== "md") {
+  if ((options?.includeSize ?? true) && settings.size && settings.size !== "md") {
     props.push(formatStringProp("size", settings.size));
   }
 
@@ -665,10 +669,13 @@ return (
   />
 );`;
     }
-    case "product-tour": return `${usageClientPrefix()}
+    case "product-tour": {
+      const s = settings as ControlSettingsBySlug["product-tour"];
+      return `${usageClientPrefix()}
 ${importLine(["Button", "ProductTour"])}
 
-const [open, setOpen] = useState(false);
+const [open, setOpen] = useState(${s.startOpen});
+const [step, setStep] = useState(${Math.max(0, s.startStep)});
 const steps = [
   {
     id: "navigation",
@@ -782,16 +789,70 @@ return (
     <ProductTour
       open={open}
       steps={steps}
+      step={step}
+      onStepChange={setStep}
       onDismiss={() => setOpen(false)}
       onComplete={() => setOpen(false)}
     />
   </>
 );`;
-    case "mention-input": return `${usageClientPrefix()}\n${importLine(["MentionInputField"])}\n\nconst [value, setValue] = useState("");\nconst people = [{ id: "1", label: "Emma Davis", description: "Procurement" }];\n\nreturn <MentionInputField id="comment" label="Comment" value={value} options={people} onChange={setValue} onMention={(person) => console.log(person)} />;`;
-    case "recurrence-editor": return `${usageClientPrefix()}\n${importLine(["RecurrenceEditor"])}\n\nconst [value, setValue] = useState({ frequency: "weekly", interval: 1, weekdays: [1, 3, 5], ends: "never" });\n\nreturn <RecurrenceEditor value={value} onChange={setValue} />;`;
-    case "time-range-picker": return `${usageClientPrefix()}\n${importLine(["TimeRangeField"])}\n\nconst [value, setValue] = useState({ start: "09:00", end: "17:30" });\n\nreturn <TimeRangeField id="hours" label="Working hours" value={value} onChange={setValue} />;`;
-    case "signature-pad": return `${usageClientPrefix(false)}\n${importLine(["SignaturePad"])}\n\nreturn <SignaturePad onChange={(dataUrl) => console.log(dataUrl)} onClear={() => console.log("Cleared")} />;`;
-    case "diff-viewer": return `${usageClientPrefix(false)}\n${importLine(["DiffViewer"])}\n\nconst originalCode = ${codeLines(brokenReactCode)};\n\nconst correctedCode = ${codeLines(correctedReactCode)};\n\nreturn (\n  <DiffViewer\n    before={originalCode}\n    after={correctedCode}\n    beforeLabel="Original code"\n    afterLabel="Corrected code"\n    defaultView="unified"\n  />\n);`;
+    }
+    case "mention-input": {
+      const s = settings as ControlSettingsBySlug["mention-input"];
+      const props = [
+        formatStringProp("id", "comment"),
+        ...fieldProps(s),
+        ...(s.placeholderEnabled ? [formatStringProp("placeholder", s.placeholder)] : []),
+        ...(s.disabled ? [formatBoolProp("disabled", true)] : []),
+        formatExpressionProp("value", "value"),
+        formatExpressionProp("options", "people"),
+        formatExpressionProp("onChange", "setValue"),
+        formatExpressionProp("onMention", "(person) => console.log(person)"),
+      ];
+      return `${usageClientPrefix()}\n${importLine(["MentionInputField"])}\n\nconst [value, setValue] = useState("");\nconst people = [{ id: "1", label: "Emma Davis", description: "Procurement" }];\n\nreturn <MentionInputField${formatSelfClosing(props)};`;
+    }
+    case "recurrence-editor": {
+      const s = settings as ControlSettingsBySlug["recurrence-editor"];
+      return `${usageClientPrefix()}\n${importLine(["RecurrenceEditor"])}\n\nconst [value, setValue] = useState({ frequency: ${quote(s.frequency)}, interval: ${Math.max(1, s.interval)}, weekdays: [1, 3, 5], ends: "never" });\n\nreturn <RecurrenceEditor value={value} onChange={setValue} />;`;
+    }
+    case "time-range-picker": {
+      const s = settings as ControlSettingsBySlug["time-range-picker"];
+      const props = [
+        formatStringProp("id", "hours"),
+        formatStringProp("label", s.label),
+        formatStringProp("radius", s.radius),
+        formatStringProp("transparency", s.transparency),
+        ...(s.required ? [formatBoolProp("required", true)] : []),
+        formatNumberProp("step", Math.max(60, s.step)),
+        formatExpressionProp("value", "value"),
+        formatExpressionProp("onChange", "setValue"),
+      ];
+      return `${usageClientPrefix()}\n${importLine(["TimeRangeField"])}\n\nconst [value, setValue] = useState({ start: ${quote(s.start)}, end: ${quote(s.end)} });\n\nreturn <TimeRangeField${formatSelfClosing(props)};`;
+    }
+    case "signature-pad": {
+      const s = settings as ControlSettingsBySlug["signature-pad"];
+      const props = [
+        formatNumberProp("width", Math.max(200, s.width)),
+        formatNumberProp("height", Math.max(120, s.height)),
+        ...(s.disabled ? [formatBoolProp("disabled", true)] : []),
+        formatExpressionProp("onChange", "(dataUrl) => console.log(dataUrl)"),
+        formatExpressionProp("onClear", "() => console.log(\"Cleared\")"),
+      ];
+      return `${usageClientPrefix(false)}\n${importLine(["SignaturePad"])}\n\nreturn <SignaturePad${formatSelfClosing(props)};`;
+    }
+    case "diff-viewer": {
+      const s = settings as ControlSettingsBySlug["diff-viewer"];
+      const props = [
+        formatExpressionProp("before", "originalCode"),
+        formatExpressionProp("after", "correctedCode"),
+        ...(s.heading ? [formatStringProp("heading", s.heading)] : []),
+        formatStringProp("beforeLabel", s.beforeLabel),
+        formatStringProp("afterLabel", s.afterLabel),
+        formatStringProp("defaultView", s.defaultView),
+        ...(s.showViewToggle ? [] : [formatBoolProp("showViewToggle", false)]),
+      ];
+      return `${usageClientPrefix(false)}\n${importLine(["DiffViewer"])}\n\nconst originalCode = ${codeLines(brokenReactCode)};\n\nconst correctedCode = ${codeLines(correctedReactCode)};\n\nreturn (\n  <DiffViewer${formatOpeningProps(props)}\n  />\n);`;
+    }
     case "search-box": {
       const s = settings as ControlSettingsBySlug["search-box"];
       const categories = s.categories.split(",").map((label) => ({ label: label.trim(), value: label.trim().toLowerCase().replaceAll(" ", "-") }));
@@ -816,7 +877,9 @@ return (
           `(event) => ${toSetter(state)}(event.target.value)`,
         ),
       ];
-      return controlledFieldUsage(["TextField"], "TextField", state, props);
+      return controlledFieldUsage(["TextField"], "TextField", state, props, {
+        initial: quote(s.value ?? ""),
+      });
     }
     case "email-input":
     case "password-input":
@@ -846,7 +909,9 @@ return (
           `(event) => ${toSetter(state)}(event.target.value)`,
         ),
       ];
-      return controlledFieldUsage(["TextField"], "TextField", state, props);
+      return controlledFieldUsage(["TextField"], "TextField", state, props, {
+        initial: quote(s.value ?? ""),
+      });
     }
     case "textarea": {
       const s = settings as ControlSettingsBySlug["textarea"];
@@ -872,6 +937,7 @@ return (
         "TextAreaField",
         state,
         props,
+        { initial: quote(s.value ?? "") },
       );
     }
     case "note-composer": {
@@ -943,7 +1009,7 @@ return (
         state,
         props,
         {
-          initial: options[0] ? quote(options[0]) : '""',
+          initial: s.value ? quote(s.value) : options[0] ? quote(options[0]) : '""',
         },
       );
     }
@@ -1058,7 +1124,7 @@ return (
         groupProps,
         {
           children,
-          initial: quote(radioOptions[0]?.value ?? ""),
+          initial: s.value ? quote(s.value) : quote(radioOptions[0]?.value ?? ""),
         },
       );
     }
@@ -1164,7 +1230,7 @@ const [${state}, ${toSetter(state)}] = useState([${s.value.map((value) => quote(
         "CheckboxField",
         state,
         props,
-        { initial: "false" },
+        { initial: String(s.checked) },
       );
     }
     case "switch": {
@@ -1184,7 +1250,7 @@ const [${state}, ${toSetter(state)}] = useState([${s.value.map((value) => quote(
         "SwitchField",
         state,
         props,
-        { initial: "false" },
+        { initial: String(s.checked) },
       );
     }
     case "range-slider": {
@@ -1203,7 +1269,7 @@ const [${state}, ${toSetter(state)}] = useState([${s.value.map((value) => quote(
         ),
       ];
       return controlledFieldUsage(["RangeField"], "RangeField", state, props, {
-        initial: String(s.min),
+        initial: String(s.value ?? s.min),
       });
     }
     case "otp-input": {
@@ -1223,33 +1289,78 @@ const [${state}, ${toSetter(state)}] = useState([${s.value.map((value) => quote(
     }
     case "date-range-picker": {
       const s = settings as ControlSettingsBySlug["date-range-picker"];
-      return `${usageClientPrefix()}\n${importLine(["DateRangeField"])}\n\nconst [range, setRange] = useState(${JSON.stringify({ from: s.from, to: s.to })});\n\nreturn <DateRangeField id="date-range" label=${quote(s.label)} value={range} onChange={setRange} />;`;
+      const props = [
+        formatStringProp("id", "date-range"),
+        ...fieldProps(s, { includeSize: false }),
+        formatExpressionProp("value", "range"),
+        formatExpressionProp("onChange", "setRange"),
+      ];
+      return `${usageClientPrefix()}\n${importLine(["DateRangeField"])}\n\nconst [range, setRange] = useState(${JSON.stringify({ from: s.from, to: s.to })});\n\nreturn <DateRangeField${formatSelfClosing(props)};`;
     }
     case "combobox": {
       const s = settings as ControlSettingsBySlug["combobox"];
       const options = s.options.split(",").map((item) => item.trim()).filter(Boolean).map((item) => ({ label: item, value: item }));
-      return `${usageClientPrefix()}\n${importLine(["ComboboxField"])}\n\nconst options = ${JSON.stringify(options, null, 2)};\nconst [value, setValue] = useState(${JSON.stringify(s.value)});\n\nreturn <ComboboxField id="company" label=${quote(s.label)} options={options} value={value} onChange={setValue} />;`;
+      const props = [
+        formatStringProp("id", "company"),
+        ...fieldProps(s),
+        formatExpressionProp("options", "options"),
+        formatStringProp("placeholder", s.placeholder),
+        formatExpressionProp("value", "value"),
+        formatExpressionProp("onChange", "setValue"),
+      ];
+      return `${usageClientPrefix()}\n${importLine(["ComboboxField"])}\n\nconst options = ${JSON.stringify(options, null, 2)};\nconst [value, setValue] = useState(${JSON.stringify(s.value)});\n\nreturn <ComboboxField${formatSelfClosing(props)};`;
     }
     case "currency-input": {
       const s = settings as ControlSettingsBySlug["currency-input"];
-      return `${usageClientPrefix()}\n${importLine(["CurrencyField"])}\n\nconst [value, setValue] = useState<number | null>(${s.value});\n\nreturn <CurrencyField currency=${quote(s.currency)} id="currency" label=${quote(s.label)} value={value} onChange={setValue} />;`;
+      const props = [
+        formatStringProp("id", "currency"),
+        ...fieldProps(s, { includeSize: false }),
+        formatStringProp("currency", s.currency),
+        formatExpressionProp("value", "value"),
+        formatExpressionProp("onChange", "setValue"),
+      ];
+      return `${usageClientPrefix()}\n${importLine(["CurrencyField"])}\n\nconst [value, setValue] = useState<number | null>(${s.value});\n\nreturn <CurrencyField${formatSelfClosing(props)};`;
     }
     case "masked-input": {
       const s = settings as ControlSettingsBySlug["masked-input"];
-      return `${usageClientPrefix()}\n${importLine(["MaskedField"])}\n\nconst [value, setValue] = useState(${JSON.stringify(s.value)});\n\nreturn <MaskedField id="masked" label=${quote(s.label)} mask=${quote(s.mask)} value={value} onChange={setValue} />;`;
+      const props = [
+        formatStringProp("id", "masked"),
+        ...fieldProps(s, { includeSize: false }),
+        formatStringProp("mask", s.mask),
+        formatStringProp("placeholder", s.placeholder),
+        formatExpressionProp("value", "value"),
+        formatExpressionProp("onChange", "setValue"),
+      ];
+      return `${usageClientPrefix()}\n${importLine(["MaskedField"])}\n\nconst [value, setValue] = useState(${JSON.stringify(s.value)});\n\nreturn <MaskedField${formatSelfClosing(props)};`;
     }
     case "multi-file-upload": {
       const s = settings as ControlSettingsBySlug["multi-file-upload"];
-      return `${usageClientPrefix()}\n${importLine(["MultiFileField"])}\n\nconst [files, setFiles] = useState<File[]>([]);\n\nreturn <MultiFileField files={files} id="documents" label=${quote(s.label)} maxFiles={${s.maxFiles}} onChange={(next) => setFiles(next.filter((file) => file instanceof File))} />;`;
+      const demoFiles = s.fileNames.split(",").map((item) => item.trim()).filter(Boolean);
+      const initialFiles = demoFiles.map((name, index) => `{ name: ${quote(name)}, size: ${(index + 1) * 245760} }`);
+      const props = [
+        formatStringProp("id", "documents"),
+        ...fieldProps(s, { includeSize: false }),
+        formatExpressionProp("files", "files"),
+        formatNumberProp("maxFiles", Math.max(1, s.maxFiles)),
+        formatExpressionProp("onChange", "setFiles"),
+      ];
+      return `${usageClientPrefix()}\n${importLine(["MultiFileField"])}\n\nconst [files, setFiles] = useState([\n${initialFiles.map((file) => `  ${file},`).join("\n")}\n]);\n\nreturn <MultiFileField${formatSelfClosing(props)};`;
     }
     case "checkbox-group": {
       const s = settings as ControlSettingsBySlug["checkbox-group"];
       const options = s.options.split(",").map((item) => item.trim()).filter(Boolean).map((item) => ({ label: item, value: item }));
-      return `${usageClientPrefix()}\n${importLine(["CheckboxGroupField"])}\n\nconst options = ${JSON.stringify(options, null, 2)};\nconst [value, setValue] = useState(${JSON.stringify(s.value)});\n\nreturn <CheckboxGroupField id="notifications" label=${quote(s.label)} options={options} value={value} onChange={setValue} />;`;
+      const props = [
+        formatStringProp("id", "notifications"),
+        ...fieldProps(s, { includeSize: false }),
+        formatExpressionProp("options", "options"),
+        formatExpressionProp("value", "value"),
+        formatExpressionProp("onChange", "setValue"),
+      ];
+      return `${usageClientPrefix()}\n${importLine(["CheckboxGroupField"])}\n\nconst options = ${JSON.stringify(options, null, 2)};\nconst [value, setValue] = useState(${JSON.stringify(s.value)});\n\nreturn <CheckboxGroupField${formatSelfClosing(props)};`;
     }
     case "form-validation-summary": {
       const s = settings as ControlSettingsBySlug["form-validation-summary"];
-      return `${usageClientPrefix(false)}\n${importLine(["Form", "FormActions", "FormSection", "FormValidationSummary", "Button"])}\n\nconst errors = [{ fieldId: "email", message: "Enter a valid email address" }];\n\nreturn (\n  <Form>\n    <FormValidationSummary errors={errors} title=${quote(s.title)} />\n    <FormSection title="Account details">Your fields</FormSection>\n    <FormActions><Button type="submit">Save</Button></FormActions>\n  </Form>\n);`;
+      return `${usageClientPrefix(false)}\n${importLine(["Form", "FormActions", "FormSection", "FormValidationSummary", "Button"])}\n\nconst errors = [{ fieldId: "email", message: "Enter a valid email address" }];\n\nreturn (\n  <Form>\n    <FormValidationSummary errors={${s.showErrors ? "errors" : "[]"}} title=${quote(s.title)} />\n    <FormSection title="Account details">Your fields</FormSection>\n    <FormActions><Button type="submit">Save</Button></FormActions>\n  </Form>\n);`;
     }
     case "number-input": {
       const s = settings as ControlSettingsBySlug["number-input"];
@@ -1271,7 +1382,7 @@ const [${state}, ${toSetter(state)}] = useState([${s.value.map((value) => quote(
         "NumberField",
         state,
         props,
-        { initial: "0" },
+        { initial: String(s.value ?? 0) },
       );
     }
     case "file-upload": {
@@ -1315,7 +1426,7 @@ const [${state}, ${toSetter(state)}] = useState([${s.value.map((value) => quote(
         "ImageCropUploadField",
         state,
         props,
-        { initial: '""' },
+        { initial: quote(s.value ?? "") },
       );
     }
     case "color-picker": {
@@ -1468,7 +1579,20 @@ const [${state}, ${toSetter(state)}] = useState(${quote(s.value)});
     }
     case "async-select": {
       const s = settings as ControlSettingsBySlug["async-select"];
-      return interactiveUsage({ components: ["AsyncSelectField"], preamble: [`const people = [\n  { label: "Emma Davis", value: "emma" },\n  { label: "Michael Brown", value: "michael" },\n  { label: "Olivia Wilson", value: "olivia" },\n];`], state: [`const [person, setPerson] = useState(null);`], jsx: `<AsyncSelectField id="assignee" label="Assignee" value={person} defaultOptions={people} debounceMs={${s.debounceMs}} minQueryLength={${s.minQueryLength}} loadOptions={async (query) => people.filter((item) => item.label.toLowerCase().includes(query.toLowerCase()))} onChange={setPerson} />` });
+      const props = [
+        formatStringProp("id", "assignee"),
+        ...fieldProps(s),
+        formatExpressionProp("value", "person"),
+        formatExpressionProp("defaultOptions", "people"),
+        formatNumberProp("debounceMs", s.debounceMs),
+        formatNumberProp("minQueryLength", s.minQueryLength),
+        formatExpressionProp(
+          "loadOptions",
+          "async (query) => people.filter((item) => item.label.toLowerCase().includes(query.toLowerCase()))",
+        ),
+        formatExpressionProp("onChange", "setPerson"),
+      ];
+      return interactiveUsage({ components: ["AsyncSelectField"], preamble: [`const people = [\n  { label: "Emma Davis", value: "emma" },\n  { label: "Michael Brown", value: "michael" },\n  { label: "Olivia Wilson", value: "olivia" },\n];`], state: [`const [person, setPerson] = useState(null);`], jsx: `<AsyncSelectField${formatSelfClosing(props)}` });
     }
     case "save-state-indicator": {
       const s = settings as ControlSettingsBySlug["save-state-indicator"];
@@ -1476,7 +1600,16 @@ const [${state}, ${toSetter(state)}] = useState(${quote(s.value)});
     }
     case "editable-data-table": {
       const s = settings as ControlSettingsBySlug["editable-data-table"];
-      return interactiveUsage({ components: ["EditableDataTable"], preamble: [`const columns = [{ key: "name", label: "Name", editable: true }, { key: "role", label: "Role", editable: true }, { key: "status", label: "Status" }];\nconst initialRows = [{ id: "1", values: { name: "Emma Davis", role: "Procurement", status: "Active" } }, { id: "2", values: { name: "Michael Brown", role: "Sales", status: "Active" } }];`], state: [`const [rows, setRows] = useState(initialRows);`], jsx: `<EditableDataTable caption="Team members" columns={columns} rows={rows} selectable={${s.selectable}} onRowsChange={setRows} onRowSave={(row) => console.log("Saved", row)} onRowDelete={(row) => console.log("Deleted", row)} onBulkAction={(action, selectedRows) => console.log(action, selectedRows)} />` });
+      const seedRows = [
+        ["Emma Davis", "Procurement", "Active"],
+        ["Michael Brown", "Sales", "Active"],
+        ["Olivia Wilson", "Operations", "Invited"],
+        ["Noah Patel", "Finance", "Active"],
+      ].slice(0, Math.min(Math.max(s.rowCount, 1), 4));
+      const initialRows = seedRows
+        .map(([name, role, status], index) => `{ id: ${quote(String(index + 1))}, values: { name: ${quote(name)}, role: ${quote(role)}, status: ${quote(status)} } }`)
+        .join(", ");
+      return interactiveUsage({ components: ["EditableDataTable"], preamble: [`const columns = [{ key: "name", label: "Name", editable: true }, { key: "role", label: "Role", editable: true }, { key: "status", label: "Status" }];\nconst initialRows = [${initialRows}];`], state: [`const [rows, setRows] = useState(initialRows);`], jsx: `<EditableDataTable caption="Team members" columns={columns} rows={rows} selectable={${s.selectable}} onRowsChange={setRows} onRowSave={(row) => console.log("Saved", row)} onRowDelete={(row) => console.log("Deleted", row)} onBulkAction={(action, selectedRows) => console.log(action, selectedRows)} />` });
     }
     case "bulk-action-bar": {
       const s = settings as ControlSettingsBySlug["bulk-action-bar"];
@@ -1484,14 +1617,40 @@ const [${state}, ${toSetter(state)}] = useState(${quote(s.value)});
     }
     case "file-manager": {
       const s = settings as ControlSettingsBySlug["file-manager"];
-      return interactiveUsage({ components: ["FileManager"], preamble: [`const entries = [{ id: "contracts", name: "Contracts", type: "folder" }, { id: "brief", name: "CRM brief.pdf", type: "file", size: "2.4 MB" }, { id: "forecast", name: "Forecast.xlsx", type: "file", size: "680 KB" }];`], state: [], jsx: `<FileManager entries={entries} path={["Documents"]} initialView=${quote(s.view)} onOpen={(entry) => console.log("Opened", entry)} onUpload={() => console.log("Upload")} onCreateFolder={() => console.log("Create folder")} />` });
+      const allEntries = [
+        `{ id: "contracts", name: "Contracts", type: "folder" }`,
+        `{ id: "brief", name: "CRM brief.pdf", type: "file", size: "2.4 MB" }`,
+        `{ id: "forecast", name: "Forecast.xlsx", type: "file", size: "680 KB" }`,
+        `{ id: "brand", name: "Brand assets", type: "folder" }`,
+        `{ id: "invoice", name: "Invoice 1042.pdf", type: "file", size: "148 KB" }`,
+        `{ id: "notes", name: "Discovery notes.docx", type: "file", size: "92 KB" }`,
+      ];
+      const entries = allEntries.slice(0, Math.min(Math.max(s.entryCount, 1), allEntries.length)).join(", ");
+      return interactiveUsage({ components: ["FileManager"], preamble: [`const entries = [${entries}];`], state: [], jsx: `<FileManager entries={entries} path={["Documents"]} initialView=${quote(s.view)} onOpen={(entry) => console.log("Opened", entry)} onUpload={() => console.log("Upload")} onCreateFolder={() => console.log("Create folder")} />` });
     }
     case "audit-log": {
-      return interactiveUsage({ components: ["AuditLog"], preamble: [`const entries = [{ id: "1", action: "Contact updated", actor: "Emma Davis", target: "Acme Ltd", timestamp: "2 minutes ago", category: "Contacts" }, { id: "2", action: "Export failed", actor: "System", target: "Monthly report", timestamp: "42 minutes ago", category: "System", status: "error" }];`], state: [], jsx: `<AuditLog entries={entries} onEntryClick={(entry) => console.log("Audit event", entry)} />` });
+      const s = settings as ControlSettingsBySlug["audit-log"];
+      const allEntries = [
+        `{ id: "1", action: "Contact updated", actor: "Emma Davis", target: "Acme Ltd", timestamp: "2 minutes ago", category: "Contacts" }`,
+        `{ id: "2", action: "Export failed", actor: "System", target: "Monthly report", timestamp: "42 minutes ago", category: "System", status: "error" }`,
+        `{ id: "3", action: "Deal moved", actor: "Michael Brown", target: "Acme renewal", timestamp: "1 hour ago", category: "Pipeline" }`,
+        `{ id: "4", action: "User invited", actor: "Olivia Wilson", target: "Noah Patel", timestamp: "3 hours ago", category: "Team" }`,
+        `{ id: "5", action: "Invoice sent", actor: "System", target: "INV-2041", timestamp: "Yesterday", category: "Billing" }`,
+        `{ id: "6", action: "Permission changed", actor: "Emma Davis", target: "Sales role", timestamp: "Yesterday", category: "Security" }`,
+      ];
+      const entries = allEntries.slice(0, Math.min(Math.max(s.entryCount, 1), allEntries.length)).join(", ");
+      return interactiveUsage({ components: ["AuditLog"], preamble: [`const entries = [${entries}];`], state: [], jsx: `<AuditLog entries={entries} onEntryClick={(entry) => console.log("Audit event", entry)} />` });
     }
     case "upload-queue": {
       const s = settings as ControlSettingsBySlug["upload-queue"];
-      return interactiveUsage({ components: ["UploadQueue"], preamble: [`const uploads = [{ id: "1", name: "CRM brief.pdf", size: "2.4 MB", progress: 100, status: "complete" }, { id: "2", name: "Brand assets.zip", size: "18 MB", progress: 68, status: "uploading" }, { id: "3", name: "Contacts.csv", size: "1.1 MB", progress: 12, status: "error", error: "Network connection lost" }];`], state: [], jsx: `<UploadQueue items={uploads} maxVisible={${s.maxVisible}} onPause={(item) => console.log("Pause", item)} onResume={(item) => console.log("Resume", item)} onRetry={(item) => console.log("Retry", item)} onRemove={(item) => console.log("Remove", item)} onClearComplete={() => console.log("Clear complete")} />` });
+      const allUploads = [
+        `{ id: "1", name: "CRM brief.pdf", size: "2.4 MB", progress: 100, status: "complete" }`,
+        `{ id: "2", name: "Brand assets.zip", size: "18 MB", progress: 68, status: "uploading" }`,
+        `{ id: "3", name: "Contacts.csv", size: "1.1 MB", progress: 12, status: "error", error: "Network connection lost" }`,
+        `{ id: "4", name: "Forecast.xlsx", size: "680 KB", progress: 0, status: "queued" }`,
+      ];
+      const uploads = allUploads.slice(0, Math.min(Math.max(s.itemCount, 0), allUploads.length)).join(", ");
+      return interactiveUsage({ components: ["UploadQueue"], preamble: [`const uploads = [${uploads}];`], state: [], jsx: `<UploadQueue items={uploads} maxVisible={${s.maxVisible}} onPause={(item) => console.log("Pause", item)} onResume={(item) => console.log("Resume", item)} onRetry={(item) => console.log("Retry", item)} onRemove={(item) => console.log("Remove", item)} onClearComplete={() => console.log("Clear complete")} />` });
     }
     case "form-wizard": {
       const s = settings as ControlSettingsBySlug["form-wizard"];
@@ -1642,6 +1801,7 @@ const [${state}, ${toSetter(state)}] = useState(${formatObjectLiteral(s.value)})
         formatStringProp("labelPosition", s.labelPosition),
         formatExpressionProp("value", "theme"),
         formatExpressionProp("onChange", "setTheme"),
+        ...(s.helpEnabled ? [formatStringProp("help", s.help)] : []),
       ];
       return `${usageClientPrefix()}\n${importLine(["ThemeToggleField"])}\n\nconst [theme, setTheme] = useState<"dark" | "light">(${quote(s.value)});\n\n<ThemeToggleField${formatSelfClosing(props)}`;
     }
@@ -1657,6 +1817,7 @@ const [${state}, ${toSetter(state)}] = useState(${formatObjectLiteral(s.value)})
         formatExpressionProp("secondaryValue", "accentSecondary"),
         formatExpressionProp("onChange", "setAccent"),
         formatExpressionProp("onSecondaryChange", "setAccentSecondary"),
+        ...(s.helpEnabled ? [formatStringProp("help", s.help)] : []),
       ];
       return `${usageClientPrefix()}\nimport { AccentColorPicker, createAccentStyle } from "opus-react";
 
@@ -1678,6 +1839,15 @@ ${formatSelfClosingElement("AccentColorPicker", props, "    ")}
         formatExpressionProp("value", "clouds"),
         formatExpressionProp("open", "open"),
         formatExpressionProp("onOpenChange", "setOpen"),
+        ...(s.showReset
+          ? [
+              formatExpressionProp("showReset", "true"),
+              formatExpressionProp(
+                "onReset",
+                "() => setItems(parseColourClouds(clouds).slice(0, 3))",
+              ),
+            ]
+          : []),
       ].filter((prop): prop is string => Boolean(prop));
       const propLines = props.map((prop) => `    ${prop}`).join("\n");
       return `${usageClientPrefix()}\nimport { AccentColorPicker, ColourClouds, parseColourClouds } from "opus-react";
@@ -1723,6 +1893,7 @@ ${propLines}
         formatStringProp("labelPosition", s.labelPosition),
         formatStringProp("value", s.value),
         formatExpressionProp("onChange", "setIcon"),
+        ...(s.helpEnabled ? [formatStringProp("help", s.help)] : []),
       ];
       return `${usageClientPrefix()}\nimport { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { ${iconOption.importName} } from "@fortawesome/free-solid-svg-icons";
@@ -2171,6 +2342,7 @@ ${children}
           ? [`description: ${quote(s.description)}`]
           : []),
         ...(s.dismissible ? [] : ["dismissible: false"]),
+        ...(s.autoDismissEnabled ? [] : ["duration: 0"]),
       ];
       return interactiveUsage({
         components: ["Button", "ToastProvider", "useToast"],
@@ -2255,7 +2427,7 @@ ${formatJsxRichContent(s.content)}
           : []),
       ];
 
-      return `${wrapDashboardWidget(`<StatCard${formatSelfClosing(props)} />`, ["CatalogIcon", "StatCard"], {
+      return `${wrapDashboardWidget(`<StatCard${formatSelfClosing(props)}`, ["CatalogIcon", "StatCard"], {
   width: s.width ?? "widget",
   wrap: s.wrapInContainer ?? true,
 })}`;
@@ -3601,7 +3773,20 @@ ${s.showFieldStatus ? fieldStatusBlock : ""}      <FormHeader title="Submitted o
         photoUploadState,
       ].filter(Boolean);
       const modalBlock = s.photoUploadEnabled
-        ? formatUserProfilePhotoUploadModalUsage(fieldId, s.photoUploadTitle)
+        ? formatUserProfilePhotoUploadModalUsage(fieldId, {
+            changeButtonLabel: s.photoUploadChangeButtonLabel,
+            cropButtonLabel: s.photoUploadCropButtonLabel,
+            description: s.photoUploadDescription,
+            label: s.photoUploadLabel,
+            maxZoom: s.photoUploadMaxZoom,
+            minZoom: s.photoUploadMinZoom,
+            outputSize: s.photoUploadOutputSize,
+            title: s.photoUploadTitle,
+            uploadLabel: s.photoUploadUploadLabel,
+            viewportSize: s.photoUploadViewportSize,
+            zoomLabel: s.photoUploadZoomLabel,
+            zoomStep: s.photoUploadZoomStep,
+          })
         : "";
       const widgetBlock = `<UserProfileWidget
 ${propsBlock}
@@ -3681,7 +3866,7 @@ ${containerContent}
         components: wrap
           ? ["DashboardContentContainer", "ImageCropUploadWidget"]
           : ["ImageCropUploadWidget"],
-        state: ['const [photo, setPhoto] = useState("");'],
+        state: [`const [photo, setPhoto] = useState(${quote(s.value ?? "")});`],
         jsx: maybeWrapDashboardContent(widget, {
           dataComponent: "profile-photo-upload",
           width: s.width ?? "widget",
@@ -5040,7 +5225,23 @@ ${formatScrollAreaContent()}
 </Toolbar>`;
     }
     case "application-footer": {
-      return `${importLine(["ApplicationFooter"])}\n\n<ApplicationFooter actions={[{ id: "help", iconName: "circle-question", label: "Help", onSelect: () => console.log("Help") }, { id: "guide", iconName: "book-open", label: "User guide" }, { id: "settings", iconName: "gear", label: "Settings" }]} productName="CRM" version="v1.0.0" />`;
+      const s = settings as ControlSettingsBySlug["application-footer"];
+      const props = [
+        ...(s.showActions
+          ? [
+              formatExpressionProp(
+                "actions",
+                `[{ id: "help", iconName: "circle-question", label: "Help", onSelect: () => console.log("Help") }, { id: "guide", iconName: "book-open", label: "User guide" }, { id: "settings", iconName: "gear", label: "Settings" }]`,
+              ),
+            ]
+          : []),
+        formatStringProp("productName", "CRM"),
+        ...(s.showVersion ? [formatStringProp("version", "v1.0.0")] : []),
+        ...(s.showBrand ? [] : [formatBoolProp("showBrand", false)]),
+        ...(s.showVersion ? [] : [formatBoolProp("showVersion", false)]),
+        ...(s.showActions ? [] : [formatBoolProp("showActions", false)]),
+      ];
+      return `${importLine(["ApplicationFooter"])}\n\n<ApplicationFooter${formatSelfClosing(props)}`;
     }
     case "application-header": {
       const s = settings as ControlSettingsBySlug["application-header"];
@@ -5154,10 +5355,11 @@ const items = ${formatPropertyInspectorItemsForUsage()};
 <PropertyInspector items={items}${s.searchable ? " searchable" : ""} onChange={(id, value) => console.log(id, value)} />`;
     }
     case "filter-builder": {
+      const s = settings as ControlSettingsBySlug["filter-builder"];
       return `${usageClientPrefix()}
 ${importLine(["FilterBuilder"])}
 
-const [conditions, setConditions] = useState(${formatFilterConditionsForUsage()});
+const [conditions, setConditions] = useState(${formatFilterConditionsForUsage(s.seedCount)});
 
 <FilterBuilder conditions={conditions} fields={${formatInspectorFieldsForUsage()}} onChange={setConditions} />`;
     }
@@ -5331,7 +5533,13 @@ const value = ${formatJsonValueForUsage()};
         return interactiveUsage({
           components: ["IconBadge"],
           state: [],
-          jsx: formatIconBadgeToolbarUsage(s.size, s.tone),
+          jsx: formatIconBadgeToolbarUsage(s.size, s.tone, {
+            count: s.count,
+            iconName: s.iconName,
+            label: s.label,
+            max: s.max,
+            showZero: s.showZero,
+          }),
         });
       }
 
@@ -5482,7 +5690,8 @@ const value = ${formatJsonValueForUsage()};
       return `${importLine(["CopyButton"])}\n\n<CopyButton${formatSelfClosing(props)}`;
     }
     case "clipboard": {
-      return `${importLine(["Clipboard", "CopyButton", "useClipboard"])}\n\n<Clipboard>\n  <CopyButton value="Opus clipboard example" />\n</Clipboard>`;
+      const s = settings as ControlSettingsBySlug["clipboard"];
+      return `${importLine(["Clipboard", "CopyButton", "useClipboard"])}\n\n<Clipboard>\n  <CopyButton value=${quote(s.value)} />\n</Clipboard>`;
     }
     case "theme-provider": {
       const s = settings as ControlSettingsBySlug["theme-provider"];
@@ -5534,7 +5743,9 @@ const value = ${formatJsonValueForUsage()};
     case "sidebar":
     case "lab-sidebar": {
       const s = settings as ControlSettingsBySlug["sidebar"];
-      const wrapped = s.wrapInContainer ?? category === "labs";
+      const wrapped =
+        (s.wrapInContainer ?? category === "labs") ||
+        Boolean(s.height && s.height !== "auto");
       const sidebarProps = [
         ...(s.side !== "left" ? [formatStringProp("side", s.side)] : []),
         ...(s.collapsed ? [formatBoolProp("collapsed", true)] : []),
@@ -5710,38 +5921,61 @@ ${navProps}
       });
     }
     case "markdown": {
-      return `${usageClientPrefix(false)}\n${importLine(["Markdown"])}\n\nconst notes = \`# Release notes\n\n- Confirm dialogs\n- Bottom sheets\n- Tree tables\n\`;\n\nreturn <Markdown>{notes}</Markdown>;`;
+      const s = settings as ControlSettingsBySlug["markdown"];
+      return `${usageClientPrefix(false)}\n${importLine(["Markdown"])}\n\nconst notes = ${JSON.stringify(s.content)};\n\nreturn <Markdown${s.externalLinksInNewTab ? "" : " externalLinksInNewTab={false}"}>{notes}</Markdown>;`;
     }
     case "code-editor": {
+      const s = settings as ControlSettingsBySlug["code-editor"];
+      const props = [
+        formatStringProp("ariaLabel", "Example code"),
+        formatStringProp("language", s.language),
+        formatNumberProp("height", Math.max(120, s.height)),
+        ...(s.readOnly ? [formatBoolProp("readOnly", true)] : []),
+        ...(s.showLineNumbers ? [] : [formatBoolProp("showLineNumbers", false)]),
+        formatExpressionProp("value", "code"),
+        formatExpressionProp("onChange", "setCode"),
+      ];
       return interactiveUsage({
         components: ["Button", "CodeEditor"],
-        state: ['const [code, setCode] = useState("const answer = 42;");'],
-        jsx: `<CodeEditor
-  ariaLabel="Example code"
-  height={260}
-  value={code}
-  onChange={setCode}
-/>`,
+        state: [`const [code, setCode] = useState(${JSON.stringify(s.code)});`],
+        jsx: `<CodeEditor${formatSelfClosing(props)}`,
       });
     }
     case "tree-table": {
-      return `${usageClientPrefix(false)}\n${importLine(["TreeTable"])}\n\nconst nodes = [\n  {\n    id: "documents",\n    label: "Documents",\n    children: [{ id: "contracts", label: "Contracts" }],\n  },\n  { id: "archive", label: "Archive" },\n];\n\nconst columns = [\n  { id: "name", header: "Name", render: (node) => node.label },\n  { id: "updated", header: "Updated", render: () => "2h ago" },\n];\n\nreturn <TreeTable ariaLabel="Files" columns={columns} nodes={nodes} defaultExpandedIds={["documents"]} />;`;
+      const s = settings as ControlSettingsBySlug["tree-table"];
+      const expanded = s.expandedByDefault ? ` defaultExpandedIds={["documents"]}` : "";
+      const sticky = s.stickyHeader ? " stickyHeader" : "";
+      return `${usageClientPrefix(false)}\n${importLine(["TreeTable"])}\n\nconst nodes = [\n  {\n    id: "documents",\n    label: "Documents",\n    children: [{ id: "contracts", label: "Contracts" }],\n  },\n  { id: "archive", label: "Archive" },\n];\n\nconst columns = [\n  { id: "name", header: "Name", render: (node) => node.label },\n  { id: "updated", header: "Updated", render: () => "2h ago" },\n];\n\nreturn <TreeTable ariaLabel="Files" columns={columns} nodes={nodes} density=${quote(s.density)}${expanded}${sticky} />;`;
     }
     case "error-state": {
-      return `${usageClientPrefix(false)}\n${importLine(["Button", "ErrorState"])}\n\nreturn (\n  <ErrorState\n    status="error"\n    title="We couldn't load this workspace"\n    description="Check your connection and try again."\n    actions={<Button onClick={() => console.log("Retry")}>Retry</Button>}\n  />\n);`;
+      const s = settings as ControlSettingsBySlug["error-state"];
+      const props = [
+        formatStringProp("status", s.status),
+        formatStringProp("title", s.title),
+        formatStringProp("description", s.description),
+        ...(s.compact ? [formatBoolProp("compact", true)] : []),
+        formatExpressionProp("actions", `<Button onClick={() => console.log("Retry")}>Retry</Button>`),
+      ];
+      return `${usageClientPrefix(false)}\n${importLine(["Button", "ErrorState"])}\n\nreturn (\n  <ErrorState${formatOpeningProps(props)}\n  />\n);`;
     }
     case "confirm-dialog": {
+      const s = settings as ControlSettingsBySlug["confirm-dialog"];
       return interactiveUsage({
         components: ["Button", "ConfirmDialog"],
-        state: ["const [open, setOpen] = useState(false);", "const [loading, setLoading] = useState(false);"],
+        state: [
+          "const [open, setOpen] = useState(false);",
+          `const [loading, setLoading] = useState(${s.loading});`,
+        ],
         jsx: `<>
-  <Button variant="danger" onClick={() => setOpen(true)}>Delete workspace</Button>
+  <Button variant="${s.tone === "danger" ? "danger" : "primary"}" onClick={() => setOpen(true)}>${s.confirmLabel}</Button>
   <ConfirmDialog
     open={open}
-    title="Delete workspace?"
-    description="This permanently removes the workspace and all saved views."
-    tone="danger"
+    title=${quote(s.title)}
+    description=${quote(s.description)}
+    tone=${quote(s.tone)}
     loading={loading}
+    confirmLabel=${quote(s.confirmLabel)}
+    cancelLabel=${quote(s.cancelLabel)}
     onClose={() => setOpen(false)}
     onConfirm={() => {
       setLoading(true);
@@ -5755,6 +5989,7 @@ ${navProps}
       });
     }
     case "bottom-sheet": {
+      const s = settings as ControlSettingsBySlug["bottom-sheet"];
       return interactiveUsage({
         components: ["Button", "BottomSheet"],
         state: ["const [open, setOpen] = useState(false);"],
@@ -5762,8 +5997,10 @@ ${navProps}
   <Button onClick={() => setOpen(true)}>Open filters</Button>
   <BottomSheet
     open={open}
-    title="Filter results"
-    description="Choose which records are included in this view."
+    title=${quote(s.title)}
+    description=${quote(s.description)}
+    size=${quote(s.size)}
+    ${s.showHandle ? "" : "showHandle={false}"}
     onClose={() => setOpen(false)}
   >
     <p>Sheet content goes here.</p>
@@ -5772,23 +6009,31 @@ ${navProps}
       });
     }
     case "overflow-toolbar": {
-      return `${usageClientPrefix(false)}\n${importLine(["Button", "OverflowToolbar"])}\n\nreturn (\n  <div style={{ width: "min(360px, 100%)" }}>\n    <OverflowToolbar label="Document actions">\n      <Button size="sm" variant="secondary">Share</Button>\n      <Button size="sm" variant="secondary">Export</Button>\n      <Button size="sm" variant="secondary">Duplicate</Button>\n      <Button size="sm">Publish</Button>\n    </OverflowToolbar>\n  </div>\n);`;
+      const s = settings as ControlSettingsBySlug["overflow-toolbar"];
+      return `${usageClientPrefix(false)}\n${importLine(["Button", "OverflowToolbar"])}\n\nreturn (\n  <div style={{ width: "min(360px, 100%)" }}>\n    <OverflowToolbar label=${quote(s.label)} moreLabel=${quote(s.moreLabel)} gap={${Math.max(0, s.gap)}}>\n      <Button size="sm" variant="secondary">Share</Button>\n      <Button size="sm" variant="secondary">Export</Button>\n      <Button size="sm" variant="secondary">Duplicate</Button>\n      <Button size="sm">Publish</Button>\n    </OverflowToolbar>\n  </div>\n);`;
     }
     case "async-multi-select": {
+      const s = settings as ControlSettingsBySlug["async-multi-select"];
+      const props = [
+        formatStringProp("id", "reviewers"),
+        ...fieldProps(s),
+        formatStringProp("placeholder", s.placeholder),
+        formatExpressionProp("value", "reviewers"),
+        formatExpressionProp("defaultOptions", "people"),
+        formatNumberProp("debounceMs", s.debounceMs),
+        formatNumberProp("minQueryLength", s.minQueryLength),
+        ...(s.maxEnabled ? [formatNumberProp("max", Math.max(1, s.max))] : []),
+        formatExpressionProp(
+          "loadOptions",
+          "async (query) => people.filter((person) => person.label.toLowerCase().includes(query.toLowerCase()))",
+        ),
+        formatExpressionProp("onChange", "setReviewers"),
+      ];
       return interactiveUsage({
         components: ["AsyncMultiSelectField"],
         preamble: [`const people = [\n  { label: "Emma Davis", value: "emma" },\n  { label: "Michael Brown", value: "michael" },\n  { label: "Olivia Wilson", value: "olivia" },\n];`],
         state: ["const [reviewers, setReviewers] = useState<{ label: string; value: string }[]>([]);"],
-        jsx: `<AsyncMultiSelectField
-  id="reviewers"
-  label="Reviewers"
-  value={reviewers}
-  defaultOptions={people}
-  loadOptions={async (query) =>
-    people.filter((person) => person.label.toLowerCase().includes(query.toLowerCase()))
-  }
-  onChange={setReviewers}
-/>`,
+        jsx: `<AsyncMultiSelectField${formatSelfClosing(props)}`,
       });
     }
     default:
@@ -5801,7 +6046,13 @@ export function generateFullUsageCode(
   settings: ControlSettings,
   category?: ComponentCategory,
 ) {
-  const content = generateUsageCodeContent(slug, settings, category);
+  // Callers may hold a partial settings object (tests, deep links); fill the
+  // gaps from the catalogue defaults so generated JSX never contains undefined.
+  const content = generateUsageCodeContent(
+    slug,
+    { ...getDefaultSettings(slug), ...settings } as ControlSettings,
+    category,
+  );
   if (/export\s+default\s+function/.test(content.trim())) {
     return content.trim();
   }

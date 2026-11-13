@@ -17,7 +17,7 @@
 .root[data-surface="true"] {
   padding-block: 16px;
   border: 1px solid var(--opus-surface-border, color-mix(in srgb, var(--opus-accent) 28%, var(--opus-border)));
-  border-radius: 14px;
+  border-radius: var(--opus-control-radius, 14px);
   background:
     var(--opus-surface-fill, radial-gradient(circle at 12% 50%, color-mix(in srgb, var(--opus-accent) 16%, transparent), transparent 38%),
     linear-gradient(135deg, color-mix(in srgb, var(--opus-accent) 8%, var(--opus-panel)), var(--opus-panel)));

@@ -75,7 +75,7 @@
   min-height: 30px;
   padding: 4px 10px;
   border: 1px solid var(--opus-border);
-  border-radius: 999px;
+  border-radius: var(--opus-control-radius, 999px);
   background: var(--opus-input-bg);
   color: var(--opus-muted);
   font-size: 0.78rem;

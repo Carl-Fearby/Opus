@@ -243,7 +243,7 @@ export type BaseFieldSettings = {
   size: InputControlSize;
 };
 
-export type ControlRadius = "none" | "standard" | "medium" | "large" | "full";
+export type ControlRadius = "none" | "minimal" | "standard" | "medium" | "large" | "full";
 
 export type NativeInputSettings = {
   autoCapitalize: "none" | "off" | "on" | "sentences" | "words" | "characters";
@@ -417,6 +417,102 @@ export type AsyncSelectSettings = BaseFieldSettings & {
   minQueryLength: number;
 };
 
+export type AsyncMultiSelectSettings = BaseFieldSettings & {
+  debounceMs: number;
+  minQueryLength: number;
+  maxEnabled: boolean;
+  max: number;
+  placeholder: string;
+};
+
+export type ProductTourSettings = {
+  startOpen: boolean;
+  startStep: number;
+};
+
+export type MentionInputSettings = BaseFieldSettings & {
+  placeholder: string;
+  placeholderEnabled: boolean;
+  disabled: boolean;
+};
+
+export type RecurrenceEditorSettings = {
+  frequency: "daily" | "weekly" | "monthly" | "yearly";
+  interval: number;
+};
+
+export type TimeRangePickerSettings = {
+  label: string;
+  start: string;
+  end: string;
+  step: number;
+  radius: ControlRadius;
+  transparency: "none" | "standard" | "glass";
+  required: boolean;
+};
+
+export type SignaturePadSettings = {
+  width: number;
+  height: number;
+  disabled: boolean;
+};
+
+export type DiffViewerSettings = {
+  defaultView: "split" | "unified";
+  heading: string;
+  showViewToggle: boolean;
+  beforeLabel: string;
+  afterLabel: string;
+};
+
+export type MarkdownSettings = {
+  content: string;
+  externalLinksInNewTab: boolean;
+};
+
+export type CodeEditorSettings = {
+  code: string;
+  height: number;
+  language: "javascript" | "jsx" | "text" | "tsx" | "typescript";
+  readOnly: boolean;
+  showLineNumbers: boolean;
+};
+
+export type TreeTableSettings = {
+  density: "compact" | "comfortable" | "standard";
+  expandedByDefault: boolean;
+  stickyHeader: boolean;
+};
+
+export type ErrorStateSettings = {
+  compact: boolean;
+  description: string;
+  status: "error" | "forbidden" | "not-found" | "offline" | "warning";
+  title: string;
+};
+
+export type ConfirmDialogSettings = {
+  cancelLabel: string;
+  confirmLabel: string;
+  description: string;
+  loading: boolean;
+  title: string;
+  tone: "danger" | "default";
+};
+
+export type BottomSheetSettings = {
+  description: string;
+  showHandle: boolean;
+  size: "content" | "full" | "half";
+  title: string;
+};
+
+export type OverflowToolbarSettings = {
+  gap: number;
+  label: string;
+  moreLabel: string;
+};
+
 export type SaveStateIndicatorSettings = {
   state: "idle" | "saving" | "saved" | "error";
   showLastSaved: boolean;
@@ -482,8 +578,14 @@ export type ColorPickerSettings = BaseFieldSettings & {
   value: string;
 };
 
-export type HiddenInputSettings = BaseFieldSettings & {
+export type HiddenInputSettings = {
+  help: string;
+  helpEnabled: boolean;
+  label: string;
+  labelPosition: LabelPosition;
+  mode: FieldMode;
   name: string;
+  required: boolean;
   value: string;
 };
 
@@ -551,7 +653,6 @@ export type AlertSettings = {
   description: string;
   dismissible: boolean;
   iconFlagged: boolean;
-  visible: boolean;
 };
 
 export type DialogSettings = {
@@ -660,7 +761,6 @@ export type CookieConsentSettings = {
   showPolicyLink: boolean;
   showRejectButton: boolean;
   title: string;
-  visible: boolean;
 };
 
 export type AccordionSettings = {
@@ -753,6 +853,7 @@ export type DataGridSettings = {
   masterDetail: boolean;
   virtualized: boolean;
   infiniteScroll: boolean;
+  saveState: boolean;
 };
 
 export type SkeletonSettings = {
@@ -1519,9 +1620,7 @@ export type RuleBuilderSettings = {
   showDisabled: boolean;
 };
 
-export type PermissionsMatrixSettings = {
-  compact: boolean;
-};
+export type PermissionsMatrixSettings = Record<string, never>;
 
 export type DualListBuilderSettings = {
   selectedCount: number;
@@ -1626,7 +1725,6 @@ export type BackgroundBlobsSettings = {
 export type BackgroundBlobsLabSettings = {
   controlRadius: ControlRadius;
   transparency: "none" | "standard" | "glass";
-  gradient: boolean;
   containerSize: "sm" | "md" | "lg" | "xl" | "full";
   containerPadded: boolean;
 };
@@ -1654,7 +1752,6 @@ export type PortalHostSettings = {
 
 export type VisuallyHiddenSettings = {
   text: string;
-  showHint: boolean;
 };
 
 export type FocusTrapSettings = {
@@ -1758,25 +1855,25 @@ export type ControlSettingsBySlug = {
     selectionIndicator: "none" | "checkbox" | "radio";
     virtualItemCount: number;
   };
-  "async-multi-select": Record<string, never>;
-  "markdown": Record<string, never>;
-  "code-editor": Record<string, never>;
-  "confirm-dialog": Record<string, never>;
-  "bottom-sheet": Record<string, never>;
-  "tree-table": Record<string, never>;
-  "error-state": Record<string, never>;
-  "overflow-toolbar": Record<string, never>;
+  "async-multi-select": AsyncMultiSelectSettings;
+  "markdown": MarkdownSettings;
+  "code-editor": CodeEditorSettings;
+  "confirm-dialog": ConfirmDialogSettings;
+  "bottom-sheet": BottomSheetSettings;
+  "tree-table": TreeTableSettings;
+  "error-state": ErrorStateSettings;
+  "overflow-toolbar": OverflowToolbarSettings;
   "virtual-list": {
     hasMore: boolean;
     scrollbarSizing: "loaded" | "virtual";
     virtualItemCount: number;
   };
-  "product-tour": Record<string, never>;
-  "mention-input": Record<string, never>;
-  "recurrence-editor": Record<string, never>;
-  "time-range-picker": Record<string, never>;
-  "signature-pad": Record<string, never>;
-  "diff-viewer": Record<string, never>;
+  "product-tour": ProductTourSettings;
+  "mention-input": MentionInputSettings;
+  "recurrence-editor": RecurrenceEditorSettings;
+  "time-range-picker": TimeRangePickerSettings;
+  "signature-pad": SignaturePadSettings;
+  "diff-viewer": DiffViewerSettings;
   button: ButtonSettings;
   "submit-button": ButtonSettings;
   "reset-button": ButtonSettings;

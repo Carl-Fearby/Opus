@@ -92,7 +92,7 @@
 .indicator[data-minimized] {
   width: 13px;
   height: 3px;
-  border-radius: 99px;
+  border-radius: var(--opus-control-radius, 99px);
 }
 
 .root[data-position="left"] .indicator,
@@ -111,7 +111,7 @@
 .resizeHandle {
   position: absolute;
   z-index: 3;
-  border-radius: 99px;
+  border-radius: var(--opus-control-radius, 99px);
   background: var(--opus-surface-fill, color-mix(in srgb, var(--opus-accent) 48%, var(--opus-border)));
   opacity: 0.52;
   touch-action: none;

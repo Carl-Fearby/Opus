@@ -32,7 +32,7 @@
 .add,
 .action {
   border: 1px solid var(--opus-surface-border, var(--opus-border));
-  border-radius: 999px;
+  border-radius: var(--opus-control-radius, 999px);
   background: transparent;
   color: var(--opus-muted);
   font-size: 0.75rem;
@@ -75,7 +75,7 @@
   gap: 8px;
   padding: 10px;
   border: 1px solid var(--opus-surface-border, var(--opus-border));
-  border-radius: 8px;
+  border-radius: var(--opus-control-radius, 8px);
   background: var(--opus-surface-fill, color-mix(in srgb, var(--opus-panel) 96%, transparent));
 }
 
@@ -101,7 +101,7 @@
   min-width: 0;
   padding: 7px 8px;
   border: 1px solid var(--opus-surface-border, var(--opus-border));
-  border-radius: 6px;
+  border-radius: var(--opus-control-radius, 6px);
   background: var(--opus-surface-fill, color-mix(in srgb, var(--opus-panel) 88%, transparent));
   color: var(--opus-surface-text, var(--opus-text));
   font: inherit;
@@ -177,7 +177,7 @@
   overflow: auto;
   padding: 8px 10px;
   border: 1px solid var(--opus-surface-border, var(--opus-border));
-  border-radius: 6px;
+  border-radius: var(--opus-control-radius, 6px);
   background: var(--opus-surface-fill, color-mix(in srgb, var(--opus-panel) 94%, #000 4%));
   color: var(--opus-surface-text, var(--opus-muted));
   font-family: var(--font-ibm-plex-mono), ui-monospace, monospace;

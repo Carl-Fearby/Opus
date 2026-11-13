@@ -183,8 +183,12 @@ export function formatPropertyInspectorItemsForUsage() {
   return formatObjectLiteral(demoPropertyInspectorItems());
 }
 
-export function formatFilterConditionsForUsage() {
-  return formatObjectLiteral(demoFilterConditions);
+export function formatFilterConditionsForUsage(count?: number) {
+  const conditions =
+    typeof count === "number"
+      ? demoFilterConditions.slice(0, Math.max(0, count))
+      : demoFilterConditions;
+  return formatObjectLiteral(conditions);
 }
 
 export function formatInspectorFieldsForUsage() {

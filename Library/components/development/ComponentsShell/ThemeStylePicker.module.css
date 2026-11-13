@@ -14,7 +14,7 @@
   min-height: var(--opus-control-height, 28px);
   padding: 0 10px;
   border: 1px solid var(--opus-surface-border, var(--opus-border-strong));
-  border-radius: 999px;
+  border-radius: var(--opus-control-radius, 999px);
   background: var(--opus-surface-fill, color-mix(in srgb, var(--opus-input-bg) 88%, transparent));
   color: var(--opus-surface-text, var(--opus-text));
   font: inherit;

@@ -54,7 +54,7 @@
   height: 42px;
   padding: 0;
   border: 1px solid var(--opus-surface-border, var(--opus-border-strong));
-  border-radius: 999px;
+  border-radius: var(--opus-control-radius, 999px);
   background: var(--opus-surface-fill, var(--opus-panel));
   color: var(--opus-surface-text, var(--opus-text));
   cursor: pointer;
@@ -120,7 +120,7 @@
   width: 12px;
   height: 12px;
   border: 2px solid var(--opus-surface-border, color-mix(in srgb, white 72%, transparent));
-  border-radius: 999px;
+  border-radius: var(--opus-control-radius, 999px);
   background: var(--opus-surface-fill, color-mix(in srgb, var(--opus-page-bg) 54%, transparent));
   cursor: pointer;
   transition:

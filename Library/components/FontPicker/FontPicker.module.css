@@ -44,7 +44,7 @@
   max-height: var(--opus-control-height, 28px);
   gap: 6px;
   padding: 0 8px;
-  border-radius: 999px;
+  border-radius: var(--opus-control-radius, 999px);
   line-height: 1;
 }
 
@@ -174,7 +174,7 @@
   min-height: 45px;
   padding: 7px 9px;
   border: 1px solid transparent;
-  border-radius: 6px;
+  border-radius: var(--opus-control-radius, 6px);
   background: transparent;
   color: var(--opus-text);
   text-align: left;

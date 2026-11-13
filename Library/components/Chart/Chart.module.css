@@ -412,7 +412,7 @@
 .legendSwatch {
   width: 10px;
   height: 10px;
-  border-radius: 999px;
+  border-radius: var(--opus-control-radius, 999px);
   background: var(--chart-current);
   box-shadow: 0 0 0 3px color-mix(in srgb, var(--chart-current) 18%, transparent);
 }

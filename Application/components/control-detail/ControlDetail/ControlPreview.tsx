@@ -4071,14 +4071,6 @@ function ControlPreviewContent({
     }
     case "alert": {
       const s = settings as ControlSettingsBySlug["alert"];
-      if (!s.visible) {
-        return (
-          <p className={styles.dismissedHint}>
-            Alert dismissed. Turn on “Show alert” in settings to preview it
-            again.
-          </p>
-        );
-      }
       return (
         <Alert
           description={s.description}
@@ -4086,9 +4078,7 @@ function ControlPreviewContent({
           iconFlagged={s.iconFlagged}
           status={s.status}
           title={s.title}
-          onDismiss={() =>
-            onSettingsChange({ ...s, visible: false } as ControlSettings)
-          }
+          onDismiss={() => undefined}
         />
       );
     }
@@ -4098,10 +4088,7 @@ function ControlPreviewContent({
     }
     case "cookie-consent": {
       const s = settings as ControlSettingsBySlug["cookie-consent"];
-      if (!s.visible) {
-        return <p className={styles.dismissedHint}>Cookie notice dismissed. Turn on “Show notice” in settings to preview it again.</p>;
-      }
-      return <CookieConsent acceptLabel={s.acceptLabel} description={s.description} dismissible={s.dismissible} open={s.visible} persist={false} placement={s.placement} storageKey="opus-cookie-consent-catalogue-preview" policyHref={s.showPolicyLink ? s.policyHref : undefined} policyLabel={s.policyLabel} rejectLabel={s.rejectLabel} showRejectButton={s.showRejectButton} title={s.title} onDismiss={() => onSettingsChange({ ...s, visible: false } as ControlSettings)} />;
+      return <CookieConsent acceptLabel={s.acceptLabel} description={s.description} dismissible={s.dismissible} open persist={false} placement={s.placement} storageKey="opus-cookie-consent-catalogue-preview" policyHref={s.showPolicyLink ? s.policyHref : undefined} policyLabel={s.policyLabel} rejectLabel={s.rejectLabel} showRejectButton={s.showRejectButton} title={s.title} onDismiss={() => undefined} />;
     }
     case "card": {
       const s = settings as ControlSettingsBySlug["card"];
@@ -6472,11 +6459,6 @@ function ControlPreviewContent({
       const s = settings as ControlSettingsBySlug["visually-hidden"];
       return (
         <div style={{ display: "grid", gap: 8 }}>
-          {s.showHint ? (
-            <p style={{ margin: 0, color: "var(--opus-muted)" }}>
-              Visible hint — the next phrase is only for screen readers.
-            </p>
-          ) : null}
           <VisuallyHidden>{s.text}</VisuallyHidden>
           <span aria-hidden="true" style={{ color: "var(--opus-text)" }}>
             ★

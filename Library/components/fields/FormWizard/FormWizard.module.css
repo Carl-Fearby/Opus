@@ -8,7 +8,7 @@
 .stepButton{position:relative;z-index:1;display:grid;justify-items:center;gap:8px;width:100%;padding:0 8px;border:0;background:transparent;color:var(--opus-muted);font:inherit;text-align:center}
 .stepButton:not(:disabled){cursor:pointer}
 .stepButton:focus-visible{outline:2px solid var(--opus-accent);outline-offset:4px;border-radius:8px}
-.marker{display:grid;place-items:center;inline-size:36px;block-size:36px;border:2px solid var(--opus-border);border-radius:999px;background:var(--opus-panel);color:var(--opus-muted);font-size:.86rem;font-weight:800;box-sizing:border-box}
+.marker{display:grid;place-items:center;inline-size:36px;block-size:36px;border:2px solid var(--opus-border);border-radius: var(--opus-control-radius, 999px);background:var(--opus-panel);color:var(--opus-muted);font-size:.86rem;font-weight:800;box-sizing:border-box}
 .step[data-status=current] .marker,.step[data-status=completed] .marker{border-color:var(--opus-accent);background:var(--opus-accent);color:var(--opus-accent-contrast,#080b18);box-shadow:0 0 16px color-mix(in srgb,var(--opus-accent) 45%,transparent)}
 .step[data-status=error] .marker{border-color:var(--opus-danger,#ef4444);color:var(--opus-danger,#ef4444)}
 .stepCopy{display:grid;gap:3px;min-width:0}

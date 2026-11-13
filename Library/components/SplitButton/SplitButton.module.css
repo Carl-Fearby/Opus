@@ -75,7 +75,7 @@
   padding: 6px;
   list-style: none;
   border: 1px solid var(--opus-surface-border, var(--opus-border));
-  border-radius: 8px;
+  border-radius: var(--opus-control-radius, 8px);
   background: var(--opus-surface-fill, var(--opus-panel, #fff));
   box-shadow: var(--opus-control-shadow, 0 10px 28px color-mix(in srgb, #000 16%, transparent));
 }
@@ -85,7 +85,7 @@
   width: 100%;
   padding: 8px 10px;
   border: 0;
-  border-radius: 6px;
+  border-radius: var(--opus-control-radius, 6px);
   background: transparent;
   color: var(--opus-text);
   font: inherit;

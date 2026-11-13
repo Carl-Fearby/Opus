@@ -23,6 +23,10 @@
   box-shadow: var(--opus-control-shadow, none);
 }
 
+.button[data-control-radius="minimal"] {
+  --opus-input-radius: 6px;
+}
+
 .button[data-control-radius="medium"] {
   --opus-input-radius: 12px;
 }

@@ -10,7 +10,7 @@
 .dot {
   width: 10px;
   height: 10px;
-  border-radius: 999px;
+  border-radius: var(--opus-control-radius, 999px);
   background: var(--opus-muted);
   box-shadow: 0 0 0 4px color-mix(in srgb, var(--opus-muted) 16%, transparent);
 }

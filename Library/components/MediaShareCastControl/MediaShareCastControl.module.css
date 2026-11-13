@@ -12,7 +12,7 @@
   height: 32px;
   padding: 0;
   border: 0;
-  border-radius: 8px;
+  border-radius: var(--opus-control-radius, 8px);
   background: transparent;
   color: var(--opus-text);
   cursor: pointer;
@@ -43,7 +43,7 @@
   min-width: 13.5rem;
   padding: 6px;
   border: 1px solid var(--opus-surface-border, var(--opus-border-strong));
-  border-radius: 12px;
+  border-radius: var(--opus-control-radius, 12px);
   background: var(--opus-surface-fill, color-mix(in srgb, var(--opus-panel) 96%, transparent));
   box-shadow: var(--opus-control-shadow, var(--opus-shadow));
   backdrop-filter: var(--opus-surface-backdrop-filter, blur(10px));
@@ -59,7 +59,7 @@
   width: 100%;
   padding: 8px 10px;
   border: 0;
-  border-radius: 8px;
+  border-radius: var(--opus-control-radius, 8px);
   background: transparent;
   color: var(--opus-text);
   text-align: left;

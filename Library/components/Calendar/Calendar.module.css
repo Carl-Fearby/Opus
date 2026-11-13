@@ -50,7 +50,7 @@
   height: 32px;
   padding: 0 28px 0 10px;
   border: 1px solid var(--opus-surface-border, var(--calendar-line));
-  border-radius: 8px;
+  border-radius: var(--opus-control-radius, 8px);
   background: var(--opus-surface-fill, color-mix(in srgb, var(--opus-input-bg) 72%, transparent));
   color: var(--opus-surface-text, var(--opus-text));
   font: inherit;
@@ -108,7 +108,7 @@
   width: 32px;
   height: 32px;
   border: 1px solid var(--opus-surface-border, var(--calendar-line));
-  border-radius: 8px;
+  border-radius: var(--opus-control-radius, 8px);
   background: var(--opus-surface-fill, color-mix(in srgb, var(--opus-input-bg) 72%, transparent));
   color: var(--opus-surface-text, var(--opus-muted));
   font-size: 1.1rem;
@@ -258,7 +258,7 @@
   flex-shrink: 0;
   width: 6px;
   height: 6px;
-  border-radius: 999px;
+  border-radius: var(--opus-control-radius, 999px);
   background: var(--opus-accent);
 }
 
@@ -332,7 +332,7 @@
   width: 8px;
   height: 8px;
   margin-top: 5px;
-  border-radius: 999px;
+  border-radius: var(--opus-control-radius, 999px);
   background: var(--opus-surface-fill, var(--opus-accent));
 }
 

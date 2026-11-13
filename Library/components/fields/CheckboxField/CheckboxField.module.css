@@ -53,7 +53,7 @@
 }
 
 .round {
-  border-radius: 999px;
+  border-radius: var(--opus-control-radius, 999px);
 }
 
 .visual::after {

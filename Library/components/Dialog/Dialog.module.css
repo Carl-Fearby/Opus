@@ -99,7 +99,7 @@
   justify-content: center;
   width: 40px;
   height: 40px;
-  border-radius: 999px;
+  border-radius: var(--opus-control-radius, 999px);
   background: var(--opus-surface-fill, var(--dialog-icon-bg));
   color: var(--opus-surface-text, var(--dialog-icon-fg));
 }

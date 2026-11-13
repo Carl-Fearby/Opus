@@ -10,7 +10,7 @@
   height: 34px;
   padding: 0 8px;
   border: 1px solid var(--opus-surface-border, var(--opus-border));
-  border-radius: 8px;
+  border-radius: var(--opus-control-radius, 8px);
   background: transparent;
   color: var(--opus-text);
   font: inherit;

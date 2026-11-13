@@ -77,11 +77,11 @@
 }
 
 .surface[data-radius="xl"] {
-  border-radius: 20px;
+  border-radius: var(--opus-control-radius, 20px);
 }
 
 .surface[data-radius="full"] {
-  border-radius: 999px;
+  border-radius: var(--opus-control-radius, 999px);
 }
 
 .surface[data-padding="snug"] {
