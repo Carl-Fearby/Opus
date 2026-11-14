@@ -19,6 +19,7 @@ export function DateRangeField({ error, help, id, label, labelPosition, max, min
       label={label}
       max={max}
       min={min}
+      radius={radius}
       value={value}
       onChange={onChange}
     />

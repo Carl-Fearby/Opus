@@ -38,6 +38,7 @@ export type OpusDateTimeInputProps = {
   name?: string;
   onChange: ChangeEventHandler<HTMLInputElement>;
   placeholder?: string;
+  radius?: import("../types").ControlRadius;
   readOnly?: boolean;
   required?: boolean;
   value: string;
@@ -57,6 +58,7 @@ export function OpusDateTimeInput({
   name,
   onChange,
   placeholder,
+  radius,
   readOnly,
   required,
   value,
@@ -168,6 +170,7 @@ export function OpusDateTimeInput({
       ? createPortal(
           <div
             className={triggerStyles.portal}
+            data-control-radius={radius}
             data-portaled="true"
             id={panelId}
             ref={panelRef}

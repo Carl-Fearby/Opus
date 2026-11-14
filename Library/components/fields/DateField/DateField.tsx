@@ -83,6 +83,7 @@ export function DateField({
           max={resolvedMax}
           min={resolvedMin}
           name={name}
+          radius={radius}
           readOnly={readOnly}
           required={required}
           value={value}
@@ -99,6 +100,7 @@ export function DateField({
           max={resolvedMax}
           min={resolvedMin}
           name={name}
+          radius={radius}
           readOnly={readOnly}
           required={required}
           value={value}
@@ -113,6 +115,7 @@ export function DateField({
           id={id}
           label={label}
           name={name}
+          radius={radius}
           readOnly={readOnly}
           required={required}
           step={typeof inputProps?.step === "number" ? inputProps.step : undefined}
@@ -130,6 +133,7 @@ export function DateField({
           max={resolvedMax}
           min={resolvedMin}
           name={name}
+          radius={radius}
           readOnly={readOnly}
           required={required}
           value={value}
@@ -146,6 +150,7 @@ export function DateField({
           max={resolvedMax}
           min={resolvedMin}
           name={name}
+          radius={radius}
           readOnly={readOnly}
           required={required}
           value={value}

@@ -116,6 +116,7 @@ export function ColorField({
       ? createPortal(
           <div
             className={styles.portal}
+            data-control-radius={radius}
             data-portaled="true"
             id={panelId}
             ref={panelRef}

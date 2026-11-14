@@ -11,7 +11,7 @@
   grid-auto-flow: column;
   gap: 0;
   border: 1px solid var(--opus-surface-border, var(--opus-border-strong));
-  border-radius: var(--opus-control-radius, 14px);
+  border-radius: var(--opus-menu-radius, 14px);
   background:
     var(--opus-surface-fill, radial-gradient(circle at 10% 0%, color-mix(in srgb, var(--opus-accent) 14%, transparent), transparent 34%),
     var(--opus-menu-surface-token, var(--opus-panel)));

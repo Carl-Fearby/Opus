@@ -38,6 +38,7 @@ export type OpusMonthInputProps = {
   name?: string;
   onChange: ChangeEventHandler<HTMLInputElement>;
   placeholder?: string;
+  radius?: import("../types").ControlRadius;
   readOnly?: boolean;
   required?: boolean;
   value: string;
@@ -61,6 +62,7 @@ export function OpusMonthInput({
   name,
   onChange,
   placeholder,
+  radius,
   readOnly,
   required,
   value,
@@ -168,6 +170,7 @@ export function OpusMonthInput({
       ? createPortal(
           <div
             className={triggerStyles.portal}
+            data-control-radius={radius}
             data-portaled="true"
             id={panelId}
             ref={panelRef}

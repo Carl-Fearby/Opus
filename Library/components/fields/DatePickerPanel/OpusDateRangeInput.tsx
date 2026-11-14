@@ -34,6 +34,7 @@ export type OpusDateRangeInputProps = {
   onChange: (value: DateRangeValue) => void;
   placeholder?: string;
   readOnly?: boolean;
+  radius?: import("../types").ControlRadius;
   required?: boolean;
   value: DateRangeValue;
 };
@@ -50,6 +51,7 @@ export function OpusDateRangeInput({
   onChange,
   placeholder = "Select dates",
   readOnly,
+  radius,
   required,
   value,
 }: OpusDateRangeInputProps) {
@@ -128,6 +130,7 @@ export function OpusDateRangeInput({
       ? createPortal(
           <div
             className={styles.portal}
+            data-control-radius={radius}
             data-portaled="true"
             id={panelId}
             ref={panelRef}

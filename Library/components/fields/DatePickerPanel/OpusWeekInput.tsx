@@ -41,6 +41,7 @@ export type OpusWeekInputProps = {
   name?: string;
   onChange: ChangeEventHandler<HTMLInputElement>;
   placeholder?: string;
+  radius?: import("../types").ControlRadius;
   readOnly?: boolean;
   required?: boolean;
   value: string;
@@ -64,6 +65,7 @@ export function OpusWeekInput({
   name,
   onChange,
   placeholder,
+  radius,
   readOnly,
   required,
   value,
@@ -172,6 +174,7 @@ export function OpusWeekInput({
       ? createPortal(
           <div
             className={triggerStyles.portal}
+            data-control-radius={radius}
             data-portaled="true"
             id={panelId}
             ref={panelRef}

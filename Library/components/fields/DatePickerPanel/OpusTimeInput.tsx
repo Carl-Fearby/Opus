@@ -36,6 +36,7 @@ export type OpusTimeInputProps = {
   onChange: ChangeEventHandler<HTMLInputElement>;
   placeholder?: string;
   readOnly?: boolean;
+  radius?: import("../types").ControlRadius;
   required?: boolean;
   step?: number;
   value: string;
@@ -99,6 +100,7 @@ export function OpusTimeInput({
   onChange,
   placeholder = "Select time",
   readOnly,
+  radius,
   required,
   step = 60,
   value,
@@ -208,6 +210,7 @@ export function OpusTimeInput({
       ? createPortal(
           <div
             className={triggerStyles.portal}
+            data-control-radius={radius}
             data-portaled="true"
             id={panelId}
             ref={panelRef}
