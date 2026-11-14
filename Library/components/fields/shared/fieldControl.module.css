@@ -232,7 +232,6 @@
 }
 
 .panel {
-  --opus-menu-radius: 14px;
   --opus-menu-surface: var(--opus-menu-surface-token, var(--opus-panel));
   position: absolute;
   top: calc(100% + 6px);
@@ -240,7 +239,7 @@
   right: 0;
   z-index: 20;
   border: 1px solid var(--opus-surface-border, var(--opus-border-strong));
-  border-radius: var(--opus-menu-radius);
+  border-radius: var(--opus-menu-radius, 14px);
   background:
     var(--opus-surface-fill, radial-gradient(circle at 10% 0%, color-mix(in srgb, var(--opus-accent) 14%, transparent), transparent 34%),
     var(--opus-menu-surface, var(--opus-menu-glass-surface, var(--opus-panel))));
