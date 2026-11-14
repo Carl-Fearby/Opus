@@ -2,6 +2,12 @@
 
 All notable public-package changes are recorded here. Opus follows [Semantic Versioning](https://semver.org/).
 
+## 0.20.2 — 2026-11-13
+
+### Fixed
+
+- The shared field menu panel hardcoded a `14px` radius, so `FilterSelectField`, `MultiSelectField`, `TreeSelectField`, `CountryPickerField` and `PhoneNumberField` ignored their `radius` prop. The panel now uses `--opus-menu-radius` from the radius scale (None `0`, Minimal `6px`, Standard and up following the scale).
+
 ## 0.20.1 — 2026-11-13
 
 ### Fixed
