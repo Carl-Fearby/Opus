@@ -41,3 +41,6 @@ yarn-error.log*
 
 # consumer app generated CSS
 Application/app/opus-react-components.css
+
+# Local Netlify folder
+.netlify

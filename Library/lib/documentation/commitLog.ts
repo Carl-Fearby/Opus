@@ -2095,5 +2095,77 @@ export const commitLog: CommitEntry[] = [
     shortHash: "3181aee",
     committedAt: "2026-11-11",
     summary: "chore: release opus-react@0.18.1",
+  },
+  {
+    hash: "9f920489263395daa6e61169751bd75b07cbebb8",
+    shortHash: "9f92048",
+    committedAt: "2026-11-11",
+    summary: "fix: keep the marketing site on the library version",
+  },
+  {
+    hash: "a3590230ebe1f8a0d8471f4aef6d53263fd3bce7",
+    shortHash: "a359023",
+    committedAt: "2026-11-11",
+    summary: "chore: align every app with opus-react 0.18.1 and ship pending site work",
+  },
+  {
+    hash: "f131c8e60a725b09f596b9a9157d12b87999f98f",
+    shortHash: "f131c8e",
+    committedAt: "2026-11-13",
+    summary: "feat: add a clear control to AsyncSelectField",
+  },
+  {
+    hash: "5abb8856fdf459f4744b39e378c52a074e28163b",
+    shortHash: "5abb885",
+    committedAt: "2026-11-13",
+    summary: "chore: release opus-react@0.19.0",
+  },
+  {
+    hash: "53f4c88ecbb1600a290a3ed8bc7a494ed7a65140",
+    shortHash: "53f4c88",
+    committedAt: "2026-11-13",
+    summary: "feat: give every component a radius setting and make catalogue props take effect",
+  },
+  {
+    hash: "1fb4c8ceec0ccd0d9d0058906a6c6aeaebfe3326",
+    shortHash: "1fb4c8c",
+    committedAt: "2026-11-13",
+    summary: "chore: release opus-react@0.20.0",
+  },
+  {
+    hash: "b56d7482b260515a94ab21ec510b5743e7fdf022",
+    shortHash: "b56d748",
+    committedAt: "2026-11-14",
+    summary: "fix: close every field dropdown when it loses focus",
+  },
+  {
+    hash: "8b6d48a02be03e3e5757b5fe87e37a2a349cb5a2",
+    shortHash: "8b6d48a",
+    committedAt: "2026-11-14",
+    summary: "chore: release opus-react@0.20.1",
+  },
+  {
+    hash: "cf853d703f05aff8f600c34f4be0af5088646a3d",
+    shortHash: "cf853d7",
+    committedAt: "2026-11-14",
+    summary: "fix: let the field menu panel follow the radius setting",
+  },
+  {
+    hash: "e0161209dc223e611f1985d84d71dcb6fca6cbf3",
+    shortHash: "e016120",
+    committedAt: "2026-11-14",
+    summary: "chore: release opus-react@0.20.2",
+  },
+  {
+    hash: "0ca01d3679d98669097ecbf1b5755c3faffe46cf",
+    shortHash: "0ca01d3",
+    committedAt: "2026-11-14",
+    summary: "fix: pass the radius through every portalled field panel",
+  },
+  {
+    hash: "64fe3c5cb9ccfdfdc5560428370cdf4677c9d3f7",
+    shortHash: "64fe3c5",
+    committedAt: "2026-11-14",
+    summary: "chore: release opus-react@0.20.3",
   }
 ].reverse();

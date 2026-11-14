@@ -1,6 +1,58 @@
 /** Curated opus-react release notes for npm publishes that only left chore commits in git. */
 export const releaseNotesOverlay = [
   {
+    version: "0.20.3",
+    releasedAt: "2026-11-14",
+    summary: "Portalled field panels pick up the radius setting.",
+    changes: [
+      "Date, time, colour and cascader panels now read the same radius scale as their fields, so Minimal or None reaches the popup and not just the input.",
+      "Each date and time input takes a radius prop and stamps data-control-radius on its portal, so the panel also inherits the active theme and appearance tokens.",
+      "The colour field portal carries the radius attribute, and the combobox list and cascader panel use the shared menu radius token instead of fixed values.",
+      "Publish opus-react 0.20.3.",
+    ],
+  },
+  {
+    version: "0.20.2",
+    releasedAt: "2026-11-14",
+    summary: "Field menus follow the radius setting.",
+    changes: [
+      "The shared field panel no longer forces a 14px menu radius, so Select, Combo, Multi, Tree, Country, Phone and Filter panels take the radius from the control instead.",
+      "Publish opus-react 0.20.2.",
+    ],
+  },
+  {
+    version: "0.20.1",
+    releasedAt: "2026-11-14",
+    summary: "Every field dropdown dismisses on blur.",
+    changes: [
+      "Select, Combo, MultiSelect, AsyncSelect, AsyncMultiSelect, TreeSelect, Cascader, FilterSelect, CountryPicker, PhoneNumber, Colour and Mention fields close when focus or a click leaves the panel.",
+      "One shared hook handles a pointer press outside the panel, focus moving to another element and Escape, replacing the per-component outside-click listeners.",
+      "AsyncSelectField previously stayed open until an option was picked, and now closes like the rest.",
+      "Publish opus-react 0.20.1.",
+    ],
+  },
+  {
+    version: "0.20.0",
+    releasedAt: "2026-11-13",
+    summary: "Every component gains a radius setting, and catalogue props take effect.",
+    changes: [
+      "The radius control offers None, Minimal, Standard, Rounded and Pill, with Minimal (6px) between None and Standard, driven by a shared data-control-radius scale in globals.css.",
+      "Every catalogue component page exposes the shared Radius control, and the generated usage code forwards it so the setting changes the preview.",
+      "Field previews seed radius, value, checked, clipboard, icon badge, sidebar height and profile photo settings from the catalogue defaults instead of ignoring them.",
+      "StatCard renders again after its duplicated closing tag was removed.",
+      "Publish opus-react 0.20.0.",
+    ],
+  },
+  {
+    version: "0.19.0",
+    releasedAt: "2026-11-13",
+    summary: "Async select fields can be cleared.",
+    changes: [
+      "AsyncSelectField gains a clear control that empties the current selection and reports null to onChange.",
+      "Publish opus-react 0.19.0.",
+    ],
+  },
+  {
     version: "0.18.1",
     releasedAt: "2026-11-11",
     summary: "Kanban lists drag from their header, and the grip handle is gone.",
