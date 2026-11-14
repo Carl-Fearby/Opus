@@ -19,6 +19,7 @@ import {
   resolveFieldListPortalStyle,
   type FloatingPortalStyle,
 } from "@/lib/ui/floatingPortalPosition";
+import { useDismissOnBlur } from "@/lib/ui/useDismissOnBlur";
 import styles from "./AsyncMultiSelectField.module.css";
 
 export type AsyncMultiSelectOption = {
@@ -159,19 +160,7 @@ export function AsyncMultiSelectField({
     if (disabled) setOpen(false);
   }, [disabled]);
 
-  useEffect(() => {
-    if (!open) return;
-
-    const handlePointerDown = (event: PointerEvent) => {
-      const target = event.target as Node;
-      if (!rootRef.current?.contains(target) && !panelRef.current?.contains(target)) {
-        setOpen(false);
-      }
-    };
-
-    document.addEventListener("pointerdown", handlePointerDown);
-    return () => document.removeEventListener("pointerdown", handlePointerDown);
-  }, [open]);
+  useDismissOnBlur({ open, onDismiss: () => setOpen(false), refs: [rootRef, panelRef] });
 
   function removeOption(option: AsyncMultiSelectOption) {
     if (disabled) return;

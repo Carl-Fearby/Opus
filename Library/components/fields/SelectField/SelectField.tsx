@@ -17,6 +17,7 @@ import {
   resolveFieldListPortalStyle,
   type FloatingPortalStyle,
 } from "@/lib/ui/floatingPortalPosition";
+import { useDismissOnBlur } from "@/lib/ui/useDismissOnBlur";
 import shared from "../shared/fieldControl.module.css";
 import { inputControlSizeClassName } from "../shared/inputControlSizes";
 import { createTypeaheadState, resolveTypeaheadIndex } from "../shared/typeahead";
@@ -130,29 +131,7 @@ export function SelectField({
     document.getElementById(`${listboxId}-option-${highlight}`)?.scrollIntoView?.({ block: "nearest" });
   }, [highlight, listboxId, open]);
 
-  useEffect(() => {
-    if (!open) return;
-
-    function handlePointerDown(event: PointerEvent) {
-      const target = event.target as Node;
-      if (!rootRef.current?.contains(target) && !panelRef.current?.contains(target)) {
-        setOpen(false);
-      }
-    }
-
-    function handleKeyDown(event: KeyboardEvent) {
-      if (event.key === "Escape") {
-        setOpen(false);
-      }
-    }
-
-    document.addEventListener("pointerdown", handlePointerDown);
-    document.addEventListener("keydown", handleKeyDown);
-    return () => {
-      document.removeEventListener("pointerdown", handlePointerDown);
-      document.removeEventListener("keydown", handleKeyDown);
-    };
-  }, [open]);
+  useDismissOnBlur({ open, onDismiss: () => setOpen(false), refs: [rootRef, panelRef] });
 
   function selectOption(option: string) {
     setHighlight(Math.max(options.indexOf(option), 0));

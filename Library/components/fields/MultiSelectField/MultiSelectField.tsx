@@ -7,6 +7,7 @@ import shared from "../shared/fieldControl.module.css";
 import { inputControlSizeClassName } from "../shared/inputControlSizes";
 import { createTypeaheadState, resolveTypeaheadIndex } from "../shared/typeahead";
 import styles from "./MultiSelectField.module.css";
+import { useDismissOnBlur } from "@/lib/ui/useDismissOnBlur";
 
 type MultiSelectFieldProps = {
   radius?: ControlRadius;
@@ -59,30 +60,7 @@ export function MultiSelectField({
     if (disabled) setOpen(false);
   }, [disabled]);
 
-  useEffect(() => {
-    if (!open) {
-      return;
-    }
-
-    function handlePointerDown(event: MouseEvent) {
-      if (!rootRef.current?.contains(event.target as Node)) {
-        setOpen(false);
-      }
-    }
-
-    function handleKeyDown(event: KeyboardEvent) {
-      if (event.key === "Escape") {
-        setOpen(false);
-      }
-    }
-
-    document.addEventListener("mousedown", handlePointerDown);
-    document.addEventListener("keydown", handleKeyDown);
-    return () => {
-      document.removeEventListener("mousedown", handlePointerDown);
-      document.removeEventListener("keydown", handleKeyDown);
-    };
-  }, [open]);
+  useDismissOnBlur({ open, onDismiss: () => setOpen(false), refs: [rootRef] });
 
   // Move focus into the list once the panel has rendered.
   useEffect(() => {

@@ -6,6 +6,7 @@ import type { FieldMode, InputControlSize, LabelPosition } from "@/components/fi
 import shared from "../shared/fieldControl.module.css";
 import { inputControlSizeClassName } from "../shared/inputControlSizes";
 import styles from "./CascaderField.module.css";
+import { useDismissOnBlur } from "@/lib/ui/useDismissOnBlur";
 import type { ControlRadius } from "../types";
 
 export type CascaderOption = {
@@ -93,30 +94,7 @@ export function CascaderField({
     if (disabled) setOpen(false);
   }, [disabled]);
 
-  useEffect(() => {
-    if (!open) {
-      return;
-    }
-
-    function handlePointerDown(event: MouseEvent) {
-      if (!rootRef.current?.contains(event.target as Node)) {
-        setOpen(false);
-      }
-    }
-
-    function handleKeyDown(event: KeyboardEvent) {
-      if (event.key === "Escape") {
-        setOpen(false);
-      }
-    }
-
-    document.addEventListener("mousedown", handlePointerDown);
-    document.addEventListener("keydown", handleKeyDown);
-    return () => {
-      document.removeEventListener("mousedown", handlePointerDown);
-      document.removeEventListener("keydown", handleKeyDown);
-    };
-  }, [open]);
+  useDismissOnBlur({ open, onDismiss: () => setOpen(false), refs: [rootRef] });
 
   function selectOption(level: number, option: CascaderOption) {
     const next = value.slice(0, level);

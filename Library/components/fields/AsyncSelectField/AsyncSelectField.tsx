@@ -6,6 +6,7 @@ import { FieldShell } from "../FieldShell";
 import type { ControlRadius, FieldMode, InputControlSize, LabelPosition } from "../types";
 import { inputControlSizeClassName } from "../shared/inputControlSizes";
 import styles from "./AsyncSelectField.module.css";
+import { useDismissOnBlur } from "@/lib/ui/useDismissOnBlur";
 
 export type AsyncSelectOption = { label: string; value: string; description?: string };
 export type AsyncSelectFieldProps = {
@@ -36,6 +37,8 @@ export function AsyncSelectField({ id, label, labelPosition, mode, value, defaul
   const { t } = useOpusI18n();
   const listId = useId();
   const requestRef = useRef(0);
+  const rootRef = useRef<HTMLDivElement>(null);
+  const panelRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
   const [query, setQuery] = useState(value?.label ?? "");
   const [options, setOptions] = useState(defaultOptions);
@@ -55,6 +58,8 @@ export function AsyncSelectField({ id, label, labelPosition, mode, value, defaul
     }, debounceMs);
     return () => window.clearTimeout(timeout);
   }, [debounceMs, loadOptions, minQueryLength, open, query]);
+
+  useDismissOnBlur({ open, onDismiss: () => setOpen(false), refs: [rootRef, panelRef] });
 
   const select = (option: AsyncSelectOption) => { setQuery(option.label); setOpen(false); onChange(option); };
   const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
@@ -90,10 +95,10 @@ export function AsyncSelectField({ id, label, labelPosition, mode, value, defaul
   const showClear = !disabled && (query.length > 0 || Boolean(value));
 
   return <FieldShell id={id} label={label} labelPosition={labelPosition} mode={mode} required={required} error={error} help={help} radius={radius} transparency={transparency} gradient={gradient}>
-    <div className={styles.root}>
+    <div className={styles.root} ref={rootRef}>
       <input id={id} role="combobox" aria-autocomplete="list" aria-expanded={open} aria-controls={listId} aria-activedescendant={open && options[highlight] ? `${listId}-${highlight}` : undefined} className={[inputControlSizeClassName[size], styles.input, showClear ? styles.inputWithClear : ""].filter(Boolean).join(" ")} disabled={disabled} placeholder={placeholder} ref={inputRef} value={query} onChange={handleChange} onFocus={() => setOpen(true)} onKeyDown={handleKeyDown} />
       {showClear ? <button aria-label={t("common.clear", "Clear")} className={styles.clear} onMouseDown={(event) => event.preventDefault()} onClick={clear} type="button">×</button> : null}
-      {open ? <div className={styles.list} id={listId} role="listbox">
+      {open ? <div className={styles.list} id={listId} ref={panelRef} role="listbox">
         {loading ? <p role="status">{loadingMessage}</p> : options.length ? options.map((option, index) => <button aria-selected={value?.value === option.value} className={styles.option} data-highlighted={index === highlight} id={`${listId}-${index}`} key={option.value} role="option" type="button" onMouseDown={(event) => event.preventDefault()} onClick={() => select(option)}><strong>{option.label}</strong>{option.description ? <small>{option.description}</small> : null}</button>) : <p role="status">{emptyMessage}</p>}
       </div> : null}
     </div>

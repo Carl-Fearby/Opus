@@ -19,6 +19,7 @@ import {
   resolveEmojiPickerPortalStyle,
   type FloatingPortalStyle,
 } from "@/lib/ui/floatingPortalPosition";
+import { useDismissOnBlur } from "@/lib/ui/useDismissOnBlur";
 import { ColorPickerPanel } from "../ColorPickerPanel";
 import { normalizeHex } from "../ColorPickerPanel/colorPickerUtils";
 
@@ -108,26 +109,7 @@ export function ColorField({
     if (disabled) setOpen(false);
   }, [disabled]);
 
-  useEffect(() => {
-    if (!open) return;
-
-    const handlePointerDown = (event: PointerEvent) => {
-      const target = event.target as Node;
-      if (!rootRef.current?.contains(target) && !panelRef.current?.contains(target)) {
-        setOpen(false);
-      }
-    };
-    const handleKeyDown = (event: KeyboardEvent) => {
-      if (event.key === "Escape") setOpen(false);
-    };
-
-    document.addEventListener("pointerdown", handlePointerDown);
-    document.addEventListener("keydown", handleKeyDown);
-    return () => {
-      document.removeEventListener("pointerdown", handlePointerDown);
-      document.removeEventListener("keydown", handleKeyDown);
-    };
-  }, [open]);
+  useDismissOnBlur({ open, onDismiss: () => setOpen(false), refs: [rootRef, panelRef] });
 
   const panel =
     open && portalStyle

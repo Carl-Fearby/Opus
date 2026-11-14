@@ -10,6 +10,7 @@ import {
 } from "react";
 import { FieldShell } from "../FieldShell";
 import styles from "./MentionInputField.module.css";
+import { useDismissOnBlur } from "@/lib/ui/useDismissOnBlur";
 import type { ControlRadius, FieldMode, InputControlSize, LabelPosition } from "../types";
 import { inputControlSizeClassName } from "../shared/inputControlSizes";
 
@@ -66,7 +67,9 @@ export function MentionInputField({
   onMention,
 }: MentionInputFieldProps) {
   const [active, setActive] = useState(0);
+  const [dismissed, setDismissed] = useState(false);
   const [inputValue, setInputValue] = useState(value);
+  const rootRef = useRef<HTMLDivElement>(null);
   const lastEmittedValue = useRef<string | null>(null);
 
   useEffect(() => {
@@ -90,6 +93,14 @@ export function MentionInputField({
     [options, query],
   );
 
+  const showMenu = shown.length > 0 && !dismissed;
+
+  useDismissOnBlur({
+    open: showMenu,
+    onDismiss: () => setDismissed(true),
+    refs: [rootRef],
+  });
+
   const pick = (option: MentionOption) => {
     updateValue(
       inputValue.slice(0, inputValue.length - (query?.length ?? 0) - 1) +
@@ -99,7 +110,7 @@ export function MentionInputField({
   };
 
   const handleKeyDown = (event: KeyboardEvent<HTMLInputElement>) => {
-    if (!shown.length) return;
+    if (!showMenu) return;
     if (event.key === "ArrowDown") {
       event.preventDefault();
       setActive((current) => Math.min(current + 1, shown.length - 1));
@@ -119,12 +130,12 @@ export function MentionInputField({
 
   return (
     <FieldShell id={id} label={label} labelPosition={labelPosition} mode={mode} radius={radius} transparency={transparency} gradient={gradient} required={required} error={error} help={help}>
-      <div className={styles.root}>
+      <div className={styles.root} ref={rootRef}>
         <input
-          aria-activedescendant={shown.length ? `${id}-mention-${active}` : undefined}
+          aria-activedescendant={showMenu ? `${id}-mention-${active}` : undefined}
           aria-autocomplete="list"
-          aria-controls={shown.length ? `${id}-mentions` : undefined}
-          aria-expanded={Boolean(shown.length)}
+          aria-controls={showMenu ? `${id}-mentions` : undefined}
+          aria-expanded={showMenu}
           aria-label={label}
           autoCapitalize={autoCapitalize}
           autoComplete={autoComplete}
@@ -140,10 +151,12 @@ export function MentionInputField({
           onChange={(event: ChangeEvent<HTMLInputElement>) => {
             updateValue(event.target.value);
             setActive(0);
+            setDismissed(false);
           }}
+          onFocus={() => setDismissed(false)}
           onKeyDown={handleKeyDown}
         />
-        {shown.length ? (
+        {showMenu ? (
           <div className={styles.menu} id={`${id}-mentions`} role="listbox">
             {shown.map((option, index) => (
               <button

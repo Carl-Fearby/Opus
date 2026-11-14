@@ -17,6 +17,7 @@ import {
   resolveFieldListPortalStyle,
   type FloatingPortalStyle,
 } from "@/lib/ui/floatingPortalPosition";
+import { useDismissOnBlur } from "@/lib/ui/useDismissOnBlur";
 import { inputControlSizeClassName } from "../shared/inputControlSizes";
 import styles from "./ComboboxField.module.css";
 
@@ -113,26 +114,7 @@ export function ComboboxField({
     };
   }, [open, filtered.length, value]);
 
-  useEffect(() => {
-    if (!open) return;
-
-    const handlePointerDown = (event: PointerEvent) => {
-      const target = event.target as Node;
-      if (!rootRef.current?.contains(target) && !panelRef.current?.contains(target)) {
-        setOpen(false);
-      }
-    };
-    const handleDocumentKeyDown = (event: globalThis.KeyboardEvent) => {
-      if (event.key === "Escape") setOpen(false);
-    };
-
-    document.addEventListener("pointerdown", handlePointerDown);
-    document.addEventListener("keydown", handleDocumentKeyDown);
-    return () => {
-      document.removeEventListener("pointerdown", handlePointerDown);
-      document.removeEventListener("keydown", handleDocumentKeyDown);
-    };
-  }, [open]);
+  useDismissOnBlur({ open, onDismiss: () => setOpen(false), refs: [rootRef, panelRef] });
 
   function selectOption(option: ComboboxOption) {
     onChange(option.value);

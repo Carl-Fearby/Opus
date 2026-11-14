@@ -7,6 +7,7 @@ import type { FieldMode, InputControlSize, LabelPosition } from "@/components/fi
 import shared from "../shared/fieldControl.module.css";
 import { inputControlSizeClassName } from "../shared/inputControlSizes";
 import styles from "./PhoneNumberField.module.css";
+import { useDismissOnBlur } from "@/lib/ui/useDismissOnBlur";
 import { countries as allCountries, type PhoneCountry } from "./countries";
 import type { NativeInputProps, TextEntryBehaviourProps } from "../shared/nativeFieldProps";
 
@@ -74,30 +75,7 @@ export function PhoneNumberField({
     }
   }, [open]);
 
-  useEffect(() => {
-    if (!open) {
-      return;
-    }
-
-    function handlePointerDown(event: MouseEvent) {
-      if (!rootRef.current?.contains(event.target as Node)) {
-        setOpen(false);
-      }
-    }
-
-    function handleKeyDown(event: KeyboardEvent) {
-      if (event.key === "Escape") {
-        setOpen(false);
-      }
-    }
-
-    document.addEventListener("mousedown", handlePointerDown);
-    document.addEventListener("keydown", handleKeyDown);
-    return () => {
-      document.removeEventListener("mousedown", handlePointerDown);
-      document.removeEventListener("keydown", handleKeyDown);
-    };
-  }, [open]);
+  useDismissOnBlur({ open, onDismiss: () => setOpen(false), refs: [rootRef] });
 
   const filteredCountries = useMemo(() => {
     const normalised = query.trim().toLowerCase();
