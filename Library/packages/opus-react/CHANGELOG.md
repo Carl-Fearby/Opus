@@ -2,6 +2,12 @@
 
 All notable public-package changes are recorded here. Opus follows [Semantic Versioning](https://semver.org/).
 
+## 0.20.3 — 2026-11-13
+
+### Fixed
+
+- Every remaining dropdown panel now follows the radius setting: `ComboboxField`'s suggestion list had a fixed 14px corner, and `ColorField`, `DateField`, `TimePicker`, `DateTimePicker`, `MonthPicker`, `WeekPicker` and `DateRangeField` portalled their panels outside the field without passing the radius, so their popovers stayed at the default. The cascader now uses the menu radius token like the other dropdowns.
+
 ## 0.20.2 — 2026-11-13
 
 ### Fixed
