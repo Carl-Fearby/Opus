@@ -2,6 +2,13 @@
 
 All notable public-package changes are recorded here. Opus follows [Semantic Versioning](https://semver.org/).
 
+## 0.20.1 — 2026-11-13
+
+### Fixed
+
+- Every field dropdown now dismisses when it loses focus, not only on an outside click: `SelectField`, `ComboboxField`, `MultiSelectField`, `AsyncSelectField`, `AsyncMultiSelectField`, `TreeSelectField`, `CascaderField`, `FilterSelectField`, `CountryPickerField`, `PhoneNumberField`, `ColorField` and the `MentionInputField` suggestions all close when focus moves to another control (for example on Tab).
+- `AsyncSelectField` had no dismissal at all, so its option list stayed open when you clicked another field; it now closes on blur, Escape and outside presses like the other dropdowns.
+
 ## 0.20.0 — 2026-11-13
 
 ### Added
